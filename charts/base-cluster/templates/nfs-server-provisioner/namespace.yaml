@@ -1,0 +1,9 @@
+{{- if .Values.storage.readWriteMany.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nfs-server-provisioner
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/part-of: nfs-server-provisioner
+{{- end }}

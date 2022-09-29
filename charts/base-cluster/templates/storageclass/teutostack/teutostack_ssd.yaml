@@ -1,0 +1,15 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: teutostack-ssd
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: storage
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+allowVolumeExpansion: true
+parameters:
+  availability: nova
+  type: Ceph-SSD
+provisioner: cinder.csi.openstack.org
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer

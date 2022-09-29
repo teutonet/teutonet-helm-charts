@@ -1,0 +1,40 @@
+{{- if .Values.monitoring.metricsServer.enabled -}}
+# TODO: prometheus-adapter is resource heavy and not necessary
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: metrics-server
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: metrics-server
+    app.kubernetes.io/part-of: monitoring
+spec:
+  chart:
+    spec:
+      chart: metrics-server
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: {{ .Release.Namespace }}
+      version: 6.x.x
+  interval: 1m
+  values:
+    apiService:
+      create: true
+    {{- if .Values.global.imageRegistry }}
+    global:
+      imageRegistry: {{ $.Values.global.imageRegistry }}
+    {{- end }}
+    resources:
+      limits:
+        cpu: 100m
+        memory: 64Mi
+    replicas: 2
+    priorityClassName: system-cluster-critical
+    podDisruptionBudget:
+      enabled: true
+      minAvailable: 1
+    extraArgs:
+      - --kubelet-preferred-address-types=InternalIP
+      - --kubelet-insecure-tls=true
+  {{- end -}}

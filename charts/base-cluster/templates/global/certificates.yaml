@@ -1,0 +1,30 @@
+{{- if and .Values.dns.email .Values.global.certificates }}
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "cert-manager-certificates" "resource" (include "base-cluster.cert-manager.custom-certificates" .) "dependencies" (dict "cert-manager" "cert-manager") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cert-manager"))}}
+{{- end }}
+
+{{- define "base-cluster.cert-manager.custom-certificates" -}}
+{{- range $name, $cert := .Values.global.certificates -}}
+  {{- if not $.Values.dns.provider -}}
+    {{- $dnsNames := include "common.tplvalues.render" (dict "value" $cert.dnsNames "context" $) | fromYamlArray -}}
+    {{- range $dnsName := $dnsNames -}}
+      {{- if $dnsName | contains "*" -}}
+        {{- fail "To use wildcard domains you need to provide a `.dns.provider`" -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "base-cluster.helm.labels" (dict) | nindent 4 }}
+spec:
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  dnsNames: {{- include "common.tplvalues.render" (dict "value" $cert.dnsNames "context" $) | nindent 4 }}
+  secretName: {{ printf "%s-certificate" $name | quote }}
+---
+{{ end -}}
+{{- end -}}

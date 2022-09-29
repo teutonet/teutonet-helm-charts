@@ -1,0 +1,821 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "Values",
+  "properties": {
+    "global": {
+      "type": "object",
+      "properties": {
+        "serviceLevelAgreement": {
+          "type": "string",
+          "enum": [
+            "None",
+            "24x7",
+            "Working-Hours"
+          ]
+        },
+        "clusterName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "baseDomain": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "imageRegistry": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "imageCredentials": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "host": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "targetNamespaces": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "const": "ALL"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1
+                  }
+                ],
+                "default": "ALL"
+              }
+            },
+            "required": [
+              "host",
+              "username",
+              "password"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "kubectl": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "$ref": "#/$defs/image"
+            }
+          },
+          "additionalProperties": false
+        },
+        "networkPolicy": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "none",
+                "auto",
+                "cilium"
+              ]
+            },
+            "metricsLabels": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "minProperties": 1
+            },
+            "dnsLabels": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "minProperties": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "helmRepositories": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "pattern": "https?://.+"
+              },
+              "interval": {
+                "type": "string",
+                "pattern": "[0-9]+[mhd]",
+                "default": "5m"
+              },
+              "condition": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "certificates": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "dnsNames": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ]
+              },
+              "targetNamespaces": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "const": "ALL"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1
+                  }
+                ],
+                "default": "ALL"
+              }
+            },
+            "required": [
+              "dnsNames"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "storageClass": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "serviceLevelAgreement"
+      ]
+    },
+    "kyverno": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "podSecurityStandard": {
+          "type": "string",
+          "enum": [
+            "baseline",
+            "restricted",
+            "privileged",
+            "custom"
+          ]
+        },
+        "podSecuritySeverity": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "validationFailureAction": {
+          "type": "string",
+          "enum": [
+            "audit",
+            "enforce"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "monitoring": {
+      "type": "object",
+      "properties": {
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "prometheus": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "replicas": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "resources": {
+              "$ref": "#/$defs/resourceRequirements"
+            },
+            "retentionDuration": {
+              "type": "string",
+              "pattern": "[0-9]+(ms|s|m|h|d|w|y)"
+            },
+            "retentionSize": {
+              "type": "string",
+              "pattern": "[0-9]+(B|KB|MB|GB|TB|PB|EB)"
+            },
+            "persistence": {
+              "type": "object",
+              "properties": {
+                "storageClass": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "size": {
+                  "$ref": "#/$defs/quantity"
+                }
+              },
+              "additionalProperties": false
+            },
+            "operator": {
+              "type": "object",
+              "properties": {
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            },
+            "kubeStateMetrics": {
+              "type": "object",
+              "properties": {
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                },
+                "metricLabelsAllowList": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "additionalProperties": false
+            },
+            "nodeExporter": {
+              "type": "object",
+              "properties": {
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            },
+            "ingress": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "host": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "alertmanager": {
+              "type": "object",
+              "properties": {
+                "ingress": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "host": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "replicas": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "retentionDuration": {
+                  "type": "string",
+                  "pattern": "[0-9]+(ms|s|m|h|d|w|y)"
+                },
+                "persistence": {
+                  "type": "object",
+                  "properties": {
+                    "storageClass": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "size": {
+                      "$ref": "#/$defs/quantity"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            },
+            "authentication": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            },
+            "overrides": {
+              "type": "object",
+              "description": "See https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml"
+            }
+          },
+          "additionalProperties": false
+        },
+        "grafana": {
+          "type": "object",
+          "properties": {
+            "adminPassword": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "ingress": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "host": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "additionalDashboards": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "gnetId": {
+                    "type": "integer"
+                  },
+                  "revision": {
+                    "type": "integer"
+                  },
+                  "datasource": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "gnetId"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "config": {
+              "type": "object"
+            },
+            "notifiers": {
+              "type": "array",
+              "description": "See https://grafana.com/docs/grafana/latest/administration/provisioning",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "uid": {
+                    "type": "string"
+                  },
+                  "org_id": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "is_default": {
+                    "type": "boolean"
+                  },
+                  "send_reminder": {
+                    "type": "boolean"
+                  },
+                  "frequency": {
+                    "type": "string"
+                  },
+                  "settings": {
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "name",
+                  "type"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "additionalPlugins": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "resources": {
+              "$ref": "#/$defs/resourceRequirements"
+            },
+            "sidecar": {
+              "type": "object",
+              "properties": {
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "loki": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "persistence": {
+              "type": "object",
+              "properties": {
+                "size": {
+                  "$ref": "#/$defs/quantity"
+                },
+                "storageClass": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            "replicas": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "resources": {
+              "$ref": "#/$defs/resourceRequirements"
+            },
+            "promtail": {
+              "type": "object",
+              "properties": {
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "metricsServer": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "costAnalysis": {
+          "type": "object",
+          "properties": {
+            "interval": {
+              "type": "string",
+              "examples": [
+                "Day",
+                "Month"
+              ],
+              "default": "Day"
+            },
+            "currency": {
+              "type": "string",
+              "examples": [
+                "currencyUSD",
+                "currencyEUR"
+              ],
+              "default": "currencyEUR"
+            },
+            "storageClassMapping": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "securityScanning": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "descheduler": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "strategies": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "params": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "dns": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "cloudflare": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "$ref": "#/$defs/email"
+                    }
+                  },
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "apiKey": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "apiKey"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "properties": {
+                        "apiToken": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "apiToken"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "cloudflare"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "email": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "$ref": "#/$defs/email"
+        },
+        "domains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "certManager": {
+      "type": "object",
+      "properties": {
+        "resources": {
+          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "webhook": {
+          "type": "object",
+          "properties": {
+            "resources": {
+              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+            }
+          },
+          "additionalProperties": false
+        },
+        "caInjector": {
+          "type": "object",
+          "properties": {
+            "resources": {
+              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "externalDNS": {
+      "type": "object",
+      "properties": {
+        "resources": {
+          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        }
+      },
+      "additionalProperties": false
+    },
+    "flux": {
+      "type": "object",
+      "properties": {
+        "gitRepositories": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string"
+              },
+              "user": {
+                "type": "string"
+              },
+              "gitInterval": {
+                "type": "string",
+                "pattern": "[0-9]+(ms|s|m|h|d|w|y)",
+                "default": "1m"
+              },
+              "email": {
+                "type": "string",
+                "$ref": "#/$defs/email"
+              },
+              "key": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ingress": {
+      "type": "object",
+      "properties": {
+        "replicas": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "resources": {
+          "$ref": "#/$defs/resourceRequirements"
+        }
+      },
+      "additionalProperties": false
+    },
+    "storage": {
+      "type": "object",
+      "properties": {
+        "readWriteMany": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "storageClass": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "persistence": {
+              "type": "object",
+              "properties": {
+                "size": {
+                  "$ref": "#/$defs/quantity"
+                },
+                "storageClass": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "common": {
+      "type": "object",
+      "description": "Values for sub-chart"
+    },
+    "kube-prometheus-stack-crds": {
+      "type": "object",
+      "description": "Values for sub-chart"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "resourceRequirements": {
+      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.24.4-standalone-strict/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+    },
+    "quantity": {
+      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.24.4-standalone-strict/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "registry": {
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        },
+        "digest": {
+          "type": "string"
+        },
+        "pullSecrets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "email": {
+      "pattern": "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])"
+    }
+  }
+}
