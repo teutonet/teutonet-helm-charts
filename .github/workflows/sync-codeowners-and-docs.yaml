@@ -1,0 +1,48 @@
+name: Sync CODEOWNERS and Docs
+
+"on":
+  push:
+    paths:
+      - charts/*/README.md.gotmpl
+      - charts/*/README.md
+      - charts/*/Chart.yaml
+      - .github/CODEOWNERS
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
+
+      - name: install yq
+        run: |
+          sudo snap install yq
+
+      - name: generate CODEOWNERS
+        run: |
+          ./.github/scripts/sync-codeowners.sh > .github/CODEOWNERS
+
+      - name: generate Docs
+        run: |
+          docker run --rm --volume "$(pwd):/helm-docs" -u "$(id -u)" jnorwood/helm-docs:v1.8.1
+
+      - name: Commit updated Docs and CODEOWNERS
+        run: |
+          if ! git diff --exit-code; then
+            git config user.name "$GITHUB_ACTOR"
+            git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+            if ! git diff --exit-code --quiet .github/CODEOWNERS; then
+              git commit -m "chore: Update 'CODEOWNERS'" .github/CODEOWNERS
+            fi
+
+            if ! git diff --exit-code --quiet charts/*/README.md; then
+              git add charts/*/README.md
+              git commit -m "chore: Update 'README.md's"
+            fi
+
+            git push
+          fi
