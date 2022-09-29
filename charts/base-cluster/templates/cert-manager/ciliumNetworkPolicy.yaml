@@ -1,0 +1,79 @@
+{{- if eq (include "common.networkPolicy.type" .) "cilium" }}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: cert-manager
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: cert-manager
+      app.kubernetes.io/instance: cert-manager
+  ingress:
+    - fromEndpoints:
+        - matchLabels: {{- include "common.tplvalues.render" (dict "value" (include "common.dict.filterEmptyValues" .Values.global.networkPolicy.metricsLabels) "context" $) | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "9402"
+              protocol: TCP
+  egress:
+    - toEntities:
+        - kube-apiserver
+    - toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: cert-manager-webhook
+  namespace: cert-manager
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: cert-manager
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: webhook
+      app.kubernetes.io/instance: cert-manager
+  ingress:
+    - fromEntities:
+        - kube-apiserver
+        - remote-node
+      toPorts:
+        - ports:
+            - port: "10250"
+              protocol: TCP
+    - fromEntities:
+        - host
+      toPorts:
+        - ports:
+            - port: "6080"
+              protocol: TCP
+  egress:
+    - toEntities:
+        - kube-apiserver
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: cert-manager-cainjector
+  namespace: cert-manager
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: cert-manager
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: cainjector
+      app.kubernetes.io/instance: cert-manager
+  ingress:
+    - { }
+  egress:
+    - toEntities:
+        - kube-apiserver
+{{- end }}

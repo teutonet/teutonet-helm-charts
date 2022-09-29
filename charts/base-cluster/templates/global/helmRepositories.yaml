@@ -1,0 +1,19 @@
+{{- range $name, $config := .Values.global.helmRepositories }}
+{{- $create := true -}}
+{{- if $config.condition -}}
+  {{- $create = eq (include "common.tplvalues.render" (dict "value" $config.condition "context" $)) "true" -}}
+{{- end -}}
+{{- if $create -}}
+# {{ $create }}
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: {{ $name }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  interval: {{ $config.interval | default "5m" }}
+  url: {{ $config.url }}
+---
+{{- end -}}
+{{- end }}

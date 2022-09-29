@@ -1,0 +1,5 @@
+{{- with (.Values.dns.provider).cloudflare }}
+{{- include "base-cluster.dns.secret.header" (dict "name" "cert-manager-dns" "namespace" "cert-manager" "context" $) }}
+stringData:
+  credentials: {{ (empty .apiToken) | ternary .apiKey .apiToken }}
+{{- end }}

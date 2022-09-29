@@ -1,0 +1,291 @@
+# yaml-language-schema: $schema=https://github.com/teutonet/teutonet-helm-charts/charts/base-cluster/values.schema.json
+# yaml-language-schema: $schema=file://./values.schema.json
+
+global:
+  serviceLevelAgreement: None
+  clusterName: null
+  baseDomain: null
+  imageRegistry: null
+  imageCredentials: { }
+  certificates:
+    cluster-wildcard:
+      dnsNames: |-
+        - {{ include "base-cluster.domain" $ | quote }}
+        {{- if .Values.dns.provider }}
+        - {{ printf "*.%s" (include "base-cluster.domain" $) | quote }}
+        {{- end }}
+      targetNamespaces: ALL
+  storageClass: null
+  kubectl:
+    image:
+      registry: docker.io
+      repository: bitnami/kubectl
+      tag: 1.24.3
+      pullSecrets: [ ]
+  networkPolicy:
+    type: none
+    dnsLabels:
+      io.kubernetes.pod.namespace: kube-system
+      k8s-app: kube-dns
+    metricsLabels:
+      io.kubernetes.pod.namespace: monitoring
+      app.kubernetes.io/name: prometheus
+  helmRepositories:
+    prometheus:
+      url: https://prometheus-community.github.io/helm-charts
+      condition: '{{ .Values.monitoring.prometheus.enabled }}'
+      interval: 5m
+    wiremind:
+      url: https://wiremind.github.io/wiremind-helm-charts
+      condition: '{{ .Values.monitoring.prometheus.enabled }}'
+    grafana:
+      url: https://grafana.github.io/helm-charts
+      condition: '{{ and .Values.monitoring.prometheus.enabled .Values.monitoring.loki.enabled }}'
+    bitnami:
+      url: https://charts.bitnami.com
+    descheduler:
+      url: https://kubernetes-sigs.github.io/descheduler
+      condition: '{{ .Values.descheduler.enabled }}'
+    jetstack:
+      url: https://charts.jetstack.io
+    nginx:
+      url: https://kubernetes.github.io/ingress-nginx
+    kyverno:
+      url: https://kyverno.github.io/kyverno
+      condition: '{{ .Values.kyverno.enabled }}'
+    cetic:
+      url: https://cetic.github.io/helm-charts
+    estafette:
+      url: https://helm.estafette.io
+      condition: '{{ .Values.monitoring.securityScanning.enabled }}'
+    nfs-server-provisioner:
+      url: https://kubernetes-sigs.github.io/nfs-ganesha-server-and-external-provisioner
+      condition: '{{ .Values.storage.readWriteMany.enabled }}'
+
+kyverno:
+  enabled: false
+  podSecurityStandard: baseline
+  podSecuritySeverity: medium
+  validationFailureAction: audit
+
+monitoring:
+  labels:
+    managed.by/monitoring: teutonet
+  grafana:
+    adminPassword: null
+    ingress:
+      enabled: true
+      host: grafana
+    additionalDashboards: { }
+    additionalPlugins: [ ]
+    config: { }
+    notifiers: [ ]
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+    sidecar:
+      resources:
+        requests:
+          memory: 128Mi
+          cpu: 100m
+        limits:
+          memory: 128Mi
+          cpu: 500m
+  costAnalysis:
+    currency: currencyEUR
+    interval: Day
+    storageClassMapping:
+      teutostack-hdd: 0.002
+      teutostack-ssd: 0.0067
+  prometheus:
+    enabled: true
+    replicas: 2
+    retentionDuration: 4w
+    retentionSize: 90GB
+    persistence:
+      storageClass: null
+      size: 100Gi
+    resources:
+      requests:
+        cpu: "500m"
+        memory: 2Gi
+      limits:
+        cpu: "500m"
+        memory: 2Gi
+    operator:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
+    kubeStateMetrics:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 100m
+          memory: 512Mi
+      metricLabelsAllowList:
+        pods:
+          - app.kubernetes.io/name
+          - app.kubernetes.io/component
+          - app.kubernetes.io/instance
+          - statefulset.kubernetes.io/pod-name
+        deployments:
+          - app.kubernetes.io/name
+          - app.kubernetes.io/component
+          - app.kubernetes.io/instance
+        statefulsets:
+          - app.kubernetes.io/name
+          - app.kubernetes.io/component
+          - app.kubernetes.io/instance
+    nodeExporter:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 64Mi
+        limits:
+          cpu: "2"
+          memory: 128Mi
+    overrides: { }
+    ingress:
+      enabled: false
+      host: prometheus
+    alertmanager:
+      ingress:
+        enabled: false
+        host: alertmanager
+      replicas: 1
+      retentionDuration: 120h
+      persistence:
+        storageClass: null
+        size: 1Gi
+  loki:
+    enabled: true
+    persistence:
+      storageClass: null
+      size: 10Gi
+    replicas: 1
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: 1
+        memory: 1Gi
+    promtail:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 64Mi
+        limits:
+          cpu: 1
+          memory: 128Mi
+  metricsServer:
+    enabled: true
+  securityScanning:
+    enabled: true
+
+descheduler:
+  enabled: true
+  strategies:
+    RemoveDuplicates:
+      enabled: true
+    RemovePodsViolatingNodeTaints:
+      enabled: true
+    RemovePodsViolatingNodeAffinity:
+      enabled: true
+      params:
+        nodeAffinityType:
+          - requiredDuringSchedulingIgnoredDuringExecution
+    RemovePodsViolatingInterPodAntiAffinity:
+      enabled: true
+    RemovePodsViolatingTopologySpreadConstraint:
+      enabled: true
+      params:
+        includeSoftConstraints: true
+    RemovePodsHavingTooManyRestarts:
+      enabled: true
+      params:
+        podsHavingTooManyRestarts:
+          podRestartThreshold: 10
+    LowNodeUtilization:
+      enabled: true
+      params:
+        nodeResourceUtilizationThresholds:
+          thresholds:
+            cpu: 50
+            memory: 50
+            pods: 50
+          targetThresholds:
+            cpu: 70
+            memory: 80
+            pods: 95
+
+dns:
+  email: null
+  domains: [ ]
+  provider: null
+
+certManager:
+  resources:
+    limits:
+      cpu: 250m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+  caInjector:
+    resources:
+      limits:
+        cpu: 250m
+        memory: 512Mi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+  webhook:
+    resources:
+      limits:
+        cpu: 1
+        memory: 512Mi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+
+externalDNS:
+  resources:
+    limits:
+      cpu: 50m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
+flux:
+  gitRepositories: { }
+
+ingress:
+  replicas: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 90Mi
+    limits:
+      cpu: 1
+      memory: 256Mi
+
+storage:
+  readWriteMany:
+    enabled: false
+    storageClass:
+      name: teutostack-nfs
+    persistence:
+      storageClass: null
+      size: 5Gi

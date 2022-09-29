@@ -1,0 +1,137 @@
+{{- if .Values.monitoring.prometheus.enabled }}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/part-of: monitoring
+spec:
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus
+        namespace: {{ .Release.Namespace }}
+      version: {{ include "base-cluster.prometheus.version" (dict) }}
+  interval: 1m
+  dependsOn:
+    - name: kube-prometheus-stack-crds
+      namespace: monitoring
+  values: {{- .Values.monitoring.prometheus.overrides | mustMergeOverwrite (include "base-cluster.prometheus.config" . | fromYaml) | toYaml | nindent 4 }}
+  {{- if false }} # TODO ingress
+{{/*  {{- if empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled }}*/}}
+---
+  {{- $backends := list (dict "host" "prometheus" "port" 9090) (dict "host" "alertmanager" "port" 9093) -}}
+  {{- range $backend := $backends}}
+  {{- $host := $backend.host -}}
+  {{- $port := $backend.port -}}
+  {{- $targetServiceName := printf "%s-%s" (include "common.names.dependency.fullname" (dict "chartName" "kube-prometheus-stack" "chartValues" .Values.monitoring.prometheus.overrides "context" (dict "Release" (dict "Name" "kube-prometheus-stack")))) $host -}}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: cluster-{{ $host }}-oauth-proxy
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: oauth
+    app.kubernetes.io/part-of: prometheus
+spec:
+  chart:
+    spec:
+      chart: oauth2-proxy
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: {{ $.Release.Namespace }}
+      version: 2.x.x
+  interval: 1m
+  values:
+    redis:
+      enabled: false
+    {{- if $.Values.global.imageRegistry }}
+    global:
+      imageRegistry: {{ $.Values.global.imageRegistry }}
+    {{- end }}
+    ingress:
+      enabled: true
+      hostname: {{ include (printf "base-cluster.%s.host" $host) $ }}
+      extraTls: |-
+        - hosts:
+          - {{ "{{ .Values.ingress.hostname }}" }}
+          secretName: cluster-wildcard-certificate
+    replicaCount: 2
+    pdb:
+      create: true
+      minAvailable: 1
+      maxUnavailable: ""
+    podSecurityContext:
+      enabled: true
+    containerSecurityContext:
+      enabled: true
+    resources: {{- toYaml $.Values.global.authentication.oauth.resources | nindent 6 }}
+    configuration:
+      clientID: {{ $.Values.global.authentication.config.clientId | quote }}
+      clientSecret: {{ $.Values.global.authentication.config.clientSecret | quote }}
+      cookieSecret: {{ $.Values.global.authentication.config.cookieSecret | quote }}
+      content: |-
+        provider = "oidc"
+        reverse_proxy = true
+        oidc_issuer_url = {{ printf "https://%s%s" $.Values.global.authentication.config.issuerHost $.Values.global.authentication.config.issuerPath | quote }}
+        skip_provider_button = true
+        email_domains = [ {{ $.Values.global.authentication.config.emailDomains | join "\", \"" | quote }} ]
+        upstreams = [ {{ printf "http://%s:%d" $targetServiceName $port | quote }} ]
+{{- if eq (include "common.networkPolicy.type" $) "cilium" }}
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: cluster-{{ $host }}-oauth-proxy
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: oauth
+    app.kubernetes.io/part-of: prometheus
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: monitoring-cluster-{{ $host }}-oauth-proxy
+  ingress:
+    - fromRequires:
+        - matchLabels:
+            app.kubernetes.io/instance: ingress-traefik
+            app.kubernetes.io/name: traefik
+            io.kubernetes.pod.namespace: ingress
+      toPorts:
+        - ports:
+            - port: "4180"
+              protocol: TCP
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: {{ $host | quote }}
+            io.kubernetes.pod.namespace: monitoring
+      toPorts:
+        - ports:
+            - port: {{ $port | quote }}
+              protocol: TCP
+    - toFQDNs:
+        - matchName: {{ $.Values.global.authentication.config.issuerHost | quote }}
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels: {{- include "common.tplvalues.render" (dict "value" $.Values.global.networkPolicy.dnsLabels "context" $) | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+{{- end }}
+---
+{{- end }}
+{{- end }}
+{{- end }}

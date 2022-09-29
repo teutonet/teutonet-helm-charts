@@ -1,0 +1,22 @@
+{{- if .Values.dns.provider }}
+{{- if false }}
+apiVersion: networking.k8s.io/v1
+{{- else }}
+apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
+{{- end }}
+kind: Ingress
+metadata:
+  name: cluster
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: &host "{{ include "base-cluster.domain" $ }}"
+    - host: &wildcard "{{ printf "*.%s" (include "base-cluster.domain" $) }}"
+  tls:
+    - secretName: cluster-wildcard-certificate
+      hosts:
+        - *host
+        - *wildcard
+{{- end }}

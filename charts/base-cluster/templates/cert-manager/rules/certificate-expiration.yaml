@@ -1,0 +1,37 @@
+{{- if .Values.monitoring.prometheus.enabled }}
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "certificate-expiration-rule" "namespace" "cert-manager" "resource" (include "base-cluster.cert-manager.expirationRule" . ) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack-crds") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "prometheus" "app.kubernetes.io/part-of" "cert-manager"))}}
+{{- end -}}
+
+{{- define "base-cluster.cert-manager.expirationRule" -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: certificate-expiration
+  namespace: cert-manager
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- .Values.monitoring.labels | toYaml | nindent 4 }}
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/part-of: cert-manager
+spec:
+  groups:
+    - name: certificate-expiration
+      rules:
+        - alert: CertificateExpiringSoon
+          annotations:
+            description: Certificate {{ "{{ $labels.exported_namespace }}/{{ $labels.name }}" }} will expire in less than 14 days. The certificate will expire at {{ "{{ humanizeTimestamp $value }}" }}
+            summary: Certificate is expiring soon.
+          expr: |-
+            certmanager_certificate_expiration_timestamp_seconds and (certmanager_certificate_expiration_timestamp_seconds - time() <= (60 * 60 * 24 * 14))
+          for: 1s
+          labels:
+            severity: warning
+        - alert: CertificateExpiringSoon
+          annotations:
+            description: Certificate {{ "{{ $labels.exported_namespace }}/{{ $labels.name }}" }} will expire in less than 1 week. The certificate will expire at {{ "{{ humanizeTimestamp $value }}" }}
+            summary: Certificate is expiring soon.
+          expr: |-
+            certmanager_certificate_expiration_timestamp_seconds and (certmanager_certificate_expiration_timestamp_seconds - time() <= (60 * 60 * 24 * 7))
+          for: 1s
+          labels:
+            severity: critical
+  {{- end }}

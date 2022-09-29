@@ -1,0 +1,70 @@
+{{- if .Values.dns.provider -}}
+{{- $apiVersion := (include "common.capabilities.ingress.apiVersion" .) -}}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: external-dns
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: external-dns
+    {{- if or (eq $apiVersion "extensions/v1beta1") (eq $apiVersion "networking.k8s.io/v1beta1") }}
+    helmrelease-metrics/ignore: "true"
+    {{- end }}
+spec:
+  chart:
+    spec:
+      chart: external-dns
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: {{ .Release.Namespace }}
+      {{- if or (eq $apiVersion "extensions/v1beta1") (eq $apiVersion "networking.k8s.io/v1beta1") }}
+      version: 5.4.8
+      {{- else }}
+      version: 6.x.x
+      {{- end }}
+  interval: 1m
+  {{- if .Values.monitoring.prometheus.enabled }}
+  dependsOn:
+    - name: kube-prometheus-stack-crds
+      namespace: monitoring
+  {{- end }}
+  values:
+    {{- if .Values.global.imageRegistry }}
+    global:
+      imageRegistry: {{ $.Values.global.imageRegistry }}
+    {{- end }}
+    provider: {{ .Values.dns.provider | keys | first | quote }}
+    {{- if .Values.dns.provider.cloudflare }}
+    cloudflare:
+      secretName: "external-dns"
+      proxied: false
+      {{- if .Values.dns.provider.cloudflare.apiKey }}
+      email: {{ required "You must provide the email for DNS" .Values.dns.email | quote }}
+      {{- end }}
+    {{- end }}
+    sources:
+      - ingress
+    rbac:
+      create: true
+    crd:
+      create: false
+    policy: sync
+    txtOwnerId: {{ required "You must provide a cluster name, unique in your DNS setup" .Values.global.clusterName }}
+    securityContext:
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      privileged: false
+      capabilities:
+        drop:
+          - ALL
+      runAsGroup: 1001
+      runAsUser: 1001
+    resources: {{- .Values.externalDNS.resources | toYaml | nindent 6 }}
+    metrics:
+      enabled: {{ .Values.monitoring.prometheus.enabled }}
+      serviceMonitor:
+        enabled: {{ .Values.monitoring.prometheus.enabled }}
+        labels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
+{{- end -}}

@@ -1,0 +1,15 @@
+{{- if .Values.dns.provider -}}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress
+---
+{{- end }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress-nginx
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress
