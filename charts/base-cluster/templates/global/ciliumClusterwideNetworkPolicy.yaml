@@ -1,0 +1,49 @@
+{{- if eq (include "common.networkPolicy.type" .) "cilium" }}
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: dns-proxy
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  endpointSelector:
+    matchLabels: { }
+  egress:
+    - toEntities:
+        - cluster
+        - host
+    - toEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels: {{- include "common.tplvalues.render" (dict "value" .Values.global.networkPolicy.dnsLabels "context" $) | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: cluster-dns
+  namespace: kube-system
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  endpointSelector:
+    matchLabels: {{- include "common.tplvalues.render" (dict "value" .Values.global.networkPolicy.dnsLabels "context" $) | nindent 6 }}
+  egress:
+    - toEntities:
+      - kube-apiserver
+      toPorts:
+        - ports:
+            - port: "6443"
+              protocol: TCP
+    - toEntities:
+      - all
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+{{- end }}

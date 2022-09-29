@@ -1,0 +1,16 @@
+apiVersion: v2
+name: base-cluster
+type: application
+version: 0.1.0
+icon: https://teuto.net/favicon.ico
+maintainers:
+  - name: cwrau
+    email: cwr@teuto.net
+sources:
+  - https://github.com/teutonet/teutonet-helm-charts
+home: https://teuto.net
+
+dependencies:
+  - name: common
+    version: 2.0.3
+    repository: https://charts.bitnami.com

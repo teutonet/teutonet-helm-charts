@@ -1,0 +1,28 @@
+{{- if .Values.monitoring.prometheus.enabled }}
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "flux-status-rule" "resource" (include "base-cluster.flux.statusRule" .) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack-crds") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "prometheus" "app.kubernetes.io/part-of" "flux"))}}
+{{- end -}}
+
+{{- define "base-cluster.flux.statusRule" -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: flux-status
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- .Values.monitoring.labels | toYaml | nindent 4 }}
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/part-of: flux
+spec:
+  groups:
+    - name: flux-status
+      rules:
+        - alert: ResourcesFailing
+          annotations:
+            description: Resource {{ "{{ $labels.kind }}/{{ $labels.exported_namespace }}/{{ $labels.name }}" }} has been in a failed state for longer than 10 minutes.
+            summary: Resource has failed.
+          expr: |-
+            gotk_reconcile_condition{type="Ready",status="False"} == 1
+          for: 10m
+          labels:
+            severity: warning
+  {{- end }}

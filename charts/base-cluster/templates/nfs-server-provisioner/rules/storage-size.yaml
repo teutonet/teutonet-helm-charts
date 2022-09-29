@@ -1,0 +1,24 @@
+{{- if .Values.storage.readWriteMany.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: storage-size
+  namespace: nfs-server-provisioner
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    {{- .Values.monitoring.labels | toYaml | nindent 4 }}
+    app.kubernetes.io/component: prometheus
+spec:
+  groups:
+    - name: over-provisioning
+      rules:
+        - alert: NFSOverProvisioned
+          annotations:
+            description: The {{ .Values.storage.readWriteMany.storageClass.name }} is overprovisioned by {{ "{{ $value | humanize }}" }}
+            summary: Too much storage provisioned for {{ .Values.storage.readWriteMany.storageClass.name }}
+          expr: |-
+            (sum(kube_persistentvolume_info{storageclass="{{ .Values.storage.readWriteMany.storageClass.name }}"} * on(persistentvolume) kube_persistentvolume_capacity_bytes) -
+              sum(kube_persistentvolumeclaim_resource_requests_storage_bytes{namespace="nfs-server-provisioner",persistentvolumeclaim="data-nfs-server-provisioner-0"})) > 0
+          for: 1s
+          labels:
+            severity: warning
+  {{- end }}

@@ -1,0 +1,73 @@
+{{- if .Values.kyverno.enabled }}
+# https://github.com/kyverno/kyverno/tree/main/charts/kyverno
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kyverno
+  namespace: kyverno
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: kyverno
+spec:
+  chart:
+    spec:
+      chart: kyverno
+      version: 2.x.x
+      sourceRef:
+        kind: HelmRepository
+        name: kyverno
+        namespace: {{ .Release.Namespace }}
+  interval: 5m
+  {{- if .Values.monitoring.prometheus.enabled }}
+  dependsOn:
+    - name: kube-prometheus-stack-crds
+      namespace: monitoring
+  {{- end }}
+  values:
+    installCRDs: true
+    networkPolicy:
+      enabled: false
+    serviceMonitor:
+      enabled: {{ .Values.monitoring.prometheus.enabled }}
+      additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
+    podDisruptionBudget:
+      enabled: true
+      minAvailable: null
+      maxUnavailable: 1
+      # Make sure that only 1 pod at a time is unavailable,
+      # otherwise the cluster might have problems because the kyverno webhooks
+      # are unavailable
+      # this is set in the postRenderer section, as in the default values minAvailable is set
+    replicaCount: 3
+    resources:
+      limits:
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+    initResources:
+      limits:
+        cpu: 100m
+        memory: 512Mi
+      requests:
+        cpu: 10m
+        memory: 256Mi
+    # node/pod affinities. Enabled by default but can be disabled in single-node clusters.
+    # This uses preferredDuringSchedulingIgnoredDuringExecution, so it's not a hard antiaffinity
+    # https://artifacthub.io/packages/helm/kyverno/kyverno#configuration
+    #  antiAffinity:
+    #    enable: true
+    #    topologyKey: "kubernetes.io/hostname"
+
+    # Configure (Validating|Mutating)WebhookConfiguration to exclude namespace
+    # kube-system from triggering the webhook. This allows  kyverno
+    # to recover itself in case no pod is available to respond to the webhook.
+    # This only works in clusters >=1.22 because it relies on the
+    # kubernetes.io/metadata.name label on namespaces, which is active by
+    # default since 1.22.
+    webhooks:
+      - namespaceSelector:
+          matchExpressions:
+            - key: kubernetes.io/metadata.name
+              operator: NotIn
+              values: {{- include "base-cluster.kyverno.ignoredNamespaces" . | nindent 18 }}
+{{- end }}

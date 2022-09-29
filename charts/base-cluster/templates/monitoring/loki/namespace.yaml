@@ -1,0 +1,9 @@
+{{- if or .Values.monitoring.loki.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: loki
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: loki
+    app.kubernetes.io/part-of: monitoring
+{{- end }}

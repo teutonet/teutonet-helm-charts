@@ -1,0 +1,81 @@
+{{- define "base-cluster.kyverno.policies.flux-multi-tenancy" -}}
+# https://github.com/fluxcd/flux2-multi-tenancy/blob/v0.1.0/infrastructure/kyverno-policies/flux-multi-tenancy.yaml
+# TODO: this is really annoying, do we need it?
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+spec:
+  validationFailureAction: audit
+  rules:
+    - name: serviceAccountName
+      exclude:
+        resources:
+          namespaces:
+            - cert-manager
+            - flux-system
+            - ingress-nginx
+            - kube-system
+            - kyverno
+            - monitoring
+      match:
+        resources:
+          kinds:
+            - Kustomization
+            - HelmRelease
+      validate:
+        message: ".spec.serviceAccountName is required"
+        pattern:
+          spec:
+            serviceAccountName: "?*"
+    - name: kustomizationSourceRefNamespace
+      exclude:
+        resources:
+          namespaces:
+            - cert-manager
+            - flux-system
+            - ingress-nginx
+            - kube-system
+            - kyverno
+            - monitoring
+      match:
+        resources:
+          kinds:
+            - Kustomization
+      preconditions:
+        any:
+          - key: {{ "{{request.object.spec.sourceRef.namespace}}" | quote }}
+            operator: NotEquals
+            value: ""
+      validate:
+        message: "spec.sourceRef.namespace must be the same as metadata.namespace"
+        deny:
+          conditions:
+            - key: {{ "{{request.object.spec.sourceRef.namespace}}" | quote }}
+              operator: NotEquals
+              value: {{ "{{request.object.metadata.namespace}}" | quote }}
+    - name: helmReleaseSourceRefNamespace
+      exclude:
+        resources:
+          namespaces:
+            - cert-manager
+            - flux-system
+            - ingress-nginx
+            - kube-system
+            - kyverno
+            - monitoring
+      match:
+        resources:
+          kinds:
+            - HelmRelease
+      preconditions:
+        any:
+          - key: {{ "{{request.object.spec.chart.spec.sourceRef.namespace}}" | quote }}
+            operator: NotEquals
+            value: ""
+      validate:
+        message: "spec.chart.spec.sourceRef.namespace must be the same as metadata.namespace"
+        deny:
+          conditions:
+            - key: {{ "{{request.object.spec.chart.spec.sourceRef.namespace}}" | quote }}
+              operator: NotEquals
+              value: ""
+{{- end -}}

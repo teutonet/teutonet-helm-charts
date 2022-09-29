@@ -1,0 +1,33 @@
+{{- if .Values.storage.readWriteMany.enabled }}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: nfs-server-provisioner
+  namespace: nfs-server-provisioner
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/part-of: nfs-server-provisioner
+spec:
+  chart:
+    spec:
+      chart: nfs-server-provisioner
+      sourceRef:
+        kind: HelmRepository
+        name: nfs-server-provisioner
+        namespace: {{ .Release.Namespace }}
+      version: 1.4.0
+  interval: 1m
+  values:
+    storageClass:
+      name: {{ .Values.storage.readWriteMany.storageClass.name }}
+    persistence:
+      enabled: true
+      size: {{ .Values.storage.readWriteMany.persistence.size }}
+    {{- $storageClass := include "common.storage.class" (dict "persistence" .Values.storage.readWriteMany.persistence "global" $) | fromYaml -}}
+    {{- if not (eq $storageClass.storageClassName nil) }}
+      storageClass: {{ $storageClass.storageClassName | quote }}
+    {{- end }}
+    podSecurityContext:
+      seccompProfile:
+        type: Unconfined
+{{- end }}

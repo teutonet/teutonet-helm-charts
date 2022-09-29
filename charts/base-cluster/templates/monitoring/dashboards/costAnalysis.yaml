@@ -1,0 +1,324 @@
+{{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.costAnalysis.storageClassMapping }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-base-cost" (include "common.names.fullname" $) | quote }}
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    grafana_dashboard: "1"
+    app.kubernetes.io/component: "base-cost"
+    app.kubernetes.io/part-of: monitoring
+data:
+  "base-cost.json": |-
+    {
+      "editable": true,
+      "panels": [
+    {{- $id := 0 }}
+    {{- $totalVolumeCosts := list }}
+    {{- $totalVolumes := list }}
+    {{- $volumeExpressions := dict }}
+    {{- $volumeCostExpressions := dict }}
+    {{- $storageClassMappings := .Values.monitoring.costAnalysis.storageClassMapping -}}
+    {{- range $storageClassName, $costPerGiB := $storageClassMappings }}
+    {{- $volumeExpression := printf "sum(kube_persistentvolumeclaim_info{storageclass=\"%s\"}) by (persistentvolumeclaim, namespace, storageclass) + on (persistentvolumeclaim, namespace) group_right(storageclass) sum(kube_persistentvolumeclaim_resource_requests_storage_bytes) by (persistentvolumeclaim, namespace)" $storageClassName }}
+    {{- $volumeCostExpression := printf "((%s) / 1024 / 1024 / 1024) * %f" $volumeExpression ($costPerGiB | float64) }}
+    {{- $volumeExpressions = set $volumeExpressions $storageClassName $volumeExpression }}
+    {{- $totalVolumes = append $totalVolumes (printf "sum(%s)" $volumeExpression) }}
+    {{- $volumeCostExpressions = set $volumeCostExpressions $storageClassName $volumeCostExpression }}
+    {{- $totalVolumeCosts = append $totalVolumeCosts (printf "sum(%s)" $volumeCostExpression) }}
+    {{- end }}
+        {
+          "fieldConfig": {
+            "defaults": {
+              "unit": "{{ .Values.monitoring.costAnalysis.currency }}",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              }
+            }
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 2
+          },
+          "id": {{ $id = add $id 2 -}}{{ $id }},
+          "options": {
+            "graphMode": "none"
+          },
+          "targets": [
+            {
+              "expr": {{ $totalVolumeCosts | join "+" | toJson -}},
+              "refId": "A"
+            }
+          ],
+          "title": "Cost per {{ $.Values.monitoring.costAnalysis.interval }}",
+          "type": "stat"
+        },
+        {
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              }
+            }
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 2,
+            "x": 2
+          },
+          "id": {{ $id = add $id 2 -}}{{ $id }},
+          "options": {
+            "graphMode": "none"
+          },
+          "targets": [
+            {
+              "expr": {{ $totalVolumes | join "+" | toJson -}},
+              "refId": "A"
+            }
+          ],
+          "title": "Total Storage",
+          "type": "stat"
+        },{{- $x := 0 }}{{- $y := -4 }}
+    {{- range $storageClassName, $costPerGiB := .Values.monitoring.costAnalysis.storageClassMapping }}
+    {{- $volumeExpression := index $volumeExpressions $storageClassName }}
+    {{- $volumeCostExpression := index $volumeCostExpressions $storageClassName }}
+        {
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "y": {{ $y = add $y 9 -}}{{ $y }}
+          },
+          "id": {{ $id = add $id 2 -}}{{ $id }},
+          "repeat": "storageClass",
+          "title": "{{- $storageClassName -}}",
+          "type": "row"
+        },
+        {
+          "fieldConfig": {
+            "defaults": {
+              "unit": "{{ $.Values.monitoring.costAnalysis.currency }}",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              }
+            }
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 2,
+            "y": {{ add $y 1 }}
+          },
+          "id": {{ $id = add $id 2 -}}{{ $id }},
+          "options": {
+            "graphMode": "none"
+          },
+          "targets": [
+            {
+              "expr": {{ (printf "sum(%s)" $volumeCostExpression) | toJson -}},
+              "refId": "A"
+            }
+          ],
+          "title": "Cost per {{ $.Values.monitoring.costAnalysis.interval }}",
+          "type": "stat"
+        },
+        {
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              }
+            }
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 2,
+            "x": 2,
+            "y": {{ add $y 1 }}
+          },
+          "id": {{ $id = add $id 2 -}}{{ $id }},
+          "options": {
+            "graphMode": "none"
+          },
+          "targets": [
+            {
+              "expr": {{ (printf "sum(%s) by (storageclass)" $volumeExpression) | toJson -}},
+              "refId": "A"
+            }
+          ],
+          "title": "Total Storage",
+          "type": "stat"
+        },
+        {
+          "fieldConfig": {
+            "defaults": {
+              "unit": "{{ $.Values.monitoring.costAnalysis.currency }}",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              }
+            }
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 2,
+            "y": {{ add $y 1 4 }}
+          },
+          "id": {{ $id = add $id 2 -}}{{ $id }},
+          "options": {
+            "graphMode": "none"
+          },
+          "targets": [
+            {
+              "expr": "{{- $costPerGiB -}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Cost/GiB/{{ $.Values.monitoring.costAnalysis.interval }}",
+          "type": "stat"
+        },
+        {
+          "fieldConfig": {
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "namespace"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Namespace"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "persistentvolumeclaim"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "PersistentVolumeClaim"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Value #Size"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Size"
+                  },
+                  {
+                    "id": "unit",
+                    "value": "bytes"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Value #Cost"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Cost"
+                  },
+                  {
+                    "id": "unit",
+                    "value": "{{ $.Values.monitoring.costAnalysis.currency }}"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 20,
+            "x": 4,
+            "y": {{ add $y 1 }}
+          },
+          "id": {{ $id = add $id 2 -}}{{ $id }},
+          "targets": [
+            {
+              "expr": {{ $volumeExpression | toJson -}},
+              "format": "table",
+              "instant": true,
+              "refId": "Size"
+            },
+            {
+              "expr": {{ $volumeCostExpression | toJson -}},
+              "format": "table",
+              "instant": true,
+              "refId": "Cost"
+            }
+          ],
+          "title": "Cost per Volume",
+          "transformations": [
+            {
+              "id": "merge"
+            },
+            {
+              "id": "filterFieldsByName",
+              "options": {
+                "include": {
+                  "names": [
+                    "namespace",
+                    "persistentvolumeclaim",
+                    "Value #Size",
+                    "Value #Cost"
+                  ]
+                }
+              }
+            },
+            {
+              "id": "sortBy",
+              "options": {
+                "sort": [
+                  {
+                    "desc": true,
+                    "field": "Value #Cost"
+                  }
+                ]
+              }
+            }
+          ],
+          "type": "table"
+        }{{- if eq $storageClassName ($.Values.monitoring.costAnalysis.storageClassMapping | keys | sortAlpha | last) }}{{- else }},{{- end }}
+    {{- end }}
+      ],
+      "title": "Storage-Cost Analysis",
+      "uid": "storage-cost-analysis"
+    }
+    {{- end }}
+    
