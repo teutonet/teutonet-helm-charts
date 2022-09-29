@@ -1,0 +1,52 @@
+name: Release Charts
+
+"on":
+  push:
+    branches:
+      - main
+    paths:
+      - charts/**
+  workflow_dispatch: {}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.5.2
+
+      - name: install yq
+        run: |
+          sudo snap install yq
+
+      - name: Extract and add helm repos
+        id: helm-repos
+        run: |
+          for DIR in ./charts/*; do
+            FILE="$DIR/Chart.yaml"
+            DIR="${DIR//\./}"
+            yq e '.dependencies.[].repository' "$FILE"
+          done | sort -u | awk '{print NR " " $1}' | xargs -r -n 2 helm repo add
+
+      - name: generate Docs
+        run: |
+          docker run --rm --volume "$(pwd):/helm-docs" -u "$(id -u)" jnorwood/helm-docs:v1.8.1
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.4.0
+        with:
+          charts_dir: charts
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

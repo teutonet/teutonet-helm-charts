@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "assigneesFromCodeOwners": true,
+  "assigneesSampleSize": 1,
+  "bumpVersion": "patch"
+}
+

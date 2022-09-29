@@ -1,0 +1,44 @@
+name: Lint Code Base
+
+"on":
+  - pull_request
+
+jobs:
+  build:
+    name: Lint Code Base
+    runs-on: ubuntu-latest
+    env:
+      CT_TARGET_BRANCH: ${{ github.event.repository.default_branch }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: install yq
+        run: |
+          sudo snap install yq
+
+      - name: Extract helm repos
+        id: helm-repos
+        run: |
+          echo -n "::set-output name=repos::"
+          for DIR in ./charts/*; do
+            FILE="$DIR/Chart.yaml"
+            DIR="${DIR//\./}"
+            yq e '.dependencies.[].repository' "$FILE"
+          done | sort -u | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
+          echo
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.7
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.2.1
+
+      - name: Lint charts
+        run: ct lint
+        env:
+          CT_CHART_REPOS: ${{ steps.helm-repos.outputs.repos }}
