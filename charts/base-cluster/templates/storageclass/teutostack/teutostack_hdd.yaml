@@ -1,0 +1,13 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: teutostack-hdd
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: storage
+allowVolumeExpansion: true
+parameters:
+  availability: nova
+  type: Ceph-HDD
+provisioner: cinder.csi.openstack.org
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer

@@ -1,0 +1,3 @@
+{{- if .Values.kyverno.enabled }}
+{{- include "base-cluster.kyverno.policy" (dict "name" "disallow-default-namespace" "context" .)}}
+{{- end }}

@@ -1,0 +1,87 @@
+{{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.loki.enabled -}}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: loki
+  namespace: loki
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: loki
+    app.kubernetes.io/part-of: monitoring
+spec:
+  chart:
+    spec:
+      chart: loki-stack
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: {{ .Release.Namespace }}
+      version: 2.x.x
+  interval: 1m
+  dependsOn:
+    - name: kube-prometheus-stack-crds
+      namespace: monitoring
+  values:
+    loki:
+      extraArgs:
+        # TODO: switch to compactor and boltdb-shipper
+        target: all,table-manager
+      isDefault: false
+      url: {{ `http://{{ (include "loki.serviceName" .) }}.{{ .Release.Namespace }}:{{ .Values.loki.service.port }}` }}
+      {{- if .Values.global.imageRegistry }}
+      image:
+        repository: {{ printf "%s/grafana/loki" $.Values.global.imageRegistry }}
+      {{- end }}
+      resources: {{- .Values.monitoring.loki.resources | toYaml | nindent 8 }}
+      replicas: {{ .Values.monitoring.loki.replicas }}
+      persistence: {{- include "common.storage.class" ( dict "persistence" .Values.monitoring.loki.persistence "global" $) | nindent 8 }}
+        enabled: true
+        size: {{ .Values.monitoring.loki.persistence.size }}
+      serviceMonitor:
+        enabled: true
+        additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
+      config:
+        table_manager:
+          retention_deletes_enabled: true
+          retention_period: 6w
+        chunk_store_config:
+          max_look_back_period: 6w
+        ingester:
+          chunk_block_size: 524288
+          chunk_target_size: 5242880
+        storage_config:
+          boltdb:
+            directory: /data/loki/index
+        schema_config:
+          configs:
+            - from: "2018-04-15"
+              index:
+                period: 1w
+                prefix: index_
+              object_store: filesystem
+              schema: v9
+              store: boltdb
+{{/* TODO: Implement */}}
+{{/*            - from: 2022-09-15*/}}
+{{/*              store: boltdb-shipper*/}}
+{{/*              object_store: filesystem*/}}
+{{/*              schema: v12*/}}
+{{/*              index:*/}}
+{{/*                prefix: index_*/}}
+{{/*                period: 24h*/}}
+    promtail:
+      {{- if .Values.global.imageRegistry }}
+      image:
+        registry: {{ $.Values.global.imageRegistry }}
+      {{- end }}
+      resources: {{- .Values.monitoring.loki.promtail.resources | toYaml | nindent 8 }}
+      serviceMonitor:
+        enabled: true
+        labels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
+    grafana:
+      enabled: false
+      sidecar:
+        datasources:
+          enabled: true
+    prometheus:
+      enabled: false
+  {{- end -}}

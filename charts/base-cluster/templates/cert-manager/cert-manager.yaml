@@ -1,0 +1,61 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: cert-manager
+spec:
+  chart:
+    spec:
+      chart: cert-manager
+      sourceRef:
+        kind: HelmRepository
+        name: jetstack
+        namespace: {{ .Release.Namespace }}
+      version: "1.x.x"
+  interval: 1m
+  {{- if .Values.monitoring.prometheus.enabled }}
+  dependsOn:
+    - name: kube-prometheus-stack-crds
+      namespace: monitoring
+  {{- end }}
+  values:
+    installCRDs: true
+    {{- if .Values.global.imageRegistry }}
+    image:
+      repository: {{ printf "%s/jetstack/cert-manager-controller" $.Values.global.imageRegistry }}
+    {{- end }}
+    {{- if .Values.dns.email }}
+    ingressShim:
+      defaultIssuerName: letsencrypt-prod
+      defaultIssuerKind: ClusterIssuer
+    {{- end }}
+    extraArgs:
+      - --dns01-recursive-nameservers=1.1.1.1:53
+    resources: {{- $.Values.certManager.resources | toYaml | nindent 6 }}
+    replicaCount: 1
+    securityContext: &securityContext
+      runAsNonRoot: true
+      runAsUser: 1001
+      runAsGroup: 1001
+      fsGroup: 1001
+    cainjector:
+      resources: {{- $.Values.certManager.caInjector.resources | toYaml | nindent 8 }}
+      securityContext: *securityContext
+      {{- if .Values.global.imageRegistry }}
+      image:
+        repository: {{ printf "%s/jetstack/cert-manager-cainjector" $.Values.global.imageRegistry }}
+      {{- end }}
+    webhook:
+      resources: {{- $.Values.certManager.webhook.resources | toYaml | nindent 8 }}
+      securityContext: *securityContext
+      {{- if .Values.global.imageRegistry }}
+      image:
+        repository: {{ printf "%s/jetstack/cert-manager-webhook" $.Values.global.imageRegistry }}
+      {{- end }}
+    prometheus:
+      enabled: {{ .Values.monitoring.prometheus.enabled }}
+      servicemonitor:
+        enabled: {{ .Values.monitoring.prometheus.enabled }}
+        labels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}

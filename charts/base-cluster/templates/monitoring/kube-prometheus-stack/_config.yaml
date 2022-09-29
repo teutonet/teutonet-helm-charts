@@ -1,0 +1,312 @@
+{{- define "base-cluster.prometheus.config" -}}
+grafana:
+  {{- if $.Values.global.imageRegistry }}
+  image:
+    repository: {{ printf "%s/grafana/grafana" .Values.global.imageRegistry }}
+  initChownData:
+    image:
+      repository: {{ printf "%s/busybox" .Values.global.imageRegistry }}
+  testFramework:
+    image: {{ printf "%s/bats/bats" .Values.global.imageRegistry }}
+  downloadDashboardsImage:
+    repository: {{ printf "%s/curlimages/curl" .Values.global.imageRegistry }}
+  imageRenderer:
+    enabled: true
+    image:
+      repository: {{ printf "%s/grafana/grafana-image-renderer" .Values.global.imageRegistry }}
+  {{- else }}
+  imageRenderer:
+    enabled: true
+  {{- end }}
+  enabled: true
+  resources: {{- .Values.monitoring.grafana.resources | toYaml | nindent 4 }}
+  serviceMonitor:
+    interval: "30s"
+    labels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
+  admin:
+    existingSecret: {{ include "common.secrets.name" (dict "defaultNameSuffix" "grafana" "context" $) }}
+    userKey: username
+    passwordKey: password
+  plugins:
+    - grafana-piechart-panel
+  {{- with .Values.monitoring.grafana.additionalPlugins }}
+  {{- . | toYaml | nindent 4 }}
+  {{- end }}
+  defaultDashboardsEnabled: true
+  grafana.ini: {{- .Values.monitoring.grafana.config | mustMergeOverwrite (include "base-cluster.grafana.config" . | fromYaml) | toYaml | nindent 4 -}}
+  {{- if .Values.monitoring.grafana.notifiers }}
+  extraEmptyDirMounts:
+    - name: provisioning-notifiers
+      mountPath: /etc/grafana/provisioning/notifiers
+  notifiers:
+    notifiers.yaml:
+      notifiers: {{- .Values.monitoring.grafana.notifiers | toYaml | nindent 8 }}
+  {{- end }}
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: 'custom'
+          orgId: 1
+          folder: ''
+          type: file
+          disableDeletion: true
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/custom
+  sidecar:
+    {{- if .Values.global.imageRegistry }}
+    image:
+      repository: {{ printf "%s/kiwigrid/k8s-sidecar" .Values.global.imageRegistry }}
+    {{- end }}
+    dashboards:
+      enabled: true
+      resource: configmap
+      searchNamespace: ALL
+    datasources:
+      enabled: true
+      resource: configmap
+      searchNamespace: ALL
+    resources: {{- .Values.monitoring.grafana.sidecar.resources | toYaml | nindent 6 }}
+  dashboards:
+    custom:
+      #capacity-planning:
+      #  gnetId: 22
+      #  revision: 7
+      #  datasource: Prometheus
+      kubernetes-cluster-monitoring-via-prometheus: &dashboard
+        datasource: Prometheus
+        gnetId: 315
+        revision: 3
+      node-exporter-full:
+        <<: *dashboard
+        gnetId: 1860
+        revision: 16
+      metrics:
+        <<: *dashboard
+        gnetId: 8588
+      ingress-nginx:
+        <<: *dashboard
+        gnetId: 9614
+        revision: 1
+      cert-manager:
+        <<: *dashboard
+        gnetId: 11001
+        revision: 1
+      {{- if .Values.dns.provider }}
+      external-dns:
+        <<: *dashboard
+        gnetId: 15038
+        revision: 1
+      {{- end }}
+      {{- if and .Values.monitoring.loki.enabled false }}
+      # TODO: this one is broken
+      loki:
+        <<: *dashboard
+        gnetId: 12611
+        revision: 1
+        datasource: Loki
+      {{- end }}
+      {{- if .Values.kyverno.enabled }}
+      kyverno:
+        <<: *dashboard
+        gnetId: 15804
+        revision: 4
+      {{- end }}
+  {{- with .Values.monitoring.grafana.additionalDashboards }}
+  {{ . | toYaml | nindent 6 }}
+  {{- end }}
+  {{- if and .Values.dns.email .Values.monitoring.grafana.ingress.enabled }}
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    {{- if not .Values.dns.provider }}
+    labels:
+      kubernetes.io/tls-acme: "true"
+    {{- end }}
+    hosts:
+      - {{ include "base-cluster.grafana.host" $ }}
+    tls:
+      - hosts:
+          - {{ include "base-cluster.grafana.host" $ }}
+        secretName: {{ include "base-cluster.certificate" (dict "name" "grafana" "context" $) }}
+  {{- end }}
+prometheusOperator:
+  secretFieldSelector: 'type!=helm.sh/release.v1'
+  {{- if .Values.global.imageRegistry }}
+  image:
+    repository: {{ printf "%s/prometheus-operator/prometheus-operator" .Values.global.imageRegistry }}
+  prometheusConfigReloader:
+    image:
+      repository: {{ printf "%s/prometheus-operator/prometheus-config-reloader" .Values.global.imageRegistry }}
+  admissionWebhooks:
+    patch:
+      image:
+        repository: {{ printf "%s/ingress-nginx/kube-webhook-certgen" .Values.global.imageRegistry }}
+  thanosImage:
+    repository: {{ printf "%s/thanos/thanos" .Values.global.imageRegistry }}
+  {{- end }}
+  resources: {{- .Values.monitoring.prometheus.operator.resources | toYaml | nindent 6 }}
+  priorityClassName: system-cluster-critical
+defaultRules:
+  disabled:
+    etcdHighNumberOfFailedGRPCRequests: true
+  rules:
+    kubeApiserverAvailability: false
+kubelet:
+  serviceMonitor:
+    resource: false
+commonLabels: {{- .Values.monitoring.labels | toYaml | nindent 2 }}
+kube-state-metrics:
+  {{- if .Values.global.imageRegistry }}
+  image:
+    repository: {{ printf "%s/kube-state-metrics/kube-state-metrics" .Values.global.imageRegistry }}
+  {{- end }}
+  resources: {{- .Values.monitoring.prometheus.kubeStateMetrics.resources | toYaml | nindent 6 }}
+  {{- $metricLabelsAllowList := list -}}
+  {{- range $resource, $labels := .Values.monitoring.prometheus.kubeStateMetrics.metricLabelsAllowList -}}
+  {{- $metricLabelsAllowList = append $metricLabelsAllowList (printf "%s=[%s]" $resource ($labels | join ",") ) -}}
+  {{- end }}
+  extraArgs:
+    - --metric-labels-allowlist={{- $metricLabelsAllowList | join "," }}
+  priorityClassName: system-cluster-critical
+  prometheus:
+    monitor:
+      additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
+prometheus-node-exporter:
+  {{- if .Values.global.imageRegistry }}
+  image:
+    repository: {{ printf "%s/prometheus/node-exporter" .Values.global.imageRegistry }}
+  {{- end }}
+  resources: {{- .Values.monitoring.prometheus.nodeExporter.resources | toYaml | nindent 6 }}
+  priorityClassName: system-cluster-critical
+  prometheus:
+    monitor:
+      additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
+alertmanager:
+  enabled: true
+  podDisruptionBudget:
+    enabled: true
+  {{- if false }} # TODO ingress
+{{/*  {{- if not (empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled) }}*/}}
+  ingress:
+    enabled: true
+    hosts:
+      - {{ include "base-cluster.alertmanager.host" $ }}
+    tls:
+      - hosts:
+          - {{ include "base-cluster.alertmanager.host" $ }}
+        secretName: cluster-wildcard-certificate
+  {{- end }}
+  alertmanagerSpec:
+    replicas: {{ .Values.monitoring.prometheus.alertmanager.replicas }}
+    {{- if .Values.global.imageRegistry }}
+    image:
+      repository: {{ printf "%s/prometheus/alertmanager" .Values.global.imageRegistry }}
+    {{- end }}
+    podAntiAffinity: soft
+    {{- if false }} # TODO ingress
+{{/*    {{- if empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled }}*/}}
+    externalUrl: https://{{ include "base-cluster.alertmanager.host" $ }}
+    {{- end }}
+    retention: {{ .Values.monitoring.prometheus.alertmanager.retentionDuration }}
+    priorityClassName: system-cluster-critical
+    storageSpec:
+      volumeClaimTemplate:
+        spec: {{- include "common.storage.class" ( dict "persistence" .Values.monitoring.prometheus.alertmanager.persistence "global" $) | nindent 10 }}
+          accessModes:
+            - "ReadWriteOnce"
+          resources:
+            requests:
+              storage: {{ .Values.monitoring.prometheus.alertmanager.persistence.size }}
+    alertmanagerConfigSelector:
+      matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
+prometheus:
+  enabled: true
+  {{- if false }} # TODO ingress
+{{/*  {{- if not (empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled) }}*/}}
+  ingress:
+    enabled: true
+    hosts:
+      - {{ include "base-cluster.prometheus.host" $ }}
+    tls:
+      - hosts:
+          - {{ include "base-cluster.prometheus.host" $ }}
+        secretName: cluster-wildcard-certificate
+  {{- end }}
+  prometheusSpec:
+    {{- if (lookup "v1" "Secret" "monitoring" "additional-alertmanager-configs") }}
+    additionalAlertManagerConfigsSecret:
+      name: additional-alertmanager-configs
+      key: prometheus-additional-alertmanager-configs.yaml
+    {{- end }}
+    {{- if .Values.global.imageRegistry }}
+    image:
+      repository: {{ printf "%s/prometheus/prometheus" .Values.global.imageRegistry }}
+    {{- end }}
+    {{- if false }} # TODO ingress
+{{/*    {{- if empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled }}*/}}
+    externalUrl: {{ printf "https://%s" (include "base-cluster.prometheus.host" $) }}
+    {{- end }}
+    resources: {{- .Values.monitoring.prometheus.resources | toYaml | nindent 6 }}
+    priorityClassName: system-cluster-critical
+    serviceMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    probeSelectorNilUsesHelmValues: false
+    retention: {{ .Values.monitoring.prometheus.retentionDuration }}
+    retentionSize: {{ .Values.monitoring.prometheus.retentionSize }}
+    storageSpec:
+      volumeClaimTemplate:
+        spec: {{- include "common.storage.class" ( dict "persistence" .Values.monitoring.prometheus.persistence "global" $) | nindent 10 }}
+          accessModes:
+            - "ReadWriteOnce"
+          resources:
+            requests:
+              storage: {{ .Values.monitoring.prometheus.persistence.size }}
+    replicas: {{ .Values.monitoring.prometheus.replicas }}
+    ruleSelector:
+      matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
+    serviceMonitorSelector:
+      matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
+    podMonitorSelector:
+      matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
+    probeSelector:
+      matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
+    additionalAlertRelabelConfigs:
+      - # TODO: Needs alternative
+        source_labels:
+          - namespace
+        action: keep
+        regex: (cert-manager|flux-system|ingress-nginx|kube-node-lease|kube-public|kube-system|kyverno|monitoring)
+      - source_labels:
+          - __address__
+        target_label: clustertype
+        replacement: kubernetes # TODO: really needed?
+
+      - source_labels:
+          - __address__
+        target_label: teutosla
+        replacement: {{ .Values.global.serviceLevelAgreement }}
+      - source_labels:
+          - __address__
+        target_label: cluster
+        replacement: {{ .Values.global.clusterName }}
+    secrets:
+      - etcd-certs
+    kubeEtcd:
+      serviceMonitor:
+        scheme: https # TODO: Do we even need this?
+        caFile: /etc/prometheus/secrets/etcd-certs/ca.crt
+        certFile: /etc/prometheus/secrets/etcd-certs/client.crt
+        keyFile: /etc/prometheus/secrets/etcd-certs/client.key
+{{- end -}}
+
+{{- define "base-cluster.grafana.config" -}}
+{{- if .Values.dns.email -}}
+auth:
+  signout_redirect_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
+server:
+  root_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
+{{- end -}}
+{{- end -}}

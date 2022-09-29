@@ -1,0 +1,14 @@
+{{- if .Values.monitoring.prometheus.enabled }}
+You can access your grafana instance via
+
+{{- if and .Values.dns.email .Values.monitoring.grafana.ingress.enabled }}
+{{ printf "https://%s" (include "base-cluster.grafana.host" $) }}
+{{- else }}
+$ kubectl -n monitoring port-forward svc/kube-prometheus-stack-grafana 3000:http-web
+
+http://localhost:3000
+{{- end }}
+
+Username: admin
+Password: {{ include "common.secrets.passwords.manage" (dict "secret" (include "common.secrets.name" (dict "defaultNameSuffix" "grafana" "context" $)) "key" "password" "providedValues" (list "monitoring.grafana.adminPassword") "context" (dict "Values" .Values "Release" (dict "Namespace" "monitoring"))) | b64dec }}
+{{- end }}
