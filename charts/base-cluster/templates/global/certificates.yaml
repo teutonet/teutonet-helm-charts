@@ -4,8 +4,8 @@
 
 {{- define "base-cluster.cert-manager.custom-certificates" -}}
 {{- range $name, $cert := .Values.global.certificates -}}
+  {{- $dnsNames := include "common.tplvalues.render" (dict "value" $cert.dnsNames "context" $) | fromYamlArray | uniq -}}
   {{- if not $.Values.dns.provider -}}
-    {{- $dnsNames := include "common.tplvalues.render" (dict "value" $cert.dnsNames "context" $) | fromYamlArray -}}
     {{- range $dnsName := $dnsNames -}}
       {{- if $dnsName | contains "*" -}}
         {{- fail "To use wildcard domains you need to provide a `.dns.provider`" -}}
@@ -23,7 +23,7 @@ spec:
     group: cert-manager.io
     kind: ClusterIssuer
     name: letsencrypt-prod
-  dnsNames: {{- include "common.tplvalues.render" (dict "value" $cert.dnsNames "context" $) | nindent 4 }}
+  dnsNames: {{- $dnsNames | toYaml | nindent 4 }}
   secretName: {{ printf "%s-certificate" $name | quote }}
 ---
 {{ end -}}

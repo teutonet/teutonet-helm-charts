@@ -1,15 +1,15 @@
-{{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.costAnalysis.storageClassMapping }}
+{{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.storageCostAnalysis.storageClassMapping }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ printf "%s-base-cost" (include "common.names.fullname" $) | quote }}
+  name: {{ printf "%s-storage-cost-analysis" (include "common.names.fullname" $) | quote }}
   namespace: monitoring
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     grafana_dashboard: "1"
-    app.kubernetes.io/component: "base-cost"
+    app.kubernetes.io/component: "storage-cost-analysis"
     app.kubernetes.io/part-of: monitoring
 data:
-  "base-cost.json": |-
+  "storage-cost-analysis.json": |-
     {
       "editable": true,
       "panels": [
@@ -18,7 +18,7 @@ data:
     {{- $totalVolumes := list }}
     {{- $volumeExpressions := dict }}
     {{- $volumeCostExpressions := dict }}
-    {{- $storageClassMappings := .Values.monitoring.costAnalysis.storageClassMapping -}}
+    {{- $storageClassMappings := .Values.monitoring.storageCostAnalysis.storageClassMapping -}}
     {{- range $storageClassName, $costPerGiB := $storageClassMappings }}
     {{- $volumeExpression := printf "sum(kube_persistentvolumeclaim_info{storageclass=\"%s\"}) by (persistentvolumeclaim, namespace, storageclass) + on (persistentvolumeclaim, namespace) group_right(storageclass) sum(kube_persistentvolumeclaim_resource_requests_storage_bytes) by (persistentvolumeclaim, namespace)" $storageClassName }}
     {{- $volumeCostExpression := printf "((%s) / 1024 / 1024 / 1024) * %f" $volumeExpression ($costPerGiB | float64) }}
@@ -30,7 +30,7 @@ data:
         {
           "fieldConfig": {
             "defaults": {
-              "unit": "{{ .Values.monitoring.costAnalysis.currency }}",
+              "unit": "{{ .Values.monitoring.storageCostAnalysis.currency }}",
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
@@ -55,7 +55,7 @@ data:
               "refId": "A"
             }
           ],
-          "title": "Cost per {{ $.Values.monitoring.costAnalysis.interval }}",
+          "title": "Cost per {{ $.Values.monitoring.storageCostAnalysis.period }}",
           "type": "stat"
         },
         {
@@ -90,7 +90,7 @@ data:
           "title": "Total Storage",
           "type": "stat"
         },{{- $x := 0 }}{{- $y := -4 }}
-    {{- range $storageClassName, $costPerGiB := .Values.monitoring.costAnalysis.storageClassMapping }}
+    {{- range $storageClassName, $costPerGiB := .Values.monitoring.storageCostAnalysis.storageClassMapping }}
     {{- $volumeExpression := index $volumeExpressions $storageClassName }}
     {{- $volumeCostExpression := index $volumeCostExpressions $storageClassName }}
         {
@@ -107,7 +107,7 @@ data:
         {
           "fieldConfig": {
             "defaults": {
-              "unit": "{{ $.Values.monitoring.costAnalysis.currency }}",
+              "unit": "{{ $.Values.monitoring.storageCostAnalysis.currency }}",
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
@@ -133,7 +133,7 @@ data:
               "refId": "A"
             }
           ],
-          "title": "Cost per {{ $.Values.monitoring.costAnalysis.interval }}",
+          "title": "Cost per {{ $.Values.monitoring.storageCostAnalysis.period }}",
           "type": "stat"
         },
         {
@@ -172,7 +172,7 @@ data:
         {
           "fieldConfig": {
             "defaults": {
-              "unit": "{{ $.Values.monitoring.costAnalysis.currency }}",
+              "unit": "{{ $.Values.monitoring.storageCostAnalysis.currency }}",
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
@@ -198,7 +198,7 @@ data:
               "refId": "A"
             }
           ],
-          "title": "Cost/GiB/{{ $.Values.monitoring.costAnalysis.interval }}",
+          "title": "Cost/GiB/{{ $.Values.monitoring.storageCostAnalysis.period }}",
           "type": "stat"
         },
         {
@@ -256,7 +256,7 @@ data:
                   },
                   {
                     "id": "unit",
-                    "value": "{{ $.Values.monitoring.costAnalysis.currency }}"
+                    "value": "{{ $.Values.monitoring.storageCostAnalysis.currency }}"
                   }
                 ]
               }
@@ -314,10 +314,10 @@ data:
             }
           ],
           "type": "table"
-        }{{- if eq $storageClassName ($.Values.monitoring.costAnalysis.storageClassMapping | keys | sortAlpha | last) }}{{- else }},{{- end }}
+        }{{- if eq $storageClassName ($.Values.monitoring.storageCostAnalysis.storageClassMapping | keys | sortAlpha | last) }}{{- else }},{{- end }}
     {{- end }}
       ],
-      "title": "Storage-Cost Analysis",
+      "title": "Storage Cost Analysis",
       "uid": "storage-cost-analysis"
     }
     {{- end }}

@@ -2,8 +2,5 @@ dependencies:
 - name: common
   repository: https://charts.bitnami.com
   version: 2.0.3
-- name: kube-prometheus-stack-crds
-  repository: https://wiremind.github.io/wiremind-helm-charts
-  version: 39.9.0
-digest: sha256:d3db41cdc73bc38617c1da8f950ead5c5fb0e3b806a7923930a744ac3d99f5cd
-generated: "2022-09-28T15:53:23.150031269+02:00"
+digest: sha256:3752df32d8d2b4ef23f0604934822de3d146ad83ed4d368e20838494d37398db
+generated: "2022-09-30T10:31:48.953068305+02:00"
