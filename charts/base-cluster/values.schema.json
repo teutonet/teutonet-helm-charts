@@ -8,37 +8,55 @@
       "properties": {
         "serviceLevelAgreement": {
           "type": "string",
+          "description": "The ServiceLevelAgreement with teutonet, will be applied to all alerts as label `teutosla`",
           "enum": [
             "None",
             "24x7",
             "Working-Hours"
-          ]
+          ],
+          "default": "None"
         },
         "clusterName": {
           "type": [
             "string",
             "null"
+          ],
+          "description": "The name of the cluster, used as subdomain under `baseDomain` and as label `cluster` on all alerts",
+          "examples": [
+            "eu-2"
           ]
         },
         "baseDomain": {
           "type": [
             "string",
             "null"
+          ],
+          "description": "The base domain to be used for cluster ingress",
+          "examples": [
+            "teuto.net"
           ]
         },
         "imageRegistry": {
           "type": [
             "string",
             "null"
+          ],
+          "description": "The global container image proxy, e.g. [Nexus](https://artifacthub.io/packages/helm/sonatype/nexus-repository-manager), this needs to support various registries",
+          "examples": [
+            "nexus.teuto.net"
           ]
         },
         "imageCredentials": {
           "type": "object",
+          "description": "A map of credentials to be created and synced into namespaces, the key is the secret name",
           "additionalProperties": {
             "type": "object",
             "properties": {
               "host": {
-                "type": "string"
+                "type": "string",
+                "examples": [
+                  "docker.io"
+                ]
               },
               "username": {
                 "type": "string"
@@ -47,20 +65,7 @@
                 "type": "string"
               },
               "targetNamespaces": {
-                "oneOf": [
-                  {
-                    "type": "string",
-                    "const": "ALL"
-                  },
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "minItems": 1
-                  }
-                ],
-                "default": "ALL"
+                "$ref": "#/$defs/targetNamespaces"
               }
             },
             "required": [
@@ -73,6 +78,7 @@
         },
         "kubectl": {
           "type": "object",
+          "description": "Image with `kubectl` binary",
           "properties": {
             "image": {
               "$ref": "#/$defs/image"
@@ -85,14 +91,17 @@
           "properties": {
             "type": {
               "type": "string",
+              "description": "Which networkPolicy to create, `auto` tries to detect the deployed framework, checking first for `cilium`",
               "enum": [
                 "none",
                 "auto",
-                "cilium"
+                "cilium",
+                "kubernetes"
               ]
             },
             "metricsLabels": {
               "type": "object",
+              "description": "The labels used to allow ingress from the metrics service",
               "additionalProperties": {
                 "type": "string"
               },
@@ -100,6 +109,7 @@
             },
             "dnsLabels": {
               "type": "object",
+              "description": "The labels used to allow egress to the DNS service",
               "additionalProperties": {
                 "type": "string"
               },
@@ -110,20 +120,26 @@
         },
         "helmRepositories": {
           "type": "object",
+          "description": "A map of helmRepositories to create, the key is the name",
           "additionalProperties": {
             "type": "object",
             "properties": {
               "url": {
                 "type": "string",
-                "pattern": "https?://.+"
+                "pattern": "https://.+"
               },
               "interval": {
                 "type": "string",
-                "pattern": "[0-9]+[mhd]",
-                "default": "5m"
+                "description": "The interval in which to update the repository",
+                "pattern": "[0-9]+[mhd]"
               },
               "condition": {
-                "type": "string"
+                "type": "string",
+                "description": "A condition with which to decide to include the repository. This will be templated. Must return a truthy value",
+                "examples": [
+                  "{{ true }}",
+                  "{{ eq .Valus.global.baseDomain \"teuto.net\" }}"
+                ]
               }
             },
             "additionalProperties": false
@@ -131,37 +147,32 @@
         },
         "certificates": {
           "type": "object",
+          "description": "A map of cert-manager certificates to create and sync it's secrets into namespaces, the key is the name, therefore the secret name will be `$key`-certificate",
           "additionalProperties": {
             "type": "object",
             "properties": {
               "dnsNames": {
+                "description": "The dnsNames to create",
                 "oneOf": [
                   {
-                    "type": "string"
+                    "type": "string",
+                    "description": "This will be templated"
                   },
                   {
                     "type": "array",
+                    "uniqueItems": true,
                     "items": {
                       "type": "string"
                     }
                   }
+                ],
+                "examples": [
+                  "test.teuto.net",
+                  "*.test.teuto.net"
                 ]
               },
               "targetNamespaces": {
-                "oneOf": [
-                  {
-                    "type": "string",
-                    "const": "ALL"
-                  },
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "minItems": 1
-                  }
-                ],
-                "default": "ALL"
+                "$ref": "#/$defs/targetNamespaces"
               }
             },
             "required": [
@@ -171,10 +182,7 @@
           }
         },
         "storageClass": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "$ref": "#/$defs/storageClass"
         }
       },
       "required": [
@@ -189,6 +197,7 @@
         },
         "podSecurityStandard": {
           "type": "string",
+          "description": "See https://kyverno.io/policies",
           "enum": [
             "baseline",
             "restricted",
@@ -206,6 +215,7 @@
         },
         "validationFailureAction": {
           "type": "string",
+          "description": "Enforce means to deny the request",
           "enum": [
             "audit",
             "enforce"
@@ -219,6 +229,7 @@
       "properties": {
         "labels": {
           "type": "object",
+          "description": "The labels to set on ServiceMonitors, ... and which the prometheus uses to search for",
           "additionalProperties": {
             "type": "string"
           }
@@ -248,10 +259,7 @@
               "type": "object",
               "properties": {
                 "storageClass": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
+                  "$ref": "#/$defs/storageClass"
                 },
                 "size": {
                   "$ref": "#/$defs/quantity"
@@ -276,8 +284,10 @@
                 },
                 "metricLabelsAllowList": {
                   "type": "object",
+                  "description": "A map of resource/[label] that will be set as labels on the state metrics",
                   "additionalProperties": {
                     "type": "array",
+                    "uniqueItems": true,
                     "items": {
                       "type": "string"
                     }
@@ -334,10 +344,7 @@
                   "type": "object",
                   "properties": {
                     "storageClass": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
+                      "$ref": "#/$defs/storageClass"
                     },
                     "size": {
                       "$ref": "#/$defs/quantity"
@@ -450,6 +457,7 @@
             },
             "additionalPlugins": {
               "type": "array",
+              "uniqueItems": true,
               "items": {
                 "type": "string"
               }
@@ -482,10 +490,7 @@
                   "$ref": "#/$defs/quantity"
                 },
                 "storageClass": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
+                  "$ref": "#/$defs/storageClass"
                 }
               },
               "additionalProperties": false
@@ -518,11 +523,13 @@
           },
           "additionalProperties": false
         },
-        "costAnalysis": {
+        "storageCostAnalysis": {
           "type": "object",
+          "description": "Configuration of the `storageCostAnalysis dashboard",
           "properties": {
-            "interval": {
+            "period": {
               "type": "string",
+              "description": "The billing period",
               "examples": [
                 "Day",
                 "Month"
@@ -539,6 +546,7 @@
             },
             "storageClassMapping": {
               "type": "object",
+              "description": "A map of storageClasses to their cost per GiB/$period",
               "additionalProperties": {
                 "type": "number"
               }
@@ -566,6 +574,7 @@
         },
         "strategies": {
           "type": "object",
+          "description": "See https://github.com/kubernetes-sigs/descheduler#policy-and-strategies. The key is the policy name",
           "additionalProperties": {
             "type": "object",
             "properties": {
@@ -587,6 +596,7 @@
       "type": "object",
       "properties": {
         "provider": {
+          "description": "Setting a provider enabled various DNS based features, such as `external-dns`, wildcard certificates, ...",
           "oneOf": [
             {
               "type": "object",
@@ -599,32 +609,15 @@
                         "string",
                         "null"
                       ],
+                      "description": "The email to use for authentication, if `null` use `.dns.email`",
                       "$ref": "#/$defs/email"
+                    },
+                    "apiToken": {
+                      "type": "string"
                     }
                   },
-                  "oneOf": [
-                    {
-                      "properties": {
-                        "apiKey": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "apiKey"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "properties": {
-                        "apiToken": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "apiToken"
-                      ],
-                      "additionalProperties": false
-                    }
+                  "required": [
+                    "apiToken"
                   ]
                 }
               },
@@ -642,10 +635,12 @@
             "string",
             "null"
           ],
+          "description": "Setting an email enables cert-manager's IngressShim",
           "$ref": "#/$defs/email"
         },
         "domains": {
           "type": "array",
+          "uniqueItems": true,
           "items": {
             "type": "string"
           }
@@ -693,17 +688,19 @@
       "properties": {
         "gitRepositories": {
           "type": "object",
+          "description": "A map of gitRepositories to create",
           "additionalProperties": {
             "type": "object",
             "properties": {
               "url": {
                 "type": "string"
               },
-              "user": {
+              "username": {
                 "type": "string"
               },
               "gitInterval": {
                 "type": "string",
+                "description": "The interval in which to sync the repository",
                 "pattern": "[0-9]+(ms|s|m|h|d|w|y)",
                 "default": "1m"
               },
@@ -711,7 +708,7 @@
                 "type": "string",
                 "$ref": "#/$defs/email"
               },
-              "key": {
+              "password": {
                 "type": "string"
               }
             },
@@ -739,6 +736,7 @@
       "properties": {
         "readWriteMany": {
           "type": "object",
+          "description": "NFS based ReadWriteMany storage, requires `mount.nfs` on the hosts",
           "properties": {
             "enabled": {
               "type": "boolean"
@@ -759,10 +757,7 @@
                   "$ref": "#/$defs/quantity"
                 },
                 "storageClass": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
+                  "$ref": "#/$defs/storageClass"
                 }
               },
               "additionalProperties": false
@@ -774,10 +769,6 @@
       "additionalProperties": false
     },
     "common": {
-      "type": "object",
-      "description": "Values for sub-chart"
-    },
-    "kube-prometheus-stack-crds": {
       "type": "object",
       "description": "Values for sub-chart"
     }
@@ -794,10 +785,18 @@
       "type": "object",
       "properties": {
         "registry": {
-          "type": "string"
+          "type": "string",
+          "description": "The host of the registry",
+          "examples": [
+            "docker.io"
+          ]
         },
         "repository": {
-          "type": "string"
+          "type": "string",
+          "description": "The image path in the registry",
+          "examples": [
+            "bitnami/kubectl"
+          ]
         },
         "tag": {
           "type": "string"
@@ -807,6 +806,8 @@
         },
         "pullSecrets": {
           "type": "array",
+          "description": "A list of imagePullSecrets to be used for this image",
+          "uniqueItems": true,
           "items": {
             "type": "string"
           }
@@ -816,6 +817,31 @@
     },
     "email": {
       "pattern": "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])"
+    },
+    "targetNamespaces": {
+      "description": "The namespaces to sync the secret into, or `ALL` for all namespaces",
+      "oneOf": [
+        {
+          "type": "string",
+          "const": "ALL"
+        },
+        {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      ],
+      "default": "ALL"
+    },
+    "storageClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd)"
     }
   }
 }
