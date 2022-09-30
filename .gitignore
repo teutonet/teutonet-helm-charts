@@ -1,0 +1,6 @@
+*.tgz
+.idea
+.vscode
+.DS_Store
+/charts/*/charts
+/charts/*/values.md
