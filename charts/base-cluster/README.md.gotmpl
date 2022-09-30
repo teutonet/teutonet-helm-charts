@@ -15,4 +15,4 @@
 
 This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
 
-{{ template "chart.valuesSection" . }}
+{{ .Files.Get "values.md"  }}
