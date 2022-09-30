@@ -28,7 +28,11 @@ jobs:
           ./.github/scripts/sync-codeowners.sh > .github/CODEOWNERS
 
       - name: generate values.md
-        run: generate-schema-doc --config-file json-schema-to-md.yaml values.schema.json values.md
+        run: |
+          for chart in charts/*; do
+            [[ "$chart" = "charts/*" ]] && continue
+            generate-schema-doc --config-file json-schema-to-md.yaml "$chart/values.schema.json" "$chart/values.md"
+          fi
       - name: generate Docs
         uses: docker://jnorwood/helm-docs:latest
 
