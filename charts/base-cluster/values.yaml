@@ -95,9 +95,9 @@ monitoring:
         limits:
           memory: 128Mi
           cpu: 500m
-  costAnalysis:
+  storageCostAnalysis:
     currency: currencyEUR
-    interval: Day
+    period: Day
     storageClassMapping:
       teutostack-hdd: 0.002
       teutostack-ssd: 0.0067
