@@ -17,17 +17,20 @@ jobs:
           ref: ${{github.event.pull_request.head.ref}}
           repository: ${{github.event.pull_request.head.repo.full_name}}
 
+      - uses: actions/setup-python@v4
+      - run: pip install json-schema-for-humans
+
       - name: install yq
         run: |
           sudo snap install yq
-
       - name: generate CODEOWNERS
         run: |
           ./.github/scripts/sync-codeowners.sh > .github/CODEOWNERS
 
+      - name: generate values.md
+        run: generate-schema-doc --config-file json-schema-to-md.yaml values.schema.json values.md
       - name: generate Docs
-        run: |
-          docker run --rm --volume "$(pwd):/helm-docs" -u "$(id -u)" jnorwood/helm-docs:v1.8.1
+        uses: docker://jnorwood/helm-docs:latest
 
       - name: Commit updated Docs and CODEOWNERS
         run: |
