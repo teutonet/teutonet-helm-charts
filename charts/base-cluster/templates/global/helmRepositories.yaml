@@ -14,5 +14,5 @@ spec:
   interval: {{ $config.interval | default "5m" }}
   url: {{ $config.url }}
 ---
-{{- end -}}
+{{ end -}}
 {{- end }}
