@@ -147,7 +147,7 @@
         },
         "certificates": {
           "type": "object",
-          "description": "A map of cert-manager certificates to create and sync it's secrets into namespaces, the key is the name, therefore the secret name will be `$key`-certificate",
+          "description": "A map of cert-manager certificates to create and sync its secrets into namespaces, the key is the name, therefore the secret name will be `$key`-certificate",
           "additionalProperties": {
             "type": "object",
             "properties": {
