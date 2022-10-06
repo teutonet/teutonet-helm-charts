@@ -5,6 +5,7 @@ name: Sync CODEOWNERS and Docs
     paths:
       - charts/*/README.md.gotmpl
       - charts/*/README.md
+      - charts/*/values.schema.json
       - charts/*/Chart.yaml
       - .github/CODEOWNERS
       - .github/json-schema-to-md.yaml
