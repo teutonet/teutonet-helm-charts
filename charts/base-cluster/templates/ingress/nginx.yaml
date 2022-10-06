@@ -36,11 +36,14 @@ spec:
 {{/*          loadbalancer.openstack.org/proxy-protocol: "true"*/}}
       replicaCount: {{ .Values.ingress.replicas }}
       resources: {{- .Values.ingress.resources | toYaml | nindent 8 }}
-      {{- if .Values.global.imageRegistry }}
-      image:
-        registry: {{ .Values.global.imageRegistry }}
       admissionWebhooks:
+        enabled: false
+      {{- if .Values.global.imageRegistry }}
         patch:
           image:
             registry: {{ .Values.global.imageRegistry }}
+      {{- end }}
+      {{- if .Values.global.imageRegistry }}
+      image:
+        registry: {{ .Values.global.imageRegistry }}
       {{- end }}
