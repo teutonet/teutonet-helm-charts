@@ -1,6 +1,0 @@
-template_name: md
-show_toc: false
-examples_as_yaml: true
-template_md_options:
-  badge_as_image: true
-link_to_reused_ref: true
