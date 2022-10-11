@@ -31,8 +31,14 @@ spec:
       defaultIssuerName: letsencrypt-prod
       defaultIssuerKind: ClusterIssuer
     {{- end }}
+    {{ if .Values.certManager.dnsChallengeNameservers }}
+    {{- $nameservers := list -}}
+    {{- range $ip, $port := .Values.certManager.dnsChallengeNameservers }}
+    {{- $nameservers = append $nameservers (printf "%s:%v" $ip $port) -}}
+    {{- end -}}
     extraArgs:
-      - --dns01-recursive-nameservers=1.1.1.1:53
+      - --dns01-recursive-nameservers={{- $nameservers | join "," }}
+    {{- end }}
     resources: {{- $.Values.certManager.resources | toYaml | nindent 6 }}
     replicaCount: 1
     securityContext: &securityContext
