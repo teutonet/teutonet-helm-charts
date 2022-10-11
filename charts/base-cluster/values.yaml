@@ -258,6 +258,8 @@ certManager:
       requests:
         cpu: 250m
         memory: 512Mi
+  dnsChallengeNameservers:
+    1.1.1.1: 53
 
 externalDNS:
   resources:
