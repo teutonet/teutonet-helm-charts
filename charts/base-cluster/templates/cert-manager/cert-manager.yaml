@@ -37,7 +37,7 @@ spec:
     {{- $nameservers = append $nameservers (printf "%s:%v" $ip $port) -}}
     {{- end -}}
     extraArgs:
-      - --dns01-recursive-nameservers={{- $nameservers | join "," }}
+      - --dns01-recursive-nameservers={{- $nameservers | sortAlpha | join "," }}
     {{- end }}
     resources: {{- $.Values.certManager.resources | toYaml | nindent 6 }}
     replicaCount: 1
