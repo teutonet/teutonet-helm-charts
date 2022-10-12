@@ -33,7 +33,7 @@ grafana:
   {{- . | toYaml | nindent 4 }}
   {{- end }}
   defaultDashboardsEnabled: true
-  grafana.ini: {{- .Values.monitoring.grafana.config | mustMergeOverwrite (include "base-cluster.grafana.config" . | fromYaml) | toYaml | nindent 4 -}}
+  grafana.ini: {{- .Values.monitoring.grafana.config | mergeOverwrite (include "base-cluster.grafana.config" . | fromYaml) | toYaml | nindent 4 -}}
   {{- if .Values.monitoring.grafana.notifiers }}
   extraEmptyDirMounts:
     - name: provisioning-notifiers

@@ -20,7 +20,7 @@ spec:
   dependsOn:
     - name: kube-prometheus-stack-crds
       namespace: monitoring
-  values: {{- .Values.monitoring.prometheus.overrides | mustMergeOverwrite (include "base-cluster.prometheus.config" . | fromYaml) | toYaml | nindent 4 }}
+  values: {{- .Values.monitoring.prometheus.overrides | mergeOverwrite (include "base-cluster.prometheus.config" . | fromYaml) | toYaml | nindent 4 }}
   {{- if false }} # TODO ingress
 {{/*  {{- if empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled }}*/}}
 ---
