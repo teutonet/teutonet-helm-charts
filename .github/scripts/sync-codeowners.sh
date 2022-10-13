@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "* @teutonet/k8s"
+
 for DIR in ./charts/*; do
   [[ "$DIR" = "charts/*" ]] && continue
   FILE="$DIR/Chart.yaml"
