@@ -34,7 +34,7 @@ jobs:
           for chart in charts/*; do
             [[ "$chart" = "charts/*" ]] && continue
             generate-schema-doc --config-file .github/json-schema-to-md.yaml "$chart/values.schema.json" "$chart/values.md"
-          fi
+          done
       - name: generate Docs
         uses: docker://jnorwood/helm-docs:latest
 
