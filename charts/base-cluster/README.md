@@ -24,6 +24,12 @@ A common base for every kubernetes cluster
 
 This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
 
+The various components are automatically updated to the latest minor and patch version.
+
+This excludes:
+
+- descheduler, its version is bound to the k8s version and they have not released 1.0.0
+
 # base cluster configuration
 
 **Title:** base cluster configuration
@@ -2021,5 +2027,5 @@ must respect the following conditions
 **Description:** Values for sub-chart
 
 ----------------------------------------------------------------------------------------------------------------------------
-Generated using [json-schema-for-humans](https://github.com/coveooss/json-schema-for-humans) on 2022-10-14 at 07:59:45 +0000
+Generated using [json-schema-for-humans](https://github.com/coveooss/json-schema-for-humans) on 2022-10-17 at 11:40:54 +0000
 
