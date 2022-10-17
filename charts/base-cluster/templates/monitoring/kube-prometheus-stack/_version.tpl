@@ -1,3 +1,3 @@
 {{- define "base-cluster.prometheus.version" -}}
-33.x.x
+40.x.x
 {{- end -}}
