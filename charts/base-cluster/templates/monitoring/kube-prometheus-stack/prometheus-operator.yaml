@@ -17,6 +17,10 @@ spec:
         namespace: {{ .Release.Namespace }}
       version: {{ include "base-cluster.prometheus.version" (dict) }}
   interval: 1m
+  install:
+    timeout: 10m0s
+  upgrade:
+    timeout: 10m0s
   dependsOn:
     - name: kube-prometheus-stack-crds
       namespace: monitoring
