@@ -15,4 +15,10 @@
 
 This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
 
+The various components are automatically updated to the latest minor and patch version.
+
+This excludes:
+
+- descheduler, its version is bound to the k8s version and they have not released 1.0.0
+
 {{ .Files.Get "values.md"  }}
