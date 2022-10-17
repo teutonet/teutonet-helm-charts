@@ -21,11 +21,7 @@ spec:
         kind: HelmRepository
         name: descheduler
         namespace: {{ .Release.Namespace }}
-      {{- if not (eq $selectedVersion $latestVersion) }}
       version: {{ $selectedVersion }}
-      {{- else }}
-      version: ">={{ $selectedVersion }} <1.0.0"
-      {{- end }}
   interval: 1m
   values:
     cronJobApiVersion: {{ include "common.capabilities.cronjob.apiVersion" . }}
