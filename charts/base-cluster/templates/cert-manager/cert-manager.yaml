@@ -13,7 +13,7 @@ spec:
         kind: HelmRepository
         name: jetstack
         namespace: {{ .Release.Namespace }}
-      version: "1.x.x"
+      version: 1.x.x
   interval: 1m
   {{- if .Values.monitoring.prometheus.enabled }}
   dependsOn:
