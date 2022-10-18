@@ -5,34 +5,32 @@ set -o pipefail
 
 : "${PR_TITLE:?Environment variable must be set}"
 
-repo_root=$(git rev-parse --show-toplevel)
-
 changed=$(ct list-changed)
 
 if [[ -z "$changed" ]]; then
-    exit 0
+  exit 0
 fi
 
 if [[ "$PR_TITLE" =~ chore(deps)* ]]; then
   exit 0
 fi
 
-num_changed=$(wc -l <<< "$changed")
+num_changed=$(wc -l <<<"$changed")
 
-if ((num_changed > 1)) && ! [[ "$PR_TITLE" =~ chore(deps):* ]]; then
-    echo "This PR has changes to multiple charts. Please create individual PRs per chart." >&2
-    exit 1
+if ((num_changed > 1)); then
+  echo "This PR has changes to multiple charts. Please create individual PRs per chart." >&2
+  exit 1
 fi
 
 # Strip charts directory
 changed="${changed##*/}"
 
 if ! cog verify "$PR_TITLE"; then
-  echo "PR title must be a conventional commit message"
+  echo "PR title must be a conventional commit message" >&2
   exit 1
 fi
 
 if [[ "$PR_TITLE" != *"($changed):"* ]]; then
-    echo "PR title must start with '\$type($changed):'." >&2
-    exit 1
+  echo "PR title must start with '\$type($changed):'." >&2
+  exit 1
 fi
