@@ -40,10 +40,6 @@ jobs:
             yq e '.dependencies.[].repository' "$FILE"
           done | sort -u | awk '{print NR " " $1}' | xargs -r -n 2 helm repo add
 
-      - name: generate Docs
-        run: |
-          docker run --rm --volume "$(pwd):/helm-docs" -u "$(id -u)" jnorwood/helm-docs:v1.8.1
-
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.1
         with:
