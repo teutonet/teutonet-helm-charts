@@ -17,13 +17,18 @@ You should configure {{ $instance.url | quote }} to accept the following key:
 You can access your grafana instance via
 
 {{- if and .Values.dns.email .Values.monitoring.grafana.ingress.enabled }}
-{{ printf "https://%s" (include "base-cluster.grafana.host" $) }}
+{{- printf "https://%s" (include "base-cluster.grafana.host" $) | nindent 2 }}
 {{- else }}
-$ kubectl -n monitoring port-forward svc/kube-prometheus-stack-grafana 3000:http-web
+{{- printf "$ kubectl -n monitoring port-forward svc/kube-prometheus-stack-grafana 3000:http-web" | nindent 2 }}
 
 http://localhost:3000
 {{- end }}
 
 Username: admin
-Password: {{ include "common.secrets.passwords.manage" (dict "secret" (include "common.secrets.name" (dict "defaultNameSuffix" "grafana" "context" $)) "key" "password" "providedValues" (list "monitoring.grafana.adminPassword") "context" (dict "Values" .Values "Release" (dict "Namespace" "monitoring"))) | b64dec }}
+{{- $secretName := include "common.secrets.name" (dict "defaultNameSuffix" "grafana" "context" $) -}}
+{{- if lookup "v1" "Secret" "monitoring" $secretName }}
+Password: {{ include "common.secrets.passwords.manage" (dict "secret" $secretName "key" "password" "providedValues" (list "monitoring.grafana.adminPassword") "context" (dict "Values" .Values "Release" (dict "Namespace" "monitoring"))) | b64dec }}
+{{- else }}
+Password: $(kubectl -n monitoring get secret {{ $secretName | quote }} -o json | jq -r .data.password | base64 -d)
+{{- end }}
 {{- end }}

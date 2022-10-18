@@ -712,28 +712,60 @@
           "description": "A map of gitRepositories to create",
           "additionalProperties": {
             "type": "object",
+            "oneOf": [
+              {
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "pattern": "https://.+"
+                  }
+                },
+                "required": [
+                  "url"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "pattern": "https://.+"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "url",
+                  "password",
+                  "username"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "pattern": "ssh://.+@.+"
+                  }
+                },
+                "required": [
+                  "url"
+                ],
+                "additionalProperties": false
+              }
+            ],
             "properties": {
-              "url": {
-                "type": "string"
-              },
-              "username": {
-                "type": "string"
-              },
               "gitInterval": {
                 "type": "string",
                 "description": "The interval in which to sync the repository",
                 "pattern": "[0-9]+(ms|s|m|h|d|w|y)",
                 "default": "1m"
-              },
-              "email": {
-                "type": "string",
-                "$ref": "#/$defs/email"
-              },
-              "password": {
-                "type": "string"
               }
-            },
-            "additionalProperties": false
+            }
           }
         }
       },
@@ -824,14 +856,6 @@
         },
         "digest": {
           "type": "string"
-        },
-        "pullSecrets": {
-          "type": "array",
-          "description": "A list of imagePullSecrets to be used for this image",
-          "uniqueItems": true,
-          "items": {
-            "type": "string"
-          }
         }
       },
       "additionalProperties": false
