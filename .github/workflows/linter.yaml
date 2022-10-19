@@ -22,13 +22,15 @@ jobs:
       - name: Extract helm repos
         id: helm-repos
         run: |
-          echo -n "::set-output name=repos::"
-          for DIR in ./charts/*; do
-            FILE="$DIR/Chart.yaml"
-            DIR="${DIR//\./}"
-            yq e '.dependencies.[].repository' "$FILE"
-          done | sort -u | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
-          echo
+          (
+            echo -n "repos="
+            for DIR in ./charts/*; do
+              FILE="$DIR/Chart.yaml"
+              DIR="${DIR//\./}"
+              yq e '.dependencies.[].repository' "$FILE"
+            done | sort -u | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
+            echo
+          ) > $GITHUB_OUTPUT
 
       - name: Set up Python
         uses: actions/setup-python@v4
