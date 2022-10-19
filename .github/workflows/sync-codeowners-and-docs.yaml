@@ -29,11 +29,9 @@ jobs:
         run: |
           ./.github/scripts/sync-codeowners.sh > .github/CODEOWNERS
 
-      - uses: EndBug/add-and-commit@v9
+      - uses: reviewdog/action-suggester@v1
         with:
-          message: "chore: Update 'CODEOWNERS'"
-          committer_name: github-actions[bot]
-          committer_email: github-actions[bot]@users.noreply.github.com
+          tool_name: CODEOWNERS
 
       - name: generate values.md
         run: |
@@ -44,9 +42,7 @@ jobs:
       - name: generate Docs
         uses: docker://jnorwood/helm-docs:latest
 
-      - uses: EndBug/add-and-commit@v9
+      - uses: reviewdog/action-suggester@v1
         with:
-          message: "chore: Update 'README.md's"
-          committer_name: github-actions[bot]
-          committer_email: github-actions[bot]@users.noreply.github.com
+          tool_name: helm-docs
 
