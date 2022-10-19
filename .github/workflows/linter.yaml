@@ -1,6 +1,6 @@
 name: Lint Code Base
 
-"on":
+on:
   - pull_request
 
 jobs:
