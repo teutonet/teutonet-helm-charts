@@ -86,6 +86,16 @@
           },
           "additionalProperties": false
         },
+        "flux": {
+          "type": "object",
+          "description": "Image with `flux` binary",
+          "properties": {
+            "image": {
+              "$ref": "#/$defs/image"
+            }
+          },
+          "additionalProperties": false
+        },
         "networkPolicy": {
           "type": "object",
           "properties": {

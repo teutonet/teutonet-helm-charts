@@ -22,6 +22,12 @@ global:
       repository: bitnami/kubectl
       tag: 1.25.3
       pullSecrets: []
+  flux:
+    image:
+      registry: docker.io
+      repository: fluxcd/flux-cli
+      tag: v0.35.0
+
   networkPolicy:
     type: none
     dnsLabels:
