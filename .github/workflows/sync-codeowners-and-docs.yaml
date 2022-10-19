@@ -1,7 +1,14 @@
 name: Sync CODEOWNERS and Docs
 
 "on":
-  - pull_request
+  push:
+    paths:
+      - charts/*/README.md.gotmpl
+      - charts/*/README.md
+      - charts/*/values.schema.json
+      - charts/*/Chart.yaml
+      - .github/CODEOWNERS
+      - .github/json-schema-to-md.yaml
 
 jobs:
   build:
@@ -25,6 +32,7 @@ jobs:
       - uses: reviewdog/action-suggester@v1
         with:
           tool_name: CODEOWNERS
+          reviewdog_flags: -reporter=github-check
 
       - name: generate values.md
         run: |
@@ -38,4 +46,5 @@ jobs:
       - uses: reviewdog/action-suggester@v1
         with:
           tool_name: helm-docs
+          reviewdog_flags: -reporter=github-check
 
