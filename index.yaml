@@ -2,6 +2,26 @@ apiVersion: v1
 entries:
   base-cluster:
   - apiVersion: v2
+    created: "2022-10-19T11:43:19.053898749Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com
+      version: 2.0.3
+    description: A common base for every kubernetes cluster
+    digest: 216b9f6593b9b29e75f85d2da422d6b8c09e24f4721d8f36c8f5ea51da5ada63
+    home: https://teuto.net
+    icon: https://teuto.net/favicon.ico
+    maintainers:
+    - email: cwr@teuto.net
+      name: cwrau
+    name: base-cluster
+    sources:
+    - https://github.com/teutonet/teutonet-helm-charts
+    type: application
+    urls:
+    - https://github.com/teutonet/teutonet-helm-charts/releases/download/base-cluster-0.1.2/base-cluster-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
     created: "2022-10-17T14:53:37.950151284Z"
     dependencies:
     - name: common
@@ -41,4 +61,4 @@ entries:
     urls:
     - https://github.com/teutonet/teutonet-helm-charts/releases/download/base-cluster-0.1.0/base-cluster-0.1.0.tgz
     version: 0.1.0
-generated: "2022-10-17T14:53:37.950168384Z"
+generated: "2022-10-19T11:43:19.053915949Z"
