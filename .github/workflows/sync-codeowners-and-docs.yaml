@@ -1,7 +1,7 @@
 name: Sync CODEOWNERS and Docs
 
 "on":
-  push:
+  pull_request:
     paths:
       - charts/*/README.md.gotmpl
       - charts/*/README.md
