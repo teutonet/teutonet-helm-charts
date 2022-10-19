@@ -1,16 +1,31 @@
-{{- range $name, $instance := .Values.flux.gitRepositories }}
+{{- range $name, $instance := .Values.flux.gitRepositories -}}
+  {{- $secretName := printf "%s-flux-%s" (include "common.names.fullname" $) $name -}}
+  {{- $authenticationMethod := "none" -}}
+  {{- if and $instance.username $instance.password -}}
+    {{- $authenticationMethod = "password" -}}
+  {{- else if regexMatch "^ssh://" $instance.url -}}
+    {{- $authenticationMethod = "ssh" -}}
+  {{- end -}}
+{{- if eq $authenticationMethod "password" }}
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ printf "%s-flux-%s" (include "common.names.fullname" $) $name }}
+  name: {{ $secretName }}
   namespace: {{ $.Release.Namespace }}
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     app.kubernetes.io/component: {{ $name | quote }}
     app.kubernetes.io/part-of: flux
+type: opaque
 stringData:
   username: {{ $instance.username }}
   password: {{ $instance.password }}
 ---
+  {{- else if eq $authenticationMethod "ssh" }}
+    {{- if not (lookup "v1" "Secret" $.Release.Namespace $secretName) }}
+      {{- include "base-cluster.flux.createSSHKeySecret" (dict "url" $instance.url "name" $name "context" $) | nindent 0 }}
+---
+    {{- end }}
+  {{- end }}
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: GitRepository
 metadata:
@@ -22,8 +37,10 @@ metadata:
 spec:
   interval: {{ $instance.gitInterval | default "1m" | quote }}
   url: {{ $instance.url | quote }}
+  {{- if not (eq $authenticationMethod "none") }}
   secretRef:
-    name: {{ printf "%s-flux-%s" (include "common.names.fullname" $) $name }}
+    name: {{ $secretName }}
+  {{- end }}
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
