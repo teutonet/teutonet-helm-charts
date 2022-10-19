@@ -1,6 +1,6 @@
 name: Validate Pull Request
 
-"on":
+on:
   pull_request:
     types:
       - opened

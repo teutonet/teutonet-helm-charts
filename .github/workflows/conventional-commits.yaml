@@ -1,6 +1,6 @@
 name: Check commits for compliance with conventional commit spec
 
-"on":
+on:
   - push
 
 jobs:
