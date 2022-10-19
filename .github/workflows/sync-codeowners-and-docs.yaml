@@ -1,19 +1,7 @@
 name: Sync CODEOWNERS and Docs
 
 "on":
-  pull_request:
-    paths:
-      - charts/*/README.md.gotmpl
-      - charts/*/README.md
-      - charts/*/values.schema.json
-      - charts/*/Chart.yaml
-      - .github/CODEOWNERS
-      - .github/json-schema-to-md.yaml
-    types:
-      - opened
-      - edited
-      - reopened
-      - synchronize
+  - pull_request
 
 jobs:
   build:
