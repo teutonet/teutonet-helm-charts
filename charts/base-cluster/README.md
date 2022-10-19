@@ -2049,5 +2049,4 @@ must respect the following conditions
 **Description:** Values for sub-chart
 
 ----------------------------------------------------------------------------------------------------------------------------
-Generated using [json-schema-for-humans](https://github.com/coveooss/json-schema-for-humans) on 2022-10-19 at 07:46:06 +0000
 
