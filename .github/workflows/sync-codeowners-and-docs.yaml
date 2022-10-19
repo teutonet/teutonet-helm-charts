@@ -28,6 +28,8 @@ jobs:
       - name: generate CODEOWNERS
         run: |
           ./.github/scripts/sync-codeowners.sh > .github/CODEOWNERS
+      - name: git add
+        run: git add .
 
       - uses: reviewdog/action-suggester@v1
         with:
@@ -42,6 +44,8 @@ jobs:
           done
       - name: generate Docs
         uses: docker://jnorwood/helm-docs:latest
+      - name: git add
+        run: git add .
 
       - uses: reviewdog/action-suggester@v1
         with:
