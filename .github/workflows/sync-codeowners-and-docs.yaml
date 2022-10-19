@@ -29,6 +29,12 @@ jobs:
         run: |
           ./.github/scripts/sync-codeowners.sh > .github/CODEOWNERS
 
+      - uses: EndBug/add-and-commit@v9
+        with:
+          message: "chore: Update 'CODEOWNERS'"
+          committer_name: github-actions[bot]
+          committer_email: github-actions[bot]@users.noreply.github.com
+
       - name: generate values.md
         run: |
           for chart in charts/*; do
@@ -38,20 +44,9 @@ jobs:
       - name: generate Docs
         uses: docker://jnorwood/helm-docs:latest
 
-      - name: Commit updated Docs and CODEOWNERS
-        run: |
-          if ! git diff --exit-code; then
-            git config user.name "$GITHUB_ACTOR"
-            git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - uses: EndBug/add-and-commit@v9
+        with:
+          message: "chore: Update 'README.md's"
+          committer_name: github-actions[bot]
+          committer_email: github-actions[bot]@users.noreply.github.com
 
-            if ! git diff --exit-code --quiet .github/CODEOWNERS; then
-              git commit -m "chore: Update 'CODEOWNERS'" .github/CODEOWNERS
-            fi
-
-            if ! git diff --exit-code --quiet charts/*/README.md; then
-              git add charts/*/README.md
-              git commit -m "chore: Update 'README.md's"
-            fi
-
-            git push
-          fi
