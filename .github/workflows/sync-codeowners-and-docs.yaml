@@ -9,6 +9,11 @@ name: Sync CODEOWNERS and Docs
       - charts/*/Chart.yaml
       - .github/CODEOWNERS
       - .github/json-schema-to-md.yaml
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
 
 jobs:
   build:
