@@ -19,7 +19,7 @@ spec:
   interval: 5m
   {{- if .Values.monitoring.prometheus.enabled }}
   dependsOn:
-    - name: kube-prometheus-stack-crds
+    - name: kube-prometheus-stack
       namespace: monitoring
   {{- end }}
   values:
