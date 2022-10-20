@@ -18,6 +18,7 @@ jobs:
         uses: pozetroninc/github-action-get-latest-release@master
         with:
           repository: ${{ github.repository }}
+        continue-on-error: true
       - id: latestReleaseFallback
         if: ${{ failure() }}
         run: echo "release=$(git rev-list HEAD | tail -n 1)" | tee $GITHUB_OUTPUT
