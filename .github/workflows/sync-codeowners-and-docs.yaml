@@ -4,6 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - charts/*/README.md.gotmpl
+      - charts/*/README.md
+      - charts/*/values.schema.json
+      - charts/*/Chart.yaml
+      - .github/scripts/sync-codeowners.sh
+      - .github/workflows/sync-codeowners-and-docs.yaml
+      - .github/CODEOWNERS
+      - .github/json-schema-to-md.yaml
 
 jobs:
   build:
