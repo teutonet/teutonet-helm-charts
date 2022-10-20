@@ -2,13 +2,8 @@ name: Sync CODEOWNERS and Docs
 
 on:
   push:
-    paths:
-      - charts/*/README.md.gotmpl
-      - charts/*/README.md
-      - charts/*/values.schema.json
-      - charts/*/Chart.yaml
-      - .github/CODEOWNERS
-      - .github/json-schema-to-md.yaml
+    branches:
+      - main
 
 jobs:
   build:
@@ -22,9 +17,7 @@ jobs:
       - uses: actions/setup-python@v4
       - run: pip install json-schema-for-humans
 
-      - name: install yq
-        run: |
-          sudo snap install yq
+      - run: sudo snap install yq
       - name: generate CODEOWNERS
         run: |
           ./.github/scripts/sync-codeowners.sh > .github/CODEOWNERS

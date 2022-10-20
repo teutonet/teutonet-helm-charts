@@ -10,14 +10,11 @@ jobs:
     env:
       CT_TARGET_BRANCH: ${{ github.event.repository.default_branch }}
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: install yq
-        run: |
-          sudo snap install yq
+      - run: sudo snap install yq
 
       - name: Extract helm repos
         id: helm-repos
@@ -30,17 +27,15 @@ jobs:
               yq e '.dependencies.[].repository' "$FILE"
             done | sort -u | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
             echo
-          ) > $GITHUB_OUTPUT
+          ) | tee $GITHUB_OUTPUT
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.7
 
-      - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.3.1
+      - uses: helm/chart-testing-action@v2.3.1
 
       - name: Lint charts
-        run: ct lint
+        run: ct lint --check-version-increment=false
         env:
           CT_CHART_REPOS: ${{ steps.helm-repos.outputs.repos }}
