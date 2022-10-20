@@ -19,6 +19,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           command: release-pr
+          release-type: helm
           monorepo-tags: true
   release:
     runs-on: ubuntu-latest
