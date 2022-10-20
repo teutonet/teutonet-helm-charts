@@ -17,7 +17,7 @@ jobs:
       - uses: GoogleCloudPlatform/release-please-action@v2
         id: release
         with:
-          token: ${{ secrets.ORIGAMI_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           command: release-pr
           monorepo-tags: true
   release:
