@@ -21,7 +21,7 @@ spec:
       namespace: monitoring
   {{- end }}
   values:
-    installCRDs: true
+    installCRDs: true # test
     {{- if .Values.global.imageRegistry }}
     image:
       repository: {{ printf "%s/jetstack/cert-manager-controller" $.Values.global.imageRegistry }}
