@@ -26,11 +26,13 @@ jobs:
         uses: helm/chart-testing-action@v2.3.1
       - id: getChangedCharts
         run: |
+          set -x
+          set -o pipefail
           LATEST_RELEASE="${{ steps.latestRelease.release }}"
           LATEST_RELEASE="${LATEST_RELEASE:-$(git rev-list HEAD | tail -n 1)}"
           (
             echo -n changedCharts=
-            ct list-changed --target-branch main --since "$LATEST_RELEASE" | jq -c -Rn '[inputs]'
+            ct list-changed --target-branch main --since "$LATEST_RELEASE" | cut -d / -f 2 | jq -c -Rn '[inputs]'
           ) | tee $GITHUB_OUTPUT
   release-please-release:
     runs-on: ubuntu-latest
