@@ -22,7 +22,7 @@ jobs:
           (
             echo -n changedCharts=
             ct list-changed --target-branch main | jq -c -Rn '[inputs]'
-          ) > $GITHUB_OUTPUT
+          ) | tee $GITHUB_OUTPUT
   release-please-release:
     runs-on: ubuntu-latest
     needs:
