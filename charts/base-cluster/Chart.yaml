@@ -1,7 +1,7 @@
 apiVersion: v2
 name: base-cluster
 type: application
-version: 0.1.4
+version: 0.1.5
 icon: https://teuto.net/favicon.ico
 maintainers:
   - name: cwrau
