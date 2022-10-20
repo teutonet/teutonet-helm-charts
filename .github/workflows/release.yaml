@@ -21,7 +21,7 @@ jobs:
         run: |
           (
             echo -n changedCharts=
-            ct list-changed --target-branch main | jq -c -Rn '[inputs]'
+            ct list-changed --target-branch main --since HEAD~ | jq -c -Rn '[inputs]'
           ) | tee $GITHUB_OUTPUT
   release-please-release:
     runs-on: ubuntu-latest
