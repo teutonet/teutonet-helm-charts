@@ -19,9 +19,6 @@ jobs:
         with:
           repository: ${{ github.repository }}
         continue-on-error: true
-      - id: latestReleaseFallback
-        if: ${{ failure() }}
-        run: echo "release=$(git rev-list HEAD | tail -n 1)" | tee $GITHUB_OUTPUT
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -30,7 +27,7 @@ jobs:
       - id: getChangedCharts
         run: |
           LATEST_RELEASE="${{ steps.latestRelease.release }}"
-          LATEST_RELEASE="${LATEST_RELEASE:-${{ steps.latestReleaseFallback.release }}}"
+          LATEST_RELEASE="${LATEST_RELEASE:-$(git rev-list HEAD | tail -n 1)}"
           (
             echo -n changedCharts=
             ct list-changed --target-branch main --since "$LATEST_RELEASE" | jq -c -Rn '[inputs]'
