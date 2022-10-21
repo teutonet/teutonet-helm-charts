@@ -23,6 +23,9 @@ grafana:
   serviceMonitor:
     interval: "30s"
     labels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
+  podAnnotations:
+    # This might change on every `template` call, this can be ignored
+    checksum/secret: {{ include (print $.Template.BasePath "/monitoring/kube-prometheus-stack/grafana-secret.yaml") . | sha256sum }}
   admin:
     existingSecret: {{ include "common.secrets.name" (dict "defaultNameSuffix" "grafana" "context" $) }}
     userKey: username
