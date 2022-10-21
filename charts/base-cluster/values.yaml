@@ -66,6 +66,8 @@ global:
     nfs-server-provisioner:
       url: https://kubernetes-sigs.github.io/nfs-ganesha-server-and-external-provisioner
       condition: '{{ .Values.storage.readWriteMany.enabled }}'
+    teuto-net:
+      url: https://teutonet.github.io/teutonet-helm-charts
 
 kyverno:
   enabled: false
