@@ -6,6 +6,8 @@ icon: https://teuto.net/favicon.ico
 maintainers:
   - name: cwrau
     email: cwr@teuto.net
+  - name: marvinWolff
+    email: mw@teuto.net
 sources:
   - https://github.com/teutonet/teutonet-helm-charts
 home: https://teuto.net
