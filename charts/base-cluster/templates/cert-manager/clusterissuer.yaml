@@ -1,5 +1,5 @@
 {{- if .Values.dns.email }}
-{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "clusterissuer-letsencrypt-prod" "resource" (include "base-cluster.cert-manager.defaultClusterIssuer" .) "dependencies" (dict "cert-manager" "cert-manager") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cert-manager"))}}
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "clusterissuer-letsencrypt-prod" "resource" (include "base-cluster.cert-manager.defaultClusterIssuer" .) "dependencies" (dict "cert-manager" "cert-manager") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cert-manager")) }}
 {{- end -}}
 
 {{- define "base-cluster.cert-manager.defaultClusterIssuer" -}}
