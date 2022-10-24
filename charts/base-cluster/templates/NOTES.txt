@@ -16,7 +16,7 @@ You should configure {{ $instance.url | quote }} to accept the following key:
 {{- if .Values.monitoring.prometheus.enabled }}
 You can access your grafana instance via
 
-{{- if and .Values.dns.email .Values.monitoring.grafana.ingress.enabled }}
+{{- if and .Values.dns.email .Values.monitoring.grafana.ingress.enabled .Values.global.baseDomain }}
 {{- printf "https://%s" (include "base-cluster.grafana.host" $) | nindent 2 }}
 {{- else }}
 {{- printf "$ kubectl -n monitoring port-forward svc/kube-prometheus-stack-grafana 3000:http-web" | nindent 2 }}

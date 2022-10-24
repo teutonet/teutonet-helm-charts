@@ -1,4 +1,4 @@
-{{- if .Values.dns.provider }}
+{{- if and .Values.dns.provider .Values.global.baseDomain }}
 {{- if false }}
 apiVersion: networking.k8s.io/v1
 {{- else }}
