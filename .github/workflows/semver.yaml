@@ -9,7 +9,7 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  changeFinder:
+  createReleasePR:
     runs-on: ubuntu-latest
     env:
       CT_TARGET_BRANCH: ${{ github.event.repository.default_branch }}
@@ -20,18 +20,21 @@ jobs:
       - uses: helm/chart-testing-action@v2.3.1
 
       - id: getChangedChart
+        name: Get changed chart in this commit
         run: |
           set -x
           set -o pipefail
           (
-            echo -n changedChart=
-            ct list-changed --since "HEAD~" | cut -d / -f 2 | jq -c -Rn '[inputs]'
+            echo -n chart=
+            ct list-changed --since "HEAD~" | cut -d / -f 2
           ) | tee $GITHUB_OUTPUT
       - id: getLatestReleaseHash
+        name: Get latest release for the changed chart
         run: |
           set -x
           set -o pipefail
-          chart="${{ steps.getChangedChart.changedChart }}"
+          chart="${{ steps.getChangedChart.outputs.chart }}"
+          chart=${chart:?chart variable is empty}
           (
             echo -n hash=
             (
@@ -48,11 +51,11 @@ jobs:
 
       - uses: google-github-actions/release-please-action@v3
         with:
-          path: charts/${{ steps.getChangedChart.changedChart }}
+          path: charts/${{ steps.getChangedChart.outputs.chart }}
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
           release-type: helm
           monorepo-tags: true
           separate-pull-requests: true
-          package-name: ${{ steps.getChangedChart.changedChart }}
+          package-name: ${{ steps.getChangedChart.outputs.chart }}
           command: release-pr
-          last-release-sha: ${{ steps.getLatestReleaseHash.hash }}
+          last-release-sha: ${{ steps.getLatestReleaseHash.outputs.hash }}
