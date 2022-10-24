@@ -148,7 +148,7 @@
                 "description": "A condition with which to decide to include the repository. This will be templated. Must return a truthy value",
                 "examples": [
                   "{{ true }}",
-                  "{{ eq .Valus.global.baseDomain \"teuto.net\" }}"
+                  "{{ eq .Values.global.baseDomain \"teuto.net\" }}"
                 ]
               }
             },
@@ -183,6 +183,15 @@
               },
               "targetNamespaces": {
                 "$ref": "#/$defs/targetNamespaces"
+              },
+              "condition": {
+                "type": "string",
+                "description": "A condition with which to decide to include the certificate. This will be templated. Must return a truthy value",
+                "examples": [
+                  "{{ true }}",
+                  "{{ eq .Values.global.baseDomain \"teuto.net\" }}",
+                  "{{ .Values.global.baseDomain }}"
+                ]
               }
             },
             "required": [

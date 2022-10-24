@@ -15,6 +15,7 @@ global:
         - {{ printf "*.%s" (include "base-cluster.domain" $) | quote }}
         {{- end }}
       targetNamespaces: ALL
+      condition: '{{ .Values.global.baseDomain }}'
   storageClass: null
   kubectl:
     image:
