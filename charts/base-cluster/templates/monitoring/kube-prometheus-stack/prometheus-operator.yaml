@@ -29,7 +29,7 @@ spec:
 {{/*  {{- if empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled }}*/}}
 ---
   {{- $backends := list (dict "host" "prometheus" "port" 9090) (dict "host" "alertmanager" "port" 9093) -}}
-  {{- range $backend := $backends}}
+  {{- range $backend := $backends }}
   {{- $host := $backend.host -}}
   {{- $port := $backend.port -}}
   {{- $targetServiceName := printf "%s-%s" (include "common.names.dependency.fullname" (dict "chartName" "kube-prometheus-stack" "chartValues" .Values.monitoring.prometheus.overrides "context" (dict "Release" (dict "Name" "kube-prometheus-stack")))) $host -}}

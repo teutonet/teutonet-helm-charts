@@ -1,5 +1,5 @@
 {{- if .Values.monitoring.prometheus.enabled }}
-{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "certificate-expiration-rule" "namespace" "cert-manager" "resource" (include "base-cluster.cert-manager.expirationRule" . ) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "prometheus" "app.kubernetes.io/part-of" "cert-manager"))}}
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "certificate-expiration-rule" "namespace" "cert-manager" "resource" (include "base-cluster.cert-manager.expirationRule" . ) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "prometheus" "app.kubernetes.io/part-of" "cert-manager")) }}
 {{- end -}}
 
 {{- define "base-cluster.cert-manager.expirationRule" -}}
