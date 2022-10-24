@@ -1,0 +1,29 @@
+name: Label release PR
+
+on:
+  pull_request_target:
+    types:
+      - closed
+
+jobs:
+  labelling:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-22.04
+    steps:
+      - name: remove old label
+        run: |
+          set -x
+          curl --silent --fail-with-body \
+            -X DELETE \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'Authorization: token ${{ github.token }}' \
+            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/issues/${{ github.event.number }}/labels/autorelease:%20pending"
+      - name: add new label
+        run: |
+          set -x
+          curl --silent --fail-with-body \
+            -X POST \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'Authorization: token ${{ github.token }}' \
+            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/issues/${{ github.event.number }}/labels" \
+            -d '{"labels":["autorelease: tagged"]}'
