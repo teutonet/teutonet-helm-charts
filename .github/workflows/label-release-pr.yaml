@@ -7,7 +7,7 @@ on:
 
 jobs:
   labelling:
-    if: github.event.pull_request.merged == true
+    if: ${{ github.event.pull_request.merged == true && contains(github.event.pull_request.base.ref, 'release-please--') }}
     runs-on: ubuntu-22.04
     steps:
       - name: remove old label
