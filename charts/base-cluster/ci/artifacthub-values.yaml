@@ -1,0 +1,6 @@
+global:
+  clusterName: artifacthub
+flux:
+  gitRepositories:
+    main:
+      url: ssh://user@example.com/repo.git
