@@ -4,7 +4,6 @@
   ],
   "assigneesFromCodeOwners": true,
   "assigneesSampleSize": 1,
-  "bumpVersion": "patch",
   "platformAutomerge": true,
   "packageRules": [
     {
