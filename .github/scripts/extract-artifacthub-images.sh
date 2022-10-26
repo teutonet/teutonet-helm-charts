@@ -48,7 +48,9 @@ function templateHelmRelease() {
   sourceName=$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.sourceRef.name)
   sourceKind=$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.sourceRef.kind)
   sourceYaml=$(yq <<<"$yaml" -erys '[.[] | select(.kind == "'"$sourceKind"'")][]')
+  set +x
   sourceResource=$(yq <<<"$sourceYaml" -erys "[.[] | select( (.metadata.namespace == \"$sourceNamespace\") and (.metadata.name == \"$sourceName\") )][0]")
+  set -x
   # I can't check it directly as I need it's stdout 🤷
   # shellcheck disable=SC2181
   if [[ "$?" != 0 ]]; then
