@@ -57,6 +57,11 @@ jobs:
             )
           ) | tee $GITHUB_OUTPUT
 
+      - name: Change to github-actions[bot]
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+
       - uses: google-github-actions/release-please-action@v3
         with:
           path: charts/${{ steps.getLatestReleaseHash.outputs.chart }}

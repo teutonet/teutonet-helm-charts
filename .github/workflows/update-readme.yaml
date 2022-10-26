@@ -1,24 +1,19 @@
-name: Sync CODEOWNERS and Docs
+name: Update README.md
 
 on:
   push:
     branches:
       - release-please--**
+    paths-ignore:
+      - charts/*/README.md
 
 jobs:
-  build:
-    runs-on: ubuntu-20.04
+  generateReadme:
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-
-      - uses: actions/setup-python@v4
-
-      - name: generate CODEOWNERS
-        run: ./.github/scripts/sync-codeowners.sh > .github/CODEOWNERS
-      - uses: EndBug/add-and-commit@v9
         with:
-          message: "chore: Update 'CODEOWNERS'"
-          default_author: github_actions
+          token: ${{ secrets.ACTIONS_BOT_TOKEN }}
 
       - run: pip install json-schema-for-humans
       - name: generate values.md
@@ -31,6 +26,6 @@ jobs:
         uses: docker://jnorwood/helm-docs:latest
       - uses: EndBug/add-and-commit@v9
         with:
-          message: "chore: Update 'README.md'"
+          message: "chore: [bot] Update 'README.md'"
           default_author: github_actions
 
