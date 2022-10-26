@@ -119,11 +119,11 @@ function updateChartYaml() {
 }
 
 if [[ "$#" == 1 ]] && [[ -d "$1" ]]; then
-  if ! [[ -f "$1/ci/artifacthub-values.yaml" ]]; then
-    echo "There is no 'artifacthub-values.yaml' in '$1/ci', exiting" >/dev/stderr
+  if ! [[ -f "charts/$1/ci/artifacthub-values.yaml" ]]; then
+    echo "There is no 'artifacthub-values.yaml' in 'charts/$1/ci', exiting" >/dev/stderr
     exit 1
   fi
-  updateChartYaml "$1"
+  updateChartYaml "charts/$1"
 else
   for chart in charts/*; do
     [[ "$chart" == "charts/*" ]] && continue

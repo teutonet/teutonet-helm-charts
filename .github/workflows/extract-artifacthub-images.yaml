@@ -34,7 +34,7 @@ jobs:
           set -o pipefail
           (
             echo -n changedCharts=
-            ct list-changed | jq -c -Rn '[inputs]'
+            ct list-changed | cut -d / -f 2 | jq -c -Rn '[inputs]'
           ) | tee $GITHUB_OUTPUT
       - name: Commit Change for single chart
         if: ${{ contains(github.ref, 'release-please--') }}
