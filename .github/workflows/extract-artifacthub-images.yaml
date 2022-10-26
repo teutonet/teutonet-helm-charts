@@ -16,6 +16,8 @@ jobs:
       CT_TARGET_BRANCH: ${{ github.event.repository.default_branch }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - run: pip install yq
       - name: Install sponge
@@ -32,7 +34,7 @@ jobs:
           set -o pipefail
           (
             echo -n changedCharts=
-            ct list-changed | cut -d / -f 2 | jq -c -Rn '[inputs]'
+            ct list-changed | jq -c -Rn '[inputs]'
           ) | tee $GITHUB_OUTPUT
       - name: Commit Change for single chart
         if: ${{ contains(github.event.pull_request.base.ref, 'release-please--') }}

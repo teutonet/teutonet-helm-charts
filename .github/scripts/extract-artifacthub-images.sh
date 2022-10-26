@@ -109,7 +109,7 @@ function getImages() {
 function updateChartYaml() {
   local chart="$1"
   local tmpFile
-  tmpFile=$(mktemp)
+  tmpFile="$(mktemp)"
   echo "Working on '$chart'" >/dev/stderr
   getImages "$chart" > "$tmpFile"
   # I don't want the $ to be shell-interpreted
