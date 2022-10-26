@@ -16,5 +16,5 @@ metadata:
   {{- with (dig "metadata" "annotations" nil $policy) }}
   annotations: {{- . | toYaml | nindent 4 }}
   {{- end }}
-spec: {{- get $policy "spec" | toYaml | nindent 2 }}
+spec: {{- get $policy "spec" | toYaml | replace "{{" "{{ `{{` }}" | nindent 2 }}
 {{- end -}}
