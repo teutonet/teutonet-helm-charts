@@ -42,7 +42,7 @@ jobs:
         if: ${{ contains(github.ref, 'release-please--') }}
         uses: EndBug/add-and-commit@v9
         with:
-          message: "chore(${{ fromJson(steps.getChangedCharts.outputs.changedCharts)[0] }}): [bot] Update images in 'Chart.yaml'"
+          message: "chore: [bot] Update images in 'Chart.yaml'"
           default_author: github_actions
           pull: --rebase --autostash
 
@@ -67,6 +67,6 @@ jobs:
         run: ./.github/scripts/extract-artifacthub-images.sh "${{ matrix.chart }}"
       - uses: EndBug/add-and-commit@v9
         with:
-          message: "chore: [bot] Update images in 'Chart.yaml'"
+          message: "chore(${{ matrix.chart }}): Update images in 'Chart.yaml'"
           default_author: github_actions
           pull: --rebase --autostash

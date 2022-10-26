@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - release-please--**
-    paths-ignore:
-      - .github/CODEOWNERS
+    paths:
+      - charts/*/Chart.yaml
 
 jobs:
   generateCodeowners:
@@ -21,3 +21,4 @@ jobs:
         with:
           message: "chore: [bot] Update 'CODEOWNERS'"
           default_author: github_actions
+          pull: --rebase --autostash
