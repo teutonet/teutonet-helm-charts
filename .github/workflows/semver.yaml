@@ -55,7 +55,7 @@ jobs:
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
           release-type: helm
           monorepo-tags: true
-          changelog-types: feat,fix,chore
+          changelog-types: '[{"type":"feat","section":"Features"},{"type":"fix","section":"Bug Fixes"},{"type":"chore","section":"Miscellaneous Chores"}]'
           pull-request-title-pattern: 'chore(${component}): [bot] release ${version}'
           separate-pull-requests: true
           package-name: ${{ steps.getChangedChart.outputs.chart }}
