@@ -4,6 +4,13 @@
   ],
   "assigneesFromCodeOwners": true,
   "assigneesSampleSize": 1,
-  "bumpVersion": "patch"
+  "platformAutomerge": true,
+  "packageRules": [
+    {
+      "matchUpdateTypes": "patch",
+      "automerge": true
+    }
+  ],
+  "separateMinorPatch": true
 }
 
