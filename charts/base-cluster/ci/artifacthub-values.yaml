@@ -1,6 +1,12 @@
 global:
   clusterName: artifacthub
+  serviceLevelAgreement: None
 flux:
   gitRepositories:
     main:
       url: ssh://user@example.com/repo.git
+kyverno:
+  enabled: true
+storage:
+  readWriteMany:
+    enabled: true
