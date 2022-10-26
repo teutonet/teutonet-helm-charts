@@ -48,7 +48,7 @@ global:
       url: https://grafana.github.io/helm-charts
       condition: '{{ and .Values.monitoring.prometheus.enabled .Values.monitoring.loki.enabled }}'
     bitnami:
-      url: https://charts.bitnami.com
+      url: https://charts.bitnami.com/bitnami
     descheduler:
       url: https://kubernetes-sigs.github.io/descheduler
       condition: '{{ .Values.descheduler.enabled }}'

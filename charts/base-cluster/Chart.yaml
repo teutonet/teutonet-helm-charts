@@ -15,4 +15,4 @@ description: A common base for every kubernetes cluster
 dependencies:
   - name: common
     version: 2.0.4
-    repository: https://charts.bitnami.com
+    repository: https://charts.bitnami.com/bitnami
