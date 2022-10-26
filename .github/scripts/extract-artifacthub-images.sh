@@ -108,14 +108,33 @@ function getImages() {
 
 function updateChartYaml() {
   local chart="$1"
-  local tmpFile
-  tmpFile="$(mktemp)"
+  local tmpDir
+  tmpDir="$(mktemp -d)"
   echo "Working on '$chart'" >/dev/stderr
-  getImages "$chart" > "$tmpFile"
-  # I don't want the $ to be shell-interpreted
-  # shellcheck disable=SC2016
-  yq -y --rawfile annotations "$tmpFile" '. | .annotations["artifacthub.io/images"] = $annotations' "$chart/Chart.yaml" | tee >(sponge "$chart/Chart.yaml")
-  rm -f "$tmpFile"
+  echo "Images:" >/dev/stderr
+  (
+    echo "artifacthub.io/images: |"
+    getImages "$chart" | awk '{print "  " $0}'
+  ) | tee "$tmpDir/images.yaml"
+
+  if yq -e .annotations "$chart/Chart.yaml" >/dev/null; then
+    echo "Existing annotations:" >/dev/stderr
+    yq -y '.annotations | del(.["artifacthub.io/images"])' "$chart/Chart.yaml" | tee "$tmpDir/annotations.yaml"
+    echo "Cleaned Chart.yaml:" >/dev/stderr
+    yq -y '. | del(.annotations)' "$chart/Chart.yaml" | tee >(sponge "$chart/Chart.yaml")
+  else
+    touch "$tmpDir/annotations.yaml"
+  fi
+
+  echo "New Chart.yaml:" >/dev/stderr
+  (
+    cat "$chart/Chart.yaml"
+    echo "annotations:"
+    (
+      grep -v '{}' "$tmpDir/annotations.yaml" || true
+      cat "$tmpDir/images.yaml"
+    ) | awk '{print "  " $0}'
+  ) | tee >(sponge "$chart/Chart.yaml")
 }
 
 if [[ "$#" == 1 ]] && [[ -d "$1" ]]; then
