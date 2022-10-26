@@ -42,7 +42,7 @@ function templateHelmRelease() {
   namespace=$(yq <<<"$helmReleaseYaml" -er '.spec.targetNamespace // .metadata.namespace')
   releaseName=$(yq <<<"$helmReleaseYaml" -er '.spec.releaseName // .metadata.name')
   values=$(yq <<<"$helmReleaseYaml" -y -r .spec.values)
-  echo "Templating '$namespace/$releaseName'" > /dev/stderr
+  echo "Templating '$namespace/$releaseName'" >/dev/stderr
 
   sourceNamespace=$(yq <<<"$helmReleaseYaml" -er ".spec.chart.spec.sourceRef.namespace // \"$namespace\"")
   sourceName=$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.sourceRef.name)
@@ -81,7 +81,7 @@ function templateHelmChart() {
   local chart="$1"
   local yaml
   local numberOfHelmReleases
-  echo "Templating '$chart'" > /dev/stderr
+  echo "Templating '$chart'" >/dev/stderr
   yaml=$(helm template "$(basename "$chart")" "$chart" --values "$chart/ci/artifacthub-values.yaml")
   numberOfHelmReleases=$(yq <<<"$yaml" -ers '[.[] | select(.kind == "HelmRelease")] | length')
   yq <<<"$yaml" -erys '.[] | select(.kind != "HelmRelease") | select(.)'
@@ -105,14 +105,21 @@ function getImages() {
 
 function updateChartYaml() {
   local chart="$1"
-  echo "Working on '$chart'" > /dev/stderr
+  local tmpFile
+  tmpFile=$(mktemp)
+  echo "Working on '$chart'" >/dev/stderr
+  getImages "$chart" > "$tmpFile"
   # I don't want the $ to be shell-interpreted
   # shellcheck disable=SC2016
-  yq -y --rawfile annotations <(getImages "$chart") '. | .annotations["artifacthub.io/images"] = $annotations' "$chart/Chart.yaml" | tee >(sponge "$chart/Chart.yaml")
+  yq -y --rawfile annotations "$tmpFile" '. | .annotations["artifacthub.io/images"] = $annotations' "$chart/Chart.yaml" | tee >(sponge "$chart/Chart.yaml")
+  rm -f "$tmpFile"
 }
 
 if [[ -n "$1" ]] && [[ -d "$1" ]]; then
-  [[ -f "$1/ci/artifacthub-values.yaml" ]] || exit 1
+  if ! [[ -f "$1/ci/artifacthub-values.yaml" ]]; then
+    echo "There is no 'artifacthub-values.yaml' in '$1/ci', exiting" >/dev/stderr
+    exit 1
+  fi
   updateChartYaml "$1"
 else
   for chart in charts/*; do
