@@ -22,10 +22,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
 
-      - uses: azure/setup-helm@v3
-        with:
-          version: v3.5.2
-
       - name: Extract and add helm repos
         id: helm-repos
         run: |
