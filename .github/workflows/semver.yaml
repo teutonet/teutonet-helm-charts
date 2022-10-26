@@ -56,7 +56,7 @@ jobs:
           release-type: helm
           monorepo-tags: true
           changelog-types: feat,fix,chore
-          pull-request-title-pattern: 'chore(${component}): release ${version}'
+          pull-request-title-pattern: 'chore(${component}): [bot] release ${version}'
           separate-pull-requests: true
           package-name: ${{ steps.getChangedChart.outputs.chart }}
           command: release-pr
