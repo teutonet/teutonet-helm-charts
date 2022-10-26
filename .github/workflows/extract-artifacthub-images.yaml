@@ -42,7 +42,7 @@ jobs:
         with:
           message: "chore(${{ fromJson(steps.getChangedCharts.outputs.changedCharts)[0] }}): Update images in 'Chart.yaml'"
           default_author: github_actions
-          pull: --rebase
+          pull: --rebase --autostash
 
   extractImagesForMultipleCharts:
     if: ${{ !contains(github.ref, 'release-please--') }}
@@ -65,4 +65,4 @@ jobs:
         with:
           message: "chore(${{ matrix.chart }}): Update images in 'Chart.yaml'"
           default_author: github_actions
-          pull: --rebase
+          pull: --rebase --autostash
