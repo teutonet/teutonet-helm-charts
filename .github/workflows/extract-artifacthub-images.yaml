@@ -37,7 +37,7 @@ jobs:
             ct list-changed | jq -c -Rn '[inputs]'
           ) | tee $GITHUB_OUTPUT
       - name: Commit Change for single chart
-        if: ${{ contains(github.event.pull_request.base.ref, 'release-please--') }}
+        if: ${{ contains(github.ref, 'release-please--') }}
         uses: EndBug/add-and-commit@v9
         with:
           message: "chore(${{ fromJson(steps.getChangedCharts.outputs.changedCharts)[0] }}): Update images in 'Chart.yaml'"
@@ -45,7 +45,7 @@ jobs:
           pull: --rebase
 
   extractImagesForMultipleCharts:
-    if: ${{ !contains(github.event.pull_request.base.ref, 'release-please--') }}
+    if: ${{ !contains(github.ref, 'release-please--') }}
     runs-on: ubuntu-22.04
     needs:
       - extractImages
@@ -57,7 +57,7 @@ jobs:
 
       - run: pip install yq
       - name: Install sponge
-        run: apt-get -yq install moreutils
+        run: sudo apt-get -yq install moreutils
 
       - name: extract images for ${{ matrix.chart }}
         run: ./.github/scripts/extract-artifacthub-images.sh "${{ matrix.chart }}"
