@@ -6,12 +6,13 @@ concurrency:
 on:
   push:
     branches:
-      - release-please--**
+      - release-please--branches--main--components-*
   schedule:
     - cron: '0 0 * * *'
 
 jobs:
   getCharts:
+    if: ${{ github.event.schedule }}
     runs-on: ubuntu-22.04
     outputs:
       charts: ${{ steps.getCharts.outputs.charts }}
@@ -23,19 +24,14 @@ jobs:
         run: |
           set -ex
           set -o pipefail
-          ref="${{ github.ref }}"
-          if [[ "$ref" =~ ^refs/heads/release-please--branches--main--components--* ]]; then
-            echo "charts=${ref/refs\/heads\/release-please--branches--main--components--}" | tee $GITHUB_OUTPUT
-          else
-            (
-              echo -n charts=
-              for chart in charts/*; do
-                if [[ "$chart" != "charts/*" ]]; then
-                  echo "$chart"
-                fi
-              done | cut -d / -f 2 | jq -c -Rn '[inputs]'
-            ) | tee $GITHUB_OUTPUT
-          fi
+          (
+            echo -n charts=
+            for chart in charts/*; do
+              if [[ "$chart" != "charts/*" ]]; then
+                echo "$chart"
+              fi
+            done | cut -d / -f 2 | jq -c -Rn '[inputs]'
+          ) | tee $GITHUB_OUTPUT
 
   extractImages:
     runs-on: ubuntu-22.04
@@ -81,8 +77,6 @@ jobs:
   generateReadme:
     if: ${{ !github.event.schedule }}
     runs-on: ubuntu-22.04
-    needs:
-      - getCharts
     steps:
       - uses: actions/checkout@v3
         with:
@@ -92,7 +86,8 @@ jobs:
       - name: generate values.md
         run: |
           set -ex
-          chart="${{ fromJson(needs.getCharts.outputs.charts)[0] }}"
+          ref="${{ github.ref }}"
+          chart="${ref/refs\/heads\/release-please--branches--main--components--}"
           generate-schema-doc --config-file .github/json-schema-to-md.yaml "$chart/values.schema.json" "$chart/values.md"
       - name: generate Docs
         uses: docker://jnorwood/helm-docs:latest
