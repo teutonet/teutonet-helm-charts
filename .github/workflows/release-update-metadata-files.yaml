@@ -70,7 +70,7 @@ jobs:
         run: |
           set -ex
           ref="${{ github.ref }}"
-          chart="${ref/refs\/heads\/release-please--branches--main--components--}"
+          chart="charts/${ref/refs\/heads\/release-please--branches--main--components--}"
           generate-schema-doc --config-file .github/json-schema-to-md.yaml "$chart/values.schema.json" "$chart/values.md"
       - name: generate Docs
         uses: docker://jnorwood/helm-docs:latest
