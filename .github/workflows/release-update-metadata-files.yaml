@@ -18,24 +18,20 @@ jobs:
     steps:
       - name: Get changed charts
         id: getCharts
-        if: ${{ !github.event.schedule }}
         run: |
           set -ex
           set -o pipefail
           ref="${{ github.ref }}"
-          echo "charts=${ref/release-please--branches--main--components--}" | tee $GITHUB_OUTPUT
-      - name: Get changed charts
-        id: getCharts
-        if: ${{ github.event.schedule }}
-        run: |
-          set -ex
-          set -o pipefail
-          (
-            echo -n charts=
-            for chart in charts/*; do
-              [[ "$chart" != "charts/*" ]] && echo "$chart"
-            done | cut -d / -f 2 | jq -c -Rn '[inputs]'
-          )
+          if [[ "$ref" =~ ^release-please--branches--main--components--* ]]; then
+            echo "charts=${ref/release-please--branches--main--components--}" | tee $GITHUB_OUTPUT
+          else
+            (
+              echo -n charts=
+              for chart in charts/*; do
+                [[ "$chart" != "charts/*" ]] && echo "$chart"
+              done | cut -d / -f 2 | jq -c -Rn '[inputs]'
+            ) | tee $GITHUB_OUTPUT
+          fi
 
   extractImages:
     runs-on: ubuntu-22.04
