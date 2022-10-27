@@ -57,23 +57,6 @@ jobs:
           default_author: github_actions
           pull: --rebase --autostash
 
-  generateCodeowners:
-    if: ${{ !github.event.schedule }}
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.ACTIONS_BOT_TOKEN }}
-
-      - name: generate CODEOWNERS
-        run: ./.github/scripts/sync-codeowners.sh > .github/CODEOWNERS
-
-      - uses: EndBug/add-and-commit@v9
-        with:
-          message: "chore: [bot] Update 'CODEOWNERS'"
-          default_author: github_actions
-          pull: --rebase --autostash
-
   generateReadme:
     if: ${{ !github.event.schedule }}
     runs-on: ubuntu-22.04
