@@ -16,19 +16,23 @@ jobs:
     outputs:
       charts: ${{ steps.getCharts.outputs.charts }}
     steps:
+      - uses: actions/checkout@v3
+
       - name: Get changed charts
         id: getCharts
         run: |
           set -ex
           set -o pipefail
           ref="${{ github.ref }}"
-          if [[ "$ref" =~ ^release-please--branches--main--components--* ]]; then
-            echo "charts=${ref/release-please--branches--main--components--}" | tee $GITHUB_OUTPUT
+          if [[ "$ref" =~ ^refs/heads/release-please--branches--main--components--* ]]; then
+            echo "charts=${ref/refs\/heads\/release-please--branches--main--components--}" | tee $GITHUB_OUTPUT
           else
             (
               echo -n charts=
               for chart in charts/*; do
-                [[ "$chart" != "charts/*" ]] && echo "$chart"
+                if [[ "$chart" != "charts/*" ]]; then
+                  echo "$chart"
+                fi
               done | cut -d / -f 2 | jq -c -Rn '[inputs]'
             ) | tee $GITHUB_OUTPUT
           fi
