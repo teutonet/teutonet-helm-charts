@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - release-please--**
+    paths:
+      - charts/*/Chart.yaml
   schedule:
     - cron: '0 0 * * *'
 
