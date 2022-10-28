@@ -57,6 +57,11 @@ jobs:
             )
           ) | tee $GITHUB_OUTPUT
 
+      - name: Change to github-actions[bot]
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+
       - uses: google-github-actions/release-please-action@v3
         with:
           path: charts/${{ steps.getLatestReleaseHash.outputs.chart }}
@@ -64,7 +69,7 @@ jobs:
           release-type: helm
           monorepo-tags: true
           changelog-types: '[{"type":"feat","section":"Features"},{"type":"fix","section":"Bug Fixes"},{"type":"chore","section":"Miscellaneous Chores"}]'
-          pull-request-title-pattern: 'chore(${component}): [bot] release ${version}'
+          pull-request-title-pattern: 'chore${scope}: [bot] release${component}:${version}'
           separate-pull-requests: true
           package-name: ${{ steps.getLatestReleaseHash.outputs.chart }}
           command: release-pr

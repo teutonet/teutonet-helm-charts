@@ -48,9 +48,9 @@ function templateHelmRelease() {
   sourceName=$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.sourceRef.name)
   sourceKind=$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.sourceRef.kind)
   sourceYaml=$(yq <<<"$yaml" -erys '[.[] | select(.kind == "'"$sourceKind"'")][]')
-  set +x
+  set +e
   sourceResource=$(yq <<<"$sourceYaml" -erys "[.[] | select( (.metadata.namespace == \"$sourceNamespace\") and (.metadata.name == \"$sourceName\") )][0]")
-  set -x
+  set -e
   # I can't check it directly as I need it's stdout 🤷
   # shellcheck disable=SC2181
   if [[ "$?" != 0 ]]; then
@@ -84,6 +84,7 @@ function templateHelmChart() {
   local yaml
   local numberOfHelmReleases
   echo "Templating '$chart'" >/dev/stderr
+  helm dependency update "$chart"
   yaml=$(helm template "$(basename "$chart")" "$chart" --values "$chart/ci/artifacthub-values.yaml")
   numberOfHelmReleases=$(yq <<<"$yaml" -ers '[.[] | select(.kind == "HelmRelease")] | length')
   yq <<<"$yaml" -erys '.[] | select(.kind != "HelmRelease") | select(.)'
@@ -107,22 +108,41 @@ function getImages() {
 
 function updateChartYaml() {
   local chart="$1"
-  local tmpFile
-  tmpFile=$(mktemp)
+  local tmpDir
+  tmpDir="$(mktemp -d)"
   echo "Working on '$chart'" >/dev/stderr
-  getImages "$chart" > "$tmpFile"
-  # I don't want the $ to be shell-interpreted
-  # shellcheck disable=SC2016
-  yq -y --rawfile annotations "$tmpFile" '. | .annotations["artifacthub.io/images"] = $annotations' "$chart/Chart.yaml" | tee >(sponge "$chart/Chart.yaml")
-  rm -f "$tmpFile"
+  echo "Images:" >/dev/stderr
+  (
+    echo "artifacthub.io/images: |"
+    getImages "$chart" | awk '{print "  " $0}'
+  ) | tee "$tmpDir/images.yaml"
+
+  if yq -e .annotations "$chart/Chart.yaml" >/dev/null; then
+    echo "Existing annotations:" >/dev/stderr
+    yq -y '.annotations | del(.["artifacthub.io/images"])' "$chart/Chart.yaml" | tee "$tmpDir/annotations.yaml"
+    echo "Cleaned Chart.yaml:" >/dev/stderr
+    yq -y '. | del(.annotations)' "$chart/Chart.yaml" | tee >(sponge "$chart/Chart.yaml")
+  else
+    touch "$tmpDir/annotations.yaml"
+  fi
+
+  echo "New Chart.yaml:" >/dev/stderr
+  (
+    cat "$chart/Chart.yaml"
+    echo "annotations:"
+    (
+      grep -v '{}' "$tmpDir/annotations.yaml" || true
+      cat "$tmpDir/images.yaml"
+    ) | awk '{print "  " $0}'
+  ) | tee >(sponge "$chart/Chart.yaml")
 }
 
-if [[ -n "$1" ]] && [[ -d "$1" ]]; then
-  if ! [[ -f "$1/ci/artifacthub-values.yaml" ]]; then
-    echo "There is no 'artifacthub-values.yaml' in '$1/ci', exiting" >/dev/stderr
+if [[ "$#" == 1 ]] && [[ -d "$1" ]]; then
+  if ! [[ -f "charts/$1/ci/artifacthub-values.yaml" ]]; then
+    echo "There is no 'artifacthub-values.yaml' in 'charts/$1/ci', exiting" >/dev/stderr
     exit 1
   fi
-  updateChartYaml "$1"
+  updateChartYaml "charts/$1"
 else
   for chart in charts/*; do
     [[ "$chart" == "charts/*" ]] && continue
