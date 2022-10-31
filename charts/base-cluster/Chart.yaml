@@ -14,5 +14,5 @@ home: https://teuto.net
 description: A common base for every kubernetes cluster
 dependencies:
   - name: common
-    version: 2.1.1
+    version: 2.1.2
     repository: https://charts.bitnami.com/bitnami
