@@ -33,7 +33,7 @@ jobs:
       - getCharts
     strategy:
       matrix:
-        chart: ${{ fromJson(needs.extractImages.outputs.charts) }}
+        chart: ${{ fromJson(needs.getCharts.outputs.charts) }}
     steps:
       - uses: actions/checkout@v3
         with:
