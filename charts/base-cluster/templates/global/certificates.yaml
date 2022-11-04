@@ -1,39 +1,50 @@
 {{- if and .Values.dns.email .Values.global.certificates }}
-  {{- $certificates := include "base-cluster.cert-manager.custom-certificates" . -}}
-  {{- if not (empty ($certificates | fromYaml)) -}}
-    {{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "cert-manager-certificates" "resource" $certificates "dependencies" (dict "cert-manager" "cert-manager") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cert-manager")) | nindent 0 }}
+  {{- $certificates := include "base-cluster.cert-manager.custom-certificates" . | fromYaml -}}
+  {{- if not (empty $certificates) -}}
+    {{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "cert-manager-certificates" "resource" (include "base-cluster.cert-manager.custom-certificates-yaml" (dict "context" . "certs" $certificates)) "dependencies" (dict "cert-manager" "cert-manager") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cert-manager")) | nindent 0 }}
   {{- end -}}
 {{- end }}
 
 {{- define "base-cluster.cert-manager.custom-certificates" -}}
-{{- range $name, $cert := .Values.global.certificates -}}
-  {{- $create := true -}}
-  {{- if $cert.condition -}}
-    {{- $create = eq (include "common.tplvalues.render" (dict "value" $cert.condition "context" $)) "true" -}}
-  {{- end -}}
-  {{- if $create -}}
-    {{- $dnsNames := include "common.tplvalues.render" (dict "value" $cert.dnsNames "context" $) | fromYamlArray | uniq -}}
-    {{- if not $.Values.dns.provider -}}
-      {{- range $dnsName := $dnsNames -}}
-        {{- if $dnsName | contains "*" -}}
-          {{- fail "To use wildcard domains you need to provide a `.dns.provider`" -}}
+  {{- $certs := dict -}}
+  {{- range $name, $cert := deepCopy .Values.global.certificates -}}
+    {{- $create := true -}}
+    {{- if $cert.condition -}}
+      {{- $create = eq (include "common.tplvalues.render" (dict "value" $cert.condition "context" $)) "true" -}}
+    {{- end -}}
+    {{- if $create -}}
+      {{- $dnsNames := include "common.tplvalues.render" (dict "value" $cert.dnsNames "context" $) | fromYamlArray | uniq -}}
+      {{- if not $.Values.dns.provider -}}
+        {{- range $dnsName := $dnsNames -}}
+          {{- if $dnsName | contains "*" -}}
+            {{- $create = false -}}
+          {{- end -}}
         {{- end -}}
       {{- end -}}
+      {{- $cert = set $cert "dnsNames" $dnsNames -}}
     {{- end -}}
+    {{- if $create -}}
+      {{- $certs = set $certs $name $cert -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $certs | toYaml -}}
+{{- end -}}
+
+{{- define "base-cluster.cert-manager.custom-certificates-yaml" -}}
+  {{- range $name, $cert := .certs -}}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: {{ $name | quote }}
-  namespace: {{ $.Release.Namespace }}
+  namespace: {{ $.context.Release.Namespace }}
   labels: {{- include "base-cluster.helm.labels" (dict) | nindent 4 }}
 spec:
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
     name: letsencrypt-prod
-  dnsNames: {{- $dnsNames | toYaml | nindent 4 }}
+  dnsNames: {{- $cert.dnsNames | toYaml | nindent 4 }}
   secretName: {{ printf "%s-certificate" $name | quote }}
 ---
-{{ end -}}
-{{- end -}}
+  {{- end -}}
 {{- end -}}
