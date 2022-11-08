@@ -25,7 +25,7 @@ annotations:
     - image: busybox:latest
     - image: curlimages/curl:7.85.0
     - image: docker.io/bitnami/kubectl:1.25.3
-    - image: docker.io/bitnami/metrics-server:0.6.1-debian-11-r46
+    - image: docker.io/bitnami/metrics-server:0.6.1-debian-11-r56
     - image: docker.io/fluxcd/flux-cli:v0.36.0
     - image: docker.io/grafana/promtail:2.6.1
     - image: estafette/estafette-vulnerability-scanner:0.1.16
