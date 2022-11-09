@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -11,6 +11,7 @@ A common base for every kubernetes cluster
 | Name | Email | Url |
 | ---- | ------ | --- |
 | cwrau | <cwr@teuto.net> |  |
+| marvinWolff | <mw@teuto.net> |  |
 
 ## Source Code
 
@@ -20,7 +21,7 @@ A common base for every kubernetes cluster
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com | common | 2.0.3 |
+| https://charts.bitnami.com/bitnami | common | 2.1.2 |
 
 This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
 
@@ -446,7 +447,7 @@ Must be one of:
 ```
 
 ```yaml
-{{ eq .Valus.global.baseDomain "teuto.net" }}
+{{ eq .Values.global.baseDomain "teuto.net" }}
 ```
 
 ### <a name="global_certificates"></a>1.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates`
@@ -469,10 +470,11 @@ Must be one of:
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                                                                          | Pattern | Type        | Deprecated | Definition                                                                                  | Title/Description                                                     |
-| --------------------------------------------------------------------------------- | ------- | ----------- | ---------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| + [dnsNames](#global_certificates_additionalProperties_dnsNames )                 | No      | Combination | No         | -                                                                                           | The dnsNames to create                                                |
-| - [targetNamespaces](#global_certificates_additionalProperties_targetNamespaces ) | No      | object      | No         | Same as [targetNamespaces](#global_imageCredentials_additionalProperties_targetNamespaces ) | The namespaces to sync the secret into, or \`ALL\` for all namespaces |
+| Property                                                                          | Pattern | Type        | Deprecated | Definition                                                                                  | Title/Description                                                                                               |
+| --------------------------------------------------------------------------------- | ------- | ----------- | ---------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| + [dnsNames](#global_certificates_additionalProperties_dnsNames )                 | No      | Combination | No         | -                                                                                           | The dnsNames to create                                                                                          |
+| - [targetNamespaces](#global_certificates_additionalProperties_targetNamespaces ) | No      | object      | No         | Same as [targetNamespaces](#global_imageCredentials_additionalProperties_targetNamespaces ) | The namespaces to sync the secret into, or \`ALL\` for all namespaces                                           |
+| - [condition](#global_certificates_additionalProperties_condition )               | No      | string      | No         | -                                                                                           | A condition with which to decide to include the certificate. This will be templated. Must return a truthy value |
 
 ##### <a name="global_certificates_additionalProperties_dnsNames"></a>1.10.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > certificates > additionalProperties > dnsNames`
 
@@ -540,6 +542,28 @@ test.teuto.net
 | **Same definition as**    | [targetNamespaces](#global_imageCredentials_additionalProperties_targetNamespaces)                                                |
 
 **Description:** The namespaces to sync the secret into, or `ALL` for all namespaces
+
+##### <a name="global_certificates_additionalProperties_condition"></a>1.10.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates > additionalProperties > condition`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** A condition with which to decide to include the certificate. This will be templated. Must return a truthy value
+
+**Examples:**
+
+```yaml
+{{ true }}
+```
+
+```yaml
+{{ eq .Values.global.baseDomain "teuto.net" }}
+```
+
+```yaml
+{{ .Values.global.baseDomain }}
+```
 
 ### <a name="global_storageClass"></a>1.11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > storageClass`
 
