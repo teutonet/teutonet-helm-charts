@@ -24,7 +24,7 @@ annotations:
     - image: busybox
     - image: busybox:latest
     - image: curlimages/curl:7.85.0
-    - image: docker.io/bitnami/kubectl:1.25.3
+    - image: docker.io/bitnami/kubectl:1.25.4
     - image: docker.io/bitnami/metrics-server:0.6.1-debian-11-r56
     - image: docker.io/fluxcd/flux-cli:v0.36.0
     - image: docker.io/grafana/promtail:2.6.1
