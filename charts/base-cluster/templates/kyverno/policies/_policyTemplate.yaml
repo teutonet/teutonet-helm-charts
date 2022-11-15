@@ -1,7 +1,7 @@
 {{- define "base-cluster.kyverno.policy" -}}
 {{- $policySpec := include (printf "base-cluster.kyverno.policies.%s" .name) (dict "context" .context "name" .name) -}}
 {{- $policy := include "base-cluster.kyverno.policy.frame" (dict "name" .name "policy" $policySpec) }}
-{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" (printf "kyverno-policy-%s" .name) "namespace" .namespace "context" .context "resource" $policy "additionalLabels" (dict "app.kubernetes.io/component" .name "app.kubernetes.io/part-of" "kyverno") "dependencies" (dict "kyverno" "kyverno")) }}
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" (printf "kyverno-policy-%s" .name) "namespace" "kyverno" "context" .context "resource" $policy "additionalLabels" (dict "app.kubernetes.io/component" .name "app.kubernetes.io/part-of" "kyverno") "dependencies" (dict "kyverno" "kyverno")) }}
 {{- end -}}
 
 {{- define "base-cluster.kyverno.policy.frame" -}}

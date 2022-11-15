@@ -29,10 +29,10 @@ spec:
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
       additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
+    priorityClassName: system-cluster-critical
     podDisruptionBudget:
       enabled: true
-      minAvailable: null
-      maxUnavailable: 1
+      minAvailable: 1
       # Make sure that only 1 pod at a time is unavailable,
       # otherwise the cluster might have problems because the kyverno webhooks
       # are unavailable

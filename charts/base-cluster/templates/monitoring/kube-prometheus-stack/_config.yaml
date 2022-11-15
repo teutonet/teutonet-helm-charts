@@ -3,22 +3,31 @@ grafana:
   {{- if $.Values.global.imageRegistry }}
   image:
     repository: {{ printf "%s/grafana/grafana" .Values.global.imageRegistry }}
-  initChownData:
-    image:
-      repository: {{ printf "%s/busybox" .Values.global.imageRegistry }}
-  testFramework:
-    image: {{ printf "%s/bats/bats" .Values.global.imageRegistry }}
   downloadDashboardsImage:
     repository: {{ printf "%s/curlimages/curl" .Values.global.imageRegistry }}
+  {{- end }}
   imageRenderer:
     enabled: true
+    securityContext:
+      seccompProfile:
+        type: RuntimeDefault
+      runAsNonRoot: true
+      runAsUser: 472
+      runAsGroup: 472
+  {{- if $.Values.global.imageRegistry }}
     image:
       repository: {{ printf "%s/grafana/grafana-image-renderer" .Values.global.imageRegistry }}
-  {{- else }}
-  imageRenderer:
-    enabled: true
   {{- end }}
   enabled: true
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext: &containerSecurityContext
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
+    privileged: false
   resources: {{- .Values.monitoring.grafana.resources | toYaml | nindent 4 }}
   serviceMonitor:
     interval: "30s"
@@ -71,6 +80,7 @@ grafana:
       resource: configmap
       searchNamespace: ALL
     resources: {{- .Values.monitoring.grafana.sidecar.resources | toYaml | nindent 6 }}
+    securityContext: *containerSecurityContext
   dashboards:
     custom:
       #capacity-planning:
@@ -123,10 +133,8 @@ grafana:
   ingress:
     enabled: true
     ingressClassName: nginx
-    {{- if not .Values.dns.provider }}
     labels:
       kubernetes.io/tls-acme: "true"
-    {{- end }}
     hosts:
       - {{ include "base-cluster.grafana.host" $ }}
     tls:
@@ -134,6 +142,10 @@ grafana:
           - {{ include "base-cluster.grafana.host" $ }}
         secretName: {{ include "base-cluster.certificate" (dict "name" "grafana" "context" $) }}
   {{- end }}
+  downloadDashboards:
+    securityContext: *containerSecurityContext
+  initChownData:
+    enabled: false
 prometheusOperator:
   secretFieldSelector: 'type!=helm.sh/release.v1'
   {{- if .Values.global.imageRegistry }}
@@ -151,6 +163,13 @@ prometheusOperator:
   {{- end }}
   resources: {{- .Values.monitoring.prometheus.operator.resources | toYaml | nindent 6 }}
   priorityClassName: system-cluster-critical
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
 defaultRules:
   disabled:
     etcdHighNumberOfFailedGRPCRequests: true
@@ -173,6 +192,12 @@ kube-state-metrics:
   extraArgs:
     - --metric-labels-allowlist={{- $metricLabelsAllowList | join "," }}
   priorityClassName: system-cluster-critical
+  securityContext:
+    enabled: true
+    seccompProfile:
+      type: RuntimeDefault
+    runAsNonRoot: true
+  containerSecurityContext: *containerSecurityContext
   prometheus:
     monitor:
       additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
@@ -183,11 +208,17 @@ prometheus-node-exporter:
   {{- end }}
   resources: {{- .Values.monitoring.prometheus.nodeExporter.resources | toYaml | nindent 6 }}
   priorityClassName: system-cluster-critical
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext: *containerSecurityContext
   prometheus:
     monitor:
       additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
 alertmanager:
-  enabled: true
+  enabled: false # TODO dependent on routes/receivers
+  # TODO routes
+  # TODO receivers
   podDisruptionBudget:
     enabled: true
   {{- if false }} # TODO ingress
@@ -253,6 +284,9 @@ prometheus:
     {{- end }}
     resources: {{- .Values.monitoring.prometheus.resources | toYaml | nindent 6 }}
     priorityClassName: system-cluster-critical
+    securityContext:
+      seccompProfile:
+        type: RuntimeDefault
     serviceMonitorSelectorNilUsesHelmValues: false
     ruleSelectorNilUsesHelmValues: false
     podMonitorSelectorNilUsesHelmValues: false
@@ -299,7 +333,7 @@ prometheus:
       - etcd-certs
     kubeEtcd:
       serviceMonitor:
-        scheme: https # TODO: Do we even need this?
+        scheme: https
         caFile: /etc/prometheus/secrets/etcd-certs/ca.crt
         certFile: /etc/prometheus/secrets/etcd-certs/client.crt
         keyFile: /etc/prometheus/secrets/etcd-certs/client.key

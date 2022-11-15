@@ -69,6 +69,8 @@ global:
       condition: '{{ .Values.storage.readWriteMany.enabled }}'
     teuto-net:
       url: https://teutonet.github.io/teutonet-helm-charts
+    trivy:
+      url: https://aquasecurity.github.io/helm-charts
 
 kyverno:
   enabled: false
@@ -119,7 +121,7 @@ monitoring:
       size: 100Gi
     resources:
       requests:
-        cpu: "500m"
+        cpu: "250m"
         memory: 2Gi
       limits:
         cpu: "500m"
@@ -183,7 +185,7 @@ monitoring:
     replicas: 1
     resources:
       requests:
-        cpu: 250m
+        cpu: 100m
         memory: 256Mi
       limits:
         cpu: 1
@@ -191,7 +193,7 @@ monitoring:
     promtail:
       resources:
         requests:
-          cpu: 100m
+          cpu: 50m
           memory: 64Mi
         limits:
           cpu: 1
@@ -275,7 +277,7 @@ externalDNS:
       cpu: 50m
       memory: 128Mi
     requests:
-      cpu: 50m
+      cpu: 10m
       memory: 64Mi
 
 flux:

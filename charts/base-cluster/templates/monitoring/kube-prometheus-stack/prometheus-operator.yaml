@@ -18,12 +18,23 @@ spec:
       version: {{ include "base-cluster.prometheus.version" (dict) }}
   interval: 1m
   install:
-    timeout: 10m0s
+    timeout: 20m0s
+    crds: CreateReplace
   upgrade:
-    timeout: 10m0s
-  dependsOn:
-    - name: kube-prometheus-stack-crds
-      namespace: monitoring
+    timeout: 20m0s
+    crds: CreateReplace
+  postRenderers:
+    - kustomize:
+        patchesStrategicMerge:
+          - apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: kube-prometheus-stack-grafana-image-renderer
+              namespace: monitoring
+            spec:
+              template:
+                spec:
+                  automountServiceAccountToken: false
   values: {{- .Values.monitoring.prometheus.overrides | mergeOverwrite (include "base-cluster.prometheus.config" . | fromYaml) | toYaml | nindent 4 }}
   {{- if false }} # TODO ingress
 {{/*  {{- if empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled }}*/}}

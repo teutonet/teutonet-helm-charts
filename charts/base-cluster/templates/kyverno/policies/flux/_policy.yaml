@@ -1,21 +1,20 @@
 {{- define "base-cluster.kyverno.policies.flux-multi-tenancy" -}}
 # https://github.com/fluxcd/flux2-multi-tenancy/blob/v0.1.0/infrastructure/kyverno-policies/flux-multi-tenancy.yaml
-# TODO: this is really annoying, do we need it?
+
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 spec:
-  validationFailureAction: audit
+  validationFailureAction: {{ .context.Values.kyverno.validationFailureAction }}
   rules:
     - name: serviceAccountName
-      exclude:
-        resources:
-          namespaces:
-            - cert-manager
-            - flux-system
-            - ingress-nginx
-            - kube-system
-            - kyverno
-            - monitoring
+      exclude: &exclude
+        all:
+          - resources:
+              kinds:
+                - HelmRelease
+                - Kustomization
+              selector:
+                matchLabels: {{- include "common.labels.matchLabels" .context | nindent 18 }}
       match:
         resources:
           kinds:
@@ -27,21 +26,13 @@ spec:
           spec:
             serviceAccountName: "?*"
     - name: kustomizationSourceRefNamespace
-      exclude:
-        resources:
-          namespaces:
-            - cert-manager
-            - flux-system
-            - ingress-nginx
-            - kube-system
-            - kyverno
-            - monitoring
+      exclude: *exclude
       match:
         resources:
           kinds:
             - Kustomization
       preconditions:
-        any:
+        all:
           - key: {{ "{{ request.object.spec.sourceRef.namespace }}" | quote }}
             operator: NotEquals
             value: ""
@@ -53,21 +44,13 @@ spec:
               operator: NotEquals
               value: {{ "{{ request.object.metadata.namespace }}" | quote }}
     - name: helmReleaseSourceRefNamespace
-      exclude:
-        resources:
-          namespaces:
-            - cert-manager
-            - flux-system
-            - ingress-nginx
-            - kube-system
-            - kyverno
-            - monitoring
+      exclude: *exclude
       match:
         resources:
           kinds:
             - HelmRelease
       preconditions:
-        any:
+        all:
           - key: {{ "{{ request.object.spec.chart.spec.sourceRef.namespace }}" | quote }}
             operator: NotEquals
             value: ""
@@ -77,5 +60,5 @@ spec:
           conditions:
             - key: {{ "{{ request.object.spec.chart.spec.sourceRef.namespace }}" | quote }}
               operator: NotEquals
-              value: ""
+              value: {{ "{{ request.object.metadata.namespace }}" | quote }}
 {{- end -}}

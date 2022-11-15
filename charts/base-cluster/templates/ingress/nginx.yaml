@@ -27,15 +27,32 @@ spec:
         serviceMonitor:
           enabled: {{ .Values.monitoring.prometheus.enabled }}
           additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 12 }}
-    # TODO: toggle for PROXY protocol
-{{/*      config:*/}}
-{{/*        use-proxy-protocol: "true"*/}}
+      config:
+        use-proxy-protocol: "true"
+      service:
+        annotations:
+          loadbalancer.openstack.org/proxy-protocol: "true"
     # TODO: allow fixed IP? better not
-{{/*      service:*/}}
-{{/*        annotations:*/}}
-{{/*          loadbalancer.openstack.org/proxy-protocol: "true"*/}}
       replicaCount: {{ .Values.ingress.replicas }}
       resources: {{- .Values.ingress.resources | toYaml | nindent 8 }}
+      podSecurityContext:
+        runAsNonRoot: true
+        runAsGroup: 101
+        runAsUser: 101
+        fsGroup: 101
+      containerPort:
+        http: 8080
+        https: 8443
+      containerSecurityContext:
+        capabilities:
+          drop:
+            - ALL
+          add:
+            - NET_BIND_SERVICE
+        privileged: false
+        allowPrivilegeEscalation: false
+        seccompProfile:
+          type: RuntimeDefault
       admissionWebhooks:
         enabled: false
       {{- if .Values.global.imageRegistry }}

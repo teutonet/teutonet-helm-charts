@@ -36,6 +36,14 @@ spec:
       persistence: {{- include "common.storage.class" ( dict "persistence" .Values.monitoring.loki.persistence "global" $) | nindent 8 }}
         enabled: true
         size: {{ .Values.monitoring.loki.persistence.size }}
+      containerSecurityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        privileged: false
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
       serviceMonitor:
         enabled: true
         additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
@@ -74,6 +82,9 @@ spec:
         registry: {{ $.Values.global.imageRegistry }}
       {{- end }}
       resources: {{- .Values.monitoring.loki.promtail.resources | toYaml | nindent 8 }}
+      containerSecurityContext:
+        seccompProfile:
+          type: RuntimeDefault
       serviceMonitor:
         enabled: true
         labels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}

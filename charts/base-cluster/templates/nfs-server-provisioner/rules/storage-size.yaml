@@ -1,4 +1,8 @@
 {{- if .Values.storage.readWriteMany.enabled }}
+  {{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "storage-readwritemany-size" "resource" (include "base-cluster.storage.readWriteMany.size" .) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "prometheus" "app.kubernetes.io/part-of" "nfs-server-provisioner")) }}
+{{- end -}}
+
+{{- define "base-cluster.storage.readWriteMany.size" -}}
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
@@ -7,6 +11,7 @@ metadata:
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     {{- .Values.monitoring.labels | toYaml | nindent 4 }}
     app.kubernetes.io/component: prometheus
+    app.kubernetes.io/part-of: nfs-server-provisioner
 spec:
   groups:
     - name: over-provisioning
@@ -21,4 +26,4 @@ spec:
           for: 1m
           labels:
             severity: warning
-  {{- end }}
+{{- end }}

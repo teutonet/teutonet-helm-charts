@@ -10,3 +10,6 @@ kyverno:
 storage:
   readWriteMany:
     enabled: true
+monitoring:
+  grafana:
+    adminPassword: default
