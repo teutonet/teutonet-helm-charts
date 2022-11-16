@@ -1,0 +1,73 @@
+{{- if and .Values.monitoring.securityScanning.enabled }}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: trivy
+  namespace: trivy
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: trivy
+    app.kubernetes.io/part-of: security
+spec:
+  chart:
+    spec:
+      chart: trivy-operator
+      sourceRef:
+        kind: HelmRepository
+        name: trivy
+        namespace: {{ .Release.Namespace }}
+      version: 0.x.x
+  interval: 1m
+  {{- if .Values.monitoring.prometheus.enabled }}
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
+  {{- end }}
+  install:
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
+  values:
+    {{- if .Values.global.imageRegistry }}
+    image:
+      repository: {{ printf "%s/aquasecurity/trivy-operator" $.Values.global.imageRegistry | quote }}
+    {{- end }}
+    trivy:
+    {{- if .Values.global.imageRegistry }}
+      image:
+        repository: {{ printf "%s/aquasecurity/trivy" $.Values.global.imageRegistry | quote }}
+        dbRepository: {{ printf "%s/aquasecurity/trivy-db" $.Values.global.imageRegistry | quote }}
+    {{- end }}
+      ignoreUnfixed: true
+    operator:
+      scanJobsConcurrentLimit: 3
+      metricsVulnIdEnabled: true
+      scanJobTimeout: 15m
+    securityContext: &securityContext
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      privileged: false
+      runAsNonRoot: true
+      runAsUser: 10000
+      runAsGroup: 10000
+    podSecurityContext: &podSecurityContext
+      seccompProfile:
+        type: RuntimeDefault
+    trivy:
+      resources:
+        requests:
+          memory: 256Mi
+        limits:
+          memory: 4Gi
+    trivyOperator:
+      scanJobCompressLogs: false
+      scanJobPodTemplateContainerSecurityContext: *securityContext
+      scanJobPodTemplatePodSecurityContext: *podSecurityContext
+    excludeNamespaces: ""
+    {{- if .Values.monitoring.prometheus.enabled }}
+    serviceMonitor:
+      enabled: true
+      labels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
+    {{- end }}
+{{- end }}
