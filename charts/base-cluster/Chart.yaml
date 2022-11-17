@@ -21,14 +21,13 @@ annotations:
     - image: alpine:latest
     - image: bats/bats:v1.1.0
     - image: bats/bats:v1.4.1
-    - image: busybox
     - image: busybox:latest
     - image: curlimages/curl:7.85.0
     - image: docker.io/bitnami/kubectl:1.25.4
     - image: docker.io/bitnami/metrics-server:0.6.1-debian-11-r56
     - image: docker.io/fluxcd/flux-cli:v0.36.0
     - image: docker.io/grafana/promtail:2.6.1
-    - image: estafette/estafette-vulnerability-scanner:0.1.16
+    - image: ghcr.io/aquasecurity/trivy-operator:0.6.0
     - image: ghcr.io/kyverno/kyverno:v1.8.1
     - image: ghcr.io/kyverno/kyvernopre:v1.8.1
     - image: grafana/grafana-image-renderer:latest
@@ -43,7 +42,6 @@ annotations:
     - image: quay.io/jetstack/cert-manager-webhook:v1.10.0
     - image: quay.io/kiwigrid/k8s-sidecar:1.19.2
     - image: quay.io/prometheus-operator/prometheus-operator:v0.59.2
-    - image: quay.io/prometheus/alertmanager:v0.24.0
     - image: quay.io/prometheus/node-exporter:v1.3.1
     - image: quay.io/prometheus/prometheus:v2.39.0
     - image: registry.k8s.io/ingress-nginx/controller:v1.5.1@sha256:4ba73c697770664c1e00e9f968de14e08f606ff961c76e5d7033a4a9c593c629
