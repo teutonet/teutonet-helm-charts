@@ -721,50 +721,108 @@
           "description": "A map of gitRepositories to create",
           "additionalProperties": {
             "type": "object",
-            "oneOf": [
+            "allOf": [
               {
-                "properties": {
-                  "url": {
-                    "type": "string",
-                    "pattern": "https://.+"
+                "oneOf": [
+                  {
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "pattern": "https://.+"
+                      },
+                      "username": {
+                        "const": null
+                      }
+                    }
+                  },
+                  {
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "pattern": "https://.+"
+                      },
+                      "password": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "password",
+                      "username"
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "pattern": "ssh://.+@.+"
+                      }
+                    }
                   }
-                },
-                "required": [
-                  "url"
-                ],
-                "additionalProperties": false
+                ]
               },
               {
-                "properties": {
-                  "url": {
-                    "type": "string",
-                    "pattern": "https://.+"
+                "oneOf": [
+                  {
+                    "properties": {
+                      "branch": {
+                        "type": "string",
+                        "default": "master"
+                      }
+                    },
+                    "required": [
+                      "branch"
+                    ]
                   },
-                  "password": {
-                    "type": "string"
+                  {
+                    "properties": {
+                      "commit": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "commit"
+                    ]
                   },
-                  "username": {
-                    "type": "string"
+                  {
+                    "properties": {
+                      "semver": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "semver"
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "tag": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "tag"
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "branch": {
+                        "const": null
+                      },
+                      "commit": {
+                        "const": null
+                      },
+                      "semver": {
+                        "const": null
+                      },
+                      "tag": {
+                        "const": null
+                      }
+                    }
                   }
-                },
-                "required": [
-                  "url",
-                  "password",
-                  "username"
-                ],
-                "additionalProperties": false
-              },
-              {
-                "properties": {
-                  "url": {
-                    "type": "string",
-                    "pattern": "ssh://.+@.+"
-                  }
-                },
-                "required": [
-                  "url"
-                ],
-                "additionalProperties": false
+                ]
               }
             ],
             "properties": {
@@ -774,7 +832,10 @@
                 "pattern": "[0-9]+(ms|s|m|h|d|w|y)",
                 "default": "1m"
               }
-            }
+            },
+            "required": [
+              "url"
+            ]
           }
         }
       },

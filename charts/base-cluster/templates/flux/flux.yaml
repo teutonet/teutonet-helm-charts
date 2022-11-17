@@ -40,6 +40,17 @@ spec:
   {{- if not (eq $authenticationMethod "none") }}
   secretRef:
     name: {{ $secretName }}
+  {{- end -}}
+  {{- $refOptions := (list "branch" "commit" "semver" "tag") -}}
+  {{- $ref := (list nil) | first -}}
+  {{- range $refName := $refOptions -}}
+    {{- $value := dig $refName nil $instance -}}
+    {{- if $value -}}
+      {{- $ref = dict $refName $value -}}
+    {{- end -}}
+  {{- end }}
+  {{- if $ref }}
+  ref: {{- toYaml $ref | nindent 4 }}
   {{- end }}
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
