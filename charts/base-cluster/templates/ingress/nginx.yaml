@@ -34,8 +34,10 @@ spec:
           loadbalancer.openstack.org/proxy-protocol: "true"
         {{- if .Values.ingress.IP }}
           loadbalancer.openstack.org/keep-floatingip: "true"
-        loadBalancerIP: {{ .Values.ingress.IP | quote }}
         {{- end }}
+      {{- if .Values.ingress.IP }}
+        loadBalancerIP: {{ .Values.ingress.IP | quote }}
+      {{- end }}
       replicaCount: {{ .Values.ingress.replicas }}
       resources: {{- .Values.ingress.resources | toYaml | nindent 8 }}
       podSecurityContext:
