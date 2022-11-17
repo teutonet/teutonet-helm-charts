@@ -292,6 +292,7 @@ ingress:
     limits:
       cpu: 1
       memory: 256Mi
+  IP: null
 
 storage:
   readWriteMany:
