@@ -1,16 +1,17 @@
 {{- range $name, $instance := .Values.flux.gitRepositories -}}
-  {{- $secretName := printf "%s-flux-%s" (include "common.names.fullname" $) $name -}}
-  {{- $authenticationMethod := "none" -}}
+  {{- $authenticationMethod := (list nil) | first -}}
   {{- if and $instance.username $instance.password -}}
     {{- $authenticationMethod = "password" -}}
   {{- else if regexMatch "^ssh://" $instance.url -}}
     {{- $authenticationMethod = "ssh" -}}
   {{- end -}}
-{{- if eq $authenticationMethod "password" }}
+  {{- $authenticationSecretName := printf "%s-flux-%s" (include "common.names.fullname" $) $name -}}
+  {{- if $authenticationMethod -}}
+    {{- if eq $authenticationMethod "password" }}
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ $secretName }}
+  name: {{ $authenticationSecretName }}
   namespace: {{ $.Release.Namespace }}
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     app.kubernetes.io/component: {{ $name | quote }}
@@ -20,12 +21,25 @@ stringData:
   username: {{ $instance.username }}
   password: {{ $instance.password }}
 ---
-  {{- else if eq $authenticationMethod "ssh" }}
-    {{- if not (lookup "v1" "Secret" $.Release.Namespace $secretName) }}
-      {{- include "base-cluster.flux.createSSHKeySecret" (dict "url" $instance.url "name" $name "context" $) | nindent 0 }}
+    {{- else if eq $authenticationMethod "ssh" }}
+      {{- if not (lookup "v1" "Secret" $.Release.Namespace $authenticationSecretName) }}
+        {{- include "base-cluster.flux.createSSHKeySecret" (dict "url" $instance.url "name" $name "secretName" $authenticationSecretName "context" $) | nindent 0 }}
 ---
+      {{- end }}
     {{- end }}
   {{- end }}
+
+  {{- $decryptionSecretName := printf "%s-flux-%s-gpg" (include "common.names.fullname" $) $name }}
+  {{- if $instance.decryption -}}
+    {{- if eq ($instance.decryption).provider "sops" }}
+      {{- if not (lookup "v1" "Secret" $.Release.Namespace $decryptionSecretName) }}
+        {{- include "base-cluster.flux.createGPGKeySecret" (dict "name" $name "secretName" $decryptionSecretName "identity" (printf "%s-%s" $.Values.global.clusterName $name) "context" $) | nindent 0 }}
+---
+      {{- end }}
+    {{- end }}
+  {{- end }}
+
+
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: GitRepository
 metadata:
@@ -39,7 +53,7 @@ spec:
   url: {{ $instance.url | quote }}
   {{- if not (eq $authenticationMethod "none") }}
   secretRef:
-    name: {{ $secretName }}
+    name: {{ $authenticationSecretName }}
   {{- end -}}
   {{- $refOptions := (list "branch" "commit" "semver" "tag") -}}
   {{- $ref := (list nil) | first -}}
@@ -67,5 +81,11 @@ spec:
     kind: GitRepository
     name: {{ printf "%s-flux-%s" (include "common.names.fullname" $) $name }}
     namespace: {{ $.Release.Namespace }}
+  {{- if $instance.decryption }}
+  decryption:
+    provider: {{ $instance.decryption.provider | quote }}
+    secretRef:
+      name: {{ $decryptionSecretName }}
+  {{- end }}
 ---
 {{- end }}

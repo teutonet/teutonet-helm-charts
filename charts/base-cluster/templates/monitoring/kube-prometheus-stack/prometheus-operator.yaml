@@ -15,7 +15,7 @@ spec:
         kind: HelmRepository
         name: prometheus
         namespace: {{ .Release.Namespace }}
-      version: {{ include "base-cluster.prometheus.version" (dict) }}
+      version: 40.x.x
   interval: 1m
   install:
     timeout: 20m0s
@@ -35,7 +35,7 @@ spec:
               template:
                 spec:
                   automountServiceAccountToken: false
-  values: {{- .Values.monitoring.prometheus.overrides | mergeOverwrite (include "base-cluster.prometheus.config" . | fromYaml) | toYaml | nindent 4 }}
+  values: {{- include "base-cluster.prometheus.config" . | nindent 4 }}
   {{- if false }} # TODO ingress
 {{/*  {{- if empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled }}*/}}
 ---

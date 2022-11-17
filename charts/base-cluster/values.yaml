@@ -27,6 +27,11 @@ global:
       registry: docker.io
       repository: fluxcd/flux-cli
       tag: v0.36.0
+  gpg:
+    image:
+      registry: docker.io
+      repository: vladgh/gpg
+      digest: sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
 
   networkPolicy:
     type: none
@@ -164,7 +169,6 @@ monitoring:
         limits:
           cpu: "2"
           memory: 128Mi
-    overrides: {}
     ingress:
       enabled: false
       host: prometheus
