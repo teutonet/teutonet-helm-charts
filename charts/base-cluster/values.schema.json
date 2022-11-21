@@ -96,6 +96,16 @@
           },
           "additionalProperties": false
         },
+        "gpg": {
+          "type": "object",
+          "description": "Image with `gpg` binary",
+          "properties": {
+            "image": {
+              "$ref": "#/$defs/image"
+            }
+          },
+          "additionalProperties": false
+        },
         "networkPolicy": {
           "type": "object",
           "properties": {
@@ -382,10 +392,6 @@
                 }
               },
               "additionalProperties": false
-            },
-            "overrides": {
-              "type": "object",
-              "description": "See https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml"
             }
           },
           "additionalProperties": false
@@ -732,6 +738,9 @@
                       },
                       "username": {
                         "const": null
+                      },
+                      "password": {
+                        "const": null
                       }
                     }
                   },
@@ -831,6 +840,21 @@
                 "description": "The interval in which to sync the repository",
                 "pattern": "[0-9]+(ms|s|m|h|d|w|y)",
                 "default": "1m"
+              },
+              "decryption": {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "type": "string",
+                    "enum": [
+                      "sops"
+                    ]
+                  }
+                },
+                "required": [
+                  "provider"
+                ],
+                "additionalProperties": false
               }
             },
             "required": [
