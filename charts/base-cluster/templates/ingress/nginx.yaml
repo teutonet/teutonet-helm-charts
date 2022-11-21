@@ -32,7 +32,12 @@ spec:
       service:
         annotations:
           loadbalancer.openstack.org/proxy-protocol: "true"
-    # TODO: allow fixed IP? better not
+        {{- if .Values.ingress.IP }}
+          loadbalancer.openstack.org/keep-floatingip: "true"
+        {{- end }}
+      {{- if .Values.ingress.IP }}
+        loadBalancerIP: {{ .Values.ingress.IP | quote }}
+      {{- end }}
       replicaCount: {{ .Values.ingress.replicas }}
       resources: {{- .Values.ingress.resources | toYaml | nindent 8 }}
       podSecurityContext:

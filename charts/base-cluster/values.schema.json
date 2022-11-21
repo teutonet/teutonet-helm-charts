@@ -850,6 +850,14 @@
         },
         "resources": {
           "$ref": "#/$defs/resourceRequirements"
+        },
+        "IP": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$",
+          "description": "Try to use specified IP as loadbalancer IP"
         }
       },
       "additionalProperties": false
