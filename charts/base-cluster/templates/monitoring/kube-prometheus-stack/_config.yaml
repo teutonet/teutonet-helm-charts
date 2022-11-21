@@ -178,6 +178,14 @@ defaultRules:
 kubelet:
   serviceMonitor:
     resource: false
+kubeEtcd:
+  service:
+    targetPort: 2379
+  serviceMonitor:
+    scheme: https
+    caFile: /etc/prometheus/secrets/etcd-certs/ca.crt
+    certFile: /etc/prometheus/secrets/etcd-certs/client.crt
+    keyFile: /etc/prometheus/secrets/etcd-certs/client.key
 commonLabels: {{- .Values.monitoring.labels | toYaml | nindent 2 }}
 kube-state-metrics:
   {{- if .Values.global.imageRegistry }}
@@ -219,6 +227,7 @@ alertmanager:
   enabled: false # TODO dependent on routes/receivers
   # TODO routes
   # TODO receivers
+  {{- if false }}
   podDisruptionBudget:
     enabled: true
   {{- if false }} # TODO ingress
@@ -255,6 +264,7 @@ alertmanager:
               storage: {{ .Values.monitoring.prometheus.alertmanager.persistence.size }}
     alertmanagerConfigSelector:
       matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
+  {{- end }}
 prometheus:
   enabled: true
   {{- if false }} # TODO ingress
@@ -331,12 +341,6 @@ prometheus:
         replacement: {{ .Values.global.clusterName }}
     secrets:
       - etcd-certs
-    kubeEtcd:
-      serviceMonitor:
-        scheme: https
-        caFile: /etc/prometheus/secrets/etcd-certs/ca.crt
-        certFile: /etc/prometheus/secrets/etcd-certs/client.crt
-        keyFile: /etc/prometheus/secrets/etcd-certs/client.key
 {{- end -}}
 
 {{- define "base-cluster.grafana.config" -}}
