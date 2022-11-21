@@ -26,6 +26,9 @@ spec:
     installCRDs: true
     networkPolicy:
       enabled: false
+    webhooksCleanup:
+      enable: true
+      image: {{ include "base-cluster.kubectl.image" . }}
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
       additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
