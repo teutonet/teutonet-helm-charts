@@ -1,7 +1,7 @@
 apiVersion: v2
 name: base-cluster
 type: application
-version: 0.3.0
+version: 0.4.0
 icon: https://teuto.net/favicon.ico
 maintainers:
   - name: cwrau
@@ -27,6 +27,7 @@ annotations:
     - image: docker.io/bitnami/metrics-server:0.6.1-debian-11-r56
     - image: docker.io/fluxcd/flux-cli:v0.36.0
     - image: docker.io/grafana/promtail:2.6.1
+    - image: docker.io/vladgh/gpg@sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
     - image: ghcr.io/aquasecurity/trivy-operator:0.7.1
     - image: ghcr.io/kyverno/kyverno:v1.8.2
     - image: ghcr.io/kyverno/kyvernopre:v1.8.2
