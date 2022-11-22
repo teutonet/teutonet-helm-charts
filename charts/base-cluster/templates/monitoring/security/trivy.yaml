@@ -38,6 +38,11 @@ spec:
         dbRepository: {{ printf "%s/aquasecurity/trivy-db" $.Values.global.imageRegistry | quote }}
     {{- end }}
       ignoreUnfixed: true
+      resources:
+        requests:
+          memory: 256Mi
+        limits:
+          memory: 4Gi
     operator:
       scanJobsConcurrentLimit: 3
       metricsVulnIdEnabled: true
@@ -54,12 +59,6 @@ spec:
     podSecurityContext: &podSecurityContext
       seccompProfile:
         type: RuntimeDefault
-    trivy:
-      resources:
-        requests:
-          memory: 256Mi
-        limits:
-          memory: 4Gi
     trivyOperator:
       scanJobCompressLogs: false
       scanJobPodTemplateContainerSecurityContext: *securityContext
