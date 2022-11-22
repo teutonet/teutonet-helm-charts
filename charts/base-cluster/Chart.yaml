@@ -27,19 +27,19 @@ annotations:
     - image: docker.io/bitnami/metrics-server:0.6.1-debian-11-r56
     - image: docker.io/fluxcd/flux-cli:v0.36.0
     - image: docker.io/grafana/promtail:2.6.1
-    - image: ghcr.io/aquasecurity/trivy-operator:0.6.0
-    - image: ghcr.io/kyverno/kyverno:v1.8.1
-    - image: ghcr.io/kyverno/kyvernopre:v1.8.1
+    - image: ghcr.io/aquasecurity/trivy-operator:0.7.1
+    - image: ghcr.io/kyverno/kyverno:v1.8.2
+    - image: ghcr.io/kyverno/kyvernopre:v1.8.2
     - image: grafana/grafana-image-renderer:latest
     - image: grafana/grafana:9.1.6
     - image: grafana/loki:2.6.1
     - image: k8s.gcr.io/descheduler/descheduler:v0.23.1
     - image: k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.3.0
     - image: k8s.gcr.io/sig-storage/nfs-provisioner:v3.0.0
-    - image: quay.io/jetstack/cert-manager-cainjector:v1.10.0
-    - image: quay.io/jetstack/cert-manager-controller:v1.10.0
-    - image: quay.io/jetstack/cert-manager-ctl:v1.10.0
-    - image: quay.io/jetstack/cert-manager-webhook:v1.10.0
+    - image: quay.io/jetstack/cert-manager-cainjector:v1.10.1
+    - image: quay.io/jetstack/cert-manager-controller:v1.10.1
+    - image: quay.io/jetstack/cert-manager-ctl:v1.10.1
+    - image: quay.io/jetstack/cert-manager-webhook:v1.10.1
     - image: quay.io/kiwigrid/k8s-sidecar:1.19.2
     - image: quay.io/prometheus-operator/prometheus-operator:v0.59.2
     - image: quay.io/prometheus/node-exporter:v1.3.1
