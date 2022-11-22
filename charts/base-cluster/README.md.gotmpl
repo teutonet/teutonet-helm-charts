@@ -9,6 +9,25 @@
 
 {{ template "chart.maintainersSection" . }}
 
+## Cluster bootstrap
+
+```sh
+if # when using teuto-net's managed apps; then
+  kustomize build t8s-managed-apps/flux/0.36.0-deployment | kubectl apply -f - -f flux.yaml -f cluster.yaml
+else # when installing flux manually
+  flux install
+  kubectl apply -f cluster.yaml
+fi
+
+
+flux create source helm --namespace flux-system teuto-net --url https://teutonet.github.io/teutonet-helm-charts --export |
+  yq -y -s '.[] | select(.metadata.name == "teuto-net") | .metadata.annotations={"meta.helm.sh/release-name": "base-cluster", "meta.helm.sh/release-namespace": "flux-system"}' |
+  kubectl apply -f -
+
+# follow the instructions to configure your flux
+helm -n flux-system get notes base-cluster
+```
+
 {{ template "chart.sourcesSection" . }}
 
 {{ template "chart.requirementsSection" . }}

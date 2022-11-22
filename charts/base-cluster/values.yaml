@@ -1,5 +1,5 @@
-# yaml-language-schema: $schema=https://github.com/teutonet/teutonet-helm-charts/charts/base-cluster/values.schema.json
-# yaml-language-schema: $schema=file://./values.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/teutonet/teutonet-helm-charts/main/charts/base-cluster/values.schema.json
+# yaml-language-server: $schema=file://./values.schema.json
 
 global:
   serviceLevelAgreement: None

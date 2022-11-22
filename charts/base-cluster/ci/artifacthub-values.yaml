@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/teutonet/teutonet-helm-charts/main/charts/base-cluster/values.schema.json
+
 global:
   clusterName: artifacthub
   serviceLevelAgreement: None
@@ -5,6 +7,8 @@ flux:
   gitRepositories:
     main:
       url: ssh://user@example.com/repo.git
+      decryption:
+        provider: sops
 kyverno:
   enabled: true
 storage:

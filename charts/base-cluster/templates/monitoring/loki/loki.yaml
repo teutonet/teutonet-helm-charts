@@ -17,6 +17,10 @@ spec:
         namespace: {{ .Release.Namespace }}
       version: 2.x.x
   interval: 1m
+  install:
+    timeout: 10m0s
+  upgrade:
+    timeout: 10m0s
   dependsOn:
     - name: kube-prometheus-stack
       namespace: monitoring
@@ -85,6 +89,7 @@ spec:
       containerSecurityContext:
         seccompProfile:
           type: RuntimeDefault
+      priorityClassName: system-cluster-critical
       serviceMonitor:
         enabled: true
         labels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
