@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -13,6 +13,24 @@ A common base for every kubernetes cluster
 | cwrau | <cwr@teuto.net> |  |
 | marvinWolff | <mw@teuto.net> |  |
 
+## Cluster bootstrap
+
+```sh
+if # when using teuto-net's managed apps; then
+  kustomize build t8s-managed-apps/flux/0.36.0-deployment | kubectl apply -f - -f flux.yaml -f cluster.yaml
+else # when installing flux manually
+  flux install
+  kubectl apply -f cluster.yaml
+fi
+
+flux create source helm --namespace flux-system teuto-net --url https://teutonet.github.io/teutonet-helm-charts --export |
+  yq -y -s '.[] | select(.metadata.name == "teuto-net") | .metadata.annotations={"meta.helm.sh/release-name": "base-cluster", "meta.helm.sh/release-namespace": "flux-system"}' |
+  kubectl apply -f -
+
+# follow the instructions to configure your flux
+helm -n flux-system get notes base-cluster
+```
+
 ## Source Code
 
 * <https://github.com/teutonet/teutonet-helm-charts>
@@ -21,7 +39,7 @@ A common base for every kubernetes cluster
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.1.2 |
+| https://charts.bitnami.com/bitnami | common | 2.2.0 |
 
 This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
 
@@ -70,6 +88,7 @@ This excludes:
 | - [imageCredentials](#global_imageCredentials )           | No      | object           | No         | -                       | A map of credentials to be created and synced into namespaces, the key is the secret name                                                                        |
 | - [kubectl](#global_kubectl )                             | No      | object           | No         | -                       | Image with \`kubectl\` binary                                                                                                                                    |
 | - [flux](#global_flux )                                   | No      | object           | No         | -                       | Image with \`flux\` binary                                                                                                                                       |
+| - [gpg](#global_gpg )                                     | No      | object           | No         | -                       | Image with \`gpg\` binary                                                                                                                                        |
 | - [networkPolicy](#global_networkPolicy )                 | No      | object           | No         | -                       | -                                                                                                                                                                |
 | - [helmRepositories](#global_helmRepositories )           | No      | object           | No         | -                       | A map of helmRepositories to create, the key is the name                                                                                                         |
 | - [certificates](#global_certificates )                   | No      | object           | No         | -                       | A map of cert-manager certificates to create and sync its secrets into namespaces, the key is the name, therefore the secret name will be \`$key\`-certificate   |
@@ -186,7 +205,7 @@ docker.io
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
+| **Type**                  | `combining`                                                                                                                       |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 | **Default**               | `"ALL"`                                                                                                                           |
 | **Defined in**            | #/$defs/targetNamespaces                                                                                                          |
@@ -245,11 +264,11 @@ Specific value: `"ALL"`
 
 #### <a name="global_kubectl_image"></a>1.6.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > kubectl > image`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Defined in**            | #/$defs/image                                                                                                                     |
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+| **Defined in**            | #/$defs/image                                                                                            |
 
 | Property                                          | Pattern | Type   | Deprecated | Definition | Title/Description              |
 | ------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------ |
@@ -313,13 +332,34 @@ bitnami/kubectl
 
 #### <a name="global_flux_image"></a>1.7.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > flux > image`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [image](#global_kubectl_image)                                                                                                    |
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+| **Same definition as**    | [image](#global_kubectl_image)                                                                           |
 
-### <a name="global_networkPolicy"></a>1.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy`
+### <a name="global_gpg"></a>1.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > gpg`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+**Description:** Image with `gpg` binary
+
+| Property                      | Pattern | Type   | Deprecated | Definition                              | Title/Description |
+| ----------------------------- | ------- | ------ | ---------- | --------------------------------------- | ----------------- |
+| - [image](#global_gpg_image ) | No      | object | No         | Same as [image](#global_kubectl_image ) | -                 |
+
+#### <a name="global_gpg_image"></a>1.8.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > gpg > image`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+| **Same definition as**    | [image](#global_kubectl_image)                                                                           |
+
+### <a name="global_networkPolicy"></a>1.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -332,7 +372,7 @@ bitnami/kubectl
 | - [metricsLabels](#global_networkPolicy_metricsLabels ) | No      | object           | No         | -          | The labels used to allow ingress from the metrics service                                                     |
 | - [dnsLabels](#global_networkPolicy_dnsLabels )         | No      | object           | No         | -          | The labels used to allow egress to the DNS service                                                            |
 
-#### <a name="global_networkPolicy_type"></a>1.8.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > type`
+#### <a name="global_networkPolicy_type"></a>1.9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > type`
 
 |          |                    |
 | -------- | ------------------ |
@@ -346,7 +386,7 @@ Must be one of:
 * "cilium"
 * "kubernetes"
 
-#### <a name="global_networkPolicy_metricsLabels"></a>1.8.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > metricsLabels`
+#### <a name="global_networkPolicy_metricsLabels"></a>1.9.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > metricsLabels`
 
 |                           |                                                                                                                                                                                                 |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -359,13 +399,13 @@ Must be one of:
 | ----------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [additionalProperties](#global_networkPolicy_metricsLabels_additionalProperties ) | No      | string | No         | -          | -                 |
 
-##### <a name="global_networkPolicy_metricsLabels_additionalProperties"></a>1.8.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > metricsLabels > additionalProperties`
+##### <a name="global_networkPolicy_metricsLabels_additionalProperties"></a>1.9.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > metricsLabels > additionalProperties`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="global_networkPolicy_dnsLabels"></a>1.8.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > dnsLabels`
+#### <a name="global_networkPolicy_dnsLabels"></a>1.9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > dnsLabels`
 
 |                           |                                                                                                                                                                                             |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -378,13 +418,13 @@ Must be one of:
 | ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [additionalProperties](#global_networkPolicy_dnsLabels_additionalProperties ) | No      | string | No         | -          | -                 |
 
-##### <a name="global_networkPolicy_dnsLabels_additionalProperties"></a>1.8.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > dnsLabels > additionalProperties`
+##### <a name="global_networkPolicy_dnsLabels_additionalProperties"></a>1.9.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > dnsLabels > additionalProperties`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="global_helmRepositories"></a>1.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories`
+### <a name="global_helmRepositories"></a>1.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories`
 
 |                           |                                                                                                                                                                                      |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -397,7 +437,7 @@ Must be one of:
 | ------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [additionalProperties](#global_helmRepositories_additionalProperties ) | No      | object | No         | -          | -                 |
 
-#### <a name="global_helmRepositories_additionalProperties"></a>1.9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties`
+#### <a name="global_helmRepositories_additionalProperties"></a>1.10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -410,7 +450,7 @@ Must be one of:
 | - [interval](#global_helmRepositories_additionalProperties_interval )   | No      | string | No         | -          | The interval in which to update the repository                                                                 |
 | - [condition](#global_helmRepositories_additionalProperties_condition ) | No      | string | No         | -          | A condition with which to decide to include the repository. This will be templated. Must return a truthy value |
 
-##### <a name="global_helmRepositories_additionalProperties_url"></a>1.9.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > url`
+##### <a name="global_helmRepositories_additionalProperties_url"></a>1.10.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > url`
 
 |          |          |
 | -------- | -------- |
@@ -420,7 +460,7 @@ Must be one of:
 | --------------------------------- | ----------------------------------------------------------------------- |
 | **Must match regular expression** | ```https://.+``` [Test](https://regex101.com/?regex=https%3A%2F%2F.%2B) |
 
-##### <a name="global_helmRepositories_additionalProperties_interval"></a>1.9.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > interval`
+##### <a name="global_helmRepositories_additionalProperties_interval"></a>1.10.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > interval`
 
 |          |          |
 | -------- | -------- |
@@ -432,7 +472,7 @@ Must be one of:
 | --------------------------------- | --------------------------------------------------------------------------- |
 | **Must match regular expression** | ```[0-9]+[mhd]``` [Test](https://regex101.com/?regex=%5B0-9%5D%2B%5Bmhd%5D) |
 
-##### <a name="global_helmRepositories_additionalProperties_condition"></a>1.9.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > condition`
+##### <a name="global_helmRepositories_additionalProperties_condition"></a>1.10.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > condition`
 
 |          |          |
 | -------- | -------- |
@@ -450,7 +490,7 @@ Must be one of:
 {{ eq .Values.global.baseDomain "teuto.net" }}
 ```
 
-### <a name="global_certificates"></a>1.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates`
+### <a name="global_certificates"></a>1.11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates`
 
 |                           |                                                                                                                                                                                  |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -463,7 +503,7 @@ Must be one of:
 | -------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [additionalProperties](#global_certificates_additionalProperties ) | No      | object | No         | -          | -                 |
 
-#### <a name="global_certificates_additionalProperties"></a>1.10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates > additionalProperties`
+#### <a name="global_certificates_additionalProperties"></a>1.11.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates > additionalProperties`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -476,7 +516,7 @@ Must be one of:
 | - [targetNamespaces](#global_certificates_additionalProperties_targetNamespaces ) | No      | object      | No         | Same as [targetNamespaces](#global_imageCredentials_additionalProperties_targetNamespaces ) | The namespaces to sync the secret into, or \`ALL\` for all namespaces                                           |
 | - [condition](#global_certificates_additionalProperties_condition )               | No      | string      | No         | -                                                                                           | A condition with which to decide to include the certificate. This will be templated. Must return a truthy value |
 
-##### <a name="global_certificates_additionalProperties_dnsNames"></a>1.10.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > certificates > additionalProperties > dnsNames`
+##### <a name="global_certificates_additionalProperties_dnsNames"></a>1.11.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > certificates > additionalProperties > dnsNames`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -500,7 +540,7 @@ test.teuto.net
 | [item 0](#global_certificates_additionalProperties_dnsNames_oneOf_i0) |
 | [item 1](#global_certificates_additionalProperties_dnsNames_oneOf_i1) |
 
-##### <a name="global_certificates_additionalProperties_dnsNames_oneOf_i0"></a>1.10.1.1.1. Property `base cluster configuration > global > certificates > additionalProperties > dnsNames > oneOf > item 0`
+##### <a name="global_certificates_additionalProperties_dnsNames_oneOf_i0"></a>1.11.1.1.1. Property `base cluster configuration > global > certificates > additionalProperties > dnsNames > oneOf > item 0`
 
 |          |          |
 | -------- | -------- |
@@ -508,7 +548,7 @@ test.teuto.net
 
 **Description:** This will be templated
 
-##### <a name="global_certificates_additionalProperties_dnsNames_oneOf_i1"></a>1.10.1.1.2. Property `base cluster configuration > global > certificates > additionalProperties > dnsNames > oneOf > item 1`
+##### <a name="global_certificates_additionalProperties_dnsNames_oneOf_i1"></a>1.11.1.1.2. Property `base cluster configuration > global > certificates > additionalProperties > dnsNames > oneOf > item 1`
 
 |          |                   |
 | -------- | ----------------- |
@@ -526,24 +566,24 @@ test.teuto.net
 | --------------------------------------------------------------------------------- | ----------- |
 | [item 1 items](#global_certificates_additionalProperties_dnsNames_oneOf_i1_items) | -           |
 
-##### <a name="autogenerated_heading_3"></a>1.10.1.1.2.1. base cluster configuration > global > certificates > additionalProperties > dnsNames > oneOf > item 1 > item 1 items
+##### <a name="autogenerated_heading_3"></a>1.11.1.1.2.1. base cluster configuration > global > certificates > additionalProperties > dnsNames > oneOf > item 1 > item 1 items
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="global_certificates_additionalProperties_targetNamespaces"></a>1.10.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates > additionalProperties > targetNamespaces`
+##### <a name="global_certificates_additionalProperties_targetNamespaces"></a>1.11.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates > additionalProperties > targetNamespaces`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
+| **Type**                  | `combining`                                                                                                                       |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 | **Default**               | `"ALL"`                                                                                                                           |
 | **Same definition as**    | [targetNamespaces](#global_imageCredentials_additionalProperties_targetNamespaces)                                                |
 
 **Description:** The namespaces to sync the secret into, or `ALL` for all namespaces
 
-##### <a name="global_certificates_additionalProperties_condition"></a>1.10.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates > additionalProperties > condition`
+##### <a name="global_certificates_additionalProperties_condition"></a>1.11.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates > additionalProperties > condition`
 
 |          |          |
 | -------- | -------- |
@@ -565,7 +605,7 @@ test.teuto.net
 {{ .Values.global.baseDomain }}
 ```
 
-### <a name="global_storageClass"></a>1.11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > storageClass`
+### <a name="global_storageClass"></a>1.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > storageClass`
 
 |                |                      |
 | -------------- | -------------------- |
@@ -674,21 +714,20 @@ Must be one of:
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                                                         | Pattern | Type    | Deprecated | Definition                      | Title/Description                                                                                          |
-| ---------------------------------------------------------------- | ------- | ------- | ---------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| - [enabled](#monitoring_prometheus_enabled )                     | No      | boolean | No         | -                               | -                                                                                                          |
-| - [replicas](#monitoring_prometheus_replicas )                   | No      | integer | No         | -                               | -                                                                                                          |
-| - [resources](#monitoring_prometheus_resources )                 | No      | object  | No         | In #/$defs/resourceRequirements | ResourceRequirements describes the compute resource requirements.                                          |
-| - [retentionDuration](#monitoring_prometheus_retentionDuration ) | No      | string  | No         | -                               | -                                                                                                          |
-| - [retentionSize](#monitoring_prometheus_retentionSize )         | No      | string  | No         | -                               | -                                                                                                          |
-| - [persistence](#monitoring_prometheus_persistence )             | No      | object  | No         | -                               | -                                                                                                          |
-| - [operator](#monitoring_prometheus_operator )                   | No      | object  | No         | -                               | -                                                                                                          |
-| - [kubeStateMetrics](#monitoring_prometheus_kubeStateMetrics )   | No      | object  | No         | -                               | -                                                                                                          |
-| - [nodeExporter](#monitoring_prometheus_nodeExporter )           | No      | object  | No         | -                               | -                                                                                                          |
-| - [ingress](#monitoring_prometheus_ingress )                     | No      | object  | No         | -                               | -                                                                                                          |
-| - [alertmanager](#monitoring_prometheus_alertmanager )           | No      | object  | No         | -                               | -                                                                                                          |
-| - [authentication](#monitoring_prometheus_authentication )       | No      | object  | No         | -                               | -                                                                                                          |
-| - [overrides](#monitoring_prometheus_overrides )                 | No      | object  | No         | -                               | See https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml |
+| Property                                                         | Pattern | Type    | Deprecated | Definition                      | Title/Description                                                 |
+| ---------------------------------------------------------------- | ------- | ------- | ---------- | ------------------------------- | ----------------------------------------------------------------- |
+| - [enabled](#monitoring_prometheus_enabled )                     | No      | boolean | No         | -                               | -                                                                 |
+| - [replicas](#monitoring_prometheus_replicas )                   | No      | integer | No         | -                               | -                                                                 |
+| - [resources](#monitoring_prometheus_resources )                 | No      | object  | No         | In #/$defs/resourceRequirements | ResourceRequirements describes the compute resource requirements. |
+| - [retentionDuration](#monitoring_prometheus_retentionDuration ) | No      | string  | No         | -                               | -                                                                 |
+| - [retentionSize](#monitoring_prometheus_retentionSize )         | No      | string  | No         | -                               | -                                                                 |
+| - [persistence](#monitoring_prometheus_persistence )             | No      | object  | No         | -                               | -                                                                 |
+| - [operator](#monitoring_prometheus_operator )                   | No      | object  | No         | -                               | -                                                                 |
+| - [kubeStateMetrics](#monitoring_prometheus_kubeStateMetrics )   | No      | object  | No         | -                               | -                                                                 |
+| - [nodeExporter](#monitoring_prometheus_nodeExporter )           | No      | object  | No         | -                               | -                                                                 |
+| - [ingress](#monitoring_prometheus_ingress )                     | No      | object  | No         | -                               | -                                                                 |
+| - [alertmanager](#monitoring_prometheus_alertmanager )           | No      | object  | No         | -                               | -                                                                 |
+| - [authentication](#monitoring_prometheus_authentication )       | No      | object  | No         | -                               | -                                                                 |
 
 #### <a name="monitoring_prometheus_enabled"></a>3.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > enabled`
 
@@ -738,7 +777,7 @@ Must be one of:
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
+| **Type**                  | `combining`                                                                                                                       |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 | **Defined in**            | #/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity                                                                       |
 
@@ -776,7 +815,7 @@ Must be one of:
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
+| **Type**                  | `combining`                                                                                                                       |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 | **Same definition as**    | [monitoring_prometheus_resources_limits_additionalProperties](#monitoring_prometheus_resources_limits_additionalProperties)       |
 
@@ -1057,15 +1096,6 @@ Must be one of:
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
-
-#### <a name="monitoring_prometheus_overrides"></a>3.2.13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > overrides`
-
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-
-**Description:** See https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
 
 ### <a name="monitoring_grafana"></a>3.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana`
 
@@ -1719,7 +1749,7 @@ currencyEUR
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
+| **Type**                  | `combining`                                                                                                                       |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 | **Defined in**            | #/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity                                                                       |
 
@@ -1757,7 +1787,7 @@ currencyEUR
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
+| **Type**                  | `combining`                                                                                                                       |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 | **Same definition as**    | [certManager_resources_limits_additionalProperties](#certManager_resources_limits_additionalProperties)                           |
 
@@ -1883,48 +1913,40 @@ must respect the following conditions
 | Property                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description                            |
 | ------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | -------------------------------------------- |
 | - [gitInterval](#flux_gitRepositories_additionalProperties_gitInterval ) | No      | string | No         | -          | The interval in which to sync the repository |
+| - [decryption](#flux_gitRepositories_additionalProperties_decryption )   | No      | object | No         | -          | -                                            |
 
-| One of(Option)                                                |
+| All of(Requirement)                                           |
 | ------------------------------------------------------------- |
-| [item 0](#flux_gitRepositories_additionalProperties_oneOf_i0) |
-| [item 1](#flux_gitRepositories_additionalProperties_oneOf_i1) |
-| [item 2](#flux_gitRepositories_additionalProperties_oneOf_i2) |
+| [item 0](#flux_gitRepositories_additionalProperties_allOf_i0) |
+| [item 1](#flux_gitRepositories_additionalProperties_allOf_i1) |
 
-##### <a name="flux_gitRepositories_additionalProperties_oneOf_i0"></a>8.1.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > oneOf > item 0`
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0"></a>8.1.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                                                                       |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-| Property                                                          | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ----------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| + [url](#flux_gitRepositories_additionalProperties_oneOf_i0_url ) | No      | string | No         | -          | -                 |
+| One of(Option)                                                         |
+| ---------------------------------------------------------------------- |
+| [item 0](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0) |
+| [item 1](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1) |
+| [item 2](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i2) |
 
-##### <a name="flux_gitRepositories_additionalProperties_oneOf_i0_url"></a>8.1.1.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > oneOf > item 0 > url`
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0"></a>8.1.1.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0`
 
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-| Restrictions                      |                                                                         |
-| --------------------------------- | ----------------------------------------------------------------------- |
-| **Must match regular expression** | ```https://.+``` [Test](https://regex101.com/?regex=https%3A%2F%2F.%2B) |
+| Property                                                                             | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [url](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_url )           | No      | string | No         | -          | -                 |
+| - [username](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_username ) | No      | const  | No         | -          | -                 |
+| - [password](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_password ) | No      | const  | No         | -          | -                 |
 
-##### <a name="flux_gitRepositories_additionalProperties_oneOf_i1"></a>8.1.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > oneOf > item 1`
-
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-
-| Property                                                                    | Pattern | Type   | Deprecated | Definition | Title/Description |
-| --------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| + [url](#flux_gitRepositories_additionalProperties_oneOf_i1_url )           | No      | string | No         | -          | -                 |
-| + [password](#flux_gitRepositories_additionalProperties_oneOf_i1_password ) | No      | string | No         | -          | -                 |
-| + [username](#flux_gitRepositories_additionalProperties_oneOf_i1_username ) | No      | string | No         | -          | -                 |
-
-##### <a name="flux_gitRepositories_additionalProperties_oneOf_i1_url"></a>8.1.1.2.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > oneOf > item 1 > url`
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_url"></a>8.1.1.1.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > url`
 
 |          |          |
 | -------- | -------- |
@@ -1934,30 +1956,73 @@ must respect the following conditions
 | --------------------------------- | ----------------------------------------------------------------------- |
 | **Must match regular expression** | ```https://.+``` [Test](https://regex101.com/?regex=https%3A%2F%2F.%2B) |
 
-##### <a name="flux_gitRepositories_additionalProperties_oneOf_i1_password"></a>8.1.1.2.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > oneOf > item 1 > password`
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_username"></a>8.1.1.1.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > username`
+
+|          |         |
+| -------- | ------- |
+| **Type** | `const` |
+
+Specific value: `{
+    "description": "😅 ERROR in schema generation, a referenced schema could not be loaded, no documentation here unfortunately 🏜️"
+}`
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_password"></a>8.1.1.1.1.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > password`
+
+|          |         |
+| -------- | ------- |
+| **Type** | `const` |
+
+Specific value: `{
+    "description": "😅 ERROR in schema generation, a referenced schema could not be loaded, no documentation here unfortunately 🏜️"
+}`
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1"></a>8.1.1.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+| Property                                                                             | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [url](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_url )           | No      | string | No         | -          | -                 |
+| + [password](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_password ) | No      | string | No         | -          | -                 |
+| + [username](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_username ) | No      | string | No         | -          | -                 |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_url"></a>8.1.1.1.2.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1 > url`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="flux_gitRepositories_additionalProperties_oneOf_i1_username"></a>8.1.1.2.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > oneOf > item 1 > username`
+| Restrictions                      |                                                                         |
+| --------------------------------- | ----------------------------------------------------------------------- |
+| **Must match regular expression** | ```https://.+``` [Test](https://regex101.com/?regex=https%3A%2F%2F.%2B) |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_password"></a>8.1.1.1.2.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1 > password`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="flux_gitRepositories_additionalProperties_oneOf_i2"></a>8.1.1.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > oneOf > item 2`
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_username"></a>8.1.1.1.2.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1 > username`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
 
-| Property                                                          | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ----------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| + [url](#flux_gitRepositories_additionalProperties_oneOf_i2_url ) | No      | string | No         | -          | -                 |
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i2"></a>8.1.1.1.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 2`
 
-##### <a name="flux_gitRepositories_additionalProperties_oneOf_i2_url"></a>8.1.1.3.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > oneOf > item 2 > url`
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+| Property                                                                   | Pattern | Type   | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [url](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i2_url ) | No      | string | No         | -          | -                 |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i2_url"></a>8.1.1.1.3.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 2 > url`
 
 |          |          |
 | -------- | -------- |
@@ -1966,6 +2031,147 @@ must respect the following conditions
 | Restrictions                      |                                                                               |
 | --------------------------------- | ----------------------------------------------------------------------------- |
 | **Must match regular expression** | ```ssh://.+@.+``` [Test](https://regex101.com/?regex=ssh%3A%2F%2F.%2B%40.%2B) |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1"></a>8.1.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                                                                       |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+| One of(Option)                                                         |
+| ---------------------------------------------------------------------- |
+| [item 0](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i0) |
+| [item 1](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i1) |
+| [item 2](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i2) |
+| [item 3](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i3) |
+| [item 4](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4) |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i0"></a>8.1.1.2.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 0`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+| Property                                                                         | Pattern | Type   | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| + [branch](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i0_branch ) | No      | string | No         | -          | -                 |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i0_branch"></a>8.1.1.2.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 0 > branch`
+
+|             |            |
+| ----------- | ---------- |
+| **Type**    | `string`   |
+| **Default** | `"master"` |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i1"></a>8.1.1.2.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 1`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+| Property                                                                         | Pattern | Type   | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| + [commit](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i1_commit ) | No      | string | No         | -          | -                 |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i1_commit"></a>8.1.1.2.2.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 1 > commit`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i2"></a>8.1.1.2.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 2`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+| Property                                                                         | Pattern | Type   | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| + [semver](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i2_semver ) | No      | string | No         | -          | -                 |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i2_semver"></a>8.1.1.2.3.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 2 > semver`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i3"></a>8.1.1.2.4. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 3`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+| Property                                                                   | Pattern | Type   | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| + [tag](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i3_tag ) | No      | string | No         | -          | -                 |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i3_tag"></a>8.1.1.2.4.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 3 > tag`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4"></a>8.1.1.2.5. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+| Property                                                                         | Pattern | Type  | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------------------------- | ------- | ----- | ---------- | ---------- | ----------------- |
+| - [branch](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_branch ) | No      | const | No         | -          | -                 |
+| - [commit](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_commit ) | No      | const | No         | -          | -                 |
+| - [semver](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_semver ) | No      | const | No         | -          | -                 |
+| - [tag](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_tag )       | No      | const | No         | -          | -                 |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_branch"></a>8.1.1.2.5.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > branch`
+
+|          |         |
+| -------- | ------- |
+| **Type** | `const` |
+
+Specific value: `{
+    "description": "😅 ERROR in schema generation, a referenced schema could not be loaded, no documentation here unfortunately 🏜️"
+}`
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_commit"></a>8.1.1.2.5.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > commit`
+
+|          |         |
+| -------- | ------- |
+| **Type** | `const` |
+
+Specific value: `{
+    "description": "😅 ERROR in schema generation, a referenced schema could not be loaded, no documentation here unfortunately 🏜️"
+}`
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_semver"></a>8.1.1.2.5.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > semver`
+
+|          |         |
+| -------- | ------- |
+| **Type** | `const` |
+
+Specific value: `{
+    "description": "😅 ERROR in schema generation, a referenced schema could not be loaded, no documentation here unfortunately 🏜️"
+}`
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_tag"></a>8.1.1.2.5.4. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > tag`
+
+|          |         |
+| -------- | ------- |
+| **Type** | `const` |
+
+Specific value: `{
+    "description": "😅 ERROR in schema generation, a referenced schema could not be loaded, no documentation here unfortunately 🏜️"
+}`
+
+##### <a name="autogenerated_heading_8"></a>8.1.1.3. The following properties are required
+* url
 
 ##### <a name="flux_gitRepositories_additionalProperties_gitInterval"></a>8.1.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > gitInterval`
 
@@ -1980,6 +2186,26 @@ must respect the following conditions
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | **Must match regular expression** | ```[0-9]+(ms\|s\|m\|h\|d\|w\|y)``` [Test](https://regex101.com/?regex=%5B0-9%5D%2B%28ms%7Cs%7Cm%7Ch%7Cd%7Cw%7Cy%29) |
 
+##### <a name="flux_gitRepositories_additionalProperties_decryption"></a>8.1.1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                                                      | Pattern | Type             | Deprecated | Definition | Title/Description |
+| ----------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ---------- | ----------------- |
+| + [provider](#flux_gitRepositories_additionalProperties_decryption_provider ) | No      | enum (of string) | No         | -          | -                 |
+
+##### <a name="flux_gitRepositories_additionalProperties_decryption_provider"></a>8.1.1.5.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption > provider`
+
+|          |                    |
+| -------- | ------------------ |
+| **Type** | `enum (of string)` |
+
+Must be one of:
+* "sops"
+
 ## <a name="ingress"></a>9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress`
 
 |                           |                                                                                                          |
@@ -1987,10 +2213,11 @@ must respect the following conditions
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                           | Pattern | Type    | Deprecated | Definition                                             | Title/Description                                                 |
-| ---------------------------------- | ------- | ------- | ---------- | ------------------------------------------------------ | ----------------------------------------------------------------- |
-| - [replicas](#ingress_replicas )   | No      | integer | No         | -                                                      | -                                                                 |
-| - [resources](#ingress_resources ) | No      | object  | No         | Same as [resources](#monitoring_prometheus_resources ) | ResourceRequirements describes the compute resource requirements. |
+| Property                           | Pattern | Type           | Deprecated | Definition                                             | Title/Description                                                 |
+| ---------------------------------- | ------- | -------------- | ---------- | ------------------------------------------------------ | ----------------------------------------------------------------- |
+| - [replicas](#ingress_replicas )   | No      | integer        | No         | -                                                      | -                                                                 |
+| - [resources](#ingress_resources ) | No      | object         | No         | Same as [resources](#monitoring_prometheus_resources ) | ResourceRequirements describes the compute resource requirements. |
+| - [IP](#ingress_IP )               | No      | string or null | No         | -                                                      | Try to use specified IP as loadbalancer IP                        |
 
 ### <a name="ingress_replicas"></a>9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > replicas`
 
@@ -2011,6 +2238,18 @@ must respect the following conditions
 | **Same definition as**    | [resources](#monitoring_prometheus_resources)                                                                                     |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
+
+### <a name="ingress_IP"></a>9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > IP`
+
+|          |                  |
+| -------- | ---------------- |
+| **Type** | `string or null` |
+
+**Description:** Try to use specified IP as loadbalancer IP
+
+| Restrictions                      |                                                                                                                                                                                         |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Must match regular expression** | ```^((25[0-5]\|(2[0-4]\|1\d\|[1-9]\|)\d)\.?\b){4}$``` [Test](https://regex101.com/?regex=%5E%28%2825%5B0-5%5D%7C%282%5B0-4%5D%7C1%5Cd%7C%5B1-9%5D%7C%29%5Cd%29%5C.%3F%5Cb%29%7B4%7D%24) |
 
 ## <a name="storage"></a>10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > storage`
 
