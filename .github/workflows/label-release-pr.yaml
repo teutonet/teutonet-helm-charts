@@ -1,13 +1,13 @@
 name: Label release PR
 
 on:
-  pull_request_target:
+  pull_request:
     types:
       - closed
 
 jobs:
   labelling:
-    if: ${{ github.event.pull_request.merged == true && contains(github.event.pull_request.base.ref, 'release-please--') }}
+    if: ${{ github.event.pull_request.merged == true && contains(github.event.pull_request.head.ref, 'release-please--') }}
     runs-on: ubuntu-22.04
     steps:
       - name: remove old label
