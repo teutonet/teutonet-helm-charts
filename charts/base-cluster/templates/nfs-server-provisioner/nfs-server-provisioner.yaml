@@ -27,6 +27,10 @@ spec:
     {{- if not (eq $storageClass.storageClassName nil) }}
       storageClass: {{ $storageClass.storageClassName | quote }}
     {{- end }}
+    {{- if .Values.global.imageRegistry }}
+    image:
+      repository: {{ printf "%s/sig-storage/nfs-provisioner" $.Values.global.imageRegistry }}
+    {{- end }}
     podSecurityContext:
       seccompProfile:
         type: Unconfined
