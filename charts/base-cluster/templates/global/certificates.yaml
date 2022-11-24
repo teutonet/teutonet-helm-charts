@@ -10,10 +10,10 @@
   {{- range $name, $cert := deepCopy .Values.global.certificates -}}
     {{- $create := true -}}
     {{- if $cert.condition -}}
-      {{- $create = eq (include "common.tplvalues.render" (dict "value" $cert.condition "context" $)) "true" -}}
+      {{- $create = eq (include "common.tplvalues.render" (dict "value" $cert.condition "context" (deepCopy $))) "true" -}}
     {{- end -}}
     {{- if $create -}}
-      {{- $dnsNames := include "common.tplvalues.render" (dict "value" $cert.dnsNames "context" $) | fromYamlArray | uniq -}}
+      {{- $dnsNames := include "common.tplvalues.render" (dict "value" $cert.dnsNames "context" (deepCopy $)) | fromYamlArray | uniq -}}
       {{- if not $.Values.dns.provider -}}
         {{- range $dnsName := $dnsNames -}}
           {{- if $dnsName | contains "*" -}}
@@ -31,7 +31,7 @@
 {{- end -}}
 
 {{- define "base-cluster.cert-manager.custom-certificates-yaml" -}}
-  {{- range $name, $cert := .certs -}}
+{{- range $name, $cert := .certs -}}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -45,6 +45,16 @@ spec:
     name: letsencrypt-prod
   dnsNames: {{- $cert.dnsNames | toYaml | nindent 4 }}
   secretName: {{ printf "%s-certificate" $name | quote }}
+  {{- if eq (include "base-cluster.reflector.enabled" (dict "context" $.context)) "true" -}}
+  secretTemplate:
+    annotations:
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+      {{- if not (typeIs "string" ($cert.targetNamespaces | default "ALL")) }}
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: {{ $cert.targetNamespaces | join "," | quote }}
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: {{ $cert.targetNamespaces | join "," | quote }}
+      {{- end }}
+  {{- end }}
 ---
-  {{- end -}}
+{{ end -}}
 {{- end -}}

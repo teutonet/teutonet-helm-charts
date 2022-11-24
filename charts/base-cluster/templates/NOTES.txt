@@ -3,24 +3,14 @@
     {{- if regexMatch "^ssh://" $instance.url }}
       {{- $authenticationSecretName := printf "%s-flux-%s" (include "common.names.fullname" $) $name -}}
 You should configure {{ $instance.url | quote }} to accept the following key:
-      {{- $existingSecret := lookup "v1" "Secret" $.Release.Namespace $authenticationSecretName -}}
-      {{- if $existingSecret }}
-        {{- (dig "data" "identity.pub" nil $existingSecret) | b64dec | nindent 2 }}
-      {{- else }}
-        {{- printf `$ kubectl -n %s get secret %s -o json | jq -r '.data["identity.pub"]' | base64 -d` $.Release.Namespace ($authenticationSecretName | quote) | nindent 2 }}
-      {{- end }}
+      {{- printf `$ kubectl -n %s get secret %s -o json | jq -r '.data["identity.pub"]' | base64 -d` $.Release.Namespace ($authenticationSecretName | quote) | nindent 2 }}
     {{- end }}
 
     {{ if $instance.decryption -}}
       {{- if eq ($instance.decryption).provider "sops" }}
         {{- $decryptionSecretName := printf "%s-flux-%s-gpg" (include "common.names.fullname" $) $name -}}
 You should configure {{ $instance.url | quote }} to add the following key as a sops recipient:
-      {{- $existingSecret := lookup "v1" "Secret" $.Release.Namespace $decryptionSecretName -}}
-      {{- if $existingSecret }}
-        {{- (dig "data" "pub.asc" nil $existingSecret) | b64dec | nindent 2 }}
-      {{- else }}
         {{- printf `$ kubectl -n %s get secret %s -o json | jq -r '.data["pub.asc"]' | base64 -d` $.Release.Namespace ($decryptionSecretName | quote) | nindent 2 }}
-      {{- end }}
       {{- end }}
     {{- end }}
   {{- end }}

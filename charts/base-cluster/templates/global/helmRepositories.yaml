@@ -1,7 +1,7 @@
 {{- range $name, $config := .Values.global.helmRepositories }}
 {{- $create := true -}}
 {{- if $config.condition -}}
-  {{- $create = eq (include "common.tplvalues.render" (dict "value" $config.condition "context" $)) "true" -}}
+  {{- $create = eq (include "common.tplvalues.render" (dict "value" $config.condition "context" (deepCopy $))) "true" -}}
 {{- end -}}
 {{- if $create -}}
 apiVersion: source.toolkit.fluxcd.io/v1beta2

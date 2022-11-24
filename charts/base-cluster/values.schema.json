@@ -923,6 +923,22 @@
       },
       "additionalProperties": false
     },
+    "reflector": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "oneOf": [
+            {
+              "const": "auto"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
     "common": {
       "type": "object",
       "description": "Values for sub-chart"

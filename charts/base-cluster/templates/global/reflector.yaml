@@ -1,0 +1,29 @@
+{{- if eq (include "base-cluster.reflector.enabled" (dict "context" .)) "true" -}}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: reflector
+  namespace: kube-system
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: reflector
+spec:
+  chart:
+    spec:
+      chart: reflector
+      sourceRef:
+        kind: HelmRepository
+        name: emberstack
+        namespace: {{ .Release.Namespace }}
+      version: 6.x.x
+  interval: 1m
+  values:
+    {{- if .Values.global.imageRegistry }}
+    image:
+      repository: {{ printf "%s/emberstack/kubernetes-reflector" $.Values.global.imageRegistry }}
+    {{- end }}
+    securityContext:
+      privileged: false
+      allowPrivilegeEscalation: false
+      seccompProfile:
+        type: RuntimeDefault
+{{- end -}}

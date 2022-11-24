@@ -76,6 +76,9 @@ global:
       url: https://teutonet.github.io/teutonet-helm-charts
     trivy:
       url: https://aquasecurity.github.io/helm-charts
+    emberstack:
+      url: https://emberstack.github.io/helm-charts
+      condition: '{{ eq (include "base-cluster.reflector.enabled" (dict "context" .)) "true" }}'
 
 kyverno:
   enabled: false
@@ -306,3 +309,6 @@ storage:
     persistence:
       storageClass: null
       size: 5Gi
+
+reflector:
+  enabled: auto
