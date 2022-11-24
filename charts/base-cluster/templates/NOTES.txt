@@ -7,9 +7,9 @@ You should configure {{ $instance.url | quote }} to accept the following key:
     {{- end }}
 
     {{ if $instance.decryption -}}
-      {{- if eq ($instance.decryption).provider "sops" }}
+      {{- if eq $instance.decryption.provider "sops" }}
         {{- $decryptionSecretName := printf "%s-flux-%s-gpg" (include "common.names.fullname" $) $name -}}
-You should configure {{ $instance.url | quote }} to add the following key as a sops recipient:
+You should configure {{ $instance.url | quote }} to add the following key as a sops recipient and store the public key in a way that it is accessible (probably a git repository):
         {{- printf `$ kubectl -n %s get secret %s -o json | jq -r '.data["pub.asc"]' | base64 -d` $.Release.Namespace ($decryptionSecretName | quote) | nindent 2 }}
       {{- end }}
     {{- end }}
