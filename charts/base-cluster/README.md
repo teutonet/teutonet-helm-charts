@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -70,6 +70,7 @@ This excludes:
 | - [flux](#flux )               | No      | object | No         | -          | -                    |
 | - [ingress](#ingress )         | No      | object | No         | -          | -                    |
 | - [storage](#storage )         | No      | object | No         | -          | -                    |
+| - [reflector](#reflector )     | No      | object | No         | -          | -                    |
 | - [common](#common )           | No      | object | No         | -          | Values for sub-chart |
 
 ## <a name="global"></a>1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global`
@@ -2329,7 +2330,44 @@ Must be one of:
 
 **Description:** The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd)
 
-## <a name="common"></a>11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > common`
+## <a name="reflector"></a>11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > reflector`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                         | Pattern | Type        | Deprecated | Definition | Title/Description |
+| -------------------------------- | ------- | ----------- | ---------- | ---------- | ----------------- |
+| - [enabled](#reflector_enabled ) | No      | Combination | No         | -          | -                 |
+
+### <a name="reflector_enabled"></a>11.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > reflector > enabled`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                                                                       |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+| One of(Option)                        |
+| ------------------------------------- |
+| [item 0](#reflector_enabled_oneOf_i0) |
+| [item 1](#reflector_enabled_oneOf_i1) |
+
+#### <a name="reflector_enabled_oneOf_i0"></a>11.1.1. Property `base cluster configuration > reflector > enabled > oneOf > item 0`
+
+|          |         |
+| -------- | ------- |
+| **Type** | `const` |
+
+Specific value: `"auto"`
+
+#### <a name="reflector_enabled_oneOf_i1"></a>11.1.2. Property `base cluster configuration > reflector > enabled > oneOf > item 1`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+## <a name="common"></a>12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > common`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
