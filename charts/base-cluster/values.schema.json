@@ -939,6 +939,53 @@
       },
       "additionalProperties": false
     },
+    "rbac": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "object",
+          "description": "A map of a ClusterRole name to it's rules",
+          "additionalProperties": {
+            "type": "array",
+            "additionalItems": {
+              "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.24.4-standalone-strict/_definitions.json#/definitions/io.k8s.api.rbac.v1.PolicyRule"
+            },
+            "minItems": 1
+          }
+        },
+        "accounts": {
+          "type": "object",
+          "description": "A map of an account to it's (Cluster-)Roles",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "roles": {
+                "type": "object",
+                "description": "A map of a role to it's intended namespaces",
+                "additionalProperties": {
+                  "type": "array",
+                  "additionalItems": {
+                    "type": "string"
+                  },
+                  "minItems": 1
+                },
+                "minProperties": 1
+              },
+              "clusterRoles": {
+                "type": "array",
+                "additionalItems": {
+                  "type": "string"
+                },
+                "minItems": 1
+              }
+            },
+            "minProperties": 1,
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "common": {
       "type": "object",
       "description": "Values for sub-chart"

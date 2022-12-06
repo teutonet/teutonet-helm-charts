@@ -1,6 +1,3 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/teutonet/teutonet-helm-charts/main/charts/base-cluster/values.schema.json
-# yaml-language-server: $schema=file://./values.schema.json
-
 global:
   serviceLevelAgreement: None
   clusterName: null
@@ -312,3 +309,7 @@ storage:
 
 reflector:
   enabled: auto
+
+rbac:
+  roles: {}
+  accounts: {}

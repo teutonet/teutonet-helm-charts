@@ -24,7 +24,7 @@ flux create source helm --namespace flux-system teuto-net --url https://teutonet
   yq -y -s '.[] | select(.metadata.name == "teuto-net") | .metadata.annotations={"meta.helm.sh/release-name": "base-cluster", "meta.helm.sh/release-namespace": "flux-system"}' |
   kubectl apply -f -
 
-# follow the instructions to configure your flux
+# follow the instructions to configure your flux, distribute KUBECONFIGs, ...
 helm -n flux-system get notes base-cluster
 ```
 

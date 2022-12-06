@@ -1,0 +1,38 @@
+global:
+  clusterName: rbac
+  serviceLevelAgreement: None
+rbac:
+  roles:
+    admin:
+      - apiGroups:
+          - metrics.k8s.io
+        resources:
+          - pods
+        verbs:
+          - get
+          - patch
+    edit:
+      - apiGroups:
+          - ""
+        resources:
+          - pods
+        verbs:
+          - update
+          - patch
+  accounts:
+    test:
+      roles:
+        edit:
+          - kube-system
+      clusterRoles:
+        - admin
+    test2:
+      roles:
+        admin:
+          - kube-system
+        edit:
+          - kube-system
+          - default
+      clusterRoles:
+        - edit
+        - admin

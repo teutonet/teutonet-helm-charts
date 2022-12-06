@@ -16,7 +16,9 @@ You should configure {{ $instance.url | quote }} to add the following key as a s
   {{- end }}
 {{- end }}
 
-{{ if .Values.monitoring.prometheus.enabled }}
+{{- if .Values.monitoring.prometheus.enabled }}
+
+===
 You can access your grafana instance via
 
 {{- if and .Values.dns.email .Values.monitoring.grafana.ingress.enabled .Values.global.baseDomain }}
@@ -35,3 +37,37 @@ Password: {{ include "common.secrets.passwords.manage" (dict "secret" $secretNam
 Password: $ kubectl -n monitoring get secret {{ $secretName | quote }} -o json | jq -r .data.password | base64 -d
 {{- end }}
 {{- end }}
+
+{{- if .Values.rbac.accounts }}
+
+===
+Use the following commands to create a kubeconfig for an account;
+
+function generateKubeconfig() {
+  local user="${1?Missing user parameter}"
+  local namespace="{{ .Release.Namespace }}"
+  local cluster="$(kubectl config view --raw -o json | jq --arg context $(kubectl config current-context) -r '.contexts[] | select(.name == $context) | .context.cluster')"
+
+  cat - <<EOF
+apiVersion: v1
+kind: Config
+clusters:
+- cluster:
+    certificate-authority-data: $(kubectl config view --raw -o json | jq --arg cluster $cluster -r '.clusters[] | select(.name == $cluster) | .cluster["certificate-authority-data"]')
+    server: $(kubectl config view --raw -o json | jq --arg cluster $cluster -r '.clusters[] | select(.name == $cluster) | .cluster.server')
+  name: $cluster
+contexts:
+- context:
+    cluster: $cluster
+    user: ${user}@${cluster}
+  name: ${user}@${cluster}
+current-context: ${user}@${cluster}
+users:
+- name: ${user}@${cluster}
+  user:
+    token: $(kubectl -n $namespace get secret $(kubectl -n $namespace get serviceaccount "{{ include "common.names.fullname" . }}-$user" -o jsonpath='{.items[].secrets[].name}') -o jsonpath={.data.token} | base64 -d)
+EOF
+}
+
+$ generateKubeconfig {{ .Values.rbac.accounts | keys | first }}
+{{- end -}}
