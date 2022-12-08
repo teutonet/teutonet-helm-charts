@@ -1,4 +1,9 @@
 {{- define "base-cluster.prometheus.config" -}}
+
+  {{- if .Values.global.imageRegistry }}
+global:
+  imageRegistry: {{ .Values.global.imageRegistry }}
+  {{- end }}
 grafana:
   {{- if $.Values.global.imageRegistry }}
   image:
@@ -148,19 +153,6 @@ grafana:
     enabled: false
 prometheusOperator:
   secretFieldSelector: 'type!=helm.sh/release.v1'
-  {{- if .Values.global.imageRegistry }}
-  image:
-    repository: {{ printf "%s/prometheus-operator/prometheus-operator" .Values.global.imageRegistry }}
-  prometheusConfigReloader:
-    image:
-      repository: {{ printf "%s/prometheus-operator/prometheus-config-reloader" .Values.global.imageRegistry }}
-  admissionWebhooks:
-    patch:
-      image:
-        repository: {{ printf "%s/ingress-nginx/kube-webhook-certgen" .Values.global.imageRegistry }}
-  thanosImage:
-    repository: {{ printf "%s/thanos/thanos" .Values.global.imageRegistry }}
-  {{- end }}
   resources: {{- .Values.monitoring.prometheus.operator.resources | toYaml | nindent 6 }}
   priorityClassName: system-cluster-critical
   securityContext:
@@ -243,10 +235,6 @@ alertmanager:
   {{- end }}
   alertmanagerSpec:
     replicas: {{ .Values.monitoring.prometheus.alertmanager.replicas }}
-    {{- if .Values.global.imageRegistry }}
-    image:
-      repository: {{ printf "%s/prometheus/alertmanager" .Values.global.imageRegistry }}
-    {{- end }}
     podAntiAffinity: soft
     {{- if false }} # TODO ingress
 {{/*    {{- if empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled }}*/}}
@@ -283,10 +271,6 @@ prometheus:
     additionalAlertManagerConfigsSecret:
       name: additional-alertmanager-configs
       key: prometheus-additional-alertmanager-configs.yaml
-    {{- end }}
-    {{- if .Values.global.imageRegistry }}
-    image:
-      repository: {{ printf "%s/prometheus/prometheus" .Values.global.imageRegistry }}
     {{- end }}
     {{- if false }} # TODO ingress
 {{/*    {{- if empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled }}*/}}
