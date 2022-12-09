@@ -1,6 +1,7 @@
 {{- define "base-cluster.rbac.roles" -}}
 {{- $roles := dict -}}
 {{- $definedRoles := .roles -}}
+{{- $definedNamespaces := .namespaces -}}
 {{- range $accountName, $account := .accounts -}}
   {{- range $roleName, $namespaces := dig "roles" (dict) $account -}}
     {{- if not (has $roleName $definedRoles) -}}
@@ -10,6 +11,10 @@
     {{- $existingRole := dig $roleName (dict) $roles -}}
     {{- $namespaceMapping := dig "namespaceMapping" (dict) $existingRole -}}
     {{- range $roleNamespace := $namespaces -}}
+      {{- if not (has $roleNamespace $definedNamespaces) -}}
+        {{- fail (printf "Role '%s' wants to be in the undefined namespace '%s'" $roleName $roleNamespace) -}}
+      {{- end -}}
+
       {{- $existingNamespace := dig $roleNamespace (list) $namespaceMapping -}}
       {{- $existingNamespace = append $existingNamespace $accountName -}}
       {{- $namespaceMapping = set $namespaceMapping $roleNamespace $existingNamespace -}}

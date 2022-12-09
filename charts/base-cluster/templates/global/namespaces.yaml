@@ -1,0 +1,11 @@
+{{- range $name, $namespace := include "base-cluster.enabled-namespaces" . | fromYaml -}}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ $name }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 -}}
+  {{- with $namespace.additionalLabels -}}
+    {{- . | toYaml | nindent 4 -}}
+  {{- end }}
+---
+{{ end -}}

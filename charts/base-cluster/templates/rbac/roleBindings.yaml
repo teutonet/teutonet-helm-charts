@@ -1,4 +1,4 @@
-{{- $roles := include "base-cluster.rbac.roles" (dict "accounts" .Values.rbac.accounts "roles" (.Values.rbac.roles | keys)) | fromYaml -}}
+{{- $roles := include "base-cluster.rbac.roles" (dict "accounts" .Values.rbac.accounts "roles" (.Values.rbac.roles | keys) "namespaces" (include "base-cluster.enabled-namespaces" . | fromYaml | keys)) | fromYaml -}}
 
 {{- range $roleName, $roleMapping := $roles -}}
   {{- $clusterMapping := dig "clusterMapping" (dict) $roleMapping -}}

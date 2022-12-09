@@ -1,6 +1,9 @@
 global:
   clusterName: rbac
   serviceLevelAgreement: None
+  namespaces:
+    my-fav-ns: {}
+    my-second-fav-nv: {}
 rbac:
   roles:
     admin:
@@ -23,16 +26,16 @@ rbac:
     test:
       roles:
         edit:
-          - kube-system
+          - my-fav-ns
       clusterRoles:
         - admin
     test2:
       roles:
         admin:
-          - kube-system
+          - my-fav-ns
         edit:
-          - kube-system
-          - default
+          - my-fav-ns
+          - my-second-fav-nv
       clusterRoles:
         - edit
         - admin
