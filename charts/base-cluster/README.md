@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -39,7 +39,7 @@ helm -n flux-system get notes base-cluster
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.2.0 |
+| https://charts.bitnami.com/bitnami | common | 2.2.2 |
 
 This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
 
