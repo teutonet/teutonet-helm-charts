@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -27,7 +27,7 @@ flux create source helm --namespace flux-system teuto-net --url https://teutonet
   yq -y -s '.[] | select(.metadata.name == "teuto-net") | .metadata.annotations={"meta.helm.sh/release-name": "base-cluster", "meta.helm.sh/release-namespace": "flux-system"}' |
   kubectl apply -f -
 
-# follow the instructions to configure your flux
+# follow the instructions to configure your flux, distribute KUBECONFIGs, ...
 helm -n flux-system get notes base-cluster
 ```
 
@@ -71,6 +71,7 @@ This excludes:
 | - [ingress](#ingress )         | No      | object | No         | -          | -                    |
 | - [storage](#storage )         | No      | object | No         | -          | -                    |
 | - [reflector](#reflector )     | No      | object | No         | -          | -                    |
+| - [rbac](#rbac )               | No      | object | No         | -          | -                    |
 | - [common](#common )           | No      | object | No         | -          | Values for sub-chart |
 
 ## <a name="global"></a>1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global`
@@ -94,6 +95,7 @@ This excludes:
 | - [helmRepositories](#global_helmRepositories )           | No      | object           | No         | -                       | A map of helmRepositories to create, the key is the name                                                                                                         |
 | - [certificates](#global_certificates )                   | No      | object           | No         | -                       | A map of cert-manager certificates to create and sync its secrets into namespaces, the key is the name, therefore the secret name will be \`$key\`-certificate   |
 | - [storageClass](#global_storageClass )                   | No      | string or null   | No         | In #/$defs/storageClass | The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd)                                                 |
+| - [namespaces](#global_namespaces )                       | No      | object           | No         | -                       | Namespaces to create. AND *delete* if removed                                                                                                                    |
 
 ### <a name="global_serviceLevelAgreement"></a>1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > serviceLevelAgreement`
 
@@ -445,11 +447,11 @@ Must be one of:
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                                                                | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                              |
-| ----------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | -------------------------------------------------------------------------------------------------------------- |
-| - [url](#global_helmRepositories_additionalProperties_url )             | No      | string | No         | -          | -                                                                                                              |
-| - [interval](#global_helmRepositories_additionalProperties_interval )   | No      | string | No         | -          | The interval in which to update the repository                                                                 |
-| - [condition](#global_helmRepositories_additionalProperties_condition ) | No      | string | No         | -          | A condition with which to decide to include the repository. This will be templated. Must return a truthy value |
+| Property                                                                | Pattern | Type   | Deprecated | Definition           | Title/Description                                                                                            |
+| ----------------------------------------------------------------------- | ------- | ------ | ---------- | -------------------- | ------------------------------------------------------------------------------------------------------------ |
+| - [url](#global_helmRepositories_additionalProperties_url )             | No      | string | No         | -                    | -                                                                                                            |
+| - [interval](#global_helmRepositories_additionalProperties_interval )   | No      | string | No         | -                    | The interval in which to update the repository                                                               |
+| - [condition](#global_helmRepositories_additionalProperties_condition ) | No      | string | No         | In #/$defs/condition | A condition with which to decide to include the resource. This will be templated. Must return a truthy value |
 
 ##### <a name="global_helmRepositories_additionalProperties_url"></a>1.10.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > url`
 
@@ -475,11 +477,12 @@ Must be one of:
 
 ##### <a name="global_helmRepositories_additionalProperties_condition"></a>1.10.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > condition`
 
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
+|                |                   |
+| -------------- | ----------------- |
+| **Type**       | `string`          |
+| **Defined in** | #/$defs/condition |
 
-**Description:** A condition with which to decide to include the repository. This will be templated. Must return a truthy value
+**Description:** A condition with which to decide to include the resource. This will be templated. Must return a truthy value
 
 **Examples:**
 
@@ -511,11 +514,11 @@ Must be one of:
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                                                                          | Pattern | Type        | Deprecated | Definition                                                                                  | Title/Description                                                                                               |
-| --------------------------------------------------------------------------------- | ------- | ----------- | ---------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| + [dnsNames](#global_certificates_additionalProperties_dnsNames )                 | No      | Combination | No         | -                                                                                           | The dnsNames to create                                                                                          |
-| - [targetNamespaces](#global_certificates_additionalProperties_targetNamespaces ) | No      | object      | No         | Same as [targetNamespaces](#global_imageCredentials_additionalProperties_targetNamespaces ) | The namespaces to sync the secret into, or \`ALL\` for all namespaces                                           |
-| - [condition](#global_certificates_additionalProperties_condition )               | No      | string      | No         | -                                                                                           | A condition with which to decide to include the certificate. This will be templated. Must return a truthy value |
+| Property                                                                          | Pattern | Type        | Deprecated | Definition                                                                                  | Title/Description                                                                                            |
+| --------------------------------------------------------------------------------- | ------- | ----------- | ---------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| + [dnsNames](#global_certificates_additionalProperties_dnsNames )                 | No      | Combination | No         | -                                                                                           | The dnsNames to create                                                                                       |
+| - [targetNamespaces](#global_certificates_additionalProperties_targetNamespaces ) | No      | object      | No         | Same as [targetNamespaces](#global_imageCredentials_additionalProperties_targetNamespaces ) | The namespaces to sync the secret into, or \`ALL\` for all namespaces                                        |
+| - [condition](#global_certificates_additionalProperties_condition )               | No      | string      | No         | Same as [condition](#global_helmRepositories_additionalProperties_condition )               | A condition with which to decide to include the resource. This will be templated. Must return a truthy value |
 
 ##### <a name="global_certificates_additionalProperties_dnsNames"></a>1.11.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > certificates > additionalProperties > dnsNames`
 
@@ -586,25 +589,12 @@ test.teuto.net
 
 ##### <a name="global_certificates_additionalProperties_condition"></a>1.11.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates > additionalProperties > condition`
 
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
+|                        |                                                                      |
+| ---------------------- | -------------------------------------------------------------------- |
+| **Type**               | `string`                                                             |
+| **Same definition as** | [condition](#global_helmRepositories_additionalProperties_condition) |
 
-**Description:** A condition with which to decide to include the certificate. This will be templated. Must return a truthy value
-
-**Examples:**
-
-```yaml
-{{ true }}
-```
-
-```yaml
-{{ eq .Values.global.baseDomain "teuto.net" }}
-```
-
-```yaml
-{{ .Values.global.baseDomain }}
-```
+**Description:** A condition with which to decide to include the resource. This will be templated. Must return a truthy value
 
 ### <a name="global_storageClass"></a>1.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > storageClass`
 
@@ -614,6 +604,57 @@ test.teuto.net
 | **Defined in** | #/$defs/storageClass |
 
 **Description:** The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd)
+
+### <a name="global_namespaces"></a>1.13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces`
+
+|                           |                                                                                                                                                                                |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Type**                  | `object`                                                                                                                                                                       |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_namespaces_additionalProperties "Each additional property must conform to the following schema") |
+
+**Description:** Namespaces to create. AND *delete* if removed
+
+| Property                                                           | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [additionalProperties](#global_namespaces_additionalProperties ) | No      | object | No         | -          | -                 |
+
+#### <a name="global_namespaces_additionalProperties"></a>1.13.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                                                        | Pattern | Type   | Deprecated | Definition                                                                    | Title/Description                                                                                            |
+| ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| - [additionalLabels](#global_namespaces_additionalProperties_additionalLabels ) | No      | object | No         | -                                                                             | -                                                                                                            |
+| - [condition](#global_namespaces_additionalProperties_condition )               | No      | string | No         | Same as [condition](#global_helmRepositories_additionalProperties_condition ) | A condition with which to decide to include the resource. This will be templated. Must return a truthy value |
+
+##### <a name="global_namespaces_additionalProperties_additionalLabels"></a>1.13.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > additionalLabels`
+
+|                           |                                                                                                                                                                                                                      |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                                                                                             |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_namespaces_additionalProperties_additionalLabels_additionalProperties "Each additional property must conform to the following schema") |
+
+| Property                                                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [additionalProperties](#global_namespaces_additionalProperties_additionalLabels_additionalProperties ) | No      | string | No         | -          | -                 |
+
+##### <a name="global_namespaces_additionalProperties_additionalLabels_additionalProperties"></a>1.13.1.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > additionalLabels > additionalProperties`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="global_namespaces_additionalProperties_condition"></a>1.13.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > condition`
+
+|                        |                                                                      |
+| ---------------------- | -------------------------------------------------------------------- |
+| **Type**               | `string`                                                             |
+| **Same definition as** | [condition](#global_helmRepositories_additionalProperties_condition) |
+
+**Description:** A condition with which to decide to include the resource. This will be templated. Must return a truthy value
 
 ## <a name="kyverno"></a>2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > kyverno`
 
@@ -2367,7 +2408,112 @@ Specific value: `"auto"`
 | -------- | --------- |
 | **Type** | `boolean` |
 
-## <a name="common"></a>12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > common`
+## <a name="rbac"></a>12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                      | Pattern | Type   | Deprecated | Definition | Title/Description                           |
+| ----------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------- |
+| - [roles](#rbac_roles )       | No      | object | No         | -          | A map of a ClusterRole name to it's rules   |
+| - [accounts](#rbac_accounts ) | No      | object | No         | -          | A map of an account to it's (Cluster-)Roles |
+
+### <a name="rbac_roles"></a>12.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac > roles`
+
+|                           |                                                                                                                                                                         |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                                                |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#rbac_roles_additionalProperties "Each additional property must conform to the following schema") |
+
+**Description:** A map of a ClusterRole name to it's rules
+
+| Property                                                    | Pattern | Type  | Deprecated | Definition | Title/Description |
+| ----------------------------------------------------------- | ------- | ----- | ---------- | ---------- | ----------------- |
+| - [additionalProperties](#rbac_roles_additionalProperties ) | No      | array | No         | -          | -                 |
+
+#### <a name="rbac_roles_additionalProperties"></a>12.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac > roles > additionalProperties`
+
+|          |         |
+| -------- | ------- |
+| **Type** | `array` |
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | 1                  |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | N/A                |
+
+### <a name="rbac_accounts"></a>12.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac > accounts`
+
+|                           |                                                                                                                                                                            |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                                                   |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#rbac_accounts_additionalProperties "Each additional property must conform to the following schema") |
+
+**Description:** A map of an account to it's (Cluster-)Roles
+
+| Property                                                       | Pattern | Type   | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [additionalProperties](#rbac_accounts_additionalProperties ) | No      | object | No         | -          | -                 |
+
+#### <a name="rbac_accounts_additionalProperties"></a>12.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac > accounts > additionalProperties`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                                            | Pattern | Type   | Deprecated | Definition | Title/Description                           |
+| ------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------- |
+| - [roles](#rbac_accounts_additionalProperties_roles )               | No      | object | No         | -          | A map of a role to it's intended namespaces |
+| - [clusterRoles](#rbac_accounts_additionalProperties_clusterRoles ) | No      | array  | No         | -          | -                                           |
+
+##### <a name="rbac_accounts_additionalProperties_roles"></a>12.2.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac > accounts > additionalProperties > roles`
+
+|                           |                                                                                                                                                                                                       |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                                                                              |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#rbac_accounts_additionalProperties_roles_additionalProperties "Each additional property must conform to the following schema") |
+
+**Description:** A map of a role to it's intended namespaces
+
+| Property                                                                                  | Pattern | Type  | Deprecated | Definition | Title/Description |
+| ----------------------------------------------------------------------------------------- | ------- | ----- | ---------- | ---------- | ----------------- |
+| - [additionalProperties](#rbac_accounts_additionalProperties_roles_additionalProperties ) | No      | array | No         | -          | -                 |
+
+##### <a name="rbac_accounts_additionalProperties_roles_additionalProperties"></a>12.2.1.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac > accounts > additionalProperties > roles > additionalProperties`
+
+|          |         |
+| -------- | ------- |
+| **Type** | `array` |
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | 1                  |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | N/A                |
+
+##### <a name="rbac_accounts_additionalProperties_clusterRoles"></a>12.2.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac > accounts > additionalProperties > clusterRoles`
+
+|          |         |
+| -------- | ------- |
+| **Type** | `array` |
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | 1                  |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | N/A                |
+
+## <a name="common"></a>13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > common`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
