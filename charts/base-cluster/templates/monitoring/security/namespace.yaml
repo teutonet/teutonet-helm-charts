@@ -1,8 +1,0 @@
-{{- if and .Values.monitoring.securityScanning.enabled .Values.monitoring.prometheus.enabled }}
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: trivy
-  labels: {{- include "common.labels.standard" $ | nindent 4 }}
-    app.kubernetes.io/component: security
-{{- end }}

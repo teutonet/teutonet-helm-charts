@@ -1,0 +1,41 @@
+global:
+  clusterName: rbac
+  serviceLevelAgreement: None
+  namespaces:
+    my-fav-ns: {}
+    my-second-fav-nv: {}
+rbac:
+  roles:
+    admin:
+      - apiGroups:
+          - metrics.k8s.io
+        resources:
+          - pods
+        verbs:
+          - get
+          - patch
+    edit:
+      - apiGroups:
+          - ""
+        resources:
+          - pods
+        verbs:
+          - update
+          - patch
+  accounts:
+    test:
+      roles:
+        edit:
+          - my-fav-ns
+      clusterRoles:
+        - admin
+    test2:
+      roles:
+        admin:
+          - my-fav-ns
+        edit:
+          - my-fav-ns
+          - my-second-fav-nv
+      clusterRoles:
+        - edit
+        - admin

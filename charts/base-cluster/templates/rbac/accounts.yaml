@@ -1,0 +1,21 @@
+{{- range $name := .Values.rbac.accounts | keys -}}
+  {{- $fullName := printf "%s-%s" (include "common.names.fullname" $) $name -}}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ $fullName }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: rbac
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $fullName }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: rbac
+  annotations:
+    kubernetes.io/service-account.name: {{ $fullName }}
+{{- end -}}
