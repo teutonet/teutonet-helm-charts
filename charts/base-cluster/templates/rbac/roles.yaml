@@ -3,7 +3,7 @@
 {{- range $name, $spec := .Values.rbac.roles -}}
   {{- if not (hasKey $usedRoles $name) -}}
     {{- fail (printf "Role '%s' is not used by any account" $name) -}}
-  {{- end -}}
+  {{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
