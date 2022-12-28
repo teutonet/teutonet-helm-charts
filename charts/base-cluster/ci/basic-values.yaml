@@ -1,0 +1,30 @@
+global:
+  # set your clusterName here
+  clusterName:
+  namespaces:
+    dev: {}
+flux:
+  gitRepositories:
+    main:
+      url: ssh://git@myfancygit.com/group/name.git
+dns:
+  # set your email here
+  email:
+rbac:
+  roles:
+    admin:
+      - apiGroups:
+          - '*'
+        resources:
+          - '*'
+        verbs:
+          - '*'
+      - nonResourceURLs:
+          - '*'
+        verbs:
+          - '*'
+  accounts:
+    dev1:
+      roles:
+        admin:
+          - dev
