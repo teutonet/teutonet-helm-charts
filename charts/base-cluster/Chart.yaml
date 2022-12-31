@@ -44,5 +44,5 @@ annotations:
     - image: quay.io/prometheus-operator/prometheus-operator:v0.60.1
     - image: quay.io/prometheus/node-exporter:v1.5.0
     - image: quay.io/prometheus/prometheus:v2.39.1
-    - image: registry.k8s.io/ingress-nginx/controller:v1.5.2@sha256:3870522ed937c9efb94bfa31a7eb16009831567a0d4cbe01846fc5486d622655
+    - image: registry.k8s.io/ingress-nginx/controller:v1.5.1@sha256:4ba73c697770664c1e00e9f968de14e08f606ff961c76e5d7033a4a9c593c629
     - image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.7.0
