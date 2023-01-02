@@ -642,7 +642,7 @@
                         "string",
                         "null"
                       ],
-                      "description": "The email to use for authentication, if `null` use `.dns.email`",
+                      "description": "The email to use for authentication and Let's Encrypt, if `null` use `.dns.email`",
                       "$ref": "#/$defs/email"
                     },
                     "apiToken": {
