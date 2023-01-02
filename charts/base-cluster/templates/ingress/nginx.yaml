@@ -45,6 +45,9 @@ spec:
         runAsGroup: 101
         runAsUser: 101
         fsGroup: 101
+      extraArgs:
+        http-port: 8080
+        https-port: 8443
       containerPort:
         http: 8080
         https: 8443
