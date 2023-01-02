@@ -22,6 +22,8 @@ flux create helmrelease --export base-cluster -n flux-system --source HelmReposi
 kubectl get node -o json | jq '.items[0].metadata.annotations["cluster.x-k8s.io/cluster-name"]'
 
 # configure according to your needs, at least `.global.clusterName` is needed
+# also, you should configure `.helmRepositories.flux.url=https://fluxcd-community.github.io/helm-charts` so flux can manage itself
+# additionally, you should add your git repo to `.flux.gitRepositories`, see [the documentation](https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster#81--property-base-cluster-configuration--flux--gitrepositories)
 vi cluster.yaml
 
 # create HelmRelease for flux to manage itself
