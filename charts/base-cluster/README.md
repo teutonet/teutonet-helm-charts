@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 0.7.1](https://img.shields.io/badge/Version-0.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -16,18 +16,34 @@ A common base for every kubernetes cluster
 ## Cluster bootstrap
 
 ```sh
-if # when using teuto-net's managed apps; then
-  kustomize build t8s-managed-apps/flux/0.36.0-deployment | kubectl apply -f - -f flux.yaml -f cluster.yaml
-else # when installing flux manually
-  flux install
-  kubectl apply -f cluster.yaml
-fi
+# always be git 😁
+git init
 
-flux create source helm --namespace flux-system teuto-net --url https://teutonet.github.io/teutonet-helm-charts --export |
-  yq -y -s '.[] | select(.metadata.name == "teuto-net") | .metadata.annotations={"meta.helm.sh/release-name": "base-cluster", "meta.helm.sh/release-namespace": "flux-system"}' |
-  kubectl apply -f -
+# create empty cluster HelmRelease;
+flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 0.x.x > cluster.yaml
 
-# follow the instructions to configure your flux, distribute KUBECONFIGs, ...
+# maybe use the following name for your cluster;
+kubectl get node -o json | jq '.items[0].metadata.annotations["cluster.x-k8s.io/cluster-name"]'
+
+# configure according to your needs, at least `.global.clusterName` is needed
+vi cluster.yaml
+
+# create HelmRelease for flux to manage itself
+flux create helmrelease --export flux -n flux-system --source HelmRepository/flux.flux-system --chart flux2 --chart-version 2.x.x > flux.yaml
+
+# add, commit and push resources
+git add cluster.yaml flux.yaml
+git commit cluster.yaml flux.yaml
+git push
+
+# we explicitly do not use `flux bootstrap` or `flux install` as this creates kustomization stuff and installs flux manually
+helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io/helm-charts --version 2.x.x --atomic
+
+# manual initial installation of the chart, afterwards the chart takes over
+# after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
+helm install -n flux-system base-cluster base-cluster --repo https://teutonet.github.io/teutonet-helm-charts --version 0.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
+
+# you can use this command to get the instructions again
 helm -n flux-system get notes base-cluster
 ```
 
@@ -1682,10 +1698,10 @@ currencyEUR
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-| Property                                                  | Pattern | Type           | Deprecated | Definition       | Title/Description                                                   |
-| --------------------------------------------------------- | ------- | -------------- | ---------- | ---------------- | ------------------------------------------------------------------- |
-| - [email](#dns_provider_oneOf_i0_cloudflare_email )       | No      | string or null | No         | In #/$defs/email | The email to use for authentication, if \`null\` use \`.dns.email\` |
-| + [apiToken](#dns_provider_oneOf_i0_cloudflare_apiToken ) | No      | string         | No         | -                | -                                                                   |
+| Property                                                  | Pattern | Type           | Deprecated | Definition       | Title/Description                                                                     |
+| --------------------------------------------------------- | ------- | -------------- | ---------- | ---------------- | ------------------------------------------------------------------------------------- |
+| - [email](#dns_provider_oneOf_i0_cloudflare_email )       | No      | string or null | No         | In #/$defs/email | The email to use for authentication and Let's Encrypt, if \`null\` use \`.dns.email\` |
+| + [apiToken](#dns_provider_oneOf_i0_cloudflare_apiToken ) | No      | string         | No         | -                | -                                                                                     |
 
 ##### <a name="dns_provider_oneOf_i0_cloudflare_email"></a>5.1.1.1.1. Property `base cluster configuration > dns > provider > oneOf > item 0 > cloudflare > email`
 
@@ -1694,7 +1710,7 @@ currencyEUR
 | **Type**       | `string or null` |
 | **Defined in** | #/$defs/email    |
 
-**Description:** The email to use for authentication, if `null` use `.dns.email`
+**Description:** The email to use for authentication and Let's Encrypt, if `null` use `.dns.email`
 
 | Restrictions                      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
