@@ -7,7 +7,7 @@ flux:
   gitRepositories:
     main:
       url: ssh://git@myfancygit.com/group/name.git
-dns:
+certManager:
   # set your email here, this is used for Let's Encrypt
   email:
 rbac:

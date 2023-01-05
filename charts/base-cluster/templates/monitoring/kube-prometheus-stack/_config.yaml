@@ -134,7 +134,7 @@ grafana:
   {{- with .Values.monitoring.grafana.additionalDashboards }}
   {{ . | toYaml | nindent 6 }}
   {{- end }}
-  {{- if and .Values.dns.email .Values.monitoring.grafana.ingress.enabled .Values.global.baseDomain }}
+  {{- if and .Values.certManager.email .Values.monitoring.grafana.ingress.enabled .Values.global.baseDomain }}
   ingress:
     enabled: true
     ingressClassName: nginx
@@ -328,7 +328,7 @@ prometheus:
 {{- end -}}
 
 {{- define "base-cluster.grafana.config" -}}
-{{- if and .Values.dns.email .Values.global.baseDomain -}}
+{{- if and .Values.certManager.email .Values.global.baseDomain -}}
 auth:
   signout_redirect_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
 server:

@@ -1,4 +1,4 @@
-{{- if .Values.dns.email }}
+{{- if .Values.certManager.email }}
 {{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "clusterissuer-letsencrypt-prod" "resource" (include "base-cluster.cert-manager.defaultClusterIssuer" .) "dependencies" (dict "cert-manager" "cert-manager") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cert-manager")) }}
 {{- end -}}
 
@@ -11,19 +11,14 @@ metadata:
     app.kubernetes.io/component: cert-manager
 spec:
   acme:
-    email: {{ .Values.dns.email }}
+    email: {{ .Values.certManager.email }}
     solvers:
       {{- if .Values.dns.provider }}
       - dns01:
           {{- $_ := required "You must choose a DNS provider" .Values.dns.provider -}}
           {{- if .Values.dns.provider.cloudflare }}
           cloudflare:
-            email: {{ .Values.dns.provider.cloudflare.email | default .Values.dns.email }}
-            {{- if .Values.dns.provider.cloudflare.apiKey }}
-            apiKeySecretRef:
-            {{- else }}
             apiTokenSecretRef:
-            {{- end }}
               name: cert-manager-dns
               key: credentials
           {{- end }}

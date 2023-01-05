@@ -638,11 +638,8 @@
                   "type": "object",
                   "properties": {
                     "email": {
-                      "type": [
-                        "string",
-                        "null"
-                      ],
-                      "description": "The email to use for authentication and Let's Encrypt, if `null` use `.dns.email`",
+                      "type": "string",
+                      "description": "The email to use for authentication",
                       "$ref": "#/$defs/email"
                     },
                     "apiToken": {
@@ -663,14 +660,6 @@
             }
           ]
         },
-        "email": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Setting an email enables cert-manager's IngressShim",
-          "$ref": "#/$defs/email"
-        },
         "domains": {
           "type": "array",
           "uniqueItems": true,
@@ -678,13 +667,22 @@
             "type": "string"
           }
         }
-      }
+      },
+      "additionalProperties": false
     },
     "certManager": {
       "type": "object",
       "properties": {
         "resources": {
           "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "email": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Setting an email enables cert-manager's IngressShim and will be used for Let's Encrypt",
+          "$ref": "#/$defs/email"
         },
         "webhook": {
           "type": "object",
