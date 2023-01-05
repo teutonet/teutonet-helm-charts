@@ -637,11 +637,6 @@
                 "cloudflare": {
                   "type": "object",
                   "properties": {
-                    "email": {
-                      "type": "string",
-                      "description": "The email to use for authentication",
-                      "$ref": "#/$defs/email"
-                    },
                     "apiToken": {
                       "type": "string"
                     }
