@@ -1,7 +1,7 @@
 apiVersion: v2
 name: base-cluster
 type: application
-version: 0.8.0
+version: 1.0.0
 icon: https://teuto.net/favicon.ico
 maintainers:
   - name: cwrau
@@ -35,6 +35,7 @@ annotations:
     - image: grafana/loki:2.6.1
     - image: k8s.gcr.io/descheduler/descheduler:v0.25.1
     - image: k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.3.0
+    - image: k8s.gcr.io/pause:3.5
     - image: k8s.gcr.io/sig-storage/nfs-provisioner:v3.0.0
     - image: quay.io/jetstack/cert-manager-cainjector:v1.10.1
     - image: quay.io/jetstack/cert-manager-controller:v1.10.1
