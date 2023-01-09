@@ -86,6 +86,16 @@
           },
           "additionalProperties": false
         },
+        "pause": {
+          "type": "object",
+          "description": "Image to be used for pause containers",
+          "properties": {
+            "image": {
+              "$ref": "#/$defs/image"
+            }
+          },
+          "additionalProperties": false
+        },
         "flux": {
           "type": "object",
           "description": "Image with `flux` binary",
