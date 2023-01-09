@@ -26,7 +26,7 @@ spec:
     image:
       repository: {{ printf "%s/jetstack/cert-manager-controller" $.Values.global.imageRegistry }}
     {{- end }}
-    {{- if .Values.dns.email }}
+    {{- if .Values.certManager.email }}
     ingressShim:
       defaultIssuerName: letsencrypt-prod
       defaultIssuerKind: ClusterIssuer

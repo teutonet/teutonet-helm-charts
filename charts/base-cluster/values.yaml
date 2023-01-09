@@ -278,11 +278,11 @@ descheduler:
             pods: 95
 
 dns:
-  email: null
   domains: []
   provider: null
 
 certManager:
+  email: null
   resources:
     limits:
       cpu: 250m

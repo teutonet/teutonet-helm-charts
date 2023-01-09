@@ -1,4 +1,4 @@
-{{- if and .Values.dns.email .Values.global.certificates }}
+{{- if and .Values.certManager.email .Values.global.certificates }}
   {{- $certificates := include "base-cluster.cert-manager.custom-certificates" . | fromYaml -}}
   {{- if not (empty $certificates) -}}
     {{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "cert-manager-certificates" "resource" (include "base-cluster.cert-manager.custom-certificates-yaml" (dict "context" . "certs" $certificates)) "dependencies" (dict "cert-manager" "cert-manager") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cert-manager")) | nindent 0 }}

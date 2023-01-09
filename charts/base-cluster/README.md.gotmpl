@@ -55,4 +55,11 @@ This excludes:
 
 - descheduler, its version is bound to the k8s version and they have not released 1.0.0
 
+## Migration
+
+# 0.x.x -> 1.0.0
+
+- The field `.dns.email` moves to `.certManager.email`.
+- The field `.dns.provider.cloudflare.email` is removed, as only `apiToken`s are supported anyways.
+
 {{ .Files.Get "values.md"  }}
