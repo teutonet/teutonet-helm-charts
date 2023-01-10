@@ -29,8 +29,8 @@ spec:
           additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 12 }}
       config:
         use-proxy-protocol: "true"
-		use-gzip: "true"
-		enable-brotli: "true"
+        use-gzip: "true"
+        enable-brotli: "true"
       service:
         annotations:
           loadbalancer.openstack.org/proxy-protocol: "true"
