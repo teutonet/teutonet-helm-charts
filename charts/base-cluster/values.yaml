@@ -293,7 +293,7 @@ certManager:
       cpu: 250m
       memory: 512Mi
     requests:
-      cpu: 250m
+      cpu: 100m
       memory: 512Mi
   caInjector:
     resources:
@@ -301,7 +301,7 @@ certManager:
         cpu: 250m
         memory: 512Mi
       requests:
-        cpu: 250m
+        cpu: 100m
         memory: 512Mi
   webhook:
     resources:
@@ -309,7 +309,7 @@ certManager:
         cpu: 1
         memory: 512Mi
       requests:
-        cpu: 250m
+        cpu: 10m
         memory: 512Mi
   dnsChallengeNameservers:
     1.1.1.1: 53
