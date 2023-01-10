@@ -1,0 +1,15 @@
+{{- $usedRoles := include "base-cluster.rbac.roles" (dict "accounts" .Values.rbac.accounts "roles" (.Values.rbac.roles | keys) "namespaces" (include "base-cluster.enabled-namespaces" . | fromYaml | keys)) | fromYaml -}}
+
+{{- range $name, $spec := .Values.rbac.roles -}}
+  {{- if not (hasKey $usedRoles $name) -}}
+    {{- fail (printf "Role '%s' is not used by any account" $name) -}}
+  {{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ printf "%s-%s" (include "common.names.fullname" $) $name }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: rbac
+rules: {{- $spec | toYaml | nindent 2 }}
+{{- end -}}

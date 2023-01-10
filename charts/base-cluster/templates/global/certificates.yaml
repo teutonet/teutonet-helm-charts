@@ -1,4 +1,4 @@
-{{- if and .Values.dns.email .Values.global.certificates }}
+{{- if and .Values.certManager.email .Values.global.certificates }}
   {{- $certificates := include "base-cluster.cert-manager.custom-certificates" . | fromYaml -}}
   {{- if not (empty $certificates) -}}
     {{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "cert-manager-certificates" "resource" (include "base-cluster.cert-manager.custom-certificates-yaml" (dict "context" . "certs" $certificates)) "dependencies" (dict "cert-manager" "cert-manager") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cert-manager")) | nindent 0 }}
@@ -45,7 +45,7 @@ spec:
     name: letsencrypt-prod
   dnsNames: {{- $cert.dnsNames | toYaml | nindent 4 }}
   secretName: {{ printf "%s-certificate" $name | quote }}
-  {{- if eq (include "base-cluster.reflector.enabled" (dict "context" $.context)) "true" -}}
+  {{- if eq (include "base-cluster.reflector.enabled" (dict "context" $.context)) "true" }}
   secretTemplate:
     annotations:
       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"

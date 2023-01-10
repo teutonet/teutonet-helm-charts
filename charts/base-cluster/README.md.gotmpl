@@ -12,19 +12,36 @@
 ## Cluster bootstrap
 
 ```sh
-if # when using teuto-net's managed apps; then
-  kustomize build t8s-managed-apps/flux/0.36.0-deployment | kubectl apply -f - -f flux.yaml -f cluster.yaml
-else # when installing flux manually
-  flux install
-  kubectl apply -f cluster.yaml
-fi
+# always be git 😁
+git init
 
+# create empty cluster HelmRelease;
+flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 0.x.x > cluster.yaml
 
-flux create source helm --namespace flux-system teuto-net --url https://teutonet.github.io/teutonet-helm-charts --export |
-  yq -y -s '.[] | select(.metadata.name == "teuto-net") | .metadata.annotations={"meta.helm.sh/release-name": "base-cluster", "meta.helm.sh/release-namespace": "flux-system"}' |
-  kubectl apply -f -
+# maybe use the following name for your cluster;
+kubectl get node -o json | jq '.items[0].metadata.annotations["cluster.x-k8s.io/cluster-name"]'
 
-# follow the instructions to configure your flux
+# configure according to your needs, at least `.global.clusterName` is needed
+# also, you should configure `.helmRepositories.flux.url=https://fluxcd-community.github.io/helm-charts` so flux can manage itself
+# additionally, you should add your git repo to `.flux.gitRepositories`, see [the documentation](https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster#81--property-base-cluster-configuration--flux--gitrepositories)
+vi cluster.yaml
+
+# create HelmRelease for flux to manage itself
+flux create helmrelease --export flux -n flux-system --source HelmRepository/flux.flux-system --chart flux2 --chart-version 2.x.x > flux.yaml
+
+# add, commit and push resources
+git add cluster.yaml flux.yaml
+git commit cluster.yaml flux.yaml
+git push
+
+# we explicitly do not use `flux bootstrap` or `flux install` as this creates kustomization stuff and installs flux manually
+helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io/helm-charts --version 2.x.x --atomic
+
+# manual initial installation of the chart, afterwards the chart takes over
+# after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
+helm install -n flux-system base-cluster base-cluster --repo https://teutonet.github.io/teutonet-helm-charts --version 0.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
+
+# you can use this command to get the instructions again
 helm -n flux-system get notes base-cluster
 ```
 
@@ -39,5 +56,12 @@ The various components are automatically updated to the latest minor and patch v
 This excludes:
 
 - descheduler, its version is bound to the k8s version and they have not released 1.0.0
+
+## Migration
+
+# 0.x.x -> 1.0.0
+
+- The field `.dns.email` moves to `.certManager.email`.
+- The field `.dns.provider.cloudflare.email` is removed, as only `apiToken`s are supported anyways.
 
 {{ .Files.Get "values.md"  }}

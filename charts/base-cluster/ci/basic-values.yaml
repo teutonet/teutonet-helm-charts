@@ -1,0 +1,30 @@
+global:
+  # set your clusterName here
+  clusterName:
+  namespaces:
+    dev: {}
+flux:
+  gitRepositories:
+    main:
+      url: ssh://git@myfancygit.com/group/name.git
+certManager:
+  # set your email here, this is used for Let's Encrypt
+  email:
+rbac:
+  roles:
+    admin:
+      - apiGroups:
+          - '*'
+        resources:
+          - '*'
+        verbs:
+          - '*'
+      - nonResourceURLs:
+          - '*'
+        verbs:
+          - '*'
+  accounts:
+    dev1:
+      roles:
+        admin:
+          - dev

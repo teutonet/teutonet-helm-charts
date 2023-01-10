@@ -33,6 +33,6 @@ jobs:
           done | sort -u | awk '{print NR " " $1}' | xargs -r -n 2 helm repo add
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.4.1
+        uses: helm/chart-releaser-action@v1.5.0
         env:
           CR_TOKEN: "${{ secrets.ACTIONS_BOT_TOKEN }}"

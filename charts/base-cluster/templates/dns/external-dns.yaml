@@ -41,9 +41,6 @@ spec:
     cloudflare:
       secretName: "external-dns"
       proxied: false
-      {{- if .Values.dns.provider.cloudflare.apiKey }}
-      email: {{ required "You must provide the email for DNS" .Values.dns.email | quote }}
-      {{- end }}
     {{- end }}
     sources:
       - ingress

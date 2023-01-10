@@ -15,7 +15,7 @@ spec:
         kind: HelmRepository
         name: prometheus
         namespace: {{ .Release.Namespace }}
-      version: 40.x.x
+      version: 42.x.x
   interval: 1m
   install:
     timeout: 20m0s
@@ -60,7 +60,7 @@ spec:
         kind: HelmRepository
         name: bitnami
         namespace: {{ $.Release.Namespace }}
-      version: 2.x.x
+      version: 3.x.x
   interval: 1m
   values:
     redis:

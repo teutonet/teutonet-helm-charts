@@ -7,10 +7,12 @@
   "platformAutomerge": true,
   "packageRules": [
     {
-      "matchUpdateTypes": "patch",
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "automerge": true
     }
   ],
   "separateMinorPatch": true
 }
-

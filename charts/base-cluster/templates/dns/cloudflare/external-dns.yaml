@@ -1,9 +1,5 @@
 {{- with (.Values.dns.provider).cloudflare }}
 {{- include "base-cluster.dns.secret.header" (dict "name" "external-dns" "namespace" "ingress" "context" $) }}
 stringData:
-  {{- if .apiToken }}
   cloudflare_api_token: {{ .apiToken | quote }}
-    {{- else if .apiKey }}
-  cloudflare_api_key: {{ .apiKey | quote }}
-    {{- end }}
 {{- end }}
