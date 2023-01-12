@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -814,7 +814,7 @@ Must be one of:
 | - [operator](#monitoring_prometheus_operator )                   | No      | object  | No         | -                               | -                                                                 |
 | - [kubeStateMetrics](#monitoring_prometheus_kubeStateMetrics )   | No      | object  | No         | -                               | -                                                                 |
 | - [nodeExporter](#monitoring_prometheus_nodeExporter )           | No      | object  | No         | -                               | -                                                                 |
-| - [ingress](#monitoring_prometheus_ingress )                     | No      | object  | No         | -                               | -                                                                 |
+| - [ingress](#monitoring_prometheus_ingress )                     | No      | object  | No         | In #/$defs/toolIngress          | -                                                                 |
 | - [alertmanager](#monitoring_prometheus_alertmanager )           | No      | object  | No         | -                               | -                                                                 |
 | - [authentication](#monitoring_prometheus_authentication )       | No      | object  | No         | -                               | -                                                                 |
 
@@ -1064,11 +1064,13 @@ Must be one of:
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+| **Defined in**            | #/$defs/toolIngress                                                                                      |
 
-| Property                                             | Pattern | Type    | Deprecated | Definition | Title/Description |
-| ---------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
-| - [enabled](#monitoring_prometheus_ingress_enabled ) | No      | boolean | No         | -          | -                 |
-| - [host](#monitoring_prometheus_ingress_host )       | No      | string  | No         | -          | -                 |
+| Property                                                       | Pattern | Type           | Deprecated | Definition | Title/Description                                                          |
+| -------------------------------------------------------------- | ------- | -------------- | ---------- | ---------- | -------------------------------------------------------------------------- |
+| - [enabled](#monitoring_prometheus_ingress_enabled )           | No      | boolean        | No         | -          | -                                                                          |
+| - [host](#monitoring_prometheus_ingress_host )                 | No      | string         | No         | -          | The subdomain to use under \`.global.customerName\`.\`.global.baseDomain\` |
+| - [customDomain](#monitoring_prometheus_ingress_customDomain ) | No      | string or null | No         | -          | The full custom domain to use                                              |
 
 ##### <a name="monitoring_prometheus_ingress_enabled"></a>3.2.10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > ingress > enabled`
 
@@ -1082,6 +1084,16 @@ Must be one of:
 | -------- | -------- |
 | **Type** | `string` |
 
+**Description:** The subdomain to use under `.global.customerName`.`.global.baseDomain`
+
+##### <a name="monitoring_prometheus_ingress_customDomain"></a>3.2.10.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > ingress > customDomain`
+
+|          |                  |
+| -------- | ---------------- |
+| **Type** | `string or null` |
+
+**Description:** The full custom domain to use
+
 #### <a name="monitoring_prometheus_alertmanager"></a>3.2.11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager`
 
 |                           |                                                                                                          |
@@ -1089,12 +1101,12 @@ Must be one of:
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                                                                      | Pattern | Type    | Deprecated | Definition | Title/Description |
-| ----------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
-| - [ingress](#monitoring_prometheus_alertmanager_ingress )                     | No      | object  | No         | -          | -                 |
-| - [replicas](#monitoring_prometheus_alertmanager_replicas )                   | No      | integer | No         | -          | -                 |
-| - [retentionDuration](#monitoring_prometheus_alertmanager_retentionDuration ) | No      | string  | No         | -          | -                 |
-| - [persistence](#monitoring_prometheus_alertmanager_persistence )             | No      | object  | No         | -          | -                 |
+| Property                                                                      | Pattern | Type    | Deprecated | Definition                                         | Title/Description |
+| ----------------------------------------------------------------------------- | ------- | ------- | ---------- | -------------------------------------------------- | ----------------- |
+| - [ingress](#monitoring_prometheus_alertmanager_ingress )                     | No      | object  | No         | Same as [ingress](#monitoring_prometheus_ingress ) | -                 |
+| - [replicas](#monitoring_prometheus_alertmanager_replicas )                   | No      | integer | No         | -                                                  | -                 |
+| - [retentionDuration](#monitoring_prometheus_alertmanager_retentionDuration ) | No      | string  | No         | -                                                  | -                 |
+| - [persistence](#monitoring_prometheus_alertmanager_persistence )             | No      | object  | No         | -                                                  | -                 |
 
 ##### <a name="monitoring_prometheus_alertmanager_ingress"></a>3.2.11.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > ingress`
 
@@ -1102,23 +1114,7 @@ Must be one of:
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-
-| Property                                                          | Pattern | Type    | Deprecated | Definition | Title/Description |
-| ----------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
-| - [enabled](#monitoring_prometheus_alertmanager_ingress_enabled ) | No      | boolean | No         | -          | -                 |
-| - [host](#monitoring_prometheus_alertmanager_ingress_host )       | No      | string  | No         | -          | -                 |
-
-##### <a name="monitoring_prometheus_alertmanager_ingress_enabled"></a>3.2.11.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > ingress > enabled`
-
-|          |           |
-| -------- | --------- |
-| **Type** | `boolean` |
-
-##### <a name="monitoring_prometheus_alertmanager_ingress_host"></a>3.2.11.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > ingress > host`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
+| **Same definition as**    | [ingress](#monitoring_prometheus_ingress)                                                                |
 
 ##### <a name="monitoring_prometheus_alertmanager_replicas"></a>3.2.11.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > replicas`
 
@@ -1196,7 +1192,7 @@ Must be one of:
 | Property                                                            | Pattern | Type            | Deprecated | Definition                                             | Title/Description                                                       |
 | ------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------------------------------------ | ----------------------------------------------------------------------- |
 | - [adminPassword](#monitoring_grafana_adminPassword )               | No      | string or null  | No         | -                                                      | -                                                                       |
-| - [ingress](#monitoring_grafana_ingress )                           | No      | object          | No         | -                                                      | -                                                                       |
+| - [ingress](#monitoring_grafana_ingress )                           | No      | object          | No         | Same as [ingress](#monitoring_prometheus_ingress )     | -                                                                       |
 | - [additionalDashboards](#monitoring_grafana_additionalDashboards ) | No      | object          | No         | -                                                      | -                                                                       |
 | - [config](#monitoring_grafana_config )                             | No      | object          | No         | -                                                      | -                                                                       |
 | - [notifiers](#monitoring_grafana_notifiers )                       | No      | array of object | No         | -                                                      | See https://grafana.com/docs/grafana/latest/administration/provisioning |
@@ -1216,23 +1212,7 @@ Must be one of:
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-
-| Property                                          | Pattern | Type    | Deprecated | Definition | Title/Description |
-| ------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
-| - [enabled](#monitoring_grafana_ingress_enabled ) | No      | boolean | No         | -          | -                 |
-| - [host](#monitoring_grafana_ingress_host )       | No      | string  | No         | -          | -                 |
-
-##### <a name="monitoring_grafana_ingress_enabled"></a>3.3.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > ingress > enabled`
-
-|          |           |
-| -------- | --------- |
-| **Type** | `boolean` |
-
-##### <a name="monitoring_grafana_ingress_host"></a>3.3.2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > ingress > host`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
+| **Same definition as**    | [ingress](#monitoring_prometheus_ingress)                                                                |
 
 #### <a name="monitoring_grafana_additionalDashboards"></a>3.3.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > additionalDashboards`
 
