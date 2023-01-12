@@ -65,7 +65,7 @@ current-context: ${user}@${cluster}
 users:
 - name: ${user}@${cluster}
   user:
-    token: $(kubectl -n $namespace get secret $(kubectl -n $namespace get serviceaccount "{{ include "common.names.fullname" . }}-$user" -o jsonpath='{.items[].secrets[].name}') -o jsonpath={.data.token} | base64 -d)
+    token: $(kubectl -n $namespace get secret "{{ include "common.names.fullname" . }}-$user" -o jsonpath={.data.token} | base64 -d)
 EOF
 }
 
