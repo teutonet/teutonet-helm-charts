@@ -138,7 +138,7 @@ grafana:
   ingress:
     enabled: true
     ingressClassName: nginx
-    labels:
+    annotations:
       kubernetes.io/tls-acme: "true"
     hosts:
       - {{ include "base-cluster.grafana.host" $ }}
