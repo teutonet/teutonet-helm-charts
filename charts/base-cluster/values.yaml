@@ -130,6 +130,7 @@ monitoring:
     ingress:
       enabled: true
       host: grafana
+      customDomain: null
     additionalDashboards: {}
     additionalPlugins: []
     config: {}
@@ -211,10 +212,12 @@ monitoring:
     ingress:
       enabled: false
       host: prometheus
+      customDomain: null
     alertmanager:
       ingress:
         enabled: false
         host: alertmanager
+        customDomain: null
       replicas: 1
       retentionDuration: 120h
       persistence:
