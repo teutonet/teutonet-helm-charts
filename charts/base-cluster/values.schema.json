@@ -359,7 +359,15 @@
                   "type": "boolean"
                 },
                 "host": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "The subdomain to use under `.global.customerName`.`.global.baseDomain`"
+                },
+                "customDomain": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The full custom domain to use"
                 }
               },
               "additionalProperties": false
