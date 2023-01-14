@@ -22,7 +22,7 @@ annotations:
     - image: bats/bats:v1.4.1
     - image: busybox:latest
     - image: curlimages/curl:7.85.0
-    - image: docker.io/bitnami/kubectl:1.25.5
+    - image: docker.io/bitnami/kubectl:1.26.0
     - image: docker.io/bitnami/metrics-server:0.6.2-debian-11-r9
     - image: docker.io/fluxcd/flux-cli:v0.38.3
     - image: docker.io/grafana/promtail:2.7.0
