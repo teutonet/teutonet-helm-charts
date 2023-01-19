@@ -15,7 +15,7 @@ spec:
         kind: HelmRepository
         name: prometheus
         namespace: {{ .Release.Namespace }}
-      version: 42.x.x
+      version: 44.x.x
   interval: 1m
   install:
     timeout: 20m0s
