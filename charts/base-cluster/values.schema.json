@@ -973,6 +973,10 @@
     "common": {
       "type": "object",
       "description": "Values for sub-chart"
+    },
+    "flux2": {
+      "type": "object",
+      "description": "Values for sub-chart"
     }
   },
   "additionalProperties": false,
