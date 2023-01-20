@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 1.2.2](https://img.shields.io/badge/Version-1.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -58,6 +58,7 @@ helm -n flux-system get notes base-cluster
 | Repository | Name | Version |
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | common | 2.2.2 |
+| https://fluxcd-community.github.io/helm-charts | flux2 | 2.4.1 |
 
 This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
 
@@ -69,10 +70,21 @@ This excludes:
 
 ## Migration
 
-# 0.x.x -> 1.0.0
+### 0.x.x -> 1.0.0
 
 - The field `.dns.email` moves to `.certManager.email`.
 - The field `.dns.provider.cloudflare.email` is removed, as only `apiToken`s are supported anyways.
+
+### 1.x.x -> 2.0.0
+
+- Flux is now a direct dependency
+  - You should add the following labels to all resources of flux;
+    - .metadata.labels["app.kubernetes.io/managed-by"]="Helm"
+    - .metadata.annotations["meta.helm.sh/release-name"]="base-cluster"
+    - .metadata.annotations["meta.helm.sh/release-namespace"]="flux-system"
+  - If you have problems when applying / `helm upgrade`ing the new CRDs, like `cannot patch "alerts.notification.toolkit.fluxcd.io" with kind CustomResourceDefinition: CustomResourceDefinition.apiextensions.k8s.io "alerts.notification.toolkit.fluxcd.io" is invalid: status.storedVersions[1]: Invalid value: "v1beta2": must appear in spec.versions`, you can replace those CRDs. (kubectl replace --force -f -)
+    - ⚠️ make sure to only replace CRDs you're not actively using!!, this is a destructive operation. If all your resources are in flux you can also try to turn off flux before the replacement and flux _should_ resync and reconcile all resources.
+  - remove your manually managed flux resources
 
 # base cluster configuration
 
@@ -98,6 +110,7 @@ This excludes:
 | - [reflector](#reflector )     | No      | object | No         | -          | -                    |
 | - [rbac](#rbac )               | No      | object | No         | -          | -                    |
 | - [common](#common )           | No      | object | No         | -          | Values for sub-chart |
+| - [flux2](#flux2 )             | No      | object | No         | -          | Values for sub-chart |
 
 ## <a name="global"></a>1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global`
 
@@ -2531,6 +2544,15 @@ Specific value: `"auto"`
 | **Tuple validation** | N/A                |
 
 ## <a name="common"></a>13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > common`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+**Description:** Values for sub-chart
+
+## <a name="flux2"></a>14. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux2`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
