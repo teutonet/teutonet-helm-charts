@@ -17,7 +17,7 @@ dependencies:
     version: 2.2.2
     repository: https://charts.bitnami.com/bitnami
   - name: flux2
-    version: 2.4.1
+    version: 2.5.0
     repository: https://fluxcd-community.github.io/helm-charts
 annotations:
   artifacthub.io/images: >
