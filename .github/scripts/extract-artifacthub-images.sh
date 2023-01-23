@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
+[[ "$RUNNER_DEBUG" == 1 ]] && set -x
+
 set -eu
 set -o pipefail
+
+TMP_DIR=$(mktemp -d)
+trap 'rm -rf "$TMP_DIR"' EXIT
 
 function templateRemoteHelmChart() {
   "$(dirname "$0")/templateRemoteHelmChart"
@@ -41,7 +46,7 @@ function getImages() {
 function updateChartYaml() {
   local chart="$1"
   local tmpDir
-  tmpDir="$(mktemp -d)"
+  tmpDir="$(mktemp -d -p "$TMP_DIR")"
   echo "Working on '$chart'" >/dev/stderr
   echo "Images:" >/dev/stderr
   (
