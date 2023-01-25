@@ -75,4 +75,14 @@ This excludes:
     - ⚠️ make sure to only replace CRDs you're not actively using!!, this is a destructive operation. If all your resources are in flux you can also try to turn off flux before the replacement and flux _should_ resync and reconcile all resources.
   - remove your manually managed flux resources
 
+### 2.x.x -> 3.0.0
+
+- Flux is removed as a direct dependency
+
+  The flux chart is way to unstable, cannot be used for an installation, ...
+
+We be sorry 😥
+
+You're gonna have to install flux yourself again
+
 {{ .Files.Get "values.md"  }}
