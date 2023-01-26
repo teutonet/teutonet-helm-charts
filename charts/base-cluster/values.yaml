@@ -137,7 +137,7 @@ monitoring:
     notifiers: []
     resources:
       requests:
-        cpu: 100m
+        cpu: 50m
         memory: 256Mi
       limits:
         cpu: 500m
@@ -145,11 +145,11 @@ monitoring:
     sidecar:
       resources:
         requests:
+          cpu: 10m
           memory: 128Mi
-          cpu: 100m
         limits:
-          memory: 128Mi
           cpu: 500m
+          memory: 128Mi
   storageCostAnalysis:
     currency: currencyEUR
     period: Day
@@ -174,7 +174,7 @@ monitoring:
     operator:
       resources:
         requests:
-          cpu: 100m
+          cpu: 50m
           memory: 256Mi
         limits:
           cpu: 500m
@@ -182,7 +182,7 @@ monitoring:
     kubeStateMetrics:
       resources:
         requests:
-          cpu: 100m
+          cpu: 50m
           memory: 128Mi
         limits:
           cpu: 100m
@@ -204,7 +204,7 @@ monitoring:
     nodeExporter:
       resources:
         requests:
-          cpu: 100m
+          cpu: 50m
           memory: 64Mi
         limits:
           cpu: "2"
@@ -296,7 +296,7 @@ certManager:
       cpu: 250m
       memory: 512Mi
     requests:
-      cpu: 250m
+      cpu: 100m
       memory: 512Mi
   caInjector:
     resources:
@@ -304,7 +304,7 @@ certManager:
         cpu: 250m
         memory: 512Mi
       requests:
-        cpu: 250m
+        cpu: 50m
         memory: 512Mi
   webhook:
     resources:
@@ -312,7 +312,7 @@ certManager:
         cpu: 1
         memory: 512Mi
       requests:
-        cpu: 250m
+        cpu: 100m
         memory: 512Mi
   dnsChallengeNameservers:
     1.1.1.1: 53
