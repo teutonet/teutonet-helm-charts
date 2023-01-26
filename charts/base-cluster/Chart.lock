@@ -2,8 +2,5 @@ dependencies:
 - name: common
   repository: https://charts.bitnami.com/bitnami
   version: 2.2.2
-- name: flux2
-  repository: https://fluxcd-community.github.io/helm-charts
-  version: 2.5.0
-digest: sha256:64a9e78920aa31fb0ea7d1390025b43407e3a5087335c97aec28552e6d4d21d3
-generated: "2023-01-23T11:41:49.862777799Z"
+digest: sha256:76e63a2ff3b4cb7676c9fc2a5c36d5c0d9564b5fe96a4ec7dcc53c2a73e723de
+generated: "2023-01-25T12:20:40.308617745+01:00"
