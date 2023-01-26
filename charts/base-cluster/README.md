@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -58,7 +58,6 @@ helm -n flux-system get notes base-cluster
 | Repository | Name | Version |
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | common | 2.2.2 |
-| https://fluxcd-community.github.io/helm-charts | flux2 | 2.4.1 |
 
 This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
 
@@ -86,6 +85,16 @@ This excludes:
     - ⚠️ make sure to only replace CRDs you're not actively using!!, this is a destructive operation. If all your resources are in flux you can also try to turn off flux before the replacement and flux _should_ resync and reconcile all resources.
   - remove your manually managed flux resources
 
+### 2.x.x -> 3.0.0
+
+- Flux is removed as a direct dependency
+
+  The flux chart is way to unstable, cannot be used for an installation, ...
+
+We be sorry 😥
+
+You're gonna have to install flux yourself again
+
 # base cluster configuration
 
 **Title:** base cluster configuration
@@ -110,7 +119,6 @@ This excludes:
 | - [reflector](#reflector )     | No      | object | No         | -          | -                    |
 | - [rbac](#rbac )               | No      | object | No         | -          | -                    |
 | - [common](#common )           | No      | object | No         | -          | Values for sub-chart |
-| - [flux2](#flux2 )             | No      | object | No         | -          | Values for sub-chart |
 
 ## <a name="global"></a>1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global`
 
@@ -2544,15 +2552,6 @@ Specific value: `"auto"`
 | **Tuple validation** | N/A                |
 
 ## <a name="common"></a>13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > common`
-
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-
-**Description:** Values for sub-chart
-
-## <a name="flux2"></a>14. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux2`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
