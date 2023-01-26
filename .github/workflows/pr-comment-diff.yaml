@@ -1,0 +1,31 @@
+name: Add comment with diff for PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    paths:
+      - charts/**
+
+jobs:
+  postDiffComment:
+    runs-on: ubuntu-22.04
+    env:
+      GITHUB_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: helm/chart-testing-action@v2.3.1
+      - id: getChangedChart
+        name: Get changed chart in this commit
+        run: |
+          set -x
+          set -o pipefail
+          (
+            echo -n chart=
+            ct list-changed --since "HEAD~" | cut -d / -f 2
+          ) | tee "$GITHUB_OUTPUT"
+
+      - run: pip install yq
+      - run: ./.github/scripts/create-values-diff.sh ${{ github.event.number }} ${{ steps.getChangedChart.outputs.chart }}
