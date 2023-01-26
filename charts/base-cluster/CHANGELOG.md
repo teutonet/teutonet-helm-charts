@@ -1,5 +1,22 @@
 # Changelog
 
+## [4.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v3.0.0...base-cluster-v4.0.0) (2023-01-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* **base-cluster:** Revert "feat(base-cluster)!: use flux as a direct… ([#152](https://github.com/teutonet/teutonet-helm-charts/issues/152))
+
+### Bug Fixes
+
+* **base-cluster:** Revert "feat(base-cluster)!: use flux as a direct… ([#152](https://github.com/teutonet/teutonet-helm-charts/issues/152)) ([10191a3](https://github.com/teutonet/teutonet-helm-charts/commit/10191a32dec2241bad62c3f2404b79e6d0fba1c4))
+
+
+### Miscellaneous Chores
+
+* **deps:** update helm release flux2 to v2.5.0 ([#149](https://github.com/teutonet/teutonet-helm-charts/issues/149)) ([d6e637f](https://github.com/teutonet/teutonet-helm-charts/commit/d6e637fec6f81f64089554840be86fc376300ea8))
+* **main:** [bot] release base-cluster:3.0.0 ([#150](https://github.com/teutonet/teutonet-helm-charts/issues/150)) ([fe9b2f2](https://github.com/teutonet/teutonet-helm-charts/commit/fe9b2f226263781fdc34bd98daae5addfdc2c11c))
+
 ## [3.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-2.0.0...base-cluster-v3.0.0) (2023-01-26)
 
 
