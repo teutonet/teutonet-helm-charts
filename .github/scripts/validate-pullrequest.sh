@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-set -exu
+[[ "$RUNNER_DEBUG" == 1 ]] && set -x
+
+set -eu
 set -o pipefail
 
 : "${PR_TITLE:?Environment variable must be set}"
