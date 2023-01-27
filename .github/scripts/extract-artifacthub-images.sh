@@ -8,29 +8,8 @@ set -o pipefail
 TMP_DIR=$(mktemp -d)
 trap 'rm -rf "$TMP_DIR"' EXIT
 
-function templateRemoteHelmChart() {
-  "$(dirname "$0")/templateRemoteHelmChart"
-}
-
 function templateLocalHelmChart() {
-  "$(dirname "$0")/templateLocalHelmChart"
-}
-
-function templateHelmChart() {
-  local chart="$1"
-  local yaml
-  local numberOfHelmReleases
-  echo "Templating '$chart'" >/dev/stderr
-  helm dependency update "$chart"
-  yaml=$(helm template "$(basename "$chart")" "$chart" --values "$chart/ci/artifacthub-values.yaml")
-  numberOfHelmReleases=$(yq <<<"$yaml" -ers '[.[] | select(.kind == "HelmRelease")] | length')
-  yq <<<"$yaml" -erys '.[] | select(.kind != "HelmRelease") | select(.)'
-  if [[ "$numberOfHelmReleases" -gt 0 ]]; then
-    for index in $(seq 0 $((numberOfHelmReleases - 1))); do
-      echo ---
-      yq <<<"$yaml" -erys '([.[] | select(.kind == "HelmRelease")]['"$index"']),(.[] | select(.kind | IN(["GitRepository", "HelmRepository"][])))' | templateRemoteHelmChart
-    done
-  fi
+  "$(dirname "$0")/templateLocalHelmChart" "$@"
 }
 
 function getImages() {

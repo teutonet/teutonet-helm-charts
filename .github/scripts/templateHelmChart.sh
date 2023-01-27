@@ -41,19 +41,19 @@ function templateHelmRelease() {
   local sourceResource
   local chartName
   yaml=$(cat -)
-  helmReleaseYaml=$(yq <<<"$yaml" -erys '.[] | select(.kind == "HelmRelease")')
+  helmReleaseYaml=$(yq -erys '.[] | select(.kind == "HelmRelease")' <<<"$yaml")
 
-  namespace=$(yq <<<"$helmReleaseYaml" -er '.spec.targetNamespace // .metadata.namespace')
-  releaseName=$(yq <<<"$helmReleaseYaml" -er '.spec.releaseName // .metadata.name')
-  values=$(yq <<<"$helmReleaseYaml" -y -r .spec.values)
+  namespace=$(yq -er '.spec.targetNamespace // .metadata.namespace' <<<"$helmReleaseYaml")
+  releaseName=$(yq -er '.spec.releaseName // .metadata.name' <<<"$helmReleaseYaml")
+  values=$(yq -y -r .spec.values <<<"$helmReleaseYaml")
   echo "Templating '$namespace/$releaseName'" >/dev/stderr
 
-  sourceNamespace=$(yq <<<"$helmReleaseYaml" -er ".spec.chart.spec.sourceRef.namespace // \"$namespace\"")
-  sourceName=$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.sourceRef.name)
-  sourceKind=$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.sourceRef.kind)
-  sourceYaml=$(yq <<<"$yaml" -erys '[.[] | select(.kind == "'"$sourceKind"'")][]')
+  sourceNamespace=$(yq -er ".spec.chart.spec.sourceRef.namespace // \"$namespace\"" <<<"$helmReleaseYaml")
+  sourceName=$(yq -er .spec.chart.spec.sourceRef.name <<<"$helmReleaseYaml")
+  sourceKind=$(yq -er .spec.chart.spec.sourceRef.kind <<<"$helmReleaseYaml")
+  sourceYaml=$(yq -erys '[.[] | select(.kind == "'"$sourceKind"'")][]' <<<"$yaml")
   set +e
-  sourceResource=$(yq <<<"$sourceYaml" -erys "[.[] | select( (.metadata.namespace == \"$sourceNamespace\") and (.metadata.name == \"$sourceName\") )][0]")
+  sourceResource=$(yq -erys "[.[] | select( (.metadata.namespace == \"$sourceNamespace\") and (.metadata.name == \"$sourceName\") )][0]" <<<"$sourceYaml")
   set -e
   # I can't check it directly as I need it's stdout 🤷
   # shellcheck disable=SC2181
@@ -61,21 +61,21 @@ function templateHelmRelease() {
     echo "Failed to get source '$sourceNamespace/$sourceKind/$sourceName'" >/dev/stderr
     return 0
   fi
-  chartName="$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.chart)"
+  chartName="$(yq -er .spec.chart.spec.chart <<<"$helmReleaseYaml")"
   case "$sourceKind" in
     GitRepository)
       local gitUrl
       local gitRef
-      gitUrl="$(yq <<<"$sourceResource" -er .spec.url)"
-      gitRef="$(yq <<<"$sourceResource" -er '.spec.ref | if .branch then .branch elif .tag then .tag elif .semver then .semver elif .commit then .commit else "master" end')"
+      gitUrl="$(yq -er .spec.url <<<"$sourceResource")"
+      gitRef="$(yq -er '.spec.ref | if .branch then .branch elif .tag then .tag elif .semver then .semver elif .commit then .commit else "master" end' <<<"$sourceResource")"
       templateGitHelmRelease "$gitUrl" "$gitRef" "$chartName" "$namespace" "$releaseName" "$values"
       ;;
     HelmRepository)
       local helmRepositoryUrl
       local chartVersion
-      helmRepositoryUrl="$(yq <<<"$sourceResource" -er .spec.url)"
-      chartVersion="$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.version)"
-      helm <<<"$values" template --namespace "$namespace" --repo "$helmRepositoryUrl" "$releaseName" "$chartName" --version "$chartVersion" --values -
+      helmRepositoryUrl="$(yq -er .spec.url <<<"$sourceResource")"
+      chartVersion="$(yq -er .spec.chart.spec.version <<<"$helmReleaseYaml")"
+      helm template --namespace "$namespace" --repo "$helmRepositoryUrl" "$releaseName" "$chartName" --version "$chartVersion" --values - <<<"$values"
       ;;
     *)
       echo "'$sourceKind' is not implemented" >/dev/stderr
@@ -96,12 +96,12 @@ function templateSubHelmCharts() {
   local numberOfHelmReleases
 
   yaml=$(cat -)
-  numberOfHelmReleases=$(yq <<<"$yaml" -ers '[.[] | select(.kind == "HelmRelease")] | length')
+  numberOfHelmReleases=$(yq -ers '[.[] | select(.kind == "HelmRelease")] | length' <<<"$yaml")
   echo "$yaml"
   if [[ "$numberOfHelmReleases" -gt 0 ]]; then
     for index in $(seq 0 $((numberOfHelmReleases - 1))); do
       echo ---
-      yq <<<"$yaml" -erys '([.[] | select(.kind == "HelmRelease")]['"$index"']),(.[] | select(.kind | IN(["GitRepository", "HelmRepository"][])))' | templateHelmRelease
+      yq -erys '([.[] | select(.kind == "HelmRelease")]['"$index"']),(.[] | select(.kind | IN(["GitRepository", "HelmRepository"][])))' <<<"$yaml" | templateHelmRelease
     done
   fi
 }
