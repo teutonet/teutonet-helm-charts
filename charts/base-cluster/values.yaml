@@ -51,17 +51,17 @@ global:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: 1.25.5
+      tag: 1.26.1
   pause:
     image:
       registry: k8s.gcr.io
       repository: pause
-      tag: "3.5"
+      tag: "3.9"
   flux:
     image:
       registry: docker.io
       repository: fluxcd/flux-cli
-      tag: v0.38.2
+      tag: v0.38.3
   gpg:
     image:
       registry: docker.io
@@ -130,13 +130,14 @@ monitoring:
     ingress:
       enabled: true
       host: grafana
+      customDomain: null
     additionalDashboards: {}
     additionalPlugins: []
     config: {}
     notifiers: []
     resources:
       requests:
-        cpu: 100m
+        cpu: 50m
         memory: 256Mi
       limits:
         cpu: 500m
@@ -144,11 +145,11 @@ monitoring:
     sidecar:
       resources:
         requests:
+          cpu: 10m
           memory: 128Mi
-          cpu: 100m
         limits:
-          memory: 128Mi
           cpu: 500m
+          memory: 128Mi
   storageCostAnalysis:
     currency: currencyEUR
     period: Day
@@ -173,7 +174,7 @@ monitoring:
     operator:
       resources:
         requests:
-          cpu: 100m
+          cpu: 50m
           memory: 256Mi
         limits:
           cpu: 500m
@@ -181,7 +182,7 @@ monitoring:
     kubeStateMetrics:
       resources:
         requests:
-          cpu: 100m
+          cpu: 50m
           memory: 128Mi
         limits:
           cpu: 100m
@@ -203,7 +204,7 @@ monitoring:
     nodeExporter:
       resources:
         requests:
-          cpu: 100m
+          cpu: 50m
           memory: 64Mi
         limits:
           cpu: "2"
@@ -211,10 +212,12 @@ monitoring:
     ingress:
       enabled: false
       host: prometheus
+      customDomain: null
     alertmanager:
       ingress:
         enabled: false
         host: alertmanager
+        customDomain: null
       replicas: 1
       retentionDuration: 120h
       persistence:
@@ -293,7 +296,7 @@ certManager:
       cpu: 250m
       memory: 512Mi
     requests:
-      cpu: 250m
+      cpu: 100m
       memory: 512Mi
   caInjector:
     resources:
@@ -301,7 +304,7 @@ certManager:
         cpu: 250m
         memory: 512Mi
       requests:
-        cpu: 250m
+        cpu: 50m
         memory: 512Mi
   webhook:
     resources:
@@ -309,7 +312,7 @@ certManager:
         cpu: 1
         memory: 512Mi
       requests:
-        cpu: 250m
+        cpu: 100m
         memory: 512Mi
   dnsChallengeNameservers:
     1.1.1.1: 53

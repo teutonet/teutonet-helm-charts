@@ -1,13 +1,13 @@
 {{- define "base-cluster.reflector.enabled" -}}
   {{- $needsReflector := false -}}
-  {{- $checkAuto := typeIs "string" .context.Values.reflector.enabled -}}
-  {{- if $checkAuto -}}
+  {{- $hardSet := typeIs "bool" .context.Values.reflector.enabled -}}
+  {{- if $hardSet -}}
+    {{- $needsReflector = .context.Values.reflector.enabled -}}
+  {{- else -}}
     {{- $needsReflector = not (empty (include "base-cluster.cert-manager.custom-certificates" .context | fromYaml)) -}}
     {{- if not $needsReflector -}}
       {{- $needsReflector = not (empty (.context.Values.global.imageCredentials | keys)) -}}
     {{- end -}}
-  {{- else -}}
-    {{- $needsReflector = .context.Values.reflector.enabled -}}
   {{- end -}}
   {{- $needsReflector -}}
 {{- end }}

@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Get changed charts
+      - name: Get all charts
         id: getCharts
         run: |
           set -ex
@@ -25,7 +25,7 @@ jobs:
                 echo "$chart"
               fi
             done | cut -d / -f 2 | jq -c -Rn '[inputs]'
-          ) | tee $GITHUB_OUTPUT
+          ) | tee "$GITHUB_OUTPUT"
 
   extractImagesForMultipleCharts:
     runs-on: ubuntu-22.04

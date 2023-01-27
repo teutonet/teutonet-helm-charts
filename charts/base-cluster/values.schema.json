@@ -353,31 +353,13 @@
               "additionalProperties": false
             },
             "ingress": {
-              "type": "object",
-              "properties": {
-                "enabled": {
-                  "type": "boolean"
-                },
-                "host": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false
+              "$ref": "#/$defs/toolIngress"
             },
             "alertmanager": {
               "type": "object",
               "properties": {
                 "ingress": {
-                  "type": "object",
-                  "properties": {
-                    "enabled": {
-                      "type": "boolean"
-                    },
-                    "host": {
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false
+                  "$ref": "#/$defs/toolIngress"
                 },
                 "replicas": {
                   "type": "integer",
@@ -424,16 +406,7 @@
               ]
             },
             "ingress": {
-              "type": "object",
-              "properties": {
-                "enabled": {
-                  "type": "boolean"
-                },
-                "host": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false
+              "$ref": "#/$defs/toolIngress"
             },
             "additionalDashboards": {
               "type": "object",
@@ -1071,6 +1044,26 @@
         "null"
       ],
       "description": "The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd)"
+    },
+    "toolIngress": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "host": {
+          "type": "string",
+          "description": "The subdomain to use under `.global.customerName`.`.global.baseDomain`"
+        },
+        "customDomain": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The full custom domain to use"
+        }
+      },
+      "additionalProperties": false
     }
   }
 }
