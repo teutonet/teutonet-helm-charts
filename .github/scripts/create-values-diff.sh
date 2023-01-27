@@ -19,28 +19,70 @@ trap 'rm -rf "$TMP_DIR"' EXIT
 
 cd "$GITHUB_WORKSPACE"
 
+function splitYamlIntoDir() {
+  local yaml="${1?}"
+  local dir="${2?}"
+  local IFS=$'\n'
+  local selector
+
+  for selector in $(yq -c -s '.[] | {kind: .kind, namespace: .metadata.namespace, name: .metadata.name}' <"$yaml"); do
+    local resourceName
+    local kind
+    local namespace
+    local name
+    kind="$(jq --argjson selector "$selector" -n -r '$selector.kind')"
+    namespace="$(jq --argjson selector "$selector" -n -r '$selector.namespace')"
+    name="$(jq --argjson selector "$selector" -n -r '$selector.name')"
+
+    resourceName="$dir/$namespace/$kind/$name.yaml"
+    if [[ -f "$resourceName" ]]; then
+      echo "'$resourceName' shouldn't already exist" >/dev/stderr
+      return 1
+    fi
+    mkdir -p "$(dirname "$resourceName")"
+    # shellcheck disable=SC2016
+    yq -y -s --argjson selector "$selector" '.[] | select((.kind == $selector.kind) and (.metadata.namespace == $selector.namespace) and (.metadata.name == $selector.name))' <"$yaml" >"$resourceName"
+    if [[ "$kind" == "HelmRelease" ]]; then
+      "$SCRIPTS/templateHelmRelease" -1 <<<"$(sed -s '$a---' <(yq -s -y '.[] | select(.apiVersion | contains("source.toolkit.fluxcd.io"))' <"$yaml") "$resourceName")" >"${resourceName}_templated"
+      splitYamlIntoDir "${resourceName}_templated" "$(dirname "$resourceName")/$(basename -s .yaml "$resourceName")"
+      rm "${resourceName}_templated"
+    fi
+  done
+}
+
 function generateComment() {
   local chart="charts/${1?}"
   local -A diffs
-  #local newResourcesDir
-  #local originalResourcesDir
-  local newResourcesFilename
-  local originalResourcesFilename
+  local newResourcesDir
+  local originalResourcesDir
 
   for values in "$chart/values.yaml" "$chart/ci/"*-values.yaml; do
     [[ -f "$values" ]] || continue
-    originalResourcesFilename="$TMP_DIR/original-${values//\//-}"
-    newResourcesFilename="$TMP_DIR/new-${values//\//-}"
+    originalResourcesDir="$TMP_DIR/original-$(basename -s .yaml "$values")"
+    newResourcesDir="$TMP_DIR/new-$(basename -s .yaml "$values")"
 
-    "$SCRIPTS/templateGitHelmChart" "$GITHUB_REPO_URL" "$chart" "${GITHUB_DEFAULT_BRANCH}" "$values" | yq -y -S >"$originalResourcesFilename"
-    "$SCRIPTS/templateLocalHelmChart" "$chart" "$values" | yq -y -S >"$newResourcesFilename"
+    mkdir "$originalResourcesDir" "$newResourcesDir"
+
+    "$SCRIPTS/templateGitHelmChart" -1 "$GITHUB_REPO_URL" "$chart" "${GITHUB_DEFAULT_BRANCH}" "$values" | yq -y -S >"$originalResourcesDir.yaml"
+    splitYamlIntoDir "$originalResourcesDir.yaml" "$originalResourcesDir"
+
+    "$SCRIPTS/templateLocalHelmChart" -1 "$chart" "$values" | yq -y -S >"$newResourcesDir.yaml"
+    splitYamlIntoDir "$newResourcesDir.yaml" "$newResourcesDir"
+
 
     diffs+=(
-      [$values]="$(diff -u "$originalResourcesFilename" "$newResourcesFilename")"
+      [$values]="$(diff -ur "$originalResourcesDir" "$newResourcesDir")"
     )
+    break
   done
 
   echo :robot: I have diffed this *beep* *boop*
+  echo ---
+  # shellcheck disable=SC2016
+  echo '"/$namespace/$kind/$name.yaml" for normal resources'
+  # shellcheck disable=SC2016
+  echo '"/$namespace/HelmRelease/$name/$namespace/$kind/$name.yaml" for HelmReleases <- this is recursive'
+  echo "'null' means it's either cluster-scoped or it's in the default namespace for the HelmRelease"
   echo ---
   echo
   for values in "${!diffs[@]}"; do
@@ -91,6 +133,9 @@ existingCommentId="$(
 
 body=$(generateComment "$chart")
 
+echo "$body"
+
+exit 0
 if [[ "$existingCommentId" == null ]]; then
   createComment "$issue" "$body"
 else
