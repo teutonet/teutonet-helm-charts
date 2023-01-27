@@ -14,6 +14,7 @@ data:
       "editable": true,
       "panels": [
     {{- $id := 0 }}
+    {{- $y := 0 }}
     {{- $totalVolumeCosts := list }}
     {{- $totalVolumes := list }}
     {{- $volumeExpressions := dict }}
@@ -27,6 +28,24 @@ data:
     {{- $volumeCostExpressions = set $volumeCostExpressions $storageClassName $volumeCostExpression }}
     {{- $totalVolumeCosts = append $totalVolumeCosts (printf "sum(%s)" $volumeCostExpression) }}
     {{- end }}
+        {
+          "gridPos": {
+            "h": 4,
+            "w": 12,
+            "x": 0,
+            "y": {{ $y }}
+          },
+          "id": {{ $id = add $id 2 -}}{{ $id }},
+          "options": {
+            "code": {
+              "language": "plaintext"
+            },
+            "content": "## This dashboard is not intended to provide accurate costs! Rather it should give you a hint about the costs.  \nThe costs on the invoice are always the final costs generated!",
+            "mode": "markdown"
+          },
+          "title": "Caution!",
+          "type": "text"
+        },
         {
           "fieldConfig": {
             "defaults": {
@@ -43,7 +62,9 @@ data:
           },
           "gridPos": {
             "h": 4,
-            "w": 2
+            "w": 2,
+            "x": 0,
+            "y": {{ $y = add $y 5 -}}{{ $y }}
           },
           "id": {{ $id = add $id 2 -}}{{ $id }},
           "options": {
@@ -75,7 +96,8 @@ data:
           "gridPos": {
             "h": 4,
             "w": 2,
-            "x": 2
+            "x": 2,
+            "y": {{ $y }}
           },
           "id": {{ $id = add $id 2 -}}{{ $id }},
           "options": {
@@ -89,7 +111,7 @@ data:
           ],
           "title": "Total Storage",
           "type": "stat"
-        },{{- $x := 0 }}{{- $y := -4 }}
+        },
     {{- range $storageClassName, $costPerGiB := .Values.monitoring.storageCostAnalysis.storageClassMapping }}
     {{- $volumeExpression := index $volumeExpressions $storageClassName }}
     {{- $volumeCostExpression := index $volumeCostExpressions $storageClassName }}
@@ -321,4 +343,4 @@ data:
       "uid": "storage-cost-analysis"
     }
     {{- end }}
-    
+
