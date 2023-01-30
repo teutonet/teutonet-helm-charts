@@ -1,0 +1,13 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: {{ printf "%s-cloud-provider-openstack" .Release.Name }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  interval: 5m
+  url: https://github.com/kubernetes/cloud-provider-openstack
+  ref:
+    tag: release-{{ .Values.version.major }}.{{ .Values.version.minor }}
+  ignore: |
+    manifests/cinder-csi-plugin/csi-secret-cinderplugin.yaml
+    manifests/controller-manager/openstack-cloud-controller-manager-pod.yaml

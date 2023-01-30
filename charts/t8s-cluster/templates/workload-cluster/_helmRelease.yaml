@@ -1,0 +1,32 @@
+{{- define "t8s-cluster.helm.resourceIntoCluster" -}}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ .name }}
+  namespace: {{ .namespace | default .context.Release.Namespace }}
+  labels: {{- include "common.labels.standard" .context | nindent 4 }}
+    {{- with .additionalLabels }}
+    {{- . | toYaml | nindent 4 }}
+    {{- end }}
+spec:
+  chart:
+    spec:
+      chart: static
+      version: 0.1.1
+      sourceRef:
+        kind: HelmRepository
+        name: cetic
+        namespace: {{ .context.Release.Namespace }}
+  interval: 30m
+  kubeConfig:
+    secretRef:
+      name: {{ .context.Release.Name }}
+  values:
+    {{- if eq .render nil }}
+    static: {{ .resource | toYaml | indent 6 }}
+    {{- else if .render }}
+    static: {{ include "common.tplvalues.render" (dict "value" .resource "context" .context) | indent 6 }}
+    {{- else }}
+    static: {{ .resource | toYaml | replace "{{" "{{ `{{` }}" | indent 6 }}
+    {{- end }}
+{{- end -}}

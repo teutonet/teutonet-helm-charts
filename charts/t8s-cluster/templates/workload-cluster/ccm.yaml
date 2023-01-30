@@ -1,0 +1,17 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: {{ printf "%s-ccm" .Release.Name }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: {{ printf "%s-cloud-provider-openstack" .Release.Name }}
+  kubeConfig:
+    secretRef:
+      name: {{ .Release.Name }}
+  targetNamespace: kube-system
+  serviceAccountName: kube-admin
+  interval: 5m
+  prune: true
+  path: manifests/controller-manager

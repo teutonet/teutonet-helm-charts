@@ -1,0 +1,13 @@
+cloud: ffm3
+version: v1.24.5
+controlPlane:
+  flavor: standard
+metadata:
+  serviceLevelAgreement: None
+  customerID: "1000"
+  customerName: test
+workers:
+  default:
+    replicas: 1
+    flavor: standard
+    availabilityZone: "1"

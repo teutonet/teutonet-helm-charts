@@ -1,0 +1,57 @@
+{{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" (printf "%s-etcd-defrag" .Release.Name) "resource" (include "t8s-cluster.etcd-defrag" (dict "context" $)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "etcd")) | nindent 0 }}
+
+{{- define "t8s-cluster.etcd-defrag" -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: kube-etcd-defrag
+  namespace: kube-system
+  labels: {{- include "common.labels.standard" .context | nindent 4 }}
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 10
+  successfulJobsHistoryLimit: 1
+  schedule: '42 * * * *'
+  jobTemplate:
+    spec:
+      backoffLimit: 6
+      template:
+        spec:
+          containers:
+            - command:
+                - etcdctl
+                - defrag
+                - --cluster
+                - --cacert=/etc/kubernetes/pki/etcd/ca.crt
+                - --cert=/etc/kubernetes/pki/etcd/peer.crt
+                - --key=/etc/kubernetes/pki/etcd/peer.key
+              env:
+                - name: ETCDCTL_API
+                  value: "3"
+                - name: ETCDCTL_ENDPOINTS
+                  value: 'localhost:2379'
+              image: registry.k8s.io/etcd:3.5.6-0
+              imagePullPolicy: IfNotPresent
+              name: etcd-defrag
+              volumeMounts:
+                - mountPath: /etc/kubernetes/pki/etcd
+                  name: etcd-certs
+                  readOnly: true
+          dnsPolicy: ClusterFirst
+          hostNetwork: true
+          nodeSelector:
+            node-role.kubernetes.io/control-plane: ""
+          restartPolicy: OnFailure
+          tolerations:
+            - effect: NoSchedule
+              key: node-role.kubernetes.io/control-plane
+              operator: Exists
+            - effect: NoSchedule
+              key: node-role.kubernetes.io/master
+              operator: Exists
+          volumes:
+            - hostPath:
+                path: /etc/kubernetes/pki/etcd
+                type: Directory
+              name: etcd-certs
+{{- end -}}

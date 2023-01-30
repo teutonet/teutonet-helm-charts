@@ -1,0 +1,22 @@
+metadata:
+  serviceLevelAgreement: None
+  supportProjectUrl: ""
+  configGroupUrl: ""
+  gopassName: ""
+  remarks: ""
+
+controlPlane:
+  flavor: ""
+  singleNode: false
+
+cloud: ""
+version:
+  major: 1
+  minor: 25
+  patch: 0
+
+workers:
+  s2-default:
+    replicas: 3
+    availabilityZone: Zone2
+    flavor: standard.2.1905

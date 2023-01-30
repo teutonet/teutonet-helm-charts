@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "t8s cluster configuration",
+  "properties": {
+    "global": {
+      "type": "object",
+      "properties": {
+        "kubectl": {
+          "type": "object",
+          "description": "Image with `kubectl` binary",
+          "properties": {
+            "image": {
+              "$ref": "#/$defs/image"
+            }
+          },
+          "additionalProperties": false
+        },
+        "pause": {
+          "type": "object",
+          "description": "Image to be used for pause containers",
+          "properties": {
+            "image": {
+              "$ref": "#/$defs/image"
+            }
+          },
+          "additionalProperties": false
+        },
+        "flux": {
+          "type": "object",
+          "description": "Image with `flux` binary",
+          "properties": {
+            "image": {
+              "$ref": "#/$defs/image"
+            }
+          },
+          "additionalProperties": false
+        },
+        "gpg": {
+          "type": "object",
+          "description": "Image with `gpg` binary",
+          "properties": {
+            "image": {
+              "$ref": "#/$defs/image"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "serviceLevelAgreement": {
+          "type": "string",
+          "enum": [
+            "None",
+            "24x7",
+            "Working-Hours"
+          ]
+        },
+        "customerID": {
+          "type": "string"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "supportProjectUrl": {
+          "type": "string"
+        },
+        "configGroupUrl": {
+          "type": "string"
+        },
+        "gopassName": {
+          "type": "string"
+        },
+        "remarks": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "serviceLevelAgreement",
+        "customerID",
+        "customerName"
+      ],
+      "additionalProperties": false
+    },
+    "controlPlane": {
+      "type": "object",
+      "properties": {
+        "flavor": {
+          "type": "string"
+        },
+        "singleNode": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "flavor"
+      ],
+      "additionalProperties": false
+    },
+    "cloud": {
+      "type": "string"
+    },
+    "version": {
+      "type": "object",
+      "properties": {
+        "major": {
+          "type": "integer"
+        },
+        "minor": {
+          "type": "integer"
+        },
+        "patch": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "major",
+        "minor",
+        "patch"
+      ],
+      "additionalProperties": false
+    },
+    "workers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "replicas": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "availabilityZone": {
+            "type": "string"
+          },
+          "flavor": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "replicas",
+          "availabilityZone",
+          "flavor"
+        ]
+      },
+      "minProperties": 1
+    },
+    "common": {
+      "type": "object",
+      "description": "Values for sub-chart"
+    }
+  },
+  "required": [
+    "metadata",
+    "cloud",
+    "version",
+    "controlPlane",
+    "workers"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "resourceRequirements": {
+      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.24.4-standalone-strict/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+    },
+    "quantity": {
+      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.24.4-standalone-strict/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "registry": {
+          "type": "string",
+          "description": "The host of the registry",
+          "examples": [
+            "docker.io"
+          ]
+        },
+        "repository": {
+          "type": "string",
+          "description": "The image path in the registry",
+          "examples": [
+            "bitnami/kubectl"
+          ]
+        },
+        "tag": {
+          "type": "string"
+        },
+        "digest": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

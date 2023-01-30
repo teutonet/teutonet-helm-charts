@@ -1,0 +1,34 @@
+apiVersion: t8s-engine.teuto.net/v1alpha1
+kind: TeutonetesCluster
+metadata:
+  name: {{ .Release.Name }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    t8s.teuto.net/sla: {{ .Values.metadata.serviceLevelAgreement | quote }}
+  {{- if or .Values.metadata.supportProjectUrl .Values.metadata.configGroupUrl .Values.metadata.gopassName .Values.metadata.remarks }}
+  annotations:
+    {{- with .Values.metadata.supportProjectUrl }}
+    t8s.teuto.net/cluster_support_project_url: {{ . | quote}}
+    {{ end }}
+    {{- with .Values.metadata.configGroupUrl }}
+    t8s.teuto.net/cluster_config_group_url: {{ . | quote }}
+    {{ end }}
+    {{- with .Values.metadata.gopassName }}
+    t8s.teuto.net/gopass_name: {{ . | quote }}
+    {{ end }}
+    {{- with .Values.metadata.remarks }}
+    t8s.teuto.net/remarks: {{ . | quote }}
+    {{ end }}
+  {{- end }}
+spec:
+  customerID: {{ .Values.metadata.customerID }}
+  customerName: {{ .Values.metadata.customerName }}
+  controlPlane:
+    singleNode: {{ .Values.controlPlane.singleNode }}
+    flavor: {{ .Values.controlPlane.flavor }}
+  teutonetesCloudRef:
+    kind: TeutonetesCloud
+    name: {{ .Values.cloud }}
+  version: {{ .Values.version }}
+  workers: {{- .Values.workers | toYaml | nindent 4 }}
+  bastion:
+    enabled: false
