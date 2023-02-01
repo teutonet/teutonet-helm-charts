@@ -1,7 +1,16 @@
 {{- if .Values.descheduler.enabled -}}
 {{- $kubeMinorVersion := .Capabilities.KubeVersion.Minor -}}
 {{- $versionMatrix := dict 18 "0.20.x" 19 "0.21.x" 20 "0.22.x" 21 "0.21.x" 22 "0.22.x" 23 "0.23.x" 24 "0.24.x" 25 "0.25.x" -}}
-{{- $latestVersion := index $versionMatrix ($versionMatrix | keys | max | toString) -}}
+{{- $highestVersionIndex := $versionMatrix | keys | first | int -}}
+{{- range $index := $versionMatrix | keys -}}
+  {{- if gt ($index | int) $highestVersionIndex -}}
+    {{- $highestVersionIndex = $index | int -}}
+  {{- end -}}
+{{- end -}}
+{{- $latestVersion := index $versionMatrix ($highestVersionIndex | toString) -}}
+{{- if eq $latestVersion nil -}}
+  {{- fail (printf "descheduler's $latestVersion should never be nil") -}}
+{{- end -}}
 {{- $selectedVersion := (hasKey $versionMatrix $kubeMinorVersion) | ternary (index $versionMatrix $kubeMinorVersion) $latestVersion -}}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
