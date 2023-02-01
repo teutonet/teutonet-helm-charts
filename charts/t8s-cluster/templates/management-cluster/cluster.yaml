@@ -2,8 +2,13 @@ apiVersion: t8s-engine.teuto.net/v1alpha1
 kind: TeutonetesCluster
 metadata:
   name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace}}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     t8s.teuto.net/sla: {{ .Values.metadata.serviceLevelAgreement | quote }}
+    t8s.teuto.net/customer-id: {{ .Values.metadata.customerID | quote }}
+    t8s.teuto.net/customer-name: {{ .Values.metadata.customerName | quote }}
+    t8s.teuto.net/internal-name: {{ .Release.Name | quote }}
+    t8s.teuto.net/role: workload
   {{- if or .Values.metadata.supportProjectUrl .Values.metadata.configGroupUrl .Values.metadata.gopassName .Values.metadata.remarks }}
   annotations:
     {{- with .Values.metadata.supportProjectUrl }}
@@ -28,7 +33,9 @@ spec:
   teutonetesCloudRef:
     kind: TeutonetesCloud
     name: {{ .Values.cloud }}
-  version: {{ .Values.version }}
+  {{- with .Values.version }}
+  version: {{ printf "v%d.%d.%d" (.major | int) (.minor | int) (.patch | int) }}
+  {{- end }}
   workers: {{- .Values.workers | toYaml | nindent 4 }}
   bastion:
     enabled: false

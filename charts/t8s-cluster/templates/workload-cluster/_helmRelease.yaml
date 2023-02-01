@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: {{ .name }}
-  namespace: {{ .namespace | default .context.Release.Namespace }}
+  namespace: {{ .context.Release.Namespace }}
   labels: {{- include "common.labels.standard" .context | nindent 4 }}
     {{- with .additionalLabels }}
     {{- . | toYaml | nindent 4 }}
@@ -15,7 +15,7 @@ spec:
       version: 0.1.1
       sourceRef:
         kind: HelmRepository
-        name: cetic
+        name: {{ printf "%s-cetic" .context.Release.Name }}
         namespace: {{ .context.Release.Namespace }}
   interval: 30m
   kubeConfig:

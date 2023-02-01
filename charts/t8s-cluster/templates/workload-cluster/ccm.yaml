@@ -2,6 +2,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
   name: {{ printf "%s-ccm" .Release.Name }}
+  namespace: {{ .Release.Namespace}}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   sourceRef:
