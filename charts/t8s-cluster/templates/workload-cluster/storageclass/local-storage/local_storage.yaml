@@ -5,7 +5,7 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: local-storage
-  labels: {{- include "base-cluster.helm.labels" (dict) | nindent 4 }}
+  labels: {{- include "t8s-cluster.helm.labels" (dict) | nindent 4 }}
     app.kubernetes.io/component: storage
 provisioner: kubernetes.io/no-provisioner
 reclaimPolicy: Delete
