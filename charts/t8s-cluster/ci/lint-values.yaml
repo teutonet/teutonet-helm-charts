@@ -1,5 +1,8 @@
 cloud: ffm3
-version: v1.24.5
+version:
+  major: 1
+  minor: 24
+  patch: 5
 controlPlane:
   flavor: standard
 metadata:
@@ -11,3 +14,4 @@ workers:
     replicas: 1
     flavor: standard
     availabilityZone: "1"
+

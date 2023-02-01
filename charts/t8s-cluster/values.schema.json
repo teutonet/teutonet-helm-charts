@@ -79,9 +79,7 @@
         }
       },
       "required": [
-        "serviceLevelAgreement",
-        "customerID",
-        "customerName"
+        "serviceLevelAgreement"
       ],
       "additionalProperties": false
     },
@@ -146,7 +144,7 @@
           "flavor"
         ]
       },
-      "minProperties": 1
+      "minProperties": 0
     },
     "common": {
       "type": "object",
