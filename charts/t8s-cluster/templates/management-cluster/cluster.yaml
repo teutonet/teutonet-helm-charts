@@ -6,8 +6,8 @@ metadata:
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     t8s.teuto.net/sla: {{ .Values.metadata.serviceLevelAgreement | quote }}
     t8s.teuto.net/cluster: {{ .Release.Name | trimPrefix (printf "%s-" .Values.metadata.customerID) | quote}}
-    t8s.teuto.net/customer-id: {{ .Values.metadata.customerID | quote }}
-    t8s.teuto.net/customer-name: {{ .Values.metadata.customerName | quote }}
+    t8s.teuto.net/customer-id: {{ required "You need to set the `customerID`" .Values.metadata.customerID | quote }}
+    t8s.teuto.net/customer-name: {{ required "You need to set the `customerName`" .Values.metadata.customerName | quote }}
     t8s.teuto.net/internal-name: {{ .Release.Name | quote }}
     t8s.teuto.net/role: workload
   annotations:
