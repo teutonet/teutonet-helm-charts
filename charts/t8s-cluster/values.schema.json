@@ -3,51 +3,6 @@
   "type": "object",
   "title": "t8s cluster configuration",
   "properties": {
-    "global": {
-      "type": "object",
-      "properties": {
-        "kubectl": {
-          "type": "object",
-          "description": "Image with `kubectl` binary",
-          "properties": {
-            "image": {
-              "$ref": "#/$defs/image"
-            }
-          },
-          "additionalProperties": false
-        },
-        "pause": {
-          "type": "object",
-          "description": "Image to be used for pause containers",
-          "properties": {
-            "image": {
-              "$ref": "#/$defs/image"
-            }
-          },
-          "additionalProperties": false
-        },
-        "flux": {
-          "type": "object",
-          "description": "Image with `flux` binary",
-          "properties": {
-            "image": {
-              "$ref": "#/$defs/image"
-            }
-          },
-          "additionalProperties": false
-        },
-        "gpg": {
-          "type": "object",
-          "description": "Image with `gpg` binary",
-          "properties": {
-            "image": {
-              "$ref": "#/$defs/image"
-            }
-          },
-          "additionalProperties": false
-        }
-      }
-    },
     "metadata": {
       "type": "object",
       "properties": {
@@ -158,39 +113,5 @@
     "controlPlane",
     "workers"
   ],
-  "additionalProperties": false,
-  "$defs": {
-    "resourceRequirements": {
-      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.24.4-standalone-strict/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
-    },
-    "quantity": {
-      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.24.4-standalone-strict/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
-    },
-    "image": {
-      "type": "object",
-      "properties": {
-        "registry": {
-          "type": "string",
-          "description": "The host of the registry",
-          "examples": [
-            "docker.io"
-          ]
-        },
-        "repository": {
-          "type": "string",
-          "description": "The image path in the registry",
-          "examples": [
-            "bitnami/kubectl"
-          ]
-        },
-        "tag": {
-          "type": "string"
-        },
-        "digest": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
-    }
-  }
+  "additionalProperties": false
 }
