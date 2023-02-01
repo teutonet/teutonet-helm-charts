@@ -32,7 +32,7 @@ if ! cog verify "$PR_TITLE"; then
   exit 1
 fi
 
-if ! cog verify "$PR_TITLE" 2>&1 | grep -Eq "^\s+Scope: $changed$"; then
-  echo "PR title must have scope $changed" >&2
+if ! cog verify "$PR_TITLE" 2>&1 | grep -Eq "^\s+Scope: $changed(/.+|)\$"; then
+  echo "PR title must have scope '$changed/\$subscope'" >&2
   exit 1
 fi
