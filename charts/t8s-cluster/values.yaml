@@ -6,10 +6,9 @@ metadata:
   remarks: ""
 
 controlPlane:
-  flavor: ""
+  flavor: standard.2.1905
   singleNode: false
 
-cloud: ""
 version:
   major: 1
   minor: 25

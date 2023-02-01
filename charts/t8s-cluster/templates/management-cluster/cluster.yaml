@@ -23,7 +23,7 @@ spec:
     flavor: {{ .Values.controlPlane.flavor }}
   teutonetesCloudRef:
     kind: TeutonetesCloud
-    name: {{ .Values.cloud }}
+    name: {{ required "You need to set the `cloud`" .Values.cloud }}
   {{- with .Values.version }}
   version: {{ printf "v%d.%d.%d" (.major | int) (.minor | int) (.patch | int) }}
   {{- end }}
