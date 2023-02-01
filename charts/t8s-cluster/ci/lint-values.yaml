@@ -14,4 +14,3 @@ workers:
     replicas: 1
     flavor: standard
     availabilityZone: "1"
-
