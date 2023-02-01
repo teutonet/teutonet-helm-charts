@@ -13,7 +13,7 @@ function templateRemoteHelmChart() {
 }
 
 function templateLocalHelmChart() {
-  "$(dirname "$0")/templateLocalHelmChart"
+  "$(dirname "$0")/templateLocalHelmChart" "$@"
 }
 
 function templateHelmChart() {
