@@ -1,0 +1,18 @@
+apiVersion: v2
+name: t8s-cluster
+type: application
+version: 0.0.1
+icon: https://teuto.net/favicon.ico
+maintainers:
+  - name: cwrau
+    email: cwr@teuto.net
+  - name: marvinWolff
+    email: mw@teuto.net
+sources:
+  - https://github.com/teutonet/teutonet-helm-charts
+home: https://teuto.net
+description: t8s-operator cluster with necessary addons
+dependencies:
+  - name: common
+    version: 2.2.2
+    repository: https://charts.bitnami.com/bitnami

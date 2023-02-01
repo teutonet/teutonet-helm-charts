@@ -1,0 +1,19 @@
+{{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "storageclass-ssd" "resource" (include "t8s-cluster.storage.ssd" (dict)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "storage")) | nindent 0 }}
+
+{{- define "t8s-cluster.storage.ssd" -}}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: teutostack-ssd
+  labels: {{- include "t8s-cluster.helm.labels" (dict) | nindent 4 }}
+    app.kubernetes.io/component: storage
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+allowVolumeExpansion: true
+parameters:
+  availability: nova
+  type: Ceph-SSD
+provisioner: cinder.csi.openstack.org
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+{{- end -}}

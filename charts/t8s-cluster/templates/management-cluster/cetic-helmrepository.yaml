@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: {{ printf "%s-cetic" .Release.Name }}
+  namespace: {{ .Release.Namespace}}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  interval: 5m
+  url: https://cetic.github.io/helm-charts

@@ -1,0 +1,50 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ printf "%s-cni" .Release.Name }}
+  namespace: {{ .Release.Namespace}}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  chart:
+    spec:
+      chart: cilium
+      sourceRef:
+        kind: HelmRepository
+        name: cilium
+        namespace: flux-system
+      version: 1.x.x
+  interval: 1m
+  kubeConfig:
+    secretRef:
+      name: {{ .Release.Name }}
+  storageNamespace: kube-system
+  targetNamespace: kube-system
+  serviceAccountName: kube-admin
+  values:
+    rollOutCiliumPods: true
+    encryption:
+      enabled: false
+      nodeEncryption: false
+    hubble:
+      metrics:
+        enabled:
+          - dns
+          - drop
+          - tcp
+          - flow
+          - icmp
+          - http
+      relay:
+        rollOutPods: true
+        enabled: true
+        prometheus:
+          enabled: true
+      ui:
+        rollOutPods: true
+        enabled: true
+    operator:
+      rollOutPods: true
+      prometheus:
+        enabled: true
+    prometheus:
+      enabled: true

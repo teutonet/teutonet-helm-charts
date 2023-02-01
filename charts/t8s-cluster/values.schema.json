@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "t8s cluster configuration",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "serviceLevelAgreement": {
+          "type": "string",
+          "enum": [
+            "None",
+            "24x7",
+            "Working-Hours"
+          ]
+        },
+        "customerID": {
+          "type": "string"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "supportProjectUrl": {
+          "type": "string"
+        },
+        "configGroupUrl": {
+          "type": "string"
+        },
+        "gopassName": {
+          "type": "string"
+        },
+        "remarks": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "serviceLevelAgreement"
+      ],
+      "additionalProperties": false
+    },
+    "controlPlane": {
+      "type": "object",
+      "properties": {
+        "flavor": {
+          "type": "string"
+        },
+        "singleNode": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "flavor"
+      ],
+      "additionalProperties": false
+    },
+    "cloud": {
+      "type": "string"
+    },
+    "version": {
+      "type": "object",
+      "properties": {
+        "major": {
+          "type": "integer"
+        },
+        "minor": {
+          "type": "integer"
+        },
+        "patch": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "major",
+        "minor",
+        "patch"
+      ],
+      "additionalProperties": false
+    },
+    "workers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "replicas": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "availabilityZone": {
+            "type": "string"
+          },
+          "flavor": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "replicas",
+          "availabilityZone",
+          "flavor"
+        ]
+      },
+      "minProperties": 0
+    },
+    "common": {
+      "type": "object",
+      "description": "Values for sub-chart"
+    }
+  },
+  "required": [
+    "metadata",
+    "version",
+    "controlPlane",
+    "workers"
+  ],
+  "additionalProperties": false
+}

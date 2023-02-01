@@ -1,0 +1,17 @@
+{{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "storageclass-hdd" "resource" (include "t8s-cluster.storage.hdd" (dict)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "storage")) | nindent 0 }}
+
+{{- define "t8s-cluster.storage.hdd" -}}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: teutostack-hdd
+  labels: {{- include "t8s-cluster.helm.labels" (dict) | nindent 4 }}
+    app.kubernetes.io/component: storage
+allowVolumeExpansion: true
+parameters:
+  availability: nova
+  type: Ceph-HDD
+provisioner: cinder.csi.openstack.org
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+{{- end }}

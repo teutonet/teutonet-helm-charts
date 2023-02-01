@@ -1,0 +1,32 @@
+apiVersion: t8s-engine.teuto.net/v1alpha1
+kind: TeutonetesCluster
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace}}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    t8s.teuto.net/sla: {{ .Values.metadata.serviceLevelAgreement | quote }}
+    t8s.teuto.net/cluster: {{ .Release.Name | trimPrefix (printf "%s-" .Values.metadata.customerID) | quote}}
+    t8s.teuto.net/customer-id: {{ required "You need to set the `customerID`" .Values.metadata.customerID | quote }}
+    t8s.teuto.net/customer-name: {{ required "You need to set the `customerName`" .Values.metadata.customerName | quote }}
+    t8s.teuto.net/internal-name: {{ .Release.Name | quote }}
+    t8s.teuto.net/role: workload
+  annotations:
+    t8s.teuto.net/cluster_support_project_url: {{ .Values.metadata.supportProjectUrl | quote}}
+    t8s.teuto.net/cluster_config_group_url: {{ .Values.metadata.configGroupUrl | quote }}
+    t8s.teuto.net/gopass_name: {{ .Values.metadata.gopassName | quote }}
+    t8s.teuto.net/remarks: {{ .Values.metadata.remarks | quote }}
+spec:
+  customerID: {{ .Values.metadata.customerID }}
+  customerName: {{ .Values.metadata.customerName }}
+  controlPlane:
+    singleNode: {{ .Values.controlPlane.singleNode }}
+    flavor: {{ .Values.controlPlane.flavor }}
+  teutonetesCloudRef:
+    kind: TeutonetesCloud
+    name: {{ required "You need to set the `cloud`" .Values.cloud }}
+  {{- with .Values.version }}
+  version: {{ printf "v%d.%d.%d" (.major | int) (.minor | int) (.patch | int) }}
+  {{- end }}
+  workers: {{- .Values.workers | toYaml | nindent 4 }}
+  bastion:
+    enabled: false
