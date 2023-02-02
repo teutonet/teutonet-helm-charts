@@ -34,8 +34,8 @@ jobs:
             echo -n chart=
             ct list-changed --since "HEAD~" | cut -d / -f 2
           ) | tee $GITHUB_OUTPUT
-      - id: getLatestReleaseHash
-        name: Get latest release for the changed chart
+      - id: getChartName
+        name: Get name for changed chart
         run: |
           set -x
           set -o pipefail
@@ -44,17 +44,6 @@ jobs:
           chart=${chart:?chart variable is empty}
           (
             echo "chart=${chart}"
-            echo -n hash=
-            (
-              curl -H "Authorization: Bearer ${{ secrets.ACTIONS_BOT_TOKEN }}" "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/releases" \
-                | jq -r ".[] | select(.name | startswith(\"${chart}-\")) | \"\\(.published_at)\\t\\(.target_commitish)\"" \
-                | sort -k 1 \
-                | tail -n 1 \
-                | cut -f 2 \
-                | grep -E .
-            ) || (
-              git rev-list HEAD "charts/$chart" | tail -n 1
-            )
           ) | tee $GITHUB_OUTPUT
 
       - name: Change to github-actions[bot]
@@ -64,13 +53,12 @@ jobs:
 
       - uses: google-github-actions/release-please-action@v3
         with:
-          path: charts/${{ steps.getLatestReleaseHash.outputs.chart }}
+          path: charts/${{ steps.getChartName.outputs.chart }}
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
           release-type: helm
           monorepo-tags: true
           changelog-types: '[{"type":"feat","section":"Features"},{"type":"fix","section":"Bug Fixes"},{"type":"chore","section":"Miscellaneous Chores"}]'
           pull-request-title-pattern: 'chore${scope}: [bot] release${component}:${version}'
           separate-pull-requests: true
-          package-name: ${{ steps.getLatestReleaseHash.outputs.chart }}
+          package-name: ${{ steps.getChartName.outputs.chart }}
           command: release-pr
-          last-release-sha: ${{ steps.getLatestReleaseHash.outputs.hash }}
