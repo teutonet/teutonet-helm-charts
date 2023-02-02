@@ -22,9 +22,18 @@ jobs:
       - run: pip install yq
       - name: Install sponge
         run: sudo apt-get -yq install moreutils
+      - id: getChartName
+        name: Get changed chart in this commit
+        env:
+          REF: ${{ github.ref }}
+        run: |
+          (
+            echo -n chart=
+            echo "charts/${REF/refs\/heads\/release-please--branches--main--components--}"
+          ) | tee "${GITHUB_OUTPUT}"
 
       - name: extract images
-        run: ./.github/scripts/extract-artifacthub-images.sh
+        run: ./.github/scripts/extract-artifacthub-images.sh ${{ steps.getChartName.outputs.chart }}
 
       - name: Commit Change for single chart
         uses: EndBug/add-and-commit@v9

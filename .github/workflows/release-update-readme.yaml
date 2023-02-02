@@ -17,14 +17,24 @@ jobs:
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
 
       - run: pip install json-schema-for-humans
+      - id: getChartName
+        name: Get changed chart in this commit
+        env:
+          REF: ${{ github.ref }}
+        run: |
+          (
+            echo -n chart=
+            echo "charts/${REF/refs\/heads\/release-please--branches--main--components--}"
+          ) | tee "${GITHUB_OUTPUT}"
       - name: generate values.md
         run: |
           set -ex
-          ref="${{ github.ref }}"
-          chart="charts/${ref/refs\/heads\/release-please--branches--main--components--}"
+          chart=${{ steps.getChartName.outputs.chart }}
           generate-schema-doc --config-file .github/json-schema-to-md.yaml "$chart/values.schema.json" "$chart/values.md"
       - name: generate Docs
         uses: docker://jnorwood/helm-docs:latest
+        with:
+          args: -g ${{ steps.getChartName.outputs.chart }}
 
       - uses: EndBug/add-and-commit@v9
         with:
