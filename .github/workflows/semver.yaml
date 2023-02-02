@@ -21,30 +21,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: helm/chart-testing-action@v2.3.1
-        if: ${{ !inputs.chart }}
-
-      - id: getChangedChart
-        if: ${{ !inputs.chart }}
-        name: Get changed chart in this commit
-        run: |
-          set -x
-          set -o pipefail
-          (
-            echo -n chart=
-            ct list-changed --since "HEAD~" | cut -d / -f 2
-          ) | tee $GITHUB_OUTPUT
       - id: getChartName
         name: Get name for changed chart
-        run: |
-          set -x
-          set -o pipefail
-          chart="${{ inputs.chart }}"
-          chart="${chart:-${{ steps.getChangedChart.outputs.chart }}}"
-          chart=${chart:?chart variable is empty}
-          (
-            echo "chart=${chart}"
-          ) | tee $GITHUB_OUTPUT
+        uses: ./.github/workflows/get-changed-chart.yaml
+        with:
+          chart: ${{ inputs.chart }}
 
       - name: Change to github-actions[bot]
         run: |

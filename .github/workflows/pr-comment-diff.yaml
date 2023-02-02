@@ -19,16 +19,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: helm/chart-testing-action@v2.3.1
       - id: getChangedChart
         name: Get changed chart in this commit
-        run: |
-          set -x
-          set -o pipefail
-          (
-            echo -n chart=
-            ct list-changed --since "HEAD~" | cut -d / -f 2
-          ) | tee "$GITHUB_OUTPUT"
+        uses: ./.github/workflows/get-changed-chart.yaml
 
       - run: pip install yq
       - run: ./.github/scripts/create-values-diff.sh ${{ github.event.number }} ${{ steps.getChangedChart.outputs.chart }}
