@@ -171,14 +171,6 @@ defaultRules:
 kubelet:
   serviceMonitor:
     resource: false
-kubeEtcd:
-  service:
-    targetPort: 2379
-  serviceMonitor:
-    scheme: https
-    caFile: /etc/prometheus/secrets/etcd-certs/ca.crt
-    certFile: /etc/prometheus/secrets/etcd-certs/client.crt
-    keyFile: /etc/prometheus/secrets/etcd-certs/client.key
 commonLabels: {{- .Values.monitoring.labels | toYaml | nindent 2 }}
 kube-state-metrics:
   {{- if .Values.global.imageRegistry }}
@@ -324,8 +316,6 @@ prometheus:
           - __address__
         target_label: cluster
         replacement: {{ .Values.global.clusterName }}
-    secrets:
-      - etcd-certs
 {{- end -}}
 
 {{- define "base-cluster.grafana.config" -}}
