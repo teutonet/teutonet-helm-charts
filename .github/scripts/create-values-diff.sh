@@ -7,11 +7,21 @@ set -o pipefail
 
 issue=${1?You need to provide the issue ID}
 chart=${2?You need to provide the chart name}
+GITHUB_API_URL="${GITHUB_API_URL:-https://api.github.com}"
+if command -v gh &> /dev/null; then
+  if ! [[ -v GITHUB_TOKEN ]]; then
+    GITHUB_TOKEN=$(gh auth token)
+  else
+    GITHUB_TOKEN="${GITHUB_TOKEN?Please export 'GITHUB_TOKEN'}"
+  fi
+  if ! [[ -v GITHUB_REPOSITORY ]]; then
+    GITHUB_REPOSITORY=$(gh repo view --json nameWithOwner -q .nameWithOwner)
+  fi
+fi
 GITHUB_API_REPO_URL="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}"
-GITHUB_TOKEN="${GITHUB_TOKEN?Please export 'GITHUB_TOKEN'}"
 GITHUB_WORKSPACE="${GITHUB_WORKSPACE:-$(git rev-parse --show-toplevel)}"
 GITHUB_DEFAULT_BRANCH="${GITHUB_DEFAULT_BRANCH:-main}"
-GITHUB_SERVER_URL="${GITHUB_SERVER_URL?Please export 'GITHUB_SERVER_URL'}"
+GITHUB_SERVER_URL="${GITHUB_SERVER_URL:-https://github.com}"
 GITHUB_REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
 SCRIPTS="$GITHUB_WORKSPACE/.github/scripts/"
 TMP_DIR="$(mktemp -d)"
