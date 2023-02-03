@@ -25,7 +25,7 @@ function templateGitHelmRelease() {
   ) >/dev/null
 
   helm dependency update "$tmpDir/$gitPath" >/dev/null
-  helm template ${namespace:+--namespace "$namespace"} "$releaseName" "$tmpDir/$gitPath" --values <([[ -f "$values" ]] && cat "$values" || echo "$values")
+  helm template ${namespace:+--namespace "$namespace"} "$releaseName" "$tmpDir/$gitPath" --values <(if [[ -f "$values" ]]; then cat "$values"; else echo "$values"; fi)
 }
 
 function templateHelmRelease() {
@@ -51,13 +51,9 @@ function templateHelmRelease() {
   sourceNamespace=$(yq <<<"$helmReleaseYaml" -er ".spec.chart.spec.sourceRef.namespace // \"$namespace\"")
   sourceName=$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.sourceRef.name)
   sourceKind=$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.sourceRef.kind)
-  sourceYaml=$(yq <<<"$yaml" -erys '[.[] | select(.kind == "'"$sourceKind"'")][]')
-  set +e
-  sourceResource=$(yq <<<"$sourceYaml" -erys "[.[] | select( (.metadata.namespace == \"$sourceNamespace\") and (.metadata.name == \"$sourceName\") )][0]")
-  set -e
-  # I can't check it directly as I need it's stdout 🤷
-  # shellcheck disable=SC2181
-  if [[ "$?" != 0 ]]; then
+  sourceYaml=$(yq <<<"$yaml" -rys '[.[] | select(.kind == "'"$sourceKind"'")][]')
+  sourceResource=$(yq <<<"$sourceYaml" -rys "[.[] | select( (.metadata.namespace == \"$sourceNamespace\") and (.metadata.name == \"$sourceName\") )][0]")
+  if [[ "$sourceResource" =~ .*"null".* ]]; then
     echo "Failed to get source '$sourceNamespace/$sourceKind/$sourceName'" >/dev/stderr
     return 0
   fi
@@ -129,18 +125,27 @@ function templateGitHelmChart() {
 
 script="$(basename -s .sh "$0")"
 
+recursive=true
+if [[ "${1:-}" == -1 ]]; then
+  recursive=false
+  shift
+fi
+
 case "$script" in
   templateHelmChart | templateLocalHelmChart)
-    templateLocalHelmChart "$@" | templateSubHelmCharts
+    templateLocalHelmChart "$@"
     ;;
   templateRemoteHelmChart)
-    templateRemoteHelmChart "$@" | templateSubHelmCharts
+    templateRemoteHelmChart "$@"
     ;;
   templateGitHelmChart)
-    templateGitHelmChart "$@" | templateSubHelmCharts
+    templateGitHelmChart "$@"
+    ;;
+  templateHelmRelease)
+    templateHelmRelease "$@"
     ;;
   *)
     echo "Wrong script: '$0'" >/dev/stderr
     exit 1
     ;;
-esac
+esac | (if [[ "$recursive" == true ]]; then templateSubHelmCharts; else cat -; fi)
