@@ -7,7 +7,7 @@ on:
 
 jobs:
   labelling:
-    if: ${{ github.event.pull_request.merged == true && contains(github.event.pull_request.head.ref, 'release-please--') }}
+    if: ${{ contains(github.event.pull_request.head.ref, 'release-please--') }}
     runs-on: ubuntu-22.04
     steps:
       - name: remove old label
@@ -19,6 +19,7 @@ jobs:
             -H 'Authorization: token ${{ github.token }}' \
             "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/issues/${{ github.event.number }}/labels/autorelease:%20pending"
       - name: add new label
+        if: ${{ github.event.pull_request.merged == true }}
         run: |
           set -x
           curl --silent --fail-with-body \
