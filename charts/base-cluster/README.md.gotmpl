@@ -45,6 +45,15 @@ helm install -n flux-system base-cluster base-cluster --repo https://teutonet.gi
 helm -n flux-system get notes base-cluster
 ```
 
+## Cluster components
+
+### Certificates for your Ingresses
+
+Certificates are handled by [cert-manager](https://cert-manager.io)
+
+1. set `.certManager.email` to your email for the Let's Encrypt account
+2. add `kubernetes.io/tls-acme: "true"` to your Ingress's annotations
+
 {{ template "chart.sourcesSection" . }}
 
 {{ template "chart.requirementsSection" . }}
@@ -66,6 +75,8 @@ This excludes:
 
 ### 1.x.x -> 2.0.0
 
+⚠️  Skip this migration!
+
 - Flux is now a direct dependency
   - You should add the following labels to all resources of flux;
     - .metadata.labels["app.kubernetes.io/managed-by"]="Helm"
@@ -79,7 +90,7 @@ This excludes:
 
 - Flux is removed as a direct dependency
 
-  The flux chart is way to unstable, cannot be used for an installation, ...
+  The flux chart is way too unstable, cannot be used for an installation, ...
 
 We be sorry 😥
 
