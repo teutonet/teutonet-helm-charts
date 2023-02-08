@@ -16,7 +16,7 @@
 git init
 
 # create empty cluster HelmRelease;
-flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 0.x.x > cluster.yaml
+flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 3.x.x > cluster.yaml
 
 # maybe use the following name for your cluster;
 kubectl get node -o json | jq '.items[0].metadata.annotations["cluster.x-k8s.io/cluster-name"]'
@@ -39,7 +39,7 @@ helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io
 
 # manual initial installation of the chart, afterwards the chart takes over
 # after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
-helm install -n flux-system base-cluster base-cluster --repo https://teutonet.github.io/teutonet-helm-charts --version 0.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
+helm install -n flux-system base-cluster base-cluster --repo https://teutonet.github.io/teutonet-helm-charts --version 3.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
 
 # you can use this command to get the instructions again
 helm -n flux-system get notes base-cluster
