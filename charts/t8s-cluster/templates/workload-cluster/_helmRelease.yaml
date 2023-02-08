@@ -23,7 +23,6 @@ spec:
       name: {{ .context.Release.Name }}
   storageNamespace: kube-system
   targetNamespace: kube-system
-  serviceAccountName: kube-admin
   values:
     {{- if eq .render nil }}
     static: {{ .resource | toYaml | indent 6 }}
