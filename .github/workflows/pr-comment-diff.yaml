@@ -18,5 +18,6 @@ jobs:
       CT_TARGET_BRANCH: ${{ github.event.repository.default_branch }}
       GITHUB_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
     steps:
+      - uses: actions/checkout@v3
       - run: pip install yq
       - run: ./.github/scripts/create-values-diff.sh ${{ github.event.number }} ${{ needs.getChangedChart.outputs.chart }}
