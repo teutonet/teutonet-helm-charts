@@ -16,7 +16,7 @@
 git init
 
 # create empty cluster HelmRelease;
-flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 0.x.x > cluster.yaml
+flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 3.x.x > cluster.yaml
 
 # maybe use the following name for your cluster;
 kubectl get node -o json | jq '.items[0].metadata.annotations["cluster.x-k8s.io/cluster-name"]'
@@ -39,11 +39,20 @@ helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io
 
 # manual initial installation of the chart, afterwards the chart takes over
 # after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
-helm install -n flux-system base-cluster base-cluster --repo https://teutonet.github.io/teutonet-helm-charts --version 0.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
+helm install -n flux-system base-cluster base-cluster --repo https://teutonet.github.io/teutonet-helm-charts --version 3.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
 
 # you can use this command to get the instructions again
 helm -n flux-system get notes base-cluster
 ```
+
+## Cluster components
+
+### Certificates for your Ingresses
+
+Certificates are handled by [cert-manager](https://cert-manager.io)
+
+1. set `.certManager.email` to your email for the Let's Encrypt account
+2. add `kubernetes.io/tls-acme: "true"` to your Ingress's annotations
 
 {{ template "chart.sourcesSection" . }}
 
@@ -66,6 +75,8 @@ This excludes:
 
 ### 1.x.x -> 2.0.0
 
+⚠️  Skip this migration!
+
 - Flux is now a direct dependency
   - You should add the following labels to all resources of flux;
     - .metadata.labels["app.kubernetes.io/managed-by"]="Helm"
@@ -79,7 +90,7 @@ This excludes:
 
 - Flux is removed as a direct dependency
 
-  The flux chart is way to unstable, cannot be used for an installation, ...
+  The flux chart is way too unstable, cannot be used for an installation, ...
 
 We be sorry 😥
 

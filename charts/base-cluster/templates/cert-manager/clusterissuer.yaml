@@ -1,14 +1,17 @@
 {{- if .Values.certManager.email }}
-{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "clusterissuer-letsencrypt-prod" "resource" (include "base-cluster.cert-manager.defaultClusterIssuer" .) "dependencies" (dict "cert-manager" "cert-manager") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cert-manager")) }}
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "clusterissuer-letsencrypt-production" "resource" (include "base-cluster.cert-manager.clusterIssuer" (dict "name" "production" "url" "https://acme-v02.api.letsencrypt.org/directory")) "dependencies" (dict "cert-manager" "cert-manager") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cert-manager")) }}
+---
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "clusterissuer-letsencrypt-staging" "resource" (include "base-cluster.cert-manager.clusterIssuer" (dict "name" "staging" "url" "https://acme-staging-v02.api.letsencrypt.org/directory")) "dependencies" (dict "cert-manager" "cert-manager") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cert-manager")) }}
 {{- end -}}
 
-{{- define "base-cluster.cert-manager.defaultClusterIssuer" -}}
+{{- define "base-cluster.cert-manager.clusterIssuer" -}}
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-prod
+  name: letsencrypt-{{ .name }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
-    app.kubernetes.io/component: cert-manager
+    app.kubernetes.io/component: {{ .name }}
+    app.kubernetes.io/part-of: cert-manager
 spec:
   acme:
     email: {{ .Values.certManager.email }}
@@ -32,6 +35,6 @@ spec:
             class: nginx
             serviceType: ClusterIP
     privateKeySecretRef:
-      name: letsencrypt-prod-account
-    server: https://acme-v02.api.letsencrypt.org/directory
+      name: letsencrypt-{{ .name }}-account
+    server: {{ .url | quote }}
 {{- end -}}
