@@ -14,7 +14,7 @@ on:
 
 jobs:
   getChangedChart:
-    uses: ./.github/actions/get-changed-chart.yaml
+    uses: ./.github/workflows/get-changed-chart.yaml
     with:
       chart: ${{ inputs.chart }}
   createReleasePR:
