@@ -85,4 +85,10 @@ We be sorry 😥
 
 You're gonna have to install flux yourself again
 
+### 3.x.x -> 4.0.0
+
+The storageClasses are going to be removed from this chart, this is prepared by leaving them in the cluster on upgrade.
+
+The new [t8s-cluster](../t8s-cluster) is going to provide these, the enduser can ignore this change.
+
 {{ .Files.Get "values.md"  }}

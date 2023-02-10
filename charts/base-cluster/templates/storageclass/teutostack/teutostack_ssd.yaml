@@ -6,6 +6,7 @@ metadata:
     app.kubernetes.io/component: storage
   annotations:
     storageclass.kubernetes.io/is-default-class: "true"
+    "helm.sh/resource-policy": keep
 allowVolumeExpansion: true
 parameters:
   availability: nova
