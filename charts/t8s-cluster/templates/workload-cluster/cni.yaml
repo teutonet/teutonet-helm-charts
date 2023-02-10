@@ -19,7 +19,6 @@ spec:
       name: {{ .Release.Name }}
   storageNamespace: kube-system
   targetNamespace: kube-system
-  serviceAccountName: kube-admin
   values:
     rollOutCiliumPods: true
     encryption:

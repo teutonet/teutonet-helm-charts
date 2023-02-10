@@ -12,7 +12,6 @@ spec:
     secretRef:
       name: {{ .Release.Name }}
   targetNamespace: kube-system
-  serviceAccountName: kube-admin
   interval: 5m
   prune: true
   path: manifests/cinder-csi-plugin
