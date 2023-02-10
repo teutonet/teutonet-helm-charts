@@ -4,6 +4,8 @@ metadata:
   name: teutostack-hdd
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     app.kubernetes.io/component: storage
+  annotations:
+    "helm.sh/resource-policy": keep
 allowVolumeExpansion: true
 parameters:
   availability: nova
