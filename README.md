@@ -5,6 +5,20 @@
 
 The code is provided as-is with no warranties.
 
+## Charts
+
+### base-cluster - Probably the chart you're looking for 😉
+
+Basic components that should be in every cluster, opinionated.
+
+[CLICK ME](./charts/base-cluster)
+
+### t8s-cluster - internal chart used by teuto.net
+
+This chart deploys a TeutonetesCluster and all it's necessary infrastructure components.
+
+[CLICK ME](./charts/t8s-cluster)
+
 ## Usage
 
 [Helm](https://helm.sh) must be installed to use the charts.
