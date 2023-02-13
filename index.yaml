@@ -1034,6 +1034,36 @@ entries:
         - image: quay.io/cilium/operator-generic:v1.12.6@sha256:eec4430d222cb2967d42d3b404d2606e66468de47ae85e0a3ca3f58f00a5e017
         - image: registry.k8s.io/etcd:3.5.6-0
     apiVersion: v2
+    created: "2023-02-13T10:14:47.456921937Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.2.3
+    description: t8s-operator cluster with necessary addons
+    digest: 63717af4d3d58e7ac857807a7140b0ccbe5bf76791ce5788731566c76b554e85
+    home: https://teuto.net
+    icon: https://teuto.net/favicon.ico
+    maintainers:
+    - email: cwr@teuto.net
+      name: cwrau
+    - email: mw@teuto.net
+      name: marvinWolff
+    name: t8s-cluster
+    sources:
+    - https://github.com/teutonet/teutonet-helm-charts
+    type: application
+    urls:
+    - https://github.com/teutonet/teutonet-helm-charts/releases/download/t8s-cluster-0.1.0/t8s-cluster-0.1.0.tgz
+    version: 0.1.0
+  - annotations:
+      artifacthub.io/images: |
+        - image: quay.io/cilium/cilium:v1.12.6@sha256:454134506b0448c756398d3e8df68d474acde2a622ab58d0c7e8b272b5867d0d
+        - image: quay.io/cilium/hubble-relay:v1.12.6@sha256:27a68a16f0ee7ed6ba690e91847de6931a5511f85a7f939320df216486764cb9
+        - image: quay.io/cilium/hubble-ui-backend:v0.9.2@sha256:a3ac4d5b87889c9f7cc6323e86d3126b0d382933bd64f44382a92778b0cde5d7
+        - image: quay.io/cilium/hubble-ui:v0.9.2@sha256:d3596efc94a41c6b772b9afe6fe47c17417658956e04c3e2a28d293f2670663e
+        - image: quay.io/cilium/operator-generic:v1.12.6@sha256:eec4430d222cb2967d42d3b404d2606e66468de47ae85e0a3ca3f58f00a5e017
+        - image: registry.k8s.io/etcd:3.5.6-0
+    apiVersion: v2
     created: "2023-02-10T14:02:51.5980028Z"
     dependencies:
     - name: common
@@ -1077,4 +1107,4 @@ entries:
     urls:
     - https://github.com/teutonet/teutonet-helm-charts/releases/download/t8s-cluster-0.0.1/t8s-cluster-0.0.1.tgz
     version: 0.0.1
-generated: "2023-02-10T14:02:51.598136405Z"
+generated: "2023-02-13T10:14:47.456969237Z"
