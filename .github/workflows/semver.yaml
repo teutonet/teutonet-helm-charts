@@ -27,6 +27,29 @@ jobs:
         with:
           fetch-depth: 0
 
+      - id: getLatestReleaseHash
+        name: Get latest release for the changed chart
+        env:
+          chart: ${{ needs.getChangedChart.outputs.chart }}
+        run: |
+          set -x
+          set -o pipefail
+          chart=${chart:?chart variable is empty}
+          (
+            echo "chart=${chart}"
+            echo -n hash=
+            (
+              curl -H "Authorization: Bearer ${{ secrets.ACTIONS_BOT_TOKEN }}" "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/releases" \
+                | jq -r ".[] | select(.name | startswith(\"${chart}-\")) | \"\\(.published_at)\\t\\(.target_commitish)\"" \
+                | sort -k 1 \
+                | tail -n 1 \
+                | cut -f 2 \
+                | grep -E .
+            ) || (
+              git rev-list HEAD "charts/$chart" | tail -n 1
+            )
+          ) | tee "$GITHUB_OUTPUT"
+
       - name: Change to github-actions[bot]
         run: |
           git config user.name github-actions[bot]
@@ -43,3 +66,4 @@ jobs:
           separate-pull-requests: true
           package-name: ${{ needs.getChangedChart.outputs.chart }}
           command: release-pr
+          last-release-sha: ${{ steps.getLatestReleaseHash.outputs.hash }}
