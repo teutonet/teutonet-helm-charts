@@ -1,0 +1,26 @@
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+kind: KubeadmConfigTemplate
+metadata:
+  name: {{ include "common.names.fullname" $ }}-default-worker
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  template:
+    spec:
+      joinConfiguration:
+        nodeRegistration:
+          kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict) | nindent 12 }}
+          name: '{{ `{{ local_hostname }}` }}'
+      files:
+          {{- if .Values.containerRegistryProxy.proxyRegistryEndpoint }}
+        - content: |- {{- include "t8s-cluster.clusterClass.containerRegistryProxies" (dict "context" $) | nindent 12 }}
+          path: /etc/containerd/conf.d/teuto-mirror.toml
+          {{- end }}
+          {{- if .Files.Get "CA.crt" }}
+        - content: |- {{- .Files.Get "CA.crt" | nindent 12 }}
+          path: /usr/local/share/ca-certificates/injected-ca-certs.crt
+          {{- end }}
+      {{- if .Files.Get "CA.crt" }}
+      preKubeadmCommands:
+        - update-ca-certificates
+      {{- end }}

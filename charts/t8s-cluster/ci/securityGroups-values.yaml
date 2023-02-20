@@ -1,0 +1,21 @@
+metadata:
+  serviceLevelAgreement: None
+version:
+  major: 1
+  minor: 25
+  patch: 0
+controlPlane:
+  flavor: standard.2.1905
+  securityGroups:
+    - default
+    - kuchen
+    - pizza
+worker:
+  securityGroups:
+    - default
+    - kuchen
+workers:
+  test:
+    replicas: 1
+    availabilityZone: Zone1
+    flavor: standard.2.1905

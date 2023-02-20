@@ -1,0 +1,13 @@
+{{- if false }}
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+{{- else }}
+apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
+{{- end }}
+kind: OpenStackClusterTemplate
+metadata:
+  name: {{ include "common.names.fullname" $ }}-{{ include "t8s-cluster.clusterClass.openStackClusterTemplate.specHash" (dict "context" $) }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  template:
+    spec: {{ include "t8s-cluster.clusterClass.openStackClusterTemplate.spec" (dict "context" .) | nindent 6 }}

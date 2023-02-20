@@ -1,0 +1,104 @@
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: ClusterClass
+metadata:
+  name: t8s-engine-v0.6.0
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  controlPlane:
+    machineHealthCheck:
+      maxUnhealthy: 33%
+      nodeStartupTimeout: 10m
+      unhealthyConditions:
+        - status: Unknown
+          timeout: 600s
+          type: Ready
+        - status: 'False'
+          timeout: 600s
+          type: Ready
+    machineInfrastructure:
+      ref:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+        kind: OpenStackMachineTemplate
+        name: {{ include "common.names.fullname" $ }}-control-plane-{{ include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfControlPlane" (dict "context" $) }}
+    ref:
+      apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+      kind: KubeadmControlPlaneTemplate
+      name: {{ include "common.names.fullname" $ }}-{{ include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.specHash" . }}
+  infrastructure:
+    ref:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+      kind: OpenStackClusterTemplate
+      name: {{ include "common.names.fullname" $ }}-{{ include "t8s-cluster.clusterClass.openStackClusterTemplate.specHash" (dict "context" $) }}
+  patches:
+    - definitions:
+        - jsonPatches:
+            - op: add
+              path: /spec/template/spec/serverGroupID
+              valueFrom:
+                variable: controlPlaneServerGroupID
+          selector:
+            apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+            kind: OpenStackMachineTemplate
+            matchResources:
+              controlPlane: true
+      description: Sets the ServerGroupID for Control Plane machines.
+      enabledIf: {{ `"{{ if .controlPlaneServerGroupID }}true{{ end }}"` }}
+      name: controlPlaneServerGroupID
+    - definitions:
+        - jsonPatches:
+            - op: add
+              path: /spec/template/spec/serverGroupID
+              valueFrom:
+                variable: machineDeploymentServerGroupID
+          selector:
+            apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+            kind: OpenStackMachineTemplate
+            matchResources:
+              machineDeploymentClass:
+                names:
+                  - default-worker
+      description: Sets the ServerGroupID for MachineDeployment machines.
+      enabledIf: {{ `"{{ if .machineDeploymentServerGroupID }}true{{ end }}"` }}
+      name: machineDeploymentServerGroupID
+  variables:
+    - name: controlPlaneServerGroupID
+      required: false
+      schema:
+        openAPIV3Schema:
+          description: |-
+            OpenStack Server Group to use for Control Plane machines.
+            Field is optional, but must be set for HA clusters.
+          type: string
+    - name: machineDeploymentServerGroupID
+      required: false
+      schema:
+        openAPIV3Schema:
+          description: |-
+            OpenStack Server Group to use for MachineDeployment machines.
+            Field is optional, but should be set for HA clusters.
+          type: string
+  workers:
+    machineDeployments:
+      - class: default-worker
+        machineHealthCheck:
+          maxUnhealthy: 50%
+          nodeStartupTimeout: 8m
+          unhealthyConditions:
+            - status: Unknown
+              timeout: 300s
+              type: Ready
+            - status: 'False'
+              timeout: 300s
+              type: Ready
+        template:
+          bootstrap:
+            ref:
+              apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+              kind: KubeadmConfigTemplate
+              name: {{ include "common.names.fullname" $ }}-default-worker
+          infrastructure:
+            ref:
+              apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+              kind: OpenStackMachineTemplate
+              name: {{ include "common.names.fullname" $ }}-default-worker-{{ include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfWorkers" (dict "context" $) }}

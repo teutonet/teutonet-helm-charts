@@ -46,6 +46,9 @@
         },
         "singleNode": {
           "type": "boolean"
+        },
+        "securityGroups": {
+          "$ref": "#/$defs/securityGroups"
         }
       },
       "required": [
@@ -76,6 +79,15 @@
       ],
       "additionalProperties": false
     },
+    "worker": {
+      "type": "object",
+      "properties": {
+        "securityGroups": {
+          "$ref": "#/$defs/securityGroups"
+        }
+      },
+      "additionalProperties": false
+    },
     "workers": {
       "type": "object",
       "additionalProperties": {
@@ -98,8 +110,77 @@
           "availabilityZone",
           "flavor"
         ]
+      }
+    },
+    "clouds": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "dnsNameservers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "controlPlaneAvailabilityZones": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "dnsNameservers"
+        ],
+        "additionalProperties": false
       },
-      "minProperties": 0
+      "minProperties": 1
+    },
+    "bastion": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "availabilityZone": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "sshKeyName": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "containerRegistryProxy": {
+      "type": "object",
+      "properties": {
+        "additionallyProxiedRegistries": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "proxyRegistryEndpoint": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "sshKeyName": {
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "common": {
       "type": "object",
@@ -112,5 +193,15 @@
     "controlPlane",
     "workers"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$defs": {
+    "securityGroups": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  }
 }
