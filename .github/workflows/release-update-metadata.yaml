@@ -35,7 +35,6 @@ jobs:
         with:
           message: "chore: [bot] Update images in 'Chart.yaml'"
           default_author: github_actions
-          pull: --rebase --autostash
           push: false
 
       - run: pip install json-schema-for-humans
@@ -46,11 +45,11 @@ jobs:
       - name: generate Docs
         uses: docker://jnorwood/helm-docs:latest
         with:
-          args: -g ${{ needs.getChangedChart.outputs.chart }}
+          args: -g charts/${{ needs.getChangedChart.outputs.chart }}
 
       - name: Commit README
         uses: EndBug/add-and-commit@v9
         with:
           message: "chore: [bot] Update 'README.md'"
           default_author: github_actions
-          pull: --rebase --autostash
+          push: true
