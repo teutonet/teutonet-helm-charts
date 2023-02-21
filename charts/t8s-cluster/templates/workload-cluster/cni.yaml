@@ -8,11 +8,11 @@ spec:
   chart:
     spec:
       chart: cilium
+      version: 1.x.x
       sourceRef:
         kind: HelmRepository
         name: {{ printf "%s-cilium" .Release.Name }}
         namespace: {{ .Release.Namespace}}
-      version: 1.x.x
   interval: 1m
   kubeConfig:
     secretRef:
