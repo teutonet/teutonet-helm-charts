@@ -10,13 +10,7 @@ metadata:
     {{- end }}
 spec:
   chart:
-    spec:
-      chart: static
-      version: 0.1.1
-      sourceRef:
-        kind: HelmRepository
-        name: cetic
-        namespace: {{ .context.Release.Namespace }}
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "cetic" "chart" "static" "context" .context) | nindent 6 }}
   interval: 30m
   dependsOn:
     {{- range $namespace, $name := .dependencies }}

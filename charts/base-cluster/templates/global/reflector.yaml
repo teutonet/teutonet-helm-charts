@@ -8,13 +8,7 @@ metadata:
     app.kubernetes.io/component: reflector
 spec:
   chart:
-    spec:
-      chart: reflector
-      sourceRef:
-        kind: HelmRepository
-        name: emberstack
-        namespace: {{ .Release.Namespace }}
-      version: 6.x.x
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "emberstack" "chart" "reflector" "context" $) | nindent 6 }}
   interval: 1m
   values:
     {{- if .Values.global.imageRegistry }}

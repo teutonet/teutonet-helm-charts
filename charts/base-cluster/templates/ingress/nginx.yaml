@@ -7,13 +7,7 @@ metadata:
     app.kubernetes.io/component: ingress
 spec:
   chart:
-    spec:
-      chart: ingress-nginx
-      sourceRef:
-        kind: HelmRepository
-        name: nginx
-        namespace: {{ .Release.Namespace }}
-      version: 4.x.x
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "nginx" "chart" "ingress-nginx" "context" $) | nindent 6 }}
   interval: 1m
   {{- if .Values.monitoring.prometheus.enabled }}
   dependsOn:

@@ -10,13 +10,7 @@ metadata:
     app.kubernetes.io/part-of: kyverno
 spec:
   chart:
-    spec:
-      chart: kyverno-policies
-      version: 2.x.x
-      sourceRef:
-        kind: HelmRepository
-        name: kyverno
-        namespace: {{ .Release.Namespace }}
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "kyverno" "chart" "kyverno-policies" "context" $) | nindent 6 }}
   interval: 5m
   dependsOn:
     - name: kyverno

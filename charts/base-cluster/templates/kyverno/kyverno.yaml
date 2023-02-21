@@ -9,13 +9,7 @@ metadata:
     app.kubernetes.io/component: kyverno
 spec:
   chart:
-    spec:
-      chart: kyverno
-      version: 2.x.x
-      sourceRef:
-        kind: HelmRepository
-        name: kyverno
-        namespace: {{ .Release.Namespace }}
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "kyverno" "chart" "kyverno" "context" $) | nindent 6 }}
   interval: 5m
   {{- if .Values.monitoring.prometheus.enabled }}
   dependsOn:

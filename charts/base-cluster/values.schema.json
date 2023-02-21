@@ -165,6 +165,13 @@
               },
               "condition": {
                 "$ref": "#/$defs/condition"
+              },
+              "charts": {
+                "type": "object",
+                "description": "Which charts are deployed in which version using this repo, used internally",
+                "additionalProperties": {
+                  "type": "string"
+                }
               }
             },
             "additionalProperties": false
