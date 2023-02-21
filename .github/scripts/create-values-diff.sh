@@ -81,7 +81,7 @@ function generateComment() {
 
 
     diffs+=(
-      [$values]="$(diff -ur "$originalResourcesDir" "$newResourcesDir")"
+      [$values]="$(diff -ur "$originalResourcesDir" "$newResourcesDir" | curl -s -F syntax=diff -F "content=<-" https://dpaste.com/api/v2/)"
     )
     break
   done
@@ -96,14 +96,8 @@ function generateComment() {
   echo ---
   echo
   for values in "${!diffs[@]}"; do
-    echo '<details>'
-    echo "<summary>$values</summary>"
+    echo "<summary>[$values](${diffs[$values]})</summary>"
     echo
-    echo '```diff'
-    echo "${diffs[$values]}"
-    echo '```'
-    echo
-    echo '</details>'
   done
 }
 
