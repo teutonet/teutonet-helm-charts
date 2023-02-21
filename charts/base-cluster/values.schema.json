@@ -750,7 +750,8 @@
                     "properties": {
                       "url": {
                         "type": "string",
-                        "pattern": "ssh://.+@.+"
+                        "pattern": "^ssh://.+@[^:]+(?::\\d+)?[^:]*$",
+                        "description": "This needs to follow flux's way of writing this url, see https://fluxcd.io/flux/components/source/gitrepositories/#url"
                       }
                     }
                   }
