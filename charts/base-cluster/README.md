@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 3.1.0](https://img.shields.io/badge/Version-3.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 3.3.1](https://img.shields.io/badge/Version-3.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -20,7 +20,7 @@ A common base for every kubernetes cluster
 git init
 
 # create empty cluster HelmRelease;
-flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 0.x.x > cluster.yaml
+flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 3.x.x > cluster.yaml
 
 # maybe use the following name for your cluster;
 kubectl get node -o json | jq '.items[0].metadata.annotations["cluster.x-k8s.io/cluster-name"]'
@@ -43,11 +43,20 @@ helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io
 
 # manual initial installation of the chart, afterwards the chart takes over
 # after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
-helm install -n flux-system base-cluster base-cluster --repo https://teutonet.github.io/teutonet-helm-charts --version 0.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
+helm install -n flux-system base-cluster base-cluster --repo https://teutonet.github.io/teutonet-helm-charts --version 3.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
 
 # you can use this command to get the instructions again
 helm -n flux-system get notes base-cluster
 ```
+
+## Cluster components
+
+### Certificates for your Ingresses
+
+Certificates are handled by [cert-manager](https://cert-manager.io)
+
+1. set `.certManager.email` to your email for the Let's Encrypt account
+2. add `kubernetes.io/tls-acme: "true"` to your Ingress's annotations
 
 ## Source Code
 
@@ -57,7 +66,7 @@ helm -n flux-system get notes base-cluster
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.2.2 |
+| https://charts.bitnami.com/bitnami | common | 2.2.3 |
 
 This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
 
@@ -76,6 +85,8 @@ This excludes:
 
 ### 1.x.x -> 2.0.0
 
+⚠️  Skip this migration!
+
 - Flux is now a direct dependency
   - You should add the following labels to all resources of flux;
     - .metadata.labels["app.kubernetes.io/managed-by"]="Helm"
@@ -89,11 +100,17 @@ This excludes:
 
 - Flux is removed as a direct dependency
 
-  The flux chart is way to unstable, cannot be used for an installation, ...
+  The flux chart is way too unstable, cannot be used for an installation, ...
 
 We be sorry 😥
 
 You're gonna have to install flux yourself again
+
+### 3.x.x -> 4.0.0
+
+The storageClasses are going to be removed from this chart, this is prepared by leaving them in the cluster on upgrade.
+
+The new [t8s-cluster](../t8s-cluster) is going to provide these, the enduser can ignore this change.
 
 # base cluster configuration
 
@@ -209,11 +226,11 @@ nexus.teuto.net
 
 **Description:** A map of credentials to be created and synced into namespaces, the key is the secret name
 
-| Property                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#global_imageCredentials_additionalProperties ) | No      | object | No         | -          | -                 |
+| Property                                             | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ---------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#global_imageCredentials_additionalProperties ) | No      | object | No         | -          | -                 |
 
-#### <a name="global_imageCredentials_additionalProperties"></a>1.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > imageCredentials > additionalProperties`
+#### <a name="global_imageCredentials_additionalProperties"></a>1.5.1. Property `base cluster configuration > global > imageCredentials > additionalProperties`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -466,11 +483,11 @@ Must be one of:
 
 **Description:** The labels used to allow ingress from the metrics service
 
-| Property                                                                            | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ----------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#global_networkPolicy_metricsLabels_additionalProperties ) | No      | string | No         | -          | -                 |
+| Property                                                        | Pattern | Type   | Deprecated | Definition | Title/Description |
+| --------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#global_networkPolicy_metricsLabels_additionalProperties ) | No      | string | No         | -          | -                 |
 
-##### <a name="global_networkPolicy_metricsLabels_additionalProperties"></a>1.10.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > metricsLabels > additionalProperties`
+##### <a name="global_networkPolicy_metricsLabels_additionalProperties"></a>1.10.2.1. Property `base cluster configuration > global > networkPolicy > metricsLabels > additionalProperties`
 
 |          |          |
 | -------- | -------- |
@@ -485,11 +502,11 @@ Must be one of:
 
 **Description:** The labels used to allow egress to the DNS service
 
-| Property                                                                        | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#global_networkPolicy_dnsLabels_additionalProperties ) | No      | string | No         | -          | -                 |
+| Property                                                    | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ----------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#global_networkPolicy_dnsLabels_additionalProperties ) | No      | string | No         | -          | -                 |
 
-##### <a name="global_networkPolicy_dnsLabels_additionalProperties"></a>1.10.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > dnsLabels > additionalProperties`
+##### <a name="global_networkPolicy_dnsLabels_additionalProperties"></a>1.10.3.1. Property `base cluster configuration > global > networkPolicy > dnsLabels > additionalProperties`
 
 |          |          |
 | -------- | -------- |
@@ -504,11 +521,11 @@ Must be one of:
 
 **Description:** A map of helmRepositories to create, the key is the name
 
-| Property                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#global_helmRepositories_additionalProperties ) | No      | object | No         | -          | -                 |
+| Property                                             | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ---------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#global_helmRepositories_additionalProperties ) | No      | object | No         | -          | -                 |
 
-#### <a name="global_helmRepositories_additionalProperties"></a>1.11.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties`
+#### <a name="global_helmRepositories_additionalProperties"></a>1.11.1. Property `base cluster configuration > global > helmRepositories > additionalProperties`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -571,11 +588,11 @@ Must be one of:
 
 **Description:** A map of cert-manager certificates to create and sync its secrets into namespaces, the key is the name, therefore the secret name will be `$key`-certificate
 
-| Property                                                             | Pattern | Type   | Deprecated | Definition | Title/Description |
-| -------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#global_certificates_additionalProperties ) | No      | object | No         | -          | -                 |
+| Property                                         | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#global_certificates_additionalProperties ) | No      | object | No         | -          | -                 |
 
-#### <a name="global_certificates_additionalProperties"></a>1.12.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates > additionalProperties`
+#### <a name="global_certificates_additionalProperties"></a>1.12.1. Property `base cluster configuration > global > certificates > additionalProperties`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -682,11 +699,11 @@ test.teuto.net
 
 **Description:** Namespaces to create. AND *delete* if removed
 
-| Property                                                           | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#global_namespaces_additionalProperties ) | No      | object | No         | -          | -                 |
+| Property                                       | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ---------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#global_namespaces_additionalProperties ) | No      | object | No         | -          | -                 |
 
-#### <a name="global_namespaces_additionalProperties"></a>1.14.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties`
+#### <a name="global_namespaces_additionalProperties"></a>1.14.1. Property `base cluster configuration > global > namespaces > additionalProperties`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -705,11 +722,11 @@ test.teuto.net
 | **Type**                  | `object`                                                                                                                                                                                                             |
 | **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_namespaces_additionalProperties_additionalLabels_additionalProperties "Each additional property must conform to the following schema") |
 
-| Property                                                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description |
-| -------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#global_namespaces_additionalProperties_additionalLabels_additionalProperties ) | No      | string | No         | -          | -                 |
+| Property                                                                             | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#global_namespaces_additionalProperties_additionalLabels_additionalProperties ) | No      | string | No         | -          | -                 |
 
-##### <a name="global_namespaces_additionalProperties_additionalLabels_additionalProperties"></a>1.14.1.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > additionalLabels > additionalProperties`
+##### <a name="global_namespaces_additionalProperties_additionalLabels_additionalProperties"></a>1.14.1.1.1. Property `base cluster configuration > global > namespaces > additionalProperties > additionalLabels > additionalProperties`
 
 |          |          |
 | -------- | -------- |
@@ -807,11 +824,11 @@ Must be one of:
 
 **Description:** The labels to set on ServiceMonitors, ... and which the prometheus uses to search for
 
-| Property                                                           | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#monitoring_labels_additionalProperties ) | No      | string | No         | -          | -                 |
+| Property                                       | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ---------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#monitoring_labels_additionalProperties ) | No      | string | No         | -          | -                 |
 
-#### <a name="monitoring_labels_additionalProperties"></a>3.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > labels > additionalProperties`
+#### <a name="monitoring_labels_additionalProperties"></a>3.1.1. Property `base cluster configuration > monitoring > labels > additionalProperties`
 
 |          |          |
 | -------- | -------- |
@@ -879,11 +896,11 @@ Must be one of:
 
 **Description:** Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 
-| Property                                                                                | Pattern | Type   | Deprecated | Definition                                                     | Title/Description |
-| --------------------------------------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------- | ----------------- |
-| - [additionalProperties](#monitoring_prometheus_resources_limits_additionalProperties ) | No      | object | No         | In #/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity | -                 |
+| Property                                                            | Pattern | Type   | Deprecated | Definition                                                     | Title/Description |
+| ------------------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------- | ----------------- |
+| - [](#monitoring_prometheus_resources_limits_additionalProperties ) | No      | object | No         | In #/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity | -                 |
 
-##### <a name="monitoring_prometheus_resources_limits_additionalProperties"></a>3.2.3.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > resources > limits > io.k8s.apimachinery.pkg.api.resource.Quantity`
+##### <a name="monitoring_prometheus_resources_limits_additionalProperties"></a>3.2.3.1.1. Property `base cluster configuration > monitoring > prometheus > resources > limits > io.k8s.apimachinery.pkg.api.resource.Quantity`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -917,11 +934,11 @@ Must be one of:
 
 **Description:** Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 
-| Property                                                                                  | Pattern | Type   | Deprecated | Definition                                                                                                                           | Title/Description |
-| ----------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------- |
-| - [additionalProperties](#monitoring_prometheus_resources_requests_additionalProperties ) | No      | object | No         | Same as [monitoring_prometheus_resources_limits_additionalProperties](#monitoring_prometheus_resources_limits_additionalProperties ) | -                 |
+| Property                                                              | Pattern | Type   | Deprecated | Definition                                                                                                                           | Title/Description |
+| --------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------- |
+| - [](#monitoring_prometheus_resources_requests_additionalProperties ) | No      | object | No         | Same as [monitoring_prometheus_resources_limits_additionalProperties](#monitoring_prometheus_resources_limits_additionalProperties ) | -                 |
 
-##### <a name="monitoring_prometheus_resources_requests_additionalProperties"></a>3.2.3.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > resources > requests > io.k8s.apimachinery.pkg.api.resource.Quantity`
+##### <a name="monitoring_prometheus_resources_requests_additionalProperties"></a>3.2.3.2.1. Property `base cluster configuration > monitoring > prometheus > resources > requests > io.k8s.apimachinery.pkg.api.resource.Quantity`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -1030,11 +1047,11 @@ Must be one of:
 
 **Description:** A map of resource/[label] that will be set as labels on the state metrics
 
-| Property                                                                                                      | Pattern | Type            | Deprecated | Definition | Title/Description |
-| ------------------------------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList_additionalProperties ) | No      | array of string | No         | -          | -                 |
+| Property                                                                                  | Pattern | Type            | Deprecated | Definition | Title/Description |
+| ----------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ---------- | ----------------- |
+| - [](#monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList_additionalProperties ) | No      | array of string | No         | -          | -                 |
 
-##### <a name="monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList_additionalProperties"></a>3.2.8.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > kubeStateMetrics > metricLabelsAllowList > additionalProperties`
+##### <a name="monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList_additionalProperties"></a>3.2.8.2.1. Property `base cluster configuration > monitoring > prometheus > kubeStateMetrics > metricLabelsAllowList > additionalProperties`
 
 |          |                   |
 | -------- | ----------------- |
@@ -1242,11 +1259,11 @@ Must be one of:
 | **Type**                  | `object`                                                                                                                                                                                             |
 | **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#monitoring_grafana_additionalDashboards_additionalProperties "Each additional property must conform to the following schema") |
 
-| Property                                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ---------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#monitoring_grafana_additionalDashboards_additionalProperties ) | No      | object | No         | -          | -                 |
+| Property                                                             | Pattern | Type   | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#monitoring_grafana_additionalDashboards_additionalProperties ) | No      | object | No         | -          | -                 |
 
-##### <a name="monitoring_grafana_additionalDashboards_additionalProperties"></a>3.3.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > additionalDashboards > additionalProperties`
+##### <a name="monitoring_grafana_additionalDashboards_additionalProperties"></a>3.3.3.1. Property `base cluster configuration > monitoring > grafana > additionalDashboards > additionalProperties`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -1598,11 +1615,11 @@ currencyEUR
 
 **Description:** A map of storageClasses to their cost per GiB/$period
 
-| Property                                                                                            | Pattern | Type   | Deprecated | Definition | Title/Description |
-| --------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#monitoring_storageCostAnalysis_storageClassMapping_additionalProperties ) | No      | number | No         | -          | -                 |
+| Property                                                                        | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#monitoring_storageCostAnalysis_storageClassMapping_additionalProperties ) | No      | number | No         | -          | -                 |
 
-##### <a name="monitoring_storageCostAnalysis_storageClassMapping_additionalProperties"></a>3.6.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > storageCostAnalysis > storageClassMapping > additionalProperties`
+##### <a name="monitoring_storageCostAnalysis_storageClassMapping_additionalProperties"></a>3.6.3.1. Property `base cluster configuration > monitoring > storageCostAnalysis > storageClassMapping > additionalProperties`
 
 |          |          |
 | -------- | -------- |
@@ -1652,11 +1669,11 @@ currencyEUR
 
 **Description:** See https://github.com/kubernetes-sigs/descheduler#policy-and-strategies. The key is the policy name
 
-| Property                                                                | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ----------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#descheduler_strategies_additionalProperties ) | No      | object | No         | -          | -                 |
+| Property                                            | Pattern | Type   | Deprecated | Definition | Title/Description |
+| --------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#descheduler_strategies_additionalProperties ) | No      | object | No         | -          | -                 |
 
-#### <a name="descheduler_strategies_additionalProperties"></a>4.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > strategies > additionalProperties`
+#### <a name="descheduler_strategies_additionalProperties"></a>4.2.1. Property `base cluster configuration > descheduler > strategies > additionalProperties`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -1681,9 +1698,9 @@ currencyEUR
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-| Property                                                                                            | Pattern | Type   | Deprecated | Definition | Title/Description |
-| --------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#descheduler_strategies_additionalProperties_params_additionalProperties ) | No      | object | No         | -          | -                 |
+| Property                                                                        | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#descheduler_strategies_additionalProperties_params_additionalProperties ) | No      | object | No         | -          | -                 |
 
 ## <a name="dns"></a>5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > dns`
 
@@ -1808,11 +1825,11 @@ currencyEUR
 
 **Description:** Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
 
-| Property                                                                      | Pattern | Type   | Deprecated | Definition                                                     | Title/Description |
-| ----------------------------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------- | ----------------- |
-| - [additionalProperties](#certManager_resources_limits_additionalProperties ) | No      | object | No         | In #/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity | -                 |
+| Property                                                  | Pattern | Type   | Deprecated | Definition                                                     | Title/Description |
+| --------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------- | ----------------- |
+| - [](#certManager_resources_limits_additionalProperties ) | No      | object | No         | In #/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity | -                 |
 
-##### <a name="certManager_resources_limits_additionalProperties"></a>6.1.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager > resources > limits > io.k8s.apimachinery.pkg.api.resource.Quantity`
+##### <a name="certManager_resources_limits_additionalProperties"></a>6.1.1.1. Property `base cluster configuration > certManager > resources > limits > io.k8s.apimachinery.pkg.api.resource.Quantity`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -1846,11 +1863,11 @@ currencyEUR
 
 **Description:** Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
 
-| Property                                                                        | Pattern | Type   | Deprecated | Definition                                                                                                       | Title/Description |
-| ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------------------------------------------------------------------------------------------------------------- | ----------------- |
-| - [additionalProperties](#certManager_resources_requests_additionalProperties ) | No      | object | No         | Same as [certManager_resources_limits_additionalProperties](#certManager_resources_limits_additionalProperties ) | -                 |
+| Property                                                    | Pattern | Type   | Deprecated | Definition                                                                                                       | Title/Description |
+| ----------------------------------------------------------- | ------- | ------ | ---------- | ---------------------------------------------------------------------------------------------------------------- | ----------------- |
+| - [](#certManager_resources_requests_additionalProperties ) | No      | object | No         | Same as [certManager_resources_limits_additionalProperties](#certManager_resources_limits_additionalProperties ) | -                 |
 
-##### <a name="certManager_resources_requests_additionalProperties"></a>6.1.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager > resources > requests > io.k8s.apimachinery.pkg.api.resource.Quantity`
+##### <a name="certManager_resources_requests_additionalProperties"></a>6.1.2.1. Property `base cluster configuration > certManager > resources > requests > io.k8s.apimachinery.pkg.api.resource.Quantity`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -1979,11 +1996,11 @@ must respect the following conditions
 
 **Description:** A map of gitRepositories to create
 
-| Property                                                              | Pattern | Type        | Deprecated | Definition | Title/Description |
-| --------------------------------------------------------------------- | ------- | ----------- | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#flux_gitRepositories_additionalProperties ) | No      | Combination | No         | -          | -                 |
+| Property                                          | Pattern | Type        | Deprecated | Definition | Title/Description |
+| ------------------------------------------------- | ------- | ----------- | ---------- | ---------- | ----------------- |
+| - [](#flux_gitRepositories_additionalProperties ) | No      | Combination | No         | -          | -                 |
 
-#### <a name="flux_gitRepositories_additionalProperties"></a>8.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties`
+#### <a name="flux_gitRepositories_additionalProperties"></a>8.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -2098,9 +2115,9 @@ Specific value: `{
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-| Property                                                                   | Pattern | Type   | Deprecated | Definition | Title/Description |
-| -------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [url](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i2_url ) | No      | string | No         | -          | -                 |
+| Property                                                                   | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                      |
+| -------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------- |
+| - [url](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i2_url ) | No      | string | No         | -          | This needs to follow flux's way of writing this url, see https://fluxcd.io/flux/components/source/gitrepositories/#url |
 
 ##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i2_url"></a>8.1.1.1.3.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 2 > url`
 
@@ -2108,9 +2125,11 @@ Specific value: `{
 | -------- | -------- |
 | **Type** | `string` |
 
-| Restrictions                      |                                                                               |
-| --------------------------------- | ----------------------------------------------------------------------------- |
-| **Must match regular expression** | ```ssh://.+@.+``` [Test](https://regex101.com/?regex=ssh%3A%2F%2F.%2B%40.%2B) |
+**Description:** This needs to follow flux's way of writing this url, see https://fluxcd.io/flux/components/source/gitrepositories/#url
+
+| Restrictions                      |                                                                                                                                                           |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Must match regular expression** | ```^ssh://.+@[^:]+(?::\d+)?[^:]*$``` [Test](https://regex101.com/?regex=%5Essh%3A%2F%2F.%2B%40%5B%5E%3A%5D%2B%28%3F%3A%3A%5Cd%2B%29%3F%5B%5E%3A%5D%2A%24) |
 
 ##### <a name="flux_gitRepositories_additionalProperties_allOf_i1"></a>8.1.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1`
 
@@ -2467,11 +2486,11 @@ Specific value: `"auto"`
 
 **Description:** A map of a ClusterRole name to it's rules
 
-| Property                                                    | Pattern | Type  | Deprecated | Definition | Title/Description |
-| ----------------------------------------------------------- | ------- | ----- | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#rbac_roles_additionalProperties ) | No      | array | No         | -          | -                 |
+| Property                                | Pattern | Type  | Deprecated | Definition | Title/Description |
+| --------------------------------------- | ------- | ----- | ---------- | ---------- | ----------------- |
+| - [](#rbac_roles_additionalProperties ) | No      | array | No         | -          | -                 |
 
-#### <a name="rbac_roles_additionalProperties"></a>12.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac > roles > additionalProperties`
+#### <a name="rbac_roles_additionalProperties"></a>12.1.1. Property `base cluster configuration > rbac > roles > additionalProperties`
 
 |          |         |
 | -------- | ------- |
@@ -2494,11 +2513,11 @@ Specific value: `"auto"`
 
 **Description:** A map of an account to it's (Cluster-)Roles
 
-| Property                                                       | Pattern | Type   | Deprecated | Definition | Title/Description |
-| -------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#rbac_accounts_additionalProperties ) | No      | object | No         | -          | -                 |
+| Property                                   | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#rbac_accounts_additionalProperties ) | No      | object | No         | -          | -                 |
 
-#### <a name="rbac_accounts_additionalProperties"></a>12.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac > accounts > additionalProperties`
+#### <a name="rbac_accounts_additionalProperties"></a>12.2.1. Property `base cluster configuration > rbac > accounts > additionalProperties`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2519,11 +2538,11 @@ Specific value: `"auto"`
 
 **Description:** A map of a role to it's intended namespaces
 
-| Property                                                                                  | Pattern | Type  | Deprecated | Definition | Title/Description |
-| ----------------------------------------------------------------------------------------- | ------- | ----- | ---------- | ---------- | ----------------- |
-| - [additionalProperties](#rbac_accounts_additionalProperties_roles_additionalProperties ) | No      | array | No         | -          | -                 |
+| Property                                                              | Pattern | Type  | Deprecated | Definition | Title/Description |
+| --------------------------------------------------------------------- | ------- | ----- | ---------- | ---------- | ----------------- |
+| - [](#rbac_accounts_additionalProperties_roles_additionalProperties ) | No      | array | No         | -          | -                 |
 
-##### <a name="rbac_accounts_additionalProperties_roles_additionalProperties"></a>12.2.1.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac > accounts > additionalProperties > roles > additionalProperties`
+##### <a name="rbac_accounts_additionalProperties_roles_additionalProperties"></a>12.2.1.1.1. Property `base cluster configuration > rbac > accounts > additionalProperties > roles > additionalProperties`
 
 |          |         |
 | -------- | ------- |

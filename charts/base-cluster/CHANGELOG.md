@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.3.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-3.3.0...base-cluster-v3.3.1) (2023-02-21)
+
+
+### Bug Fixes
+
+* **base-cluster/cert-manager:** fix clusterissuer templating ([#207](https://github.com/teutonet/teutonet-helm-charts/issues/207)) ([47a0c1d](https://github.com/teutonet/teutonet-helm-charts/commit/47a0c1da8e828ce716ebd26e95b8ccc5fe19f7bd))
+* **base-cluster/schema:** adjust regex to catch common user errors ([#212](https://github.com/teutonet/teutonet-helm-charts/issues/212)) ([61836d4](https://github.com/teutonet/teutonet-helm-charts/commit/61836d4590a6095ffdc493e295244f25c2b478ac))
+
+
+### Miscellaneous Chores
+
+* **deps:** update docker.io/fluxcd/flux-cli docker tag to v0.40.0 ([#210](https://github.com/teutonet/teutonet-helm-charts/issues/210)) ([4180283](https://github.com/teutonet/teutonet-helm-charts/commit/4180283aeb1a2e27e93a40a93d8f0ad5656a734e))
+
 ## [3.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-3.2.0...base-cluster-v3.3.0) (2023-02-10)
 
 
