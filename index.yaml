@@ -8,6 +8,59 @@ entries:
         - image: busybox:1.35
         - image: curlimages/curl:7.85.0
         - image: docker.io/bitnami/kubectl:1.26.1
+        - image: docker.io/bitnami/metrics-server:0.6.2-debian-11-r29
+        - image: docker.io/fluxcd/flux-cli:v0.40.0
+        - image: docker.io/grafana/promtail:2.7.2
+        - image: docker.io/vladgh/gpg@sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
+        - image: ghcr.io/aquasecurity/trivy-operator:0.11.1
+        - image: ghcr.io/kyverno/cleanup-controller:v1.9.0
+        - image: ghcr.io/kyverno/kyverno:v1.9.0
+        - image: ghcr.io/kyverno/kyvernopre:v1.9.0
+        - image: grafana/grafana-image-renderer:latest
+        - image: grafana/grafana:9.3.6
+        - image: grafana/loki:2.6.1
+        - image: k8s.gcr.io/descheduler/descheduler:v0.25.1
+        - image: k8s.gcr.io/sig-storage/nfs-provisioner:v3.0.0
+        - image: quay.io/jetstack/cert-manager-cainjector:v1.11.0
+        - image: quay.io/jetstack/cert-manager-controller:v1.11.0
+        - image: quay.io/jetstack/cert-manager-ctl:v1.11.0
+        - image: quay.io/jetstack/cert-manager-webhook:v1.11.0
+        - image: quay.io/kiwigrid/k8s-sidecar:1.22.0
+        - image: quay.io/prometheus-operator/prometheus-operator:v0.63.0
+        - image: quay.io/prometheus/node-exporter:v1.5.0
+        - image: quay.io/prometheus/prometheus:v2.42.0
+        - image: registry.k8s.io/ingress-nginx/controller:v1.6.4@sha256:15be4666c53052484dd2992efacf2f50ea77a78ae8aa21ccd91af6baaa7ea22f
+        - image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.3.0
+        - image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.8.0
+    apiVersion: v2
+    created: "2023-02-22T13:31:06.342720891Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.2.3
+    description: A common base for every kubernetes cluster
+    digest: 45c3204b5d22f86bfb6907b44665facdb4ef54aa0e74802b66c89d1b9e0b525e
+    home: https://teuto.net
+    icon: https://teuto.net/favicon.ico
+    maintainers:
+    - email: cwr@teuto.net
+      name: cwrau
+    - email: mw@teuto.net
+      name: marvinWolff
+    name: base-cluster
+    sources:
+    - https://github.com/teutonet/teutonet-helm-charts
+    type: application
+    urls:
+    - https://github.com/teutonet/teutonet-helm-charts/releases/download/base-cluster-3.3.1/base-cluster-3.3.1.tgz
+    version: 3.3.1
+  - annotations:
+      artifacthub.io/images: |
+        - image: bats/bats:v1.1.0
+        - image: bats/bats:v1.4.1
+        - image: busybox:1.35
+        - image: curlimages/curl:7.85.0
+        - image: docker.io/bitnami/kubectl:1.26.1
         - image: docker.io/bitnami/metrics-server:0.6.2-debian-11-r20
         - image: docker.io/fluxcd/flux-cli:v0.39.0
         - image: docker.io/grafana/promtail:2.7.2
@@ -1160,4 +1213,4 @@ entries:
     urls:
     - https://github.com/teutonet/teutonet-helm-charts/releases/download/t8s-cluster-0.0.1/t8s-cluster-0.0.1.tgz
     version: 0.0.1
-generated: "2023-02-13T10:19:40.268859782Z"
+generated: "2023-02-22T13:31:06.342902492Z"
