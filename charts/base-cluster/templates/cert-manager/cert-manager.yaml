@@ -28,7 +28,7 @@ spec:
     {{- end }}
     {{- if .Values.certManager.email }}
     ingressShim:
-      defaultIssuerName: letsencrypt-prod
+      defaultIssuerName: letsencrypt-production
       defaultIssuerKind: ClusterIssuer
     {{- end }}
     {{ if .Values.certManager.dnsChallengeNameservers }}
