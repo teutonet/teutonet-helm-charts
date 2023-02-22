@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-3.3.1...base-cluster-v3.3.2) (2023-02-22)
+
+
+### Bug Fixes
+
+* **base-cluster/cert-manager:** fix name reference to clusterIssuer ([#218](https://github.com/teutonet/teutonet-helm-charts/issues/218)) ([1ec687f](https://github.com/teutonet/teutonet-helm-charts/commit/1ec687fbb8bae040ca7b6e64e4911684be7ff320))
+
 ## [3.3.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-3.3.0...base-cluster-v3.3.1) (2023-02-21)
 
 
