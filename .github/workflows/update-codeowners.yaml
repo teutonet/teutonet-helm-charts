@@ -13,14 +13,20 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.ACTIONS_BOT_TOKEN }}
 
       - name: generate CODEOWNERS
         run: ./.github/scripts/sync-codeowners.sh > .github/CODEOWNERS
 
-      - uses: EndBug/add-and-commit@v9
+      - name: Create PR
+        id: create-pr
+        uses: peter-evans/create-pull-request@v4
         with:
-          message: "chore: [bot] Update 'CODEOWNERS'"
-          author_name: teuto.net Bot
-          author_email: github-bot@teuto.net
+          commit-message: "chore: [bot] Update 'CODEOWNERS'"
+          branch: chore/update-codeowners
+          title: "chore: Update CODEOWNERS"
+      - name: Set PR to auto-merge
+        uses: peter-evans/enable-pull-request-automerge@v2
+        with:
+          token: ${{ secrets.ACTIONS_BOT_TOKEN }}
+          pull-request-number: ${{ steps.create-pr.outputs.pull-request-number }}
+          merge-method: squash
