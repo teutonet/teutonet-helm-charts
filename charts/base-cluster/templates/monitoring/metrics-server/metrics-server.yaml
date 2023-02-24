@@ -9,13 +9,7 @@ metadata:
     app.kubernetes.io/part-of: monitoring
 spec:
   chart:
-    spec:
-      chart: metrics-server
-      sourceRef:
-        kind: HelmRepository
-        name: bitnami
-        namespace: {{ .Release.Namespace }}
-      version: 6.x.x
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "bitnami" "chart" "metrics-server" "context" $) | nindent 6 }}
   interval: 1m
   values:
     apiService:

@@ -12,17 +12,17 @@ metadata:
     {{- end }}
 spec:
   chart:
+    {{- if or (eq $apiVersion "extensions/v1beta1") (eq $apiVersion "networking.k8s.io/v1beta1") }}
     spec:
       chart: external-dns
       sourceRef:
         kind: HelmRepository
         name: bitnami
         namespace: {{ .Release.Namespace }}
-      {{- if or (eq $apiVersion "extensions/v1beta1") (eq $apiVersion "networking.k8s.io/v1beta1") }}
       version: 5.4.8
-      {{- else }}
-      version: 6.x.x
-      {{- end }}
+    {{- else }}
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "external-dns" "chart" "bitnami" "context" $) | nindent 6 }}
+    {{- end }}
   interval: 1m
   {{- if .Values.monitoring.prometheus.enabled }}
   dependsOn:

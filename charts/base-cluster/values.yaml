@@ -76,9 +76,12 @@ global:
     metricsLabels:
       io.kubernetes.pod.namespace: monitoring
       app.kubernetes.io/name: prometheus
+  # it's important that the `url` is the first key and `charts` is right below, otherwise renovate won't detect it
   helmRepositories:
     prometheus:
       url: https://prometheus-community.github.io/helm-charts
+      charts:
+        kube-prometheus-stack: 45.x.x
       condition: '{{ .Values.monitoring.prometheus.enabled }}'
       interval: 5m
     wiremind:
@@ -86,34 +89,55 @@ global:
       condition: '{{ .Values.monitoring.prometheus.enabled }}'
     grafana:
       url: https://grafana.github.io/helm-charts
+      charts:
+        loki-stack: 2.x.x
       condition: '{{ and .Values.monitoring.prometheus.enabled .Values.monitoring.loki.enabled }}'
     bitnami:
       url: https://charts.bitnami.com/bitnami
+      charts:
+        oauth2-proxy: 3.x.x
+        metrics-server: 6.x.x
+        external-dns: 6.x.x
     descheduler:
       url: https://kubernetes-sigs.github.io/descheduler
       condition: '{{ .Values.descheduler.enabled }}'
     jetstack:
       url: https://charts.jetstack.io
+      charts:
+        cert-manager: 1.x.x
     nginx:
       url: https://kubernetes.github.io/ingress-nginx
+      charts:
+        ingress-nginx: 4.x.x
     kyverno:
       url: https://kyverno.github.io/kyverno
+      charts:
+        kyverno: 2.x.x
+        kyverno-policies: 2.x.x
       condition: '{{ .Values.kyverno.enabled }}'
     cetic:
       url: https://cetic.github.io/helm-charts
+      charts:
+        static: 0.1.1
     estafette:
       url: https://helm.estafette.io
       condition: '{{ .Values.monitoring.securityScanning.enabled }}'
     nfs-server-provisioner:
       url: https://kubernetes-sigs.github.io/nfs-ganesha-server-and-external-provisioner
+      charts:
+        nfs-server-provisioner: 1.4.0
       condition: '{{ .Values.storage.readWriteMany.enabled }}'
     teuto-net:
       url: https://teutonet.github.io/teutonet-helm-charts
     trivy:
       url: https://aquasecurity.github.io/helm-charts
+      charts:
+        trivy-operator: 0.x.x
       condition: '{{ .Values.monitoring.securityScanning.enabled }}'
     emberstack:
       url: https://emberstack.github.io/helm-charts
+      charts:
+        reflector: 6.x.x
       condition: '{{ eq (include "base-cluster.reflector.enabled" (dict "context" .)) "true" }}'
 
 kyverno:

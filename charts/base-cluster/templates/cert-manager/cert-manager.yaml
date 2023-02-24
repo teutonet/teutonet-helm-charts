@@ -7,13 +7,7 @@ metadata:
     app.kubernetes.io/component: cert-manager
 spec:
   chart:
-    spec:
-      chart: cert-manager
-      sourceRef:
-        kind: HelmRepository
-        name: jetstack
-        namespace: {{ .Release.Namespace }}
-      version: 1.x.x
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "jetstack" "chart" "cert-manager" "context" $) | nindent 6 }}
   interval: 1m
   {{- if .Values.monitoring.prometheus.enabled }}
   dependsOn:

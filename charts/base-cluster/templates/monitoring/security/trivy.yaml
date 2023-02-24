@@ -9,13 +9,7 @@ metadata:
     app.kubernetes.io/part-of: security
 spec:
   chart:
-    spec:
-      chart: trivy-operator
-      sourceRef:
-        kind: HelmRepository
-        name: trivy
-        namespace: {{ .Release.Namespace }}
-      version: 0.x.x
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "trivy" "chart" "trivy-operator" "context" $) | nindent 6 }}
   interval: 1m
   {{- if .Values.monitoring.prometheus.enabled }}
   dependsOn:

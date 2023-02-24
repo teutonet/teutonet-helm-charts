@@ -9,13 +9,7 @@ metadata:
     app.kubernetes.io/part-of: nfs-server-provisioner
 spec:
   chart:
-    spec:
-      chart: nfs-server-provisioner
-      sourceRef:
-        kind: HelmRepository
-        name: nfs-server-provisioner
-        namespace: {{ .Release.Namespace }}
-      version: 1.4.0
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "nfs-server-provisioner" "chart" "nfs-server-provisioner" "context" $) | nindent 6 }}
   interval: 1m
   values:
     storageClass:

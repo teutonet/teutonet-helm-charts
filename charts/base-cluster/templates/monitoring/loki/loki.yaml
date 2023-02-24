@@ -9,13 +9,7 @@ metadata:
     app.kubernetes.io/part-of: monitoring
 spec:
   chart:
-    spec:
-      chart: loki-stack
-      sourceRef:
-        kind: HelmRepository
-        name: grafana
-        namespace: {{ .Release.Namespace }}
-      version: 2.x.x
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "grafana" "chart" "loki-stack" "context" $) | nindent 6 }}
   interval: 1m
   install:
     timeout: 10m0s
