@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-0.1.0...t8s-cluster-v0.1.1) (2023-02-24)
+
+
+### Bug Fixes
+
+* **t8s-cluster:** use correct kubeConfig secret name ([#223](https://github.com/teutonet/teutonet-helm-charts/issues/223)) ([24a5685](https://github.com/teutonet/teutonet-helm-charts/commit/24a5685a8fd80e8ee954793a3fa7d2e65e883cb4))
+
 ## [0.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v0.0.2...t8s-cluster-v0.1.0) (2023-02-10)
 
 
