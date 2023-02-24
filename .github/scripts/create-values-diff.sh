@@ -83,7 +83,6 @@ function generateComment() {
     diffs+=(
       [$values]="$(diff -ur "$originalResourcesDir" "$newResourcesDir" | curl -s -F syntax=diff -F "content=<-" https://dpaste.com/api/v2/)"
     )
-    break
   done
 
   echo :robot: I have diffed this *beep* *boop*
@@ -137,9 +136,6 @@ existingCommentId="$(
 
 body=$(generateComment "$chart")
 
-echo "$body"
-
-exit 0
 if [[ "$existingCommentId" == null ]]; then
   createComment "$issue" "$body"
 else
