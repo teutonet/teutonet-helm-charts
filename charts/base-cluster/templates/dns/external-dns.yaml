@@ -21,7 +21,7 @@ spec:
         namespace: {{ .Release.Namespace }}
       version: 5.4.8
     {{- else }}
-    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "external-dns" "chart" "bitnami" "context" $) | nindent 6 }}
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "bitnami" "chart" "external-dns" "context" $) | nindent 6 }}
     {{- end }}
   interval: 1m
   {{- if .Values.monitoring.prometheus.enabled }}
