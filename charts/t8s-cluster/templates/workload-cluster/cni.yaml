@@ -16,7 +16,7 @@ spec:
   interval: 1m
   kubeConfig:
     secretRef:
-      name: {{ .Release.Name }}
+      name: {{ .Release.Name }}-kubeconfig
   storageNamespace: kube-system
   targetNamespace: kube-system
   values:

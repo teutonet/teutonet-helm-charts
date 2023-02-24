@@ -10,7 +10,7 @@ spec:
     name: {{ printf "%s-cloud-provider-openstack" .Release.Name }}
   kubeConfig:
     secretRef:
-      name: {{ .Release.Name }}
+      name: {{ .Release.Name }}-kubeconfig
   targetNamespace: kube-system
   interval: 5m
   prune: true
