@@ -15,6 +15,7 @@ on:
 jobs:
   getChangedChart:
     uses: ./.github/workflows/get-changed-chart.yaml
+    if: ${{ !contains(github.event.head_commit.message, '[bot] release') }}
     with:
       chart: ${{ inputs.chart }}
   createReleasePR:
