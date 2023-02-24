@@ -19,21 +19,23 @@ git init
 flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 3.x.x > cluster.yaml
 
 # maybe use the following name for your cluster;
-kubectl get node -o json | jq '.items[0].metadata.annotations["cluster.x-k8s.io/cluster-name"]'
+kubectl get node -o jsonpath='{.items[0].metadata.annotations.cluster\.x-k8s\.io/cluster-name}'
 
 # configure according to your needs, at least `.global.clusterName` is needed
-# also, you should configure `.helmRepositories.flux.url=https://fluxcd-community.github.io/helm-charts` so flux can manage itself
 # additionally, you should add your git repo to `.flux.gitRepositories`, see [the documentation](https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster#81--property-base-cluster-configuration--flux--gitrepositories)
 vi cluster.yaml
 
 # create HelmRelease for flux to manage itself
-flux create helmrelease --export flux -n flux-system --source HelmRepository/flux.flux-system --chart flux2 --chart-version 2.x.x > flux.yaml
+kubectl create namespace flux-system --dry-run=client -o yaml > flux.yaml
+flux create source helm --url https://fluxcd-community.github.io/helm-charts flux -n flux-system --export >> flux.yaml
+flux create helmrelease --export flux -n flux-system --source HelmRepository/flux.flux-system --chart flux2 --chart-version 2.x.x >> flux.yaml
 
 # add, commit and push resources
 git add cluster.yaml flux.yaml
 git commit cluster.yaml flux.yaml
 git push
 
+# after this you should be on the KUBECONFIG for the cluster
 # we explicitly do not use `flux bootstrap` or `flux install` as this creates kustomization stuff and installs flux manually
 helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io/helm-charts --version 2.x.x --atomic
 
