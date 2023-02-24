@@ -48,7 +48,7 @@ metadata:
     app.kubernetes.io/part-of: prometheus
 spec:
   chart:
-    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "oauth2-proxy" "chart" "bitnami" "context" $) | nindent 6 }}
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "bitnami" "chart" "oauth2-proxy" "context" $) | nindent 6 }}
   interval: 1m
   values:
     redis:
