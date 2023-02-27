@@ -23,8 +23,8 @@ annotations:
     - image: busybox:1.35
     - image: curlimages/curl:7.85.0
     - image: docker.io/bitnami/kubectl:1.26.1
-    - image: docker.io/bitnami/metrics-server:0.6.2-debian-11-r29
-    - image: docker.io/fluxcd/flux-cli:v0.40.0
+    - image: docker.io/bitnami/metrics-server:0.6.2-debian-11-r31
+    - image: docker.io/fluxcd/flux-cli:v0.40.1
     - image: docker.io/grafana/promtail:2.7.2
     - image: docker.io/vladgh/gpg@sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
     - image: ghcr.io/aquasecurity/trivy-operator:0.11.1
@@ -34,7 +34,6 @@ annotations:
     - image: grafana/grafana-image-renderer:latest
     - image: grafana/grafana:9.3.6
     - image: grafana/loki:2.6.1
-    - image: k8s.gcr.io/descheduler/descheduler:v0.25.1
     - image: k8s.gcr.io/sig-storage/nfs-provisioner:v3.0.0
     - image: quay.io/jetstack/cert-manager-cainjector:v1.11.0
     - image: quay.io/jetstack/cert-manager-controller:v1.11.0
@@ -44,6 +43,7 @@ annotations:
     - image: quay.io/prometheus-operator/prometheus-operator:v0.63.0
     - image: quay.io/prometheus/node-exporter:v1.5.0
     - image: quay.io/prometheus/prometheus:v2.42.0
+    - image: registry.k8s.io/descheduler/descheduler:v0.26.0
     - image: registry.k8s.io/ingress-nginx/controller:v1.6.4@sha256:15be4666c53052484dd2992efacf2f50ea77a78ae8aa21ccd91af6baaa7ea22f
-    - image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.3.0
+    - image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20221220-controller-v1.5.1-58-g787ea74b6
     - image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.8.0
