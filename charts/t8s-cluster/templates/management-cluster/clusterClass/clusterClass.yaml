@@ -1,7 +1,7 @@
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: ClusterClass
 metadata:
-  name: {{ include "common.names.fullname" $ }}
+  name: {{ $.Release.Name }}
   namespace: {{ $.Release.Namespace }}
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
 spec:
@@ -20,17 +20,17 @@ spec:
       ref:
         apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
         kind: OpenStackMachineTemplate
-        name: {{ include "common.names.fullname" $ }}-control-plane-{{ include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfControlPlane" (dict "context" $) }}
+        name: {{ printf "%s-control-plane-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfControlPlane" (dict "context" $)) }}
     ref:
       apiVersion: controlplane.cluster.x-k8s.io/v1beta1
       kind: KubeadmControlPlaneTemplate
       # the full context is needed for .Files.Get
-      name: {{ include "common.names.fullname" $ }}-{{ include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.specHash" . }}
+      name: {{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.specHash" .) }}
   infrastructure:
     ref:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
       kind: OpenStackClusterTemplate
-      name: {{ include "common.names.fullname" $ }}-{{ include "t8s-cluster.clusterClass.openStackClusterTemplate.specHash" (dict "context" $) }}
+      name: {{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackClusterTemplate.specHash" (dict "context" $)) }}
   patches:
     - definitions:
         - jsonPatches:
@@ -57,8 +57,7 @@ spec:
             kind: OpenStackMachineTemplate
             matchResources:
               machineDeploymentClass:
-                names:
-                  - default-worker
+                names: {{- .Values.workers | keys | sortAlpha | toYaml | nindent 18 }}
       description: Sets the ServerGroupID for MachineDeployment machines.
       enabledIf: {{ `"{{ if .machineDeploymentServerGroupID }}true{{ end }}"` }}
       name: machineDeploymentServerGroupID
@@ -81,7 +80,8 @@ spec:
           type: string
   workers:
     machineDeployments:
-      - class: default-worker
+      {{- range $name, $machineDeploymentClass := .Values.workers }}
+      - class: {{ $name }}
         machineHealthCheck:
           maxUnhealthy: 50%
           nodeStartupTimeout: 8m
@@ -97,9 +97,10 @@ spec:
             ref:
               apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
               kind: KubeadmConfigTemplate
-              name: {{ include "common.names.fullname" $ }}-default-worker
+              name: {{ printf "%s-worker" $.Release.Name }}
           infrastructure:
             ref:
               apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
               kind: OpenStackMachineTemplate
-              name: {{ include "common.names.fullname" $ }}-default-worker-{{ include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfWorkers" (dict "context" $) }}
+              name: {{ printf "%s-%s-%s" $.Release.Name $name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfWorkers" (dict "context" $ "worker" $machineDeploymentClass)) }}
+      {{- end }}

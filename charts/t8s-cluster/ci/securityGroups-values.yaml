@@ -11,12 +11,11 @@ controlPlane:
     - default
     - kuchen
     - pizza
-worker:
-  securityGroups:
-    - default
-    - kuchen
 workers:
   test:
     replicas: 1
     availabilityZone: Zone1
     flavor: standard.2.1905
+    securityGroups:
+      - default
+      - kuchen

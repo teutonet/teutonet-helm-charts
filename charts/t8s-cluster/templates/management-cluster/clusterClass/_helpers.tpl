@@ -7,15 +7,15 @@ openstack
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.imageVersion" -}}
-t8s-engine-2004-kube-{{ include "t8s-cluster.k8s-version" $ }}
+  {{- printf "t8s-engine-2004-kube-%s" (include "t8s-cluster.k8s-version" $) -}}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.getIdentityRefSecretName" -}}
-cloud-config-{{ .Release.Name }}
+  {{- printf "cloud-config-%s" .Release.Name -}}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.sshKeyName" -}}
-  {{ .Values.sshKeyName }}
+  {{- .Values.sshKeyName -}}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.cloud" -}}
@@ -32,7 +32,7 @@ cloud-config-{{ .Release.Name }}
 
 {{- define "t8s-cluster.clusterClass.managedSecurityGroups" -}}
   {{- $managedSecurityGroups := true -}}
-  {{- range $name, $machineDeploymentClass := (dict "worker" .Values.worker "control-plane" .Values.controlPlane) }}
+  {{- range $name, $machineDeploymentClass := (merge (deepCopy .Values.workers) (dict "control-plane" .Values.controlPlane)) }}
     {{- if $machineDeploymentClass -}}
       {{- if not (empty $machineDeploymentClass.securityGroups) -}}
         {{- $managedSecurityGroups = false -}}

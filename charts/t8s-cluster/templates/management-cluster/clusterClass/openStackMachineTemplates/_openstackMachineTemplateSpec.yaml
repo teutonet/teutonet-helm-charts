@@ -5,12 +5,12 @@ Here we are generating a hash suffix.
 {{- define "t8s-cluster.clusterClass.openStackMachineTemplate.spec" -}}
   {{- $_ := set . "Values" .context.Values -}}
 cloudName: {{ include "t8s-cluster.clusterClass.cloudName" (dict) }}
-flavor: nil
+flavor: {{ .machineDeploymentClass.flavor }}
 identityRef:
   name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" .context }}
   kind: Secret
 image: {{ include "t8s-cluster.clusterClass.imageVersion" .context }}
-securityGroups: {{- include "t8s-cluster.clusterClass.securityGroups" (dict "name" .name "context" .context) | nindent 2 }}
+securityGroups: {{- include "t8s-cluster.clusterClass.securityGroups" .machineDeploymentClass | nindent 2 }}
   {{- if .Values.bastion.enabled }}
 bastion:
   instance:

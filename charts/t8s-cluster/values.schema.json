@@ -79,15 +79,6 @@
       ],
       "additionalProperties": false
     },
-    "worker": {
-      "type": "object",
-      "properties": {
-        "securityGroups": {
-          "$ref": "#/$defs/securityGroups"
-        }
-      },
-      "additionalProperties": false
-    },
     "workers": {
       "type": "object",
       "additionalProperties": {
@@ -102,6 +93,9 @@
           },
           "flavor": {
             "type": "string"
+          },
+          "securityGroups": {
+            "$ref": "#/$defs/securityGroups"
           }
         },
         "additionalProperties": false,

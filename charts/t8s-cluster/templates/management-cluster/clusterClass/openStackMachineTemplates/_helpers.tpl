@@ -11,11 +11,11 @@
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfWorkers" -}}
-  {{- include "t8s-cluster.clusterClass.openStackMachineTemplate.specHash" (dict "machineDeploymentClass" .context.Values.worker "name" "worker" "context" .context) -}}
+  {{- include "t8s-cluster.clusterClass.openStackMachineTemplate.specHash" (dict "machineDeploymentClass" .worker "name" "worker" "context" .context) -}}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.securityGroups" -}}
-  {{- $securityGroups := (get (index .context.Values .name) "securityGroups") | default (list "default") | sortAlpha | uniq -}}
+  {{- $securityGroups := .securityGroups | default (list "default") | sortAlpha | uniq -}}
   {{- $securityGroupsObject := list -}}
   {{- range $name := $securityGroups -}}
     {{- $securityGroupsObject = append $securityGroupsObject (dict "filter" (dict) "name" $name)}}
