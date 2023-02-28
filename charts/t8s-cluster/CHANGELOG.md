@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-0.1.1...t8s-cluster-v0.1.2) (2023-02-28)
+
+
+### Bug Fixes
+
+* **t8s-cluster/workload-cluster:** change HelmRelease names to contain ([#229](https://github.com/teutonet/teutonet-helm-charts/issues/229)) ([9811053](https://github.com/teutonet/teutonet-helm-charts/commit/981105389153b43a149f47c2a2661257dc66998d))
+
 ## [0.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-0.1.0...t8s-cluster-v0.1.1) (2023-02-24)
 
 
