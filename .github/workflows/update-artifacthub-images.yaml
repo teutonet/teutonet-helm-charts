@@ -55,6 +55,7 @@ jobs:
           title: "chore(${{ matrix.chart }}/artifacthub-images): Update ArtifactHUB images"
       - name: Set PR to auto-merge
         uses: peter-evans/enable-pull-request-automerge@v2
+        if: ${{ steps.create-pr.outputs.pull-request-number }}
         with:
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
           pull-request-number: ${{ steps.create-pr.outputs.pull-request-number }}
