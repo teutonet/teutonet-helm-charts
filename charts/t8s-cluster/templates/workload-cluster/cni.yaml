@@ -19,6 +19,7 @@ spec:
       name: {{ .Release.Name }}-kubeconfig
   storageNamespace: kube-system
   targetNamespace: kube-system
+  releaseName: cni
   values:
     rollOutCiliumPods: true
     encryption:

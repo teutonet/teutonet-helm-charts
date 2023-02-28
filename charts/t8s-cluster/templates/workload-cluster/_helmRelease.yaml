@@ -23,6 +23,7 @@ spec:
       name: {{ .context.Release.Name }}-kubeconfig
   storageNamespace: kube-system
   targetNamespace: kube-system
+  releaseName: {{ .name }}
   values:
     {{- if eq .render nil }}
     static: {{ .resource | toYaml | indent 6 }}
