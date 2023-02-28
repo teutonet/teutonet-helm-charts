@@ -1,4 +1,4 @@
-{{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" (printf "%s-etcd-defrag" .Release.Name) "resource" (include "t8s-cluster.etcd-defrag" (dict "context" $)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "etcd")) | nindent 0 }}
+{{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "etcd-defrag" "resource" (include "t8s-cluster.etcd-defrag" (dict "context" $)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "etcd")) | nindent 0 }}
 
 {{- define "t8s-cluster.etcd-defrag" -}}
 apiVersion: batch/v1
