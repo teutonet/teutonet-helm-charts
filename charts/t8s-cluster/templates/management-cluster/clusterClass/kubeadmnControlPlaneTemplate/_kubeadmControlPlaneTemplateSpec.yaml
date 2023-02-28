@@ -41,6 +41,11 @@ files:
     path: *admissionControlConfigFilePath
   - content: |- {{- .Files.Get "files/event-rate-limit-config.yaml" | nindent 6 }}
     path: *eventRateLimitConfigFilePath
+  - content: |- {{- .Files.Get "files/kube-proxy.patch.sh" | nindent 6 }}
+    path: /etc/kube-proxy-patch.sh
+    permissions: "0700"
+  - content: |- {{- .Files.Get "files/kube-proxy.config.yaml" | nindent 6 }}
+    path: /etc/kube-proxy-config.yaml
   {{- if .Values.containerRegistryProxy.proxyRegistryEndpoint }}
   - content: |- {{- include "t8s-cluster.clusterClass.containerRegistryProxies" (dict "context" $) | nindent 6 }}
     path: /etc/containerd/conf.d/teuto-mirror.toml

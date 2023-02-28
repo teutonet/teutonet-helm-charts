@@ -49,6 +49,9 @@
         },
         "securityGroups": {
           "$ref": "#/$defs/securityGroups"
+        },
+        "nodeDrainTimeout": {
+          "$ref": "#/$defs/nodeDrainTimeout"
         }
       },
       "required": [
@@ -96,6 +99,9 @@
           },
           "securityGroups": {
             "$ref": "#/$defs/securityGroups"
+          },
+          "nodeDrainTimeout": {
+            "$ref": "#/$defs/nodeDrainTimeout"
           }
         },
         "additionalProperties": false,
@@ -196,6 +202,11 @@
       },
       "minItems": 1,
       "uniqueItems": true
+    },
+    "nodeDrainTimeout": {
+      "type": "string",
+      "default": "3m",
+      "pattern": "[0-9]+[smh]"
     }
   }
 }
