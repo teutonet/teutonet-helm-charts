@@ -31,7 +31,7 @@ spec:
       {{- end }}
       resources: {{- .Values.monitoring.loki.resources | toYaml | nindent 8 }}
       replicas: {{ .Values.monitoring.loki.replicas }}
-      persistence: {{- include "common.storage.class" ( dict "persistence" .Values.monitoring.loki.persistence "global" $) | nindent 8 }}
+      persistence: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.loki.persistence "global" $.Values.global) | nindent 8 }}
         enabled: true
         size: {{ .Values.monitoring.loki.persistence.size }}
       containerSecurityContext:
