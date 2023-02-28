@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-0.1.2...t8s-cluster-v0.1.3) (2023-02-28)
+
+
+### Bug Fixes
+
+* **t8s-cluster/workload-cluster:** shorten releaseNames ([#238](https://github.com/teutonet/teutonet-helm-charts/issues/238)) ([f84917f](https://github.com/teutonet/teutonet-helm-charts/commit/f84917ff8b3b45cb99cefac45261cb285ad6a65b))
+
 ## [0.1.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-0.1.1...t8s-cluster-v0.1.2) (2023-02-28)
 
 
