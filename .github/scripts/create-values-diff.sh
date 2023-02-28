@@ -95,7 +95,7 @@ function generateComment() {
   echo ---
   echo
   for values in "${!diffs[@]}"; do
-    echo "<summary>[$values](${diffs[$values]})</summary>"
+    echo "[$values](${diffs[$values]})"
     echo
   done
 }
