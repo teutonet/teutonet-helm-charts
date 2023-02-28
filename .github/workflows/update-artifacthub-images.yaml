@@ -50,9 +50,9 @@ jobs:
         id: create-pr
         uses: peter-evans/create-pull-request@v4
         with:
-          commit-message: "chore(${{ matrix.chart }}): Update images in 'Chart.yaml'"
-          branch: chore/update-codeowners
-          title: "chore(${{ matrix.chart }}): Update ArtifactHUB images"
+          commit-message: "chore(${{ matrix.chart }}/artifacthub-images): Update images in 'Chart.yaml'"
+          branch: chore/${{ matrix.chart }}-update-artifacthub-images
+          title: "chore(${{ matrix.chart }}/artifacthub-images): Update ArtifactHUB images"
       - name: Set PR to auto-merge
         uses: peter-evans/enable-pull-request-automerge@v2
         with:
