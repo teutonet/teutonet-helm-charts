@@ -24,7 +24,7 @@ spec:
     ref:
       apiVersion: controlplane.cluster.x-k8s.io/v1beta1
       kind: KubeadmControlPlaneTemplate
-      name: {{ include "common.names.fullname" $ }}-{{ include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.specHash" . }}
+      name: {{ include "common.names.fullname" $ }}-{{ include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.specHash" (dict "context" $) }}
   infrastructure:
     ref:
       apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
