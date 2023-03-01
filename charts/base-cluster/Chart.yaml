@@ -24,7 +24,7 @@ annotations:
     - image: curlimages/curl:7.85.0
     - image: docker.io/bitnami/kubectl:1.26.1
     - image: docker.io/bitnami/metrics-server:0.6.2-debian-11-r31
-    - image: docker.io/fluxcd/flux-cli:v0.40.1
+    - image: docker.io/fluxcd/flux-cli:v0.40.2
     - image: docker.io/grafana/promtail:2.7.2
     - image: docker.io/vladgh/gpg@sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
     - image: ghcr.io/aquasecurity/trivy-operator:0.11.1
@@ -34,7 +34,7 @@ annotations:
     - image: grafana/grafana-image-renderer:latest
     - image: grafana/grafana:9.3.6
     - image: grafana/loki:2.6.1
-    - image: k8s.gcr.io/sig-storage/nfs-provisioner:v3.0.0
+    - image: k8s.gcr.io/sig-storage/nfs-provisioner:v4.0.8
     - image: quay.io/jetstack/cert-manager-cainjector:v1.11.0
     - image: quay.io/jetstack/cert-manager-controller:v1.11.0
     - image: quay.io/jetstack/cert-manager-ctl:v1.11.0
