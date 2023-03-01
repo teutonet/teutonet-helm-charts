@@ -51,7 +51,7 @@ global:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: 1.26.1
+      tag: 1.26.2
   pause:
     image:
       registry: k8s.gcr.io
