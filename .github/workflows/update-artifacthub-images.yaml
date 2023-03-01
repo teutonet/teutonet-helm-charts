@@ -50,6 +50,8 @@ jobs:
         id: create-pr
         uses: peter-evans/create-pull-request@v4
         with:
+          add-paths: |
+            charts/${{ matrix.chart }}/**
           commit-message: "chore(${{ matrix.chart }}/artifacthub-images): Update images in 'Chart.yaml'"
           branch: chore/${{ matrix.chart }}-update-artifacthub-images
           title: "chore(${{ matrix.chart }}/artifacthub-images): Update ArtifactHUB images"
