@@ -51,7 +51,7 @@
     "registry.teuto.io"
     "index.docker.io"
     -}}
-  {{- $proxiedRegistries := concat $defaultProxiedRegistries (.Values.additionallyProxiedRegistries | default list) | sortAlpha | uniq -}}
+  {{- $proxiedRegistries := concat $defaultProxiedRegistries (.Values.containerRegistryProxy.additionallyProxiedRegistries | default list) | sortAlpha | uniq -}}
 [plugins]
   [plugins."io.containerd.grpc.v1.cri".registry]
     [plugins."io.containerd.grpc.v1.cri".registry.mirrors]
