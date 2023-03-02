@@ -44,7 +44,7 @@ jobs:
         run: sudo apt-get -yq install moreutils
 
       - name: extract images for ${{ matrix.chart }}
-        run: ./.github/scripts/extract-artifacthub-images.sh "${{ matrix.chart }}"
+        run: ./.github/scripts/extract-artifacthub-images.sh "charts/${{ matrix.chart }}"
 
       - name: Create PR
         id: create-pr
