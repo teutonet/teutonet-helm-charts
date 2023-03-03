@@ -1,6 +1,6 @@
 # t8s-cluster
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -34,14 +34,17 @@ t8s-operator cluster with necessary addons
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                         | Pattern | Type   | Deprecated | Definition | Title/Description    |
-| -------------------------------- | ------- | ------ | ---------- | ---------- | -------------------- |
-| + [metadata](#metadata )         | No      | object | No         | -          | -                    |
-| + [controlPlane](#controlPlane ) | No      | object | No         | -          | -                    |
-| - [cloud](#cloud )               | No      | string | No         | -          | -                    |
-| + [version](#version )           | No      | object | No         | -          | -                    |
-| + [workers](#workers )           | No      | object | No         | -          | -                    |
-| - [common](#common )             | No      | object | No         | -          | Values for sub-chart |
+| Property                                             | Pattern | Type           | Deprecated | Definition | Title/Description    |
+| ---------------------------------------------------- | ------- | -------------- | ---------- | ---------- | -------------------- |
+| + [metadata](#metadata )                             | No      | object         | No         | -          | -                    |
+| + [controlPlane](#controlPlane )                     | No      | object         | No         | -          | -                    |
+| - [cloud](#cloud )                                   | No      | string         | No         | -          | -                    |
+| + [version](#version )                               | No      | object         | No         | -          | -                    |
+| + [workers](#workers )                               | No      | object         | No         | -          | -                    |
+| - [bastion](#bastion )                               | No      | object         | No         | -          | -                    |
+| - [containerRegistryProxy](#containerRegistryProxy ) | No      | object         | No         | -          | -                    |
+| - [sshKeyName](#sshKeyName )                         | No      | string or null | No         | -          | -                    |
+| - [common](#common )                                 | No      | object         | No         | -          | Values for sub-chart |
 
 ## <a name="metadata"></a>1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > metadata`
 
@@ -114,10 +117,12 @@ Must be one of:
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                                  | Pattern | Type    | Deprecated | Definition | Title/Description |
-| ----------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
-| + [flavor](#controlPlane_flavor )         | No      | string  | No         | -          | -                 |
-| - [singleNode](#controlPlane_singleNode ) | No      | boolean | No         | -          | -                 |
+| Property                                              | Pattern | Type            | Deprecated | Definition                  | Title/Description |
+| ----------------------------------------------------- | ------- | --------------- | ---------- | --------------------------- | ----------------- |
+| + [flavor](#controlPlane_flavor )                     | No      | string          | No         | -                           | -                 |
+| - [singleNode](#controlPlane_singleNode )             | No      | boolean         | No         | -                           | -                 |
+| - [securityGroups](#controlPlane_securityGroups )     | No      | array of string | No         | In #/$defs/securityGroups   | -                 |
+| - [nodeDrainTimeout](#controlPlane_nodeDrainTimeout ) | No      | string          | No         | In #/$defs/nodeDrainTimeout | -                 |
 
 ### <a name="controlPlane_flavor"></a>2.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > controlPlane > flavor`
 
@@ -130,6 +135,43 @@ Must be one of:
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
+
+### <a name="controlPlane_securityGroups"></a>2.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > securityGroups`
+
+|                |                        |
+| -------------- | ---------------------- |
+| **Type**       | `array of string`      |
+| **Defined in** | #/$defs/securityGroups |
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | 1                  |
+| **Max items**        | N/A                |
+| **Items unicity**    | True               |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                            | Description |
+| ---------------------------------------------------------- | ----------- |
+| [securityGroups items](#controlPlane_securityGroups_items) | -           |
+
+#### <a name="autogenerated_heading_2"></a>2.3.1. t8s cluster configuration > controlPlane > securityGroups > securityGroups items
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+### <a name="controlPlane_nodeDrainTimeout"></a>2.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > nodeDrainTimeout`
+
+|                |                          |
+| -------------- | ------------------------ |
+| **Type**       | `string`                 |
+| **Default**    | `"3m"`                   |
+| **Defined in** | #/$defs/nodeDrainTimeout |
+
+| Restrictions                      |                                                                             |
+| --------------------------------- | --------------------------------------------------------------------------- |
+| **Must match regular expression** | ```[0-9]+[smh]``` [Test](https://regex101.com/?regex=%5B0-9%5D%2B%5Bsmh%5D) |
 
 ## <a name="cloud"></a>3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > cloud`
 
@@ -186,11 +228,13 @@ Must be one of:
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                                                              | Pattern | Type    | Deprecated | Definition | Title/Description |
-| --------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
-| + [replicas](#workers_additionalProperties_replicas )                 | No      | integer | No         | -          | -                 |
-| + [availabilityZone](#workers_additionalProperties_availabilityZone ) | No      | string  | No         | -          | -                 |
-| + [flavor](#workers_additionalProperties_flavor )                     | No      | string  | No         | -          | -                 |
+| Property                                                              | Pattern | Type            | Deprecated | Definition                                                  | Title/Description |
+| --------------------------------------------------------------------- | ------- | --------------- | ---------- | ----------------------------------------------------------- | ----------------- |
+| + [replicas](#workers_additionalProperties_replicas )                 | No      | integer         | No         | -                                                           | -                 |
+| + [availabilityZone](#workers_additionalProperties_availabilityZone ) | No      | string          | No         | -                                                           | -                 |
+| + [flavor](#workers_additionalProperties_flavor )                     | No      | string          | No         | -                                                           | -                 |
+| - [securityGroups](#workers_additionalProperties_securityGroups )     | No      | array of string | No         | Same as [securityGroups](#controlPlane_securityGroups )     | -                 |
+| - [nodeDrainTimeout](#workers_additionalProperties_nodeDrainTimeout ) | No      | string          | No         | Same as [nodeDrainTimeout](#controlPlane_nodeDrainTimeout ) | -                 |
 
 #### <a name="workers_additionalProperties_replicas"></a>5.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > workers > additionalProperties > replicas`
 
@@ -214,7 +258,101 @@ Must be one of:
 | -------- | -------- |
 | **Type** | `string` |
 
-## <a name="common"></a>6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > common`
+#### <a name="workers_additionalProperties_securityGroups"></a>5.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > workers > additionalProperties > securityGroups`
+
+|                        |                                                |
+| ---------------------- | ---------------------------------------------- |
+| **Type**               | `array of string`                              |
+| **Same definition as** | [securityGroups](#controlPlane_securityGroups) |
+
+#### <a name="workers_additionalProperties_nodeDrainTimeout"></a>5.1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > workers > additionalProperties > nodeDrainTimeout`
+
+|                        |                                                    |
+| ---------------------- | -------------------------------------------------- |
+| **Type**               | `string`                                           |
+| **Default**            | `"3m"`                                             |
+| **Same definition as** | [nodeDrainTimeout](#controlPlane_nodeDrainTimeout) |
+
+## <a name="bastion"></a>6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                         | Pattern | Type           | Deprecated | Definition | Title/Description |
+| ------------------------------------------------ | ------- | -------------- | ---------- | ---------- | ----------------- |
+| - [enabled](#bastion_enabled )                   | No      | boolean        | No         | -          | -                 |
+| - [availabilityZone](#bastion_availabilityZone ) | No      | null or string | No         | -          | -                 |
+| - [sshKeyName](#bastion_sshKeyName )             | No      | null or string | No         | -          | -                 |
+
+### <a name="bastion_enabled"></a>6.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion > enabled`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+### <a name="bastion_availabilityZone"></a>6.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion > availabilityZone`
+
+|          |                  |
+| -------- | ---------------- |
+| **Type** | `null or string` |
+
+### <a name="bastion_sshKeyName"></a>6.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion > sshKeyName`
+
+|          |                  |
+| -------- | ---------------- |
+| **Type** | `null or string` |
+
+## <a name="containerRegistryProxy"></a>7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryProxy`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                                                                  | Pattern | Type            | Deprecated | Definition | Title/Description |
+| ----------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ---------- | ----------------- |
+| - [additionallyProxiedRegistries](#containerRegistryProxy_additionallyProxiedRegistries ) | No      | array of string | No         | -          | -                 |
+| - [proxyRegistryEndpoint](#containerRegistryProxy_proxyRegistryEndpoint )                 | No      | string          | No         | -          | -                 |
+
+### <a name="containerRegistryProxy_additionallyProxiedRegistries"></a>7.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryProxy > additionallyProxiedRegistries`
+
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of string` |
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                                                    | Description |
+| -------------------------------------------------------------------------------------------------- | ----------- |
+| [additionallyProxiedRegistries items](#containerRegistryProxy_additionallyProxiedRegistries_items) | -           |
+
+#### <a name="autogenerated_heading_3"></a>7.1.1. t8s cluster configuration > containerRegistryProxy > additionallyProxiedRegistries > additionallyProxiedRegistries items
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+### <a name="containerRegistryProxy_proxyRegistryEndpoint"></a>7.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryProxy > proxyRegistryEndpoint`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+## <a name="sshKeyName"></a>8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > sshKeyName`
+
+|          |                  |
+| -------- | ---------------- |
+| **Type** | `string or null` |
+
+## <a name="common"></a>9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > common`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
