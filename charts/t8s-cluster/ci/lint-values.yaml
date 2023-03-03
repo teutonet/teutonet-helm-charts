@@ -5,6 +5,7 @@ version:
   patch: 5
 controlPlane:
   flavor: standard
+  nodeDrainTimeout: 5m
 metadata:
   serviceLevelAgreement: None
   customerID: "1000"
@@ -14,3 +15,4 @@ workers:
     replicas: 1
     flavor: standard
     availabilityZone: "1"
+    nodeDrainTimeout: 2m

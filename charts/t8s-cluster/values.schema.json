@@ -46,6 +46,12 @@
         },
         "singleNode": {
           "type": "boolean"
+        },
+        "securityGroups": {
+          "$ref": "#/$defs/securityGroups"
+        },
+        "nodeDrainTimeout": {
+          "$ref": "#/$defs/nodeDrainTimeout"
         }
       },
       "required": [
@@ -90,6 +96,12 @@
           },
           "flavor": {
             "type": "string"
+          },
+          "securityGroups": {
+            "$ref": "#/$defs/securityGroups"
+          },
+          "nodeDrainTimeout": {
+            "$ref": "#/$defs/nodeDrainTimeout"
           }
         },
         "additionalProperties": false,
@@ -98,8 +110,49 @@
           "availabilityZone",
           "flavor"
         ]
+      }
+    },
+    "bastion": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "availabilityZone": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "sshKeyName": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
       },
-      "minProperties": 0
+      "additionalProperties": false
+    },
+    "containerRegistryProxy": {
+      "type": "object",
+      "properties": {
+        "additionallyProxiedRegistries": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "proxyRegistryEndpoint": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "sshKeyName": {
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "common": {
       "type": "object",
@@ -112,5 +165,20 @@
     "controlPlane",
     "workers"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$defs": {
+    "securityGroups": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "nodeDrainTimeout": {
+      "type": "string",
+      "default": "3m",
+      "pattern": "[0-9]+[smh]"
+    }
+  }
 }

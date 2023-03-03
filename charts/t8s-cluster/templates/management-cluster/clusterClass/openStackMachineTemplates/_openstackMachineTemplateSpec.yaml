@@ -1,0 +1,22 @@
+{{/*
+OpenStackMachineTemplate is immutable. We need to create new versions during upgrades.
+Here we are generating a hash suffix.
+*/}}
+{{- define "t8s-cluster.clusterClass.openStackMachineTemplate.spec" -}}
+  {{- $_ := set . "Values" .context.Values -}}
+cloudName: {{ include "t8s-cluster.clusterClass.cloudName" (dict) }}
+flavor: {{ .machineDeploymentClass.flavor }}
+identityRef:
+  name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" .context }}
+  kind: Secret
+image: {{ include "t8s-cluster.clusterClass.imageVersion" .context }}
+securityGroups: {{- include "t8s-cluster.clusterClass.securityGroups" .machineDeploymentClass | nindent 2 }}
+  {{- if .Values.bastion.enabled }}
+bastion:
+  instance:
+    cloudName: {{ include "t8s-cluster.clusterClass.cloudName" (dict) }}
+  {{- end }}
+  {{- with .Values.sshKeyName }}
+sshKeyName: {{ . }}
+  {{- end -}}
+{{- end -}}

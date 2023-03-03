@@ -1,0 +1,16 @@
+{{- range $name, $machineDeploymentClass := (merge (deepCopy .Values.workers) (dict "control-plane" .Values.controlPlane)) }}
+{{- if false }}
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+{{- else }}
+apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
+{{- end }}
+kind: OpenStackMachineTemplate
+metadata:
+  name: {{ printf "%s-%s-%s" $.Release.Name $name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHash" (dict "machineDeploymentClass" $machineDeploymentClass "name" $name "context" $)) }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  template:
+    spec: {{- include "t8s-cluster.clusterClass.openStackMachineTemplate.spec" (dict "machineDeploymentClass" $machineDeploymentClass "context" $) | nindent 6 }}
+---
+{{- end }}

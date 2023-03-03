@@ -15,3 +15,14 @@ version:
   patch: 0
 
 workers: {}
+
+bastion:
+  enabled: false
+  availabilityZone: null
+  sshKeyName: null
+
+containerRegistryProxy:
+  additionallyProxiedRegistries: []
+  proxyRegistryEndpoint: https://harbor.teuto.net/v2/
+
+sshKeyName: null

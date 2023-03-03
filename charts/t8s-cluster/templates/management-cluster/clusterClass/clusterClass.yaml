@@ -1,0 +1,148 @@
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: ClusterClass
+metadata:
+  name: {{ $.Release.Name }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  controlPlane:
+    machineHealthCheck:
+      maxUnhealthy: 33%
+      nodeStartupTimeout: 10m
+      unhealthyConditions:
+        - status: Unknown
+          timeout: 600s
+          type: Ready
+        - status: 'False'
+          timeout: 600s
+          type: Ready
+    nodeDrainTimeout: {{ .Values.controlPlane.nodeDrainTimeout | default "8m" }}
+    machineInfrastructure:
+      ref:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+        kind: OpenStackMachineTemplate
+        name: {{ printf "%s-control-plane-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfControlPlane" (dict "context" $)) }}
+    ref:
+      apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+      kind: KubeadmControlPlaneTemplate
+      # the full context is needed for .Files.Get
+      name: {{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.specHash" .) }}
+  infrastructure:
+    ref:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+      kind: OpenStackClusterTemplate
+      name: {{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackClusterTemplate.specHash" (dict "context" $)) }}
+  patches:
+    - definitions:
+        - jsonPatches:
+            - op: add
+              path: /spec/template/spec/serverGroupID
+              valueFrom:
+                variable: controlPlaneServerGroupID
+          selector:
+            apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+            kind: OpenStackMachineTemplate
+            matchResources:
+              controlPlane: true
+      description: Sets the ServerGroupID for Control Plane machines.
+      name: controlPlaneServerGroupID
+    - definitions:
+        - jsonPatches:
+            - op: add
+              path: /spec/template/spec/serverGroupID
+              valueFrom:
+                variable: machineDeploymentServerGroupID
+          selector:
+            apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+            kind: OpenStackMachineTemplate
+            matchResources:
+              machineDeploymentClass:
+                names: {{- .Values.workers | keys | sortAlpha | toYaml | nindent 18 }}
+      description: Sets the ServerGroupID for MachineDeployment machines.
+      name: machineDeploymentServerGroupID
+    - name: openStackCloudConfiguration
+      definitions:
+        - selector:
+            apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+            kind: OpenStackClusterTemplate
+            matchResources:
+              infrastructureCluster: true
+          jsonPatches:
+            - op: add
+              path: /spec/template/spec/controlPlaneAvailabilityZones
+              valueFrom:
+                variable: controlPlaneAvailabilityZones
+            - op: add
+              path: /spec/template/spec/dnsNameservers
+              valueFrom:
+                variable: dnsNameservers
+  variables:
+    - name: controlPlaneServerGroupID
+      required: false
+      schema:
+        openAPIV3Schema:
+          description: |-
+            OpenStack Server Group to use for Control Plane machines.
+            Field is optional, but must be set for HA clusters.
+          type: string
+    - name: machineDeploymentServerGroupID
+      required: false
+      schema:
+        openAPIV3Schema:
+          description: |-
+            OpenStack Server Group to use for MachineDeployment machines.
+            Field is optional, but should be set for HA clusters.
+          type: string
+    - name: dnsNameservers
+      required: false
+      schema:
+        openAPIV3Schema:
+          description: |
+            [Optional] Can be specified to set a list of DNS Nameservers for the servers.
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: string
+            format: ipv4
+            example: "203.0.113.123"
+    - name: controlPlaneAvailabilityZones
+      required: false
+      schema:
+        openAPIV3Schema:
+          type: array
+          description: |
+            [Optional] Can be specified to restrict the Zones used for
+                  ControlPlane Machines (default is all available Zones)
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: string
+            example: Zone1
+  workers:
+    machineDeployments:
+      {{- range $name, $machineDeploymentClass := .Values.workers }}
+      - class: {{ $name }}
+        machineHealthCheck:
+          maxUnhealthy: 50%
+          nodeStartupTimeout: 8m
+          unhealthyConditions:
+            - status: Unknown
+              timeout: 300s
+              type: Ready
+            - status: 'False'
+              timeout: 300s
+              type: Ready
+        nodeDrainTimeout: {{ $machineDeploymentClass.nodeDrainTimeout | default "8m" }}
+        template:
+          bootstrap:
+            ref:
+              apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+              kind: KubeadmConfigTemplate
+              name: {{ printf "%s-worker" $.Release.Name }}
+          infrastructure:
+            ref:
+              apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+              kind: OpenStackMachineTemplate
+              name: {{ printf "%s-%s-%s" $.Release.Name $name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfWorkers" (dict "context" $ "worker" $machineDeploymentClass)) }}
+      {{- end }}

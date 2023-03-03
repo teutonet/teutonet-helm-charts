@@ -1,0 +1,11 @@
+apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+kind: KubeadmControlPlaneTemplate
+metadata:
+  name: {{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.specHash" .) }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  template:
+    spec:
+      # the full context is needed for .Files.Get
+      kubeadmConfigSpec: {{- include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.spec" . | nindent 8 }}

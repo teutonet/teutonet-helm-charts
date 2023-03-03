@@ -1,0 +1,27 @@
+{{/*
+OpenStackClusterTemplate is immutable. We need to create new versions during upgrades.
+Here we are generating a hash suffix.
+*/}}
+{{- define "t8s-cluster.clusterClass.openStackClusterTemplate.spec" -}}
+  {{- $_ := set . "Values" .context.Values -}}
+apiServerLoadBalancer:
+  enabled: true
+bastion:
+  availabilityZone: {{ .Values.bastion.availabilityZone }}
+  enabled: {{ .Values.bastion.enabled }}
+  instance:
+    cloudName: {{ include "t8s-cluster.clusterClass.cloudName" (dict) }}
+    flavor: standard.1.1905
+    identityRef:
+      kind: Secret
+      name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" .context }}
+    image: Ubuntu 20.04
+    sshKeyName: {{ .Values.bastion.sshKeyName }}
+cloudName: {{ include "t8s-cluster.clusterClass.cloudName" (dict) }}
+disablePortSecurity: false
+identityRef:
+  kind: Secret
+  name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" .context }}
+managedSecurityGroups: {{ include "t8s-cluster.clusterClass.managedSecurityGroups" .context }}
+nodeCidr: 10.6.0.0/24
+{{- end -}}

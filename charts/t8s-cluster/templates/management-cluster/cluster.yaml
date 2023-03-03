@@ -27,6 +27,7 @@ spec:
   {{- with .Values.version }}
   version: {{ printf "v%d.%d.%d" (.major | int) (.minor | int) (.patch | int) }}
   {{- end }}
+  clusterClass: {{ $.Release.Name }}
   workers: {{- .Values.workers | toYaml | nindent 4 }}
   bastion:
     enabled: false
