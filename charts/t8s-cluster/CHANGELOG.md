@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-0.1.3...t8s-cluster-v0.2.0) (2023-03-03)
+
+
+### Features
+
+* **t8s-cluster/clusterClass:** include clusterClass ([#209](https://github.com/teutonet/teutonet-helm-charts/issues/209)) ([7aaa8b5](https://github.com/teutonet/teutonet-helm-charts/commit/7aaa8b58caecdc4e8c59bf1291e4982a7354e2c7))
+
 ## [0.1.3](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-0.1.2...t8s-cluster-v0.1.3) (2023-02-28)
 
 
