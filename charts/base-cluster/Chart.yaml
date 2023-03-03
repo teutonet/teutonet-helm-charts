@@ -32,7 +32,7 @@ annotations:
     - image: ghcr.io/kyverno/kyverno:v1.9.0
     - image: ghcr.io/kyverno/kyvernopre:v1.9.0
     - image: grafana/grafana-image-renderer:latest
-    - image: grafana/grafana:9.3.6
+    - image: grafana/grafana:9.3.8
     - image: grafana/loki:2.6.1
     - image: k8s.gcr.io/sig-storage/nfs-provisioner:v4.0.8
     - image: quay.io/jetstack/cert-manager-cainjector:v1.11.0
