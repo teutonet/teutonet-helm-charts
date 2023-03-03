@@ -16,7 +16,7 @@ spec:
         - status: 'False'
           timeout: 600s
           type: Ready
-    nodeDrainTimeout: {{ .Values.controlPlane.nodeDrainTimeout | default "3m" }}
+    nodeDrainTimeout: {{ .Values.controlPlane.nodeDrainTimeout | default "8m" }}
     machineInfrastructure:
       ref:
         apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
@@ -133,7 +133,7 @@ spec:
             - status: 'False'
               timeout: 300s
               type: Ready
-        nodeDrainTimeout: {{ $machineDeploymentClass.nodeDrainTimeout | default "3m" }}
+        nodeDrainTimeout: {{ $machineDeploymentClass.nodeDrainTimeout | default "8m" }}
         template:
           bootstrap:
             ref:
