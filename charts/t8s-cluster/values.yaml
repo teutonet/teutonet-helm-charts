@@ -16,19 +16,6 @@ version:
 
 workers: {}
 
-clouds:
-  ffm3: &ffm3
-    dnsNameservers:
-      - 212.15.212.158
-      - 212.15.212.129
-  ffm3-dev: *ffm3
-  bfe:
-    dnsNameservers:
-      - 212.8.197.2
-      - 212.8.211.15
-    controlPlaneAvailabilityZones:
-      - Zone1
-
 bastion:
   enabled: false
   availabilityZone: null

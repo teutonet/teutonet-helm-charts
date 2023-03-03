@@ -17,10 +17,8 @@ bastion:
       name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" .context }}
     image: Ubuntu 20.04
     sshKeyName: {{ .Values.bastion.sshKeyName }}
-controlPlaneAvailabilityZones: {{- include "t8s-cluster.clusterClass.controlPlaneAvailabilityZones" .context | nindent 2 }}
 cloudName: {{ include "t8s-cluster.clusterClass.cloudName" (dict) }}
 disablePortSecurity: false
-dnsNameservers: {{- include "t8s-cluster.clusterClass.dnsNameservers" .context | nindent 2 }}
 identityRef:
   kind: Secret
   name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" .context }}

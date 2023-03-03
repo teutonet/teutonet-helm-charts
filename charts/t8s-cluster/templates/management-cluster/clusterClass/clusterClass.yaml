@@ -45,7 +45,6 @@ spec:
             matchResources:
               controlPlane: true
       description: Sets the ServerGroupID for Control Plane machines.
-      enabledIf: {{ `"{{ if .controlPlaneServerGroupID }}true{{ end }}"` }}
       name: controlPlaneServerGroupID
     - definitions:
         - jsonPatches:
@@ -60,8 +59,23 @@ spec:
               machineDeploymentClass:
                 names: {{- .Values.workers | keys | sortAlpha | toYaml | nindent 18 }}
       description: Sets the ServerGroupID for MachineDeployment machines.
-      enabledIf: {{ `"{{ if .machineDeploymentServerGroupID }}true{{ end }}"` }}
       name: machineDeploymentServerGroupID
+    - name: openStackCloudConfiguration
+      definitions:
+        - selector:
+            apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+            kind: OpenStackClusterTemplate
+            matchResources:
+              infrastructureCluster: true
+          jsonPatches:
+            - op: add
+              path: /spec/template/spec/controlPlaneAvailabilityZones
+              valueFrom:
+                variable: controlPlaneAvailabilityZones
+            - op: add
+              path: /spec/template/spec/dnsNameservers
+              valueFrom:
+                variable: dnsNameservers
   variables:
     - name: controlPlaneServerGroupID
       required: false
@@ -79,6 +93,32 @@ spec:
             OpenStack Server Group to use for MachineDeployment machines.
             Field is optional, but should be set for HA clusters.
           type: string
+    - name: dnsNameservers
+      required: false
+      schema:
+        openAPIV3Schema:
+          description: |
+            [Optional] Can be specified to set a list of DNS Nameservers for the servers.
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: string
+            format: ipv4
+            example: "203.0.113.123"
+    - name: controlPlaneAvailabilityZones
+      required: false
+      schema:
+        openAPIV3Schema:
+          type: array
+          description: |
+            [Optional] Can be specified to restrict the Zones used for
+                  ControlPlane Machines (default is all available Zones)
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: string
+            example: Zone1
   workers:
     machineDeployments:
       {{- range $name, $machineDeploymentClass := .Values.workers }}

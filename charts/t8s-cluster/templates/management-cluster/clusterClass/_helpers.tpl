@@ -14,22 +14,6 @@ openstack
   {{- printf "cloud-config-%s" .Release.Name -}}
 {{- end -}}
 
-{{- define "t8s-cluster.clusterClass.sshKeyName" -}}
-  {{- .Values.sshKeyName -}}
-{{- end -}}
-
-{{- define "t8s-cluster.clusterClass.cloud" -}}
-  {{- get .Values.clouds .Values.cloud | toYaml -}}
-{{- end -}}
-
-{{- define "t8s-cluster.clusterClass.controlPlaneAvailabilityZones" -}}
-  {{- get (include "t8s-cluster.clusterClass.cloud" . | fromYaml) "controlPlaneAvailabilityZones" | default (list) | toYaml -}}
-{{- end -}}
-
-{{- define "t8s-cluster.clusterClass.dnsNameservers" -}}
-  {{- get (include "t8s-cluster.clusterClass.cloud" . | fromYaml) "dnsNameservers" | toYaml -}}
-{{- end -}}
-
 {{- define "t8s-cluster.clusterClass.managedSecurityGroups" -}}
   {{- $managedSecurityGroups := true -}}
   {{- range $name, $machineDeploymentClass := (merge (deepCopy .Values.workers) (dict "control-plane" .Values.controlPlane)) }}

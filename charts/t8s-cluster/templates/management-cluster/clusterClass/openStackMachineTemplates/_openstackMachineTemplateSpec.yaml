@@ -16,7 +16,7 @@ bastion:
   instance:
     cloudName: {{ include "t8s-cluster.clusterClass.cloudName" (dict) }}
   {{- end }}
-  {{- if .Values.sshKeyName }}
-sshKeyName: {{ include "t8s-cluster.clusterClass.sshKeyName" .context }}
+  {{- with .Values.sshKeyName }}
+sshKeyName: {{ . }}
   {{- end -}}
 {{- end -}}

@@ -112,34 +112,6 @@
         ]
       }
     },
-    "clouds": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "object",
-        "properties": {
-          "dnsNameservers": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "minItems": 1,
-            "uniqueItems": true
-          },
-          "controlPlaneAvailabilityZones": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "uniqueItems": true
-          }
-        },
-        "required": [
-          "dnsNameservers"
-        ],
-        "additionalProperties": false
-      },
-      "minProperties": 1
-    },
     "bastion": {
       "type": "object",
       "properties": {
