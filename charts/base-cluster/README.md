@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 3.3.2](https://img.shields.io/badge/Version-3.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 4.0.0](https://img.shields.io/badge/Version-4.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -23,21 +23,23 @@ git init
 flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 3.x.x > cluster.yaml
 
 # maybe use the following name for your cluster;
-kubectl get node -o json | jq '.items[0].metadata.annotations["cluster.x-k8s.io/cluster-name"]'
+kubectl get node -o jsonpath='{.items[0].metadata.annotations.cluster\.x-k8s\.io/cluster-name}'
 
 # configure according to your needs, at least `.global.clusterName` is needed
-# also, you should configure `.helmRepositories.flux.url=https://fluxcd-community.github.io/helm-charts` so flux can manage itself
 # additionally, you should add your git repo to `.flux.gitRepositories`, see [the documentation](https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster#81--property-base-cluster-configuration--flux--gitrepositories)
 vi cluster.yaml
 
 # create HelmRelease for flux to manage itself
-flux create helmrelease --export flux -n flux-system --source HelmRepository/flux.flux-system --chart flux2 --chart-version 2.x.x > flux.yaml
+kubectl create namespace flux-system --dry-run=client -o yaml > flux.yaml
+flux create source helm --url https://fluxcd-community.github.io/helm-charts flux -n flux-system --export >> flux.yaml
+flux create helmrelease --export flux -n flux-system --source HelmRepository/flux.flux-system --chart flux2 --chart-version 2.x.x >> flux.yaml
 
 # add, commit and push resources
 git add cluster.yaml flux.yaml
 git commit cluster.yaml flux.yaml
 git push
 
+# after this you should be on the KUBECONFIG for the cluster
 # we explicitly do not use `flux bootstrap` or `flux install` as this creates kustomization stuff and installs flux manually
 helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io/helm-charts --version 2.x.x --atomic
 
@@ -537,6 +539,7 @@ Must be one of:
 | - [url](#global_helmRepositories_additionalProperties_url )             | No      | string | No         | -                    | -                                                                                                            |
 | - [interval](#global_helmRepositories_additionalProperties_interval )   | No      | string | No         | -                    | The interval in which to update the repository                                                               |
 | - [condition](#global_helmRepositories_additionalProperties_condition ) | No      | string | No         | In #/$defs/condition | A condition with which to decide to include the resource. This will be templated. Must return a truthy value |
+| - [charts](#global_helmRepositories_additionalProperties_charts )       | No      | object | No         | -                    | Which charts are deployed in which version using this repo, used internally                                  |
 
 ##### <a name="global_helmRepositories_additionalProperties_url"></a>1.11.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > url`
 
@@ -578,6 +581,25 @@ Must be one of:
 ```yaml
 {{ eq .Values.global.baseDomain "teuto.net" }}
 ```
+
+##### <a name="global_helmRepositories_additionalProperties_charts"></a>1.11.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > charts`
+
+|                           |                                                                                                                                                                                                                  |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                                                                                         |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties_charts_additionalProperties "Each additional property must conform to the following schema") |
+
+**Description:** Which charts are deployed in which version using this repo, used internally
+
+| Property                                                                         | Pattern | Type   | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#global_helmRepositories_additionalProperties_charts_additionalProperties ) | No      | string | No         | -          | -                 |
+
+##### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties"></a>1.11.1.4.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
 
 ### <a name="global_certificates"></a>1.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates`
 

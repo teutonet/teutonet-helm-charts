@@ -1,5 +1,35 @@
 # Changelog
 
+## [4.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-3.3.2...base-cluster-v4.0.0) (2023-03-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* **base-cluster:** remove storageclass from chart ([#224](https://github.com/teutonet/teutonet-helm-charts/issues/224))
+
+### Features
+
+* **base-cluster/readme:** add additional info ([#211](https://github.com/teutonet/teutonet-helm-charts/issues/211)) ([defc7c0](https://github.com/teutonet/teutonet-helm-charts/commit/defc7c0ac48ed4f060ec52ad342ed39d9a14e9c1))
+* **base-cluster:** move version so renovate can detect this ([#217](https://github.com/teutonet/teutonet-helm-charts/issues/217)) ([ed575a1](https://github.com/teutonet/teutonet-helm-charts/commit/ed575a1d9d569716891e7bc50ab5c9616964706c))
+* **base-cluster:** remove storageclass from chart ([#224](https://github.com/teutonet/teutonet-helm-charts/issues/224)) ([efebd28](https://github.com/teutonet/teutonet-helm-charts/commit/efebd286784a38b8cfaa3fd075064196188754c2))
+
+
+### Bug Fixes
+
+* **base-cluster:** correctly use chartSpec ([#226](https://github.com/teutonet/teutonet-helm-charts/issues/226)) ([c072c05](https://github.com/teutonet/teutonet-helm-charts/commit/c072c05a99125f8adfac47f37c82074970a9e3cc))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/artifacthub-images:** Update ArtifactHUB images ([#244](https://github.com/teutonet/teutonet-helm-charts/issues/244)) ([daa9db7](https://github.com/teutonet/teutonet-helm-charts/commit/daa9db7fe890dc9fddd244fdcbe08c91f728a9df))
+* **base-cluster/artifacthub-images:** Update ArtifactHUB images ([#249](https://github.com/teutonet/teutonet-helm-charts/issues/249)) ([30ff49f](https://github.com/teutonet/teutonet-helm-charts/commit/30ff49ff309dfeb9bc2443a14c0d9eef3cc2f027))
+* **base-cluster/artifacthub-images:** Update ArtifactHUB images ([#251](https://github.com/teutonet/teutonet-helm-charts/issues/251)) ([8e9b9b1](https://github.com/teutonet/teutonet-helm-charts/commit/8e9b9b1c840cb34c6a03bdb1a3e43031be7d7d23))
+* **deps:** update docker.io/bitnami/kubectl docker tag to v1.26.2 ([#246](https://github.com/teutonet/teutonet-helm-charts/issues/246)) ([163f15a](https://github.com/teutonet/teutonet-helm-charts/commit/163f15abcaceb23b1b77e160c34965f462a78614))
+* **deps:** update docker.io/fluxcd/flux-cli docker tag to v0.40.1 ([#221](https://github.com/teutonet/teutonet-helm-charts/issues/221)) ([264fbc9](https://github.com/teutonet/teutonet-helm-charts/commit/264fbc99b1179e17c9fbc99f159e533391260f88))
+* **deps:** update docker.io/fluxcd/flux-cli docker tag to v0.40.2 ([#243](https://github.com/teutonet/teutonet-helm-charts/issues/243)) ([59f273b](https://github.com/teutonet/teutonet-helm-charts/commit/59f273bb6a01e8889c06f2d558b773cfe9b78797))
+* **deps:** update helm release nfs-server-provisioner to v1.7.0 ([#225](https://github.com/teutonet/teutonet-helm-charts/issues/225)) ([7c1c93e](https://github.com/teutonet/teutonet-helm-charts/commit/7c1c93e6cce6270fb6d1027f68b3b2239e99215e))
+* **t8s-cluster:** Update ArtifactHUB images ([#233](https://github.com/teutonet/teutonet-helm-charts/issues/233)) ([22cab6b](https://github.com/teutonet/teutonet-helm-charts/commit/22cab6b19469775cae3d172b3f47b56ad111eb90))
+
 ## [3.3.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-3.3.1...base-cluster-v3.3.2) (2023-02-22)
 
 
