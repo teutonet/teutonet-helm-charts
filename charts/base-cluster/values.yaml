@@ -137,7 +137,7 @@ global:
     emberstack:
       url: https://emberstack.github.io/helm-charts
       charts:
-        reflector: 6.x.x
+        reflector: 7.x
       condition: '{{ eq (include "base-cluster.reflector.enabled" (dict "context" .)) "true" }}'
 
 kyverno:
