@@ -237,7 +237,7 @@ alertmanager:
     priorityClassName: system-cluster-critical
     storageSpec:
       volumeClaimTemplate:
-        spec: {{- include "common.storage.class" ( dict "persistence" .Values.monitoring.prometheus.alertmanager.persistence "global" $) | nindent 10 }}
+        spec: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.prometheus.alertmanager.persistence "global" $.Values.global) | nindent 10 }}
           accessModes:
             - "ReadWriteOnce"
           resources:
@@ -282,7 +282,7 @@ prometheus:
     retentionSize: {{ .Values.monitoring.prometheus.retentionSize }}
     storageSpec:
       volumeClaimTemplate:
-        spec: {{- include "common.storage.class" ( dict "persistence" .Values.monitoring.prometheus.persistence "global" $) | nindent 10 }}
+        spec: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.prometheus.persistence "global" $.Values.global) | nindent 10 }}
           accessModes:
             - "ReadWriteOnce"
           resources:

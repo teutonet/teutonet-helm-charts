@@ -17,7 +17,7 @@ spec:
     persistence:
       enabled: true
       size: {{ .Values.storage.readWriteMany.persistence.size }}
-    {{- $storageClass := include "common.storage.class" (dict "persistence" .Values.storage.readWriteMany.persistence "global" $) | fromYaml -}}
+    {{- $storageClass := include "common.storage.class" (dict "persistence" .Values.storage.readWriteMany.persistence "global" $.Values.global) | fromYaml -}}
     {{- if not (eq $storageClass.storageClassName nil) }}
       storageClass: {{ $storageClass.storageClassName | quote }}
     {{- end }}
