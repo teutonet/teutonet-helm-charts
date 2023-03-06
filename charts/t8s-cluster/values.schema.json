@@ -3,6 +3,29 @@
   "type": "object",
   "title": "t8s cluster configuration",
   "properties": {
+    "global": {
+      "helmRepositories": {
+        "type": "object",
+        "description": "A map of helmRepositories to create, the key is the name",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "pattern": "https://.+"
+            },
+            "charts": {
+              "type": "object",
+              "description": "Which charts are deployed in which version using this repo, used internally",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
     "metadata": {
       "type": "object",
       "properties": {
@@ -152,6 +175,13 @@
       "type": [
         "string",
         "null"
+      ]
+    },
+    "cni": {
+      "type": "string",
+      "enum": [
+        "cilium",
+        "calico"
       ]
     },
     "common": {
