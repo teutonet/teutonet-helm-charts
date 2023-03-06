@@ -7,6 +7,8 @@ on:
   pull_request:
     paths:
       - charts/**
+    branches-ignore:
+      - release-please--branches--main--components-*
 
 jobs:
   getChangedChart:
