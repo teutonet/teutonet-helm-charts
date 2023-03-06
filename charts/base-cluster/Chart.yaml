@@ -27,7 +27,7 @@ annotations:
     - image: docker.io/fluxcd/flux-cli:v0.40.2
     - image: docker.io/grafana/promtail:2.7.2
     - image: docker.io/vladgh/gpg@sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
-    - image: ghcr.io/aquasecurity/trivy-operator:0.11.1
+    - image: ghcr.io/aquasecurity/trivy-operator:0.12.0
     - image: ghcr.io/kyverno/cleanup-controller:v1.9.0
     - image: ghcr.io/kyverno/kyverno:v1.9.0
     - image: ghcr.io/kyverno/kyvernopre:v1.9.0
