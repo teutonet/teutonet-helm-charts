@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-0.2.0...t8s-cluster-v0.3.0) (2023-03-07)
+
+
+### Features
+
+* **t8s-cluster:** add calico CNI as an option ([#261](https://github.com/teutonet/teutonet-helm-charts/issues/261)) ([61a5087](https://github.com/teutonet/teutonet-helm-charts/commit/61a5087520dc8d8a0402e2e0a56e386e8023a6a0))
+
+
+### Bug Fixes
+
+* **t8s-cluster/clusterClass:** only patch controlPlaneAvailabilityZones ([#257](https://github.com/teutonet/teutonet-helm-charts/issues/257)) ([da8f3a9](https://github.com/teutonet/teutonet-helm-charts/commit/da8f3a9447b38500917e9c7f100aeb0dafff5d94))
+
 ## [0.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-0.1.3...t8s-cluster-v0.2.0) (2023-03-03)
 
 
