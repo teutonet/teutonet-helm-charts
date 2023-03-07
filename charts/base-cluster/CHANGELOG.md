@@ -1,5 +1,23 @@
 # Changelog
 
+## [4.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.0.0...base-cluster-v4.1.0) (2023-03-07)
+
+
+### Features
+
+* **base-cluster:** use current version dir for schema ([#260](https://github.com/teutonet/teutonet-helm-charts/issues/260)) ([18ed476](https://github.com/teutonet/teutonet-helm-charts/commit/18ed476fa17a45f7589dd9ff4f36ee8f726cde9d))
+
+
+### Bug Fixes
+
+* **base-cluster/storage:** wrong usage of the "common.storage.class" ([#241](https://github.com/teutonet/teutonet-helm-charts/issues/241)) ([b1dbeb5](https://github.com/teutonet/teutonet-helm-charts/commit/b1dbeb5609c39e769126149881714e1645fc5950))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/artifacthub-images:** Update ArtifactHUB images ([#255](https://github.com/teutonet/teutonet-helm-charts/issues/255)) ([f4f0eff](https://github.com/teutonet/teutonet-helm-charts/commit/f4f0effb317c5f0d16da63a493b6378e83065b88))
+* **deps:** update helm release reflector to v7 ([#254](https://github.com/teutonet/teutonet-helm-charts/issues/254)) ([27f7a7d](https://github.com/teutonet/teutonet-helm-charts/commit/27f7a7d07b95ddfdffd9bbbfe697c9b3c30aee45))
+
 ## [4.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-3.3.2...base-cluster-v4.0.0) (2023-03-03)
 
 
