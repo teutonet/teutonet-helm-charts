@@ -1,3 +1,11 @@
+global:
+  # it's important that the `url` is the first key and `charts` is right below, otherwise renovate won't detect it
+  helmRepositories:
+    cilium:
+      url: https://helm.cilium.io
+      charts:
+        cilium: 1.x.x
+
 metadata:
   serviceLevelAgreement: None
   supportProjectUrl: ""
@@ -26,3 +34,5 @@ containerRegistryProxy:
   proxyRegistryEndpoint: https://harbor.teuto.net/v2/
 
 sshKeyName: null
+
+cni: cilium

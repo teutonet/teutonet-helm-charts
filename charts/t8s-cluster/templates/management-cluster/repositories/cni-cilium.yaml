@@ -1,3 +1,4 @@
+{{- if eq .Values.cni "cilium" }}
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
@@ -7,3 +8,4 @@ metadata:
 spec:
   interval: 5m
   url: https://helm.cilium.io
+{{- end }}

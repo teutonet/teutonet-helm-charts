@@ -9,8 +9,8 @@ spec:
   url: https://github.com/kubernetes/cloud-provider-openstack
   ref:
     {{- with .Values.version }}
-    tag: {{ printf "release-%d.%d" (.major | int) (.minor | int) }}
+    branch: {{ printf "release-%d.%d" (.major | int) (.minor | int) }}
     {{- end }}
   ignore: |
-    manifests/cinder-csi-plugin/csi-secret-cinderplugin.yaml
-    manifests/controller-manager/openstack-cloud-controller-manager-pod.yaml
+    /manifests/cinder-csi-plugin/csi-secret-cinderplugin.yaml
+    /manifests/controller-manager/openstack-cloud-controller-manager-pod.yaml
