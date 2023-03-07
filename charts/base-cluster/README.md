@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 4.0.0](https://img.shields.io/badge/Version-4.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 4.1.0](https://img.shields.io/badge/Version-4.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -904,12 +904,59 @@ Must be one of:
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-| Property                                                 | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                           |
-| -------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| - [limits](#monitoring_prometheus_resources_limits )     | No      | object | No         | -          | Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/                                                                                                                                                 |
-| - [requests](#monitoring_prometheus_resources_requests ) | No      | object | No         | -          | Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| Property                                                 | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                          |
+| -------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| - [claims](#monitoring_prometheus_resources_claims )     | No      | array  | No         | -          | Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.<br /><br />This is an alpha field and requires enabling the DynamicResourceAllocation feature gate.<br /><br />This field is immutable. It can only be set for containers.                                                           |
+| - [limits](#monitoring_prometheus_resources_limits )     | No      | object | No         | -          | Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/                                                                                                                                                                                |
+| - [requests](#monitoring_prometheus_resources_requests ) | No      | object | No         | -          | Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
 
-##### <a name="monitoring_prometheus_resources_limits"></a>3.2.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > resources > limits`
+##### <a name="monitoring_prometheus_resources_claims"></a>3.2.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > resources > claims`
+
+|          |         |
+| -------- | ------- |
+| **Type** | `array` |
+
+**Description:** Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
+
+This is an alpha field and requires enabling the DynamicResourceAllocation feature gate.
+
+This field is immutable. It can only be set for containers.
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                                   | Description                                                   |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| [io.k8s.api.core.v1.ResourceClaim](#monitoring_prometheus_resources_claims_items) | ResourceClaim references one entry in PodSpec.ResourceClaims. |
+
+##### <a name="autogenerated_heading_4"></a>3.2.3.1.1. base cluster configuration > monitoring > prometheus > resources > claims > io.k8s.api.core.v1.ResourceClaim
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+| **Defined in**            | #/definitions/io.k8s.api.core.v1.ResourceClaim                                                           |
+
+**Description:** ResourceClaim references one entry in PodSpec.ResourceClaims.
+
+| Property                                                      | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                          |
+| ------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [name](#monitoring_prometheus_resources_claims_items_name ) | No      | string | No         | -          | Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container. |
+
+##### <a name="monitoring_prometheus_resources_claims_items_name"></a>3.2.3.1.1.1. Property `base cluster configuration > monitoring > prometheus > resources > claims > claims items > name`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+
+##### <a name="monitoring_prometheus_resources_limits"></a>3.2.3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > resources > limits`
 
 |                           |                                                                                                                                                                                                     |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -922,7 +969,7 @@ Must be one of:
 | ------------------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------- | ----------------- |
 | - [](#monitoring_prometheus_resources_limits_additionalProperties ) | No      | object | No         | In #/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity | -                 |
 
-##### <a name="monitoring_prometheus_resources_limits_additionalProperties"></a>3.2.3.1.1. Property `base cluster configuration > monitoring > prometheus > resources > limits > io.k8s.apimachinery.pkg.api.resource.Quantity`
+##### <a name="monitoring_prometheus_resources_limits_additionalProperties"></a>3.2.3.2.1. Property `base cluster configuration > monitoring > prometheus > resources > limits > io.k8s.apimachinery.pkg.api.resource.Quantity`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -935,32 +982,32 @@ Must be one of:
 | [item 0](#monitoring_prometheus_resources_limits_additionalProperties_oneOf_i0) |
 | [item 1](#monitoring_prometheus_resources_limits_additionalProperties_oneOf_i1) |
 
-##### <a name="monitoring_prometheus_resources_limits_additionalProperties_oneOf_i0"></a>3.2.3.1.1.1. Property `base cluster configuration > monitoring > prometheus > resources > limits > additionalProperties > oneOf > item 0`
+##### <a name="monitoring_prometheus_resources_limits_additionalProperties_oneOf_i0"></a>3.2.3.2.1.1. Property `base cluster configuration > monitoring > prometheus > resources > limits > additionalProperties > oneOf > item 0`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="monitoring_prometheus_resources_limits_additionalProperties_oneOf_i1"></a>3.2.3.1.1.2. Property `base cluster configuration > monitoring > prometheus > resources > limits > additionalProperties > oneOf > item 1`
+##### <a name="monitoring_prometheus_resources_limits_additionalProperties_oneOf_i1"></a>3.2.3.2.1.2. Property `base cluster configuration > monitoring > prometheus > resources > limits > additionalProperties > oneOf > item 1`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `number` |
 
-##### <a name="monitoring_prometheus_resources_requests"></a>3.2.3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > resources > requests`
+##### <a name="monitoring_prometheus_resources_requests"></a>3.2.3.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > resources > requests`
 
 |                           |                                                                                                                                                                                                       |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                                                                                              |
 | **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#monitoring_prometheus_resources_requests_additionalProperties "Each additional property must conform to the following schema") |
 
-**Description:** Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+**Description:** Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 
 | Property                                                              | Pattern | Type   | Deprecated | Definition                                                                                                                           | Title/Description |
 | --------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------- |
 | - [](#monitoring_prometheus_resources_requests_additionalProperties ) | No      | object | No         | Same as [monitoring_prometheus_resources_limits_additionalProperties](#monitoring_prometheus_resources_limits_additionalProperties ) | -                 |
 
-##### <a name="monitoring_prometheus_resources_requests_additionalProperties"></a>3.2.3.2.1. Property `base cluster configuration > monitoring > prometheus > resources > requests > io.k8s.apimachinery.pkg.api.resource.Quantity`
+##### <a name="monitoring_prometheus_resources_requests_additionalProperties"></a>3.2.3.3.1. Property `base cluster configuration > monitoring > prometheus > resources > requests > io.k8s.apimachinery.pkg.api.resource.Quantity`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -1091,7 +1138,7 @@ Must be one of:
 | ---------------------------------------------------------------------------------------------------------------------- | ----------- |
 | [additionalProperties items](#monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList_additionalProperties_items) | -           |
 
-##### <a name="autogenerated_heading_4"></a>3.2.8.2.1.1. base cluster configuration > monitoring > prometheus > kubeStateMetrics > metricLabelsAllowList > additionalProperties > additionalProperties items
+##### <a name="autogenerated_heading_5"></a>3.2.8.2.1.1. base cluster configuration > monitoring > prometheus > kubeStateMetrics > metricLabelsAllowList > additionalProperties > additionalProperties items
 
 |          |          |
 | -------- | -------- |
@@ -1343,7 +1390,7 @@ Must be one of:
 | ------------------------------------------------------ | ----------- |
 | [notifiers items](#monitoring_grafana_notifiers_items) | -           |
 
-##### <a name="autogenerated_heading_5"></a>3.3.5.1. base cluster configuration > monitoring > grafana > notifiers > notifiers items
+##### <a name="autogenerated_heading_6"></a>3.3.5.1. base cluster configuration > monitoring > grafana > notifiers > notifiers items
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -1432,7 +1479,7 @@ Must be one of:
 | ---------------------------------------------------------------------- | ----------- |
 | [additionalPlugins items](#monitoring_grafana_additionalPlugins_items) | -           |
 
-##### <a name="autogenerated_heading_6"></a>3.3.6.1. base cluster configuration > monitoring > grafana > additionalPlugins > additionalPlugins items
+##### <a name="autogenerated_heading_7"></a>3.3.6.1. base cluster configuration > monitoring > grafana > additionalPlugins > additionalPlugins items
 
 |          |          |
 | -------- | -------- |
@@ -1802,7 +1849,7 @@ currencyEUR
 | ----------------------------------- | ----------- |
 | [domains items](#dns_domains_items) | -           |
 
-#### <a name="autogenerated_heading_7"></a>5.2.1. base cluster configuration > dns > domains > domains items
+#### <a name="autogenerated_heading_8"></a>5.2.1. base cluster configuration > dns > domains > domains items
 
 |          |          |
 | -------- | -------- |
@@ -2291,7 +2338,7 @@ Specific value: `{
     "description": "😅 ERROR in schema generation, a referenced schema could not be loaded, no documentation here unfortunately 🏜️"
 }`
 
-##### <a name="autogenerated_heading_8"></a>8.1.1.3. The following properties are required
+##### <a name="autogenerated_heading_9"></a>8.1.1.3. The following properties are required
 * url
 
 ##### <a name="flux_gitRepositories_additionalProperties_gitInterval"></a>8.1.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > gitInterval`
