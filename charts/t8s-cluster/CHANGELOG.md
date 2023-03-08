@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-0.3.0...t8s-cluster-v0.3.1) (2023-03-08)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** remove wrong bastion field ([#266](https://github.com/teutonet/teutonet-helm-charts/issues/266)) ([88ce007](https://github.com/teutonet/teutonet-helm-charts/commit/88ce00734802ea862ffd7878929be84a3c79a27f))
+
 ## [0.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-0.2.0...t8s-cluster-v0.3.0) (2023-03-07)
 
 
