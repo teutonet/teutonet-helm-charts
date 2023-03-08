@@ -11,11 +11,6 @@ identityRef:
   kind: Secret
 image: {{ include "t8s-cluster.clusterClass.imageVersion" .context }}
 securityGroups: {{- include "t8s-cluster.clusterClass.securityGroups" .machineDeploymentClass | nindent 2 }}
-  {{- if .Values.bastion.enabled }}
-bastion:
-  instance:
-    cloudName: {{ include "t8s-cluster.clusterClass.cloudName" (dict) }}
-  {{- end }}
   {{- with .Values.sshKeyName }}
 sshKeyName: {{ . }}
   {{- end -}}
