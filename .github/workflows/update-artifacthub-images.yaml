@@ -6,7 +6,7 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  getCharts:
+  getAllCharts:
     runs-on: ubuntu-22.04
     outputs:
       charts: ${{ steps.getCharts.outputs.charts }}
@@ -29,11 +29,10 @@ jobs:
 
   extractImagesForMultipleCharts:
     runs-on: ubuntu-22.04
-    needs:
-      - getCharts
+    needs: getAllCharts
     strategy:
       matrix:
-        chart: ${{ fromJson(needs.getCharts.outputs.charts) }}
+        chart: ${{ fromJson(needs.getAllCharts.outputs.charts) }}
     steps:
       - uses: actions/checkout@v3
         with:

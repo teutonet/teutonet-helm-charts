@@ -1,0 +1,44 @@
+name: Create Release of chart
+
+on:
+  workflow_call:
+    inputs:
+      chart: &input
+        type: string
+        required: true
+        description: The name of the chart to run against
+  workflow_dispatch:
+    inputs:
+      chart: *input
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.ACTIONS_BOT_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Extract and add helm repos and single out the changed chart
+        id: helm-repos
+        env:
+          CHART: ${{ inputs.chart }}
+        run: |
+          CHART_DIR="charts/${CHART}"
+          FILE="${CHART_DIR}/Chart.yaml"
+          yq e '.dependencies.[].repository' "$FILE" | sort -u | awk '{print NR " " $1}' | xargs -r -n 2 helm repo add
+          mkdir changed_chart
+          mv "${CHART_DIR}" changed_chart/
+          rm -rf charts
+          mv changed_chart charts
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.5.0
+        env:
+          CR_TOKEN: "${{ secrets.ACTIONS_BOT_TOKEN }}"

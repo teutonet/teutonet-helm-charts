@@ -6,46 +6,14 @@ on:
       - main
     paths:
       - charts/*/Chart.yaml
-  workflow_dispatch:
-    inputs:
-      chart:
-        type: string
-        description: The name of the chart to run against
 
 jobs:
   getChangedChart:
+    if: ${{ contains(github.event.head_commit.message, '[bot] release') }}
     uses: ./.github/workflows/get-changed-chart.yaml
-    with:
-      chart: ${{ inputs.chart }}
   release:
-    if: ${{ contains(github.event.head_commit.message, '[bot] release') || needs.getChangedChart.outputs.chart }}
-    runs-on: ubuntu-latest
+    if: ${{ contains(github.event.head_commit.message, '[bot] release') }}
     needs: getChangedChart
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.ACTIONS_BOT_TOKEN }}
-
-      - name: Configure Git
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email 'github-actions[bot]@users.noreply.github.com'
-
-      - name: Extract and add helm repos and single out the changed chart
-        id: helm-repos
-        env:
-          CHART: ${{ needs.getChangedChart.outputs.chart }}
-        run: |
-          CHART_DIR="charts/${CHART}"
-          FILE="${CHART_DIR}/Chart.yaml"
-          yq e '.dependencies.[].repository' "$FILE" | sort -u | awk '{print NR " " $1}' | xargs -r -n 2 helm repo add
-          mkdir changed_chart
-          mv "${CHART_DIR}" changed_chart/
-          rm -rf charts
-          mv changed_chart charts
-
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.5.0
-        env:
-          CR_TOKEN: "${{ secrets.ACTIONS_BOT_TOKEN }}"
+    uses: ./.github/workflows/release-chart.yaml
+    with:
+      chart: ${{ needs.getChangedChart.outputs.chart }}

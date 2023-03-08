@@ -4,7 +4,7 @@ on:
   - push
 
 jobs:
-  cog_check_job:
+  cogCheck:
     runs-on: ubuntu-latest
     name: check conventional commit compliance
     steps:
