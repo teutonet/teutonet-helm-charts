@@ -68,11 +68,14 @@ function splitYamlIntoDir() {
     # shellcheck disable=SC2016
     yq -y -s --argjson selector "$selector" '.[] | select((.kind == $selector.kind) and (.metadata.namespace == $selector.namespace) and (.metadata.name == $selector.name)) | del(.metadata.labels.chart) | del(.metadata.labels["helm.sh/chart"])' <"$yaml" >"$resourceName"
     if [[ "$kind" == "HelmRelease" ]]; then
-      "$SCRIPTS/templateHelmRelease" -1 <<<"$(sed -s '$a---' <(yq -s -y '.[] | select(.apiVersion | contains("source.toolkit.fluxcd.io"))' <"$yaml") "$resourceName")" >"${resourceName}_templated"
-      splitYamlIntoDir "${resourceName}_templated" "$(dirname "$resourceName")/$(basename -s .yaml "$resourceName")"
-      rm "${resourceName}_templated"
+      (
+        "$SCRIPTS/templateHelmRelease" -1 <<<"$(sed -s '$a---' <(yq -s -y '.[] | select(.apiVersion | contains("source.toolkit.fluxcd.io"))' <"$yaml") "$resourceName")" >"${resourceName}_templated"
+        splitYamlIntoDir "${resourceName}_templated" "$(dirname "$resourceName")/$(basename -s .yaml "$resourceName")"
+        rm "${resourceName}_templated"
+      ) &
     fi
   done
+  wait
 }
 
 function generateComment() {
@@ -83,20 +86,29 @@ function generateComment() {
 
   for values in "$chart/values.yaml" "$chart/ci/"*-values.yaml; do
     [[ -f "$values" ]] || continue
+    (
+      originalResourcesDir="$TMP_DIR/original-$(basename -s .yaml "$values")"
+      newResourcesDir="$TMP_DIR/new-$(basename -s .yaml "$values")"
+
+      mkdir "$originalResourcesDir" "$newResourcesDir"
+
+      "$SCRIPTS/templateGitHelmChart" -1 "$GITHUB_REPO_URL" "$chart" "${GITHUB_DEFAULT_BRANCH}" "$values" | yq -y -S >"$originalResourcesDir.yaml"
+      splitYamlIntoDir "$originalResourcesDir.yaml" "$originalResourcesDir"
+
+      "$SCRIPTS/templateLocalHelmChart" -1 "$chart" "$values" | yq -y -S >"$newResourcesDir.yaml"
+      splitYamlIntoDir "$newResourcesDir.yaml" "$newResourcesDir"
+    ) &
+  done
+  wait
+  for values in "$chart/values.yaml" "$chart/ci/"*-values.yaml; do
+    [[ -f "$values" ]] || continue
     originalResourcesDir="$TMP_DIR/original-$(basename -s .yaml "$values")"
     newResourcesDir="$TMP_DIR/new-$(basename -s .yaml "$values")"
-
-    mkdir "$originalResourcesDir" "$newResourcesDir"
-
-    "$SCRIPTS/templateGitHelmChart" -1 "$GITHUB_REPO_URL" "$chart" "${GITHUB_DEFAULT_BRANCH}" "$values" | yq -y -S >"$originalResourcesDir.yaml"
-    splitYamlIntoDir "$originalResourcesDir.yaml" "$originalResourcesDir"
-
-    "$SCRIPTS/templateLocalHelmChart" -1 "$chart" "$values" | yq -y -S >"$newResourcesDir.yaml"
-    splitYamlIntoDir "$newResourcesDir.yaml" "$newResourcesDir"
 
     diffs+=(
       [$values]="$(diff -ur "$originalResourcesDir" "$newResourcesDir" | curl -s -F syntax=diff -F "content=<-" https://dpaste.com/api/v2/)"
     )
+    sleep 2
   done
 
   echo :robot: I have diffed this *beep* *boop*

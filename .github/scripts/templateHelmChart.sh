@@ -80,11 +80,16 @@ function templateHelmRelease() {
 }
 
 function templateLocalHelmChart() {
-  local chart="${1?}"
+  local chartPath="${1?}"
   local values="${2:-$chart/ci/artifacthub-values.yaml}"
+  local chart
+  chart="$(basename "$chartPath")"
+  local tmpDir
+  tmpDir=$(mktemp -d -p "$TMP_DIR")
   echo "Templating '$chart' with '$values'" >/dev/stderr
-  helm dependency update "$chart" >/dev/null
-  helm template "$(basename "$chart")" "$chart" --values "$values"
+  cp -r "$chartPath" "$tmpDir/$chart"
+  helm dependency update "$tmpDir/$chart" >/dev/null
+  helm template "$chart" "$tmpDir/$chart" --values "$values"
 }
 
 function templateSubHelmCharts() {
