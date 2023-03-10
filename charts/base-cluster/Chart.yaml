@@ -28,9 +28,9 @@ annotations:
     - image: docker.io/grafana/promtail:2.7.2
     - image: docker.io/vladgh/gpg@sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
     - image: ghcr.io/aquasecurity/trivy-operator:0.12.0
-    - image: ghcr.io/kyverno/cleanup-controller:v1.9.0
-    - image: ghcr.io/kyverno/kyverno:v1.9.0
-    - image: ghcr.io/kyverno/kyvernopre:v1.9.0
+    - image: ghcr.io/kyverno/cleanup-controller:v1.9.1
+    - image: ghcr.io/kyverno/kyverno:v1.9.1
+    - image: ghcr.io/kyverno/kyvernopre:v1.9.1
     - image: grafana/grafana-image-renderer:latest
     - image: grafana/grafana:9.3.8
     - image: grafana/loki:2.6.1
@@ -46,4 +46,4 @@ annotations:
     - image: registry.k8s.io/descheduler/descheduler:v0.26.0
     - image: registry.k8s.io/ingress-nginx/controller:v1.6.4@sha256:15be4666c53052484dd2992efacf2f50ea77a78ae8aa21ccd91af6baaa7ea22f
     - image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20221220-controller-v1.5.1-58-g787ea74b6
-    - image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.8.0
+    - image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.8.1
