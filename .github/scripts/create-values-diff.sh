@@ -7,8 +7,20 @@ set -o pipefail
 
 issue=${1?You need to provide the issue ID}
 chart=${2?You need to provide the chart name}
+dryRun=false
+case "$3" in
+  --dry-run)
+    dryRun=true
+    ;;
+  *)
+    echo "Option '$3' not supported" >/dev/stderr
+    exit 1
+    ;;
+esac
+
 GITHUB_API_URL="${GITHUB_API_URL:-https://api.github.com}"
-if command -v gh &> /dev/null; then
+
+if command -v gh &>/dev/null; then
   if ! [[ -v GITHUB_TOKEN ]]; then
     GITHUB_TOKEN=$(gh auth token)
   else
@@ -51,7 +63,7 @@ function splitYamlIntoDir() {
     fi
     mkdir -p "$(dirname "$resourceName")"
     # shellcheck disable=SC2016
-    yq -y -s --argjson selector "$selector" '.[] | select((.kind == $selector.kind) and (.metadata.namespace == $selector.namespace) and (.metadata.name == $selector.name))' <"$yaml" >"$resourceName"
+    yq -y -s --argjson selector "$selector" '.[] | select((.kind == $selector.kind) and (.metadata.namespace == $selector.namespace) and (.metadata.name == $selector.name)) | del(.metadata.labels.chart) | del(.metadata.labels["helm.sh/chart"])' <"$yaml" >"$resourceName"
     if [[ "$kind" == "HelmRelease" ]]; then
       "$SCRIPTS/templateHelmRelease" -1 <<<"$(sed -s '$a---' <(yq -s -y '.[] | select(.apiVersion | contains("source.toolkit.fluxcd.io"))' <"$yaml") "$resourceName")" >"${resourceName}_templated"
       splitYamlIntoDir "${resourceName}_templated" "$(dirname "$resourceName")/$(basename -s .yaml "$resourceName")"
@@ -73,10 +85,10 @@ function generateComment() {
 
     mkdir "$originalResourcesDir" "$newResourcesDir"
 
-    "$SCRIPTS/templateGitHelmChart" -1 "$GITHUB_REPO_URL" "$chart" "${GITHUB_DEFAULT_BRANCH}" "$values" | grep -v -e "\shelm.sh/chart:" -e "\schart:" | yq -y -S >"$originalResourcesDir.yaml"
+    "$SCRIPTS/templateGitHelmChart" -1 "$GITHUB_REPO_URL" "$chart" "${GITHUB_DEFAULT_BRANCH}" "$values" | yq -y -S >"$originalResourcesDir.yaml"
     splitYamlIntoDir "$originalResourcesDir.yaml" "$originalResourcesDir"
 
-    "$SCRIPTS/templateLocalHelmChart" -1 "$chart" "$values" | grep -v -e "\shelm.sh/chart:" -e "\schart:" | yq -y -S >"$newResourcesDir.yaml"
+    "$SCRIPTS/templateLocalHelmChart" -1 "$chart" "$values" | yq -y -S >"$newResourcesDir.yaml"
     splitYamlIntoDir "$newResourcesDir.yaml" "$newResourcesDir"
 
 
@@ -95,7 +107,11 @@ function generateComment() {
   echo ---
   echo
   for values in "${!diffs[@]}"; do
-    echo "[$values](${diffs[$values]})"
+    if [[ "${diffs[$values]}" = *'This field is required.'* ]]; then
+      echo "$values has no changes"
+    else
+      echo "[$values](${diffs[$values]})"
+    fi
     echo
   done
 }
@@ -126,18 +142,21 @@ function updateComment() {
       -d @-
 }
 
-existingCommentId="$(
-  curl --silent --fail-with-body \
-    -H 'Accept: application/vnd.github+json' \
-    -H "Authorization: token ${GITHUB_TOKEN}" \
-    "${GITHUB_API_REPO_URL}/issues/${issue}/comments" |
-    jq '. | map(select(.body | contains(":robot: I have diffed this *beep* *boop*")))[0].id'
-)"
-
 body=$(generateComment "$chart")
 
-if [[ "$existingCommentId" == null ]]; then
-  createComment "$issue" "$body"
+if [[ "$dryRun" == false ]]; then
+  if [[ "$existingCommentId" == null ]]; then
+    createComment "$issue" "$body"
+  else
+    existingCommentId="$(
+      curl --silent --fail-with-body \
+        -H 'Accept: application/vnd.github+json' \
+        -H "Authorization: token ${GITHUB_TOKEN}" \
+        "${GITHUB_API_REPO_URL}/issues/${issue}/comments" |
+        jq '. | map(select(.body | contains(":robot: I have diffed this *beep* *boop*")))[0].id'
+    )"
+    updateComment "$body" "$existingCommentId"
+  fi
 else
-  updateComment "$body" "$existingCommentId"
+  echo "$body"
 fi
