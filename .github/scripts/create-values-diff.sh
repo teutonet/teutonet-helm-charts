@@ -7,16 +7,19 @@ set -o pipefail
 
 issue=${1?You need to provide the issue ID}
 chart=${2?You need to provide the chart name}
-dryRun=false
-case "$3" in
-  --dry-run)
-    dryRun=true
-    ;;
-  *)
-    echo "Option '$3' not supported" >/dev/stderr
-    exit 1
-    ;;
-esac
+if [[ -v 3 ]]; then
+  case "$3" in
+    --dry-run)
+      dryRun=true
+      ;;
+    *)
+      echo "Option '$3' not supported" >/dev/stderr
+      exit 1
+      ;;
+  esac
+else
+  dryRun=false
+fi
 
 GITHUB_API_URL="${GITHUB_API_URL:-https://api.github.com}"
 
@@ -90,7 +93,6 @@ function generateComment() {
 
     "$SCRIPTS/templateLocalHelmChart" -1 "$chart" "$values" | yq -y -S >"$newResourcesDir.yaml"
     splitYamlIntoDir "$newResourcesDir.yaml" "$newResourcesDir"
-
 
     diffs+=(
       [$values]="$(diff -ur "$originalResourcesDir" "$newResourcesDir" | curl -s -F syntax=diff -F "content=<-" https://dpaste.com/api/v2/)"
