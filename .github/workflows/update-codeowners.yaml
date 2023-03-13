@@ -22,6 +22,7 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           commit-message: "chore: [bot] Update 'CODEOWNERS'"
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           branch: chore/update-codeowners
           title: "chore: Update CODEOWNERS"
       - name: Set PR to auto-merge
