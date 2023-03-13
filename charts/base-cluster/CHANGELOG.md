@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.1.0...base-cluster-v4.1.1) (2023-03-13)
+
+
+### Bug Fixes
+
+* **base-cluster/validation:** ssh regex ([#270](https://github.com/teutonet/teutonet-helm-charts/issues/270)) ([0567f66](https://github.com/teutonet/teutonet-helm-charts/commit/0567f6656ae669832656912870151a6788433d91))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/artifacthub-images:** Update ArtifactHUB images ([#273](https://github.com/teutonet/teutonet-helm-charts/issues/273)) ([d41cada](https://github.com/teutonet/teutonet-helm-charts/commit/d41cada6a879e2ce268fb92f7c2a14635bfa1da9))
+* **base-cluster/artifacthub-images:** Update ArtifactHUB images ([#283](https://github.com/teutonet/teutonet-helm-charts/issues/283)) ([4535610](https://github.com/teutonet/teutonet-helm-charts/commit/4535610925e77057591b7ebe8cd4edf5280a3f6d))
+* **deps:** update docker.io/fluxcd/flux-cli docker tag to v0.41.0 ([#276](https://github.com/teutonet/teutonet-helm-charts/issues/276)) ([fce38d0](https://github.com/teutonet/teutonet-helm-charts/commit/fce38d017997903d53ad30e5f0b43d1b453632b8))
+* **deps:** update docker.io/fluxcd/flux-cli docker tag to v0.41.1 ([#282](https://github.com/teutonet/teutonet-helm-charts/issues/282)) ([2b24d9e](https://github.com/teutonet/teutonet-helm-charts/commit/2b24d9e193c0d79494b230916b49fb1a617a6104))
+
 ## [4.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.0.0...base-cluster-v4.1.0) (2023-03-07)
 
 
