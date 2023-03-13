@@ -37,6 +37,7 @@ function getImages() {
   local chart="$1"
   templateLocalHelmChart "$chart" |
     grep -E '\s+image: \S+' |
+    grep -v 'artifacthub-ignore' |
     awk '{print $NF}' |
     tr -d '"' |
     sort -u |
