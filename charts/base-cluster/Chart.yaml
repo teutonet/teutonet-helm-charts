@@ -24,10 +24,10 @@ annotations:
     - image: curlimages/curl:7.85.0
     - image: docker.io/bitnami/kubectl:1.26.2
     - image: docker.io/bitnami/metrics-server:0.6.2-debian-11-r33
-    - image: docker.io/fluxcd/flux-cli:v0.40.2
+    - image: docker.io/fluxcd/flux-cli:v0.41.0
     - image: docker.io/grafana/promtail:2.7.2
     - image: docker.io/vladgh/gpg@sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
-    - image: ghcr.io/aquasecurity/trivy-operator:0.12.0
+    - image: ghcr.io/aquasecurity/trivy-operator:0.12.1
     - image: ghcr.io/kyverno/cleanup-controller:v1.9.1
     - image: ghcr.io/kyverno/kyverno:v1.9.1
     - image: ghcr.io/kyverno/kyvernopre:v1.9.1
