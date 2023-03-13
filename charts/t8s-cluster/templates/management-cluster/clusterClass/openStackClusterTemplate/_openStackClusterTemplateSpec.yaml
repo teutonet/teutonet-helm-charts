@@ -15,7 +15,7 @@ bastion:
     identityRef:
       kind: Secret
       name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" .context }}
-    image: Ubuntu 20.04
+    image: Ubuntu 20.04 # artifacthub-ignore
     sshKeyName: {{ .Values.bastion.sshKeyName }}
 cloudName: {{ include "t8s-cluster.clusterClass.cloudName" (dict) }}
 disablePortSecurity: false
