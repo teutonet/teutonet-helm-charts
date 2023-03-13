@@ -1,6 +1,6 @@
 # base-cluster
 
-![Version: 4.1.0](https://img.shields.io/badge/Version-4.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 4.1.1](https://img.shields.io/badge/Version-4.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -2196,9 +2196,9 @@ Specific value: `{
 
 **Description:** This needs to follow flux's way of writing this url, see https://fluxcd.io/flux/components/source/gitrepositories/#url
 
-| Restrictions                      |                                                                                                                                                           |
-| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Must match regular expression** | ```^ssh://.+@[^:]+(?::\d+)?[^:]*$``` [Test](https://regex101.com/?regex=%5Essh%3A%2F%2F.%2B%40%5B%5E%3A%5D%2B%28%3F%3A%3A%5Cd%2B%29%3F%5B%5E%3A%5D%2A%24) |
+| Restrictions                      |                                                                                                                                                               |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Must match regular expression** | ```^ssh://.+@[^:]+(?::\d+/)?[^:]*$``` [Test](https://regex101.com/?regex=%5Essh%3A%2F%2F.%2B%40%5B%5E%3A%5D%2B%28%3F%3A%3A%5Cd%2B%2F%29%3F%5B%5E%3A%5D%2A%24) |
 
 ##### <a name="flux_gitRepositories_additionalProperties_allOf_i1"></a>8.1.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1`
 
