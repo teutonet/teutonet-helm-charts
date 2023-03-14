@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: {{ printf "%s-%s" (.context.Release.Name) .name }}
+  name: {{ printf "%s-%s" .context.Release.Name .name }}
   namespace: {{ .context.Release.Namespace }}
   labels: {{- include "common.labels.standard" .context | nindent 4 }}
     {{- with .additionalLabels }}
