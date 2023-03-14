@@ -8,7 +8,7 @@ on:
     paths:
       - charts/**
     branches-ignore:
-      - release-please--branches--main--components-*
+      - release-please--branches--main--components-**
 
 jobs:
   getChangedChart:
