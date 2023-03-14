@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.3.3](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v0.3.2...t8s-cluster-v0.3.3) (2023-03-14)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** ignore machine images for artifa… ([#281](https://github.com/teutonet/teutonet-helm-charts/issues/281)) ([47bfe4c](https://github.com/teutonet/teutonet-helm-charts/commit/47bfe4cd48874eedf9cea7d8de798097102cdad9))
+* **t8s-cluster/workload-cluster:** change names 😅 *again* ([#240](https://github.com/teutonet/teutonet-helm-charts/issues/240)) ([54198b2](https://github.com/teutonet/teutonet-helm-charts/commit/54198b22045d1e4ea8af2689cbf00a7fb5b670c2))
+
+
+### Miscellaneous Chores
+
+* **main:** [bot] release t8s-cluster:0.3.2 ([#277](https://github.com/teutonet/teutonet-helm-charts/issues/277)) ([c7e83f0](https://github.com/teutonet/teutonet-helm-charts/commit/c7e83f0894a4b103d93fb4970ead27c64b7771d3))
+* **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#272](https://github.com/teutonet/teutonet-helm-charts/issues/272)) ([9b4270a](https://github.com/teutonet/teutonet-helm-charts/commit/9b4270ac347ca676a4c0f07f0d1c1851debf4509))
+* **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#287](https://github.com/teutonet/teutonet-helm-charts/issues/287)) ([0ada4a3](https://github.com/teutonet/teutonet-helm-charts/commit/0ada4a3b8167eec758ddaab16ef7f6c3e462ef73))
+
 ## [0.3.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-0.3.1...t8s-cluster-v0.3.2) (2023-03-13)
 
 
