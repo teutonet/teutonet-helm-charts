@@ -3,13 +3,16 @@ name: Create Release PR for chart
 on:
   workflow_call:
     inputs:
-      chart: &input
+      chart:
         type: string
         required: true
         description: The name of the chart to run against
   workflow_dispatch:
     inputs:
-      chart: *input
+      chart:
+        type: string
+        required: true
+        description: The name of the chart to run against
 
 jobs:
   createReleasePR:
