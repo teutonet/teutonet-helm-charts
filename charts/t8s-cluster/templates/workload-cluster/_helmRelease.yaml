@@ -21,6 +21,9 @@ spec:
   kubeConfig:
     secretRef:
       name: {{ .context.Release.Name }}-kubeconfig
+  install:
+    remediation:
+      retries: -1
   storageNamespace: kube-system
   targetNamespace: kube-system
   releaseName: {{ .name }}
