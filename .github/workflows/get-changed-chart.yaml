@@ -1,4 +1,4 @@
-name: Auto-version Charts
+name: Get single changed chart in last commit
 
 on:
   workflow_call:
@@ -10,10 +10,10 @@ on:
     outputs:
       chart:
         description: The name of the changed cart in the last commit
-        value: ${{ jobs.get_changed_chart.outputs.chart }}
+        value: ${{ jobs.getChangedChart.outputs.chart }}
 
 jobs:
-  get_changed_chart:
+  getChangedChart:
     runs-on: ubuntu-latest
     outputs:
       chart: ${{ steps.getChartName.outputs.chart }}

@@ -27,7 +27,7 @@ jobs:
               yq e '.dependencies.[].repository' "$FILE"
             done | sort -u | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
             echo
-          ) | tee $GITHUB_OUTPUT
+          ) | tee "$GITHUB_OUTPUT"
 
       - uses: actions/setup-python@v4
         with:

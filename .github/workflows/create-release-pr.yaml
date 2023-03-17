@@ -1,0 +1,63 @@
+name: Create Release PR for chart
+
+on:
+  workflow_call:
+    inputs:
+      chart: &input
+        type: string
+        required: true
+        description: The name of the chart to run against
+  workflow_dispatch:
+    inputs:
+      chart: *input
+
+jobs:
+  createReleasePR:
+    runs-on: ubuntu-latest
+    env:
+      CT_TARGET_BRANCH: ${{ github.event.repository.default_branch }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - id: getLatestReleaseHash
+        name: Get latest release for the changed chart
+        env:
+          chart: ${{ inputs.chart }}
+        run: |
+          set -x
+          set -o pipefail
+          chart=${chart:?chart variable is empty}
+          (
+            echo "chart=${chart}"
+            echo -n hash=
+            (
+              curl -H "Authorization: Bearer ${{ secrets.ACTIONS_BOT_TOKEN }}" "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/releases" \
+                | jq -r ".[] | select(.name | startswith(\"${chart}-\")) | \"\\(.published_at)\\t\\(.target_commitish)\"" \
+                | sort -k 1 \
+                | tail -n 1 \
+                | cut -f 2 \
+                | grep -E .
+            ) || (
+              git rev-list HEAD "charts/$chart" | tail -n 1
+            )
+          ) | tee "$GITHUB_OUTPUT"
+
+      - name: Change to github-actions[bot]
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+
+      - uses: google-github-actions/release-please-action@v3
+        with:
+          path: charts/${{ inputs.chart }}
+          token: ${{ secrets.ACTIONS_BOT_TOKEN }}
+          release-type: helm
+          monorepo-tags: true
+          changelog-types: '[{"type":"feat","section":"Features"},{"type":"fix","section":"Bug Fixes"},{"type":"chore","section":"Miscellaneous Chores"}]'
+          pull-request-title-pattern: "chore${scope}: [bot] release${component}:${version}"
+          separate-pull-requests: true
+          package-name: ${{ inputs.chart }}
+          command: release-pr
+          last-release-sha: ${{ steps.getLatestReleaseHash.outputs.hash }}
