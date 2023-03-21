@@ -100,6 +100,8 @@ global:
         external-dns: 6.x.x
     descheduler:
       url: https://kubernetes-sigs.github.io/descheduler
+      charts:
+        descheduler: 0.26.x
       condition: '{{ .Values.descheduler.enabled }}'
     jetstack:
       url: https://charts.jetstack.io
