@@ -1,6 +1,6 @@
 {{- range $name, $machineDeploymentClass := (merge (deepCopy .Values.workers) (dict "control-plane" .Values.controlPlane)) }}
 {{- if false }}
-apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha6
 {{- else }}
 apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
 {{- end }}
