@@ -81,7 +81,7 @@ function templateHelmRelease() {
 
 function templateLocalHelmChart() {
   local chartPath="${1?}"
-  local values="${2:-$chart/ci/artifacthub-values.yaml}"
+  local values="${2:-$chartPath/ci/artifacthub-values.yaml}"
   local chart
   chart="$(basename "$chartPath")"
   local tmpDir
