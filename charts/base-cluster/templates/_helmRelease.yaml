@@ -11,7 +11,7 @@ metadata:
 spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "cetic" "chart" "static" "context" .context) | nindent 6 }}
-  interval: 30m
+  interval: 1h
   dependsOn:
     {{- range $namespace, $name := .dependencies }}
     - name: {{ $name }}

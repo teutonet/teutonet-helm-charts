@@ -10,7 +10,7 @@ metadata:
 spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "bitnami" "chart" "metrics-server" "context" $) | nindent 6 }}
-  interval: 1m
+  interval: 1h
   values:
     apiService:
       create: true

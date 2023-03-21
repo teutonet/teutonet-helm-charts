@@ -10,7 +10,7 @@ metadata:
 spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "nfs-server-provisioner" "chart" "nfs-server-provisioner" "context" $) | nindent 6 }}
-  interval: 1m
+  interval: 1h
   values:
     storageClass:
       name: {{ .Values.storage.readWriteMany.storageClass.name }}
