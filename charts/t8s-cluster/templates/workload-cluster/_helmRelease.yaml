@@ -17,7 +17,7 @@ spec:
         kind: HelmRepository
         name: {{ printf "%s-cetic" .context.Release.Name }}
         namespace: {{ .context.Release.Namespace }}
-  interval: 30m
+  interval: 1h
   kubeConfig:
     secretRef:
       name: {{ .context.Release.Name }}-kubeconfig
