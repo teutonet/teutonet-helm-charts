@@ -34,11 +34,11 @@
           "enum": [
             "None",
             "24x7",
-            "Working-Hours"
+            "WorkingHours"
           ]
         },
         "customerID": {
-          "type": "string"
+          "type": "integer"
         },
         "customerName": {
           "type": "string"

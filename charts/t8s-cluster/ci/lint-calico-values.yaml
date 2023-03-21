@@ -8,7 +8,7 @@ controlPlane:
   nodeDrainTimeout: 5m
 metadata:
   serviceLevelAgreement: None
-  customerID: "1000"
+  customerID: 1000
   customerName: test
 workers:
   default:
