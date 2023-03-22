@@ -125,7 +125,7 @@ global:
     nfs-server-provisioner:
       url: https://kubernetes-sigs.github.io/nfs-ganesha-server-and-external-provisioner
       charts:
-        nfs-server-provisioner: 1.7.0
+        nfs-server-provisioner: 1.8.0
       condition: '{{ .Values.storage.readWriteMany.enabled }}'
     teuto-net:
       url: https://teutonet.github.io/teutonet-helm-charts
