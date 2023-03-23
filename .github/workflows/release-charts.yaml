@@ -32,6 +32,8 @@ jobs:
         env:
           CHARTS: ${{ needs.getChangedCharts.outputs.charts }}
         run: |
+          set -ex
+          set -o pipefail
           mkdir changed_charts
           for CHART in $(jq -r '. | values[]' <"$CHARTS"); do
             CHART_DIR="charts/${CHART}"
