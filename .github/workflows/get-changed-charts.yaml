@@ -16,6 +16,8 @@ jobs:
       CT_TARGET_BRANCH: ${{ github.event.repository.default_branch }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - uses: helm/chart-testing-action@v2.3.1
 
