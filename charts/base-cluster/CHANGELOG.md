@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.1.1...base-cluster-v4.2.0) (2023-03-23)
+
+
+### Features
+
+* **base-cluster/docs:** add info about components ([#291](https://github.com/teutonet/teutonet-helm-charts/issues/291)) ([575878f](https://github.com/teutonet/teutonet-helm-charts/commit/575878f65dd7360f4b9da92fa5388fe734beace3)), closes [#290](https://github.com/teutonet/teutonet-helm-charts/issues/290)
+
+
+### Miscellaneous Chores
+
+* **deps:** update docker.io/bitnami/kubectl docker tag to v1.26.3 ([#307](https://github.com/teutonet/teutonet-helm-charts/issues/307)) ([c017239](https://github.com/teutonet/teutonet-helm-charts/commit/c0172397c9a54bef788948de3210ef9350d99147))
+* **deps:** update docker.io/fluxcd/flux-cli docker tag to v0.41.2 ([#303](https://github.com/teutonet/teutonet-helm-charts/issues/303)) ([9d9b327](https://github.com/teutonet/teutonet-helm-charts/commit/9d9b32751273db9a688d76be219f846b0a931364))
+* **deps:** update helm release common to v2.2.4 ([#264](https://github.com/teutonet/teutonet-helm-charts/issues/264)) ([4e4f4ed](https://github.com/teutonet/teutonet-helm-charts/commit/4e4f4edcceeec46b2df23f3e2d9d152d296f8933))
+* **deps:** update helm release nfs-server-provisioner to v1.8.0 ([#265](https://github.com/teutonet/teutonet-helm-charts/issues/265)) ([a72e3ff](https://github.com/teutonet/teutonet-helm-charts/commit/a72e3ff0eb12bcbc360e46a9790e6c717f63ba32)), closes [#263](https://github.com/teutonet/teutonet-helm-charts/issues/263)
+
 ## [4.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.1.0...base-cluster-v4.1.1) (2023-03-13)
 
 
