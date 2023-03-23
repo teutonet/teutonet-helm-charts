@@ -1,0 +1,12 @@
+name: Validate Pull Request
+
+on:
+  merge_group:
+    types:
+      - checks_requested
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Always success'

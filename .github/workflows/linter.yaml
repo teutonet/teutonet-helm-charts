@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - charts/**
+  merge_group:
+    types:
+      - checks_requested
 
 jobs:
   build:
