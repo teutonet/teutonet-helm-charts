@@ -1,7 +1,7 @@
 apiVersion: v2
 name: base-cluster
 type: application
-version: 4.1.1
+version: 4.2.0
 icon: https://teuto.net/favicon.ico
 maintainers:
   - name: cwrau
@@ -22,19 +22,18 @@ annotations:
     - image: bats/bats:v1.4.1
     - image: busybox:1.35
     - image: curlimages/curl:7.85.0
-    - image: docker.io/bitnami/kubectl:1.26.2
-    - image: docker.io/bitnami/metrics-server:0.6.2-debian-11-r33
-    - image: docker.io/fluxcd/flux-cli:v0.41.1
+    - image: docker.io/bitnami/kubectl:1.26.3
+    - image: docker.io/bitnami/metrics-server:0.6.3-debian-11-r0
+    - image: docker.io/fluxcd/flux-cli:v0.41.2
     - image: docker.io/grafana/promtail:2.7.2
     - image: docker.io/vladgh/gpg@sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
     - image: ghcr.io/aquasecurity/trivy-operator:0.12.1
-    - image: ghcr.io/kyverno/cleanup-controller:v1.9.1
-    - image: ghcr.io/kyverno/kyverno:v1.9.1
-    - image: ghcr.io/kyverno/kyvernopre:v1.9.1
+    - image: ghcr.io/kyverno/cleanup-controller:v1.9.2
+    - image: ghcr.io/kyverno/kyverno:v1.9.2
+    - image: ghcr.io/kyverno/kyvernopre:v1.9.2
     - image: grafana/grafana-image-renderer:latest
     - image: grafana/grafana:9.3.8
     - image: grafana/loki:2.6.1
-    - image: k8s.gcr.io/sig-storage/nfs-provisioner:v4.0.8
     - image: quay.io/jetstack/cert-manager-cainjector:v1.11.0
     - image: quay.io/jetstack/cert-manager-controller:v1.11.0
     - image: quay.io/jetstack/cert-manager-ctl:v1.11.0
@@ -47,3 +46,4 @@ annotations:
     - image: registry.k8s.io/ingress-nginx/controller:v1.6.4@sha256:15be4666c53052484dd2992efacf2f50ea77a78ae8aa21ccd91af6baaa7ea22f
     - image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20221220-controller-v1.5.1-58-g787ea74b6
     - image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.8.1
+    - image: registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8

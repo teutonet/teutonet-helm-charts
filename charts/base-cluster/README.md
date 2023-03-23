@@ -1,6 +1,7 @@
+[modeline]: # ( vim: set ft=markdown: )
 # base-cluster
 
-![Version: 4.1.1](https://img.shields.io/badge/Version-4.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 4.2.0](https://img.shields.io/badge/Version-4.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -20,7 +21,7 @@ A common base for every kubernetes cluster
 git init
 
 # create empty cluster HelmRelease;
-flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 3.x.x > cluster.yaml
+flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 4.x.x > cluster.yaml
 
 # maybe use the following name for your cluster;
 kubectl get node -o jsonpath='{.items[0].metadata.annotations.cluster\.x-k8s\.io/cluster-name}'
@@ -41,24 +42,154 @@ git push
 
 # after this you should be on the KUBECONFIG for the cluster
 # we explicitly do not use `flux bootstrap` or `flux install` as this creates kustomization stuff and installs flux manually
+kubectl apply --server-side -f flux.yaml # ignore the errors about missing CRDs
 helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io/helm-charts --version 2.x.x --atomic
 
 # manual initial installation of the chart, afterwards the chart takes over
 # after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
-helm install -n flux-system base-cluster base-cluster --repo https://teutonet.github.io/teutonet-helm-charts --version 3.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
+helm install -n flux-system base-cluster base-cluster --repo https://teutonet.github.io/teutonet-helm-charts --version 4.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
 
 # you can use this command to get the instructions again
+# e.g. when adding users, gitRepositories, ...
 helm -n flux-system get notes base-cluster
 ```
 
 ## Cluster components
 
-### Certificates for your Ingresses
+### Component [cert-manager](#certManager)
 
-Certificates are handled by [cert-manager](https://cert-manager.io)
+[manager](https://cert-manager.io) takes care of creating SSL certificates
+for your Ingresses (and [other needs](https://cert-manager.io/docs/usage/))
 
-1. set `.certManager.email` to your email for the Let's Encrypt account
-2. add `kubernetes.io/tls-acme: "true"` to your Ingress's annotations
+1. set `.certManager.email` to your email for the Let's Encrypt account to enable
+   certificates
+
+To create wildcard certificates, you need to enable a [DNS Provider](#component-dns)
+
+Then you can just create a [`Certiticate`](https://cert-manager.io/docs/usage/certificate/)
+resource.
+
+### Component [descheduler](#descheduler)
+
+The [descheduler](https://github.com/kubernetes-sigs/descheduler) runs periodically
+and tries to average the load across the nodes by deleting pods on fuller nodes
+so the kube-scheduler can, hopefully, schedule them on nodes with more space.
+
+Additionally, the descheduler also tries to reconcile `topologySpreadConstraints`
+and affinities.
+
+If the cluster is _semi_ underspecced or the individual applications have unperfect
+resource requests, the descheduler might lead to period restarting of random pods.
+
+In that case you should disable the deschedler.
+
+### Component [dns](#dns)
+
+The [external-dns](https://github.com/kubernetes-sigs/external-dns) creates, updates,
+deletes and syncs DNS records for your Ingresses.
+
+1. set `.dns.provider.<provider>` to your implementation:
+    - cloudflare: `.dns.provider.cloudflare.apiToken`
+
+If you need a different provider than cloudflare, please open a ticket for one of
+the [supported ones](https://github.com/kubernetes-sigs/external-dns#status-of-providers)
+which is also supprted by [cert-manager](https://cert-manager.io/docs/configuration/acme/dns01/#supported-dns01-providers)
+
+### Component [ingress](#ingress)
+
+The included [`nginx` ingress-controller](https://docs.nginx.com/nginx-ingress-controller)
+only works for the `IngressClassName: nginx`.
+
+#### TLS
+
+1. add `kubernetes.io/tls-acme: "true"` to your Ingress's annotations
+    - additionally, although not advised unless you know what you're doing,
+      you can explicitly choose the Issuer by using these annotations:
+      - `cert-manager.io/cluster-issuer: letsencrypt-staging`
+      - `cert-manager.io/cluster-issuer: letsencrypt-production`
+
+#### IP Address
+
+If you want to make sure that, in the event of a catastrophic failure, you keep the
+same IP adress, you should roll this out, get the assigned IP
+(`kubectl -n ingress-nginx get svc ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress}'`)
+and set `.ingress.IP=<ip>` in the values. This makes sure the IP is kept in your
+project (may incur cost!), which means you can re-use it later or after recovery.
+
+### Component [flux](#flux)
+
+[Flux](https://fluxcd.io) is used to deploy resources to your cluster and to
+keep them in sync.
+
+Flux can also auto-update images and HelmReleases.
+
+You can create any number of gitRepository connections, with SSH(recommended)
+or https checkout, with or without SOPS, ... .
+
+### Component [kyverno](#kyverno)
+
+You can optionally enable [kyverno](https://kyverno.io), which is a policy
+system, allowing you to specify in-depth policies to prevent or force certain
+things in your cluster.
+
+### Component [monitoring](#monitoring)
+
+#### Sub-Component [prometheus](#monitoring_prometheus)
+
+[Prometheus](https://prometheus.io) takes care of scraping metrics and alerting.
+
+#### Sub-Component [grafana](#monitoring_grafana)
+
+[Grafana](https://grafana.com) is used to create dashboards to visualize your
+metrics and the health of your cluster and applications.
+
+#### Sub-Component [loki](#monitoring_loki)
+
+[Loki](https://grafana.com/oss/loki) collects logs from across the cluster and
+allows to have a centralized, non-CLI, view of the logs and to create alerting
+based on them.
+
+#### Sub-Component [metrics-server](#monitoring_metricsServer)
+
+[Metrics Server](https://github.com/kubernetes-sigs/metrics-server) implements
+the [kubernetes Metrics API](https://github.com/kubernetes/metrics) to allow
+for [Horizontal Autoscaling](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale),
+[Vertical Autoscaling](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler)
+and to allow `kubectl top` and tools like [k9s](https://k9scli.io) to show
+resource usage for your pods and nodes.
+
+#### Sub-Component [securityScanning](#monitoring_securityScanning)
+
+The included [trivy](https://aquasecurity.github.io/trivy-operator) scans the
+running workload in your cluster for CVEs and creates
+[Custom Resources](https://aquasecurity.github.io/trivy-operator/v0.12.1/docs/crds)
+to present the results.
+
+### Component [storage](#storage)
+
+The included [NFS Ganesha server and external provisioner](https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner)
+provides rudimentary support for RWM volumes if needed.
+
+> ⚠️  This is _not_ highly available, and the software itself _does not_ support
+it you should only use this if there is no other choice and make sure you're
+cloud provider knows about this, because a node rotation _will_ result in a
+downtime for all attaches applications!
+
+### Component [rbac](#rbac)
+
+This chart gives you the ability to create serviceAccounts, roles, roleBindings,
+[namespaces](#miscellaneous) and KUBECONFIG files with a, hopefully easy to
+understand, DSL.
+
+After configuring your stuff you can fetch the KUBECONFIGs with the help of the
+output of `helm -n flux-system get notes base-cluster`
+
+### Miscellaneous
+
+- You can create [`HelmRepositoy`s](#global); `.global.helmRepositories.<name>.url=<url>`
+- You can create [cluster-wide certificates](#global_certificates); `.global.certificates.<name>.dnsNames=[<domain>]`
+- You can create [namespaces](#global_namespaces); `.global.namespaces.<name>={}`
+- You can create [cluster-wide imageCredentials](#global); `.global.imageCredentials.<name>.{host,username,password}`
 
 ## Source Code
 
@@ -68,22 +199,25 @@ Certificates are handled by [cert-manager](https://cert-manager.io)
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.2.3 |
+| https://charts.bitnami.com/bitnami | common | 2.2.4 |
 
-This helm chart requires flux v2 to be installed (https://fluxcd.io/docs/installation)
+This helm chart requires [flux v2 to be installed](https://fluxcd.io/docs/installation),
+see [bootstrap](#cluster-bootstrap)
 
 The various components are automatically updated to the latest minor and patch version.
 
 This excludes:
 
-- descheduler, its version is bound to the k8s version and they have not released 1.0.0
+- descheduler, its version is bound to the k8s version and they have not released
+  1.0.0
 
 ## Migration
 
 ### 0.x.x -> 1.0.0
 
 - The field `.dns.email` moves to `.certManager.email`.
-- The field `.dns.provider.cloudflare.email` is removed, as only `apiToken`s are supported anyways.
+- The field `.dns.provider.cloudflare.email` is removed, as only `apiToken`s are
+  supported anyways.
 
 ### 1.x.x -> 2.0.0
 
@@ -94,8 +228,16 @@ This excludes:
     - .metadata.labels["app.kubernetes.io/managed-by"]="Helm"
     - .metadata.annotations["meta.helm.sh/release-name"]="base-cluster"
     - .metadata.annotations["meta.helm.sh/release-namespace"]="flux-system"
-  - If you have problems when applying / `helm upgrade`ing the new CRDs, like `cannot patch "alerts.notification.toolkit.fluxcd.io" with kind CustomResourceDefinition: CustomResourceDefinition.apiextensions.k8s.io "alerts.notification.toolkit.fluxcd.io" is invalid: status.storedVersions[1]: Invalid value: "v1beta2": must appear in spec.versions`, you can replace those CRDs. (kubectl replace --force -f -)
-    - ⚠️ make sure to only replace CRDs you're not actively using!!, this is a destructive operation. If all your resources are in flux you can also try to turn off flux before the replacement and flux _should_ resync and reconcile all resources.
+  - If you have problems when applying / `helm upgrade`ing the new CRDs, like
+    `cannot patch "alerts.notification.toolkit.fluxcd.io" with kind
+     CustomResourceDefinition: CustomResourceDefinition.apiextensions.k8s.io
+     "alerts.notification.toolkit.fluxcd.io" is invalid: status.storedVersions[1]:
+     Invalid value: "v1beta2": must appear in spec.versions`, you can replace
+     those CRDs. (kubectl replace --force -f -)
+    - ⚠️ make sure to only replace CRDs you're not actively using!!, this is
+      a destructive operation. If all your resources are in flux you can also
+      try to turn off flux before the replacement and flux _should_ resync and
+      reconcile all resources.
   - remove your manually managed flux resources
 
 ### 2.x.x -> 3.0.0
@@ -110,9 +252,11 @@ You're gonna have to install flux yourself again
 
 ### 3.x.x -> 4.0.0
 
-The storageClasses are going to be removed from this chart, this is prepared by leaving them in the cluster on upgrade.
+The storageClasses are going to be removed from this chart, this is prepared by
+leaving them in the cluster on upgrade.
 
-The new [t8s-cluster](../t8s-cluster) is going to provide these, the enduser can ignore this change.
+The new [t8s-cluster](../t8s-cluster) is going to provide these, the enduser can
+ignore this change.
 
 # base cluster configuration
 
