@@ -3,7 +3,7 @@ name: Get changed charts in last commit
 on:
   workflow_call:
     outputs:
-      chart:
+      charts:
         description: The names of the changed charts in the last commit
         value: ${{ jobs.getChangedCharts.outputs.charts }}
 
