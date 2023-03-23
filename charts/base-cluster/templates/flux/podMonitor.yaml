@@ -1,0 +1,37 @@
+{{- if .Values.monitoring.prometheus.enabled }}
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "flux-podmonitor" "resource" (include "base-cluster.flux.podMonitor" .) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "prometheus" "app.kubernetes.io/part-of" "flux")) }}
+{{- end -}}
+
+{{- define "base-cluster.flux.podMonitor" -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: flux
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- .Values.monitoring.labels | toYaml | nindent 4 }}
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/part-of: flux
+spec:
+  namespaceSelector:
+    matchNames:
+      - flux-system
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - helm-controller
+          - source-controller
+          - kustomize-controller
+          - notification-controller
+          - image-automation-controller
+          - image-reflector-controller
+  podMetricsEndpoints:
+    - port: http-prom
+      relabelings:
+        # https://github.com/prometheus-operator/prometheus-operator/issues/4816
+        - sourceLabels: [__meta_kubernetes_pod_phase]
+          action: keep
+          regex: Running
+{{- end -}}
