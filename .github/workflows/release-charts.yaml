@@ -35,7 +35,7 @@ jobs:
           set -ex
           set -o pipefail
           mkdir changed_charts
-          for CHART in $(jq -r '. | values[]' <"$CHARTS"); do
+          for CHART in $(jq -r '. | values[]' <<<"$CHARTS"); do
             CHART_DIR="charts/${CHART}"
             FILE="${CHART_DIR}/Chart.yaml"
             yq e '.dependencies.[].repository' "$FILE" | sort -u | awk '{print NR " " $1}' | xargs -r -n 2 helm repo add
