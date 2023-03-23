@@ -3,7 +3,7 @@ name: Get changed charts in last commit
 on:
   workflow_call:
     outputs:
-      chart:
+      charts:
         description: The names of the changed charts in the last commit
         value: ${{ jobs.getChangedCharts.outputs.charts }}
 
@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-22.04
     outputs:
       charts: ${{ steps.getCharts.outputs.charts }}
+    env:
+      CT_TARGET_BRANCH: ${{ github.event.repository.default_branch }}
     steps:
       - uses: actions/checkout@v3
 
