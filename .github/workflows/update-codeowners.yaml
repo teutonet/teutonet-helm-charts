@@ -26,7 +26,7 @@ jobs:
           branch: chore/update-codeowners
           title: "chore: Update CODEOWNERS"
       - name: Set PR to auto-merge
-        uses: peter-evans/enable-pull-request-automerge@v2
+        uses: peter-evans/enable-pull-request-automerge@v3
         if: ${{ steps.create-pr.outputs.pull-request-number }}
         with:
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
