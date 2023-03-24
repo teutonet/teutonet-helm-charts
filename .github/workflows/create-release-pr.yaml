@@ -2,6 +2,9 @@ name: Create Release PR for chart
 
 on:
   workflow_call:
+    secrets:
+      ACTIONS_BOT_TOKEN:
+        required: true
     inputs:
       chart:
         type: string
