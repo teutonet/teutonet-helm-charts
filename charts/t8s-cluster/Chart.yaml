@@ -18,9 +18,9 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
 annotations:
   artifacthub.io/images: |
-    - image: quay.io/cilium/cilium:v1.13.0@sha256:6544a3441b086a2e09005d3e21d1a4afb216fae19c5a60b35793c8a9438f8f68
-    - image: quay.io/cilium/hubble-relay:v1.13.0@sha256:bc00f086285d2d287dd662a319d3dbe90e57179515ce8649425916aecaa9ac3c
+    - image: quay.io/cilium/cilium:v1.13.1@sha256:428a09552707cc90228b7ff48c6e7a33dc0a97fe1dd93311ca672834be25beda
+    - image: quay.io/cilium/hubble-relay:v1.13.1@sha256:ad7ce650c7877f8d769264e20bf5b9020ea778a9530cfae9d67a5c9d942c04cb
     - image: quay.io/cilium/hubble-ui-backend:v0.10.0@sha256:cc5e2730b3be6f117b22176e25875f2308834ced7c3aa34fb598aa87a2c0a6a4
     - image: quay.io/cilium/hubble-ui:v0.10.0@sha256:118ad2fcfd07fabcae4dde35ec88d33564c9ca7abe520aa45b1eb13ba36c6e0a
-    - image: quay.io/cilium/operator-generic:v1.13.0@sha256:4b58d5b33e53378355f6e8ceb525ccf938b7b6f5384b35373f1f46787467ebf5
+    - image: quay.io/cilium/operator-generic:v1.13.1@sha256:f47ba86042e11b11b1a1e3c8c34768a171c6d8316a3856253f4ad4a92615d555
     - image: registry.k8s.io/etcd:3.5.6-0
