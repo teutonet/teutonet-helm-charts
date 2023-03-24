@@ -26,9 +26,9 @@ jobs:
           branch: chore/update-codeowners
           title: "chore: Update CODEOWNERS"
       - name: Set PR to auto-merge
-        uses: peter-evans/enable-pull-request-automerge@v2
         if: ${{ steps.create-pr.outputs.pull-request-number }}
-        with:
-          token: ${{ secrets.ACTIONS_BOT_TOKEN }}
-          pull-request-number: ${{ steps.create-pr.outputs.pull-request-number }}
+        run: gh pr merge --merge --auto --squash "$PR_NUMBER"
+        env:
+          GH_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
+          PR_NUMBER: ${{ steps.create-pr.outputs.pull-request-number }}
           merge-method: squash
