@@ -8,7 +8,7 @@ metadata:
 spec:
   chart:
     spec: {{- include "t8s-cluster.helm.chartSpec" (dict "repo" "cilium" "chart" "cilium" "context" $) | nindent 6 }}
-  interval: 1m
+  interval: 1h
   kubeConfig:
     secretRef:
       name: {{ .Release.Name }}-kubeconfig
