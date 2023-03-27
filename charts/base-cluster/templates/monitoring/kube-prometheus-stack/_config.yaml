@@ -131,6 +131,10 @@ grafana:
         gnetId: 15804
         revision: 4
       {{- end }}
+      flux:
+        <<: *dashboard
+        gnetId: 16714
+        revision: 1
   {{- with .Values.monitoring.grafana.additionalDashboards }}
   {{ . | toYaml | nindent 6 }}
   {{- end }}
