@@ -1,0 +1,12 @@
+name: Update metadata files for release
+
+on:
+  push:
+    branches-ignore:
+      - release-please--branches--main--components-*
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Always success'
