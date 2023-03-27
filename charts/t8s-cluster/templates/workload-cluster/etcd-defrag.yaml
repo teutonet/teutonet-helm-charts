@@ -30,7 +30,7 @@ spec:
                   value: "3"
                 - name: ETCDCTL_ENDPOINTS
                   value: 'localhost:2379'
-              image: registry.k8s.io/etcd:3.5.6-0
+              image: {{ include "common.images.image" (dict "imageRoot" .context.Values.global.etcd.image "global" .context.Values.global) }}
               imagePullPolicy: IfNotPresent
               name: etcd-defrag
               volumeMounts:

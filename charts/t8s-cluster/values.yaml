@@ -5,6 +5,11 @@ global:
       url: https://helm.cilium.io
       charts:
         cilium: 1.x.x
+  etcd:
+    image:
+      registry: registry.k8s.io
+      repository: etcd
+      tag: 3.5.6-0
 
 metadata:
   serviceLevelAgreement: None
