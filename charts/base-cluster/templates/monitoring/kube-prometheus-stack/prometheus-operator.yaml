@@ -10,7 +10,7 @@ metadata:
 spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "prometheus" "chart" "kube-prometheus-stack" "context" $) | nindent 6 }}
-  interval: 1m
+  interval: 1h
   install:
     timeout: 20m0s
     crds: CreateReplace
@@ -49,7 +49,7 @@ metadata:
 spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "bitnami" "chart" "oauth2-proxy" "context" $) | nindent 6 }}
-  interval: 1m
+  interval: 1h
   values:
     redis:
       enabled: false

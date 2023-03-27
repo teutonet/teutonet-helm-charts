@@ -10,7 +10,7 @@ metadata:
 spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "grafana" "chart" "loki-stack" "context" $) | nindent 6 }}
-  interval: 1m
+  interval: 1h
   install:
     timeout: 10m0s
   upgrade:

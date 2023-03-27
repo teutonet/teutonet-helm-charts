@@ -11,7 +11,7 @@ metadata:
 spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "kyverno" "chart" "kyverno-policies" "context" $) | nindent 6 }}
-  interval: 5m
+  interval: 1h
   dependsOn:
     - name: kyverno
       namespace: kyverno

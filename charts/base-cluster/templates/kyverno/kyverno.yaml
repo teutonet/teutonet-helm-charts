@@ -10,7 +10,7 @@ metadata:
 spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "kyverno" "chart" "kyverno" "context" $) | nindent 6 }}
-  interval: 5m
+  interval: 1h
   {{- if .Values.monitoring.prometheus.enabled }}
   dependsOn:
     - name: kube-prometheus-stack
