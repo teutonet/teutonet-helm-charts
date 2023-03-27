@@ -1,0 +1,45 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ printf "%s-ccm" .Release.Name }}
+  namespace: {{ .Release.Namespace}}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  chart:
+    spec:
+      chart: openstack-cloud-controller-manager
+      sourceRef:
+        kind: HelmRepository
+        name: {{ printf "%s-cloud-provider-openstack" .Release.Name }}
+        namespace: {{ .Release.Namespace }}
+      version: {{ printf "2.%d.x" (.Values.version.minor | int) }}
+  interval: 1h
+  kubeConfig:
+    secretRef:
+      name: {{ .Release.Name }}-kubeconfig
+  install:
+    remediation:
+      retries: -1
+  storageNamespace: kube-system
+  targetNamespace: kube-system
+  releaseName: ccm
+  valuesFrom:
+    - &valuesFrom
+      kind: Secret
+      name: {{ .Release.Name }}-ccm-cloud-config
+      optional: false
+      targetPath: cloudConfigContents
+      valuesKey: cloud.conf
+    - <<: *valuesFrom
+      targetPath: cloudConfig.metadata.hash
+  values:
+    tolerations:
+      - key: node.cloudprovider.kubernetes.io/uninitialized
+        value: "true"
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/control-plane
+        effect: NoSchedule
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: ""

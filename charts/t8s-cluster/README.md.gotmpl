@@ -1,3 +1,4 @@
+[modeline]: # ( vim: set ft=markdown: )
 {{ template "chart.header" . }}
 {{ template "chart.deprecationWarning" . }}
 
@@ -13,8 +14,19 @@
 
 {{ template "chart.requirementsSection" . }}
 
+## Initial installation
+
+Take care to do the same steps as in [the first migration](#0xx---100)
+
 ## Migration
 
 When switching from cilium to calico, which is not recommended, the cilium CRDs are left behind
+
+### 0.x.x -> 1.x.x
+
+The resources of the ccm and the csi are now managed via helm instead of
+kustomize, which means that you have to either manually add the required labels to
+everything or, which we would recommend, just uninstall the ccm, the csi and
+delete the cloud-config secret, as these will just be recreated during installation.
 
 {{ .Files.Get "values.md"  }}
