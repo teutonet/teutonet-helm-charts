@@ -10,7 +10,12 @@ spec:
       joinConfiguration:
         nodeRegistration:
           kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict) | nindent 12 }}
-          name: '{{ `{{ local_hostname }}` }}'
+          name: {{ `{{ local_hostname }}` | quote }}
+        patches:
+          directory: /etc/kubeadm-patches
+      initConfiguration:
+        patches:
+          directory: /etc/kubeadm-patches
       files:
           {{- if .Values.containerRegistryProxy.proxyRegistryEndpoint }}
         - content: |- {{- include "t8s-cluster.clusterClass.containerRegistryProxies" (dict "context" $) | nindent 12 }}

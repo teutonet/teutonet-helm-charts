@@ -10,7 +10,8 @@ clusterConfiguration:
       cloud-provider: external
       enable-admission-plugins: AlwaysPullImages,EventRateLimit,NodeRestriction
       profiling: 'false'
-      tls-cipher-suites: {{ include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) }}
+      event-ttl: 8h
+      tls-cipher-suites: {{ dig "tlsCipherSuites" nil (include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) | fromYaml) | join "," }}
     extraVolumes:
       - hostPath: *admissionControlConfigFilePath
         mountPath: *admissionControlConfigFilePath
@@ -46,6 +47,8 @@ files:
     permissions: "0700"
   - content: |- {{- .Files.Get "files/kube-proxy.config.yaml" | nindent 6 }}
     path: /etc/kube-proxy-config.yaml
+  - content: |- {{- include "t8s-cluster.clusterClass.kubeletConfiguration" . | nindent 6 }}
+    path: /etc/kubeadm-patches/kubeletconfiguration.yaml
   {{- if .Values.containerRegistryProxy.proxyRegistryEndpoint }}
   - content: |- {{- include "t8s-cluster.clusterClass.containerRegistryProxies" (dict "context" $) | nindent 6 }}
     path: /etc/containerd/conf.d/teuto-mirror.toml
@@ -58,9 +61,13 @@ initConfiguration:
   nodeRegistration:
     kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict) | nindent 6 }}
     name: '{{ `{{ local_hostname }}` }}'
+  patches:
+    directory: /etc/kubeadm-patches
 joinConfiguration:
   nodeRegistration:
     kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict) | nindent 6 }}
     name: '{{ `{{ local_hostname }}` }}'
+  patches:
+    directory: /etc/kubeadm-patches
 preKubeadmCommands: {{- include "t8s-cluster.clusterClass.preKudeadmCommands" $ | nindent 2 }}
 {{- end -}}

@@ -7,22 +7,12 @@
 
 {{- define "t8s-cluster.clusterClass.tlsCipherSuites" -}}
   {{- $cipherSuites := list "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256" "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256" "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305" "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384" "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305" "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384" "TLS_RSA_WITH_AES_256_GCM_SHA384" "TLS_RSA_WITH_AES_128_GCM_SHA256" -}}
-  {{- join "," $cipherSuites -}}
+  {{- dict "tlsCipherSuites" $cipherSuites | toYaml -}}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.kubeletExtraArgs" -}}
-  {{- $featureGates := dict "SeccompDefault" "true" -}}
-  {{- $featureGatesFlags := list }}
-  {{- range $name, $value := $featureGates -}}
-    {{- $featureGatesFlags = append $featureGatesFlags (printf "%s=%s" $name $value) -}}
-  {{- end -}}
   {{- $args := dict
     "cloud-provider" "external"
-    "event-qps" "0"
-    "protect-kernel-defaults" "true"
-    "tls-cipher-suites" (include "t8s-cluster.clusterClass.tlsCipherSuites" (dict))
-    "feature-gates" (join "," $featureGatesFlags)
-    "seccomp-default" "true"
         -}}
   {{- $args | toYaml -}}
 {{- end -}}
@@ -34,6 +24,17 @@
     {{- $commands = append $commands "update-ca-certificates" -}}
   {{- end -}}
   {{- $commands | toYaml }}
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.kubeletConfiguration" -}}
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+eventRecordQPS: 0
+{{- $featureGates := dict "SeccompDefault" "true" }}
+featureGates: {{- $featureGates | toYaml | nindent 2 }}
+seccompDefault: true
+protectKernelDefaults: true
+{{- include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) | nindent 0 }}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.containerRegistryProxies" -}}
