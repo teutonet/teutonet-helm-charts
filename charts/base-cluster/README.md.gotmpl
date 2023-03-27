@@ -54,7 +54,7 @@ helm -n flux-system get notes base-cluster
 
 ### Component [cert-manager](#certManager)
 
-[manager](https://cert-manager.io) takes care of creating SSL certificates
+[cert-manager](https://cert-manager.io) takes care of creating SSL certificates
 for your Ingresses (and [other needs](https://cert-manager.io/docs/usage/))
 
 1. set `.certManager.email` to your email for the Let's Encrypt account to enable
@@ -167,9 +167,9 @@ The included [NFS Ganesha server and external provisioner](https://github.com/ku
 provides rudimentary support for RWM volumes if needed.
 
 > ⚠️  This is _not_ highly available, and the software itself _does not_ support
-it you should only use this if there is no other choice and make sure you're
+it. You should only use this if there is no other choice and make sure you're
 cloud provider knows about this, because a node rotation _will_ result in a
-downtime for all attaches applications!
+downtime for all attached applications!
 
 ### Component [rbac](#rbac)
 
