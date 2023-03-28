@@ -9,7 +9,7 @@ global:
     image:
       registry: registry.k8s.io
       repository: etcd
-      tag: 3.5.6-0
+      tag: 3.5.7-0
 
 metadata:
   serviceLevelAgreement: None
