@@ -19,7 +19,7 @@ spec:
     nodeDrainTimeout: {{ .Values.controlPlane.nodeDrainTimeout | default "8m" }}
     machineInfrastructure:
       ref:
-        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+        apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
         kind: OpenStackMachineTemplate
         name: {{ printf "%s-control-plane-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfControlPlane" (dict "context" $)) }}
     ref:
@@ -29,7 +29,7 @@ spec:
       name: {{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.specHash" .) }}
   infrastructure:
     ref:
-      apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+      apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
       kind: OpenStackClusterTemplate
       name: {{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackClusterTemplate.specHash" (dict "context" $)) }}
   variables:
@@ -83,7 +83,7 @@ spec:
               valueFrom:
                 variable: controlPlaneServerGroupID
           selector:
-            apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
             kind: OpenStackMachineTemplate
             matchResources:
               controlPlane: true
@@ -96,7 +96,7 @@ spec:
               valueFrom:
                 variable: machineDeploymentServerGroupID
           selector:
-            apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
             kind: OpenStackMachineTemplate
             matchResources:
               machineDeploymentClass:
@@ -107,7 +107,7 @@ spec:
       enabledIf: .controlPlaneAvailabilityZones
       definitions:
         - selector:
-            apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
             kind: OpenStackClusterTemplate
             matchResources:
               infrastructureCluster: true
@@ -119,7 +119,7 @@ spec:
     - name: dnsNameservers
       definitions:
         - selector:
-            apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
             kind: OpenStackClusterTemplate
             matchResources:
               infrastructureCluster: true
@@ -151,7 +151,7 @@ spec:
               name: {{ printf "%s-worker" $.Release.Name }}
           infrastructure:
             ref:
-              apiVersion: infrastructure.cluster.x-k8s.io/v1alpha5
+              apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
               kind: OpenStackMachineTemplate
               name: {{ printf "%s-%s-%s" $.Release.Name $name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfWorkers" (dict "context" $ "worker" $machineDeploymentClass)) }}
       {{- end }}
