@@ -4,22 +4,44 @@
   "title": "t8s cluster configuration",
   "properties": {
     "global": {
-      "helmRepositories": {
-        "type": "object",
-        "description": "A map of helmRepositories to create, the key is the name",
-        "additionalProperties": {
+      "properties": {
+        "helmRepositories": {
           "type": "object",
-          "properties": {
-            "url": {
-              "type": "string",
-              "pattern": "https://.+"
-            },
-            "charts": {
-              "type": "object",
-              "description": "Which charts are deployed in which version using this repo, used internally",
-              "additionalProperties": {
-                "type": "string"
+          "description": "A map of helmRepositories to create, the key is the name",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "pattern": "https://.+"
+              },
+              "charts": {
+                "type": "object",
+                "description": "Which charts are deployed in which version using this repo, used internally",
+                "additionalProperties": {
+                  "type": "string"
+                }
               }
+            },
+            "additionalProperties": false
+          }
+        },
+        "kubectl": {
+          "type": "object",
+          "description": "Image with `kubectl` binary",
+          "properties": {
+            "image": {
+              "$ref": "#/$defs/image"
+            }
+          },
+          "additionalProperties": false
+        },
+        "etcd": {
+          "type": "object",
+          "description": "Image with `kubectl` binary",
+          "properties": {
+            "image": {
+              "$ref": "#/$defs/image"
             }
           },
           "additionalProperties": false
@@ -209,6 +231,32 @@
       "type": "string",
       "default": "3m",
       "pattern": "[0-9]+[smh]"
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "registry": {
+          "type": "string",
+          "description": "The host of the registry",
+          "examples": [
+            "docker.io"
+          ]
+        },
+        "repository": {
+          "type": "string",
+          "description": "The image path in the registry",
+          "examples": [
+            "bitnami/kubectl"
+          ]
+        },
+        "tag": {
+          "type": "string"
+        },
+        "digest": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
     }
   }
 }
