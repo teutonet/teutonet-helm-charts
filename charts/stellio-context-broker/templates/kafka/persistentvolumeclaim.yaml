@@ -1,0 +1,14 @@
+{{- $name := "kafka" -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: {{ $name }}
+  name: {{ printf "%s-%s" (include "common.names.fullname" $) $name | quote }}
+spec:
+  accessModes:
+    - {{ .Values.kafka.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.kafka.persistence.size }}
+  {{ include "common.storage.class" (dict "persistence" .Values.kafka.persistence "global" $ )}}

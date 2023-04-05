@@ -1,0 +1,1 @@
+{{ include "stellio.deployment" (dict "name" "api-gateway" "deployment" .Values.api_gateway "context" . )}}

@@ -1,0 +1,17 @@
+Thanks for installing stellio context broker.
+
+Use the following URL to access stellio context broker:
+
+https://{{ .Values.api_gateway.ingress.host }}
+
+You can perform initial tests using the beehive example.
+
+export STELLIO_URL="https://{{ .Values.api_gateway.ingress.host }}"
+
+To create the beehive and sensors entities just run:
+
+beehive-sample.sh create
+
+In order to rerun the script you need to delete all created entites.
+
+beehive-sample.sh delete

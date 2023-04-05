@@ -1,0 +1,15 @@
+apiVersion: v2
+name: stellio-context-broker
+type: application
+version: 0.1.0
+appVersion: "2.1.0"
+maintainers:
+  - name: cwrau
+    email: cwr@teuto.net
+  - name: ocaner-biz
+    email: oc@teuto.net
+description: An NGSI-LD compliant context broker
+dependencies:
+  - name: common
+    version: 2.2.3
+    repository: https://charts.bitnami.com/bitnami

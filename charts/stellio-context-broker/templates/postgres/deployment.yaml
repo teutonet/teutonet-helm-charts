@@ -1,0 +1,63 @@
+{{- $name := "postgres" -}}
+{{- $configNamePsql := printf "%s-%s-config" (include "common.names.fullname" $) $name  -}}
+{{- $claimName := printf "%s-%s" (include "common.names.fullname" $) $name -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ printf "%s-%s" (include "common.names.fullname" $) $name | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: {{ $name }}
+spec:
+  replicas: {{ .Values.postgres.replicas }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: {{ $name }}
+  template:
+    metadata:
+      {{- with .Values.postgres.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels: {{- include "common.labels.matchLabels" . | nindent 8 }}
+        app.kubernetes.io/component: {{ $name }}
+    spec:
+      {{- include "common.images.renderPullSecrets" ( dict "images" (list .Values.postgres.image) "context" $) | indent 6 }}
+      automountServiceAccountToken: false
+      securityContext:
+        {{- toYaml .Values.postgres.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ printf "%s-%s" .Chart.Name $name }}
+          env:
+            - name: ACCEPT_TIMESCALE_TUNING
+              value: "TRUE"
+            - name: POSTGRES_DBNAME
+              value: "stellio_search,stellio_subscription"
+            - name: POSTGRES_MULTIPLE_EXTENSIONS
+              value: postgis,timescaledb,pgcrypto
+            - name: POSTGRES_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $configNamePsql }}
+                  key: password
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $configNamePsql }}
+                  key: username    
+          securityContext:
+            {{- toYaml .Values.postgres.securityContext | nindent 12 }}
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.postgres.image "global" .Values.global) }}
+          imagePullPolicy: {{ .Values.postgres.image.pullPolicy }}
+          ports:
+            - name: postgresql
+              containerPort: {{ include "stellio.postgres.service.port" $ }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.postgres.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql
+              name: stellio-postgres-storage
+      volumes:
+        - name: stellio-postgres-storage
+          persistentVolumeClaim:
+            claimName: {{ $claimName }}
