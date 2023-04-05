@@ -35,11 +35,11 @@ jobs:
           set -ex
           set -o pipefail
           mkdir changed_charts
-          for CHART in $(jq -r '. | values[]' <<<"$CHARTS"); do
-            CHART_DIR="charts/${CHART}"
-            FILE="${CHART_DIR}/Chart.yaml"
-            yq e '.dependencies.[].repository' "$FILE" | sort -u | awk '{print NR " " $1}' | xargs -r -n 2 helm repo add
-            mv "${CHART_DIR}" changed_charts/
+          for chart in $(jq -r '. | values[]' <<<"$CHARTS"); do
+            chart_dir="charts/${chart}"
+            file="${chart_dir}/Chart.yaml"
+            yq e '.dependencies.[].repository' "$file" | sort -u | awk '{print NR " " $1}' | xargs -r -n 2 helm repo add
+            mv "${chart_dir}" changed_charts/
             rm -rf charts
           done
           mv changed_charts charts

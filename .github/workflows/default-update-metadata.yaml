@@ -6,7 +6,7 @@ on:
       - release-please--branches--main--components-*
 
 jobs:
-  update:
+  update-metadata-files:
     runs-on: ubuntu-latest
     steps:
       - run: echo 'Always success'
