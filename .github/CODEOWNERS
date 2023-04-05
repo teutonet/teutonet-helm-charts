@@ -1,3 +1,3 @@
 * @teutonet/k8s
-/charts/base-cluster/ @cwrau @marvinWolff 
-/charts/t8s-cluster/ @cwrau @marvinWolff 
+/charts/base-cluster/ @cwrau @marvinWolff @steutol 
+/charts/t8s-cluster/ @cwrau @marvinWolff @steutol 
