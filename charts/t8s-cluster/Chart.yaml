@@ -8,6 +8,8 @@ maintainers:
     email: cwr@teuto.net
   - name: marvinWolff
     email: mw@teuto.net
+  - name: steutol
+    email: sl@teuto.net
 sources:
   - https://github.com/teutonet/teutonet-helm-charts
 home: https://teuto.net
