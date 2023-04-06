@@ -1,5 +1,33 @@
 # Changelog
 
+## [2.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v1.0.0...t8s-cluster-v2.0.0) (2023-04-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* **t8s-cluster:** wrong type for customerID, should be int ([#302](https://github.com/teutonet/teutonet-helm-charts/issues/302))
+
+### Features
+
+* **t8s-cluster/etcd-defrag:** refactor image into values.yaml ([#304](https://github.com/teutonet/teutonet-helm-charts/issues/304)) ([b7095c5](https://github.com/teutonet/teutonet-helm-charts/commit/b7095c5c9cffe20f475da74bea081760a43a39ad)), closes [#297](https://github.com/teutonet/teutonet-helm-charts/issues/297)
+* **t8s-cluster/management-cluster:** keep retrying installing the ([#292](https://github.com/teutonet/teutonet-helm-charts/issues/292)) ([54e1d5e](https://github.com/teutonet/teutonet-helm-charts/commit/54e1d5ef6b8905e630b779962428df7e19dc1283))
+* **t8s-cluster/management-cluster:** use v1alpha6 instead v1alpha5 ([#305](https://github.com/teutonet/teutonet-helm-charts/issues/305)) ([4ff4763](https://github.com/teutonet/teutonet-helm-charts/commit/4ff4763de64e4405c406e59228427c9abfafa5f8))
+* **t8s-cluster/workload-cluster:** remove local-storage StorageClass ([#335](https://github.com/teutonet/teutonet-helm-charts/issues/335)) ([fea935f](https://github.com/teutonet/teutonet-helm-charts/commit/fea935fb2a71b930a5402a3edc593414fe5b3749))
+* **t8s-cluster:** update CODEOWNERS ([#333](https://github.com/teutonet/teutonet-helm-charts/issues/333)) ([5f445d3](https://github.com/teutonet/teutonet-helm-charts/commit/5f445d3ed56cfbd9f97fc6d84124cf10a2a88c1b))
+
+
+### Bug Fixes
+
+* **t8s-cluster:** wrong type for customerID, should be int ([#302](https://github.com/teutonet/teutonet-helm-charts/issues/302)) ([7b9e609](https://github.com/teutonet/teutonet-helm-charts/commit/7b9e609d265a10c6ea164ce8ded17351be3fb00d))
+
+
+### Miscellaneous Chores
+
+* **deps:** update helm release common to v2.2.4 ([#264](https://github.com/teutonet/teutonet-helm-charts/issues/264)) ([4e4f4ed](https://github.com/teutonet/teutonet-helm-charts/commit/4e4f4edcceeec46b2df23f3e2d9d152d296f8933))
+* **deps:** update registry.k8s.io/etcd docker tag to v3.5.7 ([#325](https://github.com/teutonet/teutonet-helm-charts/issues/325)) ([9b6ace1](https://github.com/teutonet/teutonet-helm-charts/commit/9b6ace1d70deb6b4fe4d0a21a1e53eee1bc66573))
+* **main:** [bot] release t8s-cluster:1.0.0 ([#295](https://github.com/teutonet/teutonet-helm-charts/issues/295)) ([920169d](https://github.com/teutonet/teutonet-helm-charts/commit/920169d53f7256a77b176aa8761de0e6153c4c96))
+* **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#315](https://github.com/teutonet/teutonet-helm-charts/issues/315)) ([d479c5e](https://github.com/teutonet/teutonet-helm-charts/commit/d479c5e7e1abc5a6d300a3eac079546df2c599c6))
+
 ## [1.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-0.3.3...t8s-cluster-v1.0.0) (2023-04-05)
 
 
