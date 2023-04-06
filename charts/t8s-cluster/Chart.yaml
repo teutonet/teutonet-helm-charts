@@ -1,7 +1,7 @@
 apiVersion: v2
 name: t8s-cluster
 type: application
-version: 0.3.3
+version: 1.0.0
 icon: https://teuto.net/favicon.ico
 maintainers:
   - name: cwrau
@@ -25,4 +25,4 @@ annotations:
     - image: quay.io/cilium/hubble-ui-backend:v0.10.0@sha256:cc5e2730b3be6f117b22176e25875f2308834ced7c3aa34fb598aa87a2c0a6a4
     - image: quay.io/cilium/hubble-ui:v0.10.0@sha256:118ad2fcfd07fabcae4dde35ec88d33564c9ca7abe520aa45b1eb13ba36c6e0a
     - image: quay.io/cilium/operator-generic:v1.13.1@sha256:f47ba86042e11b11b1a1e3c8c34768a171c6d8316a3856253f4ad4a92615d555
-    - image: registry.k8s.io/etcd:3.5.6-0
+    - image: registry.k8s.io/etcd:3.5.7-0

@@ -1,6 +1,6 @@
 # t8s-cluster
 
-![Version: 0.3.3](https://img.shields.io/badge/Version-0.3.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -12,6 +12,7 @@ t8s-operator cluster with necessary addons
 | ---- | ------ | --- |
 | cwrau | <cwr@teuto.net> |  |
 | marvinWolff | <mw@teuto.net> |  |
+| steutol | <sl@teuto.net> |  |
 
 ## Source Code
 
@@ -21,7 +22,7 @@ t8s-operator cluster with necessary addons
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.2.3 |
+| https://charts.bitnami.com/bitnami | common | 2.2.4 |
 
 ## Migration
 
@@ -67,7 +68,7 @@ When switching from cilium to calico, which is not recommended, the cilium CRDs 
 | Property                                                    | Pattern | Type             | Deprecated | Definition | Title/Description |
 | ----------------------------------------------------------- | ------- | ---------------- | ---------- | ---------- | ----------------- |
 | + [serviceLevelAgreement](#metadata_serviceLevelAgreement ) | No      | enum (of string) | No         | -          | -                 |
-| - [customerID](#metadata_customerID )                       | No      | string           | No         | -          | -                 |
+| - [customerID](#metadata_customerID )                       | No      | integer          | No         | -          | -                 |
 | - [customerName](#metadata_customerName )                   | No      | string           | No         | -          | -                 |
 | - [supportProjectUrl](#metadata_supportProjectUrl )         | No      | string           | No         | -          | -                 |
 | - [configGroupUrl](#metadata_configGroupUrl )               | No      | string           | No         | -          | -                 |
@@ -83,13 +84,13 @@ When switching from cilium to calico, which is not recommended, the cilium CRDs 
 Must be one of:
 * "None"
 * "24x7"
-* "Working-Hours"
+* "WorkingHours"
 
 ### <a name="metadata_customerID"></a>2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > metadata > customerID`
 
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
+|          |           |
+| -------- | --------- |
+| **Type** | `integer` |
 
 ### <a name="metadata_customerName"></a>2.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > metadata > customerName`
 
