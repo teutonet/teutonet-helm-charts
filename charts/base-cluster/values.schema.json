@@ -724,42 +724,54 @@
                   {
                     "properties": {
                       "url": {
-                        "type": "string",
                         "pattern": "https://.+"
-                      },
-                      "username": {
-                        "const": null
-                      },
-                      "password": {
-                        "const": null
-                      }
-                    }
-                  },
-                  {
-                    "properties": {
-                      "url": {
-                        "type": "string",
-                        "pattern": "https://.+"
-                      },
-                      "password": {
-                        "type": "string"
-                      },
-                      "username": {
-                        "type": "string"
                       }
                     },
-                    "required": [
-                      "password",
-                      "username"
+                    "oneOf": [
+                      {
+                        "required": [
+                          "password",
+                          "username"
+                        ]
+                      },
+                      {
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "username"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "password"
+                              ]
+                            }
+                          ]
+                        }
+                      }
                     ]
                   },
                   {
                     "properties": {
                       "url": {
-                        "type": "string",
                         "pattern": "^ssh://.+@[^:]+(?::\\d+/)?[^:]*$",
                         "description": "This needs to follow flux's way of writing this url, see https://fluxcd.io/flux/components/source/gitrepositories/#url"
                       }
+                    },
+                    "not": {
+                      "anyOf": [
+                        {
+                          "required": [
+                            "username"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "password"
+                          ]
+                        }
+                      ]
                     }
                   }
                 ]
@@ -767,66 +779,77 @@
               {
                 "oneOf": [
                   {
-                    "properties": {
-                      "branch": {
-                        "type": "string",
-                        "default": "master"
-                      }
-                    },
                     "required": [
                       "branch"
                     ]
                   },
                   {
-                    "properties": {
-                      "commit": {
-                        "type": "string"
-                      }
-                    },
                     "required": [
                       "commit"
                     ]
                   },
                   {
-                    "properties": {
-                      "semver": {
-                        "type": "string"
-                      }
-                    },
                     "required": [
                       "semver"
                     ]
                   },
                   {
-                    "properties": {
-                      "tag": {
-                        "type": "string"
-                      }
-                    },
                     "required": [
                       "tag"
                     ]
                   },
                   {
-                    "properties": {
-                      "branch": {
-                        "const": null
-                      },
-                      "commit": {
-                        "const": null
-                      },
-                      "semver": {
-                        "const": null
-                      },
-                      "tag": {
-                        "const": null
-                      }
+                    "not": {
+                      "anyOf": [
+                        {
+                          "required": [
+                            "branch"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "commit"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "semver"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "tag"
+                          ]
+                        }
+                      ]
                     }
                   }
                 ]
               }
             ],
             "properties": {
+              "url": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "branch": {
+                "type": "string",
+                "default": "master"
+              },
+              "commit": {
+                "type": "string"
+              },
+              "semver": {
+                "type": "string"
+              },
+              "tag": {
+                "type": "string"
+              },
               "gitInterval": {
                 "type": "string",
                 "description": "The interval in which to sync the repository",
@@ -851,7 +874,8 @@
             },
             "required": [
               "url"
-            ]
+            ],
+            "additionalProperties": false
           }
         }
       },
@@ -1072,6 +1096,34 @@
         }
       },
       "additionalProperties": false
+    },
+    "fluxRepository": {
+      "properties": {
+        "gitInterval": {
+          "type": "string",
+          "description": "The interval in which to sync the repository",
+          "pattern": "[0-9]+(ms|s|m|h|d|w|y)",
+          "default": "1m"
+        },
+        "decryption": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "enum": [
+                "sops"
+              ]
+            }
+          },
+          "required": [
+            "provider"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "url"
+      ]
     }
   }
 }
