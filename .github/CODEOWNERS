@@ -1,3 +1,4 @@
 * @teutonet/k8s
 /charts/base-cluster/ @cwrau @marvinWolff @steutol 
+/charts/stellio-context-broker/ @cwrau @ocaner-biz 
 /charts/t8s-cluster/ @cwrau @marvinWolff @steutol 
