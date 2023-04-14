@@ -1395,6 +1395,26 @@ entries:
     urls:
     - https://github.com/teutonet/teutonet-helm-charts/releases/download/base-cluster-0.1.0/base-cluster-0.1.0.tgz
     version: 0.1.0
+  stellio-context-broker:
+  - apiVersion: v2
+    appVersion: 2.1.0
+    created: "2023-04-14T11:12:12.156842528Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.2.3
+    description: An NGSI-LD compliant context broker
+    digest: 5f40fc808218efaa03e6d27ba98ceec509342a4b382a9b35f2b04a4352160df2
+    maintainers:
+    - email: cwr@teuto.net
+      name: cwrau
+    - email: oc@teuto.net
+      name: ocaner-biz
+    name: stellio-context-broker
+    type: application
+    urls:
+    - https://github.com/teutonet/teutonet-helm-charts/releases/download/stellio-context-broker-0.1.0/stellio-context-broker-0.1.0.tgz
+    version: 0.1.0
   t8s-cluster:
   - annotations:
       artifacthub.io/images: |
@@ -1726,4 +1746,4 @@ entries:
     urls:
     - https://github.com/teutonet/teutonet-helm-charts/releases/download/t8s-cluster-0.0.1/t8s-cluster-0.0.1.tgz
     version: 0.0.1
-generated: "2023-04-06T13:04:15.654824069Z"
+generated: "2023-04-14T11:12:12.157281037Z"
