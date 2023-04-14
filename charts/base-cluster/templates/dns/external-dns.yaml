@@ -23,7 +23,7 @@ spec:
     {{- else }}
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "bitnami" "chart" "external-dns" "context" $) | nindent 6 }}
     {{- end }}
-  interval: 1m
+  interval: 1h
   {{- if .Values.monitoring.prometheus.enabled }}
   dependsOn:
     - name: kube-prometheus-stack
