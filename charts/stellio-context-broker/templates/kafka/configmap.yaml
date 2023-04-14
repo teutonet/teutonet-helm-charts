@@ -1,0 +1,20 @@
+{{- $name := "kafka" -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: {{ $name }}
+data:
+  entrypoint.sh: |-
+    #!/bin/sh
+    # Docker workaround: Remove check for KAFKA_ZOOKEEPER_CONNECT parameter
+    sed -i '/KAFKA_ZOOKEEPER_CONNECT/d' /etc/confluent/docker/configure
+
+    # Docker workaround: Ignore cub zk-ready
+    sed -i 's/cub zk-ready/echo ignore zk-ready/' /etc/confluent/docker/ensure
+
+    # KRaft required step: Format the storage directory with a new cluster ID
+    echo "kafka-storage format --ignore-formatted -t $(kafka-storage random-uuid) -c /etc/kafka/kafka.properties" >> /etc/confluent/docker/ensure
+
+    exec /etc/confluent/docker/run
