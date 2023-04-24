@@ -14,7 +14,7 @@ global:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: 1.26.3
+      tag: 1.27.1
 
 metadata:
   serviceLevelAgreement: None
