@@ -1,0 +1,3 @@
+{{- if eq .Values.cni "cilium" -}}
+{{ include "t8s-cluster.workload.uninstall-job" (dict "name" "cni" "context" . "clusterResourceSet" "cni") }}
+{{- end -}}

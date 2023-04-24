@@ -10,6 +10,11 @@ global:
       registry: registry.k8s.io
       repository: etcd
       tag: 3.5.7-0
+  kubectl:
+    image:
+      registry: docker.io
+      repository: bitnami/kubectl
+      tag: 1.26.3
 
 metadata:
   serviceLevelAgreement: None
