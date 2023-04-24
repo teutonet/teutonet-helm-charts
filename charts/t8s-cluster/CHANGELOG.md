@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-1.0.0...t8s-cluster-v1.1.0) (2023-04-24)
+
+
+### Features
+
+* **t8s-cluster/workload-cluster:** install ccm/csi via helm to inline-reuse the cloud-config secret ([#324](https://github.com/teutonet/teutonet-helm-charts/issues/324)) ([f7e9f6b](https://github.com/teutonet/teutonet-helm-charts/commit/f7e9f6b47dff6264468a314d6c0f8be8e544bacc))
+* **t8s-cluster:** prepare for flux drift-detection ([#322](https://github.com/teutonet/teutonet-helm-charts/issues/322)) ([4cccb6d](https://github.com/teutonet/teutonet-helm-charts/commit/4cccb6d4cc33b2b4ab38095af48b6aa6c4007095))
+
+
+### Miscellaneous Chores
+
+* **deps:** update docker.io/bitnami/kubectl docker tag to v1.27.1 ([#351](https://github.com/teutonet/teutonet-helm-charts/issues/351)) ([3a22fce](https://github.com/teutonet/teutonet-helm-charts/commit/3a22fceb617b8e5f0eb18e104f104070e65649b6))
+
 ## [1.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-0.3.3...t8s-cluster-v1.0.0) (2023-04-05)
 
 
