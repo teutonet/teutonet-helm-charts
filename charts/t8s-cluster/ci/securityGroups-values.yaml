@@ -1,12 +1,3 @@
-cloud: ffm3
-metadata:
-  customerID: 1000
-  serviceLevelAgreement: None
-  customerName: test
-version:
-  major: 1
-  minor: 25
-  patch: 0
 controlPlane:
   flavor: standard.2.1905
   securityGroups:
