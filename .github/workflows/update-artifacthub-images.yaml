@@ -41,6 +41,7 @@ jobs:
       - run: pip install yq
       - name: Install sponge
         run: sudo apt-get -yq install moreutils
+      - run: ./.github/scripts/prepare-values.sh
 
       - name: extract images for ${{ matrix.chart }}
         run: ./.github/scripts/extract-artifacthub-images.sh "charts/${{ matrix.chart }}"

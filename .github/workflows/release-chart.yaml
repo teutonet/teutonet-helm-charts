@@ -1,4 +1,4 @@
-name: Release Charts
+name: Release Chart
 
 on:
   workflow_dispatch: {}
@@ -9,13 +9,13 @@ on:
       - charts/*/Chart.yaml
 
 jobs:
-  getChangedCharts:
+  getChangedChart:
     if: ${{ contains(github.event.head_commit.message, '[bot] release') || github.event.name != 'push' }}
-    uses: ./.github/workflows/get-changed-charts.yaml
+    uses: ./.github/workflows/get-changed-chart.yaml
   release:
     if: ${{ contains(github.event.head_commit.message, '[bot] release') || github.event.name != 'push' }}
     runs-on: ubuntu-latest
-    needs: getChangedCharts
+    needs: getChangedChart
     steps:
       - uses: actions/checkout@v3
         with:
@@ -27,21 +27,20 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
 
+      - run: pip install yq
       - name: Extract and add helm repos and single out the changed chart
         id: helm-repos
         env:
-          CHARTS: ${{ needs.getChangedCharts.outputs.charts }}
+          CHART: ${{ needs.getChangedChart.outputs.chart }}
         run: |
           set -ex
           set -o pipefail
           mkdir changed_charts
-          for chart in $(jq -r '. | values[]' <<<"$CHARTS"); do
-            chart_dir="charts/${chart}"
-            file="${chart_dir}/Chart.yaml"
-            yq e '.dependencies.[].repository' "$file" | sort -u | awk '{print NR " " $1}' | xargs -r -n 2 helm repo add
-            mv "${chart_dir}" changed_charts/
-            rm -rf charts
-          done
+          chart_dir="charts/${CHART}"
+          file="${chart_dir}/Chart.yaml"
+          yq -r '.dependencies[] | .repository' "$file" | sort -u | awk '{print NR " " $1}' | xargs -r -n 2 helm repo add
+          mv "${chart_dir}" changed_charts/
+          rm -rf charts
           mv changed_charts charts
 
       - name: Run chart-releaser
