@@ -1,6 +1,7 @@
+[modeline]: # ( vim: set ft=markdown: )
 # t8s-cluster
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -24,9 +25,20 @@ t8s-operator cluster with necessary addons
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | common | 2.2.4 |
 
+## Initial installation
+
+Take care to do the same steps as in [the first migration](#0xx---100)
+
 ## Migration
 
 When switching from cilium to calico, which is not recommended, the cilium CRDs are left behind
+
+### 0.x.x -> 1.x.x
+
+The resources of the ccm and the csi are now managed via helm instead of
+kustomize, which means that you have to either manually add the required labels to
+everything or, which we would recommend, just uninstall the ccm, the csi and
+delete the cloud-config secret, as these will just be recreated during installation.
 
 # t8s cluster configuration
 
@@ -57,6 +69,155 @@ When switching from cilium to calico, which is not recommended, the cilium CRDs 
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+| Property                                        | Pattern | Type   | Deprecated | Definition | Title/Description                                        |
+| ----------------------------------------------- | ------- | ------ | ---------- | ---------- | -------------------------------------------------------- |
+| - [helmRepositories](#global_helmRepositories ) | No      | object | No         | -          | A map of helmRepositories to create, the key is the name |
+| - [kubectl](#global_kubectl )                   | No      | object | No         | -          | Image with \`kubectl\` binary                            |
+| - [etcd](#global_etcd )                         | No      | object | No         | -          | Image with \`kubectl\` binary                            |
+
+### <a name="global_helmRepositories"></a>1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > helmRepositories`
+
+|                           |                                                                                                                                                                                      |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Type**                  | `object`                                                                                                                                                                             |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties "Each additional property must conform to the following schema") |
+
+**Description:** A map of helmRepositories to create, the key is the name
+
+| Property                                             | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ---------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#global_helmRepositories_additionalProperties ) | No      | object | No         | -          | -                 |
+
+#### <a name="global_helmRepositories_additionalProperties"></a>1.1.1. Property `t8s cluster configuration > global > helmRepositories > additionalProperties`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                                          | Pattern | Type   | Deprecated | Definition | Title/Description                                                           |
+| ----------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | --------------------------------------------------------------------------- |
+| - [url](#global_helmRepositories_additionalProperties_url )       | No      | string | No         | -          | -                                                                           |
+| - [charts](#global_helmRepositories_additionalProperties_charts ) | No      | object | No         | -          | Which charts are deployed in which version using this repo, used internally |
+
+##### <a name="global_helmRepositories_additionalProperties_url"></a>1.1.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > helmRepositories > additionalProperties > url`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+| Restrictions                      |                                                                         |
+| --------------------------------- | ----------------------------------------------------------------------- |
+| **Must match regular expression** | ```https://.+``` [Test](https://regex101.com/?regex=https%3A%2F%2F.%2B) |
+
+##### <a name="global_helmRepositories_additionalProperties_charts"></a>1.1.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > helmRepositories > additionalProperties > charts`
+
+|                           |                                                                                                                                                                                                                  |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                                                                                         |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties_charts_additionalProperties "Each additional property must conform to the following schema") |
+
+**Description:** Which charts are deployed in which version using this repo, used internally
+
+| Property                                                                         | Pattern | Type   | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#global_helmRepositories_additionalProperties_charts_additionalProperties ) | No      | string | No         | -          | -                 |
+
+##### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties"></a>1.1.1.2.1. Property `t8s cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+### <a name="global_kubectl"></a>1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubectl`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+**Description:** Image with `kubectl` binary
+
+| Property                          | Pattern | Type   | Deprecated | Definition       | Title/Description |
+| --------------------------------- | ------- | ------ | ---------- | ---------------- | ----------------- |
+| - [image](#global_kubectl_image ) | No      | object | No         | In #/$defs/image | -                 |
+
+#### <a name="global_kubectl_image"></a>1.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubectl > image`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+| **Defined in**            | #/$defs/image                                                                                            |
+
+| Property                                          | Pattern | Type   | Deprecated | Definition | Title/Description              |
+| ------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------ |
+| - [registry](#global_kubectl_image_registry )     | No      | string | No         | -          | The host of the registry       |
+| - [repository](#global_kubectl_image_repository ) | No      | string | No         | -          | The image path in the registry |
+| - [tag](#global_kubectl_image_tag )               | No      | string | No         | -          | -                              |
+| - [digest](#global_kubectl_image_digest )         | No      | string | No         | -          | -                              |
+
+##### <a name="global_kubectl_image_registry"></a>1.2.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubectl > image > registry`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** The host of the registry
+
+**Example:**
+
+```yaml
+docker.io
+```
+
+##### <a name="global_kubectl_image_repository"></a>1.2.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubectl > image > repository`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** The image path in the registry
+
+**Example:**
+
+```yaml
+bitnami/kubectl
+```
+
+##### <a name="global_kubectl_image_tag"></a>1.2.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubectl > image > tag`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="global_kubectl_image_digest"></a>1.2.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubectl > image > digest`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+### <a name="global_etcd"></a>1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > etcd`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+**Description:** Image with `kubectl` binary
+
+| Property                       | Pattern | Type   | Deprecated | Definition                              | Title/Description |
+| ------------------------------ | ------- | ------ | ---------- | --------------------------------------- | ----------------- |
+| - [image](#global_etcd_image ) | No      | object | No         | Same as [image](#global_kubectl_image ) | -                 |
+
+#### <a name="global_etcd_image"></a>1.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > etcd > image`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+| **Same definition as**    | [image](#global_kubectl_image)                                                                           |
 
 ## <a name="metadata"></a>2. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > metadata`
 
