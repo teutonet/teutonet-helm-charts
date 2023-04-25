@@ -1,6 +1,3 @@
-global:
-  clusterName: artifacthub
-  serviceLevelAgreement: None
 flux:
   gitRepositories:
     main:
@@ -12,6 +9,3 @@ kyverno:
 storage:
   readWriteMany:
     enabled: true
-monitoring:
-  grafana:
-    adminPassword: default

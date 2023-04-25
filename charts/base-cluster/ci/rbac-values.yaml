@@ -1,6 +1,4 @@
 global:
-  clusterName: rbac
-  serviceLevelAgreement: None
   namespaces:
     my-fav-ns: {}
     my-second-fav-nv: {}
@@ -15,15 +13,15 @@ rbac:
           - get
           - patch
       - apiGroups:
-          - '*'
+          - "*"
         resources:
-          - '*'
+          - "*"
         verbs:
-          - '*'
+          - "*"
       - nonResourceURLs:
-          - '*'
+          - "*"
         verbs:
-          - '*'
+          - "*"
     edit:
       - apiGroups:
           - ""
