@@ -6,6 +6,9 @@ Here we are generating a hash suffix.
   {{- $_ := set . "Values" .context.Values -}}
 apiServerLoadBalancer:
   enabled: true
+  {{- with .Values.controlPlane.allowedCIDRs }}
+  allowedCidrs: {{- . | toYaml | nindent 4 }}
+  {{- end }}
 bastion:
   availabilityZone: {{ .Values.bastion.availabilityZone }}
   enabled: {{ .Values.bastion.enabled }}

@@ -97,6 +97,14 @@
         },
         "nodeDrainTimeout": {
           "$ref": "#/$defs/nodeDrainTimeout"
+        },
+        "allowedCIDRs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(/([0-9]|[1-2][0-9]|3[0-2]))?$"
+          },
+          "uniqueItems": true
         }
       },
       "required": [
