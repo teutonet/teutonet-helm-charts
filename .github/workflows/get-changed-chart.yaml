@@ -1,4 +1,4 @@
-name: Get single changed chart in last commit
+name: Get single changed chart
 
 on:
   workflow_call:
@@ -7,9 +7,13 @@ on:
         type: string
         required: false
         description: The name of the chart to run against
+      forPR:
+        type: boolean
+        required: true
+        description: If it should run against the default branch instead of the last commit
     outputs:
       chart:
-        description: The name of the changed cart in the last commit
+        description: The name of the changed chart
         value: ${{ jobs.getChangedChart.outputs.chart }}
 
 jobs:
@@ -30,12 +34,18 @@ jobs:
       - id: getChangedChart
         if: ${{ !inputs.chart }}
         name: Get changed chart in this commit
+        env:
+          FOR_PR: ${{ inputs.forPR }}
         run: |
           set -x
           set -o pipefail
           (
             echo -n chart=
-            ct list-changed --since "HEAD~" | cut -d / -f 2
+            ct_flags=( list-changed )
+            if [[ "$FOR_PR" == "false" ]]; then
+              ct_flags+=( --since=HEAD~ )
+            fi
+            ct "${ct_flags[@]}" | cut -d / -f 2
           ) | tee "$GITHUB_OUTPUT"
       - id: getChartName
         name: Get name for changed chart

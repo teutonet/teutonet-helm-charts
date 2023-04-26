@@ -12,6 +12,8 @@ jobs:
   getChangedChart:
     if: ${{ contains(github.event.head_commit.message, '[bot] release') || github.event.name != 'push' }}
     uses: ./.github/workflows/get-changed-chart.yaml
+    with:
+      forPR: false
   release:
     if: ${{ contains(github.event.head_commit.message, '[bot] release') || github.event.name != 'push' }}
     runs-on: ubuntu-latest

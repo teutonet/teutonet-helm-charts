@@ -16,6 +16,7 @@ spec:
   {{- end }}
   values:
     controller:
+      kuchen: asd
       metrics:
         enabled: {{ .Values.monitoring.prometheus.enabled }}
         serviceMonitor:

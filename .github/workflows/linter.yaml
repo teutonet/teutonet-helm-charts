@@ -4,16 +4,21 @@ on:
   pull_request:
     paths:
       - charts/**
-  merge_group:
-    types:
-      - checks_requested
 
 jobs:
+  getChangedCharts:
+    uses: ./.github/workflows/get-changed-charts.yaml
+    with:
+      forPR: true
   build:
     name: Lint Code Base
     runs-on: ubuntu-latest
+    needs: getChangedCharts
+    permissions:
+      security-events: write
     env:
       CT_TARGET_BRANCH: ${{ github.event.repository.default_branch }}
+      CHARTS: ${{ needs.getChangedCharts.outputs.charts }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -25,12 +30,14 @@ jobs:
       - name: Extract helm repos
         id: helm-repos
         run: |
+          set -ex
+          set -o pipefail
           (
             echo -n "repos="
-            for DIR in ./charts/*; do
-              FILE="$DIR/Chart.yaml"
-              DIR="${DIR//\./}"
-              yq -r '.dependencies[] | .repository' "$FILE"
+            for chart in $(jq -r '. | values[]' <<<"$CHARTS"); do
+              chart_dir="charts/${chart}"
+              file="${chart_dir}/Chart.yaml"
+              yq -r '.dependencies[] | .repository' "$file"
             done | sort -u | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
             echo
           ) | tee "$GITHUB_OUTPUT"
@@ -42,7 +49,26 @@ jobs:
       - run: ./.github/scripts/prepare-values.sh
       - uses: helm/chart-testing-action@v2.4.0
 
+      - name: templateCharts
+        id: charts
+        run: |
+          set -ex
+          set -o pipefail
+          mkdir /tmp/templated
+          (
+            echo -n charts=
+            for chart in $(jq -r '. | values[]' <<<"$CHARTS"); do
+              ./.github/scripts/templateLocalHelmChart charts/"$chart" > "/tmp/templated/$chart.yaml"
+              echo "charts/$chart"
+            done | jq -c -Rn '[inputs]'
+          ) | tee "$GITHUB_OUTPUT"
+
+      - name: monokle
+        uses: kubeshop/monokle-action@main
+        with:
+          path: /tmp/templated
       - name: Lint charts
         run: ct lint --check-version-increment=false
         env:
           CT_CHART_REPOS: ${{ steps.helm-repos.outputs.repos }}
+          CT_CHARTS: ${{ join(steps.charts.outputs.charts, ',') }}
