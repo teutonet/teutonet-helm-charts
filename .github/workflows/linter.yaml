@@ -19,6 +19,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - run: pip install yq
+      - name: Install sponge
+        run: sudo apt-get -yq install moreutils
       - name: Extract helm repos
         id: helm-repos
         run: |
@@ -27,7 +30,7 @@ jobs:
             for DIR in ./charts/*; do
               FILE="$DIR/Chart.yaml"
               DIR="${DIR//\./}"
-              yq e '.dependencies.[].repository' "$FILE"
+              yq -r '.dependencies[] | .repository' "$FILE"
             done | sort -u | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
             echo
           ) | tee "$GITHUB_OUTPUT"
@@ -36,6 +39,7 @@ jobs:
         with:
           python-version: 3.7
 
+      - run: ./.github/scripts/prepare-values.sh
       - uses: helm/chart-testing-action@v2.4.0
 
       - name: Lint charts
