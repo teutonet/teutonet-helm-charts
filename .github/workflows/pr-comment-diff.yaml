@@ -13,6 +13,8 @@ on:
 jobs:
   getChangedChart:
     uses: ./.github/workflows/get-changed-chart.yaml
+    with:
+      forPR: true
   postDiffComment:
     runs-on: ubuntu-22.04
     needs: getChangedChart

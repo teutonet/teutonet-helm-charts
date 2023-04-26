@@ -10,6 +10,8 @@ on:
 jobs:
   getChangedCharts:
     uses: ./.github/workflows/get-changed-charts.yaml
+    with:
+      forPR: false
   createReleasePR:
     needs: getChangedCharts
     strategy:

@@ -2,6 +2,11 @@ name: Get changed charts in last commit
 
 on:
   workflow_call:
+    inputs:
+      forPR:
+        type: boolean
+        required: true
+        description: If it should run against the default branch instead of the last commit
     outputs:
       charts:
         description: The names of the changed charts in the last commit
@@ -23,10 +28,16 @@ jobs:
 
       - name: Get all charts
         id: getCharts
+        env:
+          FOR_PR: ${{ inputs.forPR }}
         run: |
           set -ex
           set -o pipefail
           (
             echo -n charts=
-            ct list-changed --since "HEAD~" | cut -d / -f 2 | jq -c -Rn '[inputs]'
+            ct_flags=( list-changed )
+            if [[ "$FOR_PR" == "true" ]]; then
+              ct_flags+=( --since=HEAD~ )
+            fi
+            ct "${ct_flags[@]}" | cut -d / -f 2 | jq -c -Rn '[inputs]'
           ) | tee "$GITHUB_OUTPUT"
