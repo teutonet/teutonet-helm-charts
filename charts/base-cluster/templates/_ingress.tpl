@@ -1,5 +1,5 @@
 {{- define "base-cluster.certificate" -}}
-{{- if .context.Values.dns.provider -}}
+{{- if and .context.Values.dns.provider (not .customDomain) -}}
 cluster-wildcard-certificate
 {{- else -}}
 {{- printf "%s-certificate" .name -}}

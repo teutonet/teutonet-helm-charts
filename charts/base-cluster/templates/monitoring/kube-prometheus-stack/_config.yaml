@@ -50,7 +50,6 @@ grafana:
   {{- . | toYaml | nindent 4 }}
   {{- end }}
   defaultDashboardsEnabled: true
-  grafana.ini: {{- .Values.monitoring.grafana.config | mergeOverwrite (include "base-cluster.grafana.config" . | fromYaml) | toYaml | nindent 4 -}}
   {{- if .Values.monitoring.grafana.notifiers }}
   extraEmptyDirMounts:
     - name: provisioning-notifiers
@@ -111,6 +110,10 @@ grafana:
         <<: *dashboard
         gnetId: 11001
         revision: 1
+      flux:
+        <<: *dashboard
+        gnetId: 16714
+        revision: 1
       {{- if .Values.dns.provider }}
       external-dns:
         <<: *dashboard
@@ -131,26 +134,11 @@ grafana:
         gnetId: 15804
         revision: 4
       {{- end }}
-      flux:
-        <<: *dashboard
-        gnetId: 16714
-        revision: 1
   {{- with .Values.monitoring.grafana.additionalDashboards }}
   {{ . | toYaml | nindent 6 }}
   {{- end }}
-  {{- if and .Values.certManager.email .Values.monitoring.grafana.ingress.enabled .Values.global.baseDomain }}
-  ingress:
-    enabled: true
-    ingressClassName: nginx
-    annotations:
-      kubernetes.io/tls-acme: "true"
-    hosts:
-      - {{ include "base-cluster.grafana.host" $ }}
-    tls:
-      - hosts:
-          - {{ include "base-cluster.grafana.host" $ }}
-        secretName: {{ include "base-cluster.certificate" (dict "name" "grafana" "context" $) }}
-  {{- end }}
+  {{- include "base-cluster.monitoring.ingress" (dict "name" "grafana" "context" $) | nindent 2 }}
+  grafana.ini: {{- .Values.monitoring.grafana.config | mergeOverwrite (include "base-cluster.grafana.config" . | fromYaml) | toYaml | nindent 4 }}
   downloadDashboards:
     securityContext: *containerSecurityContext
   initChownData:
@@ -221,14 +209,7 @@ alertmanager:
     enabled: true
   {{- if false }} # TODO ingress
 {{/*  {{- if not (empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled) }}*/}}
-  ingress:
-    enabled: true
-    hosts:
-      - {{ include "base-cluster.alertmanager.host" $ }}
-    tls:
-      - hosts:
-          - {{ include "base-cluster.alertmanager.host" $ }}
-        secretName: cluster-wildcard-certificate
+  {{- include "base-cluster.monitoring.ingress" (dict "name" "alertmanager" "context" $) | nindent 2 }}
   {{- end }}
   alertmanagerSpec:
     replicas: {{ .Values.monitoring.prometheus.alertmanager.replicas }}
@@ -254,14 +235,7 @@ prometheus:
   enabled: true
   {{- if false }} # TODO ingress
 {{/*  {{- if not (empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled) }}*/}}
-  ingress:
-    enabled: true
-    hosts:
-      - {{ include "base-cluster.prometheus.host" $ }}
-    tls:
-      - hosts:
-          - {{ include "base-cluster.prometheus.host" $ }}
-        secretName: cluster-wildcard-certificate
+  {{- include "base-cluster.monitoring.ingress" (dict "name" "prometheus" "context" $) | nindent 2 }}
   {{- end }}
   prometheusSpec:
     {{- if (lookup "v1" "Secret" "monitoring" "additional-alertmanager-configs") }}
