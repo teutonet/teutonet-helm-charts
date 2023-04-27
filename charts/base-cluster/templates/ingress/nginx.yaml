@@ -16,6 +16,8 @@ spec:
   {{- end }}
   values:
     controller:
+      ingressClassResource:
+        default: true
       metrics:
         enabled: {{ .Values.monitoring.prometheus.enabled }}
         serviceMonitor:
