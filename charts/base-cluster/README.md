@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # base-cluster
 
-![Version: 4.2.0](https://img.shields.io/badge/Version-4.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 4.3.0](https://img.shields.io/badge/Version-4.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -13,6 +13,7 @@ A common base for every kubernetes cluster
 | ---- | ------ | --- |
 | cwrau | <cwr@teuto.net> |  |
 | marvinWolff | <mw@teuto.net> |  |
+| steutol | <sl@teuto.net> |  |
 
 ## Cluster bootstrap
 
@@ -58,7 +59,7 @@ helm -n flux-system get notes base-cluster
 
 ### Component [cert-manager](#certManager)
 
-[manager](https://cert-manager.io) takes care of creating SSL certificates
+[cert-manager](https://cert-manager.io) takes care of creating SSL certificates
 for your Ingresses (and [other needs](https://cert-manager.io/docs/usage/))
 
 1. set `.certManager.email` to your email for the Let's Encrypt account to enable
@@ -171,9 +172,9 @@ The included [NFS Ganesha server and external provisioner](https://github.com/ku
 provides rudimentary support for RWM volumes if needed.
 
 > ⚠️  This is _not_ highly available, and the software itself _does not_ support
-it you should only use this if there is no other choice and make sure you're
+it. You should only use this if there is no other choice and make sure you're
 cloud provider knows about this, because a node rotation _will_ result in a
-downtime for all attaches applications!
+downtime for all attached applications!
 
 ### Component [rbac](#rbac)
 
@@ -2215,13 +2216,20 @@ must respect the following conditions
 
 #### <a name="flux_gitRepositories_additionalProperties"></a>8.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                                              |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
 | Property                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description                            |
 | ------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | -------------------------------------------- |
+| + [url](#flux_gitRepositories_additionalProperties_url )                 | No      | string | No         | -          | -                                            |
+| - [username](#flux_gitRepositories_additionalProperties_username )       | No      | string | No         | -          | -                                            |
+| - [password](#flux_gitRepositories_additionalProperties_password )       | No      | string | No         | -          | -                                            |
+| - [branch](#flux_gitRepositories_additionalProperties_branch )           | No      | string | No         | -          | -                                            |
+| - [commit](#flux_gitRepositories_additionalProperties_commit )           | No      | string | No         | -          | -                                            |
+| - [semver](#flux_gitRepositories_additionalProperties_semver )           | No      | string | No         | -          | -                                            |
+| - [tag](#flux_gitRepositories_additionalProperties_tag )                 | No      | string | No         | -          | -                                            |
 | - [gitInterval](#flux_gitRepositories_additionalProperties_gitInterval ) | No      | string | No         | -          | The interval in which to sync the repository |
 | - [decryption](#flux_gitRepositories_additionalProperties_decryption )   | No      | object | No         | -          | -                                            |
 
@@ -2241,102 +2249,133 @@ must respect the following conditions
 | ---------------------------------------------------------------------- |
 | [item 0](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0) |
 | [item 1](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1) |
-| [item 2](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i2) |
 
 ##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0"></a>8.1.1.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                                                                       |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+| Property                                                                   | Pattern | Type   | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [url](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_url ) | No      | object | No         | -          | -                 |
+
+| One of(Option)                                                                  |
+| ------------------------------------------------------------------------------- |
+| [item 0](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_oneOf_i0) |
+| [item 1](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_oneOf_i1) |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_oneOf_i0"></a>8.1.1.1.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > oneOf > item 0`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-| Property                                                                             | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ------------------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [url](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_url )           | No      | string | No         | -          | -                 |
-| - [username](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_username ) | No      | const  | No         | -          | -                 |
-| - [password](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_password ) | No      | const  | No         | -          | -                 |
+##### <a name="autogenerated_heading_9"></a>8.1.1.1.1.1.1. The following properties are required
+* password
+* username
 
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_url"></a>8.1.1.1.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > url`
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_oneOf_i1"></a>8.1.1.1.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > oneOf > item 1`
 
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                                                                       |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+##### <a name="autogenerated_heading_10"></a>8.1.1.1.1.2.1. Must **not** be
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                                                                       |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+| Any of(Option)                                                                               |
+| -------------------------------------------------------------------------------------------- |
+| [item 0](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_oneOf_i1_not_anyOf_i0) |
+| [item 1](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_oneOf_i1_not_anyOf_i1) |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_oneOf_i1_not_anyOf_i0"></a>8.1.1.1.1.2.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > oneOf > item 1 > not > anyOf > item 0`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+##### <a name="autogenerated_heading_11"></a>8.1.1.1.1.2.1.1.1. The following properties are required
+* username
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_oneOf_i1_not_anyOf_i1"></a>8.1.1.1.1.2.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > oneOf > item 1 > not > anyOf > item 1`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+##### <a name="autogenerated_heading_12"></a>8.1.1.1.1.2.1.2.1. The following properties are required
+* password
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_url"></a>8.1.1.1.1.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > url`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
 | Restrictions                      |                                                                         |
 | --------------------------------- | ----------------------------------------------------------------------- |
 | **Must match regular expression** | ```https://.+``` [Test](https://regex101.com/?regex=https%3A%2F%2F.%2B) |
-
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_username"></a>8.1.1.1.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > username`
-
-|          |         |
-| -------- | ------- |
-| **Type** | `const` |
-
-Specific value: `{
-    "description": "😅 ERROR in schema generation, a referenced schema could not be loaded, no documentation here unfortunately 🏜️"
-}`
-
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_password"></a>8.1.1.1.1.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > password`
-
-|          |         |
-| -------- | ------- |
-| **Type** | `const` |
-
-Specific value: `{
-    "description": "😅 ERROR in schema generation, a referenced schema could not be loaded, no documentation here unfortunately 🏜️"
-}`
 
 ##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1"></a>8.1.1.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
+| **Type**                  | `combining`                                                                                                                       |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-| Property                                                                             | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ------------------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [url](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_url )           | No      | string | No         | -          | -                 |
-| + [password](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_password ) | No      | string | No         | -          | -                 |
-| + [username](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_username ) | No      | string | No         | -          | -                 |
+| Property                                                                   | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                      |
+| -------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------- |
+| - [url](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_url ) | No      | object | No         | -          | This needs to follow flux's way of writing this url, see https://fluxcd.io/flux/components/source/gitrepositories/#url |
 
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_url"></a>8.1.1.1.2.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1 > url`
+##### <a name="autogenerated_heading_13"></a>8.1.1.1.2.1. Must **not** be
 
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                                                                       |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-| Restrictions                      |                                                                         |
-| --------------------------------- | ----------------------------------------------------------------------- |
-| **Must match regular expression** | ```https://.+``` [Test](https://regex101.com/?regex=https%3A%2F%2F.%2B) |
+| Any of(Option)                                                                      |
+| ----------------------------------------------------------------------------------- |
+| [item 0](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_not_anyOf_i0) |
+| [item 1](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_not_anyOf_i1) |
 
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_password"></a>8.1.1.1.2.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1 > password`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
-
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_username"></a>8.1.1.1.2.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1 > username`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
-
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i2"></a>8.1.1.1.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 2`
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_not_anyOf_i0"></a>8.1.1.1.2.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1 > not > anyOf > item 0`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-| Property                                                                   | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                      |
-| -------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------- |
-| - [url](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i2_url ) | No      | string | No         | -          | This needs to follow flux's way of writing this url, see https://fluxcd.io/flux/components/source/gitrepositories/#url |
+##### <a name="autogenerated_heading_14"></a>8.1.1.1.2.1.1.1. The following properties are required
+* username
 
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i2_url"></a>8.1.1.1.3.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 2 > url`
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_not_anyOf_i1"></a>8.1.1.1.2.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1 > not > anyOf > item 1`
 
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+##### <a name="autogenerated_heading_15"></a>8.1.1.1.2.1.2.1. The following properties are required
+* password
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_url"></a>8.1.1.1.2.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1 > url`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
 **Description:** This needs to follow flux's way of writing this url, see https://fluxcd.io/flux/components/source/gitrepositories/#url
 
@@ -2366,16 +2405,8 @@ Specific value: `{
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-| Property                                                                         | Pattern | Type   | Deprecated | Definition | Title/Description |
-| -------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| + [branch](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i0_branch ) | No      | string | No         | -          | -                 |
-
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i0_branch"></a>8.1.1.2.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 0 > branch`
-
-|             |            |
-| ----------- | ---------- |
-| **Type**    | `string`   |
-| **Default** | `"master"` |
+##### <a name="autogenerated_heading_16"></a>8.1.1.2.1.1. The following properties are required
+* branch
 
 ##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i1"></a>8.1.1.2.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 1`
 
@@ -2384,15 +2415,8 @@ Specific value: `{
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-| Property                                                                         | Pattern | Type   | Deprecated | Definition | Title/Description |
-| -------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| + [commit](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i1_commit ) | No      | string | No         | -          | -                 |
-
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i1_commit"></a>8.1.1.2.2.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 1 > commit`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
+##### <a name="autogenerated_heading_17"></a>8.1.1.2.2.1. The following properties are required
+* commit
 
 ##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i2"></a>8.1.1.2.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 2`
 
@@ -2401,15 +2425,8 @@ Specific value: `{
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-| Property                                                                         | Pattern | Type   | Deprecated | Definition | Title/Description |
-| -------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| + [semver](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i2_semver ) | No      | string | No         | -          | -                 |
-
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i2_semver"></a>8.1.1.2.3.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 2 > semver`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
+##### <a name="autogenerated_heading_18"></a>8.1.1.2.3.1. The following properties are required
+* semver
 
 ##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i3"></a>8.1.1.2.4. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 3`
 
@@ -2418,74 +2435,114 @@ Specific value: `{
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-| Property                                                                   | Pattern | Type   | Deprecated | Definition | Title/Description |
-| -------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| + [tag](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i3_tag ) | No      | string | No         | -          | -                 |
-
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i3_tag"></a>8.1.1.2.4.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 3 > tag`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
+##### <a name="autogenerated_heading_19"></a>8.1.1.2.4.1. The following properties are required
+* tag
 
 ##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4"></a>8.1.1.2.5. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                                                                       |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+##### <a name="autogenerated_heading_20"></a>8.1.1.2.5.1. Must **not** be
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                                                                       |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+| Any of(Option)                                                                      |
+| ----------------------------------------------------------------------------------- |
+| [item 0](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_not_anyOf_i0) |
+| [item 1](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_not_anyOf_i1) |
+| [item 2](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_not_anyOf_i2) |
+| [item 3](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_not_anyOf_i3) |
+
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_not_anyOf_i0"></a>8.1.1.2.5.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > not > anyOf > item 0`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-| Property                                                                         | Pattern | Type  | Deprecated | Definition | Title/Description |
-| -------------------------------------------------------------------------------- | ------- | ----- | ---------- | ---------- | ----------------- |
-| - [branch](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_branch ) | No      | const | No         | -          | -                 |
-| - [commit](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_commit ) | No      | const | No         | -          | -                 |
-| - [semver](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_semver ) | No      | const | No         | -          | -                 |
-| - [tag](#flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_tag )       | No      | const | No         | -          | -                 |
+##### <a name="autogenerated_heading_21"></a>8.1.1.2.5.1.1.1. The following properties are required
+* branch
 
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_branch"></a>8.1.1.2.5.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > branch`
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_not_anyOf_i1"></a>8.1.1.2.5.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > not > anyOf > item 1`
 
-|          |         |
-| -------- | ------- |
-| **Type** | `const` |
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-Specific value: `{
-    "description": "😅 ERROR in schema generation, a referenced schema could not be loaded, no documentation here unfortunately 🏜️"
-}`
+##### <a name="autogenerated_heading_22"></a>8.1.1.2.5.1.2.1. The following properties are required
+* commit
 
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_commit"></a>8.1.1.2.5.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > commit`
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_not_anyOf_i2"></a>8.1.1.2.5.1.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > not > anyOf > item 2`
 
-|          |         |
-| -------- | ------- |
-| **Type** | `const` |
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-Specific value: `{
-    "description": "😅 ERROR in schema generation, a referenced schema could not be loaded, no documentation here unfortunately 🏜️"
-}`
+##### <a name="autogenerated_heading_23"></a>8.1.1.2.5.1.3.1. The following properties are required
+* semver
 
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_semver"></a>8.1.1.2.5.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > semver`
+##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_not_anyOf_i3"></a>8.1.1.2.5.1.4. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > not > anyOf > item 3`
 
-|          |         |
-| -------- | ------- |
-| **Type** | `const` |
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-Specific value: `{
-    "description": "😅 ERROR in schema generation, a referenced schema could not be loaded, no documentation here unfortunately 🏜️"
-}`
+##### <a name="autogenerated_heading_24"></a>8.1.1.2.5.1.4.1. The following properties are required
+* tag
 
-##### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_tag"></a>8.1.1.2.5.4. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > tag`
+##### <a name="flux_gitRepositories_additionalProperties_url"></a>8.1.1.3. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > flux > gitRepositories > additionalProperties > url`
 
-|          |         |
-| -------- | ------- |
-| **Type** | `const` |
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
 
-Specific value: `{
-    "description": "😅 ERROR in schema generation, a referenced schema could not be loaded, no documentation here unfortunately 🏜️"
-}`
+##### <a name="flux_gitRepositories_additionalProperties_username"></a>8.1.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > username`
 
-##### <a name="autogenerated_heading_9"></a>8.1.1.3. The following properties are required
-* url
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
 
-##### <a name="flux_gitRepositories_additionalProperties_gitInterval"></a>8.1.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > gitInterval`
+##### <a name="flux_gitRepositories_additionalProperties_password"></a>8.1.1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > password`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="flux_gitRepositories_additionalProperties_branch"></a>8.1.1.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > branch`
+
+|             |            |
+| ----------- | ---------- |
+| **Type**    | `string`   |
+| **Default** | `"master"` |
+
+##### <a name="flux_gitRepositories_additionalProperties_commit"></a>8.1.1.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > commit`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="flux_gitRepositories_additionalProperties_semver"></a>8.1.1.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > semver`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="flux_gitRepositories_additionalProperties_tag"></a>8.1.1.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > tag`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="flux_gitRepositories_additionalProperties_gitInterval"></a>8.1.1.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > gitInterval`
 
 |             |          |
 | ----------- | -------- |
@@ -2498,7 +2555,7 @@ Specific value: `{
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | **Must match regular expression** | ```[0-9]+(ms\|s\|m\|h\|d\|w\|y)``` [Test](https://regex101.com/?regex=%5B0-9%5D%2B%28ms%7Cs%7Cm%7Ch%7Cd%7Cw%7Cy%29) |
 
-##### <a name="flux_gitRepositories_additionalProperties_decryption"></a>8.1.1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption`
+##### <a name="flux_gitRepositories_additionalProperties_decryption"></a>8.1.1.11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2509,7 +2566,7 @@ Specific value: `{
 | ----------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ---------- | ----------------- |
 | + [provider](#flux_gitRepositories_additionalProperties_decryption_provider ) | No      | enum (of string) | No         | -          | -                 |
 
-##### <a name="flux_gitRepositories_additionalProperties_decryption_provider"></a>8.1.1.5.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption > provider`
+##### <a name="flux_gitRepositories_additionalProperties_decryption_provider"></a>8.1.1.11.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption > provider`
 
 |          |                    |
 | -------- | ------------------ |
