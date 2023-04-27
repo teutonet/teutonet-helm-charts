@@ -1,5 +1,34 @@
 # Changelog
 
+## [4.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.2.0...base-cluster-v4.3.0) (2023-04-27)
+
+
+### Features
+
+* **base-cluster/ci:** add scripts, deduplicate values ([#357](https://github.com/teutonet/teutonet-helm-charts/issues/357)) ([1c0a7f1](https://github.com/teutonet/teutonet-helm-charts/commit/1c0a7f1b5377d5fe9b9114d05cec6db39fee77ae))
+* **base-cluster/ingress:** set nginx as default ingerssClass ([#368](https://github.com/teutonet/teutonet-helm-charts/issues/368)) ([93b4747](https://github.com/teutonet/teutonet-helm-charts/commit/93b4747ddef340470c27162347971515afb9ab59))
+* **base-cluster/ingress:** support hetzner cloud loadbalancer ([#363](https://github.com/teutonet/teutonet-helm-charts/issues/363)) ([96a5119](https://github.com/teutonet/teutonet-helm-charts/commit/96a5119e2ca569464965dd1c4932767d3599a088))
+* **base-cluster/monitoring:** add podMonitor and dashboard for flux ([#314](https://github.com/teutonet/teutonet-helm-charts/issues/314)) ([6e58cf8](https://github.com/teutonet/teutonet-helm-charts/commit/6e58cf89ca62c9ed6fcf7788bfc76a56b1abb23f))
+* **base-cluster:** prepare for flux drift-detection ([#323](https://github.com/teutonet/teutonet-helm-charts/issues/323)) ([9089bd5](https://github.com/teutonet/teutonet-helm-charts/commit/9089bd52640cef227f301f3cc41f3cb5e248699f))
+* **base-cluster:** update CODEOWNERS ([#332](https://github.com/teutonet/teutonet-helm-charts/issues/332)) ([79bd962](https://github.com/teutonet/teutonet-helm-charts/commit/79bd962de9fadb043de9a43817cd3d97565e5655))
+
+
+### Bug Fixes
+
+* **base-cluster/cert-manager:** use correct ClusterIssuer name ([#358](https://github.com/teutonet/teutonet-helm-charts/issues/358)) ([2ed7824](https://github.com/teutonet/teutonet-helm-charts/commit/2ed7824887d4bb443c0c79b3f099fde573e851b9))
+* **base-cluster/docs:** typos ([#313](https://github.com/teutonet/teutonet-helm-charts/issues/313)) ([cf24622](https://github.com/teutonet/teutonet-helm-charts/commit/cf24622ce728970ccf09aac53d8c731a1e11aced))
+* **base-cluster/flux:** adjust schema for flux gitRepositories ([#344](https://github.com/teutonet/teutonet-helm-charts/issues/344)) ([0ab5ee9](https://github.com/teutonet/teutonet-helm-charts/commit/0ab5ee98e4b72331358c8da57ab50eff0696d7cf))
+* **base-cluster/ingress:** remove duplicate certs ([#369](https://github.com/teutonet/teutonet-helm-charts/issues/369)) ([a2b652f](https://github.com/teutonet/teutonet-helm-charts/commit/a2b652f96bff6f0d8c5d8cefc24f78ea0f8369b6))
+* **base-cluster:** weird stuff ([#327](https://github.com/teutonet/teutonet-helm-charts/issues/327)) ([5a3fc3e](https://github.com/teutonet/teutonet-helm-charts/commit/5a3fc3e301095e36153cf689555eb6a822042688))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/artifacthub-images:** Update ArtifactHUB images ([#319](https://github.com/teutonet/teutonet-helm-charts/issues/319)) ([e295af7](https://github.com/teutonet/teutonet-helm-charts/commit/e295af74af05524434bb9bf070760aec1e146a12))
+* **base-cluster/artifacthub-images:** Update ArtifactHUB images ([#340](https://github.com/teutonet/teutonet-helm-charts/issues/340)) ([06e2877](https://github.com/teutonet/teutonet-helm-charts/commit/06e28774cf1b4f58672ce0473c85b50b23cf7871))
+* **deps:** update docker.io/bitnami/kubectl docker tag to v1.26.4 ([#342](https://github.com/teutonet/teutonet-helm-charts/issues/342)) ([88493f2](https://github.com/teutonet/teutonet-helm-charts/commit/88493f22224e068d7297d151011905f0b261be2b))
+* **deps:** update docker.io/bitnami/kubectl docker tag to v1.27.1 ([#351](https://github.com/teutonet/teutonet-helm-charts/issues/351)) ([3a22fce](https://github.com/teutonet/teutonet-helm-charts/commit/3a22fceb617b8e5f0eb18e104f104070e65649b6))
+
 ## [4.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.1.1...base-cluster-v4.2.0) (2023-03-23)
 
 
