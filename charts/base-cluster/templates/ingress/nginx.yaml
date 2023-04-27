@@ -28,6 +28,8 @@ spec:
       service:
         annotations:
           loadbalancer.openstack.org/proxy-protocol: "true"
+          load-balancer.hetzner.cloud/uses-proxyprotocol: "true"
+          load-balancer.hetzner.cloud/disable-private-ingress: "true"
         {{- if .Values.ingress.IP }}
           loadbalancer.openstack.org/keep-floatingip: "true"
         {{- end }}
