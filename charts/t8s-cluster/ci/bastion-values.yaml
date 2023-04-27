@@ -1,2 +1,6 @@
 bastion:
   enabled: true
+metadata:
+  customerID: 1000
+  customerName: test
+cloud: ffm3

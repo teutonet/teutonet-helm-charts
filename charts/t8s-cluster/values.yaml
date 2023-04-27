@@ -1,5 +1,4 @@
 global:
-  # it's important that the `url` is the first key and `charts` is right below, otherwise renovate won't detect it
   helmRepositories:
     cilium:
       url: https://helm.cilium.io
@@ -15,35 +14,30 @@ global:
       registry: docker.io
       repository: bitnami/kubectl
       tag: 1.27.1
-
 metadata:
   serviceLevelAgreement: None
-  supportProjectUrl: ""
-  configGroupUrl: ""
-  gopassName: ""
-  remarks: ""
-
+  supportProjectUrl: ''
+  configGroupUrl: ''
+  gopassName: ''
+  remarks: ''
+  customerID: 1000
+  customerName: test
 controlPlane:
   flavor: standard.2.1905
   singleNode: false
   allowedCIDRs: []
-
 version:
   major: 1
   minor: 25
   patch: 0
-
 workers: {}
-
 bastion:
   enabled: false
   availabilityZone: null
   sshKeyName: null
-
 containerRegistryProxy:
   additionallyProxiedRegistries: []
   proxyRegistryEndpoint: https://harbor.teuto.net/v2/
-
 sshKeyName: null
-
 cni: cilium
+cloud: ffm3

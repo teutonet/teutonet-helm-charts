@@ -2,6 +2,8 @@ global:
   namespaces:
     my-fav-ns: {}
     my-second-fav-nv: {}
+  clusterName: test
+  serviceLevelAgreement: None
 rbac:
   roles:
     admin:
@@ -13,18 +15,18 @@ rbac:
           - get
           - patch
       - apiGroups:
-          - "*"
+          - '*'
         resources:
-          - "*"
+          - '*'
         verbs:
-          - "*"
+          - '*'
       - nonResourceURLs:
-          - "*"
+          - '*'
         verbs:
-          - "*"
+          - '*'
     edit:
       - apiGroups:
-          - ""
+          - ''
         resources:
           - pods
         verbs:
@@ -47,3 +49,6 @@ rbac:
       clusterRoles:
         - edit
         - admin
+monitoring:
+  grafana:
+    adminPassword: test

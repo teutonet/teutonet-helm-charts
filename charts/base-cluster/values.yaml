@@ -1,6 +1,6 @@
 global:
   serviceLevelAgreement: None
-  clusterName: null
+  clusterName: test
   baseDomain: null
   imageRegistry: null
   imageCredentials: {}
@@ -20,7 +20,8 @@ global:
       additionalLabels:
         app.kubernetes.io/component: kyverno
     monitoring:
-      condition: '{{ or .Values.monitoring.prometheus.enabled .Values.monitoring.metricsServer.enabled }}'
+      condition: '{{ or .Values.monitoring.prometheus.enabled .Values.monitoring.metricsServer.enabled
+        }}'
       additionalLabels:
         app.kubernetes.io/component: monitoring
     loki:
@@ -39,11 +40,13 @@ global:
         app.kubernetes.io/part-of: nfs-server-provisioner
   certificates:
     cluster-wildcard:
-      dnsNames: |-
-        - {{ include "base-cluster.domain" $ | quote }}
+      dnsNames: '- {{ include "base-cluster.domain" $ | quote }}
+
         {{- if .Values.dns.provider }}
+
         - {{ printf "*.%s" (include "base-cluster.domain" $) | quote }}
-        {{- end }}
+
+        {{- end }}'
       targetNamespaces: ALL
       condition: '{{ not (empty .Values.global.baseDomain) }}'
   storageClass: null
@@ -56,7 +59,7 @@ global:
     image:
       registry: k8s.gcr.io
       repository: pause
-      tag: "3.9"
+      tag: '3.9'
   flux:
     image:
       registry: docker.io
@@ -67,7 +70,6 @@ global:
       registry: docker.io
       repository: vladgh/gpg
       digest: sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
-
   networkPolicy:
     type: none
     dnsLabels:
@@ -76,7 +78,6 @@ global:
     metricsLabels:
       io.kubernetes.pod.namespace: monitoring
       app.kubernetes.io/name: prometheus
-  # it's important that the `url` is the first key and `charts` is right below, otherwise renovate won't detect it
   helmRepositories:
     prometheus:
       url: https://prometheus-community.github.io/helm-charts
@@ -91,7 +92,8 @@ global:
       url: https://grafana.github.io/helm-charts
       charts:
         loki-stack: 2.x.x
-      condition: '{{ and .Values.monitoring.prometheus.enabled .Values.monitoring.loki.enabled }}'
+      condition: '{{ and .Values.monitoring.prometheus.enabled .Values.monitoring.loki.enabled
+        }}'
     bitnami:
       url: https://charts.bitnami.com/bitnami
       charts:
@@ -140,19 +142,18 @@ global:
       url: https://emberstack.github.io/helm-charts
       charts:
         reflector: 7.x
-      condition: '{{ eq (include "base-cluster.reflector.enabled" (dict "context" .)) "true" }}'
-
+      condition: '{{ eq (include "base-cluster.reflector.enabled" (dict "context"
+        .)) "true" }}'
 kyverno:
   enabled: false
   podSecurityStandard: baseline
   podSecuritySeverity: medium
   validationFailureAction: audit
-
 monitoring:
   labels:
     managed.by/monitoring: teutonet
   grafana:
-    adminPassword: null
+    adminPassword: test
     ingress:
       enabled: true
       host: grafana
@@ -192,10 +193,10 @@ monitoring:
       size: 100Gi
     resources:
       requests:
-        cpu: "250m"
+        cpu: 250m
         memory: 2Gi
       limits:
-        cpu: "500m"
+        cpu: 500m
         memory: 2Gi
     operator:
       resources:
@@ -233,7 +234,7 @@ monitoring:
           cpu: 50m
           memory: 64Mi
         limits:
-          cpu: "2"
+          cpu: '2'
           memory: 128Mi
     ingress:
       enabled: false
@@ -274,7 +275,6 @@ monitoring:
     enabled: true
   securityScanning:
     enabled: true
-
 descheduler:
   enabled: true
   strategies:
@@ -310,11 +310,9 @@ descheduler:
             cpu: 70
             memory: 80
             pods: 95
-
 dns:
   domains: []
   provider: null
-
 certManager:
   email: null
   resources:
@@ -342,7 +340,6 @@ certManager:
         memory: 512Mi
   dnsChallengeNameservers:
     1.1.1.1: 53
-
 externalDNS:
   resources:
     limits:
@@ -351,10 +348,8 @@ externalDNS:
     requests:
       cpu: 10m
       memory: 64Mi
-
 flux:
   gitRepositories: {}
-
 ingress:
   replicas: 2
   resources:
@@ -365,7 +360,6 @@ ingress:
       cpu: 1
       memory: 256Mi
   IP: null
-
 storage:
   readWriteMany:
     enabled: false
@@ -374,10 +368,8 @@ storage:
     persistence:
       storageClass: null
       size: 5Gi
-
 reflector:
   enabled: auto
-
 rbac:
   roles: {}
   accounts: {}

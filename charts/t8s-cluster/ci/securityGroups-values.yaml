@@ -12,3 +12,7 @@ workers:
     securityGroups:
       - default
       - kuchen
+metadata:
+  customerID: 1000
+  customerName: test
+cloud: ffm3
