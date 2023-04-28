@@ -114,6 +114,7 @@ rules:
   - verbs:
       - get
       - delete
+      - list
     resources:
       - secrets
       - configmaps
