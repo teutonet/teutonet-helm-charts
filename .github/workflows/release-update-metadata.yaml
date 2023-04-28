@@ -38,6 +38,7 @@ jobs:
           message: "chore: [bot] Update images in 'Chart.yaml'"
           default_author: github_actions
           push: false
+          add: charts/${{ needs.getChangedChart.outputs.chart }}/Chart.yaml
 
       - run: pip install json-schema-for-humans
       - name: generate values.md
@@ -55,3 +56,4 @@ jobs:
           message: "chore: [bot] Update 'README.md'"
           default_author: github_actions
           push: true
+          add: charts/${{ needs.getChangedChart.outputs.chart }}/README.md
