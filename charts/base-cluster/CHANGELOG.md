@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.3.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.3.0...base-cluster-v4.3.1) (2023-04-28)
+
+
+### Bug Fixes
+
+* **base-cluster/ingress:** change "kind" of default ([#376](https://github.com/teutonet/teutonet-helm-charts/issues/376)) ([32d6063](https://github.com/teutonet/teutonet-helm-charts/commit/32d6063af102d668f20334e500328455c824e549))
+
 ## [4.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.2.0...base-cluster-v4.3.0) (2023-04-27)
 
 
