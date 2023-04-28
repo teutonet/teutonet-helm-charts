@@ -32,7 +32,8 @@ helm repo add teutonet https://teutonet.github.io/teutonet-helm-charts
 
 You can then run `helm search repo teutonet` to see the charts.
 
+Or you can use the new OCI registry; `oci://ghcr.io/teutonet/teutonet-helm-charts`
+
 ## License
 
 [MIT](https://github.com/teutonet/teutonet-helm-charts/blob/main/LICENSE).
-
