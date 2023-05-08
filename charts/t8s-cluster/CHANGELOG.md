@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-1.2.0...t8s-cluster-v1.2.1) (2023-05-08)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** fix conditional patch ([#395](https://github.com/teutonet/teutonet-helm-charts/issues/395)) ([ebb3e69](https://github.com/teutonet/teutonet-helm-charts/commit/ebb3e69744525fd4353eb0845025eec76c3cdfb7))
+
+
+### Miscellaneous Chores
+
+* **deps:** update helm release common to v2.2.5 ([#383](https://github.com/teutonet/teutonet-helm-charts/issues/383)) ([6205753](https://github.com/teutonet/teutonet-helm-charts/commit/620575318783563c30ae38e436208f3ba24aa203))
+
 ## [1.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-1.1.0...t8s-cluster-v1.2.0) (2023-05-08)
 
 

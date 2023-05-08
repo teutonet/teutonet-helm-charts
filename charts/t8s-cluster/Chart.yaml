@@ -1,7 +1,7 @@
 apiVersion: v2
 name: t8s-cluster
 type: application
-version: 1.2.0
+version: 1.2.1
 icon: https://teuto.net/favicon.ico
 maintainers:
   - name: cwrau
