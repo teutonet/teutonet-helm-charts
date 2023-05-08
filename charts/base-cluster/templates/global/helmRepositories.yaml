@@ -13,6 +13,9 @@ metadata:
 spec:
   interval: {{ $config.interval | default "5m" }}
   url: {{ $config.url }}
+  {{- if $config.url | hasPrefix "oci://" }}
+  type: oci
+  {{- end }}
 ---
 {{ end -}}
 {{- end }}
