@@ -1,0 +1,57 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: storageclasses-uninstall
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: storageclasses
+    app.kubernetes.io/part-of: pre-install-cleanup
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-weight: "1"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsGroup: 1000
+        runAsUser: 1000
+        fsGroup: 1000
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      containers:
+        - name: uninstall
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.global.kubectl.image "global" .Values.global) }}
+          {{- if .Values.global.kubectl.image.digest }}
+          imagePullPolicy: IfNotPresent
+          {{- else }}
+          imagePullPolicy: Always
+          {{- end }}
+          securityContext:
+            readOnlyRootFilesystem: true
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /tmp/workload-kubeconfig
+              name: workload-kubeconfig
+              subPath: value
+          command:
+            - bash
+            - -ex
+            - -c
+            - |-
+              for storageclass in teutostack-hdd teutostack-ssd; do
+                kubectl --kubeconfig /tmp/workload-kubeconfig delete storageclass "$storageclass"
+              done
+      volumes:
+        - name: workload-kubeconfig
+          secret:
+            secretName: {{ .Release.Name }}-kubeconfig
+            optional: false
