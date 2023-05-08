@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-1.1.0...t8s-cluster-v1.2.0) (2023-05-08)
+
+
+### Features
+
+* **t8s-cluster/ci:** add scripts, deduplicate values ([#356](https://github.com/teutonet/teutonet-helm-charts/issues/356)) ([8dc7ce5](https://github.com/teutonet/teutonet-helm-charts/commit/8dc7ce5d0721897584b385a24f97a5232bce63a8))
+* **t8s-cluster/management-cluster:** allow setting the allowedCidrs of the openStackClusterTemplate ([#331](https://github.com/teutonet/teutonet-helm-charts/issues/331)) ([13d0b0a](https://github.com/teutonet/teutonet-helm-charts/commit/13d0b0ac8f03b7f9f0683f11b5a5fe204c23ae3b))
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** bump CAPO apiVersion ([#329](https://github.com/teutonet/teutonet-helm-charts/issues/329)) ([c540ad2](https://github.com/teutonet/teutonet-helm-charts/commit/c540ad2839b4977fda6839993598a2b45a5dbdad))
+* **t8s-cluster/workload-cluster:** add `list` to rbac, otherwise job … ([#373](https://github.com/teutonet/teutonet-helm-charts/issues/373)) ([4670eae](https://github.com/teutonet/teutonet-helm-charts/commit/4670eaee1ca0cc20a3fb14c421667c233b36f644))
+* **t8s-cluster/workload-cluster:** add missing uninstall job for the storageclasses ([#390](https://github.com/teutonet/teutonet-helm-charts/issues/390)) ([691ebc9](https://github.com/teutonet/teutonet-helm-charts/commit/691ebc929c7e581688d081c9df5de825b9593dad))
+
 ## [1.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-1.0.0...t8s-cluster-v1.1.0) (2023-04-24)
 
 
