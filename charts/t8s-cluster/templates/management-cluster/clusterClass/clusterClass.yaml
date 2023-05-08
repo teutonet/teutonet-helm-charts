@@ -104,7 +104,7 @@ spec:
       description: Sets the ServerGroupID for MachineDeployment machines.
       name: machineDeploymentServerGroupID
     - name: controlPlaneAvailabilityZones
-      enabledIf: .controlPlaneAvailabilityZones
+      enabledIf: {{ `{{ if .controlPlaneAvailabilityZones }}true{{ end }}` | quote }}
       definitions:
         - selector:
             apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
