@@ -21,6 +21,8 @@ jobs:
         id: create-pr
         uses: peter-evans/create-pull-request@v5
         with:
+          add-paths: |
+            .github/CODEOWNERS
           commit-message: "chore: [bot] Update 'CODEOWNERS'"
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           branch: chore/update-codeowners
