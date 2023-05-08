@@ -1,0 +1,23 @@
+{{- define "base-cluster.prometheus-stack.kube-state-metrics.config" -}}
+  {{- if .Values.global.imageRegistry }}
+image:
+  repository: {{ printf "%s/kube-state-metrics/kube-state-metrics" .Values.global.imageRegistry }}
+  {{- end }}
+resources: {{- .Values.monitoring.prometheus.kubeStateMetrics.resources | toYaml | nindent 2 }}
+  {{- $metricLabelsAllowList := list -}}
+  {{- range $resource, $labels := .Values.monitoring.prometheus.kubeStateMetrics.metricLabelsAllowList -}}
+  {{- $metricLabelsAllowList = append $metricLabelsAllowList (printf "%s=[%s]" $resource ($labels | join ",") ) -}}
+  {{- end }}
+extraArgs:
+  - --metric-labels-allowlist={{- $metricLabelsAllowList | join "," }}
+priorityClassName: system-cluster-critical
+securityContext:
+  enabled: true
+  seccompProfile:
+    type: RuntimeDefault
+  runAsNonRoot: true
+containerSecurityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 2 }}
+prometheus:
+  monitor:
+    additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
+{{- end -}}
