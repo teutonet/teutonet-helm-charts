@@ -1,0 +1,64 @@
+{{- define "base-cluster.prometheus-stack.prometheus.config" -}}
+enabled: true
+  {{- if false }} # TODO ingress
+{{/*  {{- if not (empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled) }}*/}}
+  {{- include "base-cluster.monitoring.ingress" (dict "name" "prometheus" "context" $) | nindent 0 }}
+  {{- end }}
+prometheusSpec:
+    {{- if (lookup "v1" "Secret" "monitoring" "additional-alertmanager-configs") }}
+  additionalAlertManagerConfigsSecret:
+    name: additional-alertmanager-configs
+    key: prometheus-additional-alertmanager-configs.yaml
+    {{- end }}
+    {{- if false }} # TODO ingress
+{{/*    {{- if empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled }}*/}}
+  externalUrl: {{ printf "https://%s" (include "base-cluster.prometheus.host" $) }}
+    {{- end }}
+  resources: {{- .Values.monitoring.prometheus.resources | toYaml | nindent 4 }}
+  priorityClassName: system-cluster-critical
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  serviceMonitorSelectorNilUsesHelmValues: false
+  ruleSelectorNilUsesHelmValues: false
+  podMonitorSelectorNilUsesHelmValues: false
+  probeSelectorNilUsesHelmValues: false
+  retention: {{ .Values.monitoring.prometheus.retentionDuration }}
+  retentionSize: {{ .Values.monitoring.prometheus.retentionSize }}
+  storageSpec:
+    volumeClaimTemplate:
+      spec: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.prometheus.persistence "global" $.Values.global) | nindent 8 }}
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: {{ .Values.monitoring.prometheus.persistence.size }}
+  replicas: {{ .Values.monitoring.prometheus.replicas }}
+  ruleSelector:
+    matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
+  serviceMonitorSelector:
+    matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
+  podMonitorSelector:
+    matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
+  probeSelector:
+    matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
+  additionalAlertRelabelConfigs:
+    - # TODO: Needs alternative
+      source_labels:
+        - namespace
+      action: keep
+      regex: (cert-manager|flux-system|ingress-nginx|kube-node-lease|kube-public|kube-system|kyverno|monitoring)
+    - source_labels:
+        - __address__
+      target_label: clustertype
+      replacement: kubernetes # TODO: really needed?
+
+    - source_labels:
+        - __address__
+      target_label: teutosla
+      replacement: {{ .Values.global.serviceLevelAgreement }}
+    - source_labels:
+        - __address__
+      target_label: cluster
+      replacement: {{ .Values.global.clusterName }}
+{{- end -}}

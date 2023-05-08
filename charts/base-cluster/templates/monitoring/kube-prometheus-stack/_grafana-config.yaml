@@ -1,0 +1,144 @@
+{{- define "base-cluster.prometheus-stack.grafana.config" -}}
+  {{- if $.Values.global.imageRegistry }}
+image:
+  repository: {{ printf "%s/grafana/grafana" .Values.global.imageRegistry }}
+downloadDashboardsImage:
+  repository: {{ printf "%s/curlimages/curl" .Values.global.imageRegistry }}
+  {{- end }}
+imageRenderer:
+  enabled: true
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
+    runAsNonRoot: true
+    runAsUser: 472
+    runAsGroup: 472
+  {{- if $.Values.global.imageRegistry }}
+  image:
+    repository: {{ printf "%s/grafana/grafana-image-renderer" .Values.global.imageRegistry }}
+  {{- end }}
+enabled: true
+securityContext:
+  seccompProfile:
+    type: RuntimeDefault
+containerSecurityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 2 }}
+resources: {{- .Values.monitoring.grafana.resources | toYaml | nindent 2 }}
+serviceMonitor:
+  interval: "30s"
+  labels: {{- .Values.monitoring.labels | toYaml | nindent 4 }}
+podAnnotations:
+  # This might change on every `template` call, this can be ignored
+  checksum/secret: {{ include (print $.Template.BasePath "/monitoring/kube-prometheus-stack/grafana-secret.yaml") . | sha256sum }}
+admin:
+  existingSecret: {{ include "common.secrets.name" (dict "defaultNameSuffix" "grafana" "context" $) }}
+  userKey: username
+  passwordKey: password
+plugins:
+  - grafana-piechart-panel
+  {{- with .Values.monitoring.grafana.additionalPlugins }}
+  {{- . | toYaml | nindent 2 }}
+  {{- end }}
+defaultDashboardsEnabled: true
+  {{- if .Values.monitoring.grafana.notifiers }}
+extraEmptyDirMounts:
+  - name: provisioning-notifiers
+    mountPath: /etc/grafana/provisioning/notifiers
+notifiers:
+  notifiers.yaml:
+    notifiers: {{- .Values.monitoring.grafana.notifiers | toYaml | nindent 6 }}
+  {{- end }}
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: 'custom'
+        orgId: 1
+        folder: ''
+        type: file
+        disableDeletion: true
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/custom
+sidecar:
+    {{- if .Values.global.imageRegistry }}
+  image:
+    repository: {{ printf "%s/kiwigrid/k8s-sidecar" .Values.global.imageRegistry }}
+    {{- end }}
+  dashboards:
+    enabled: true
+    resource: configmap
+    searchNamespace: ALL
+  datasources:
+    enabled: true
+    resource: configmap
+    searchNamespace: ALL
+  resources: {{- .Values.monitoring.grafana.sidecar.resources | toYaml | nindent 4 }}
+  securityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 4 }}
+dashboards:
+  custom:
+    #capacity-planning:
+    #  gnetId: 22
+    #  revision: 7
+    #  datasource: Prometheus
+    kubernetes-cluster-monitoring-via-prometheus: &dashboard
+      datasource: Prometheus
+      gnetId: 315
+      revision: 3
+    node-exporter-full:
+      <<: *dashboard
+      gnetId: 1860
+      revision: 16
+    metrics:
+      <<: *dashboard
+      gnetId: 8588
+    ingress-nginx:
+      <<: *dashboard
+      gnetId: 9614
+      revision: 1
+    cert-manager:
+      <<: *dashboard
+      gnetId: 11001
+      revision: 1
+    flux:
+      <<: *dashboard
+      gnetId: 16714
+      revision: 1
+      {{- if .Values.dns.provider }}
+    external-dns:
+      <<: *dashboard
+      gnetId: 15038
+      revision: 1
+      {{- end }}
+      {{- if and .Values.monitoring.loki.enabled false }}
+    # TODO: this one is broken
+    loki:
+      <<: *dashboard
+      gnetId: 12611
+      revision: 1
+      datasource: Loki
+      {{- end }}
+      {{- if .Values.kyverno.enabled }}
+    kyverno:
+      <<: *dashboard
+      gnetId: 15804
+      revision: 4
+      {{- end }}
+  {{- with .Values.monitoring.grafana.additionalDashboards }}
+  {{ . | toYaml | nindent 4 }}
+  {{- end }}
+  {{- include "base-cluster.monitoring.ingress" (dict "name" "grafana" "context" $) | nindent 0 }}
+grafana.ini: {{- .Values.monitoring.grafana.config | mergeOverwrite (include "base-cluster.prometheus-stack.grafana.config-ini" . | fromYaml) | toYaml | nindent 2 }}
+downloadDashboards:
+  securityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 4 }}
+initChownData:
+  enabled: false
+{{- end -}}
+
+{{- define "base-cluster.prometheus-stack.grafana.config-ini" -}}
+  {{- if and .Values.certManager.email .Values.global.baseDomain -}}
+auth:
+  signout_redirect_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
+server:
+  root_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
+  {{- end -}}
+{{- end -}}
