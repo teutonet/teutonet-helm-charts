@@ -6,7 +6,7 @@ image:
 resources: {{- .Values.monitoring.prometheus.kubeStateMetrics.resources | toYaml | nindent 2 }}
   {{- $metricLabelsAllowList := list -}}
   {{- range $resource, $labels := .Values.monitoring.prometheus.kubeStateMetrics.metricLabelsAllowList -}}
-  {{- $metricLabelsAllowList = append $metricLabelsAllowList (printf "%s=[%s]" $resource ($labels | join ",") ) -}}
+    {{- $metricLabelsAllowList = append $metricLabelsAllowList (printf "%s=[%s]" $resource ($labels | join ",") ) -}}
   {{- end }}
 extraArgs:
   - --metric-labels-allowlist={{- $metricLabelsAllowList | join "," }}
