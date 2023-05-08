@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.3.1...base-cluster-v4.4.0) (2023-05-08)
+
+
+### Features
+
+* **base-cluster/descheduler:** add new version ([#392](https://github.com/teutonet/teutonet-helm-charts/issues/392)) ([cb11504](https://github.com/teutonet/teutonet-helm-charts/commit/cb11504f96f2db80c4f24d11815b61218fa9387a))
+* **base-cluster/monitoring:** make rootFS readOnly ([#386](https://github.com/teutonet/teutonet-helm-charts/issues/386)) ([6c92e41](https://github.com/teutonet/teutonet-helm-charts/commit/6c92e41a374bc14cc4cfec21a55f8cfdf76f3056))
+
 ## [4.3.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.3.0...base-cluster-v4.3.1) (2023-04-28)
 
 
