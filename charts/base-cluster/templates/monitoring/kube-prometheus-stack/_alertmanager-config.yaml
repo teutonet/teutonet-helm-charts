@@ -12,10 +12,10 @@ podDisruptionBudget:
 alertmanagerSpec:
   replicas: {{ .Values.monitoring.prometheus.alertmanager.replicas }}
   podAntiAffinity: soft
-    {{- if false }} # TODO ingress
+  {{- if false }} # TODO ingress
 {{/*    {{- if empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled }}*/}}
   externalUrl: https://{{ include "base-cluster.alertmanager.host" $ }}
-    {{- end }}
+  {{- end }}
   retention: {{ .Values.monitoring.prometheus.alertmanager.retentionDuration }}
   priorityClassName: system-cluster-critical
   storageSpec:

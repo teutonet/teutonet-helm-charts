@@ -60,10 +60,10 @@ dashboardProviders:
         options:
           path: /var/lib/grafana/dashboards/custom
 sidecar:
-    {{- if .Values.global.imageRegistry }}
+  {{- if .Values.global.imageRegistry }}
   image:
     repository: {{ printf "%s/kiwigrid/k8s-sidecar" .Values.global.imageRegistry }}
-    {{- end }}
+  {{- end }}
   dashboards:
     enabled: true
     resource: configmap
@@ -103,26 +103,32 @@ dashboards:
       <<: *dashboard
       gnetId: 16714
       revision: 1
-      {{- if .Values.dns.provider }}
+    {{- if .Values.dns.provider }}
     external-dns:
       <<: *dashboard
       gnetId: 15038
       revision: 1
-      {{- end }}
-      {{- if and .Values.monitoring.loki.enabled false }}
+    {{- end }}
+    {{- if and .Values.monitoring.loki.enabled false }}
     # TODO: this one is broken
     loki:
       <<: *dashboard
       gnetId: 12611
       revision: 1
       datasource: Loki
-      {{- end }}
-      {{- if .Values.kyverno.enabled }}
+    {{- end }}
+    {{- if .Values.kyverno.enabled }}
     kyverno:
       <<: *dashboard
       gnetId: 15804
       revision: 4
-      {{- end }}
+    {{- end }}
+    {{- if .Values.monitoring.securityScanning.enabled }}
+    kyverno:
+      <<: *dashboard
+      gnetId: 17813
+      revision: 2
+    {{- end }}
   {{- with .Values.monitoring.grafana.additionalDashboards }}
   {{ . | toYaml | nindent 4 }}
   {{- end }}
