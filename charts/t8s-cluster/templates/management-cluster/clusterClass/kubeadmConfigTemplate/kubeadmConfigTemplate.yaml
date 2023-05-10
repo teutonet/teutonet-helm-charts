@@ -20,7 +20,7 @@ spec:
         - content: |- {{- .Values.global.injectedCertificateAuthorities | nindent 12 }}
           path: /usr/local/share/ca-certificates/injected-ca-certs.crt
         {{- end }}
-      {{- if .Values.global.injectedCertificateAuthorities -}}
+      {{ if .Values.global.injectedCertificateAuthorities -}}
       preKubeadmCommands:
         - update-ca-certificates
       {{- end }}
