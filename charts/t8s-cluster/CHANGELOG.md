@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-1.3.1...t8s-cluster-v1.3.2) (2023-05-10)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** kubeadmConfigTemplate templating ([#414](https://github.com/teutonet/teutonet-helm-charts/issues/414)) ([ef79f61](https://github.com/teutonet/teutonet-helm-charts/commit/ef79f61e6aa8d5dc585711fc396f9012b0499415))
+
 ## [1.3.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-1.3.0...t8s-cluster-v1.3.1) (2023-05-10)
 
 
