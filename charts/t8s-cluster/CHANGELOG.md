@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-1.2.1...t8s-cluster-v1.3.0) (2023-05-10)
+
+
+### Features
+
+* **t8s-cluster/management-cluster:** allow managing injectedCertificateAuthorities via flux ([#410](https://github.com/teutonet/teutonet-helm-charts/issues/410)) ([3076eb5](https://github.com/teutonet/teutonet-helm-charts/commit/3076eb5f9fe9f8c322bd403bc3e50aba91d5eec2))
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** only add the supported fields instead of all ([#408](https://github.com/teutonet/teutonet-helm-charts/issues/408)) ([b972067](https://github.com/teutonet/teutonet-helm-charts/commit/b972067c7092ffbd84f78aee7c6ccc991c4548e2))
+
 ## [1.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-1.2.0...t8s-cluster-v1.2.1) (2023-05-08)
 
 
