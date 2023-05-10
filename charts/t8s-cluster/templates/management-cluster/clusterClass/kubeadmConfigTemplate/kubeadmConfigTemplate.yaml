@@ -12,15 +12,15 @@ spec:
           kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict) | nindent 12 }}
           name: '{{ `{{ local_hostname }}` }}'
       files:
-          {{- if .Values.containerRegistryProxy.proxyRegistryEndpoint }}
+        {{- if .Values.containerRegistryProxy.proxyRegistryEndpoint }}
         - content: |- {{- include "t8s-cluster.clusterClass.containerRegistryProxies" (dict "context" $) | nindent 12 }}
           path: /etc/containerd/conf.d/teuto-mirror.toml
-          {{- end }}
-          {{- if .Files.Get "CA.crt" }}
-        - content: |- {{- .Files.Get "CA.crt" | nindent 12 }}
+        {{- end }}
+        {{- if .Values.global.injectedCertificateAuthorities }}
+        - content: |- {{- .Values.global.injectedCertificateAuthorities | nindent 12 }}
           path: /usr/local/share/ca-certificates/injected-ca-certs.crt
-          {{- end }}
-      {{- if .Files.Get "CA.crt" }}
+        {{- end }}
+      {{- if .Values.global.injectedCertificateAuthorities -}}
       preKubeadmCommands:
         - update-ca-certificates
       {{- end }}
