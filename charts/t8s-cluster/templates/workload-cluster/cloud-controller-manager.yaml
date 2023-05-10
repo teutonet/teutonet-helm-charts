@@ -33,6 +33,8 @@ spec:
     - <<: *valuesFrom
       targetPath: cloudConfig.metadata.hash
   values:
+    controllerExtraArgs: |
+      - --use-service-account-credentials=false
     tolerations:
       - key: node.cloudprovider.kubernetes.io/uninitialized
         value: "true"
