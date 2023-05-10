@@ -69,9 +69,22 @@ function templateHelmRelease() {
     HelmRepository)
       local helmRepositoryUrl
       local chartVersion
+      local -a args=("$releaseName")
       helmRepositoryUrl="$(yq <<<"$sourceResource" -er .spec.url)"
+      case "$helmRepositoryUrl" in
+        https://*)
+          args+=(--repo "$helmRepositoryUrl" "$chartName")
+          ;;
+        oci://*)
+          args+=("$helmRepositoryUrl/$chartName")
+          ;;
+        *)
+          echo "'$helmRepositoryUrl' is not supported" >/dev/stderr
+          return 1
+          ;;
+      esac
       chartVersion="$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.version)"
-      helm <<<"$values" template --namespace "$namespace" --repo "$helmRepositoryUrl" "$releaseName" "$chartName" --version "$chartVersion" --values -
+      helm <<<"$values" template --namespace "$namespace" "${args[@]}" --repo "$helmRepositoryUrl" "$releaseName" "$chartName" --version "$chartVersion" --values -
       ;;
     *)
       echo "'$sourceKind' is not implemented" >/dev/stderr
