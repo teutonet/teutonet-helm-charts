@@ -50,6 +50,10 @@ helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-ch
 helm -n flux-system get notes base-cluster
 ```
 
+> ⚠️  Due to various reasons, it's not possible to cleanly uninstall this
+via a normal `kubectl delete`, `helm uninstall` or via flux deletion.
+[See the corresponding issue](https://github.com/teutonet/teutonet-helm-charts/issues/28)
+
 ## Cluster components
 
 ### Component [cert-manager](#certManager)
