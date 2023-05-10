@@ -45,6 +45,9 @@
             }
           },
           "additionalProperties": false
+        },
+        "injectedCertificateAuthorities": {
+          "type": "string"
         }
       }
     },

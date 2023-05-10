@@ -50,8 +50,8 @@ files:
   - content: |- {{- include "t8s-cluster.clusterClass.containerRegistryProxies" (dict "context" $) | nindent 6 }}
     path: /etc/containerd/conf.d/teuto-mirror.toml
   {{- end }}
-  {{- if .Files.Get "files/CA.crt" }}
-  - content: |- {{- .Files.Get "files/CA.crt" | nindent 6 }}
+  {{- if .Values.global.injectedCertificateAuthorities }}
+  - content: |- {{- .Values.global.injectedCertificateAuthorities | nindent 6 }}
     path: /usr/local/share/ca-certificates/injected-ca-certs.crt
   {{- end }}
 initConfiguration:

@@ -30,7 +30,7 @@
 {{- define "t8s-cluster.clusterClass.preKudeadmCommands" -}}
   {{- $commands := list -}}
   {{- $commands = append $commands "bash /etc/kube-proxy-patch.sh" }}
-  {{- if .Files.Get "files/CA.crt" -}}
+  {{- if .Values.global.injectedCertificateAuthorities -}}
     {{- $commands = append $commands "update-ca-certificates" -}}
   {{- end -}}
   {{- $commands | toYaml }}
