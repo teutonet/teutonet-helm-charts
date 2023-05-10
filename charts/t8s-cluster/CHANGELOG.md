@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.3](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-1.3.2...t8s-cluster-v1.3.3) (2023-05-10)
+
+
+### Bug Fixes
+
+* **t8s-cluster/cloud-controller-manager:** Don't use service-account credentials ([#412](https://github.com/teutonet/teutonet-helm-charts/issues/412)) ([151960c](https://github.com/teutonet/teutonet-helm-charts/commit/151960c46af84cd16c29d687e9ed9337d17dbd8d))
+
 ## [1.3.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-1.3.1...t8s-cluster-v1.3.2) (2023-05-10)
 
 
