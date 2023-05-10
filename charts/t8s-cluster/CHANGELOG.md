@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-1.3.0...t8s-cluster-v1.3.1) (2023-05-10)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** add injected-ca-certs for compute nodes ([#411](https://github.com/teutonet/teutonet-helm-charts/issues/411)) ([0ea4dd3](https://github.com/teutonet/teutonet-helm-charts/commit/0ea4dd3047a7532106f4e22483a83d15202c4446))
+
 ## [1.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-1.2.1...t8s-cluster-v1.3.0) (2023-05-10)
 
 
