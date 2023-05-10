@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # t8s-cluster
 
-![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -70,11 +70,12 @@ delete the cloud-config secret, as these will just be recreated during installat
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-| Property                                        | Pattern | Type   | Deprecated | Definition | Title/Description                                        |
-| ----------------------------------------------- | ------- | ------ | ---------- | ---------- | -------------------------------------------------------- |
-| - [helmRepositories](#global_helmRepositories ) | No      | object | No         | -          | A map of helmRepositories to create, the key is the name |
-| - [kubectl](#global_kubectl )                   | No      | object | No         | -          | Image with \`kubectl\` binary                            |
-| - [etcd](#global_etcd )                         | No      | object | No         | -          | Image with \`kubectl\` binary                            |
+| Property                                                                    | Pattern | Type   | Deprecated | Definition | Title/Description                                        |
+| --------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | -------------------------------------------------------- |
+| - [helmRepositories](#global_helmRepositories )                             | No      | object | No         | -          | A map of helmRepositories to create, the key is the name |
+| - [kubectl](#global_kubectl )                                               | No      | object | No         | -          | Image with \`kubectl\` binary                            |
+| - [etcd](#global_etcd )                                                     | No      | object | No         | -          | Image with \`kubectl\` binary                            |
+| - [injectedCertificateAuthorities](#global_injectedCertificateAuthorities ) | No      | string | No         | -          | -                                                        |
 
 ### <a name="global_helmRepositories"></a>1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > helmRepositories`
 
@@ -218,6 +219,12 @@ bitnami/kubectl
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 | **Same definition as**    | [image](#global_kubectl_image)                                                                           |
+
+### <a name="global_injectedCertificateAuthorities"></a>1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > injectedCertificateAuthorities`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
 
 ## <a name="metadata"></a>2. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > metadata`
 
