@@ -28,6 +28,11 @@ spec:
   version: {{ printf "v%d.%d.%d" (.major | int) (.minor | int) (.patch | int) }}
   {{- end }}
   clusterClass: {{ $.Release.Name }}
-  workers: {{- .Values.workers | toYaml | nindent 4 }}
+  workers: {{- range $name, $machineDeploymentClass := .Values.workers }}
+    {{ $name -}}:
+      availabilityZone: {{ $machineDeploymentClass.availabilityZone | quote }}
+      flavor: {{ $machineDeploymentClass.flavor | quote }}
+      replicas: {{ $machineDeploymentClass.replicas }}
+  {{- end }}
   bastion:
     enabled: false
