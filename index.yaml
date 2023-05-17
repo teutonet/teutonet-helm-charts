@@ -1599,6 +1599,47 @@ entries:
         - image: registry.k8s.io/provider-os/cinder-csi-plugin:v1.25.5
         - image: registry.k8s.io/provider-os/openstack-cloud-controller-manager:v1.25.5
     apiVersion: v2
+    created: "2023-05-17T13:47:23.305451347Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.2.5
+    description: t8s-operator cluster with necessary addons
+    digest: 640fdd00df287ef33b96e01ba22f8dc17452d59165f3eebac64a73674bb6d74e
+    home: https://teuto.net
+    icon: https://teuto.net/favicon.ico
+    maintainers:
+    - email: cwr@teuto.net
+      name: cwrau
+    - email: mw@teuto.net
+      name: marvinWolff
+    - email: sl@teuto.net
+      name: steutol
+    name: t8s-cluster
+    sources:
+    - https://github.com/teutonet/teutonet-helm-charts
+    type: application
+    urls:
+    - https://github.com/teutonet/teutonet-helm-charts/releases/download/t8s-cluster-1.3.3/t8s-cluster-1.3.3.tgz
+    version: 1.3.3
+  - annotations:
+      artifacthub.io/images: |
+        - image: docker.io/bitnami/kubectl:1.27.1
+        - image: k8s.gcr.io/sig-storage/csi-attacher:v3.4.0
+        - image: k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.5.0
+        - image: k8s.gcr.io/sig-storage/csi-provisioner:v3.1.0
+        - image: k8s.gcr.io/sig-storage/csi-resizer:v1.4.0
+        - image: k8s.gcr.io/sig-storage/csi-snapshotter:v5.0.1
+        - image: k8s.gcr.io/sig-storage/livenessprobe:v2.6.0
+        - image: quay.io/cilium/cilium:v1.13.2@sha256:85708b11d45647c35b9288e0de0706d24a5ce8a378166cadc700f756cc1a38d6
+        - image: quay.io/cilium/hubble-relay:v1.13.2@sha256:51b772cab0724511583c3da3286439791dc67d7c35077fa30eaba3b5d555f8f4
+        - image: quay.io/cilium/hubble-ui-backend:v0.11.0@sha256:14c04d11f78da5c363f88592abae8d2ecee3cbe009f443ef11df6ac5f692d839
+        - image: quay.io/cilium/hubble-ui:v0.11.0@sha256:bcb369c47cada2d4257d63d3749f7f87c91dde32e010b223597306de95d1ecc8
+        - image: quay.io/cilium/operator-generic:v1.13.2@sha256:a1982c0a22297aaac3563e428c330e17668305a41865a842dec53d241c5490ab
+        - image: registry.k8s.io/etcd:3.5.7-0
+        - image: registry.k8s.io/provider-os/cinder-csi-plugin:v1.25.5
+        - image: registry.k8s.io/provider-os/openstack-cloud-controller-manager:v1.25.5
+    apiVersion: v2
     created: "2023-05-10T09:50:52.819019457Z"
     dependencies:
     - name: common
@@ -2156,4 +2197,4 @@ entries:
     urls:
     - https://github.com/teutonet/teutonet-helm-charts/releases/download/t8s-cluster-0.0.1/t8s-cluster-0.0.1.tgz
     version: 0.0.1
-generated: "2023-05-10T09:50:52.819263859Z"
+generated: "2023-05-17T13:47:23.307063064Z"
