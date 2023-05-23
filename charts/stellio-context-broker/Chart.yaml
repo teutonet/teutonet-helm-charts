@@ -11,7 +11,7 @@ maintainers:
 description: An NGSI-LD compliant context broker
 dependencies:
   - name: common
-    version: 2.2.5
+    version: 2.4.0
     repository: https://charts.bitnami.com/bitnami
 annotations:
   artifacthub.io/images: |
