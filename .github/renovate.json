@@ -1,32 +1,35 @@
 {
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:base"],
   "assigneesFromCodeOwners": true,
   "assigneesSampleSize": 1,
   "platformAutomerge": true,
   "packageRules": [
     {
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
+      "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
     }
   ],
   "separateMinorPatch": true,
   "regexManagers": [
     {
-      "fileMatch": [
-        "(^|/)values\\.yaml$"
-      ],
+      "fileMatch": ["(^|/)values\\.yaml$"],
       "matchStrings": [
-        " {4}\\S+:\\n {6}url: (?<registryUrl>\\S+)\\n {6}charts:(?:\\s+\\S+: [0-9.x]+\\s)+",
+        " {4}\\S+:\\n {6}url: (?<registryUrl>https://\\S+)\\n {6}charts:(?:\\s+\\S+: [0-9.x]+\\s)+",
         " {8}(?<depName>\\S+): (?<currentValue>\\S+)\\s"
       ],
       "matchStringsStrategy": "recursive",
       "versioningTemplate": "helm",
       "datasourceTemplate": "helm"
+    },
+    {
+      "fileMatch": ["(^|/)values\\.yaml$"],
+      "matchStrings": [
+        " {4}\\S+:\\n {6}url: (?<registryUrl>oci://\\S+)\\n {6}charts:(?:\\s+\\S+: [0-9.x]+\\s)+",
+        " {8}(?<depName>\\S+): (?<currentValue>\\S+)\\s"
+      ],
+      "matchStringsStrategy": "recursive",
+      "versioningTemplate": "helm",
+      "datasourceTemplate": "docker"
     }
   ]
 }
