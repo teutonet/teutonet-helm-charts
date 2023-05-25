@@ -1,7 +1,6 @@
 controlPlane:
   flavor: standard.2.1905
-  securityGroups:
-    - default
+  additionalSecurityGroups:
     - kuchen
     - pizza
 workers:
@@ -9,6 +8,5 @@ workers:
     replicas: 1
     availabilityZone: Zone1
     flavor: standard.2.1905
-    securityGroups:
-      - default
+    additionalSecurityGroups:
       - kuchen
