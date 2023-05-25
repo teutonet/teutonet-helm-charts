@@ -20,7 +20,7 @@ spec:
       containers:
         - name: fail
           image: {{ template "base-cluster.kubectl.image" . }}
-          {{- if .Values.global.kubectl.image.tag | contains "@" }}
+          {{- if .Values.global.kubectl.image.digest }}
           imagePullPolicy: IfNotPresent
           {{- else }}
           imagePullPolicy: Always
