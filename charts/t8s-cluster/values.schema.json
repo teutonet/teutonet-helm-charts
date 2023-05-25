@@ -95,7 +95,7 @@
         "singleNode": {
           "type": "boolean"
         },
-        "securityGroups": {
+        "additionalSecurityGroups": {
           "$ref": "#/$defs/securityGroups"
         },
         "nodeDrainTimeout": {
@@ -153,7 +153,7 @@
           "flavor": {
             "type": "string"
           },
-          "securityGroups": {
+          "additionalSecurityGroups": {
             "$ref": "#/$defs/securityGroups"
           },
           "nodeDrainTimeout": {

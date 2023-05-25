@@ -15,7 +15,8 @@
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.securityGroups" -}}
-  {{- $securityGroups := .securityGroups | default (list "default") | sortAlpha | uniq -}}
+  {{- $securityGroups := .additionalSecurityGroups | default (list) -}}
+  {{- $securityGroups = append $securityGroups "default" | sortAlpha | uniq }}
   {{- $securityGroupsObject := list -}}
   {{- range $name := $securityGroups -}}
     {{- $securityGroupsObject = append $securityGroupsObject (dict "filter" (dict) "name" $name)}}
