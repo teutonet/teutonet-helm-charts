@@ -25,6 +25,6 @@ disablePortSecurity: false
 identityRef:
   kind: Secret
   name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" .context }}
-managedSecurityGroups: {{ include "t8s-cluster.clusterClass.managedSecurityGroups" .context }}
+managedSecurityGroups: true
 nodeCidr: 10.6.0.0/24
 {{- end -}}

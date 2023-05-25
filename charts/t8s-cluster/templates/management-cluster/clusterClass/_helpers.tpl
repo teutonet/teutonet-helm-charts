@@ -13,16 +13,3 @@ openstack
 {{- define "t8s-cluster.clusterClass.getIdentityRefSecretName" -}}
   {{- printf "cloud-config-%s" .Release.Name -}}
 {{- end -}}
-
-{{- define "t8s-cluster.clusterClass.managedSecurityGroups" -}}
-  {{- $managedSecurityGroups := true -}}
-  {{- range $name, $machineDeploymentClass := (merge (deepCopy .Values.workers) (dict "control-plane" .Values.controlPlane)) }}
-    {{- if $machineDeploymentClass -}}
-      {{- if not (empty $machineDeploymentClass.securityGroups) -}}
-        {{- $managedSecurityGroups = false -}}
-        {{- break -}}
-      {{- end -}}
-    {{- end -}}
-  {{- end -}}
-  {{- $managedSecurityGroups -}}
-{{- end -}}
