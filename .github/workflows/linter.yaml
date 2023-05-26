@@ -9,11 +9,18 @@ on:
       - checks_requested
 
 jobs:
-  lint-helm-charts:
-    name: lint helm charts
+  getChangedCharts:
+    uses: ./.github/workflows/get-changed-charts.yaml
+  lint-helm-chart:
+    name: lint helm chart
     runs-on: ubuntu-latest
+    needs: getChangedCharts
+    strategy:
+      matrix:
+        chart: ${{ fromJson(needs.getChangedCharts.outputs.charts) }}
     env:
       CT_TARGET_BRANCH: ${{ github.event.repository.default_branch }}
+      CHART: ${{ matrix.chart }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -27,11 +34,7 @@ jobs:
         run: |
           (
             echo -n "repos="
-            for DIR in ./charts/*; do
-              FILE="$DIR/Chart.yaml"
-              DIR="${DIR//\./}"
-              yq -r '.dependencies[] | .repository' "$FILE"
-            done | sort -u | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
+            yq -r '.dependencies[] | .repository' "charts/$CHART/Chart.yaml" | sort -u | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
             echo
           ) | tee "$GITHUB_OUTPUT"
 
@@ -39,10 +42,11 @@ jobs:
         with:
           python-version: 3.7
 
-      - run: ./.github/scripts/prepare-values.sh
+      - run: ./.github/scripts/prepare-values.sh "charts/$CHART"
       - uses: helm/chart-testing-action@v2.4.0
 
-      - name: Lint charts
+      - name: Lint chart
         run: ct lint --check-version-increment=false
         env:
           CT_CHART_REPOS: ${{ steps.helm-repos.outputs.repos }}
+          CT_CHARTS: charts/${{ matrix.chart }}
