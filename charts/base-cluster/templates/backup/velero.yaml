@@ -1,0 +1,74 @@
+{{- if .Values.backup.enabled }}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: velero
+  namespace: backup
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: backup
+spec:
+  chart:
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "vmware" "chart" "velero" "context" $) | nindent 6 }}
+  interval: 1h
+  {{- if .Values.monitoring.prometheus.enabled }}
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
+  {{- end }}
+  install:
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
+  values:
+    {{- if .Values.global.imageRegistry }}
+    image:
+      repository: {{ printf "%s/velero/velero" $.Values.global.imageRegistry }}
+    {{- end }}
+    upgradeCRDs: false
+    cleanUpCRDs: true
+    podSecurityContext:
+      fsGroup: 1000
+      runAsUser: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+    containerSecurityContext:
+      readOnlyRootFilesystem: true
+      privileged: false
+      capabilities:
+        drop:
+          - ALL
+      allowPrivilegeEscalation: false
+      seccompProfile:
+        type: RuntimeDefault
+    priorityClassName: system-cluster-critical
+    deployNodeAgent: true # enable FSB
+    {{- if .Values.backup.backupStorageLocations }}
+    configuration:
+      backupStorageLocation: {{- range $name, $spec := .Values.backup.backupStorageLocations }}
+        {{- $providerName := include "base-cluster.backup.getProviderName" $spec.provider }}
+        - name: {{ $name | quote }}
+          provider: {{ include "base-cluster.backup.mapProviderName" $providerName | quote }}
+          bucket: {{ $spec.bucket | quote }}
+          {{- if $spec.prefix }}
+          prefix: {{ $spec.prefix | quote }}
+          {{- end }}
+          {{- if $.Values.backup.defaultLocation }}
+          default: {{ eq $name $.Values.backup.defaultLocation }}
+          {{- end }}
+          {{- $credentialType := include "base-cluster.backup.credentialType" $spec.provider }}
+          {{- if eq $credentialType "direct" }}
+          credential:
+            name: {{ printf "%s-velero-backuplocation-%s" (include "common.names.fullname" $) $name }}
+            key: {{ $providerName }}
+          {{- else if eq $credentialType "existingSecret" }}
+            {{- $existingSecret := dig $providerName "existingSecret" (dict) $spec.provider }}
+          credential:
+            name: {{ get $existingSecret "name" | required (printf "You need to provide the existingSecret.name for %s" $name) }}
+            key: {{ get $existingSecret "key" | default (printf "%s-%s" $providerName $name) }}
+          {{- end }}
+      {{- end }}
+    {{- end }}
+    metrics:
+      serviceMonitor:
+        additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
+{{- end }}

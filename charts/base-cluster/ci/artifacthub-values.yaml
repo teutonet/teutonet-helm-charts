@@ -9,3 +9,9 @@ kyverno:
 storage:
   readWriteMany:
     enabled: true
+global:
+  clusterName: test
+  serviceLevelAgreement: None
+monitoring:
+  grafana:
+    adminPassword: test

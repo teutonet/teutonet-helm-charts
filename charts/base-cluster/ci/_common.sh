@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-set -ex
+[[ "$RUNNER_DEBUG" == 1 ]] && set -x
+
+set -eu
+set -o pipefail
 
 jq -n '{
   global: {

@@ -1002,6 +1002,118 @@
       },
       "additionalProperties": false
     },
+    "backup": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "backupStorageLocations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "provider": {
+                "type": "object",
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "minio": {
+                        "type": "object",
+                        "oneOf": [
+                          {
+                            "required": [
+                              "accessKeyID",
+                              "secretAccessKey"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "existingSecret"
+                            ]
+                          },
+                          {
+                            "not": {
+                              "anyOf": [
+                                {
+                                  "required": [
+                                    "accessKeyID"
+                                  ]
+                                },
+                                {
+                                  "required": [
+                                    "secretAccessKey"
+                                  ]
+                                },
+                                {
+                                  "required": [
+                                    "existingSecret"
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "properties": {
+                          "accessKeyID": {
+                            "type": "string"
+                          },
+                          "secretAccessKey": {
+                            "type": "string"
+                          },
+                          "existingSecret": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "key": {
+                                "type": "string",
+                                "description": "The default is <$providerName-$name> (e.g. 'minio-prod')"
+                              }
+                            },
+                            "required": [
+                              "name"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "url": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "url"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                ],
+                "minProperties": 1,
+                "maxProperties": 1
+              },
+              "bucket": {
+                "type": "string"
+              },
+              "prefix": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "provider",
+              "bucket"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "defaultLocation": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
     "common": {
       "type": "object",
       "description": "Values for sub-chart"

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-set -ex
+[[ "$RUNNER_DEBUG" == 1 ]] && set -x
+
+set -eu
+set -o pipefail
 
 i=0
 for url in 'url="https://github.com"' 'url="ssh://git@github.com/group/name.git"'; do

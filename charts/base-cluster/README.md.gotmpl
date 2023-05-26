@@ -56,17 +56,21 @@ via a normal `kubectl delete`, `helm uninstall` or via flux deletion.
 
 ## Cluster components
 
+### Component [backup](#backup)
+
+[velero](https://velero.io) takes care of backing up your PVCs.
+
 ### Component [cert-manager](#certManager)
 
 [cert-manager](https://cert-manager.io) takes care of creating SSL certificates
-for your Ingresses (and [other needs](https://cert-manager.io/docs/usage/))
+for your Ingresses (and [other needs](https://cert-manager.io/docs/usage))
 
 1. set `.certManager.email` to your email for the Let's Encrypt account to enable
    certificates
 
 To create wildcard certificates, you need to enable a [DNS Provider](#component-dns)
 
-Then you can just create a [`Certiticate`](https://cert-manager.io/docs/usage/certificate/)
+Then you can just create a [`Certiticate`](https://cert-manager.io/docs/usage/certificate)
 resource.
 
 ### Component [descheduler](#descheduler)

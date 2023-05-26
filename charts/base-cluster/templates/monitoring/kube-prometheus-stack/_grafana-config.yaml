@@ -129,6 +129,12 @@ dashboards:
       gnetId: 17813
       revision: 2
     {{- end }}
+    {{- if .Values.backup.enabled }}
+    velero:
+      <<: *dashboard
+      gnetId: 11055
+      revision: 2
+    {{- end }}
   {{- with .Values.monitoring.grafana.additionalDashboards }}
   {{ . | toYaml | nindent 4 }}
   {{- end }}
