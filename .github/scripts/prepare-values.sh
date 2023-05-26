@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+[[ "$RUNNER_DEBUG" == 1 ]] && set -x
+
+set -eu
+set -o pipefail
+
 function mergeYaml() {
   local valuesFile="${1?}"
   local overrideJson="${2?}"
@@ -11,6 +16,7 @@ function mergeYaml() {
 
 function prepare-values() {
   local chart="${1?}"
+  local runByGit="$2"
   local commonValues
   local values
   local valuesScript
@@ -18,6 +24,7 @@ function prepare-values() {
     commonValues="$("$chart/ci/_common.sh")"
     for values in "$chart/values.yaml" "$chart/ci/"*-values.yaml; do
       [[ -f "$values" ]] || continue
+      [[ "$runByGit" == GIT ]] && [[ "$(basename "$values")" == values.yaml ]] && continue
       mergeYaml "$values" "$commonValues" | sponge "$values"
     done
   fi
@@ -28,12 +35,13 @@ function prepare-values() {
   done
 }
 
-set -ex
-if [[ -v 1 ]]; then
+if [[ -v 1 ]] && [[ -v 2 ]]; then
+  prepare-values "$1" "$2"
+elif [[ -v 1 ]]; then
   prepare-values "$1"
 else
   for chart in charts/*; do
     [[ -d "$chart" ]] || continue
-    prepare-values "$chart"
+    prepare-values "$chart" "$2"
   done
 fi
