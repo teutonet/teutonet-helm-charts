@@ -84,7 +84,7 @@ function templateHelmRelease() {
           ;;
       esac
       chartVersion="$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.version)"
-      helm <<<"$values" template --namespace "$namespace" "${args[@]}" --repo "$helmRepositoryUrl" "$releaseName" "$chartName" --version "$chartVersion" --values -
+      helm <<<"$values" template --namespace "$namespace" "${args[@]}" --version "$chartVersion" --values -
       ;;
     *)
       echo "'$sourceKind' is not implemented" >/dev/stderr
