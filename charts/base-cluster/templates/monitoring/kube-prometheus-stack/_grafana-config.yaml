@@ -124,7 +124,7 @@ dashboards:
       revision: 4
     {{- end }}
     {{- if .Values.monitoring.securityScanning.enabled }}
-    kyverno:
+    trivy:
       <<: *dashboard
       gnetId: 17813
       revision: 2
