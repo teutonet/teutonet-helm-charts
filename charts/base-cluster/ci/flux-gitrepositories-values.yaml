@@ -1,0 +1,306 @@
+global:
+  clusterName: test
+  serviceLevelAgreement: None
+monitoring:
+  grafana:
+    adminPassword: test
+flux:
+  gitRepositories:
+    main0:
+      url: https://github.com
+      branch: main
+      decryption:
+        provider: sops
+      username: user
+      password: pass
+      gitInterval: 5m
+    main1:
+      url: https://github.com
+      branch: main
+      decryption:
+        provider: sops
+      username: user
+      password: pass
+    main2:
+      url: https://github.com
+      branch: main
+      decryption:
+        provider: sops
+      gitInterval: 5m
+    main3:
+      url: https://github.com
+      branch: main
+      decryption:
+        provider: sops
+    main4:
+      url: https://github.com
+      branch: main
+      username: user
+      password: pass
+      gitInterval: 5m
+    main5:
+      url: https://github.com
+      branch: main
+      username: user
+      password: pass
+    main6:
+      url: https://github.com
+      branch: main
+      gitInterval: 5m
+    main7:
+      url: https://github.com
+      branch: main
+    main8:
+      url: https://github.com
+      commit: 549aee1
+      decryption:
+        provider: sops
+      username: user
+      password: pass
+      gitInterval: 5m
+    main9:
+      url: https://github.com
+      commit: 549aee1
+      decryption:
+        provider: sops
+      username: user
+      password: pass
+    main10:
+      url: https://github.com
+      commit: 549aee1
+      decryption:
+        provider: sops
+      gitInterval: 5m
+    main11:
+      url: https://github.com
+      commit: 549aee1
+      decryption:
+        provider: sops
+    main12:
+      url: https://github.com
+      commit: 549aee1
+      username: user
+      password: pass
+      gitInterval: 5m
+    main13:
+      url: https://github.com
+      commit: 549aee1
+      username: user
+      password: pass
+    main14:
+      url: https://github.com
+      commit: 549aee1
+      gitInterval: 5m
+    main15:
+      url: https://github.com
+      commit: 549aee1
+    main16:
+      url: https://github.com
+      semver: 1.0.0
+      decryption:
+        provider: sops
+      username: user
+      password: pass
+      gitInterval: 5m
+    main17:
+      url: https://github.com
+      semver: 1.0.0
+      decryption:
+        provider: sops
+      username: user
+      password: pass
+    main18:
+      url: https://github.com
+      semver: 1.0.0
+      decryption:
+        provider: sops
+      gitInterval: 5m
+    main19:
+      url: https://github.com
+      semver: 1.0.0
+      decryption:
+        provider: sops
+    main20:
+      url: https://github.com
+      semver: 1.0.0
+      username: user
+      password: pass
+      gitInterval: 5m
+    main21:
+      url: https://github.com
+      semver: 1.0.0
+      username: user
+      password: pass
+    main22:
+      url: https://github.com
+      semver: 1.0.0
+      gitInterval: 5m
+    main23:
+      url: https://github.com
+      semver: 1.0.0
+    main24:
+      url: https://github.com
+      tag: 2.0.1
+      decryption:
+        provider: sops
+      username: user
+      password: pass
+      gitInterval: 5m
+    main25:
+      url: https://github.com
+      tag: 2.0.1
+      decryption:
+        provider: sops
+      username: user
+      password: pass
+    main26:
+      url: https://github.com
+      tag: 2.0.1
+      decryption:
+        provider: sops
+      gitInterval: 5m
+    main27:
+      url: https://github.com
+      tag: 2.0.1
+      decryption:
+        provider: sops
+    main28:
+      url: https://github.com
+      tag: 2.0.1
+      username: user
+      password: pass
+      gitInterval: 5m
+    main29:
+      url: https://github.com
+      tag: 2.0.1
+      username: user
+      password: pass
+    main30:
+      url: https://github.com
+      tag: 2.0.1
+      gitInterval: 5m
+    main31:
+      url: https://github.com
+      tag: 2.0.1
+    main32:
+      url: https://github.com
+      decryption:
+        provider: sops
+      username: user
+      password: pass
+      gitInterval: 5m
+    main33:
+      url: https://github.com
+      decryption:
+        provider: sops
+      username: user
+      password: pass
+    main34:
+      url: https://github.com
+      decryption:
+        provider: sops
+      gitInterval: 5m
+    main35:
+      url: https://github.com
+      decryption:
+        provider: sops
+    main36:
+      url: https://github.com
+      username: user
+      password: pass
+      gitInterval: 5m
+    main37:
+      url: https://github.com
+      username: user
+      password: pass
+    main38:
+      url: https://github.com
+      gitInterval: 5m
+    main39:
+      url: https://github.com
+    main40:
+      url: ssh://git@github.com/group/name.git
+      branch: main
+      decryption:
+        provider: sops
+      gitInterval: 5m
+    main41:
+      url: ssh://git@github.com/group/name.git
+      branch: main
+      decryption:
+        provider: sops
+    main42:
+      url: ssh://git@github.com/group/name.git
+      branch: main
+      gitInterval: 5m
+    main43:
+      url: ssh://git@github.com/group/name.git
+      branch: main
+    main44:
+      url: ssh://git@github.com/group/name.git
+      commit: 549aee1
+      decryption:
+        provider: sops
+      gitInterval: 5m
+    main45:
+      url: ssh://git@github.com/group/name.git
+      commit: 549aee1
+      decryption:
+        provider: sops
+    main46:
+      url: ssh://git@github.com/group/name.git
+      commit: 549aee1
+      gitInterval: 5m
+    main47:
+      url: ssh://git@github.com/group/name.git
+      commit: 549aee1
+    main48:
+      url: ssh://git@github.com/group/name.git
+      semver: 1.0.0
+      decryption:
+        provider: sops
+      gitInterval: 5m
+    main49:
+      url: ssh://git@github.com/group/name.git
+      semver: 1.0.0
+      decryption:
+        provider: sops
+    main50:
+      url: ssh://git@github.com/group/name.git
+      semver: 1.0.0
+      gitInterval: 5m
+    main51:
+      url: ssh://git@github.com/group/name.git
+      semver: 1.0.0
+    main52:
+      url: ssh://git@github.com/group/name.git
+      tag: 2.0.1
+      decryption:
+        provider: sops
+      gitInterval: 5m
+    main53:
+      url: ssh://git@github.com/group/name.git
+      tag: 2.0.1
+      decryption:
+        provider: sops
+    main54:
+      url: ssh://git@github.com/group/name.git
+      tag: 2.0.1
+      gitInterval: 5m
+    main55:
+      url: ssh://git@github.com/group/name.git
+      tag: 2.0.1
+    main56:
+      url: ssh://git@github.com/group/name.git
+      decryption:
+        provider: sops
+      gitInterval: 5m
+    main57:
+      url: ssh://git@github.com/group/name.git
+      decryption:
+        provider: sops
+    main58:
+      url: ssh://git@github.com/group/name.git
+      gitInterval: 5m
+    main59:
+      url: ssh://git@github.com/group/name.git

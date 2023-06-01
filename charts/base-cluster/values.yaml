@@ -37,6 +37,10 @@ global:
       additionalLabels:
         app.kubernetes.io/component: storage
         app.kubernetes.io/part-of: nfs-server-provisioner
+    backup:
+      condition: "{{ .Values.backup.enabled }}"
+      additionalLabels:
+        app.kubernetes.io/component: backup
   certificates:
     cluster-wildcard:
       dnsNames: |-
@@ -141,6 +145,11 @@ global:
       charts:
         reflector: 7.x
       condition: '{{ eq (include "base-cluster.reflector.enabled" (dict "context" .)) "true" }}'
+    vmware:
+      url: https://vmware-tanzu.github.io/helm-charts
+      charts:
+        velero: 4.x.x
+      condition: "{{ .Values.backup.enabled }}"
 
 kyverno:
   enabled: false
@@ -381,3 +390,7 @@ reflector:
 rbac:
   roles: {}
   accounts: {}
+
+backup:
+  enabled: true
+  backupStorageLocations: {}
