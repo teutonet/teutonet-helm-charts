@@ -1,3 +1,10 @@
+{{- $storageClasses := list "teutostack-ssd" "teutostack-hdd" -}}
+{{- range $sc := $storageClasses -}}
+  {{- if not (lookup "v1" "StorageClass" "" $sc) -}}
+    {{- $storageClasses = without $storageClasses $sc -}}
+  {{- end -}}
+{{- end -}}
+{{- if $storageClasses }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -47,7 +54,7 @@ spec:
             - -ex
             - -c
             - |-
-              for storageclass in teutostack-hdd teutostack-ssd; do
+              for storageclass in {{ $storageClasses | join " " }}; do
                 kubectl --kubeconfig /tmp/workload-kubeconfig delete storageclass "$storageclass"
               done
       volumes:
@@ -55,3 +62,4 @@ spec:
           secret:
             secretName: {{ .Release.Name }}-kubeconfig
             optional: false
+{{- end -}}

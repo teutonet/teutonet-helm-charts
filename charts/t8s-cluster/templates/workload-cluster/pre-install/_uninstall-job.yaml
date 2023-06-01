@@ -61,6 +61,7 @@ spec:
             - -c
             - |-
               set -o pipefail
+              {{- if .Release.IsInstall }}
               for resource in $(kubectl -n "$NAMESPACE" get clusterresourceset "$CLUSTERRESOURCESET" -o json | jq -r -c '.spec.resources | map({kind: .kind, name: .name})[]'); do
                 kind="$(jq -r .kind <<<"$resource")"
                 name="$(jq -r .name <<<"$resource")"
@@ -78,6 +79,7 @@ spec:
                 esac | kubectl --kubeconfig /tmp/workload-kubeconfig delete -f -
                 kubectl -n "$NAMESPACE" delete "$kind" "$name"
               done
+              {{- end }}
               kubectl -n "$NAMESPACE" delete clusterresourceset "$CLUSTERRESOURCESET"
       volumes:
         - name: workload-kubeconfig
@@ -94,7 +96,7 @@ metadata:
     app.kubernetes.io/component: {{ $name }}
     app.kubernetes.io/part-of: pre-install-cleanup
   annotations:
-    helm.sh/hook: pre-install
+    helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -106,7 +108,7 @@ metadata:
     app.kubernetes.io/component: {{ $name }}
     app.kubernetes.io/part-of: pre-install-cleanup
   annotations:
-    helm.sh/hook: pre-install
+    helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
 rules:
   - verbs:
@@ -130,7 +132,7 @@ metadata:
     app.kubernetes.io/component: {{ $name }}
     app.kubernetes.io/part-of: pre-install-cleanup
   annotations:
-    helm.sh/hook: pre-install
+    helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
 subjects:
   - kind: ServiceAccount
