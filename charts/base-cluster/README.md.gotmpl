@@ -85,7 +85,7 @@ and affinities.
 If the cluster is _semi_ underspecced or the individual applications have unperfect
 resource requests, the descheduler might lead to period restarting of random pods.
 
-In that case you should disable the deschedler.
+In that case you should disable the descheduler.
 
 ### Component [dns](#dns)
 
@@ -168,6 +168,42 @@ The included [trivy](https://aquasecurity.github.io/trivy-operator) scans the
 running workload in your cluster for CVEs and creates
 [Custom Resources](https://aquasecurity.github.io/trivy-operator/v0.12.1/docs/crds)
 to present the results.
+
+#### Sub-Component [tracing](#monitoring_tracing)
+
+The included [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
+collects traces via otlp-grpc on every node on the host IP.
+These traces are then sent to [Grafana Tempo](https://grafana.com/oss/tempo/),
+which is included as a datasource in Grafana by default.
+
+##### Usage Example
+
+In your deployment/statefulset/daemonset/... add the following config;
+
+```yaml
+spec:
+  template:
+    spec:
+      containers:
+        - env:
+            - name: OTEL_HOST <- change this to your framework's environment variable
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTEL_PORT
+              value: "4317"
+```
+
+The supported protocols are;
+
+- jaeger
+  - grpc: 14250
+  - thrift_http: 14268
+  - thrift_compact: 6831
+- otlp
+  - grpc: 4317
+  - http: 4318
+- zipkin: 9411
 
 ### Component [storage](#storage)
 

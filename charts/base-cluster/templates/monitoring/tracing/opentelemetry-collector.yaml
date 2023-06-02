@@ -1,0 +1,100 @@
+{{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled -}}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: open-telemetry-collector
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: tracing
+    app.kubernetes.io/part-of: monitoring
+spec:
+  chart:
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "open-telemetry" "chart" "opentelemetry-collector" "context" $) | nindent 6 }}
+  interval: 1h
+  {{- if .Values.monitoring.prometheus.enabled }}
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
+  {{- end }}
+  values:
+    {{- if .Values.global.imageRegistry }}
+    image:
+      repository: {{ printf "%s/otel/opentelemetry-collector-contrib" $.Values.global.imageRegistry }}
+    {{- end }}
+    mode: daemonset
+    hostNetwork: true
+    service:
+      enabled: true
+    dnsPolicy: ClusterFirstWithHostNet
+    extraEnvs:
+      - name: HOST_IP
+        valueFrom:
+          fieldRef:
+            fieldPath: status.hostIP
+    config:
+      extensions:
+        health_check:
+          endpoint: ${env:HOST_IP}:13133
+      receivers:
+        jaeger:
+          protocols:
+            grpc:
+              endpoint: ${env:HOST_IP}:14250
+            thrift_http:
+              endpoint: ${env:HOST_IP}:14268
+            thrift_compact:
+              endpoint: ${env:HOST_IP}:6831
+        otlp:
+          protocols:
+            grpc:
+              endpoint: ${env:HOST_IP}:4317
+            http:
+              endpoint: ${env:HOST_IP}:4318
+        prometheus: null
+        zipkin:
+          endpoint: ${env:HOST_IP}:9411
+      service:
+        pipelines:
+          logs: null
+          metrics: null
+          traces:
+            receivers:
+              - otlp
+              - jaeger
+              - zipkin
+            processors:
+              - batch
+            exporters:
+              - logging
+              - otlp
+      exporters:
+        otlp:
+          endpoint: tempo-grafana-tempo-distributor:4317
+          tls:
+            insecure: true
+    presets:
+      kubernetesAttributes:
+        enabled: true
+    ports:
+      jaeger-compact:
+        enabled: true
+      jaeger-thrift:
+        enabled: true
+      jaeger-grpc:
+        enabled: true
+      otlp:
+        enabled: true
+      otlp-http:
+        enabled: true
+      zipkin:
+        enabled: true
+      metrics:
+        enabled: {{ .Values.monitoring.prometheus.enabled }}
+    podMonitor:
+      enabled: {{ .Values.monitoring.prometheus.enabled }}
+      extraLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
+    prometheusRule:
+      enabled: {{ .Values.monitoring.prometheus.enabled }}
+      defaultRules:
+        enabled: true
+{{- end -}}

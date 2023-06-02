@@ -97,6 +97,7 @@ global:
         oauth2-proxy: 3.x.x
         metrics-server: 6.x.x
         external-dns: 6.x.x
+        grafana-tempo: 2.x.x
     descheduler:
       url: https://kubernetes-sigs.github.io/descheduler
       charts:
@@ -113,6 +114,7 @@ global:
     kyverno:
       url: https://kyverno.github.io/kyverno
       charts:
+        # TODO: migrate to v3 https://artifacthub.io/packages/helm/kyverno/kyverno#migrating-from-v2-to-v3
         kyverno: 2.x.x
         kyverno-policies: 2.x.x
       condition: "{{ .Values.kyverno.enabled }}"
@@ -145,6 +147,11 @@ global:
       charts:
         velero: 4.x.x
       condition: "{{ .Values.backup.enabled }}"
+    open-telemetry:
+      url: https://open-telemetry.github.io/opentelemetry-helm-charts
+      charts:
+        opentelemetry-collector:  0.x.x
+      condition: "{{ and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}"
 
 kyverno:
   enabled: false
@@ -278,6 +285,8 @@ monitoring:
     enabled: true
   securityScanning:
     enabled: true
+  tracing:
+    enabled: false
 
 descheduler:
   enabled: true

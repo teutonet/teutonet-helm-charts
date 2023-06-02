@@ -38,6 +38,22 @@ spec:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
       additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
     priorityClassName: system-cluster-critical
+    # this only works in version 3
+    {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
+    admissionController: &tracingConfig
+      tracing:
+        enabled: true
+        address: $(HOST_IP)
+        port: 14250 # jaeger-grpc
+      extraEnvVars:
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+    backgroundController: *tracingConfig
+    cleanupController: *tracingConfig
+    reportsController: *tracingConfig
+    {{- end }}
     podDisruptionBudget:
       enabled: true
       minAvailable: 1
