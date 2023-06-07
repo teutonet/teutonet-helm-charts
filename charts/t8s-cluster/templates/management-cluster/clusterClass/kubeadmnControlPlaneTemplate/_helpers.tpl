@@ -24,6 +24,10 @@
     "feature-gates" (join "," $featureGatesFlags)
     "seccomp-default" "true"
         -}}
+  {{- if and (eq (int .Values.version.major) 1) (ge (int .Values.version.minor) 27) (gt (int .Values.global.kubeletExtraConfig.maxParallelImagePulls) 1) -}}
+    {{- $_ := set $args "serializeImagePulls" "false" -}}
+    {{- $_ := set $args "maxParallelImagePulls" .Values.global.kubeletExtraConfig.maxParallelImagePulls -}}
+  {{- end -}}
   {{- $args | toYaml -}}
 {{- end -}}
 

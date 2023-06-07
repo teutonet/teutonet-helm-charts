@@ -16,6 +16,9 @@ global:
       repository: bitnami/kubectl
       tag: 1.27.2
   injectedCertificateAuthorities: ""
+  kubeletExtraConfig:
+    # Only use this with k8s v1.27 and up
+    maxParallelImagePulls: 1
 
 metadata:
   serviceLevelAgreement: None
