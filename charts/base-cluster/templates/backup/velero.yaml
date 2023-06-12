@@ -42,8 +42,8 @@ spec:
         type: RuntimeDefault
     priorityClassName: system-cluster-critical
     deployNodeAgent: true # enable FSB
-    {{- if .Values.backup.backupStorageLocations }}
     configuration:
+      {{- if .Values.backup.backupStorageLocations }}
       backupStorageLocation: {{- range $name, $spec := .Values.backup.backupStorageLocations }}
         {{- $providerName := include "base-cluster.backup.getProviderName" $spec.provider }}
         - name: {{ $name | quote }}
@@ -67,7 +67,10 @@ spec:
             key: {{ get $existingSecret "key" | default (printf "%s-%s" $providerName $name) }}
           {{- end }}
       {{- end }}
-    {{- end }}
+      {{- else }}
+      backupStorageLocation: []
+      {{- end }}
+      volumeSnapshotLocation: []
     metrics:
       serviceMonitor:
         additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
