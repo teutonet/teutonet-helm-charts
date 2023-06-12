@@ -1,5 +1,34 @@
 # Changelog
 
+## [4.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.4.0...base-cluster-v4.5.0) (2023-06-12)
+
+
+### Features
+
+* **base-cluster/backup:** implement velero backup provider ([#431](https://github.com/teutonet/teutonet-helm-charts/issues/431)) ([47ee030](https://github.com/teutonet/teutonet-helm-charts/commit/47ee0304dd650fd6d9ae1ed67995e317afd3733c))
+* **base-cluster/kube-prometheus-stack:** restructure kube-prometheus-stack for better maintainability ([#391](https://github.com/teutonet/teutonet-helm-charts/issues/391)) ([3441b57](https://github.com/teutonet/teutonet-helm-charts/commit/3441b57ab5663438912d9e06ebd3ec8011c8415a))
+* **base-cluster/monitoring:** add trivy dashboard ([#400](https://github.com/teutonet/teutonet-helm-charts/issues/400)) ([d0d28d3](https://github.com/teutonet/teutonet-helm-charts/commit/d0d28d35adf7d1363a4fe5d0e6576a59712a5772))
+* **base-cluster:** add pre-delete hook and docs about uninstalling ([#407](https://github.com/teutonet/teutonet-helm-charts/issues/407)) ([a02ba9e](https://github.com/teutonet/teutonet-helm-charts/commit/a02ba9ead69f466357ac6977f8759cdc2987353e))
+* **base-cluster:** support and use OCI helmRepositories wherever possible ([#381](https://github.com/teutonet/teutonet-helm-charts/issues/381)) ([f83f433](https://github.com/teutonet/teutonet-helm-charts/commit/f83f433ba73ed93ca3e06a52806a46a0ffc0b9bd))
+
+
+### Bug Fixes
+
+* **base-cluster/backup:** fix non-working default configuration ([#440](https://github.com/teutonet/teutonet-helm-charts/issues/440)) ([438416d](https://github.com/teutonet/teutonet-helm-charts/commit/438416d04b62f6ec7cb1459cdbbdec6082dff447))
+* **base-cluster/grafana:** fix dashboard name ([#429](https://github.com/teutonet/teutonet-helm-charts/issues/429)) ([cdbb398](https://github.com/teutonet/teutonet-helm-charts/commit/cdbb398f17900d727c479c8507620f176ff5bf24))
+* **base-cluster/uninstallation:** do the correct templating 🤦 ([#427](https://github.com/teutonet/teutonet-helm-charts/issues/427)) ([39e4940](https://github.com/teutonet/teutonet-helm-charts/commit/39e49401105b1f625cd0a1c1aee639427170602f))
+* **base-cluster:** fix uninstallation templating ([#425](https://github.com/teutonet/teutonet-helm-charts/issues/425)) ([394dd36](https://github.com/teutonet/teutonet-helm-charts/commit/394dd36c3eaec88b252f9f429a67d5353e36b449))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/artifacthub-images:** Update ArtifactHUB images ([#367](https://github.com/teutonet/teutonet-helm-charts/issues/367)) ([d57e531](https://github.com/teutonet/teutonet-helm-charts/commit/d57e5317cd573d18d01448aa7404d3d3398b9851))
+* **deps:** update docker.io/bitnami/kubectl docker tag to v1.27.2 ([#421](https://github.com/teutonet/teutonet-helm-charts/issues/421)) ([4d0fcd7](https://github.com/teutonet/teutonet-helm-charts/commit/4d0fcd7bf5a45cdac602670908b1f8a0de9ce914))
+* **deps:** update helm release common to v2.2.5 ([#383](https://github.com/teutonet/teutonet-helm-charts/issues/383)) ([6205753](https://github.com/teutonet/teutonet-helm-charts/commit/620575318783563c30ae38e436208f3ba24aa203))
+* **deps:** update helm release common to v2.4.0 ([#419](https://github.com/teutonet/teutonet-helm-charts/issues/419)) ([a2eef0a](https://github.com/teutonet/teutonet-helm-charts/commit/a2eef0aae49cef3be171c610ff8146b9b2b6fb65))
+* **deps:** update helm release descheduler to 0.27.x ([#388](https://github.com/teutonet/teutonet-helm-charts/issues/388)) ([4e66a01](https://github.com/teutonet/teutonet-helm-charts/commit/4e66a01b5a0e514e5dda7a820213f316f3ec945c))
+* **deps:** update helm release kube-prometheus-stack to v46 ([#424](https://github.com/teutonet/teutonet-helm-charts/issues/424)) ([73daff3](https://github.com/teutonet/teutonet-helm-charts/commit/73daff315e1b90e8aa0bdbbd3a11b63148b75174))
+
 ## [4.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.3.1...base-cluster-v4.4.0) (2023-05-08)
 
 

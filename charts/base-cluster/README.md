@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # base-cluster
 
-![Version: 4.4.0](https://img.shields.io/badge/Version-4.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 4.5.0](https://img.shields.io/badge/Version-4.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -48,26 +48,34 @@ helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io
 
 # manual initial installation of the chart, afterwards the chart takes over
 # after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
-helm install -n flux-system base-cluster base-cluster --repo https://teutonet.github.io/teutonet-helm-charts --version 4.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
+helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 4.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
 
 # you can use this command to get the instructions again
 # e.g. when adding users, gitRepositories, ...
 helm -n flux-system get notes base-cluster
 ```
 
+> ⚠️  Due to various reasons, it's not possible to cleanly uninstall this
+via a normal `kubectl delete`, `helm uninstall` or via flux deletion.
+[See the corresponding issue](https://github.com/teutonet/teutonet-helm-charts/issues/28)
+
 ## Cluster components
+
+### Component [backup](#backup)
+
+[velero](https://velero.io) takes care of backing up your PVCs.
 
 ### Component [cert-manager](#certManager)
 
 [cert-manager](https://cert-manager.io) takes care of creating SSL certificates
-for your Ingresses (and [other needs](https://cert-manager.io/docs/usage/))
+for your Ingresses (and [other needs](https://cert-manager.io/docs/usage))
 
 1. set `.certManager.email` to your email for the Let's Encrypt account to enable
    certificates
 
 To create wildcard certificates, you need to enable a [DNS Provider](#component-dns)
 
-Then you can just create a [`Certiticate`](https://cert-manager.io/docs/usage/certificate/)
+Then you can just create a [`Certiticate`](https://cert-manager.io/docs/usage/certificate)
 resource.
 
 ### Component [descheduler](#descheduler)
@@ -200,7 +208,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.2.4 |
+| https://charts.bitnami.com/bitnami | common | 2.4.0 |
 
 This helm chart requires [flux v2 to be installed](https://fluxcd.io/docs/installation),
 see [bootstrap](#cluster-bootstrap)
@@ -282,6 +290,7 @@ ignore this change.
 | - [storage](#storage )         | No      | object | No         | -          | -                    |
 | - [reflector](#reflector )     | No      | object | No         | -          | -                    |
 | - [rbac](#rbac )               | No      | object | No         | -          | -                    |
+| - [backup](#backup )           | No      | object | No         | -          | -                    |
 | - [common](#common )           | No      | object | No         | -          | Values for sub-chart |
 
 ## <a name="global"></a>1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global`
@@ -692,9 +701,9 @@ Must be one of:
 | -------- | -------- |
 | **Type** | `string` |
 
-| Restrictions                      |                                                                         |
-| --------------------------------- | ----------------------------------------------------------------------- |
-| **Must match regular expression** | ```https://.+``` [Test](https://regex101.com/?regex=https%3A%2F%2F.%2B) |
+| Restrictions                      |                                                                                            |
+| --------------------------------- | ------------------------------------------------------------------------------------------ |
+| **Must match regular expression** | ```(https\|oci)://.+``` [Test](https://regex101.com/?regex=%28https%7Coci%29%3A%2F%2F.%2B) |
 
 ##### <a name="global_helmRepositories_additionalProperties_interval"></a>1.11.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > interval`
 
@@ -2840,7 +2849,214 @@ Specific value: `"auto"`
 | **Additional items** | False              |
 | **Tuple validation** | N/A                |
 
-## <a name="common"></a>13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > common`
+## <a name="backup"></a>13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                                    | Pattern | Type    | Deprecated | Definition | Title/Description |
+| ----------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
+| - [enabled](#backup_enabled )                               | No      | boolean | No         | -          | -                 |
+| - [backupStorageLocations](#backup_backupStorageLocations ) | No      | object  | No         | -          | -                 |
+| - [defaultLocation](#backup_defaultLocation )               | No      | string  | No         | -          | -                 |
+
+### <a name="backup_enabled"></a>13.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > enabled`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+### <a name="backup_backupStorageLocations"></a>13.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations`
+
+|                           |                                                                                                                                                                                            |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Type**                  | `object`                                                                                                                                                                                   |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#backup_backupStorageLocations_additionalProperties "Each additional property must conform to the following schema") |
+
+| Property                                                   | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ---------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#backup_backupStorageLocations_additionalProperties ) | No      | object | No         | -          | -                 |
+
+#### <a name="backup_backupStorageLocations_additionalProperties"></a>13.2.1. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                                                    | Pattern | Type   | Deprecated | Definition | Title/Description |
+| --------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| + [provider](#backup_backupStorageLocations_additionalProperties_provider ) | No      | object | No         | -          | -                 |
+| + [bucket](#backup_backupStorageLocations_additionalProperties_bucket )     | No      | string | No         | -          | -                 |
+| - [prefix](#backup_backupStorageLocations_additionalProperties_prefix )     | No      | string | No         | -          | -                 |
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider"></a>13.2.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                                                       | Pattern | Type        | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------------------ | ------- | ----------- | ---------- | ---------- | ----------------- |
+| - [minio](#backup_backupStorageLocations_additionalProperties_provider_minio ) | No      | Combination | No         | -          | -                 |
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio"></a>13.2.1.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                                              |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [accessKeyID](#backup_backupStorageLocations_additionalProperties_provider_minio_accessKeyID )         | No      | string | No         | -          | -                 |
+| - [secretAccessKey](#backup_backupStorageLocations_additionalProperties_provider_minio_secretAccessKey ) | No      | string | No         | -          | -                 |
+| - [existingSecret](#backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret )   | No      | object | No         | -          | -                 |
+| + [url](#backup_backupStorageLocations_additionalProperties_provider_minio_url )                         | No      | string | No         | -          | -                 |
+
+| One of(Option)                                                                        |
+| ------------------------------------------------------------------------------------- |
+| [item 0](#backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i0) |
+| [item 1](#backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i1) |
+| [item 2](#backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2) |
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i0"></a>13.2.1.1.1.1. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 0`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+##### <a name="autogenerated_heading_25"></a>13.2.1.1.1.1.1. The following properties are required
+* accessKeyID
+* secretAccessKey
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i1"></a>13.2.1.1.1.2. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 1`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+##### <a name="autogenerated_heading_26"></a>13.2.1.1.1.2.1. The following properties are required
+* existingSecret
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2"></a>13.2.1.1.1.3. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                                                                       |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+##### <a name="autogenerated_heading_27"></a>13.2.1.1.1.3.1. Must **not** be
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                                                                       |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+| Any of(Option)                                                                                     |
+| -------------------------------------------------------------------------------------------------- |
+| [item 0](#backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i0) |
+| [item 1](#backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i1) |
+| [item 2](#backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i2) |
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i0"></a>13.2.1.1.1.3.1.1. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2 > not > anyOf > item 0`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+##### <a name="autogenerated_heading_28"></a>13.2.1.1.1.3.1.1.1. The following properties are required
+* accessKeyID
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i1"></a>13.2.1.1.1.3.1.2. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2 > not > anyOf > item 1`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+##### <a name="autogenerated_heading_29"></a>13.2.1.1.1.3.1.2.1. The following properties are required
+* secretAccessKey
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i2"></a>13.2.1.1.1.3.1.3. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2 > not > anyOf > item 2`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+
+##### <a name="autogenerated_heading_30"></a>13.2.1.1.1.3.1.3.1. The following properties are required
+* existingSecret
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_accessKeyID"></a>13.2.1.1.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > accessKeyID`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_secretAccessKey"></a>13.2.1.1.1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > secretAccessKey`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret"></a>13.2.1.1.1.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > existingSecret`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                                                                          | Pattern | Type   | Deprecated | Definition | Title/Description                                        |
+| ------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | -------------------------------------------------------- |
+| + [name](#backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret_name ) | No      | string | No         | -          | -                                                        |
+| - [key](#backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret_key )   | No      | string | No         | -          | The default is <$providerName-$name> (e.g. 'minio-prod') |
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret_name"></a>13.2.1.1.1.6.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > existingSecret > name`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret_key"></a>13.2.1.1.1.6.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > existingSecret > key`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** The default is <$providerName-$name> (e.g. 'minio-prod')
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_url"></a>13.2.1.1.1.7. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > url`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="backup_backupStorageLocations_additionalProperties_bucket"></a>13.2.1.2. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > bucket`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="backup_backupStorageLocations_additionalProperties_prefix"></a>13.2.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > prefix`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+### <a name="backup_defaultLocation"></a>13.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > defaultLocation`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+## <a name="common"></a>14. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > common`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
