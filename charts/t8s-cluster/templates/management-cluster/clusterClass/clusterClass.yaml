@@ -103,6 +103,31 @@ spec:
                 names: {{- .Values.workers | keys | sortAlpha | toYaml | nindent 18 }}
       description: Sets the ServerGroupID for MachineDeployment machines.
       name: machineDeploymentServerGroupID
+    - definitions:
+        - jsonPatches:
+            - op: add
+              path: /spec/template/spec/image
+              valueFrom:
+                template: {{ .Values.imageNameTemplate.workers }}
+          selector:
+            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
+            kind: OpenStackMachineTemplate
+            matchResources:
+              machineDeploymentClass:
+                names: {{- .Values.workers | keys | sortAlpha | toYaml | nindent 18 }}
+        - jsonPatches:
+            - op: add
+              path: /spec/template/spec/image
+              valueFrom:
+                template: {{ .Values.imageNameTemplate.controlPlane }}
+          selector:
+            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
+            kind: OpenStackMachineTemplate
+            matchResources:
+              controlPlane: true
+
+      description: Sets the image version for machines.
+      name: imageVersion
     - name: controlPlaneAvailabilityZones
       enabledIf: {{ `{{ if .controlPlaneAvailabilityZones }}true{{ end }}` | quote }}
       definitions:

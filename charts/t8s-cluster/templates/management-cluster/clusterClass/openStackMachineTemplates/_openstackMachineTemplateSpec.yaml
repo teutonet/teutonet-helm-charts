@@ -9,7 +9,6 @@ flavor: {{ .machineDeploymentClass.flavor }}
 identityRef:
   name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" .context }}
   kind: Secret
-image: {{ include "t8s-cluster.clusterClass.imageVersion" .context }} # artifacthub-ignore
 securityGroups: {{- include "t8s-cluster.clusterClass.securityGroups" .machineDeploymentClass | nindent 2 }}
   {{- with .Values.sshKeyName }}
 sshKeyName: {{ . }}
