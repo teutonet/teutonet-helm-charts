@@ -17,7 +17,7 @@ global:
       tag: 1.27.2
   injectedCertificateAuthorities: ""
   kubeletExtraConfig:
-    # Only use this with k8s v1.27 and up
+    # This is only used when using 1.27 or later
     maxParallelImagePulls: 4
 
 metadata:
