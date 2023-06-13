@@ -18,7 +18,7 @@ global:
   injectedCertificateAuthorities: ""
   kubeletExtraConfig:
     # Only use this with k8s v1.27 and up
-    maxParallelImagePulls: 1
+    maxParallelImagePulls: 4
 
 metadata:
   serviceLevelAgreement: None
