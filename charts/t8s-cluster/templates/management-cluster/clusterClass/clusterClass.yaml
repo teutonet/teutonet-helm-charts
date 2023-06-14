@@ -143,6 +143,12 @@ spec:
               timeout: 300s
               type: Ready
         nodeDrainTimeout: {{ $machineDeploymentClass.nodeDrainTimeout | default "8m" }}
+        strategy:
+          type: RollingUpdate
+          rollingUpdate:
+            deletePolicy: Oldest
+            maxSurge: 75%
+            maxUnavailable: 0
         template:
           bootstrap:
             ref:
