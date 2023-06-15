@@ -32,6 +32,9 @@ jobs:
       - name: extract images
         run: ./.github/scripts/extract-artifacthub-images.sh "charts/$CHART"
 
+      - name: enforce trusted registries
+        run: ./.github/scripts/enforce-trusted-registries.sh "charts/$CHART"
+
       - name: Commit artifacthub images
         uses: EndBug/add-and-commit@v9
         with:
