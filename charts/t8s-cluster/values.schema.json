@@ -48,6 +48,17 @@
         },
         "injectedCertificateAuthorities": {
           "type": "string"
+        },
+        "kubeletExtraConfig": {
+          "type": "object",
+          "description": "Additional kubelet configuration",
+          "properties": {
+            "maxParallelImagePulls": {
+              "type": "integer",
+              "description": "Only valid for k8s version 1.27 and later. The number of images to pull in parallel."
+            }
+          },
+          "additionalProperties": false
         }
       }
     },

@@ -16,6 +16,9 @@ global:
       repository: bitnami/kubectl
       tag: 1.27.2
   injectedCertificateAuthorities: ""
+  kubeletExtraConfig:
+    # This is only used when using 1.27 or later
+    maxParallelImagePulls: 4
 
 metadata:
   serviceLevelAgreement: None
