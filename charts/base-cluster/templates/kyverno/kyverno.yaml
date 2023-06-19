@@ -17,6 +17,17 @@ spec:
       namespace: monitoring
   {{- end }}
   values:
+    testImage:
+      registry: {{ $.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict)) }}
+    {{- if .Values.global.imageRegistry }}
+    image:
+      repository: {{ printf "%s/kyverno/kyverno" $.Values.global.imageRegistry }}
+    initImage:
+      repository: {{ printf "%s/kyverno/kyvernopre" $.Values.global.imageRegistry }}
+    cleanupController:
+      image:
+        repository: {{ printf "%s/kyverno/cleanup-controller" $.Values.global.imageRegistry }}
+    {{- end }}
     installCRDs: true
     networkPolicy:
       enabled: false

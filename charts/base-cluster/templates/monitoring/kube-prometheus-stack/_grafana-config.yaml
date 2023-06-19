@@ -1,5 +1,7 @@
 {{- define "base-cluster.prometheus-stack.grafana.config" -}}
   {{- if $.Values.global.imageRegistry }}
+testFramework:
+  image: {{ printf "%s/bats/bats" .Values.global.imageRegistry }}
 image:
   repository: {{ printf "%s/grafana/grafana" .Values.global.imageRegistry }}
 downloadDashboardsImage:

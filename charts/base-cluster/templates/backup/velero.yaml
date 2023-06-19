@@ -20,10 +20,11 @@ spec:
   upgrade:
     crds: CreateReplace
   values:
-    {{- if .Values.global.imageRegistry }}
     image:
-      repository: {{ printf "%s/velero/velero" $.Values.global.imageRegistry }}
-    {{- end }}
+      repository: {{ printf "%s/velero/velero" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
+    kubectl:
+      image:
+        repository: {{ printf "%s/bitnami/kubectl" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
     upgradeCRDs: false
     cleanUpCRDs: true
     podSecurityContext:
