@@ -1,0 +1,36 @@
+registries:
+  docker.io:
+    bats:
+      bats: ALL_TAGS
+    bitnami: ALL_IMAGES
+    busybox: ALL_TAGS
+    confluentinc:
+      cp-kafka: ALL_TAGS
+    curlimages:
+      curl: ALL_TAGS
+    fluxcd: ALL_IMAGES
+    grafana: ALL_IMAGES
+    stellio: ALL_IMAGES
+    velero: ALL_IMAGES
+    vladgh:
+      gpg@sha256: ALL_TAGS
+  ghcr.io:
+    aquasecurity: ALL_IMAGES
+    kyverno: ALL_IMAGES
+  quay.io:
+    cilium: ALL_IMAGES
+    jetstack: ALL_IMAGES
+    kiwigrid:
+      k8s-sidecar: ALL_TAGS
+    prometheus: ALL_IMAGES
+    prometheus-operator: ALL_IMAGES
+  registry.k8s.io:
+    descheduler: ALL_IMAGES
+    ingress-nginx: ALL_IMAGES
+    kube-state-metrics: ALL_IMAGES
+    sig-storage:
+      nfs-provisioner: ALL_TAGS
+    etcd: ALL_TAGS
+    provider-os: ALL_IMAGES
+  k8s.gcr.io:
+    sig-storage: ALL_IMAGES

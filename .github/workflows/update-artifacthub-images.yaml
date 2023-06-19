@@ -46,6 +46,9 @@ jobs:
       - name: extract images for ${{ matrix.chart }}
         run: ./.github/scripts/extract-artifacthub-images.sh "charts/${{ matrix.chart }}"
 
+      - name: enforce trusted registries
+        run: ./.github/scripts/enforce-trusted-registries.sh "charts/${{ matrix.chart }}"
+
       - name: Create PR
         id: create-pr
         uses: peter-evans/create-pull-request@v5
