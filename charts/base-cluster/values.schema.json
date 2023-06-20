@@ -659,7 +659,7 @@
       "type": "object",
       "properties": {
         "resources": {
-          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/$defs/resourceRequirements"
         },
         "email": {
           "type": [
@@ -673,7 +673,7 @@
           "type": "object",
           "properties": {
             "resources": {
-              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+              "$ref": "#/$defs/resourceRequirements"
             }
           },
           "additionalProperties": false
@@ -682,7 +682,7 @@
           "type": "object",
           "properties": {
             "resources": {
-              "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+              "$ref": "#/$defs/resourceRequirements"
             }
           },
           "additionalProperties": false
@@ -705,7 +705,7 @@
       "type": "object",
       "properties": {
         "resources": {
-          "$ref": "https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+          "$ref": "#/$defs/resourceRequirements"
         }
       },
       "additionalProperties": false
