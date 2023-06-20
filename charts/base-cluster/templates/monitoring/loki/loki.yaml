@@ -19,16 +19,16 @@ spec:
     - name: kube-prometheus-stack
       namespace: monitoring
   values:
+    test_pod:
+      image: {{ printf "%s/bats/bats:1.8.2" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
     loki:
       extraArgs:
         # TODO: switch to compactor and boltdb-shipper
         target: all,table-manager
       isDefault: false
       url: {{ `http://{{ (include "loki.serviceName" .) }}.{{ .Release.Namespace }}:{{ .Values.loki.service.port }}` }}
-      {{- if .Values.global.imageRegistry }}
       image:
-        repository: {{ printf "%s/grafana/loki" $.Values.global.imageRegistry }}
-      {{- end }}
+        repository: {{ printf "%s/grafana/loki" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
       resources: {{- .Values.monitoring.loki.resources | toYaml | nindent 8 }}
       replicas: {{ .Values.monitoring.loki.replicas }}
       persistence: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.loki.persistence "global" $.Values.global) | nindent 8 }}

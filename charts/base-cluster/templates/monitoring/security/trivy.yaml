@@ -23,13 +23,16 @@ spec:
   values:
     {{- if .Values.global.imageRegistry }}
     image:
-      repository: {{ printf "%s/aquasecurity/trivy-operator" $.Values.global.imageRegistry | quote }}
+      registry: {{ $.Values.global.imageRegistry }}
+    nodeCollector:
+      registry: {{ $.Values.global.imageRegistry }}
     {{- end }}
     trivy:
     {{- if .Values.global.imageRegistry }}
+      dbRegistry: {{ $.Values.global.imageRegistry }}
+      javaDbRegistry: {{ $.Values.global.imageRegistry }}
       image:
-        repository: {{ printf "%s/aquasecurity/trivy" $.Values.global.imageRegistry | quote }}
-        dbRepository: {{ printf "%s/aquasecurity/trivy-db" $.Values.global.imageRegistry | quote }}
+        registry: {{ $.Values.global.imageRegistry }}
     {{- end }}
       ignoreUnfixed: true
       resources:
