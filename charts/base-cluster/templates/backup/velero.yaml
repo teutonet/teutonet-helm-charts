@@ -40,6 +40,7 @@ spec:
       allowPrivilegeEscalation: false
       seccompProfile:
         type: RuntimeDefault
+    resources: {{- .Values.backup.resources | toYaml | nindent 6 }}
     priorityClassName: system-cluster-critical
     deployNodeAgent: true # enable FSB
     configuration:

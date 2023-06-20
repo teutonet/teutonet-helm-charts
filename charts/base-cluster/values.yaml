@@ -394,3 +394,10 @@ rbac:
 backup:
   enabled: true
   backupStorageLocations: {}
+  resources:
+    requests:
+      cpu: 5m
+      memory: 25Mi
+    limits:
+      cpu: 500m
+      memory: 100Mi
