@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.5.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.5.0...base-cluster-v4.5.1) (2023-06-21)
+
+
+### Bug Fixes
+
+* **base-cluster/backup:** reduce request, make configurable ([#453](https://github.com/teutonet/teutonet-helm-charts/issues/453)) ([85e9b13](https://github.com/teutonet/teutonet-helm-charts/commit/85e9b13e0c404a46a612dd7554411a9fe11b8220))
+* **base-cluster:** update config to comply with trusted images ([#451](https://github.com/teutonet/teutonet-helm-charts/issues/451)) ([9431caf](https://github.com/teutonet/teutonet-helm-charts/commit/9431caf831346c06d6a3d31d27a3c50fc2ae8111))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/artifacthub-images:** Update ArtifactHUB images ([#438](https://github.com/teutonet/teutonet-helm-charts/issues/438)) ([fffc128](https://github.com/teutonet/teutonet-helm-charts/commit/fffc128ba81038842ce8356d3d46b203123aa1f3))
+* **base-cluster/schema:** use $def instead of URL ([#452](https://github.com/teutonet/teutonet-helm-charts/issues/452)) ([82142eb](https://github.com/teutonet/teutonet-helm-charts/commit/82142ebaad2d049fb5bb35be0e02890fd68ebd5f))
+* **deps:** update docker.io/bitnami/kubectl docker tag to v1.27.3 ([#447](https://github.com/teutonet/teutonet-helm-charts/issues/447)) ([dcb099d](https://github.com/teutonet/teutonet-helm-charts/commit/dcb099da6d49ea24aa9208a4834214b6c5967d6b))
+
 ## [4.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.4.0...base-cluster-v4.5.0) (2023-06-12)
 
 

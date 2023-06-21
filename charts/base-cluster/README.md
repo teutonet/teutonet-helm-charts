@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # base-cluster
 
-![Version: 4.5.0](https://img.shields.io/badge/Version-4.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 4.5.1](https://img.shields.io/badge/Version-4.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -2016,13 +2016,13 @@ currencyEUR
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                                                           | Pattern | Type           | Deprecated | Definition                                                                                                         | Title/Description                                                                      |
-| ------------------------------------------------------------------ | ------- | -------------- | ---------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
-| - [resources](#certManager_resources )                             | No      | object         | No         | In https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements | ResourceRequirements describes the compute resource requirements.                      |
-| - [email](#certManager_email )                                     | No      | string or null | No         | In #/$defs/email                                                                                                   | Setting an email enables cert-manager's IngressShim and will be used for Let's Encrypt |
-| - [webhook](#certManager_webhook )                                 | No      | object         | No         | -                                                                                                                  | -                                                                                      |
-| - [caInjector](#certManager_caInjector )                           | No      | object         | No         | -                                                                                                                  | -                                                                                      |
-| - [dnsChallengeNameservers](#certManager_dnsChallengeNameservers ) | No      | object         | No         | -                                                                                                                  | -                                                                                      |
+| Property                                                           | Pattern | Type           | Deprecated | Definition                                             | Title/Description                                                                      |
+| ------------------------------------------------------------------ | ------- | -------------- | ---------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| - [resources](#certManager_resources )                             | No      | object         | No         | Same as [resources](#monitoring_prometheus_resources ) | ResourceRequirements describes the compute resource requirements.                      |
+| - [email](#certManager_email )                                     | No      | string or null | No         | In #/$defs/email                                       | Setting an email enables cert-manager's IngressShim and will be used for Let's Encrypt |
+| - [webhook](#certManager_webhook )                                 | No      | object         | No         | -                                                      | -                                                                                      |
+| - [caInjector](#certManager_caInjector )                           | No      | object         | No         | -                                                      | -                                                                                      |
+| - [dnsChallengeNameservers](#certManager_dnsChallengeNameservers ) | No      | object         | No         | -                                                      | -                                                                                      |
 
 ### <a name="certManager_resources"></a>6.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager > resources`
 
@@ -2030,73 +2030,9 @@ currencyEUR
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Defined in**            | https://kubernetesjsonschema.dev/v1.18.1/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements                   |
+| **Same definition as**    | [resources](#monitoring_prometheus_resources)                                                                                     |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
-
-| Property                                       | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                  |
-| ---------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| - [limits](#certManager_resources_limits )     | No      | object | No         | -          | Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/                                                                                                                                                 |
-| - [requests](#certManager_resources_requests ) | No      | object | No         | -          | Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/ |
-
-#### <a name="certManager_resources_limits"></a>6.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager > resources > limits`
-
-|                           |                                                                                                                                                                                           |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                  |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#certManager_resources_limits_additionalProperties "Each additional property must conform to the following schema") |
-
-**Description:** Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-
-| Property                                                  | Pattern | Type   | Deprecated | Definition                                                     | Title/Description |
-| --------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------- | ----------------- |
-| - [](#certManager_resources_limits_additionalProperties ) | No      | object | No         | In #/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity | -                 |
-
-##### <a name="certManager_resources_limits_additionalProperties"></a>6.1.1.1. Property `base cluster configuration > certManager > resources > limits > io.k8s.apimachinery.pkg.api.resource.Quantity`
-
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Defined in**            | #/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity                                                                       |
-
-| One of(Option)                                                        |
-| --------------------------------------------------------------------- |
-| [item 0](#certManager_resources_limits_additionalProperties_oneOf_i0) |
-| [item 1](#certManager_resources_limits_additionalProperties_oneOf_i1) |
-
-##### <a name="certManager_resources_limits_additionalProperties_oneOf_i0"></a>6.1.1.1.1. Property `base cluster configuration > certManager > resources > limits > additionalProperties > oneOf > item 0`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
-
-##### <a name="certManager_resources_limits_additionalProperties_oneOf_i1"></a>6.1.1.1.2. Property `base cluster configuration > certManager > resources > limits > additionalProperties > oneOf > item 1`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `number` |
-
-#### <a name="certManager_resources_requests"></a>6.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager > resources > requests`
-
-|                           |                                                                                                                                                                                             |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                    |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#certManager_resources_requests_additionalProperties "Each additional property must conform to the following schema") |
-
-**Description:** Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-
-| Property                                                    | Pattern | Type   | Deprecated | Definition                                                                                                       | Title/Description |
-| ----------------------------------------------------------- | ------- | ------ | ---------- | ---------------------------------------------------------------------------------------------------------------- | ----------------- |
-| - [](#certManager_resources_requests_additionalProperties ) | No      | object | No         | Same as [certManager_resources_limits_additionalProperties](#certManager_resources_limits_additionalProperties ) | -                 |
-
-##### <a name="certManager_resources_requests_additionalProperties"></a>6.1.2.1. Property `base cluster configuration > certManager > resources > requests > io.k8s.apimachinery.pkg.api.resource.Quantity`
-
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [certManager_resources_limits_additionalProperties](#certManager_resources_limits_additionalProperties)                           |
 
 ### <a name="certManager_email"></a>6.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager > email`
 
@@ -2118,9 +2054,9 @@ currencyEUR
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                                       | Pattern | Type   | Deprecated | Definition                                   | Title/Description                                                 |
-| ---------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------- | ----------------------------------------------------------------- |
-| - [resources](#certManager_webhook_resources ) | No      | object | No         | Same as [resources](#certManager_resources ) | ResourceRequirements describes the compute resource requirements. |
+| Property                                       | Pattern | Type   | Deprecated | Definition                                             | Title/Description                                                 |
+| ---------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------ | ----------------------------------------------------------------- |
+| - [resources](#certManager_webhook_resources ) | No      | object | No         | Same as [resources](#monitoring_prometheus_resources ) | ResourceRequirements describes the compute resource requirements. |
 
 #### <a name="certManager_webhook_resources"></a>6.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager > webhook > resources`
 
@@ -2128,7 +2064,7 @@ currencyEUR
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#certManager_resources)                                                                                               |
+| **Same definition as**    | [resources](#monitoring_prometheus_resources)                                                                                     |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
@@ -2139,9 +2075,9 @@ currencyEUR
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                                          | Pattern | Type   | Deprecated | Definition                                   | Title/Description                                                 |
-| ------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------- | ----------------------------------------------------------------- |
-| - [resources](#certManager_caInjector_resources ) | No      | object | No         | Same as [resources](#certManager_resources ) | ResourceRequirements describes the compute resource requirements. |
+| Property                                          | Pattern | Type   | Deprecated | Definition                                             | Title/Description                                                 |
+| ------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------ | ----------------------------------------------------------------- |
+| - [resources](#certManager_caInjector_resources ) | No      | object | No         | Same as [resources](#monitoring_prometheus_resources ) | ResourceRequirements describes the compute resource requirements. |
 
 #### <a name="certManager_caInjector_resources"></a>6.4.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager > caInjector > resources`
 
@@ -2149,7 +2085,7 @@ currencyEUR
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#certManager_resources)                                                                                               |
+| **Same definition as**    | [resources](#monitoring_prometheus_resources)                                                                                     |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
@@ -2185,9 +2121,9 @@ must respect the following conditions
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                               | Pattern | Type   | Deprecated | Definition                                   | Title/Description                                                 |
-| -------------------------------------- | ------- | ------ | ---------- | -------------------------------------------- | ----------------------------------------------------------------- |
-| - [resources](#externalDNS_resources ) | No      | object | No         | Same as [resources](#certManager_resources ) | ResourceRequirements describes the compute resource requirements. |
+| Property                               | Pattern | Type   | Deprecated | Definition                                             | Title/Description                                                 |
+| -------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------ | ----------------------------------------------------------------- |
+| - [resources](#externalDNS_resources ) | No      | object | No         | Same as [resources](#monitoring_prometheus_resources ) | ResourceRequirements describes the compute resource requirements. |
 
 ### <a name="externalDNS_resources"></a>7.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > externalDNS > resources`
 
@@ -2195,7 +2131,7 @@ must respect the following conditions
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#certManager_resources)                                                                                               |
+| **Same definition as**    | [resources](#monitoring_prometheus_resources)                                                                                     |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
@@ -2856,11 +2792,12 @@ Specific value: `"auto"`
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                                                    | Pattern | Type    | Deprecated | Definition | Title/Description |
-| ----------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
-| - [enabled](#backup_enabled )                               | No      | boolean | No         | -          | -                 |
-| - [backupStorageLocations](#backup_backupStorageLocations ) | No      | object  | No         | -          | -                 |
-| - [defaultLocation](#backup_defaultLocation )               | No      | string  | No         | -          | -                 |
+| Property                                                    | Pattern | Type    | Deprecated | Definition                                             | Title/Description                                                 |
+| ----------------------------------------------------------- | ------- | ------- | ---------- | ------------------------------------------------------ | ----------------------------------------------------------------- |
+| - [enabled](#backup_enabled )                               | No      | boolean | No         | -                                                      | -                                                                 |
+| - [resources](#backup_resources )                           | No      | object  | No         | Same as [resources](#monitoring_prometheus_resources ) | ResourceRequirements describes the compute resource requirements. |
+| - [backupStorageLocations](#backup_backupStorageLocations ) | No      | object  | No         | -                                                      | -                                                                 |
+| - [defaultLocation](#backup_defaultLocation )               | No      | string  | No         | -                                                      | -                                                                 |
 
 ### <a name="backup_enabled"></a>13.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > enabled`
 
@@ -2868,7 +2805,17 @@ Specific value: `"auto"`
 | -------- | --------- |
 | **Type** | `boolean` |
 
-### <a name="backup_backupStorageLocations"></a>13.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations`
+### <a name="backup_resources"></a>13.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > resources`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+| **Same definition as**    | [resources](#monitoring_prometheus_resources)                                                                                     |
+
+**Description:** ResourceRequirements describes the compute resource requirements.
+
+### <a name="backup_backupStorageLocations"></a>13.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations`
 
 |                           |                                                                                                                                                                                            |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -2879,7 +2826,7 @@ Specific value: `"auto"`
 | ---------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [](#backup_backupStorageLocations_additionalProperties ) | No      | object | No         | -          | -                 |
 
-#### <a name="backup_backupStorageLocations_additionalProperties"></a>13.2.1. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties`
+#### <a name="backup_backupStorageLocations_additionalProperties"></a>13.3.1. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2892,7 +2839,7 @@ Specific value: `"auto"`
 | + [bucket](#backup_backupStorageLocations_additionalProperties_bucket )     | No      | string | No         | -          | -                 |
 | - [prefix](#backup_backupStorageLocations_additionalProperties_prefix )     | No      | string | No         | -          | -                 |
 
-##### <a name="backup_backupStorageLocations_additionalProperties_provider"></a>13.2.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider`
+##### <a name="backup_backupStorageLocations_additionalProperties_provider"></a>13.3.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2903,7 +2850,7 @@ Specific value: `"auto"`
 | ------------------------------------------------------------------------------ | ------- | ----------- | ---------- | ---------- | ----------------- |
 | - [minio](#backup_backupStorageLocations_additionalProperties_provider_minio ) | No      | Combination | No         | -          | -                 |
 
-##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio"></a>13.2.1.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio`
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio"></a>13.3.1.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2923,35 +2870,35 @@ Specific value: `"auto"`
 | [item 1](#backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i1) |
 | [item 2](#backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2) |
 
-##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i0"></a>13.2.1.1.1.1. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 0`
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i0"></a>13.3.1.1.1.1. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 0`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-##### <a name="autogenerated_heading_25"></a>13.2.1.1.1.1.1. The following properties are required
+##### <a name="autogenerated_heading_25"></a>13.3.1.1.1.1.1. The following properties are required
 * accessKeyID
 * secretAccessKey
 
-##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i1"></a>13.2.1.1.1.2. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 1`
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i1"></a>13.3.1.1.1.2. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 1`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-##### <a name="autogenerated_heading_26"></a>13.2.1.1.1.2.1. The following properties are required
+##### <a name="autogenerated_heading_26"></a>13.3.1.1.1.2.1. The following properties are required
 * existingSecret
 
-##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2"></a>13.2.1.1.1.3. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2`
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2"></a>13.3.1.1.1.3. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `combining`                                                                                                                       |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-##### <a name="autogenerated_heading_27"></a>13.2.1.1.1.3.1. Must **not** be
+##### <a name="autogenerated_heading_27"></a>13.3.1.1.1.3.1. Must **not** be
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -2964,49 +2911,49 @@ Specific value: `"auto"`
 | [item 1](#backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i1) |
 | [item 2](#backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i2) |
 
-##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i0"></a>13.2.1.1.1.3.1.1. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2 > not > anyOf > item 0`
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i0"></a>13.3.1.1.1.3.1.1. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2 > not > anyOf > item 0`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-##### <a name="autogenerated_heading_28"></a>13.2.1.1.1.3.1.1.1. The following properties are required
+##### <a name="autogenerated_heading_28"></a>13.3.1.1.1.3.1.1.1. The following properties are required
 * accessKeyID
 
-##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i1"></a>13.2.1.1.1.3.1.2. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2 > not > anyOf > item 1`
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i1"></a>13.3.1.1.1.3.1.2. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2 > not > anyOf > item 1`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-##### <a name="autogenerated_heading_29"></a>13.2.1.1.1.3.1.2.1. The following properties are required
+##### <a name="autogenerated_heading_29"></a>13.3.1.1.1.3.1.2.1. The following properties are required
 * secretAccessKey
 
-##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i2"></a>13.2.1.1.1.3.1.3. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2 > not > anyOf > item 2`
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i2"></a>13.3.1.1.1.3.1.3. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2 > not > anyOf > item 2`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-##### <a name="autogenerated_heading_30"></a>13.2.1.1.1.3.1.3.1. The following properties are required
+##### <a name="autogenerated_heading_30"></a>13.3.1.1.1.3.1.3.1. The following properties are required
 * existingSecret
 
-##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_accessKeyID"></a>13.2.1.1.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > accessKeyID`
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_accessKeyID"></a>13.3.1.1.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > accessKeyID`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_secretAccessKey"></a>13.2.1.1.1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > secretAccessKey`
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_secretAccessKey"></a>13.3.1.1.1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > secretAccessKey`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret"></a>13.2.1.1.1.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > existingSecret`
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret"></a>13.3.1.1.1.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > existingSecret`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -3018,13 +2965,13 @@ Specific value: `"auto"`
 | + [name](#backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret_name ) | No      | string | No         | -          | -                                                        |
 | - [key](#backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret_key )   | No      | string | No         | -          | The default is <$providerName-$name> (e.g. 'minio-prod') |
 
-##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret_name"></a>13.2.1.1.1.6.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > existingSecret > name`
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret_name"></a>13.3.1.1.1.6.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > existingSecret > name`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret_key"></a>13.2.1.1.1.6.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > existingSecret > key`
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret_key"></a>13.3.1.1.1.6.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > existingSecret > key`
 
 |          |          |
 | -------- | -------- |
@@ -3032,25 +2979,25 @@ Specific value: `"auto"`
 
 **Description:** The default is <$providerName-$name> (e.g. 'minio-prod')
 
-##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_url"></a>13.2.1.1.1.7. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > url`
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_url"></a>13.3.1.1.1.7. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > url`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="backup_backupStorageLocations_additionalProperties_bucket"></a>13.2.1.2. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > bucket`
+##### <a name="backup_backupStorageLocations_additionalProperties_bucket"></a>13.3.1.2. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > bucket`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="backup_backupStorageLocations_additionalProperties_prefix"></a>13.2.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > prefix`
+##### <a name="backup_backupStorageLocations_additionalProperties_prefix"></a>13.3.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > prefix`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="backup_defaultLocation"></a>13.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > defaultLocation`
+### <a name="backup_defaultLocation"></a>13.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > defaultLocation`
 
 |          |          |
 | -------- | -------- |
