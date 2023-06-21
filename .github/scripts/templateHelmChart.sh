@@ -108,16 +108,22 @@ function templateLocalHelmChart() {
 function templateSubHelmCharts() {
   local yaml
   local numberOfHelmReleases
+  local tmpDir
+  tmpDir=$(mktemp -d -p "$TMP_DIR")
 
   yaml=$(cat -)
   numberOfHelmReleases=$(yq <<<"$yaml" -ers '[.[] | select(.kind == "HelmRelease")] | length')
   echo "$yaml"
   if [[ "$numberOfHelmReleases" -gt 0 ]]; then
     for index in $(seq 0 $((numberOfHelmReleases - 1))); do
-      echo ---
-      yq <<<"$yaml" -erys '([.[] | select(.kind == "HelmRelease")]['"$index"']),(.[] | select(.kind | IN(["GitRepository", "HelmRepository"][])))' | templateHelmRelease
+      yq <<<"$yaml" -erys '([.[] | select(.kind == "HelmRelease")]['"$index"']),(.[] | select(.kind | IN(["GitRepository", "HelmRepository"][])))' | templateHelmRelease >"$tmpDir/$index.yaml" &
     done
   fi
+  wait
+  for index in $(seq 0 $((numberOfHelmReleases - 1))); do
+    echo ---
+    cat "$tmpDir/$index.yaml"
+  done
 }
 
 function templateRemoteHelmChart() {
