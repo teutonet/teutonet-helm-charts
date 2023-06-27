@@ -11,32 +11,22 @@
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.kubeletExtraArgs" -}}
-  {{- $featureGates := dict "SeccompDefault" "true" -}}
-  {{- $featureGatesFlags := list }}
-  {{- range $name, $value := $featureGates -}}
-    {{- $featureGatesFlags = append $featureGatesFlags (printf "%s=%s" $name $value) -}}
-  {{- end -}}
-  {{- $args := dict
-    "cloud-provider" "external"
-    "event-qps" "0"
-    "protect-kernel-defaults" "true"
-    "tls-cipher-suites" (include "t8s-cluster.clusterClass.tlsCipherSuites" (dict))
-    "feature-gates" (join "," $featureGatesFlags)
-    "seccomp-default" "true"
-        -}}
-  {{- if and (eq (int .Values.version.major) 1) (ge (int .Values.version.minor) 27) (gt (int .Values.global.kubeletExtraConfig.maxParallelImagePulls) 1) -}}
-    {{- $args = set $args "serializeImagePulls" "false" -}}
-    {{- $args = set $args "maxParallelImagePulls" (.Values.global.kubeletExtraConfig.maxParallelImagePulls | toString) -}}
-  {{- end -}}
+  {{- $args := dict "cloud-provider" "external" -}}
   {{- $args | toYaml -}}
 {{- end -}}
 
-{{- define "t8s-cluster.clusterClass.preKudeadmCommands" -}}
+{{- define "t8s-cluster.clusterClass.preKubeadmCommands" -}}
   {{- $commands := list -}}
   {{- $commands = append $commands "bash /etc/kube-proxy-patch.sh" }}
   {{- if .Values.global.injectedCertificateAuthorities -}}
     {{- $commands = append $commands "update-ca-certificates" -}}
   {{- end -}}
+  {{- $commands | toYaml }}
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.postKubeadmCommands" -}}
+  {{- $commands := list -}}
+  {{- $commands = append $commands "bash -xc 'if systemctl -q is-failed kubelet; then journalctl -u kubelet; else echo kubelet startup successful; fi | tee -a /dev/console'" }}
   {{- $commands | toYaml }}
 {{- end -}}
 
