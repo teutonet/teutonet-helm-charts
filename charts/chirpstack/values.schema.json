@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "chirpstack configuration",
+  "properties": {
+    "global": {
+      "type": "object",
+      "properties": {
+        "curl": {
+          "$ref": "#/$defs/deployment"
+        },
+        "additionalProperties": false
+      }
+    },
+    "ingress": {
+      "type": "object",
+      "oneOf": [
+        {
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "const": true
+            },
+            "host": {
+              "type": "string"
+            },
+            "class": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "host"
+          ]
+        },
+        {
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "const": false
+            }
+          }
+        }
+      ]
+    },
+    "chirpstack": {
+      "$ref": "#/$defs/deployment"
+    },
+    "chirpstackGatewayBridge": {
+      "$ref": "#/$defs/deployment"
+    },
+    "chirpstackRestAPI": {
+      "$ref": "#/$defs/deployment"
+    },
+    "mosquitto": {
+      "$ref": "#/$defs/deployment"
+    },
+    "postgres": {
+      "$ref": "#/$defs/deployment",
+      "properties": {
+        "persistence": {
+          "$ref": "#/$defs/persistence"
+        }
+      }
+    },
+    "redis": {
+      "$ref": "#/$defs/deployment",
+      "properties": {
+        "persistence": {
+          "$ref": "#/$defs/persistence"
+        }
+      }
+    }
+  },
+  "required": [
+  ],
+  "$defs": {
+    "resourceRequirements": {
+      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.24.4-standalone-strict/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "registry": {
+          "type": "string",
+          "description": "The host of the registry",
+          "examples": [
+            "docker.io"
+          ]
+        },
+        "repository": {
+          "type": "string",
+          "description": "The image path in the registry",
+          "examples": [
+            "bitnami/kubectl"
+          ]
+        },
+        "tag": {
+          "type": "string"
+        },
+        "digest": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "deployment": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "$ref": "#/$defs/image"
+        },
+        "resources": {
+          "$ref": "#/$defs/resourceRequirements"
+        }
+      }
+    },
+    "persistence": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "storageClass": {
+          "type": "string"
+        },
+        "size": {
+          "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.24.4-standalone-strict/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        }
+      }
+    }
+  }
+}

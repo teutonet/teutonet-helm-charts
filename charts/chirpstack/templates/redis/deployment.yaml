@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {{- include "chirpstack.commonMetadata" (dict "component" "redis" "context" .) | nindent 2 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: redis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: redis
+    spec:
+      {{- include "chirpstack.securityOptions" (dict) | nindent 6 }}
+      containers:
+        - image: {{ include "common.images.image" (dict "imageRoot" .Values.redis.image "global" .Values.global) }}
+          resources: {{- .Values.redis.resources | toYaml | nindent 12 }}
+          ports:
+            - containerPort: 6379
+              name: redis
+          name: redis
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+            tcpSocket:
+              port: 6379
+          volumeMounts:
+            - mountPath: /data
+              name: redisdata
+      restartPolicy: Always
+      volumes:
+        - name: redisdata
+          persistentVolumeClaim:
+            claimName: {{ include "chirpstack.fullname" (dict "context" . "component" "redis") }}

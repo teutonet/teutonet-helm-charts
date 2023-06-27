@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {{- include "chirpstack.commonMetadata" (dict "context" . "component" "mosquitto") | nindent 2 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: mosquitto
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: mosquitto
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/mosquitto/configmap.yaml") . | sha256sum }}
+    spec:
+      {{- include "chirpstack.securityOptions" (dict) | nindent 6 }}
+      containers:
+        - image: {{ include "common.images.image" (dict "imageRoot" .Values.mosquitto.image "global" .Values.global) }}
+          name: mosquitto
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+            tcpSocket:
+              port: 1883
+          resources: {{- .Values.mosquitto.resources | toYaml | nindent 12 }}
+          command:
+            - /usr/sbin/mosquitto
+            - -c
+            - /mosquitto/config/mosquitto.conf
+          ports:
+            - containerPort: 1883
+              name: mqtt
+          volumeMounts:
+            - mountPath: /mosquitto/config/
+              name: mosquitto-config
+      restartPolicy: Always
+      volumes:
+        - name: mosquitto-config
+          configMap:
+            name: {{ include "chirpstack.fullname" (dict "context" . "component" "mosquitto") }}

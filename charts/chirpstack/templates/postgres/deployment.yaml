@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {{- include "chirpstack.commonMetadata" (dict "component" "postgres" "context" .) | nindent 2 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: postgres
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/postgres/configmap.yaml") . | sha256sum }}
+    spec:
+      {{- include "chirpstack.securityOptions" (dict) | nindent 6 }}
+      containers:
+        - env:
+            - name: POSTGRES_PASSWORD
+              value: root
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.postgres.image "global" .Values.global) }}
+          name: postgres
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+            tcpSocket:
+              port: 5432
+          resources: {{- .Values.postgres.resources | toYaml | nindent 12 }}
+          ports:
+            - containerPort: 5432
+              name: postgres
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d
+              name: postgres-init-db
+            - mountPath: /var/lib/postgresql/data
+              name: postgresqldata
+              subPath: postgres
+      restartPolicy: Always
+      volumes:
+        - name: postgres-init-db
+          configMap:
+            name: {{ include "chirpstack.fullname" (dict "context" . "component" "postgres") }}
+        - name: postgresqldata
+          persistentVolumeClaim:
+            claimName: {{ include "chirpstack.fullname" (dict "context" . "component" "postgres") }}
