@@ -151,7 +151,7 @@ function deleteComment() {
     -X DELETE \
     -H 'Accept: application/vnd.github+json' \
     -H "Authorization: token ${GITHUB_TOKEN}" \
-    "${GITHUB_API_REPO_URL}/issues/${issue}/comments/${comment}"
+    "${GITHUB_API_REPO_URL}/issues/comments/${comment}"
 }
 
 body=$(generateComment "$chart")
