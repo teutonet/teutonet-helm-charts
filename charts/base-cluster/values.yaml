@@ -85,7 +85,7 @@ global:
     prometheus:
       url: https://prometheus-community.github.io/helm-charts
       charts:
-        kube-prometheus-stack: 46.x
+        kube-prometheus-stack: 47.x
       condition: "{{ .Values.monitoring.prometheus.enabled }}"
       interval: 5m
     wiremind:
