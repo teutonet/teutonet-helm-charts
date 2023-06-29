@@ -7,6 +7,63 @@ entries:
         - image: docker.io/bats/bats:v1.4.1
         - image: docker.io/bitnami/kubectl:1.27
         - image: docker.io/bitnami/kubectl:1.27.3
+        - image: docker.io/bitnami/metrics-server:0.6.3-debian-11-r32
+        - image: docker.io/busybox:1.35
+        - image: docker.io/curlimages/curl:7.85.0
+        - image: docker.io/fluxcd/flux-cli:v0.41.2
+        - image: docker.io/grafana/grafana-image-renderer:latest
+        - image: docker.io/grafana/grafana:9.5.5
+        - image: docker.io/grafana/loki:2.6.1
+        - image: docker.io/grafana/promtail:2.7.4
+        - image: docker.io/velero/velero:v1.11.0
+        - image: docker.io/vladgh/gpg@sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
+        - image: ghcr.io/aquasecurity/trivy-operator:0.14.1
+        - image: ghcr.io/kyverno/cleanup-controller:v1.9.5
+        - image: ghcr.io/kyverno/kyverno:v1.9.5
+        - image: ghcr.io/kyverno/kyvernopre:v1.9.5
+        - image: quay.io/jetstack/cert-manager-cainjector:v1.12.2
+        - image: quay.io/jetstack/cert-manager-controller:v1.12.2
+        - image: quay.io/jetstack/cert-manager-ctl:v1.12.2
+        - image: quay.io/jetstack/cert-manager-webhook:v1.12.2
+        - image: quay.io/kiwigrid/k8s-sidecar:1.24.3
+        - image: quay.io/prometheus-operator/prometheus-operator:v0.66.0
+        - image: quay.io/prometheus/node-exporter:v1.6.0
+        - image: quay.io/prometheus/prometheus:v2.45.0
+        - image: registry.k8s.io/descheduler/descheduler:v0.27.1
+        - image: registry.k8s.io/ingress-nginx/controller:v1.8.0@sha256:744ae2afd433a395eeb13dc03d3313facba92e96ad71d9feaafc85925493fee3
+        - image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20221220-controller-v1.5.1-58-g787ea74b6
+        - image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.9.2
+        - image: registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8
+    apiVersion: v2
+    created: "2023-06-29T13:48:54.298819818Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.4.0
+    description: A common base for every kubernetes cluster
+    digest: 54e6164fd005e448277304458916572dae648ad62ad9fbe2973f6de36eb92169
+    home: https://teuto.net
+    icon: https://teuto.net/favicon.ico
+    maintainers:
+    - email: cwr@teuto.net
+      name: cwrau
+    - email: mw@teuto.net
+      name: marvinWolff
+    - email: sl@teuto.net
+      name: steutol
+    name: base-cluster
+    sources:
+    - https://github.com/teutonet/teutonet-helm-charts
+    type: application
+    urls:
+    - https://github.com/teutonet/teutonet-helm-charts/releases/download/base-cluster-4.5.2/base-cluster-4.5.2.tgz
+    version: 4.5.2
+  - annotations:
+      artifacthub.io/images: |
+        - image: docker.io/bats/bats:1.8.2
+        - image: docker.io/bats/bats:v1.4.1
+        - image: docker.io/bitnami/kubectl:1.27
+        - image: docker.io/bitnami/kubectl:1.27.3
         - image: docker.io/bitnami/metrics-server:0.6.3-debian-11-r30
         - image: docker.io/busybox:1.35
         - image: docker.io/curlimages/curl:7.85.0
@@ -2311,4 +2368,4 @@ entries:
     urls:
     - https://github.com/teutonet/teutonet-helm-charts/releases/download/t8s-cluster-0.0.1/t8s-cluster-0.0.1.tgz
     version: 0.0.1
-generated: "2023-06-21T13:04:58.822090568Z"
+generated: "2023-06-29T13:48:54.299389853Z"
