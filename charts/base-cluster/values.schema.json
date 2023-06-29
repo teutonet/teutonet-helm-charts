@@ -1113,6 +1113,15 @@
         },
         "defaultLocation": {
           "type": "string"
+        },
+        "nodeAgent": {
+          "type": "object",
+          "properties": {
+            "resources": {
+              "$ref": "#/$defs/resourceRequirements"
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false

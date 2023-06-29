@@ -401,3 +401,11 @@ backup:
     limits:
       cpu: 500m
       memory: 100Mi
+  nodeAgent:
+    resources:
+      requests:
+        cpu: 5m
+        memory: 25Mi
+      limits:
+        cpu: 500m
+        memory: 100Mi
