@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.5.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.5.1...base-cluster-v4.5.2) (2023-06-29)
+
+
+### Bug Fixes
+
+* **base-cluster/backup:** also lower resource requests for nodeAgent ([#459](https://github.com/teutonet/teutonet-helm-charts/issues/459)) ([384f3cd](https://github.com/teutonet/teutonet-helm-charts/commit/384f3cd7844bc40b85be3ecd5e689c9938cc341e))
+
+
+### Miscellaneous Chores
+
+* **deps:** update helm release kube-prometheus-stack to v47 ([#454](https://github.com/teutonet/teutonet-helm-charts/issues/454)) ([5d16743](https://github.com/teutonet/teutonet-helm-charts/commit/5d1674369275cccb0f3447fc8ddf9f58dce7d3e0))
+
 ## [4.5.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.5.0...base-cluster-v4.5.1) (2023-06-21)
 
 
