@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # base-cluster
 
-![Version: 4.5.1](https://img.shields.io/badge/Version-4.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 4.5.2](https://img.shields.io/badge/Version-4.5.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -2798,6 +2798,7 @@ Specific value: `"auto"`
 | - [resources](#backup_resources )                           | No      | object  | No         | Same as [resources](#monitoring_prometheus_resources ) | ResourceRequirements describes the compute resource requirements. |
 | - [backupStorageLocations](#backup_backupStorageLocations ) | No      | object  | No         | -                                                      | -                                                                 |
 | - [defaultLocation](#backup_defaultLocation )               | No      | string  | No         | -                                                      | -                                                                 |
+| - [nodeAgent](#backup_nodeAgent )                           | No      | object  | No         | -                                                      | -                                                                 |
 
 ### <a name="backup_enabled"></a>13.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > enabled`
 
@@ -3002,6 +3003,27 @@ Specific value: `"auto"`
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
+
+### <a name="backup_nodeAgent"></a>13.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > nodeAgent`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                    | Pattern | Type   | Deprecated | Definition                                             | Title/Description                                                 |
+| ------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------ | ----------------------------------------------------------------- |
+| - [resources](#backup_nodeAgent_resources ) | No      | object | No         | Same as [resources](#monitoring_prometheus_resources ) | ResourceRequirements describes the compute resource requirements. |
+
+#### <a name="backup_nodeAgent_resources"></a>13.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > nodeAgent > resources`
+
+|                           |                                                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                          |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+| **Same definition as**    | [resources](#monitoring_prometheus_resources)                                                                                     |
+
+**Description:** ResourceRequirements describes the compute resource requirements.
 
 ## <a name="common"></a>14. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > common`
 
