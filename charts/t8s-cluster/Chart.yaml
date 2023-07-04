@@ -16,7 +16,7 @@ home: https://teuto.net
 description: t8s-operator cluster with necessary addons
 dependencies:
   - name: common
-    version: 2.5.0
+    version: 2.6.0
     repository: https://charts.bitnami.com/bitnami
 annotations:
   artifacthub.io/images: |
