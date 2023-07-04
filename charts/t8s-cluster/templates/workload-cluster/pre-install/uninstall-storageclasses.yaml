@@ -1,10 +1,3 @@
-{{- $storageClasses := list "teutostack-ssd" "teutostack-hdd" -}}
-{{- range $sc := $storageClasses -}}
-  {{- if not (lookup "v1" "StorageClass" "" $sc) -}}
-    {{- $storageClasses = without $storageClasses $sc -}}
-  {{- end -}}
-{{- end -}}
-{{- if $storageClasses }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -45,6 +38,9 @@ spec:
             allowPrivilegeEscalation: false
             seccompProfile:
               type: RuntimeDefault
+          env:
+            - name: KUBECONFIG
+              value: /tmp/workload-kubeconfig
           volumeMounts:
             - mountPath: /tmp/workload-kubeconfig
               name: workload-kubeconfig
@@ -54,12 +50,13 @@ spec:
             - -ex
             - -c
             - |-
-              for storageclass in {{ $storageClasses | join " " }}; do
-                kubectl --kubeconfig /tmp/workload-kubeconfig delete storageclass "$storageclass"
+              for storageclass in teutostack-ssd teutostack-hdd; do
+                if kubectl get storageclass "$storageclass" >/dev/null; then
+                  kubectl delete storageclass "$storageclass"
+                fi
               done
       volumes:
         - name: workload-kubeconfig
           secret:
             secretName: {{ .Release.Name }}-kubeconfig
             optional: false
-{{- end -}}
