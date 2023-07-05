@@ -7,14 +7,14 @@ data:
     set -e
 
     psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
-        create role chirpstack with login password 'chirpstack';
-        create database chirpstack with owner chirpstack;
+        create role $CS_POSTGRESQL_USER with login password '$CS_POSTGRESQL_PASSWORD';
+        create database $CS_POSTGRESQL_DB with owner $CS_POSTGRESQL_USER;
     EOSQL
   002-chirpstack_extensions.sh: |
     #!/bin/bash
     set -e
 
-    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname="chirpstack" <<-EOSQL
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname="$CS_POSTGRESQL_DB" <<-EOSQL
         create extension pg_trgm;
         create extension hstore;
     EOSQL

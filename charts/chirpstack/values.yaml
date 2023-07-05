@@ -77,6 +77,8 @@ postgres:
     limits:
       cpu: 100m
       memory: 150Mi
+  user: chirpstack
+  dbname: chirpstack
 
 redis:
   image:

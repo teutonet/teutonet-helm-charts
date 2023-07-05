@@ -61,6 +61,24 @@
         "persistence": {
           "$ref": "#/$defs/persistence"
         }
+      },
+      "user": {
+        "description": "The username for the postgres database",
+        "examples": [
+          "chirpstack"
+        ],
+        "type": "string"
+      },
+      "password": {
+        "desciption": "The password for the database",
+        "type": "string"
+      },
+      "dbname": {
+        "description": "The name of the chirpstack database",
+        "examples": [
+          "chirpstack"
+        ],
+        "type": "string"
       }
     },
     "redis": {
