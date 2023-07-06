@@ -1,3 +1,4 @@
+{{- if not .Values.postgres.existingPsqlUrl -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata: {{- include "chirpstack.commonMetadata" (dict "component" "postgres" "context" .) | nindent 2 }}
@@ -46,3 +47,4 @@ spec:
         - name: postgresqldata
           persistentVolumeClaim:
             claimName: {{ include "chirpstack.fullname" (dict "context" . "component" "postgres") }}
+{{- end -}}

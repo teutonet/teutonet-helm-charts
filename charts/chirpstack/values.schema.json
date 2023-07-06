@@ -86,6 +86,13 @@
           "mypostgressecret"
         ],
         "type": "string"
+      },
+      "existingPSQL": {
+        "description": "Use an existing PSQL host",
+        "examples": [
+          "mypsqlhost"
+        ],
+        "type": "string"
       }
     },
     "redis": {

@@ -2,7 +2,7 @@
 - name: MQTT_BROKER_HOST
   value: {{ include "chirpstack.fullname" (dict "context" . "component" "mosquitto") }}
 - name: POSTGRESQL_HOST
-  value: {{ include "chirpstack.fullname" (dict "context" . "component" "postgres") }}
+  value: {{ .Values.postgres.existingPsqlUrl | default (include "chirpstack.fullname" (dict "context" . "component" "postgres")) }}
 - name: POSTGRESQL_USER
   valueFrom:
     secretKeyRef:
