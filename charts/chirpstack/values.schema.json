@@ -79,6 +79,13 @@
           "chirpstack"
         ],
         "type": "string"
+      },
+      "existingSecretName": {
+        "description": "Use credentials from an existing secret",
+        "examples": [
+          "mypostgressecret"
+        ],
+        "type": "string"
       }
     },
     "redis": {

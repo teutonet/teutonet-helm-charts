@@ -17,21 +17,7 @@ spec:
     spec:
       {{- include "chirpstack.securityOptions" (dict) | nindent 6 }}
       containers:
-        - env:
-            - name: POSTGRES_PASSWORD
-              value: root
-            - name: CS_POSTGRESQL_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "chirpstack.fullname" (dict "context" . "component" "postgres") }}
-                  key: username
-            - name: CS_POSTGRESQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "chirpstack.fullname" (dict "context" . "component" "postgres") }}
-                  key: password
-            - name: CS_POSTGRESQL_DB
-              value: {{ .Values.postgres.dbname }}
+        - env: {{- include "chirpstack.postgres.env" . | nindent 12 }}
           image: {{ include "common.images.image" (dict "imageRoot" .Values.postgres.image "global" .Values.global) }}
           name: postgres
           readinessProbe:
