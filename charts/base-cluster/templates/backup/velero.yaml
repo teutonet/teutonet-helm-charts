@@ -27,6 +27,13 @@ spec:
         repository: {{ printf "%s/bitnami/kubectl" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
     upgradeCRDs: false
     cleanUpCRDs: true
+    initContainers:
+      - name: velero-plugin-for-aws
+        image: velero/velero-plugin-for-aws:v1.7.0
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - mountPath: /target
+            name: plugins
     podSecurityContext:
       fsGroup: 1000
       runAsUser: 1000
