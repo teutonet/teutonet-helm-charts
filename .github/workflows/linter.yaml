@@ -50,3 +50,6 @@ jobs:
         env:
           CT_CHART_REPOS: ${{ steps.helm-repos.outputs.repos }}
           CT_CHARTS: charts/${{ matrix.chart }}
+
+      - name: enforce trusted registries
+        run: ./.github/scripts/enforce-trusted-registries.sh "charts/$CHART"
