@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.5.3](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.5.2...base-cluster-v4.5.3) (2023-07-07)
+
+
+### Bug Fixes
+
+* **base-cluster/kyverno:** add aws provider ([#471](https://github.com/teutonet/teutonet-helm-charts/issues/471)) ([6d80478](https://github.com/teutonet/teutonet-helm-charts/commit/6d80478c52e49b715ed790d3deea35d500b1bec2))
+* **base-cluster/velero:** add docker.io as registry ([#474](https://github.com/teutonet/teutonet-helm-charts/issues/474)) ([28553a4](https://github.com/teutonet/teutonet-helm-charts/commit/28553a41ccc61950b9391b0d962032e7b6106bb0))
+
+
+### Miscellaneous Chores
+
+* **deps:** update helm release common to v2.5.0 ([#462](https://github.com/teutonet/teutonet-helm-charts/issues/462)) ([03b6520](https://github.com/teutonet/teutonet-helm-charts/commit/03b652030040e01dcdef4c5fbe3992b48f781bc8))
+* **deps:** update helm release common to v2.6.0 ([#468](https://github.com/teutonet/teutonet-helm-charts/issues/468)) ([ecb2102](https://github.com/teutonet/teutonet-helm-charts/commit/ecb2102b141d0e7d27fb476ca3e102719c461eee))
+
 ## [4.5.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.5.1...base-cluster-v4.5.2) (2023-06-29)
 
 
