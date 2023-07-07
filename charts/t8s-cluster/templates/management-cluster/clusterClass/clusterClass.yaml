@@ -7,7 +7,7 @@ metadata:
 spec:
   controlPlane:
     machineHealthCheck:
-      maxUnhealthy: 33%
+      maxUnhealthy: 1
       nodeStartupTimeout: 10m
       unhealthyConditions:
         - status: Unknown
@@ -133,7 +133,6 @@ spec:
       {{- range $name, $machineDeploymentClass := .Values.workers }}
       - class: {{ $name }}
         machineHealthCheck:
-          maxUnhealthy: 50%
           nodeStartupTimeout: 8m
           unhealthyConditions:
             - status: Unknown
