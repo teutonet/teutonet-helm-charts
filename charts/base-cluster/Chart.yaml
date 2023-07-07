@@ -1,7 +1,7 @@
 apiVersion: v2
 name: base-cluster
 type: application
-version: 4.5.2
+version: 4.5.3
 icon: https://teuto.net/favicon.ico
 maintainers:
   - name: cwrau
@@ -32,6 +32,7 @@ annotations:
     - image: docker.io/grafana/grafana:9.5.5
     - image: docker.io/grafana/loki:2.6.1
     - image: docker.io/grafana/promtail:2.7.4
+    - image: docker.io/velero/velero-plugin-for-aws:v1.7.0
     - image: docker.io/velero/velero:v1.11.0
     - image: docker.io/vladgh/gpg@sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
     - image: ghcr.io/aquasecurity/trivy-operator:0.14.1
@@ -47,7 +48,7 @@ annotations:
     - image: quay.io/prometheus/node-exporter:v1.6.0
     - image: quay.io/prometheus/prometheus:v2.45.0
     - image: registry.k8s.io/descheduler/descheduler:v0.27.1
-    - image: registry.k8s.io/ingress-nginx/controller:v1.8.0@sha256:744ae2afd433a395eeb13dc03d3313facba92e96ad71d9feaafc85925493fee3
+    - image: registry.k8s.io/ingress-nginx/controller:v1.8.1@sha256:e5c4824e7375fcf2a393e1c03c293b69759af37a9ca6abdb91b13d78a93da8bd
     - image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20221220-controller-v1.5.1-58-g787ea74b6
     - image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.9.2
     - image: registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8
