@@ -24,7 +24,8 @@ function templateGitHelmRelease() {
     git checkout -q "$gitRef"
   ) >/dev/null
 
-  helm dependency update "$tmpDir/$gitPath" >/dev/null
+  source <(helm env)
+  flock --close "${HELM_REPOSITORY_CACHE}" helm dependency update "$tmpDir/$gitPath" >/dev/null
   helm template ${namespace:+--namespace "$namespace"} "$releaseName" "$tmpDir/$gitPath" --values <(if [[ -f "$values" ]]; then cat "$values"; else echo "$values"; fi)
 }
 
