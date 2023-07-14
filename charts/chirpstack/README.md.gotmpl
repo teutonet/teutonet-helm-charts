@@ -1,0 +1,45 @@
+[modeline]: # ( vim: set ft=markdown: )
+{{ template "chart.header" . }}
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+# Teuto-Chirpstack Helm-Chart
+
+This is an opinionated helm chart that will install a ChirpStack LoRaWAN Network
+Server to your cluster.
+
+## Configuration
+
+For this to work, you will have to provide some configuration through your
+`values.yaml` (or set them through CLI).
+
+```yaml
+chirpstack:
+  # This secret is used for generating login and API tokens, make sure this
+  # is never exposed. Changing this secret will invalidate all login and API
+  # tokens. The following command can be used to generate a random secret:
+  #   openssl rand -base64 32
+  apiSecret: CHANGEME
+
+postgres:
+  # You will want to set a secure password for your database.
+  password: SUPERSECURE
+  # Alternatively you can specify the name of an allready existing secret
+  # containing the postgres databases `username` and `password`.
+  #existingSecretName: mypostgresdbsecret
+```
+
+All the other configuration should have defaults.
+
+{{ .Files.Get "values.md"  }}
