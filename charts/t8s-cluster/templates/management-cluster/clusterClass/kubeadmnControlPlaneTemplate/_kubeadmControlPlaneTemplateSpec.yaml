@@ -36,7 +36,7 @@ clusterConfiguration:
       authorization-always-allow-paths: /healthz,/readyz,/livez,/metrics
       bind-address: 0.0.0.0
       profiling: 'false'
-files:
+files: {{- include "t8s-cluster.patches.kubelet.patches" . | nindent 2 }}
   - content: |- {{- .Files.Get "files/admission-control-config.yaml" | nindent 6 }}
     path: *admissionControlConfigFilePath
   - content: |- {{- .Files.Get "files/event-rate-limit-config.yaml" | nindent 6 }}
@@ -58,9 +58,14 @@ initConfiguration:
   nodeRegistration:
     kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" $ | nindent 6 }}
     name: '{{ `{{ local_hostname }}` }}'
+  patches:
+    directory: {{ include "t8s-cluster.patches.directory" (dict) }}
 joinConfiguration:
   nodeRegistration:
     kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" $ | nindent 6 }}
     name: '{{ `{{ local_hostname }}` }}'
-preKubeadmCommands: {{- include "t8s-cluster.clusterClass.preKudeadmCommands" $ | nindent 2 }}
+  patches:
+    directory: {{ include "t8s-cluster.patches.directory" (dict) }}
+preKubeadmCommands: {{- include "t8s-cluster.clusterClass.preKubeadmCommands" $ | nindent 2 }}
+postKubeadmCommands: {{- include "t8s-cluster.clusterClass.postKubeadmCommands" (dict) | nindent 2 }}
 {{- end -}}
