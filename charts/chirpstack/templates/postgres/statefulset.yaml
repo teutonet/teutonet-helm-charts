@@ -1,14 +1,13 @@
 {{- if not .Values.postgres.existingPsqlUrl -}}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata: {{- include "chirpstack.commonMetadata" (dict "component" "postgres" "context" .) | nindent 2 }}
 spec:
   replicas: 1
   selector:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
       app.kubernetes.io/component: postgres
-  strategy:
-    type: Recreate
+  serviceName: {{ include "chirpstack.fullname" (dict "context" . "component" "postgres") }}
   template:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
@@ -44,7 +43,16 @@ spec:
         - name: postgres-init-db
           configMap:
             name: {{ include "chirpstack.fullname" (dict "context" . "component" "postgres") }}
-        - name: postgresqldata
-          persistentVolumeClaim:
-            claimName: {{ include "chirpstack.fullname" (dict "context" . "component" "postgres") }}
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: postgresqldata
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.postgres.persistence.size }}
+          {{ include "common.storage.class" ( dict "persistence" .Values.postgres.persistence "global" .Values.global) }}
 {{- end -}}
