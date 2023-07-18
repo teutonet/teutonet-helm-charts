@@ -7,9 +7,7 @@ global:
     resources: {}
 
 ingress:
-  enabled: true
-  host: chirpstack.iotonic.de
-  class: nginx
+  enabled: false
 
 chirpstack:
   image:
