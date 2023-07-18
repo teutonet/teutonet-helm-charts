@@ -8,7 +8,7 @@ global:
 
 ingress:
   enabled: true
-  host: chirpstack.iotonic.de 
+  host: chirpstack.iotonic.de
   class: nginx
 
 chirpstack:
