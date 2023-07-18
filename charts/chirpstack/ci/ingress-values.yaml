@@ -1,3 +1,5 @@
 ingress:
   enabled: true
   host: "chirpstack.example.com"
+postgres:
+  password: THISisJUSTaTESTpassword
