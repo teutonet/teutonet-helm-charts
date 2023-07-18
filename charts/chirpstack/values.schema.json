@@ -44,16 +44,22 @@
       ]
     },
     "chirpstack": {
-      "$ref": "#/$defs/deployment",
-      "properties": {
-        "apiSecret": {
-          "type": "string",
-          "description": "This secret is used for generating login and API tokens, make sure this is never exposed. Changing this secret will invalidate all login and API tokens. The following command can be used to generate a random secret: openssl rand -base64 32",
-          "pattern": "^.+$"
+      "allOf": [
+        {
+          "$ref": "#/$defs/deployment"
+        },
+        {
+          "properties": {
+            "apiSecret": {
+              "type": "string",
+              "description": "This secret is used for generating login and API tokens, make sure this is never exposed. Changing this secret will invalidate all login and API tokens. The following command can be used to generate a random secret: openssl rand -base64 32",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "apiSecret"
+          ]
         }
-      },
-      "required": [
-        "apiSecret"
       ]
     },
     "chirpstackGatewayBridge": {
@@ -67,64 +73,70 @@
     },
     "postgres": {
       "type": "object",
-      "$ref": "#/$defs/deployment",
-      "oneOf": [
+      "allOf": [
         {
+          "$ref": "#/$defs/deployment"
+        },
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "password": {
+                  "desciption": "The password for the database",
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "type": "object",
+              "required": [
+                "password"
+              ]
+            },
+            {
+              "properties": {
+                "existingSecretName": {
+                  "description": "Use credentials from an existing secret",
+                  "examples": [
+                    "mypostgressecret"
+                  ],
+                  "type": "string",
+                  "pattern": "^[a-z0-9-]+$"
+                }
+              },
+              "type": "object",
+              "required": [
+                "existingSecretName"
+              ]
+            }
+          ],
           "properties": {
-            "existingSecretName": {
-              "description": "Use credentials from an existing secret",
+            "persistence": {
+              "$ref": "#/$defs/persistence"
+            },
+            "user": {
+              "description": "The username for the postgres database",
               "examples": [
-                "mypostgressecret"
+                "chirpstack"
               ],
-              "type": "string",
-              "pattern": "^[a-z0-9-]+$"
+              "type": "string"
+            },
+            "dbname": {
+              "description": "The name of the chirpstack database",
+              "examples": [
+                "chirpstack"
+              ],
+              "type": "string"
+            },
+            "existingPSQL": {
+              "description": "Use an existing PSQL host",
+              "examples": [
+                "mypsqlhost"
+              ],
+              "type": "string"
             }
-          },
-          "type": "object",
-          "required": [
-            "existingSecretName"
-          ]
-        },
-        {
-          "properties": {
-            "password": {
-              "desciption": "The password for the database",
-              "type": "string",
-              "pattern": "^.+$"
-            }
-          },
-          "type": "object",
-          "required": [
-            "password"
-          ]
+          }
         }
-      ],
-      "properties": {
-        "persistence": {
-          "$ref": "#/$defs/persistence"
-        },
-        "user": {
-          "description": "The username for the postgres database",
-          "examples": [
-            "chirpstack"
-          ],
-          "type": "string"
-        },
-        "dbname": {
-          "description": "The name of the chirpstack database",
-          "examples": [
-            "chirpstack"
-          ],
-          "type": "string"
-        },
-        "existingPSQL": {
-          "description": "Use an existing PSQL host",
-          "examples": [
-            "mypsqlhost"
-          ],
-          "type": "string"
-        }
-      }
+      ]
     },
     "redis": {
       "$ref": "#/$defs/deployment",
