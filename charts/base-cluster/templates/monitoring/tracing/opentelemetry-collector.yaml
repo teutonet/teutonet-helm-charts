@@ -11,11 +11,9 @@ spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "open-telemetry" "chart" "opentelemetry-collector" "context" $) | nindent 6 }}
   interval: 1h
-  {{- if .Values.monitoring.prometheus.enabled }}
   dependsOn:
     - name: kube-prometheus-stack
       namespace: monitoring
-  {{- end }}
   values:
     {{- if .Values.global.imageRegistry }}
     image:
@@ -89,12 +87,12 @@ spec:
       zipkin:
         enabled: true
       metrics:
-        enabled: {{ .Values.monitoring.prometheus.enabled }}
+        enabled: true
     podMonitor:
-      enabled: {{ .Values.monitoring.prometheus.enabled }}
+      enabled: true
       extraLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
     prometheusRule:
-      enabled: {{ .Values.monitoring.prometheus.enabled }}
+      enabled: true
       defaultRules:
         enabled: true
 {{- end -}}
