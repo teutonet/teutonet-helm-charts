@@ -51,3 +51,7 @@ containerRegistryProxy:
 sshKeyName: null
 
 cni: cilium
+
+imageNameTemplate:
+  workers: t8s-engine-2004-kube-{{ .builtin.machineDeployment.version }}
+  controlPlane: t8s-engine-2004-kube-{{ .builtin.controlPlane.version }}

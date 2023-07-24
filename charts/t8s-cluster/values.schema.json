@@ -228,6 +228,22 @@
         "calico"
       ]
     },
+    "imageNameTemplate": {
+      "type": "object",
+      "properties": {
+        "workers": {
+          "type": "string"
+        },
+        "controlPlane": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "workers",
+        "controlPlane"
+      ],
+      "additionalItems": false
+    },
     "common": {
       "type": "object",
       "description": "Values for sub-chart"
