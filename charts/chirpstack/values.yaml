@@ -78,6 +78,7 @@ postgres:
       memory: 150Mi
   user: chirpstack
   dbname: chirpstack
+  rootPassword: terceSrepuS
 
 redis:
   image:

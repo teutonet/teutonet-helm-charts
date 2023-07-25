@@ -137,6 +137,10 @@
                 "mypsqlhost"
               ],
               "type": "string"
+            },
+            "rootPassword": {
+              "description": "The password for the superuser. This is only used within the postgres container and is not available for any network logins.",
+              "type": "string"
             }
           }
         }

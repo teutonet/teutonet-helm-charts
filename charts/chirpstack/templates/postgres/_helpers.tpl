@@ -1,6 +1,6 @@
 {{- define "chirpstack.postgres.env" -}}
 - name: POSTGRES_PASSWORD
-  value: root
+  value: {{ .Values.postgres.rootPassword }}
 - name: CS_POSTGRESQL_USER
   valueFrom:
     secretKeyRef:
