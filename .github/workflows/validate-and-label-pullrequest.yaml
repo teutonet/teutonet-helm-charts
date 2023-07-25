@@ -9,7 +9,19 @@ on:
       - synchronize
 
 jobs:
-  validateAndLabel:
+  validateCommits:
+    if: ${{ !startsWith(github.head_ref, 'release-please--') }}
+    name: Validate commits
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Conventional commit check
+        uses: cocogitto/cocogitto-action@v3
+  validateAndLabelPR:
     if: ${{ !startsWith(github.head_ref, 'release-please--') }}
     name: Validate and label PR
     runs-on: ubuntu-latest
@@ -18,14 +30,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.repository.default_branch }}
 
       - uses: helm/chart-testing-action@v2.4.0
-
-      - name: Conventional commit check
-        uses: cocogitto/cocogitto-action@v3
-
       - run: .github/scripts/validate-and-label-pullrequest.sh
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
