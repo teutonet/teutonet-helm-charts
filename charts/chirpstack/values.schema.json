@@ -54,6 +54,10 @@
               "type": "string",
               "description": "This secret is used for generating login and API tokens, make sure this is never exposed. Changing this secret will invalidate all login and API tokens. The following command can be used to generate a random secret: openssl rand -base64 32",
               "minLength": 1
+            },
+            "logLevel": {
+              "type": "string",
+              "description": "The loging level of chirpstack. Ooptions are trace, debug, info, warn and error"
             }
           },
           "required": [

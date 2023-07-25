@@ -4,6 +4,8 @@
     secretKeyRef:
       name: {{ include "chirpstack.fullname" (dict "context" . "component" "chirpstack") }}
       key: apisecret
+- name: LOGLEVEL
+  value: {{ .Values.chirpstack.logLevel | default "info" }}
 - name: MQTT_BROKER_HOST
   value: {{ include "chirpstack.fullname" (dict "context" . "component" "mosquitto") }}
 - name: POSTGRESQL_HOST

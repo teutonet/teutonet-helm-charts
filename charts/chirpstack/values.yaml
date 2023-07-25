@@ -21,6 +21,7 @@ chirpstack:
     limits:
       cpu: 100m
       memory: 100Mi
+  logLevel: info
 
 chirpstackGatewayBridge:
   image:

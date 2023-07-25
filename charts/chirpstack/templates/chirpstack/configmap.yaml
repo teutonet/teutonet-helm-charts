@@ -9,7 +9,7 @@ data:
       # Log level.
       #
       # Options are: trace, debug, info, warn error.
-      level="info"
+      level="$LOGLEVEL"
 
 
     # PostgreSQL configuration.
