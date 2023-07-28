@@ -79,6 +79,9 @@
         "customerName": {
           "type": "string"
         },
+        "friendlyName": {
+          "type": "string"
+        },
         "supportProjectUrl": {
           "type": "string"
         },
