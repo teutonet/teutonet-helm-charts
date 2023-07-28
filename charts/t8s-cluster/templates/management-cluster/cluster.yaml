@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace}}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     t8s.teuto.net/sla: {{ .Values.metadata.serviceLevelAgreement | quote }}
-    t8s.teuto.net/cluster: {{ .Release.Name | trimPrefix (printf "%d-" .Values.metadata.customerID) | quote}}
+    t8s.teuto.net/cluster: {{ .Values.metadata.friendlyName | default (.Release.Name | trimPrefix (printf "%d-" .Values.metadata.customerID)) | quote }}
     t8s.teuto.net/customer-id: {{ required "You need to set the `customerID`" .Values.metadata.customerID | quote }}
     t8s.teuto.net/customer-name: {{ required "You need to set the `customerName`" .Values.metadata.customerName | quote }}
     t8s.teuto.net/internal-name: {{ .Release.Name | quote }}

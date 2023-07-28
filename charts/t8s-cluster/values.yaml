@@ -26,6 +26,7 @@ metadata:
   configGroupUrl: ""
   gopassName: ""
   remarks: ""
+  friendlyName: ""
 
 controlPlane:
   flavor: standard.2.1905
