@@ -891,6 +891,11 @@
         "resources": {
           "$ref": "#/$defs/resourceRequirements"
         },
+        "enabled": {
+          "type": [
+            "boolean"
+          ]
+        },
         "IP": {
           "type": [
             "string",

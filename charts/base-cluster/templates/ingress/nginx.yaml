@@ -1,3 +1,4 @@
+{{ if .Values.ingress.enabled }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -71,3 +72,4 @@ spec:
       image:
         registry: {{ .Values.global.imageRegistry }}
       {{- end }}
+  {{ end }}

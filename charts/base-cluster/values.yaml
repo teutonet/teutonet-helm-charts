@@ -365,6 +365,7 @@ flux:
   gitRepositories: {}
 
 ingress:
+  enabled: true
   replicas: 2
   resources:
     requests:
