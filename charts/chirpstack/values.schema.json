@@ -59,10 +59,7 @@
               "type": "string",
               "description": "The loging level of chirpstack. Ooptions are trace, debug, info, warn and error"
             }
-          },
-          "required": [
-            "apiSecret"
-          ]
+          }
         }
       ]
     },
@@ -91,10 +88,7 @@
                   "minLength": 1
                 }
               },
-              "type": "object",
-              "required": [
-                "password"
-              ]
+              "type": "object"
             },
             {
               "properties": {
