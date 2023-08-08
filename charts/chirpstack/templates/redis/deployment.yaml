@@ -29,10 +29,12 @@ spec:
             failureThreshold: 5
             tcpSocket:
               port: 6379
+          securityContext: {{- include "chirpstack.containerSecurityContext" (dict) | nindent 12 }}
           volumeMounts:
             - mountPath: /data
               name: redisdata
       restartPolicy: Always
+      securityContext: {{- include "chirpstack.securityContext" (dict) | nindent 8 }}
       volumes:
         - name: redisdata
           persistentVolumeClaim:

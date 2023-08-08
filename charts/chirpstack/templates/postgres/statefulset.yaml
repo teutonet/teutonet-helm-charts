@@ -32,17 +32,29 @@ spec:
           ports:
             - containerPort: 5432
               name: postgres
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
           volumeMounts:
             - mountPath: /docker-entrypoint-initdb.d
               name: postgres-init-db
+            - mountPath: /var/run/postgresql
+              name: postgresql-run
             - mountPath: /var/lib/postgresql/data
               name: postgresqldata
               subPath: postgres
       restartPolicy: Always
+      securityContext:
+        # init-db needs some privileges to change file-permissions
+        fsGroup: 70
       volumes:
         - name: postgres-init-db
           configMap:
             name: {{ include "chirpstack.fullname" (dict "context" . "component" "postgres") }}
+        - name: postgresql-run
+          emptyDir:
+            {}
   volumeClaimTemplates:
     - apiVersion: v1
       kind: PersistentVolumeClaim

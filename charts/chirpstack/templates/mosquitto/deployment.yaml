@@ -35,10 +35,12 @@ spec:
           ports:
             - containerPort: 1883
               name: mqtt
+          securityContext: {{- include "chirpstack.containerSecurityContext" (dict) | nindent 12 }}
           volumeMounts:
             - mountPath: /mosquitto/config/
               name: mosquitto-config
       restartPolicy: Always
+      securityContext: {{- include "chirpstack.securityContext" (dict) | nindent 8 }}
       volumes:
         - name: mosquitto-config
           configMap:
