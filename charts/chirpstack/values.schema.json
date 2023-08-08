@@ -74,71 +74,50 @@
     },
     "postgres": {
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/$defs/deployment"
+      "$ref": "#/$defs/deployment",
+      "properties": {
+        "persistence": {
+          "$ref": "#/$defs/persistence"
         },
-        {
-          "oneOf": [
-            {
-              "properties": {
-                "password": {
-                  "desciption": "The password for the database",
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "type": "object"
-            },
-            {
-              "properties": {
-                "existingSecretName": {
-                  "description": "Use credentials from an existing secret",
-                  "examples": [
-                    "mypostgressecret"
-                  ],
-                  "type": "string",
-                  "pattern": "^[a-z0-9-]+$"
-                }
-              },
-              "type": "object",
-              "required": [
-                "existingSecretName"
-              ]
-            }
+        "password": {
+          "desciption": "The password for the database",
+          "type": "string",
+          "minLength": 1
+        },
+        "existingSecretName": {
+          "description": "Use credentials from an existing secret",
+          "examples": [
+            "mypostgressecret"
           ],
-          "properties": {
-            "persistence": {
-              "$ref": "#/$defs/persistence"
-            },
-            "user": {
-              "description": "The username for the postgres database",
-              "examples": [
-                "chirpstack"
-              ],
-              "type": "string"
-            },
-            "dbname": {
-              "description": "The name of the chirpstack database",
-              "examples": [
-                "chirpstack"
-              ],
-              "type": "string"
-            },
-            "existingPSQL": {
-              "description": "Use an existing PSQL host",
-              "examples": [
-                "mypsqlhost"
-              ],
-              "type": "string"
-            },
-            "rootPassword": {
-              "description": "The password for the superuser. This is only used within the postgres container and is not available for any network logins.",
-              "type": "string"
-            }
-          }
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "user": {
+          "description": "The username for the postgres database",
+          "examples": [
+            "chirpstack"
+          ],
+          "type": "string"
+        },
+        "dbname": {
+          "description": "The name of the chirpstack database",
+          "examples": [
+            "chirpstack"
+          ],
+          "type": "string"
+        },
+        "existingPSQL": {
+          "description": "Use an existing PSQL host",
+          "examples": [
+            "mypsqlhost"
+          ],
+          "type": "string"
+        },
+        "rootPassword": {
+          "description": "The password for the superuser. This is only used within the postgres container and is not available for any network logins.",
+          "type": "string"
         }
-      ]
+      }
     },
     "redis": {
       "$ref": "#/$defs/deployment",
