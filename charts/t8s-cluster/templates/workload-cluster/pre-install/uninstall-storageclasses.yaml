@@ -1,3 +1,4 @@
+{{- if lookup "v1" "Secret" .Release.Namespace (printf "%s-kubeconfig" .Release.Name) -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -60,3 +61,4 @@ spec:
           secret:
             secretName: {{ .Release.Name }}-kubeconfig
             optional: false
+{{- end }}
