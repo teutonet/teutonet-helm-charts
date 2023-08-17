@@ -1,5 +1,5 @@
 {{- define "base-cluster.backup.getProviderName" -}}
-  {{- $providers := list "minio" -}}
+  {{- $providers := list "minio" "aws" -}}
   {{- $providerName := . | keys | first -}}
   {{- if has $providerName $providers -}}
     {{- $providerName -}}
@@ -9,7 +9,7 @@
 {{- end -}}
 
 {{- define "base-cluster.backup.mapProviderName" -}}
-  {{- $providerMap := dict "minio" "aws" -}}
+  {{- $providerMap := dict "minio" "aws" "aws" "aws" -}}
   {{- get $providerMap . | required "Missing provider mapping" -}}
 {{- end -}}
 
