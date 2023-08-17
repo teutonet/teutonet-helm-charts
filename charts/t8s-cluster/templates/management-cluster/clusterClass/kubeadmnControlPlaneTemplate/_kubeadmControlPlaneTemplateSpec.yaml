@@ -47,8 +47,7 @@ files: {{- include "t8s-cluster.patches.kubelet.patches" . | nindent 2 }}
   - content: |- {{- .Files.Get "files/kube-proxy.config.yaml" | nindent 6 }}
     path: /etc/kube-proxy-config.yaml
   {{- if .Values.containerRegistryProxy.proxyRegistryEndpoint }}
-  - content: |- {{- include "t8s-cluster.clusterClass.containerRegistryProxies" (dict "context" $) | nindent 6 }}
-    path: /etc/containerd/conf.d/teuto-mirror.toml
+    {{- include "t8s-cluster.clusterClass.containerdConfig.containerRegistryProxyConfigs" (dict "context" $) | nindent 2 }}
   {{- end }}
   {{- if .Values.global.injectedCertificateAuthorities }}
   - content: |- {{- .Values.global.injectedCertificateAuthorities | nindent 6 }}

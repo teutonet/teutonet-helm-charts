@@ -15,8 +15,7 @@ spec:
           directory: /etc/kubernetes/patches
       files: {{- include "t8s-cluster.patches.kubelet.patches" . | nindent 8 }}
         {{- if .Values.containerRegistryProxy.proxyRegistryEndpoint }}
-        - content: |- {{- include "t8s-cluster.clusterClass.containerRegistryProxies" (dict "context" $) | nindent 12 }}
-          path: /etc/containerd/conf.d/teuto-mirror.toml
+          {{- include "t8s-cluster.clusterClass.containerdConfig.containerRegistryProxyConfigs" (dict "context" $) | nindent 8 }}
         {{- end }}
         {{- if .Values.global.injectedCertificateAuthorities }}
         - content: |- {{- .Values.global.injectedCertificateAuthorities | nindent 12 }}
