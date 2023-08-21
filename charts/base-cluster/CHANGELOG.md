@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.5.4](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.5.3...base-cluster-v4.5.4) (2023-08-21)
+
+
+### Bug Fixes
+
+* **base-cluster/backups:** Allow for better configuration of s3 buckets ([#495](https://github.com/teutonet/teutonet-helm-charts/issues/495)) ([b64fcc8](https://github.com/teutonet/teutonet-helm-charts/commit/b64fcc8057b8e589c8d98c2dd43be9b38d37b3e7))
+* **base-cluster/flux:** correctly check for the correct imagePullPolicy ([#477](https://github.com/teutonet/teutonet-helm-charts/issues/477)) ([9818d77](https://github.com/teutonet/teutonet-helm-charts/commit/9818d775b626c64d68d278be7d7f6ea6d40374ce))
+* **base-cluster/imagePullSecrets:** getting recreated upon reconciliation ([#476](https://github.com/teutonet/teutonet-helm-charts/issues/476)) ([b910569](https://github.com/teutonet/teutonet-helm-charts/commit/b910569d1f95fd26d316f3cd3a0ea5c658f5b461))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/artifacthub-images:** Update ArtifactHUB images ([#478](https://github.com/teutonet/teutonet-helm-charts/issues/478)) ([9cefe19](https://github.com/teutonet/teutonet-helm-charts/commit/9cefe1936ab103be57d572c1470447dbcfc6f0fb))
+
 ## [4.5.3](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.5.2...base-cluster-v4.5.3) (2023-07-07)
 
 
