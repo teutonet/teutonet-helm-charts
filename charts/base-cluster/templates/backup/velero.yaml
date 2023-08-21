@@ -81,7 +81,7 @@ spec:
           {{- $providerSpec := get $spec.provider $providerName }}
           config:
             region: {{ ($providerSpec.region | default "Region1") | quote }}
-            s3ForcePathStyle: {{ ($providerSpec.forcePathStyle | default "true") | quote }}
+            s3ForcePathStyle: {{ $providerSpec.forcePathStyle | default true }}
             s3Url: {{ $providerSpec.url | quote }}
           {{- end }}
       {{- end }}
