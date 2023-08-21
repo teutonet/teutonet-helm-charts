@@ -1083,6 +1083,14 @@
                           },
                           "url": {
                             "type": "string"
+                          },
+                          "region": {
+                            "type": "string",
+                            "default": "Region1"
+                          },
+                          "forcePathStyle": {
+                            "type": "boolean",
+                            "default": true
                           }
                         },
                         "required": [

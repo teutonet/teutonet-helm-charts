@@ -77,6 +77,13 @@ spec:
             name: {{ get $existingSecret "name" | required (printf "You need to provide the existingSecret.name for %s" $name) }}
             key: {{ get $existingSecret "key" | default (printf "%s-%s" $providerName $name) }}
           {{- end }}
+          {{- if eq $providerName "minio" }}
+          {{- $providerSpec := get $spec.provider $providerName }}
+          config:
+            region: {{ ($providerSpec.region | default "Region1") | quote }}
+            s3ForcePathStyle: {{ $providerSpec.forcePathStyle | default true }}
+            s3Url: {{ $providerSpec.url | quote }}
+          {{- end }}
       {{- end }}
       {{- else }}
       backupStorageLocation: []
