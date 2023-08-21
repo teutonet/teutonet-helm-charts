@@ -24,25 +24,25 @@ annotations:
     - image: docker.io/bats/bats:v1.4.1
     - image: docker.io/bitnami/kubectl:1.27
     - image: docker.io/bitnami/kubectl:1.27.3
-    - image: docker.io/bitnami/metrics-server:0.6.3-debian-11-r32
+    - image: docker.io/bitnami/metrics-server:0.6.4-debian-11-r24
     - image: docker.io/busybox:1.35
     - image: docker.io/curlimages/curl:7.85.0
     - image: docker.io/fluxcd/flux-cli:v0.41.2
     - image: docker.io/grafana/grafana-image-renderer:latest
     - image: docker.io/grafana/grafana:10.0.1
     - image: docker.io/grafana/loki:2.6.1
-    - image: docker.io/grafana/promtail:2.7.4
+    - image: docker.io/grafana/promtail:2.8.3
     - image: docker.io/velero/velero-plugin-for-aws:v1.7.0
-    - image: docker.io/velero/velero:v1.11.0
+    - image: docker.io/velero/velero:v1.11.1
     - image: docker.io/vladgh/gpg@sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
-    - image: ghcr.io/aquasecurity/trivy-operator:0.14.1
+    - image: ghcr.io/aquasecurity/trivy-operator:0.15.1
     - image: ghcr.io/kyverno/cleanup-controller:v1.9.5
     - image: ghcr.io/kyverno/kyverno:v1.9.5
     - image: ghcr.io/kyverno/kyvernopre:v1.9.5
-    - image: quay.io/jetstack/cert-manager-cainjector:v1.12.2
-    - image: quay.io/jetstack/cert-manager-controller:v1.12.2
-    - image: quay.io/jetstack/cert-manager-ctl:v1.12.2
-    - image: quay.io/jetstack/cert-manager-webhook:v1.12.2
+    - image: quay.io/jetstack/cert-manager-cainjector:v1.12.3
+    - image: quay.io/jetstack/cert-manager-controller:v1.12.3
+    - image: quay.io/jetstack/cert-manager-ctl:v1.12.3
+    - image: quay.io/jetstack/cert-manager-webhook:v1.12.3
     - image: quay.io/kiwigrid/k8s-sidecar:1.24.6
     - image: quay.io/prometheus-operator/prometheus-operator:v0.66.0
     - image: quay.io/prometheus/node-exporter:v1.6.0
