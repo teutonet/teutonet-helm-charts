@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # base-cluster
 
-![Version: 4.5.3](https://img.shields.io/badge/Version-4.5.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 4.5.4](https://img.shields.io/badge/Version-4.5.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -2716,7 +2716,7 @@ Specific value: `"auto"`
 | **Min items**        | 1                  |
 | **Max items**        | N/A                |
 | **Items unicity**    | False              |
-| **Additional items** | False              |
+| **Additional items** | True               |
 | **Tuple validation** | N/A                |
 
 ### <a name="rbac_accounts"></a>12.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac > accounts`
@@ -2768,7 +2768,7 @@ Specific value: `"auto"`
 | **Min items**        | 1                  |
 | **Max items**        | N/A                |
 | **Items unicity**    | False              |
-| **Additional items** | False              |
+| **Additional items** | True               |
 | **Tuple validation** | N/A                |
 
 ##### <a name="rbac_accounts_additionalProperties_clusterRoles"></a>12.2.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac > accounts > additionalProperties > clusterRoles`
@@ -2782,7 +2782,7 @@ Specific value: `"auto"`
 | **Min items**        | 1                  |
 | **Max items**        | N/A                |
 | **Items unicity**    | False              |
-| **Additional items** | False              |
+| **Additional items** | True               |
 | **Tuple validation** | N/A                |
 
 ## <a name="backup"></a>13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup`
@@ -2858,12 +2858,14 @@ Specific value: `"auto"`
 | **Type**                  | `combining`                                                                                              |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                                                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description |
-| -------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [accessKeyID](#backup_backupStorageLocations_additionalProperties_provider_minio_accessKeyID )         | No      | string | No         | -          | -                 |
-| - [secretAccessKey](#backup_backupStorageLocations_additionalProperties_provider_minio_secretAccessKey ) | No      | string | No         | -          | -                 |
-| - [existingSecret](#backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret )   | No      | object | No         | -          | -                 |
-| + [url](#backup_backupStorageLocations_additionalProperties_provider_minio_url )                         | No      | string | No         | -          | -                 |
+| Property                                                                                                 | Pattern | Type    | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
+| - [accessKeyID](#backup_backupStorageLocations_additionalProperties_provider_minio_accessKeyID )         | No      | string  | No         | -          | -                 |
+| - [secretAccessKey](#backup_backupStorageLocations_additionalProperties_provider_minio_secretAccessKey ) | No      | string  | No         | -          | -                 |
+| - [existingSecret](#backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret )   | No      | object  | No         | -          | -                 |
+| + [url](#backup_backupStorageLocations_additionalProperties_provider_minio_url )                         | No      | string  | No         | -          | -                 |
+| - [region](#backup_backupStorageLocations_additionalProperties_provider_minio_region )                   | No      | string  | No         | -          | -                 |
+| - [forcePathStyle](#backup_backupStorageLocations_additionalProperties_provider_minio_forcePathStyle )   | No      | boolean | No         | -          | -                 |
 
 | One of(Option)                                                                        |
 | ------------------------------------------------------------------------------------- |
@@ -2985,6 +2987,20 @@ Specific value: `"auto"`
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_region"></a>13.3.1.1.1.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > region`
+
+|             |             |
+| ----------- | ----------- |
+| **Type**    | `string`    |
+| **Default** | `"Region1"` |
+
+##### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_forcePathStyle"></a>13.3.1.1.1.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > forcePathStyle`
+
+|             |           |
+| ----------- | --------- |
+| **Type**    | `boolean` |
+| **Default** | `true`    |
 
 ##### <a name="backup_backupStorageLocations_additionalProperties_bucket"></a>13.3.1.2. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > bucket`
 
