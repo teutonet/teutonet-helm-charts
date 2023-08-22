@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.6.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.5.4...base-cluster-v4.6.0) (2023-08-22)
+
+
+### Features
+
+* **base-cluster/nginx:** enable underscores in headers ([#488](https://github.com/teutonet/teutonet-helm-charts/issues/488)) ([b6b8f0a](https://github.com/teutonet/teutonet-helm-charts/commit/b6b8f0a8c162a9640eaeae0fb260fbe77aacda99))
+* **base-cluster/velero:** increase velero resources ([#491](https://github.com/teutonet/teutonet-helm-charts/issues/491)) ([e9cd094](https://github.com/teutonet/teutonet-helm-charts/commit/e9cd094e5899520450fbc1373e74948af9f78b62))
+
+
+### Bug Fixes
+
+* **base-cluster/backup:** typos in credential keys ([#497](https://github.com/teutonet/teutonet-helm-charts/issues/497)) ([b990a04](https://github.com/teutonet/teutonet-helm-charts/commit/b990a047a1d80e7430bda0cae0679466bac54023))
+
 ## [4.5.4](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.5.3...base-cluster-v4.5.4) (2023-08-21)
 
 
