@@ -26,6 +26,7 @@ spec:
         use-proxy-protocol: "true"
         use-gzip: "true"
         enable-brotli: "true"
+        enable-underscores-in-headers: true
       service:
         annotations:
           loadbalancer.openstack.org/proxy-protocol: "true"
