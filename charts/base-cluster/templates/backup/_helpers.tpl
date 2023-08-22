@@ -20,8 +20,8 @@
   {{- if eq $pluginName "aws" -}}
     {{- if hasKey $provider "accessKeyID" -}}
 [default]
-aw_access_key_id={{ get $provider "accessKeyID" }}
-aw_access_key_id={{ get $provider "secretAccessKey" }}
+aws_access_key_id={{ get $provider "accessKeyID" }}
+aws_secret_access_key={{ get $provider "secretAccessKey" }}
     {{- end -}}
   {{- else -}}
     {{- fail (printf "Credentials for plugin '%s' not implemented" $pluginName) -}}
