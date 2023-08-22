@@ -50,7 +50,7 @@ function splitYamlIntoDir() {
   local IFS=$'\n'
   local selector
 
-  for selector in $(yq -c -s '.[] | {kind: .kind, namespace: .metadata.namespace, name: .metadata.name}' <"$yaml"); do
+  for selector in $(yq -c -s '.[] | select(.kind and .metadata.name) | {kind: .kind, namespace: .metadata.namespace, name: .metadata.name}' <"$yaml"); do
     local resourceName
     local kind
     local namespace
@@ -106,7 +106,7 @@ function generateComment() {
     newResourcesDir="$TMP_DIR/new-$(basename -s .yaml "$values")"
 
     diffs+=(
-      [$values]="$(diff -ur "$originalResourcesDir" "$newResourcesDir" | curl -s -F syntax=diff -F "content=<-" https://dpaste.com/api/v2/)"
+      [$values]="$(diff --unidirectional-new-file -ur "$originalResourcesDir" "$newResourcesDir" | curl -s -F syntax=diff -F "content=<-" https://dpaste.com/api/v2/)"
     )
     sleep 2
   done
