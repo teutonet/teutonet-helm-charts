@@ -20,3 +20,13 @@ sourceRef:
   name: {{ printf "%s-%s" .context.Release.Name .repo | quote }}
   namespace: {{ .context.Release.Namespace }}
 {{- end -}}
+
+{{- define "t8s-cluster.hasGPUNodes" -}}
+{{- $hasGPUFlavor := false -}}
+{{- range $name, $machineDeploymentClass := .Values.workers -}}
+  {{- if contains "gpu" (lower $machineDeploymentClass.flavor) -}}
+    {{- $hasGPUFlavor = true -}}
+  {{- end -}}
+{{- end -}}
+{{- $hasGPUFlavor -}}
+{{- end -}}

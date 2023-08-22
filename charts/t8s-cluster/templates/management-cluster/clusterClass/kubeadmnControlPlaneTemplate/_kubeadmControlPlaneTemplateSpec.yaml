@@ -36,7 +36,7 @@ clusterConfiguration:
       authorization-always-allow-paths: /healthz,/readyz,/livez,/metrics
       bind-address: 0.0.0.0
       profiling: 'false'
-files: {{- include "t8s-cluster.patches.kubelet.patches" . | nindent 2 }}
+files: {{- include "t8s-cluster.patches.kubelet.patches" $ | nindent 2 }}
   - content: |- {{- .Files.Get "files/admission-control-config.yaml" | nindent 6 }}
     path: *admissionControlConfigFilePath
   - content: |- {{- .Files.Get "files/event-rate-limit-config.yaml" | nindent 6 }}
@@ -49,6 +49,8 @@ files: {{- include "t8s-cluster.patches.kubelet.patches" . | nindent 2 }}
   {{- if .Values.containerRegistryProxy.proxyRegistryEndpoint }}
     {{- include "t8s-cluster.clusterClass.containerdConfig.containerRegistryProxyConfigs" (dict "context" $) | nindent 2 }}
   {{- end }}
+  - content: |- {{- include "t8s-cluster.clusterClass.containerdConfig.plugins" (dict "context" $ "gpu" false) | nindent 6 }}
+    path: /etc/containerd/conf.d/plugins.toml
   {{- if .Values.global.injectedCertificateAuthorities }}
   - content: |- {{- .Values.global.injectedCertificateAuthorities | nindent 6 }}
     path: /usr/local/share/ca-certificates/injected-ca-certs.crt

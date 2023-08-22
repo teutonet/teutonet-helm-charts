@@ -21,6 +21,9 @@
                 "additionalProperties": {
                   "type": "string"
                 }
+              },
+              "condition": {
+                "$ref": "#/$defs/condition"
               }
             },
             "additionalProperties": false
@@ -308,6 +311,14 @@
         }
       },
       "additionalProperties": false
+    },
+    "condition": {
+      "type": "string",
+      "description": "A condition with which to decide to include the resource. This will be templated. Must return a truthy value",
+      "examples": [
+        "{{ true }}",
+        "{{ eq .Values.global.baseDomain \"teuto.net\" }}"
+      ]
     }
   }
 }

@@ -1,0 +1,5 @@
+workers:
+  test:
+    replicas: 1
+    availabilityZone: Zone1
+    flavor: standard-gpu.2.1905

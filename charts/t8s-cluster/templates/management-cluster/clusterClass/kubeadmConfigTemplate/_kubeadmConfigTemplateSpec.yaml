@@ -1,0 +1,24 @@
+{{- define "t8s-cluster.clusterClass.kubeadmConfigTemplate.spec" -}}
+  {{- $_ := set . "Values" .context.Values -}}
+joinConfiguration:
+  nodeRegistration:
+    kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" .context | nindent 6 }}
+    name: '{{ `{{ local_hostname }}` }}'
+  patches:
+    directory: /etc/kubernetes/patches
+files: {{- include "t8s-cluster.patches.kubelet.patches" .context | nindent 2 }}
+    {{- if .Values.containerRegistryProxy.proxyRegistryEndpoint }}
+      {{- include "t8s-cluster.clusterClass.containerdConfig.containerRegistryProxyConfigs" (dict "context" .context) | nindent 2 }}
+    {{- end }}
+  - content: |- {{- include "t8s-cluster.clusterClass.containerdConfig.plugins" (dict "context" .context "gpu" .gpu) | nindent 6 }}
+    path: /etc/containerd/conf.d/plugins.toml
+    {{- if .Values.global.injectedCertificateAuthorities }}
+  - content: |- {{- .Values.global.injectedCertificateAuthorities | nindent 6 }}
+    path: /usr/local/share/ca-certificates/injected-ca-certs.crt
+    {{- end }}
+  {{ if .Values.global.injectedCertificateAuthorities }}
+preKubeadmCommands:
+  - update-ca-certificates
+  {{- end }}
+postKubeadmCommands: {{- include "t8s-cluster.clusterClass.postKubeadmCommands" (dict) | nindent 2 }}
+{{- end -}}

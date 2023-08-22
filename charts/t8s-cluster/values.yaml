@@ -5,6 +5,16 @@ global:
       url: https://helm.cilium.io
       charts:
         cilium: 1.x.x
+      condition: '{{ eq .Values.cni "cilium" }}'
+    nvidia:
+      url: https://helm.ngc.nvidia.com/nvidia
+      charts:
+        gpu-operator: 23.x.x
+      condition: '{{ include "t8s-cluster.hasGPUNodes" . }}'
+    cloud-provider-openstack:
+      url: https://kubernetes.github.io/cloud-provider-openstack
+    cetic:
+      url: https://cetic.github.io/helm-charts
   etcd:
     image:
       registry: registry.k8s.io
