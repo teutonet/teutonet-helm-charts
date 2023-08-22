@@ -400,7 +400,7 @@ backup:
       memory: 25Mi
     limits:
       cpu: 500m
-      memory: 100Mi
+      memory: 500Mi
   nodeAgent:
     resources:
       requests:
@@ -408,4 +408,4 @@ backup:
         memory: 25Mi
       limits:
         cpu: 500m
-        memory: 100Mi
+        memory: 500Mi
