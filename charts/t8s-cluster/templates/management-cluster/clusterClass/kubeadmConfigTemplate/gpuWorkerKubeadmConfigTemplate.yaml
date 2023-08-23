@@ -1,11 +1,3 @@
 {{- if eq (include "t8s-cluster.hasGPUNodes" .) "true" }}
-apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
-kind: KubeadmConfigTemplate
-metadata:
-  name: {{ printf "%s-gpu-worker" $.Release.Name }}
-  namespace: {{ $.Release.Namespace }}
-  labels: {{- include "common.labels.standard" $ | nindent 4 }}
-spec:
-  template:
-    spec: {{- include "t8s-cluster.clusterClass.kubeadmConfigTemplate.spec" (dict "gpu" true "context" $) | nindent 6 }}
+  {{- include "t8s-cluster.clusterClass.kubeadmConfigTemplate" (dict "gpu" true "context" $) -}}
 {{- end }}
