@@ -172,7 +172,7 @@ subscription:
     pullPolicy: IfNotPresent
     pullSecrets: []
     repository: stellio/stellio-subscription-service
-    tag: 2.1.0
+    tag: 2.6.3
     digest: ""
   podAnnotations: {}
 
