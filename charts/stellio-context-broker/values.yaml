@@ -146,7 +146,7 @@ search:
     pullPolicy: IfNotPresent
     pullSecrets: []
     repository: stellio/stellio-search-service
-    tag: 2.1.0
+    tag: 2.6.3
     digest: ""
   podAnnotations: {}
 
