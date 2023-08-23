@@ -4,7 +4,7 @@
   "assigneesSampleSize": 1,
   "platformAutomerge": true,
   "semanticCommitScope": "{{parentDir}}/dependencies",
-  "additionalBranchPrefix": "{{parentDir}}",
+  "additionalBranchPrefix": "{{parentDir}}-",
   "separateMinorPatch": true,
   "packageRules": [
     {
