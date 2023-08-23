@@ -6,12 +6,7 @@
   "semanticCommitScope": "{{parentDir}}/dependencies",
   "additionalBranchPrefix": "{{parentDir}}-",
   "separateMinorPatch": true,
-  "packageRules": [
-    {
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
-    }
-  ],
+  "automerge": true,
   "regexManagers": [
     {
       "fileMatch": ["(^|/)values\\.yaml$"],
