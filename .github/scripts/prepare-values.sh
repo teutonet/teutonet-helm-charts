@@ -16,10 +16,8 @@ function prepare-values() {
   local valuesScript
   if [[ -f "$chart/ci/_common.sh" ]]; then
     commonValues="$("$chart/ci/_common.sh")"
-    for values in "$chart/values.yaml" "$chart/ci/"*-values.yaml; do
-      [[ -f "$values" ]] || continue
-      mergeYaml "$values" "$commonValues" | sponge "$values"
-    done
+    values="$chart/values.yaml"
+    mergeYaml "$values" "$commonValues" | sponge "$values"
   fi
   for valuesScript in "$chart/ci/"*-values.sh; do
     [[ -f "$valuesScript" ]] || continue
