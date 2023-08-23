@@ -18,4 +18,21 @@ spec:
   storageNamespace: kube-system
   targetNamespace: kube-system
   releaseName: gpu-operator
+  values:
+    node-feature-discovery:
+      topologyUpdater:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: node.kubernetes.io/instance-type
+                      operator: In
+                      {{- $gpuFlavours := list }}
+                      {{- range $_, $machineDeploymentClass := .Values.workers -}}
+                        {{- if contains "gpu" (lower $machineDeploymentClass.flavor) -}}
+                          {{- $gpuFlavours = append $gpuFlavours $machineDeploymentClass.flavor -}}
+                        {{- end -}}
+                      {{- end }}
+                      values: {{- $gpuFlavours | toYaml | nindent 24 }}
 {{- end }}
