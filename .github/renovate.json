@@ -3,13 +3,15 @@
   "assigneesFromCodeOwners": true,
   "assigneesSampleSize": 1,
   "platformAutomerge": true,
+  "semanticCommitScope": "{{parentDir}}/dependencies",
+  "additionalBranchPrefix": "{{parentDir}}",
+  "separateMinorPatch": true,
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
     }
   ],
-  "separateMinorPatch": true,
   "regexManagers": [
     {
       "fileMatch": ["(^|/)values\\.yaml$"],
