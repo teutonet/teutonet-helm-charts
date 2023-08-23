@@ -56,11 +56,6 @@ global:
       registry: docker.io
       repository: bitnami/kubectl
       tag: 1.27.4
-  pause:
-    image:
-      registry: k8s.gcr.io
-      repository: pause
-      tag: "3.9"
   flux:
     image:
       registry: docker.io
