@@ -1,4 +1,4 @@
-{{- if (include "t8s-cluster.hasGPUNodes" .) }}
+{{- if eq (include "t8s-cluster.hasGPUNodes" .) "true" }}
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
 metadata:
