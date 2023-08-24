@@ -34,6 +34,10 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: helm/chart-testing-action@v2.4.0
+      - name: Conventional commit check
+        uses: cocogitto/cocogitto-action@v3
+        with:
+          check: false
       - run: .github/scripts/validate-and-label-pullrequest.sh
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
