@@ -143,7 +143,7 @@ global:
     vmware:
       url: https://vmware-tanzu.github.io/helm-charts
       charts:
-        velero: 4.x.x
+        velero: 5.x
       condition: "{{ .Values.backup.enabled }}"
 
 kyverno:
