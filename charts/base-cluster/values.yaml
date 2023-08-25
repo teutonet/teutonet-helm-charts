@@ -113,7 +113,7 @@ global:
     kyverno:
       url: https://kyverno.github.io/kyverno
       charts:
-        kyverno: 2.x.x
+        kyverno: 3.x
         kyverno-policies: 2.x.x
       condition: "{{ .Values.kyverno.enabled }}"
     cetic:
