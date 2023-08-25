@@ -1,0 +1,9 @@
+{{- $hasStandardFlavor := false -}}
+{{- range $name, $machineDeploymentClass := .Values.workers }}
+  {{- if not (contains "gpu" (lower $machineDeploymentClass.flavor)) -}}
+    {{- $hasStandardFlavor = true -}}
+  {{- end -}}
+{{- end }}
+{{- if $hasStandardFlavor }}
+  {{- include "t8s-cluster.clusterClass.kubeadmConfigTemplate" (dict "gpu" false "context" $) -}}
+{{- end }}

@@ -178,7 +178,7 @@ spec:
             ref:
               apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
               kind: KubeadmConfigTemplate
-              name: {{ printf "%s-worker" $.Release.Name }}
+              name: {{ printf "%s-%s-worker" $.Release.Name ($machineDeploymentClass.flavor | contains "gpu" | ternary "gpu" "standard") }}
           infrastructure:
             ref:
               apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}

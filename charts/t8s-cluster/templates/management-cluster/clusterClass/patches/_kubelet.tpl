@@ -16,6 +16,6 @@
   {{- $patches := list (include "t8s-cluster.patches.kubelet.default" . | fromYaml) -}}
   {{- if and (eq (int .Values.version.major) 1) (ge (int .Values.version.minor) 27) (gt (int .Values.global.kubeletExtraConfig.maxParallelImagePulls) 1) -}}
     {{- $patches = append $patches (include "t8s-cluster.patches.kubelet.imagePulls" . | fromYaml) -}}
-  {{- end }}
+  {{- end -}}
   {{- $patches | toYaml -}}
 {{- end -}}
