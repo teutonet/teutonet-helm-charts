@@ -114,7 +114,7 @@ global:
       url: https://kyverno.github.io/kyverno
       charts:
         kyverno: 2.x.x
-        kyverno-policies: 2.x.x
+        kyverno-policies: 3.x
       condition: "{{ .Values.kyverno.enabled }}"
     cetic:
       url: https://cetic.github.io/helm-charts
