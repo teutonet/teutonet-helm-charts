@@ -3,7 +3,7 @@
   {{- if and .context.Values.certManager.email $ingress.enabled .context.Values.ingress.enabled (or .context.Values.global.baseDomain $ingress.customDomain) -}}
     {{- $host := include (printf "base-cluster.%s.host" .name) .context -}}
 ingress:
-  enabled: {{ .context.Values.ingress.enabled }}
+  enabled: true
   {{- if or (not .context.Values.dns.provider) $ingress.customDomain }}
   annotations:
     kubernetes.io/tls-acme: "true"
