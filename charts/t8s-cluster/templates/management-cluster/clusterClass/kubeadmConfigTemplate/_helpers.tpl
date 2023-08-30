@@ -31,6 +31,7 @@
     "gcr.io"
     "ghcr.io"
     "k8s.gcr.io"
+    "nvcr.io"
     "quay.io"
     "registry.gitlab.com"
     "registry.k8s.io"

@@ -62,7 +62,7 @@ bastion:
 
 containerRegistryProxy:
   additionallyProxiedRegistries: []
-  proxyRegistryEndpoint: https://harbor.teuto.net/v2/
+  proxyRegistryEndpoint: https://mirror.teuto.net
 
 sshKeyName: null
 
