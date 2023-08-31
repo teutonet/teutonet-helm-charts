@@ -15,3 +15,5 @@ global:
 monitoring:
   grafana:
     adminPassword: test
+  tracing:
+    enabled: true
