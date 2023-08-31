@@ -10,7 +10,7 @@ resources: {{- .Values.monitoring.prometheus.kubeStateMetrics.resources | toYaml
   {{- end }}
 extraArgs:
   - --metric-labels-allowlist={{- $metricLabelsAllowList | join "," }}
-priorityClassName: system-cluster-critical
+priorityClassName: monitoring-components
 securityContext:
   enabled: true
   seccompProfile:

@@ -1,0 +1,13 @@
+{{- $defaultClasses := dict "cluster-components" (dict "value" 500000000) "monitoring-components" (dict "value" 250000000) -}}
+{{- $priorityClasses := merge $defaultClasses .Values.global.priorityClasses -}}
+  {{- range $priorityClassName, $priorityClass := $priorityClasses }}
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: {{ $priorityClassName }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+description: {{ $priorityClass.description }}
+preemptionPolicy: {{ $priorityClass.preemptionPolicy | default "PreemptLowerPriority" }}
+value: {{ $priorityClass.value }}
+---
+  {{- end }}

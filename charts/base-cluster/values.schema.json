@@ -237,6 +237,35 @@
             },
             "additionalProperties": false
           }
+        },
+        "priorityClasses": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "integer",
+                "minimum": -2147483648,
+                "maximum": 1000000000
+              },
+              "description": {
+                "type": "string"
+              },
+              "preemptionPolicy": {
+                "type": "string",
+                "enum": [
+                  "PreemptLowerPriority",
+                  "Never"
+                ],
+                "default": "PreemptLowerPriority"
+              }
+            },
+            "required": ["value"],
+            "additionalProperties": false
+          },
+          "propertyNames": {
+            "maxLength": 63
+          }
         }
       },
       "required": [

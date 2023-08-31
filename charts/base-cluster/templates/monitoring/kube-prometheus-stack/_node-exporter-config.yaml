@@ -4,7 +4,7 @@ image:
   repository: {{ printf "%s/prometheus/node-exporter" .Values.global.imageRegistry }}
   {{- end }}
 resources: {{- .Values.monitoring.prometheus.nodeExporter.resources | toYaml | nindent 2 }}
-priorityClassName: system-cluster-critical
+priorityClassName: monitoring-components
 securityContext:
   seccompProfile:
     type: RuntimeDefault

@@ -30,6 +30,7 @@ spec:
       namespace: monitoring
   {{- end }}
   values:
+    priorityClassName: cluster-components
     {{- if .Values.global.imageRegistry }}
     global:
       imageRegistry: {{ $.Values.global.imageRegistry }}

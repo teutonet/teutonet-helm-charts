@@ -4,6 +4,7 @@ global:
   baseDomain: null
   imageRegistry: null
   imageCredentials: {}
+  priorityClasses: {}
   namespaces:
     ingress:
       condition: "{{ not (empty .Values.dns.provider) }}"

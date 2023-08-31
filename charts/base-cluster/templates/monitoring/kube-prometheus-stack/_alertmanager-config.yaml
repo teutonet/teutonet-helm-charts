@@ -17,7 +17,7 @@ alertmanagerSpec:
   externalUrl: https://{{ include "base-cluster.alertmanager.host" $ }}
   {{- end }}
   retention: {{ .Values.monitoring.prometheus.alertmanager.retentionDuration }}
-  priorityClassName: system-cluster-critical
+  priorityClassName: monitoring-components
   storageSpec:
     volumeClaimTemplate:
       spec: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.prometheus.alertmanager.persistence "global" $.Values.global) | nindent 8 }}

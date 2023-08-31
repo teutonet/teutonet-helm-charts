@@ -53,6 +53,7 @@ spec:
     deployNodeAgent: true # enable FSB
     nodeAgent:
       resources: {{- .Values.backup.nodeAgent.resources | toYaml | nindent 8 }}
+      priorityClassName: system-cluster-critical
     configuration:
       {{- if .Values.backup.backupStorageLocations }}
       backupStorageLocation: {{- range $name, $spec := .Values.backup.backupStorageLocations }}

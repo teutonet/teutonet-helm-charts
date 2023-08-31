@@ -83,7 +83,7 @@ spec:
       containerSecurityContext:
         seccompProfile:
           type: RuntimeDefault
-      priorityClassName: system-cluster-critical
+      priorityClassName: monitoring-components
       serviceMonitor:
         enabled: true
         labels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
