@@ -27,6 +27,7 @@ spec:
   targetNamespace: kube-system
   releaseName: csi
   values:
+    priorityClassName: system-node-critical
     storageClass:
       enabled: false
     secret:
