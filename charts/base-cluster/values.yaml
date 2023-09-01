@@ -83,9 +83,6 @@ global:
         kube-prometheus-stack: 51.x
       condition: "{{ .Values.monitoring.prometheus.enabled }}"
       interval: 5m
-    wiremind:
-      url: https://wiremind.github.io/wiremind-helm-charts
-      condition: "{{ .Values.monitoring.prometheus.enabled }}"
     grafana:
       url: https://grafana.github.io/helm-charts
       charts:
@@ -122,9 +119,6 @@ global:
       url: https://cetic.github.io/helm-charts
       charts:
         static: 0.1.1
-    estafette:
-      url: https://helm.estafette.io
-      condition: "{{ .Values.monitoring.securityScanning.enabled }}"
     nfs-server-provisioner:
       url: https://kubernetes-sigs.github.io/nfs-ganesha-server-and-external-provisioner
       charts:
