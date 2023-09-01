@@ -43,11 +43,17 @@ prometheusSpec:
   probeSelector:
     matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
   additionalAlertRelabelConfigs:
+    {{- if not .Values.monitoring.monitorAllNamespaces }}
+      {{- $namespaces := list .Release.Namespace "kube-node-lease" "kube-public" "kube-system" -}}
+      {{- range $name := include "base-cluster.enabled-namespaces" . | fromYaml | keys -}}
+        {{- $namespaces = append $namespaces $name -}}
+      {{- end }}
     - # TODO: Needs alternative
       source_labels:
         - namespace
       action: keep
-      regex: (cert-manager|flux-system|ingress-nginx|kube-node-lease|kube-public|kube-system|kyverno|monitoring)
+      regex: {{ printf "(%s)" ($namespaces | sortAlpha | uniq | join "|") }}
+    {{- end }}
     - source_labels:
         - __address__
       target_label: clustertype

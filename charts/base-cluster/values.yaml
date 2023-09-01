@@ -160,6 +160,7 @@ kyverno:
   validationFailureAction: audit
 
 monitoring:
+  monitorAllNamespaces: true
   labels:
     managed.by/monitoring: teutonet
   grafana:
