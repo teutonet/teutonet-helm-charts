@@ -2,48 +2,7 @@
 {{- $existingCluster := lookup $cluster.apiVersion $cluster.kind $cluster.metadata.namespace $cluster.metadata.name }}
 {{/* Should always pass, just doesn't work for local diffs 😥 */}}
 {{- if $existingCluster }}
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: check-k8s-version
-  namespace: {{ .Release.Namespace }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
-  annotations:
-    helm.sh/hook: pre-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
-spec:
-  backoffLimit: 0
-  template:
-    spec:
-      restartPolicy: Never
-      automountServiceAccountToken: false
-      securityContext:
-        runAsNonRoot: true
-        runAsGroup: 1000
-        runAsUser: 1000
-        fsGroup: 1000
-      containers:
-        - name: check-k8s-version
-          image: {{ include "common.images.image" (dict "imageRoot" .Values.global.semver.image "global" .Values.global) }}
-          {{- if .Values.global.semver.image.digest }}
-          imagePullPolicy: IfNotPresent
-          {{- else }}
-          imagePullPolicy: Always
-          {{- end }}
-          securityContext:
-            readOnlyRootFilesystem: true
-            privileged: false
-            capabilities:
-              drop:
-                - ALL
-            allowPrivilegeEscalation: false
-            seccompProfile:
-              type: RuntimeDefault
-          command:
-            - semver
-            - --range
-            - '>={{ $existingCluster.spec.version }}'
-            {{- with .Values.version }}
-            - {{ printf "v%d.%d.%d" (.major | int) (.minor | int) (.patch | int) }}
-            {{- end }}
+  {{- if semverCompare (printf "<%s" ($existingCluster.spec.version | trimPrefix "v")) (printf "%d.%d.%d" (.Values.version.major | int) (.Values.version.minor | int) (.Values.version.patch | int)) -}}
+    {{- fail "Cannot downgrade cluster version" -}}
+  {{- end }}
 {{- end }}
