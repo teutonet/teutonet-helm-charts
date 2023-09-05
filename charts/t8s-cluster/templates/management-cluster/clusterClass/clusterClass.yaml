@@ -156,6 +156,7 @@ spec:
   workers:
     machineDeployments:
       {{- range $name, $machineDeploymentClass := .Values.workers }}
+        {{- $isGpuDeploymentClass := $machineDeploymentClass.flavor | contains "gpu" }}
       - class: {{ $name }}
         machineHealthCheck:
           nodeStartupTimeout: 8m
@@ -171,14 +172,19 @@ spec:
           type: RollingUpdate
           rollingUpdate:
             deletePolicy: Oldest
+            {{- if $isGpuDeploymentClass }}
+            maxSurge: 0
+            maxUnavailable: 1
+            {{- else }}
             maxSurge: 75%
             maxUnavailable: 0
+            {{- end }}
         template:
           bootstrap:
             ref:
               apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
               kind: KubeadmConfigTemplate
-              name: {{ printf "%s-%s-worker" $.Release.Name ($machineDeploymentClass.flavor | contains "gpu" | ternary "gpu" "standard") }}
+              name: {{ printf "%s-%s-worker" $.Release.Name ($isGpuDeploymentClass | ternary "gpu" "standard") }}
           infrastructure:
             ref:
               apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
