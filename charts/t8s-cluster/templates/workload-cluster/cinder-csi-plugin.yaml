@@ -14,9 +14,11 @@ spec:
         namespace: {{ .Release.Namespace }}
       version: {{ printf "2.%d.x" (.Values.version.minor | int) }}
   interval: 1h
+  {{- if eq .Values.cni "cilium" }}
   dependsOn:
     - name: {{ printf "%s-cni" .Release.Name }}
       namespace: {{ .Release.Namespace }}
+  {{- end }}
   kubeConfig:
     secretRef:
       name: {{ .Release.Name }}-kubeconfig
