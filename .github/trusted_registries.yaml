@@ -14,6 +14,8 @@ registries:
     velero: ALL_IMAGES
     vladgh:
       gpg@sha256: ALL_TAGS
+    otel:
+      opentelemetry-collector-contrib: ALL_TAGS
   ghcr.io:
     aquasecurity: ALL_IMAGES
     kyverno: ALL_IMAGES

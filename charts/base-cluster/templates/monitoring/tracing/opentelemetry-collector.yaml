@@ -15,10 +15,8 @@ spec:
     - name: kube-prometheus-stack
       namespace: monitoring
   values:
-    {{- if .Values.global.imageRegistry }}
     image:
-      repository: {{ printf "%s/otel/opentelemetry-collector-contrib" $.Values.global.imageRegistry }}
-    {{- end }}
+      repository: {{ printf "%s/otel/opentelemetry-collector-contrib" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
     mode: daemonset
     hostNetwork: true
     service:
