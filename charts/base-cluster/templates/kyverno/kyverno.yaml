@@ -43,13 +43,8 @@ spec:
     admissionController: &tracingConfig
       tracing:
         enabled: true
-        address: $(HOST_IP)
+        address: open-telemetry-collector-opentelemetry-collector.monitoring
         port: 14250 # jaeger-grpc
-      extraEnvVars:
-        - name: HOST_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.hostIP
     backgroundController: *tracingConfig
     cleanupController: *tracingConfig
     reportsController: *tracingConfig
