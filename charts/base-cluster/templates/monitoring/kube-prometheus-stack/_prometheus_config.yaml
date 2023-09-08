@@ -61,4 +61,11 @@ prometheusSpec:
         - __address__
       target_label: cluster
       replacement: {{ .Values.global.clusterName }}
+  {{- if .Values.monitoring.tracing.enabled }}
+  tracingConfig:
+    clientType: grpc
+    samplingFraction: "0.1"
+    insecure: true
+    endpoint: open-telemetry-collector-opentelemetry-collector.monitoring:4317
+  {{- end }}
 {{- end -}}
