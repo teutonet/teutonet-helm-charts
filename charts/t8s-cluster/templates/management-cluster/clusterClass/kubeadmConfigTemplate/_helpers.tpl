@@ -28,23 +28,32 @@
 {{- define "t8s-cluster.clusterClass.containerdConfig.containerRegistryProxyConfigs" -}}
   {{- $_ := set . "Values" .context.Values -}}
   {{- $defaultProxiedRegistries := list
-    "docker.io"
     "gcr.io"
     "ghcr.io"
-    "hub.docker.com"
     "k8s.gcr.io"
+    "nvcr.io"
     "quay.io"
     "registry.gitlab.com"
     "registry.k8s.io"
     "registry.opensource.zalan.do"
     "registry.teuto.io"
-    "index.docker.io"
     -}}
   {{- $proxiedRegistries := concat $defaultProxiedRegistries (.Values.containerRegistryProxy.additionallyProxiedRegistries | default list) | sortAlpha | uniq -}}
   {{- range $registry := $proxiedRegistries }}
 - content: |-
-    {{ printf `[host."%s%s"]` $.Values.containerRegistryProxy.proxyRegistryEndpoint $registry }}
+    server = {{ printf "https://%s" $registry | quote }}
+    {{ printf `[host."%s"]` $.Values.containerRegistryProxy.proxyRegistryEndpoint }}
       capabilities = ["pull", "resolve"]
   path: {{ printf `/etc/containerd/registries.conf.d/%s/hosts.toml` $registry }}
-  {{- end -}}
+  {{- end }}
+- content: |-
+    server = "registry-1.docker.io"
+    {{ printf `[host."%s"]` $.Values.containerRegistryProxy.proxyRegistryEndpoint }}
+      capabilities = ["pull", "resolve"]
+  path: /etc/containerd/registries.conf.d/docker.io/hosts.toml
+- content: |- # this only works with containerd >=1.7.0, that's why the above still exists
+    server = "*"
+    {{ printf `[host."%s"]` $.Values.containerRegistryProxy.proxyRegistryEndpoint }}
+      capabilities = ["pull", "resolve"]
+  path: /etc/containerd/registries.conf.d/_default/hosts.toml
 {{- end -}}
