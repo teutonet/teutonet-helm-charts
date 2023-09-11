@@ -1,5 +1,40 @@
 # Changelog
 
+## [3.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-2.0.0...t8s-cluster-v3.0.0) (2023-09-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* **t8s-cluster:** change `proxy` to `mirror` ([#559](https://github.com/teutonet/teutonet-helm-charts/issues/559))
+
+### Features
+
+* **t8s-cluster/management-cluster:** add support for gpu nodes ([#499](https://github.com/teutonet/teutonet-helm-charts/issues/499)) ([7552b66](https://github.com/teutonet/teutonet-helm-charts/commit/7552b667c222fe99c28cffc494f30ec77e72e6f7))
+* **t8s-cluster/management-cluster:** don't surge GPU nodes ([#549](https://github.com/teutonet/teutonet-helm-charts/issues/549)) ([a08d394](https://github.com/teutonet/teutonet-helm-charts/commit/a08d39469d68ac739ae79730140603c8ed7a0df4))
+* **t8s-cluster/management-cluster:** replace harbor mirror syntax with standard OCI syntax ([#532](https://github.com/teutonet/teutonet-helm-charts/issues/532)) ([7e4af4e](https://github.com/teutonet/teutonet-helm-charts/commit/7e4af4ed2459cf25c9e6825dfe159581519889be))
+* **t8s-cluster/management-cluster:** simplify k8s version check ([#548](https://github.com/teutonet/teutonet-helm-charts/issues/548)) ([f0d4b31](https://github.com/teutonet/teutonet-helm-charts/commit/f0d4b3135f806286701e8c6a09f9ebfb45099b08))
+* **t8s-cluster/management-cluster:** validate new k8s version before upgrade ([#508](https://github.com/teutonet/teutonet-helm-charts/issues/508)) ([a3922e5](https://github.com/teutonet/teutonet-helm-charts/commit/a3922e533213275b3958b288df271b8dc9aa3ede))
+* **t8s-cluster/workload-cluster:** add priorityClassName to critical components ([#540](https://github.com/teutonet/teutonet-helm-charts/issues/540)) ([00f5d9b](https://github.com/teutonet/teutonet-helm-charts/commit/00f5d9b5823140ef5e7812c0c809ea4f36daffe7))
+* **t8s-cluster:** change `proxy` to `mirror` ([#559](https://github.com/teutonet/teutonet-helm-charts/issues/559)) ([e405d74](https://github.com/teutonet/teutonet-helm-charts/commit/e405d74bf6a8ee23f08e6eb18372b3319f0f1de3))
+
+
+### Bug Fixes
+
+* **t8s-cluster/workload-cluster:** cleanup of storageclasses ([#492](https://github.com/teutonet/teutonet-helm-charts/issues/492)) ([138c185](https://github.com/teutonet/teutonet-helm-charts/commit/138c18573854de95807719f9792bdba17c2ff2c2))
+* **t8s-cluster/workload-cluster:** dependency on cni helmrelease ([#550](https://github.com/teutonet/teutonet-helm-charts/issues/550)) ([a54108d](https://github.com/teutonet/teutonet-helm-charts/commit/a54108d1d60bf63512b865ad0999460728ada3b2))
+
+
+### Miscellaneous Chores
+
+* **deps:** update docker.io/bitnami/kubectl docker tag to v1.27.4 ([#484](https://github.com/teutonet/teutonet-helm-charts/issues/484)) ([3e73e61](https://github.com/teutonet/teutonet-helm-charts/commit/3e73e61caa0bf590116db7958f34aeff8c231d7e))
+* **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#490](https://github.com/teutonet/teutonet-helm-charts/issues/490)) ([4ab441d](https://github.com/teutonet/teutonet-helm-charts/commit/4ab441d6cfdc54bf03561785b3ec79afa43725a6))
+* **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#527](https://github.com/teutonet/teutonet-helm-charts/issues/527)) ([9522b32](https://github.com/teutonet/teutonet-helm-charts/commit/9522b32a1876d4517669b8897ed37a57fc9f8ff0))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.27.5 ([#536](https://github.com/teutonet/teutonet-helm-charts/issues/536)) ([835d15e](https://github.com/teutonet/teutonet-helm-charts/commit/835d15e927c82cdd4ef7787d6f9e787f0e1f2266))
+* **t8s-cluster/dependencies:** update helm release common to v2.9.0 ([#514](https://github.com/teutonet/teutonet-helm-charts/issues/514)) ([01bae27](https://github.com/teutonet/teutonet-helm-charts/commit/01bae271440a3e694c687d08ce4cb7f65f4f07e8))
+* **t8s-cluster/dependencies:** update helm release common to v2.9.1 ([#537](https://github.com/teutonet/teutonet-helm-charts/issues/537)) ([264405b](https://github.com/teutonet/teutonet-helm-charts/commit/264405b33e99c50c463a31dbdacad07c0a8bacff))
+* **t8s-cluster/management-cluster:** migrate containerd registry mirror config ([#494](https://github.com/teutonet/teutonet-helm-charts/issues/494)) ([be41141](https://github.com/teutonet/teutonet-helm-charts/commit/be41141e364692df4761ad7b2cc53ed8c9709fc7))
+* **t8s-cluster:** remove steutol ([#542](https://github.com/teutonet/teutonet-helm-charts/issues/542)) ([5f6d5fc](https://github.com/teutonet/teutonet-helm-charts/commit/5f6d5fc46c6b94f820ce4623821a9376daadebec))
+
 ## [2.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-1.3.3...t8s-cluster-v2.0.0) (2023-08-15)
 
 
