@@ -216,16 +216,16 @@
       },
       "additionalProperties": false
     },
-    "containerRegistryProxy": {
+    "containerRegistryMirror": {
       "type": "object",
       "properties": {
-        "additionallyProxiedRegistries": {
+        "additionallyMirroredRegistries": {
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-        "proxyRegistryEndpoint": {
+        "mirrorEndpoint": {
           "type": "string"
         }
       },

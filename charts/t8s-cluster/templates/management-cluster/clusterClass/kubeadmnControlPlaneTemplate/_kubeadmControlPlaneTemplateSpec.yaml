@@ -46,8 +46,8 @@ files: {{- include "t8s-cluster.patches.kubelet.patches" $ | nindent 2 }}
     permissions: "0700"
   - content: |- {{- .Files.Get "files/kube-proxy.config.yaml" | nindent 6 }}
     path: /etc/kube-proxy-config.yaml
-  {{- if .Values.containerRegistryProxy.proxyRegistryEndpoint }}
-    {{- include "t8s-cluster.clusterClass.containerdConfig.containerRegistryProxyConfigs" (dict "context" $) | nindent 2 }}
+  {{- if .Values.containerRegistryMirror.mirrorEndpoint }}
+    {{- include "t8s-cluster.clusterClass.containerdConfig.containerRegistryMirrorConfigs" (dict "context" $) | nindent 2 }}
   {{- end }}
   - content: |- {{- include "t8s-cluster.clusterClass.containerdConfig.plugins" (dict "context" $ "gpu" false) | nindent 6 }}
     path: /etc/containerd/conf.d/plugins.toml
