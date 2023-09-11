@@ -2,7 +2,7 @@
 [plugins]
   [plugins."io.containerd.grpc.v1.cri"]
   {{- $_ := set . "Values" .context.Values -}}
-  {{- if .Values.containerRegistryProxy.proxyRegistryEndpoint }}
+  {{- if .Values.containerRegistryMirror.mirrorEndpoint }}
     [plugins."io.containerd.grpc.v1.cri".registry]
       config_path = "/etc/containerd/registries.conf.d"
   {{- end }}
@@ -25,9 +25,9 @@
   {{- end -}}
 {{- end -}}
 
-{{- define "t8s-cluster.clusterClass.containerdConfig.containerRegistryProxyConfigs" -}}
+{{- define "t8s-cluster.clusterClass.containerdConfig.containerRegistryMirrorConfigs" -}}
   {{- $_ := set . "Values" .context.Values -}}
-  {{- $defaultProxiedRegistries := list
+  {{- $defaultMirroredRegistries := list
     "gcr.io"
     "ghcr.io"
     "k8s.gcr.io"
@@ -38,22 +38,22 @@
     "registry.opensource.zalan.do"
     "registry.teuto.io"
     -}}
-  {{- $proxiedRegistries := concat $defaultProxiedRegistries (.Values.containerRegistryProxy.additionallyProxiedRegistries | default list) | sortAlpha | uniq -}}
-  {{- range $registry := $proxiedRegistries }}
+  {{- $mirroredRegistries := concat $defaultMirroredRegistries (.Values.containerRegistryMirror.additionallyMirroredRegistries | default list) | sortAlpha | uniq -}}
+  {{- range $registry := $mirroredRegistries }}
 - content: |-
     server = {{ printf "https://%s" $registry | quote }}
-    {{ printf `[host."%s"]` $.Values.containerRegistryProxy.proxyRegistryEndpoint }}
+    {{ printf `[host."%s"]` $.Values.containerRegistryMirror.mirrorEndpoint }}
       capabilities = ["pull", "resolve"]
   path: {{ printf `/etc/containerd/registries.conf.d/%s/hosts.toml` $registry }}
   {{- end }}
 - content: |-
     server = "registry-1.docker.io"
-    {{ printf `[host."%s"]` $.Values.containerRegistryProxy.proxyRegistryEndpoint }}
+    {{ printf `[host."%s"]` $.Values.containerRegistryMirror.mirrorEndpoint }}
       capabilities = ["pull", "resolve"]
   path: /etc/containerd/registries.conf.d/docker.io/hosts.toml
 - content: |- # this only works with containerd >=1.7.0, that's why the above still exists
     server = "*"
-    {{ printf `[host."%s"]` $.Values.containerRegistryProxy.proxyRegistryEndpoint }}
+    {{ printf `[host."%s"]` $.Values.containerRegistryMirror.mirrorEndpoint }}
       capabilities = ["pull", "resolve"]
   path: /etc/containerd/registries.conf.d/_default/hosts.toml
 {{- end -}}

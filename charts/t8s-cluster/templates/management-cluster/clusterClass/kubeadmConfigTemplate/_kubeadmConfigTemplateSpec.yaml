@@ -7,8 +7,8 @@ joinConfiguration:
   patches:
     directory: /etc/kubernetes/patches
 files: {{- include "t8s-cluster.patches.kubelet.patches" .context | nindent 2 }}
-    {{- if .Values.containerRegistryProxy.proxyRegistryEndpoint }}
-      {{- include "t8s-cluster.clusterClass.containerdConfig.containerRegistryProxyConfigs" (dict "context" .context) | nindent 2 }}
+    {{- if .Values.containerRegistryMirror.mirrorEndpoint }}
+      {{- include "t8s-cluster.clusterClass.containerdConfig.containerRegistryMirrorConfigs" (dict "context" .context) | nindent 2 }}
     {{- end }}
   - content: |- {{- include "t8s-cluster.clusterClass.containerdConfig.plugins" (dict "context" .context "gpu" .gpu) | nindent 6 }}
     path: /etc/containerd/conf.d/plugins.toml

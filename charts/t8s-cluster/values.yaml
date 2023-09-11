@@ -60,9 +60,9 @@ bastion:
   availabilityZone: null
   sshKeyName: null
 
-containerRegistryProxy:
-  additionallyProxiedRegistries: []
-  proxyRegistryEndpoint: https://mirror.teuto.net
+containerRegistryMirror:
+  additionallyMirroredRegistries: []
+  mirrorEndpoint: https://mirror.teuto.net
 
 sshKeyName: null
 
