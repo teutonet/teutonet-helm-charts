@@ -51,9 +51,4 @@
     {{ printf `[host."%s"]` $.Values.containerRegistryMirror.mirrorEndpoint }}
       capabilities = ["pull", "resolve"]
   path: /etc/containerd/registries.conf.d/docker.io/hosts.toml
-- content: |- # this only works with containerd >=1.7.0, that's why the above still exists
-    server = "*"
-    {{ printf `[host."%s"]` $.Values.containerRegistryMirror.mirrorEndpoint }}
-      capabilities = ["pull", "resolve"]
-  path: /etc/containerd/registries.conf.d/_default/hosts.toml
 {{- end -}}
