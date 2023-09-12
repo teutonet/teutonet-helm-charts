@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     name: lint github workflows
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Add problem matchers
         run: |
           # https://github.com/rhysd/actionlint/blob/3a2f2c7/docs/usage.md#problem-matchers
