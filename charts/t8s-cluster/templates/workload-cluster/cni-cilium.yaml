@@ -15,6 +15,8 @@ spec:
   install:
     remediation:
       retries: -1
+  upgrade:
+    timeout: 5m
   storageNamespace: kube-system
   targetNamespace: kube-system
   releaseName: cni
