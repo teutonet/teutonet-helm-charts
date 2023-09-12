@@ -65,7 +65,7 @@ spec:
               - otlp
       exporters:
         otlp:
-          endpoint: tempo-grafana-tempo-distributor:4317
+          endpoint: grafana-tempo-distributor:4317
           tls:
             insecure: true
     presets:
