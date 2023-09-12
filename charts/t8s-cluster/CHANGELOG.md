@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-3.0.0...t8s-cluster-v3.0.1) (2023-09-12)
+
+
+### Bug Fixes
+
+* **t8s-cluster/kubeadmConfigTemplate:** gitlab registry does no play nice with mirrors ([#570](https://github.com/teutonet/teutonet-helm-charts/issues/570)) ([d2230e6](https://github.com/teutonet/teutonet-helm-charts/commit/d2230e606741101a87cd2c24f46fda69c6838f67))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#544](https://github.com/teutonet/teutonet-helm-charts/issues/544)) ([f70116e](https://github.com/teutonet/teutonet-helm-charts/commit/f70116e15a76b14a2d52cd5c270bce4b88518081))
+* **t8s-cluster/dependencies:** update helm release common to v2.10.1 ([#563](https://github.com/teutonet/teutonet-helm-charts/issues/563)) ([5a479d9](https://github.com/teutonet/teutonet-helm-charts/commit/5a479d986fafb82d5eb237997dce253266f8322a))
+* **t8s-cluster/dependencies:** update helm release common to v2.9.2 ([#560](https://github.com/teutonet/teutonet-helm-charts/issues/560)) ([727d5ad](https://github.com/teutonet/teutonet-helm-charts/commit/727d5ad06ff2f026accd0a84b6fec4248651dce1))
+
 ## [3.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-2.0.0...t8s-cluster-v3.0.0) (2023-09-11)
 
 
