@@ -1,5 +1,43 @@
 # Changelog
 
+## [4.7.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.6.0...base-cluster-v4.7.0) (2023-09-13)
+
+
+### Features
+
+* **base-cluster/tracing:** add OpenTelemetry Collector and Grafana Tempo ([#439](https://github.com/teutonet/teutonet-helm-charts/issues/439)) ([8176833](https://github.com/teutonet/teutonet-helm-charts/commit/8176833388c7db9035244b6cde382ce3086be98f))
+* **base-cluster/tracing:** enable tracing for prometheus ([#556](https://github.com/teutonet/teutonet-helm-charts/issues/556)) ([57bd136](https://github.com/teutonet/teutonet-helm-charts/commit/57bd13699f1883394d7203943a798998e0c77400))
+* **base-cluster/tracing:** simplify tracingConfig ([#557](https://github.com/teutonet/teutonet-helm-charts/issues/557)) ([5645d12](https://github.com/teutonet/teutonet-helm-charts/commit/5645d12b2c04134e3fb65fb8aa933ea16b6af59c))
+* **base-cluster:** remove unused helmrepositories ([#546](https://github.com/teutonet/teutonet-helm-charts/issues/546)) ([b2ae1e6](https://github.com/teutonet/teutonet-helm-charts/commit/b2ae1e63ff185fd1d86a429c9b43189214ffa55d))
+
+
+### Bug Fixes
+
+* **base-cluster/tracing:** add missing otel to trusted image ([#552](https://github.com/teutonet/teutonet-helm-charts/issues/552)) ([5332ca8](https://github.com/teutonet/teutonet-helm-charts/commit/5332ca88fc2a1208b2493a7dad3c746a31936085))
+* **base-cluster/tracing:** apparently tempo changed their service name ([#555](https://github.com/teutonet/teutonet-helm-charts/issues/555)) ([a3b1cf0](https://github.com/teutonet/teutonet-helm-charts/commit/a3b1cf02b0f80f3ba2f1306fc3da174dfc2e006b))
+* **base-cluster/tracing:** grafana tempo labels indentation ([#553](https://github.com/teutonet/teutonet-helm-charts/issues/553)) ([79a239b](https://github.com/teutonet/teutonet-helm-charts/commit/79a239b927c459de03bac4b13043aead7d518dc1))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/artifacthub-images:** Update ArtifactHUB images ([#528](https://github.com/teutonet/teutonet-helm-charts/issues/528)) ([f50f801](https://github.com/teutonet/teutonet-helm-charts/commit/f50f8016b5fffbea2a2f5ea4249644ede974defa))
+* **base-cluster/artifacthub-images:** Update ArtifactHUB images ([#531](https://github.com/teutonet/teutonet-helm-charts/issues/531)) ([f9e3ea5](https://github.com/teutonet/teutonet-helm-charts/commit/f9e3ea53adfa8b14148376d42b501c253c0f2efe))
+* **base-cluster/artifacthub-images:** Update ArtifactHUB images ([#566](https://github.com/teutonet/teutonet-helm-charts/issues/566)) ([7b6dda9](https://github.com/teutonet/teutonet-helm-charts/commit/7b6dda91d0a7147ba267191c392d1ddb855bae89))
+* **base-cluster/backup:** migrate velero to 5.x ([#529](https://github.com/teutonet/teutonet-helm-charts/issues/529)) ([10759bf](https://github.com/teutonet/teutonet-helm-charts/commit/10759bfce72c57ad506f651e8dc4ef57e890162f))
+* **base-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.27.5 ([#533](https://github.com/teutonet/teutonet-helm-charts/issues/533)) ([37966aa](https://github.com/teutonet/teutonet-helm-charts/commit/37966aaf5d4cf3699223c151e11c5e54926a3513))
+* **base-cluster/dependencies:** update helm release common to v2.10.1 ([#561](https://github.com/teutonet/teutonet-helm-charts/issues/561)) ([b82c790](https://github.com/teutonet/teutonet-helm-charts/commit/b82c790a59b2c134d371df3c7b5bccc555e5dfb5))
+* **base-cluster/dependencies:** update helm release common to v2.11.0 ([#568](https://github.com/teutonet/teutonet-helm-charts/issues/568)) ([3edd2b3](https://github.com/teutonet/teutonet-helm-charts/commit/3edd2b389c52d17624d494f618b5e55af6a24c3c))
+* **base-cluster/dependencies:** update helm release common to v2.9.0 ([#512](https://github.com/teutonet/teutonet-helm-charts/issues/512)) ([4162755](https://github.com/teutonet/teutonet-helm-charts/commit/41627550e0e347f67829c9b73ef225469841ac33))
+* **base-cluster/dependencies:** update helm release common to v2.9.1 ([#534](https://github.com/teutonet/teutonet-helm-charts/issues/534)) ([a8f5cfc](https://github.com/teutonet/teutonet-helm-charts/commit/a8f5cfc83351676e10abff3342d711abc38cc9fa))
+* **base-cluster/dependencies:** update helm release common to v2.9.2 ([#547](https://github.com/teutonet/teutonet-helm-charts/issues/547)) ([e795117](https://github.com/teutonet/teutonet-helm-charts/commit/e795117e49796928d6b5eaf7fa36b5ef0643195a))
+* **base-cluster/dependencies:** update helm release descheduler to 0.28.x ([#538](https://github.com/teutonet/teutonet-helm-charts/issues/538)) ([3f927b9](https://github.com/teutonet/teutonet-helm-charts/commit/3f927b9c0522b6b4136313aa2f2fa7e7771eecc9))
+* **base-cluster/dependencies:** update helm release kube-prometheus-stack to v51 ([#564](https://github.com/teutonet/teutonet-helm-charts/issues/564)) ([00d46bc](https://github.com/teutonet/teutonet-helm-charts/commit/00d46bce88299c2121bffc1d8f21261f0e0bc872))
+* **base-cluster/dependencies:** update oauth2-proxy docker tag to v4 ([#543](https://github.com/teutonet/teutonet-helm-charts/issues/543)) ([399e610](https://github.com/teutonet/teutonet-helm-charts/commit/399e61006fe3b3f6c764d79531173403a1dcc829))
+* **base-cluster:** remove pause container image configuration ([#515](https://github.com/teutonet/teutonet-helm-charts/issues/515)) ([d95087f](https://github.com/teutonet/teutonet-helm-charts/commit/d95087f012d22414afe5913f3d19e21da974d139))
+* **base-cluster:** remove steutol ([#541](https://github.com/teutonet/teutonet-helm-charts/issues/541)) ([aa36edd](https://github.com/teutonet/teutonet-helm-charts/commit/aa36eddd8c998cf3aa5fc83e0e07c94e43ce45c8))
+* **deps:** update docker.io/bitnami/kubectl docker tag to v1.27.4 ([#484](https://github.com/teutonet/teutonet-helm-charts/issues/484)) ([3e73e61](https://github.com/teutonet/teutonet-helm-charts/commit/3e73e61caa0bf590116db7958f34aeff8c231d7e))
+* **deps:** update helm release kube-prometheus-stack to v48 ([#482](https://github.com/teutonet/teutonet-helm-charts/issues/482)) ([2b18f57](https://github.com/teutonet/teutonet-helm-charts/commit/2b18f57fe9169839f9759a6bebc476eed7ef9e5c))
+
 ## [4.6.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.5.4...base-cluster-v4.6.0) (2023-08-22)
 
 
