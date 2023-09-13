@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # base-cluster
 
-![Version: 4.6.0](https://img.shields.io/badge/Version-4.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 4.7.0](https://img.shields.io/badge/Version-4.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -13,7 +13,7 @@ A common base for every kubernetes cluster
 | ---- | ------ | --- |
 | cwrau | <cwr@teuto.net> |  |
 | marvinWolff | <mw@teuto.net> |  |
-| steutol | <sl@teuto.net> |  |
+| tasches | <st@teuto.net> |  |
 
 ## Cluster bootstrap
 
@@ -90,7 +90,7 @@ and affinities.
 If the cluster is _semi_ underspecced or the individual applications have unperfect
 resource requests, the descheduler might lead to period restarting of random pods.
 
-In that case you should disable the deschedler.
+In that case you should disable the descheduler.
 
 ### Component [dns](#dns)
 
@@ -174,6 +174,42 @@ running workload in your cluster for CVEs and creates
 [Custom Resources](https://aquasecurity.github.io/trivy-operator/v0.12.1/docs/crds)
 to present the results.
 
+#### Sub-Component [tracing](#monitoring_tracing)
+
+The included [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
+collects traces via otlp-grpc on every node on the host IP.
+These traces are then sent to [Grafana Tempo](https://grafana.com/oss/tempo/),
+which is included as a datasource in Grafana by default.
+
+##### Usage Example
+
+In your deployment/statefulset/daemonset/... add the following config;
+
+```yaml
+spec:
+  template:
+    spec:
+      containers:
+        - env:
+            - name: OTEL_HOST <- change this to your framework's environment variable
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTEL_PORT
+              value: "4317"
+```
+
+The supported protocols are;
+
+- jaeger
+  - grpc: 14250
+  - thrift_http: 14268
+  - thrift_compact: 6831
+- otlp
+  - grpc: 4317
+  - http: 4318
+- zipkin: 9411
+
 ### Component [storage](#storage)
 
 The included [NFS Ganesha server and external provisioner](https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner)
@@ -208,7 +244,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.6.0 |
+| https://charts.bitnami.com/bitnami | common | 2.11.0 |
 
 This helm chart requires [flux v2 to be installed](https://fluxcd.io/docs/installation),
 see [bootstrap](#cluster-bootstrap)
@@ -990,6 +1026,7 @@ Must be one of:
 | - [metricsServer](#monitoring_metricsServer )             | No      | object | No         | -          | -                                                                                     |
 | - [storageCostAnalysis](#monitoring_storageCostAnalysis ) | No      | object | No         | -          | Configuration of the \`storageCostAnalysis dashboard                                  |
 | - [securityScanning](#monitoring_securityScanning )       | No      | object | No         | -          | -                                                                                     |
+| - [tracing](#monitoring_tracing )                         | No      | object | No         | -          | -                                                                                     |
 
 ### <a name="monitoring_labels"></a>3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > labels`
 
@@ -1860,6 +1897,23 @@ currencyEUR
 | - [enabled](#monitoring_securityScanning_enabled ) | No      | boolean | No         | -          | -                 |
 
 #### <a name="monitoring_securityScanning_enabled"></a>3.7.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > securityScanning > enabled`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+### <a name="monitoring_tracing"></a>3.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                  | Pattern | Type    | Deprecated | Definition | Title/Description |
+| ----------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
+| - [enabled](#monitoring_tracing_enabled ) | No      | boolean | No         | -          | -                 |
+
+#### <a name="monitoring_tracing_enabled"></a>3.8.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > enabled`
 
 |          |           |
 | -------- | --------- |
