@@ -20,7 +20,7 @@ spec:
   releaseName: gpu-operator
   values:
     node-feature-discovery:
-      topologyUpdater:
+      worker:
         affinity:
           nodeAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
