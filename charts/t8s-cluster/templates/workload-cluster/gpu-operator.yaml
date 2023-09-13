@@ -21,6 +21,20 @@ spec:
   targetNamespace: kube-system
   releaseName: gpu-operator
   values:
+    devicePlugin:
+      config:
+        create: true
+        name: gpu-operator-time-slicing
+        default: any
+        data:
+          any: |-
+            version: v1
+            sharing:
+              timeSlicing:
+                failRequestsGreaterThanOne: true
+                resources:
+                  - name: nvidia.com/gpu
+                    replicas: 4
     node-feature-discovery:
       worker:
         affinity:
