@@ -27,11 +27,11 @@ annotations:
     - image: k8s.gcr.io/sig-storage/csi-resizer:v1.4.0
     - image: k8s.gcr.io/sig-storage/csi-snapshotter:v5.0.1
     - image: k8s.gcr.io/sig-storage/livenessprobe:v2.6.0
-    - image: quay.io/cilium/cilium:v1.14.1@sha256:edc1d05ea1365c4a8f6ac6982247d5c145181704894bb698619c3827b6963a72
-    - image: quay.io/cilium/hubble-relay:v1.14.1@sha256:db30e85a7abc10589ce2a97d61ee18696a03dc5ea04d44b4d836d88bd75b59d8
+    - image: quay.io/cilium/cilium:v1.14.2@sha256:6263f3a3d5d63b267b538298dbeb5ae87da3efacf09a2c620446c873ba807d35
+    - image: quay.io/cilium/hubble-relay:v1.14.2@sha256:a89030b31f333e8fb1c10d2473250399a1a537c27d022cd8becc1a65d1bef1d6
     - image: quay.io/cilium/hubble-ui-backend:v0.12.0@sha256:8a79a1aad4fc9c2aa2b3e4379af0af872a89fcec9d99e117188190671c66fc2e
     - image: quay.io/cilium/hubble-ui:v0.12.0@sha256:1c876cfa1d5e35bc91e1025c9314f922041592a88b03313c22c1f97a5d2ba88f
-    - image: quay.io/cilium/operator-generic:v1.14.1@sha256:e061de0a930534c7e3f8feda8330976367971238ccafff42659f104effd4b5f7
+    - image: quay.io/cilium/operator-generic:v1.14.2@sha256:52f70250dea22e506959439a7c4ea31b10fe8375db62f5c27ab746e3a2af866d
     - image: registry.k8s.io/etcd:3.5.9-0
     - image: registry.k8s.io/provider-os/cinder-csi-plugin:v1.25.6
     - image: registry.k8s.io/provider-os/openstack-cloud-controller-manager:v1.25.6
