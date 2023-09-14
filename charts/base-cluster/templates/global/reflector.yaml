@@ -11,6 +11,7 @@ spec:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "emberstack" "chart" "reflector" "context" $) | nindent 6 }}
   interval: 1h
   values:
+    priorityClassName: cluster-components
     {{- if .Values.global.imageRegistry }}
     image:
       repository: {{ printf "%s/emberstack/kubernetes-reflector" $.Values.global.imageRegistry }}

@@ -16,6 +16,7 @@ spec:
   {{- end }}
   values:
     controller:
+      priorityClassName: system-cluster-critical
       watchIngressWithoutClass: true
       metrics:
         enabled: {{ .Values.monitoring.prometheus.enabled }}

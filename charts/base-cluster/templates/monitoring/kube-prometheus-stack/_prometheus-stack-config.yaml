@@ -7,7 +7,7 @@ grafana: {{- include "base-cluster.prometheus-stack.grafana.config" . | nindent 
 prometheusOperator:
   secretFieldSelector: 'type!=helm.sh/release.v1'
   resources: {{- .Values.monitoring.prometheus.operator.resources | toYaml | nindent 4 }}
-  priorityClassName: system-cluster-critical
+  priorityClassName: monitoring-components
   securityContext:
     seccompProfile:
       type: RuntimeDefault

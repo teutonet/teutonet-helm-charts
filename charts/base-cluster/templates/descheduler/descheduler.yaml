@@ -26,6 +26,7 @@ spec:
   values:
     cronJobApiVersion: {{ include "common.capabilities.cronjob.apiVersion" . }}
     startingDeadlineSeconds: 120
+    priorityClassName: system-cluster-critical
     deschedulerPolicy:
       evictLocalStoragePods: true
       strategies: {{- .Values.descheduler.strategies | toYaml | nindent 8 }}

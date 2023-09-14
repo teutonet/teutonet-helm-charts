@@ -23,7 +23,7 @@ spec:
         cpu: 100m
         memory: 64Mi
     replicas: 2
-    priorityClassName: system-cluster-critical
+    priorityClassName: cluster-components
     podSecurityContext:
       enabled: true
       seccompProfile:

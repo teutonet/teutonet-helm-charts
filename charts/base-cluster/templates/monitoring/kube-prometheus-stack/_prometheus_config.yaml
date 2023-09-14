@@ -15,7 +15,7 @@ prometheusSpec:
   externalUrl: {{ printf "https://%s" (include "base-cluster.prometheus.host" $) }}
   {{- end }}
   resources: {{- .Values.monitoring.prometheus.resources | toYaml | nindent 4 }}
-  priorityClassName: system-cluster-critical
+  priorityClassName: monitoring-components
   securityContext:
     seccompProfile:
       type: RuntimeDefault

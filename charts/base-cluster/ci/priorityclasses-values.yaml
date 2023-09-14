@@ -1,0 +1,6 @@
+global:
+  priorityClasses:
+    test:
+      value: 600
+      description: tesssssssst
+      preemptionPolicy: Never
