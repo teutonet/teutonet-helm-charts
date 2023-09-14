@@ -14,50 +14,22 @@ spec:
   dependsOn:
     - name: kube-prometheus-stack
       namespace: monitoring
+  upgrade:
+    timeout: 5m
   values:
     image:
       repository: {{ printf "%s/otel/opentelemetry-collector-contrib" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
     mode: daemonset
-    hostNetwork: true
     service:
       enabled: true
-    dnsPolicy: ClusterFirstWithHostNet
-    extraEnvs:
-      - name: HOST_IP
-        valueFrom:
-          fieldRef:
-            fieldPath: status.hostIP
     config:
-      extensions:
-        health_check:
-          endpoint: ${env:HOST_IP}:13133
       receivers:
-        jaeger:
-          protocols:
-            grpc:
-              endpoint: ${env:HOST_IP}:14250
-            thrift_http:
-              endpoint: ${env:HOST_IP}:14268
-            thrift_compact:
-              endpoint: ${env:HOST_IP}:6831
-        otlp:
-          protocols:
-            grpc:
-              endpoint: ${env:HOST_IP}:4317
-            http:
-              endpoint: ${env:HOST_IP}:4318
         prometheus: null
-        zipkin:
-          endpoint: ${env:HOST_IP}:9411
       service:
         pipelines:
           logs: null
           metrics: null
           traces:
-            receivers:
-              - otlp
-              - jaeger
-              - zipkin
             processors:
               - batch
             exporters:
@@ -72,18 +44,6 @@ spec:
       kubernetesAttributes:
         enabled: true
     ports:
-      jaeger-compact:
-        enabled: true
-      jaeger-thrift:
-        enabled: true
-      jaeger-grpc:
-        enabled: true
-      otlp:
-        enabled: true
-      otlp-http:
-        enabled: true
-      zipkin:
-        enabled: true
       metrics:
         enabled: true
     podMonitor:
