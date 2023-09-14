@@ -23,11 +23,20 @@ spec:
         serviceMonitor:
           enabled: {{ .Values.monitoring.prometheus.enabled }}
           additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 12 }}
+      {{- if .Values.monitoring.tracing.enabled }}
+      opentelemetry:
+        enabled: true
+      {{- end }}
       config:
-        use-proxy-protocol: "true"
-        use-gzip: "true"
-        enable-brotli: "true"
+        use-proxy-protocol: true
+        use-gzip: true
+        enable-brotli: true
         enable-underscores-in-headers: true
+        {{- if .Values.monitoring.tracing.enabled }}
+        enable-opentelemetry: true
+        opentelemetry-operation-name: ingress
+        otlp-collector-host: open-telemetry-collector-opentelemetry-collector.monitoring
+        {{- end }}
       service:
         annotations:
           loadbalancer.openstack.org/proxy-protocol: "true"
