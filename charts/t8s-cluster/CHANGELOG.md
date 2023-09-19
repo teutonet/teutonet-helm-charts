@@ -1,5 +1,24 @@
 # Changelog
 
+## [3.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-3.0.1...t8s-cluster-v3.1.0) (2023-09-19)
+
+
+### Features
+
+* **t8s-cluster/workload-cluster:** add a higher timeout for upgrading ([#567](https://github.com/teutonet/teutonet-helm-charts/issues/567)) ([c5cb979](https://github.com/teutonet/teutonet-helm-charts/commit/c5cb979bffe15c8d811fae944df97619ffb83d9a))
+
+
+### Bug Fixes
+
+* **t8s-cluster/gpu-operator:** fix worker affinity ([#572](https://github.com/teutonet/teutonet-helm-charts/issues/572)) ([e8bc84b](https://github.com/teutonet/teutonet-helm-charts/commit/e8bc84be710b77e1d9cd511a0bba32cfbe95f2c6))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#573](https://github.com/teutonet/teutonet-helm-charts/issues/573)) ([8b6f934](https://github.com/teutonet/teutonet-helm-charts/commit/8b6f93459845efeb97953c3df83d71106783f3eb))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.27.6 ([#577](https://github.com/teutonet/teutonet-helm-charts/issues/577)) ([c8f4142](https://github.com/teutonet/teutonet-helm-charts/commit/c8f414209d64193cadfaec86800fc3a59e4d9cd6))
+* **t8s-cluster/dependencies:** update helm release common to v2.11.0 ([#569](https://github.com/teutonet/teutonet-helm-charts/issues/569)) ([805eceb](https://github.com/teutonet/teutonet-helm-charts/commit/805eceb14f79e556f572740259a91c64396db9bd))
+
 ## [3.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-3.0.0...t8s-cluster-v3.0.1) (2023-09-12)
 
 
