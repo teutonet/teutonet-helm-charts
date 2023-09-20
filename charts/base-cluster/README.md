@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # base-cluster
 
-![Version: 4.7.0](https://img.shields.io/badge/Version-4.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 4.8.0](https://img.shields.io/badge/Version-4.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -352,6 +352,7 @@ ignore this change.
 | - [certificates](#global_certificates )                   | No      | object           | No         | -                       | A map of cert-manager certificates to create and sync its secrets into namespaces, the key is the name, therefore the secret name will be \`$key\`-certificate   |
 | - [storageClass](#global_storageClass )                   | No      | string or null   | No         | In #/$defs/storageClass | The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd)                                                 |
 | - [namespaces](#global_namespaces )                       | No      | object           | No         | -                       | Namespaces to create. AND *delete* if removed                                                                                                                    |
+| - [priorityClasses](#global_priorityClasses )             | No      | object           | No         | -                       | -                                                                                                                                                                |
 
 ### <a name="global_serviceLevelAgreement"></a>1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > serviceLevelAgreement`
 
@@ -952,6 +953,58 @@ test.teuto.net
 | **Same definition as** | [condition](#global_helmRepositories_additionalProperties_condition) |
 
 **Description:** A condition with which to decide to include the resource. This will be templated. Must return a truthy value
+
+### <a name="global_priorityClasses"></a>1.15. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > priorityClasses`
+
+|                           |                                                                                                                                                                                     |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                                                            |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_priorityClasses_additionalProperties "Each additional property must conform to the following schema") |
+
+| Property                                            | Pattern | Type   | Deprecated | Definition | Title/Description |
+| --------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#global_priorityClasses_additionalProperties ) | No      | object | No         | -          | -                 |
+
+#### <a name="global_priorityClasses_additionalProperties"></a>1.15.1. Property `base cluster configuration > global > priorityClasses > additionalProperties`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                                                             | Pattern | Type             | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------------------------ | ------- | ---------------- | ---------- | ---------- | ----------------- |
+| + [value](#global_priorityClasses_additionalProperties_value )                       | No      | integer          | No         | -          | -                 |
+| - [description](#global_priorityClasses_additionalProperties_description )           | No      | string           | No         | -          | -                 |
+| - [preemptionPolicy](#global_priorityClasses_additionalProperties_preemptionPolicy ) | No      | enum (of string) | No         | -          | -                 |
+
+##### <a name="global_priorityClasses_additionalProperties_value"></a>1.15.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > priorityClasses > additionalProperties > value`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `integer` |
+
+| Restrictions |                  |
+| ------------ | ---------------- |
+| **Minimum**  | &ge; -2147483648 |
+| **Maximum**  | &le; 1000000000  |
+
+##### <a name="global_priorityClasses_additionalProperties_description"></a>1.15.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > priorityClasses > additionalProperties > description`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="global_priorityClasses_additionalProperties_preemptionPolicy"></a>1.15.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > priorityClasses > additionalProperties > preemptionPolicy`
+
+|             |                          |
+| ----------- | ------------------------ |
+| **Type**    | `enum (of string)`       |
+| **Default** | `"PreemptLowerPriority"` |
+
+Must be one of:
+* "PreemptLowerPriority"
+* "Never"
 
 ## <a name="kyverno"></a>2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > kyverno`
 
