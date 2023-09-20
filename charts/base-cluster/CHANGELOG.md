@@ -1,5 +1,21 @@
 # Changelog
 
+## [4.8.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.7.0...base-cluster-v4.8.0) (2023-09-20)
+
+
+### Features
+
+* **base-cluster/flux:** change ssh algorithm to ed25519 ([#582](https://github.com/teutonet/teutonet-helm-charts/issues/582)) ([5dfa01f](https://github.com/teutonet/teutonet-helm-charts/commit/5dfa01fd730eb8409262e76eb01f2c38216ac095))
+* **base-cluster/ingress:** enable tracing for nginx ([#578](https://github.com/teutonet/teutonet-helm-charts/issues/578)) ([b7aabcb](https://github.com/teutonet/teutonet-helm-charts/commit/b7aabcbb4f81dd86558a4f84da322f68bd39ab40))
+* **base-cluster:** add priorityClassName to critical applications ([#535](https://github.com/teutonet/teutonet-helm-charts/issues/535)) ([abcce53](https://github.com/teutonet/teutonet-helm-charts/commit/abcce53156f21ee14baad214572964631838ecb4))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/artifacthub-images:** Update ArtifactHUB images ([#580](https://github.com/teutonet/teutonet-helm-charts/issues/580)) ([a8932e8](https://github.com/teutonet/teutonet-helm-charts/commit/a8932e888401e6aaa9ff8aa4c4ff1ce08071483a))
+* **base-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.27.6 ([#576](https://github.com/teutonet/teutonet-helm-charts/issues/576)) ([94dfe6b](https://github.com/teutonet/teutonet-helm-charts/commit/94dfe6b38f95882b4c65064d7205e6da7ced7710))
+* **base-cluster/dependencies:** update docker.io/fluxcd/flux-cli docker tag to v2 ([#521](https://github.com/teutonet/teutonet-helm-charts/issues/521)) ([2cdc7f0](https://github.com/teutonet/teutonet-helm-charts/commit/2cdc7f07b3084a525233064119e00c76c51c44ce))
+
 ## [4.7.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.6.0...base-cluster-v4.7.0) (2023-09-13)
 
 
