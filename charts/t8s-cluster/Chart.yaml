@@ -1,7 +1,7 @@
 apiVersion: v2
 name: t8s-cluster
 type: application
-version: 3.0.1
+version: 3.1.0
 icon: https://teuto.net/favicon.ico
 maintainers:
   - name: cwrau
@@ -20,7 +20,7 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
 annotations:
   artifacthub.io/images: |
-    - image: docker.io/bitnami/kubectl:1.27.5
+    - image: docker.io/bitnami/kubectl:1.27.6
     - image: k8s.gcr.io/sig-storage/csi-attacher:v3.4.0
     - image: k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.5.0
     - image: k8s.gcr.io/sig-storage/csi-provisioner:v3.1.0
