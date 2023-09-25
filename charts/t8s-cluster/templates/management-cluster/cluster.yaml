@@ -5,10 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace}}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     t8s.teuto.net/sla: {{ .Values.metadata.serviceLevelAgreement | quote }}
-    t8s.teuto.net/cluster: {{ .Values.metadata.friendlyName | default (.Release.Name | trimPrefix (printf "%d-" .Values.metadata.customerID)) | quote }}
     t8s.teuto.net/customer-id: {{ required "You need to set the `customerID`" .Values.metadata.customerID | quote }}
-    t8s.teuto.net/customer-name: {{ required "You need to set the `customerName`" .Values.metadata.customerName | quote }}
-    t8s.teuto.net/internal-name: {{ .Release.Name | quote }}
     t8s.teuto.net/role: workload
   annotations:
     t8s.teuto.net/cluster_support_project_url: {{ .Values.metadata.supportProjectUrl | quote}}
@@ -18,6 +15,9 @@ metadata:
 spec:
   customerID: {{ .Values.metadata.customerID }}
   customerName: {{ .Values.metadata.customerName }}
+  {{- with .Values.metadata.friendlyName }}
+  friendlyName: {{ . }}
+  {{- end }}
   controlPlane:
     singleNode: {{ .Values.controlPlane.singleNode }}
     flavor: {{ .Values.controlPlane.flavor }}
