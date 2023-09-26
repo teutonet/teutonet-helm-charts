@@ -13,6 +13,7 @@ global:
       additionalLabels:
         app.kubernetes.io/component: cert-manager
     ingress-nginx:
+      condition: "{{ .Values.ingress.enabled }}"
       additionalLabels:
         app.kubernetes.io/component: ingress
     kyverno:
