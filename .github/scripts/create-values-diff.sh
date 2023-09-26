@@ -92,11 +92,17 @@ function generateComment() {
 
       mkdir "$originalResourcesDir" "$newResourcesDir"
 
-      "$SCRIPTS/templateGitHelmChart" -1 "$GITHUB_REPO_URL" "$chart" "${GITHUB_DEFAULT_BRANCH}" "$values" | yq -y -S >"$originalResourcesDir.yaml"
-      splitYamlIntoDir "$originalResourcesDir.yaml" "$originalResourcesDir"
+      (
+        "$SCRIPTS/templateGitHelmChart" -1 "$GITHUB_REPO_URL" "$chart" "${GITHUB_DEFAULT_BRANCH}" "$values" | yq -y -S >"$originalResourcesDir.yaml"
+        splitYamlIntoDir "$originalResourcesDir.yaml" "$originalResourcesDir"
+      ) &
 
-      "$SCRIPTS/templateLocalHelmChart" -1 "$chart" "$values" | yq -y -S >"$newResourcesDir.yaml"
-      splitYamlIntoDir "$newResourcesDir.yaml" "$newResourcesDir"
+      (
+        "$SCRIPTS/templateLocalHelmChart" -1 "$chart" "$values" | yq -y -S >"$newResourcesDir.yaml"
+        splitYamlIntoDir "$newResourcesDir.yaml" "$newResourcesDir"
+      ) &
+
+      wait
     ) &
   done
   wait
