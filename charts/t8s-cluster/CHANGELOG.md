@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-3.1.0...t8s-cluster-v3.2.0) (2023-09-26)
+
+
+### Features
+
+* **t8s-cluster/workload-cluster:** configure gpu time slicing ([#575](https://github.com/teutonet/teutonet-helm-charts/issues/575)) ([32fb616](https://github.com/teutonet/teutonet-helm-charts/commit/32fb61621a122b8b53753b3abbf7c05b655fe165))
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** labels ([#590](https://github.com/teutonet/teutonet-helm-charts/issues/590)) ([de72cbc](https://github.com/teutonet/teutonet-helm-charts/commit/de72cbc8f08b8aa10c40074f06a56cbfc1869a53))
+
 ## [3.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-3.0.1...t8s-cluster-v3.1.0) (2023-09-19)
 
 
