@@ -1,3 +1,4 @@
+{{- $machineDeploymentClasses := dict "compute-plane" false "gpu-compute-plane" true -}}
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: ClusterClass
 metadata:
@@ -19,17 +20,16 @@ spec:
     nodeDrainTimeout: {{ .Values.controlPlane.nodeDrainTimeout | default "8m" }}
     machineInfrastructure:
       ref:
-        apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
+        apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
         kind: OpenStackMachineTemplate
         name: {{ printf "%s-control-plane-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfControlPlane" (dict "context" $)) }}
     ref:
       apiVersion: controlplane.cluster.x-k8s.io/v1beta1
       kind: KubeadmControlPlaneTemplate
-      # the full context is needed for .Files.Get
-      name: {{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.specHash" .) }}
+      name: {{/* the full context is needed for .Files.Get */}}{{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.specHash" .) }}
   infrastructure:
     ref:
-      apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
+      apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
       kind: OpenStackClusterTemplate
       name: {{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackClusterTemplate.specHash" (dict "context" $)) }}
   variables:
@@ -37,102 +37,106 @@ spec:
       required: true
       schema:
         openAPIV3Schema:
-          description: |-
-            OpenStack Server Group to use for Control Plane machines.
-            Field is optional, but must be set for HA clusters.
           type: string
     - name: machineDeploymentServerGroupID
       required: false
       schema:
         openAPIV3Schema:
-          description: |-
-            OpenStack Server Group to use for MachineDeployment machines.
-            Field is optional, but should be set for HA clusters.
           type: string
     - name: dnsNameservers
       required: true
       schema:
         openAPIV3Schema:
-          description: |
-            [Optional] Can be specified to set a list of DNS Nameservers for the servers.
           type: array
           minItems: 1
           uniqueItems: true
           items:
             type: string
             format: ipv4
-            example: "203.0.113.123"
     - name: controlPlaneAvailabilityZones
       required: false
       schema:
         openAPIV3Schema:
           type: array
-          description: |
-            [Optional] Can be specified to restrict the Zones used for
-                  ControlPlane Machines (default is all available Zones)
           minItems: 1
           uniqueItems: true
           items:
             type: string
-            example: Zone1
+    - name: machineDeploymentFlavor
+      required: true
+      schema:
+        openAPIV3Schema:
+          type: string
+          default: compute-plane-placeholder
   patches:
-    - definitions:
+    - name: controlPlaneServerGroupID
+      description: Sets the ServerGroupID for Control Plane machines.
+      definitions:
         - jsonPatches:
             - op: add
               path: /spec/template/spec/serverGroupID
               valueFrom:
                 variable: controlPlaneServerGroupID
           selector:
-            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
+            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
             kind: OpenStackMachineTemplate
             matchResources:
               controlPlane: true
-      description: Sets the ServerGroupID for Control Plane machines.
-      name: controlPlaneServerGroupID
-    - definitions:
+    - name: machineDeploymentServerGroupID
+      description: Sets the ServerGroupID for MachineDeployment machines.
+      definitions:
         - jsonPatches:
             - op: add
               path: /spec/template/spec/serverGroupID
               valueFrom:
                 variable: machineDeploymentServerGroupID
           selector:
-            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
+            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
             kind: OpenStackMachineTemplate
             matchResources:
               machineDeploymentClass:
-                names: {{- .Values.workers | keys | sortAlpha | toYaml | nindent 18 }}
-      description: Sets the ServerGroupID for MachineDeployment machines.
-      name: machineDeploymentServerGroupID
-    - definitions:
+                names: {{- $machineDeploymentClasses | keys | sortAlpha | toYaml | nindent 18 }}
+    - name: machineDeploymentFlavour
+      definitions:
         - jsonPatches:
             - op: add
+              path: /spec/template/spec/flavor
+              valueFrom:
+                variable: machineDeploymentFlavor
+          selector:
+            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
+            kind: OpenStackMachineTemplate
+            matchResources:
+              machineDeploymentClass:
+                names: {{- $machineDeploymentClasses | keys | sortAlpha | toYaml | nindent 18 }}
+    - name: imageVersion
+      description: Sets the image version for machines.
+      definitions:
+        - jsonPatches:
+            - &imagePatch
+              op: add
               path: /spec/template/spec/image
               valueFrom:
-                template: {{ .Values.imageNameTemplate.workers }}
-          selector:
-            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
+                template: {{ .Values.imageNameTemplate.computePlane }}
+          selector: &imagePatchSelector
+            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
             kind: OpenStackMachineTemplate
             matchResources:
               machineDeploymentClass:
-                names: {{- .Values.workers | keys | sortAlpha | toYaml | nindent 18 }}
+                names: {{- $machineDeploymentClasses | keys | sortAlpha | toYaml | nindent 18 }}
         - jsonPatches:
-            - op: add
-              path: /spec/template/spec/image
+            - <<: *imagePatch
               valueFrom:
                 template: {{ .Values.imageNameTemplate.controlPlane }}
           selector:
-            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
-            kind: OpenStackMachineTemplate
+            <<: *imagePatchSelector
             matchResources:
               controlPlane: true
-
-      description: Sets the image version for machines.
-      name: imageVersion
     - name: controlPlaneAvailabilityZones
       enabledIf: {{ `{{ if .controlPlaneAvailabilityZones }}true{{ end }}` | quote }}
       definitions:
         - selector:
-            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
+            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
             kind: OpenStackClusterTemplate
             matchResources:
               infrastructureCluster: true
@@ -144,7 +148,7 @@ spec:
     - name: dnsNameservers
       definitions:
         - selector:
-            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
+            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
             kind: OpenStackClusterTemplate
             matchResources:
               infrastructureCluster: true
@@ -155,8 +159,7 @@ spec:
                 variable: dnsNameservers
   workers:
     machineDeployments:
-      {{- range $name, $machineDeploymentClass := .Values.workers }}
-        {{- $isGpuDeploymentClass := $machineDeploymentClass.flavor | contains "gpu" }}
+      {{- range $name, $isGpuDeploymentClass := $machineDeploymentClasses }}
       - class: {{ $name }}
         machineHealthCheck:
           nodeStartupTimeout: 8m
@@ -167,11 +170,12 @@ spec:
             - status: 'False'
               timeout: 300s
               type: Ready
-        nodeDrainTimeout: {{ $machineDeploymentClass.nodeDrainTimeout | default "8m" }}
+        nodeDrainTimeout: "8m"
         strategy:
           type: RollingUpdate
           rollingUpdate:
             deletePolicy: Oldest
+            {{/* TODO: this is only for our beta phase */}}
             {{- if $isGpuDeploymentClass }}
             maxSurge: 0
             maxUnavailable: 1
@@ -184,10 +188,10 @@ spec:
             ref:
               apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
               kind: KubeadmConfigTemplate
-              name: {{ printf "%s-%s-worker" $.Release.Name ($isGpuDeploymentClass | ternary "gpu" "standard") }}
+              name: {{ printf "%s-%s-compute-plane" $.Release.Name ($isGpuDeploymentClass | ternary "gpu" "standard") }}
           infrastructure:
             ref:
-              apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" $ }}
+              apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
               kind: OpenStackMachineTemplate
-              name: {{ printf "%s-%s-%s" $.Release.Name $name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfWorkers" (dict "context" $ "worker" $machineDeploymentClass)) }}
+              name: {{ printf "%s-compute-plane-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfNodePools" (dict "context" $)) }}
       {{- end }}

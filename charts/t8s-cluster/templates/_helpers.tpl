@@ -9,7 +9,8 @@
 {{- end -}}
 
 {{- define "t8s-cluster.helm.chartVersion" -}}
-{{- dig .repo "charts" .chart nil .context.Values.global.helmRepositories | required (printf "The repo '%s' is either missing or doesn't contain the chart '%s'" .repo .chart) -}}
+  {{- $_ := set . "Values" .context.Values -}}
+  {{- dig .repo "charts" .chart nil .Values.global.helmRepositories | required (printf "The repo '%s' is either missing or doesn't contain the chart '%s'" .repo .chart) -}}
 {{- end -}}
 
 {{- define "t8s-cluster.helm.chartSpec" -}}
@@ -22,11 +23,12 @@ sourceRef:
 {{- end -}}
 
 {{- define "t8s-cluster.hasGPUNodes" -}}
-{{- $hasGPUFlavor := false -}}
-{{- range $name, $machineDeploymentClass := .Values.workers -}}
-  {{- if contains "gpu" (lower $machineDeploymentClass.flavor) -}}
-    {{- $hasGPUFlavor = true -}}
+  {{- $_ := set . "Values" .context.Values -}}
+  {{- $hasGPUFlavor := false -}}
+  {{- range $name, $machineDeploymentClass := .Values.nodePools -}}
+    {{- if contains "gpu" (lower $machineDeploymentClass.flavor) -}}
+      {{- $hasGPUFlavor = true -}}
+    {{- end -}}
   {{- end -}}
-{{- end -}}
-{{- $hasGPUFlavor -}}
+  {{- $hasGPUFlavor -}}
 {{- end -}}

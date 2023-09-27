@@ -46,7 +46,7 @@ global:
     -----END CERTIFICATE-----
 controlPlane:
   flavor: standard.2.1905
-workers:
+nodePools:
   test:
     replicas: 1
     availabilityZone: Zone1
