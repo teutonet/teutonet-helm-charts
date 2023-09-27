@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # t8s-cluster
 
-![Version: 3.2.0](https://img.shields.io/badge/Version-3.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 3.3.0](https://img.shields.io/badge/Version-3.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -512,7 +512,7 @@ Must be one of:
 | Property                                                                              | Pattern | Type            | Deprecated | Definition                                                                  | Title/Description |
 | ------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | --------------------------------------------------------------------------- | ----------------- |
 | + [replicas](#workers_additionalProperties_replicas )                                 | No      | integer         | No         | -                                                                           | -                 |
-| + [availabilityZone](#workers_additionalProperties_availabilityZone )                 | No      | string          | No         | -                                                                           | -                 |
+| - [availabilityZone](#workers_additionalProperties_availabilityZone )                 | No      | string          | No         | -                                                                           | -                 |
 | + [flavor](#workers_additionalProperties_flavor )                                     | No      | string          | No         | -                                                                           | -                 |
 | - [additionalSecurityGroups](#workers_additionalProperties_additionalSecurityGroups ) | No      | array of string | No         | Same as [additionalSecurityGroups](#controlPlane_additionalSecurityGroups ) | -                 |
 | - [nodeDrainTimeout](#workers_additionalProperties_nodeDrainTimeout )                 | No      | string          | No         | Same as [nodeDrainTimeout](#controlPlane_nodeDrainTimeout )                 | -                 |
@@ -527,7 +527,7 @@ Must be one of:
 | ------------ | ------ |
 | **Minimum**  | &ge; 0 |
 
-#### <a name="workers_additionalProperties_availabilityZone"></a>6.1.2. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > workers > additionalProperties > availabilityZone`
+#### <a name="workers_additionalProperties_availabilityZone"></a>6.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > workers > additionalProperties > availabilityZone`
 
 |          |          |
 | -------- | -------- |
