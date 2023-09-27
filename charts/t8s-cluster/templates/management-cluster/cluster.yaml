@@ -30,7 +30,9 @@ spec:
   clusterClass: {{ $.Release.Name }}
   workers: {{- range $name, $machineDeploymentClass := .Values.workers }}
     {{ $name -}}:
+      {{- if $machineDeploymentClass.availabilityZone }}
       availabilityZone: {{ $machineDeploymentClass.availabilityZone | quote }}
+      {{- end }}
       flavor: {{ $machineDeploymentClass.flavor | quote }}
       replicas: {{ $machineDeploymentClass.replicas }}
   {{- end }}

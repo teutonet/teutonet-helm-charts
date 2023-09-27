@@ -190,7 +190,6 @@
         "additionalProperties": false,
         "required": [
           "replicas",
-          "availabilityZone",
           "flavor"
         ]
       }
