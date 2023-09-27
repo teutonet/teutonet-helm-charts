@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-3.2.0...t8s-cluster-v3.3.0) (2023-09-27)
+
+
+### Features
+
+* **t8s-cluster/management-cluster:** make field availabilityZone optional ([#592](https://github.com/teutonet/teutonet-helm-charts/issues/592)) ([f94fc7a](https://github.com/teutonet/teutonet-helm-charts/commit/f94fc7a88f367767c751a14f3f1f00b1ac4c4ff7))
+
 ## [3.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-3.1.0...t8s-cluster-v3.2.0) (2023-09-26)
 
 
