@@ -1,4 +1,4 @@
-{{- if .Values.certManager.email }}
+{{- if and .Values.certManager.email .Values.ingress.enabled }}
 {{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "clusterissuer-letsencrypt-production" "resource" (include "base-cluster.cert-manager.clusterIssuer" (dict "name" "production" "url" "https://acme-v02.api.letsencrypt.org/directory" "context" $)) "dependencies" (dict "cert-manager" "cert-manager") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cert-manager")) }}
 ---
 {{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "clusterissuer-letsencrypt-staging" "resource" (include "base-cluster.cert-manager.clusterIssuer" (dict "name" "staging" "url" "https://acme-staging-v02.api.letsencrypt.org/directory" "context" $)) "dependencies" (dict "cert-manager" "cert-manager") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cert-manager")) }}
