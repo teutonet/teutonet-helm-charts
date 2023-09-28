@@ -1046,6 +1046,11 @@
         "enabled": {
           "type": "boolean"
         },
+        "alerting":{
+          "enabled":{
+            "type": "boolean"
+          }
+        },
         "resources": {
           "$ref": "#/$defs/resourceRequirements"
         },
