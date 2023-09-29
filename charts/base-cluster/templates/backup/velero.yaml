@@ -92,26 +92,26 @@ spec:
       volumeSnapshotLocation: []
     metrics:
       prometheusRule:
+        autodetect: false
         additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
-        enabled: true
+        enabled: {{ .Values.monitoring.prometheus.enabled }}
         spec:
         - alert: VeleroBackupPartialFailures
           annotations:
-            message: {{ `Velero backup {{ $labels.schedule }} has {{ $value | humanizePercentage }} partialy failed backups.` }}
+            message: {{ `Velero backup {{ $labels.schedule }} has {{ $value | humanizePercentage }} partialy failed backups.` | quote }}
           expr: velero_backup_partial_failure_total{schedule!=""} / velero_backup_attempt_total{schedule!=""} > 0.25
           for: 15m
           labels:
             severity: warning
         - alert: VeleroBackupFailures
           annotations:
-            message: {{ `Velero backup {{ $labels.schedule }} has {{ $value | humanizePercentage }} failed backups.` }}
+            message: {{ `Velero backup {{ $labels.schedule }} has {{ $value | humanizePercentage }} failed backups.` | quote }}
           expr: velero_backup_failure_total{schedule!=""} / velero_backup_attempt_total{schedule!=""} > 0.25
           for: 15m
           labels:
             severity: warning
       serviceMonitor:
-      {{- if .Values.monitoring.prometheus.enabled }}
-        enabled: true
-      {{- end}}
+        autodetect: false
+        enabled: {{ .Values.monitoring.prometheus.enabled }}
         additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
 {{- end }}

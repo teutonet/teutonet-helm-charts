@@ -392,8 +392,6 @@ rbac:
 
 backup:
   enabled: true
-  alerting:
-    enabled: true
   backupStorageLocations: {}
   resources:
     requests:
