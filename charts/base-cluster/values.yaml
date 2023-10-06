@@ -366,6 +366,7 @@ flux:
 
 ingress:
   enabled: true
+  snippets: false
   replicas: 2
   resources:
     requests:

@@ -934,6 +934,12 @@
             "boolean"
           ]
         },
+        "snippets": {
+          "type": [
+            "boolean"
+          ],
+          "description": "Please don't do it if not absolutely necessary."
+        },
         "IP": {
           "type": [
             "string",
