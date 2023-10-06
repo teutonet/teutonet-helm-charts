@@ -17,7 +17,7 @@ spec:
   {{- end }}
   values:
     controller:
-      allowSnippetAnnotations: {{ .Values.ingress.snippets }}
+      allowSnippetAnnotations: {{ .Values.ingress.allowNginxConfigurationSnippets }}
       priorityClassName: system-cluster-critical
       watchIngressWithoutClass: true
       metrics:
