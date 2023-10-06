@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # base-cluster
 
-![Version: 4.8.0](https://img.shields.io/badge/Version-4.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 4.9.0](https://img.shields.io/badge/Version-4.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -2634,11 +2634,13 @@ Must be one of:
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                           | Pattern | Type           | Deprecated | Definition                                             | Title/Description                                                 |
-| ---------------------------------- | ------- | -------------- | ---------- | ------------------------------------------------------ | ----------------------------------------------------------------- |
-| - [replicas](#ingress_replicas )   | No      | integer        | No         | -                                                      | -                                                                 |
-| - [resources](#ingress_resources ) | No      | object         | No         | Same as [resources](#monitoring_prometheus_resources ) | ResourceRequirements describes the compute resource requirements. |
-| - [IP](#ingress_IP )               | No      | string or null | No         | -                                                      | Try to use specified IP as loadbalancer IP                        |
+| Property                                                                       | Pattern | Type           | Deprecated | Definition                                             | Title/Description                                                                                                                                                                                                             |
+| ------------------------------------------------------------------------------ | ------- | -------------- | ---------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [replicas](#ingress_replicas )                                               | No      | integer        | No         | -                                                      | -                                                                                                                                                                                                                             |
+| - [resources](#ingress_resources )                                             | No      | object         | No         | Same as [resources](#monitoring_prometheus_resources ) | ResourceRequirements describes the compute resource requirements.                                                                                                                                                             |
+| - [enabled](#ingress_enabled )                                                 | No      | boolean        | No         | -                                                      | -                                                                                                                                                                                                                             |
+| - [allowNginxConfigurationSnippets](#ingress_allowNginxConfigurationSnippets ) | No      | boolean        | No         | -                                                      | Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets |
+| - [IP](#ingress_IP )                                                           | No      | string or null | No         | -                                                      | Try to use specified IP as loadbalancer IP                                                                                                                                                                                    |
 
 ### <a name="ingress_replicas"></a>9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > replicas`
 
@@ -2660,7 +2662,21 @@ Must be one of:
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-### <a name="ingress_IP"></a>9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > IP`
+### <a name="ingress_enabled"></a>9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > enabled`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+### <a name="ingress_allowNginxConfigurationSnippets"></a>9.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > allowNginxConfigurationSnippets`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+**Description:** Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets
+
+### <a name="ingress_IP"></a>9.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > IP`
 
 |          |                  |
 | -------- | ---------------- |

@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.9.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.8.0...base-cluster-v4.9.0) (2023-10-06)
+
+
+### Features
+
+* **base-cluster/nginx:** add possibility to disable ingress ([#489](https://github.com/teutonet/teutonet-helm-charts/issues/489)) ([c5d822a](https://github.com/teutonet/teutonet-helm-charts/commit/c5d822a4c030a10b7acb76c0abe79c6ac6392fc5))
+* **base-cluster/nginx:** add toggle for snippets ([#599](https://github.com/teutonet/teutonet-helm-charts/issues/599)) ([be13b6a](https://github.com/teutonet/teutonet-helm-charts/commit/be13b6aa084effab44cf9af7cc0b0549315a8bf4))
+
 ## [4.8.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.7.0...base-cluster-v4.8.0) (2023-09-20)
 
 
