@@ -930,9 +930,11 @@
           "$ref": "#/$defs/resourceRequirements"
         },
         "enabled": {
-          "type": [
-            "boolean"
-          ]
+          "type": "boolean"
+        },
+        "allowNginxConfigurationSnippets": {
+          "type": "boolean",
+          "description": "Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets"
         },
         "IP": {
           "type": [
