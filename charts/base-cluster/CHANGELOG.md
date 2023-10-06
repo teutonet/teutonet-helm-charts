@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.9.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.9.0...base-cluster-v4.9.1) (2023-10-06)
+
+
+### Bug Fixes
+
+* **base-cluster/ingress-nginx:** use correct field ([#601](https://github.com/teutonet/teutonet-helm-charts/issues/601)) ([4c8c1f4](https://github.com/teutonet/teutonet-helm-charts/commit/4c8c1f48c39f46e9f23710598a2f5a8823d2dddd))
+
 ## [4.9.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.8.0...base-cluster-v4.9.0) (2023-10-06)
 
 
