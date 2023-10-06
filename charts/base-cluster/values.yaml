@@ -366,7 +366,7 @@ flux:
 
 ingress:
   enabled: true
-  snippets: false
+  allowNginxConfigurationSnippets: false
   replicas: 2
   resources:
     requests:
