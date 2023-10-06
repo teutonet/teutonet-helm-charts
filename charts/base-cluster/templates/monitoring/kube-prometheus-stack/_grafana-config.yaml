@@ -93,6 +93,7 @@ dashboards:
     metrics:
       <<: *dashboard
       gnetId: 8588
+    {{- if .Values.ingress.enabled}}
     ingress-nginx:
       <<: *dashboard
       gnetId: 9614
@@ -101,6 +102,7 @@ dashboards:
       <<: *dashboard
       gnetId: 11001
       revision: 1
+    {{- end}}
     flux:
       <<: *dashboard
       gnetId: 16714
