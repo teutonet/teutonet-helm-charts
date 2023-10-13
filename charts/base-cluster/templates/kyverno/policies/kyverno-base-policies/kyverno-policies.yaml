@@ -31,9 +31,9 @@ spec:
             - kube-system
             - default
     {{ $lokiPromtail := dict "resources" (dict "namespaces" (list "loki") "kinds" (list "Pod") "names" (list "loki-promtail-*")) -}}
-    {{- $syncEtcdSecret := dict "resources" (dict "namespaces" (list "monitoring") "kinds" (list "Pod") "names" (list "sync-etcd-secret-*")) -}}
     {{- $nodeExporter := dict "resources" (dict "namespaces" (list "monitoring") "kinds" (list "Pod") "names" (list "kube-prometheus-stack-prometheus-node-exporter-*")) -}}
     {{- $nfsServerProvisioner := dict "resources" (dict "namespaces" (list "nfs-server-provisioner") "kinds" (list "Pod") "names" (list "nfs-server-provisioner-0")) -}}
+    {{- $veleroNodeAgent := dict "resources" (dict "namespaces" (list "backup") "kinds" (list "Pod") "names" (list "node-agent-*")) -}}
 
     {{- $disallowHostPath := list -}}
     {{- $runAsNonRoot := list -}}
@@ -48,11 +48,9 @@ spec:
       {{- $runAsNonRoot = append $runAsNonRoot $lokiPromtail -}}
     {{- end -}}
     {{- if .Values.monitoring.prometheus.enabled -}}
-      {{- $disallowHostPath = append $disallowHostPath $syncEtcdSecret -}}
       {{- $disallowHostPath = append $disallowHostPath $nodeExporter -}}
       {{- $disallowHostPorts = append $disallowHostPorts $nodeExporter -}}
       {{- $disallowHostNamespaces = append $disallowHostNamespaces $nodeExporter -}}
-      {{- $runAsNonRoot = append $runAsNonRoot $syncEtcdSecret -}}
     {{- end -}}
     {{- if .Values.storage.readWriteMany.enabled -}}
       {{- $restrictSeccomp = append $restrictSeccomp $nfsServerProvisioner -}}
@@ -60,6 +58,10 @@ spec:
       {{- $disallowPrivilegeEscalation = append $disallowPrivilegeEscalation $nfsServerProvisioner -}}
       {{- $disallowCapabilities = append $disallowCapabilities $nfsServerProvisioner -}}
     {{- end -}}
+    {{- if .Values.backup.enabled }}
+      {{- $disallowHostPath = append $disallowHostPath $veleroNodeAgent -}}
+      {{- $runAsNonRoot = append $runAsNonRoot $veleroNodeAgent -}}
+    {{- end }}
     policyExclude:
     {{- if $disallowHostPath }}
       disallow-host-path:
