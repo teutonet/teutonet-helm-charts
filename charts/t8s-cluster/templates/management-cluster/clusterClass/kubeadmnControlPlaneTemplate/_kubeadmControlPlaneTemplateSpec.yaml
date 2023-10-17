@@ -11,6 +11,7 @@ clusterConfiguration:
       enable-admission-plugins: AlwaysPullImages,EventRateLimit,NodeRestriction
       profiling: 'false'
       tls-cipher-suites: {{ include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) }}
+      event-ttl: 4h
     extraVolumes:
       - hostPath: *admissionControlConfigFilePath
         mountPath: *admissionControlConfigFilePath
