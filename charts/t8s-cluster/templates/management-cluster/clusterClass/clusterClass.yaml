@@ -17,7 +17,7 @@ spec:
         - status: 'False'
           timeout: 600s
           type: Ready
-    nodeDrainTimeout: {{ .Values.controlPlane.nodeDrainTimeout | default "8m" }}
+    nodeDrainTimeout: "8m"
     machineInfrastructure:
       ref:
         apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}

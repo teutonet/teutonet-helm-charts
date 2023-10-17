@@ -125,9 +125,6 @@
         "additionalSecurityGroups": {
           "$ref": "#/$defs/securityGroups"
         },
-        "nodeDrainTimeout": {
-          "$ref": "#/$defs/nodeDrainTimeout"
-        },
         "allowedCIDRs": {
           "type": "array",
           "items": {
@@ -179,9 +176,6 @@
           },
           "flavor": {
             "type": "string"
-          },
-          "nodeDrainTimeout": {
-            "$ref": "#/$defs/nodeDrainTimeout"
           }
         },
         "additionalProperties": false,
@@ -278,11 +272,6 @@
         "type": "string"
       },
       "uniqueItems": true
-    },
-    "nodeDrainTimeout": {
-      "type": "string",
-      "default": "3m",
-      "pattern": "[0-9]+[smh]"
     },
     "image": {
       "type": "object",
