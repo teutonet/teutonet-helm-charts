@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-3.3.0...t8s-cluster-v3.4.0) (2023-10-23)
+
+
+### Features
+
+* **t8s-cluster/management-cluster:** up the event ttl ([#611](https://github.com/teutonet/teutonet-helm-charts/issues/611)) ([4f0ed61](https://github.com/teutonet/teutonet-helm-charts/commit/4f0ed619c60f4d1260316c48f6c8fbbbff8559de))
+
+
+### Bug Fixes
+
+* **t8s-cluster/workload-cluster:** also upgrade gpu-operator CRDs ([#619](https://github.com/teutonet/teutonet-helm-charts/issues/619)) ([1b5b572](https://github.com/teutonet/teutonet-helm-charts/commit/1b5b5724042815a10752329d2b51e0594736dcff))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.28.2 ([#614](https://github.com/teutonet/teutonet-helm-charts/issues/614)) ([c875537](https://github.com/teutonet/teutonet-helm-charts/commit/c8755376361b8a64d8ae5ca244eda64b8a5c6f4e))
+
 ## [3.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-3.2.0...t8s-cluster-v3.3.0) (2023-09-27)
 
 
