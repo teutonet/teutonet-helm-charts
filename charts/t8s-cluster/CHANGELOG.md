@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-3.4.0...t8s-cluster-v4.0.0) (2023-10-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* **t8s-cluster/clusterClass:** configure static machineDeploymentClasses instead of one per computePlane ([#594](https://github.com/teutonet/teutonet-helm-charts/issues/594))
+
+### Features
+
+* **t8s-cluster/clusterClass:** configure static machineDeploymentClasses instead of one per computePlane ([#594](https://github.com/teutonet/teutonet-helm-charts/issues/594)) ([46aa22d](https://github.com/teutonet/teutonet-helm-charts/commit/46aa22d0581f8e5673aa22078e13d3736b881e7f))
+
 ## [3.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-3.3.0...t8s-cluster-v3.4.0) (2023-10-23)
 
 
