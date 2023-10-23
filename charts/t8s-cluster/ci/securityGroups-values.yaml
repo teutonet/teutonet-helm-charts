@@ -3,10 +3,8 @@ controlPlane:
   additionalSecurityGroups:
     - kuchen
     - pizza
-workers:
+nodePools:
   test:
     replicas: 1
     availabilityZone: Zone1
     flavor: standard.2.1905
-    additionalSecurityGroups:
-      - kuchen

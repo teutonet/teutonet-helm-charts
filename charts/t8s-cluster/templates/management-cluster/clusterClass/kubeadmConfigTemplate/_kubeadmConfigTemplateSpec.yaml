@@ -2,11 +2,11 @@
   {{- $_ := set . "Values" .context.Values -}}
 joinConfiguration:
   nodeRegistration:
-    kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" .context | nindent 6 }}
+    kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict) | nindent 6 }}
     name: '{{ `{{ local_hostname }}` }}'
   patches:
     directory: /etc/kubernetes/patches
-files: {{- include "t8s-cluster.patches.kubelet.patches" .context | nindent 2 }}
+files: {{- include "t8s-cluster.patches.kubelet.patches" (dict "context" .context) | nindent 2 }}
     {{- if .Values.containerRegistryMirror.mirrorEndpoint }}
       {{- include "t8s-cluster.clusterClass.containerdConfig.containerRegistryMirrorConfigs" (dict "context" .context) | nindent 2 }}
     {{- end }}

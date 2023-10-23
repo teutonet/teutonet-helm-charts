@@ -1,5 +1,4 @@
 controlPlane:
   flavor: standard
-  nodeDrainTimeout: 5m
   allowedCIDRs:
     - 1.2.3.4

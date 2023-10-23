@@ -1,4 +1,4 @@
-apiVersion: t8s-engine.teuto.net/v1alpha1
+apiVersion: t8s-engine.teuto.net/v1beta1
 kind: TeutonetesCluster
 metadata:
   name: {{ .Release.Name }}
@@ -28,7 +28,7 @@ spec:
   version: {{ printf "v%d.%d.%d" (.major | int) (.minor | int) (.patch | int) }}
   {{- end }}
   clusterClass: {{ $.Release.Name }}
-  workers: {{- range $name, $machineDeploymentClass := .Values.workers }}
+  nodePools: {{- range $name, $machineDeploymentClass := .Values.nodePools }}
     {{ $name -}}:
       {{- if $machineDeploymentClass.availabilityZone }}
       availabilityZone: {{ $machineDeploymentClass.availabilityZone | quote }}

@@ -1,6 +1,7 @@
 {{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "etcd-defrag" "resource" (include "t8s-cluster.etcd-defrag" (dict "context" $)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "etcd")) | nindent 0 }}
 
 {{- define "t8s-cluster.etcd-defrag" -}}
+  {{- $_ := set . "Values" .context.Values -}}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -30,7 +31,7 @@ spec:
                   value: "3"
                 - name: ETCDCTL_ENDPOINTS
                   value: 'localhost:2379'
-              image: {{ include "common.images.image" (dict "imageRoot" .context.Values.global.etcd.image "global" .context.Values.global) }}
+              image: {{ include "common.images.image" (dict "imageRoot" .Values.global.etcd.image "global" .Values.global) }}
               imagePullPolicy: IfNotPresent
               name: etcd-defrag
               volumeMounts:

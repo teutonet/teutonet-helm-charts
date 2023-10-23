@@ -1,4 +1,4 @@
-{{- if eq (include "t8s-cluster.hasGPUNodes" .) "true" }}
+{{- if eq (include "t8s-cluster.hasGPUNodes" (dict "context" $)) "true" }}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -46,7 +46,7 @@ spec:
                     - key: node.kubernetes.io/instance-type
                       operator: In
                       {{- $gpuFlavours := list }}
-                      {{- range $_, $machineDeploymentClass := .Values.workers -}}
+                      {{- range $_, $machineDeploymentClass := .Values.nodePools -}}
                         {{- if contains "gpu" (lower $machineDeploymentClass.flavor) -}}
                           {{- $gpuFlavours = append $gpuFlavours $machineDeploymentClass.flavor -}}
                         {{- end -}}

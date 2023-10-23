@@ -1,4 +1,4 @@
-workers:
+nodePools:
   test:
     replicas: 1
     availabilityZone: Zone1

@@ -17,14 +17,14 @@ bastion:
     flavor: standard.1.1905
     identityRef:
       kind: Secret
-      name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" .context }}
+      name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" (dict "context" .context) }}
     image: Ubuntu 20.04 # artifacthub-ignore
     sshKeyName: {{ .Values.bastion.sshKeyName }}
 cloudName: {{ include "t8s-cluster.clusterClass.cloudName" (dict) }}
 disablePortSecurity: false
 identityRef:
   kind: Secret
-  name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" .context }}
+  name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" (dict "context" .context) }}
 managedSecurityGroups: true
 nodeCidr: 10.6.0.0/24
 {{- end -}}

@@ -1,3 +1,0 @@
-{{- if eq (include "t8s-cluster.hasGPUNodes" .) "true" }}
-  {{- include "t8s-cluster.clusterClass.kubeadmConfigTemplate" (dict "gpu" true "context" $) -}}
-{{- end }}
