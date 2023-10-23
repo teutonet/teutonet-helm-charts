@@ -17,6 +17,7 @@ spec:
       retries: -1
   upgrade:
     timeout: 5m
+    crds: CreateReplace
   storageNamespace: kube-system
   targetNamespace: kube-system
   releaseName: gpu-operator
