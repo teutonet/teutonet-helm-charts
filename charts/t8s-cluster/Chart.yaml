@@ -20,18 +20,18 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
 annotations:
   artifacthub.io/images: |
-    - image: docker.io/bitnami/kubectl:1.27.6
+    - image: docker.io/bitnami/kubectl:1.28.2
     - image: k8s.gcr.io/sig-storage/csi-attacher:v3.4.0
     - image: k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.5.0
     - image: k8s.gcr.io/sig-storage/csi-provisioner:v3.1.0
     - image: k8s.gcr.io/sig-storage/csi-resizer:v1.4.0
     - image: k8s.gcr.io/sig-storage/csi-snapshotter:v5.0.1
     - image: k8s.gcr.io/sig-storage/livenessprobe:v2.6.0
-    - image: quay.io/cilium/cilium:v1.14.2@sha256:6263f3a3d5d63b267b538298dbeb5ae87da3efacf09a2c620446c873ba807d35
-    - image: quay.io/cilium/hubble-relay:v1.14.2@sha256:a89030b31f333e8fb1c10d2473250399a1a537c27d022cd8becc1a65d1bef1d6
-    - image: quay.io/cilium/hubble-ui-backend:v0.12.0@sha256:8a79a1aad4fc9c2aa2b3e4379af0af872a89fcec9d99e117188190671c66fc2e
-    - image: quay.io/cilium/hubble-ui:v0.12.0@sha256:1c876cfa1d5e35bc91e1025c9314f922041592a88b03313c22c1f97a5d2ba88f
-    - image: quay.io/cilium/operator-generic:v1.14.2@sha256:52f70250dea22e506959439a7c4ea31b10fe8375db62f5c27ab746e3a2af866d
+    - image: quay.io/cilium/cilium:v1.14.3@sha256:e5ca22526e01469f8d10c14e2339a82a13ad70d9a359b879024715540eef4ace
+    - image: quay.io/cilium/hubble-relay:v1.14.3@sha256:3f5c425faca4f8a38e29d4f86db2aadd8f33c9f05debd78a2bb2a24dd9e565d8
+    - image: quay.io/cilium/hubble-ui-backend:v0.12.1@sha256:1f86f3400827a0451e6332262467f894eeb7caf0eb8779bd951e2caa9d027cbe
+    - image: quay.io/cilium/hubble-ui:v0.12.1@sha256:9e5f81ee747866480ea1ac4630eb6975ff9227f9782b7c93919c081c33f38267
+    - image: quay.io/cilium/operator-generic:v1.14.3@sha256:c9613277b72103ed36e9c0d16b9a17cafd507461d59340e432e3e9c23468b5e2
     - image: registry.k8s.io/etcd:3.5.9-0
     - image: registry.k8s.io/provider-os/cinder-csi-plugin:v1.25.6
     - image: registry.k8s.io/provider-os/openstack-cloud-controller-manager:v1.25.6
