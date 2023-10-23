@@ -2183,6 +2183,47 @@ entries:
   t8s-cluster:
   - annotations:
       artifacthub.io/images: |
+        - image: docker.io/bitnami/kubectl:1.28.2
+        - image: k8s.gcr.io/sig-storage/csi-attacher:v3.4.0
+        - image: k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.5.0
+        - image: k8s.gcr.io/sig-storage/csi-provisioner:v3.1.0
+        - image: k8s.gcr.io/sig-storage/csi-resizer:v1.4.0
+        - image: k8s.gcr.io/sig-storage/csi-snapshotter:v5.0.1
+        - image: k8s.gcr.io/sig-storage/livenessprobe:v2.6.0
+        - image: quay.io/cilium/cilium:v1.14.3@sha256:e5ca22526e01469f8d10c14e2339a82a13ad70d9a359b879024715540eef4ace
+        - image: quay.io/cilium/hubble-relay:v1.14.3@sha256:3f5c425faca4f8a38e29d4f86db2aadd8f33c9f05debd78a2bb2a24dd9e565d8
+        - image: quay.io/cilium/hubble-ui-backend:v0.12.1@sha256:1f86f3400827a0451e6332262467f894eeb7caf0eb8779bd951e2caa9d027cbe
+        - image: quay.io/cilium/hubble-ui:v0.12.1@sha256:9e5f81ee747866480ea1ac4630eb6975ff9227f9782b7c93919c081c33f38267
+        - image: quay.io/cilium/operator-generic:v1.14.3@sha256:c9613277b72103ed36e9c0d16b9a17cafd507461d59340e432e3e9c23468b5e2
+        - image: registry.k8s.io/etcd:3.5.9-0
+        - image: registry.k8s.io/provider-os/cinder-csi-plugin:v1.25.6
+        - image: registry.k8s.io/provider-os/openstack-cloud-controller-manager:v1.25.6
+    apiVersion: v2
+    created: "2023-10-23T11:42:17.38377231Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.11.0
+    description: t8s-operator cluster with necessary addons
+    digest: 0c3a875330540a68e5aeafb9bcd7730db1f80978a9723ee6d63ffc940e9c08dd
+    home: https://teuto.net
+    icon: https://teuto.net/favicon.ico
+    maintainers:
+    - email: cwr@teuto.net
+      name: cwrau
+    - email: mw@teuto.net
+      name: marvinWolff
+    - email: st@teuto.net
+      name: tasches
+    name: t8s-cluster
+    sources:
+    - https://github.com/teutonet/teutonet-helm-charts
+    type: application
+    urls:
+    - https://github.com/teutonet/teutonet-helm-charts/releases/download/t8s-cluster-3.4.0/t8s-cluster-3.4.0.tgz
+    version: 3.4.0
+  - annotations:
+      artifacthub.io/images: |
         - image: docker.io/bitnami/kubectl:1.27.6
         - image: k8s.gcr.io/sig-storage/csi-attacher:v3.4.0
         - image: k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.5.0
@@ -3043,4 +3084,4 @@ entries:
     urls:
     - https://github.com/teutonet/teutonet-helm-charts/releases/download/t8s-cluster-0.0.1/t8s-cluster-0.0.1.tgz
     version: 0.0.1
-generated: "2023-10-12T08:54:05.677200411Z"
+generated: "2023-10-23T11:42:17.384539127Z"
