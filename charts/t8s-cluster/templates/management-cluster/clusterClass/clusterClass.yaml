@@ -1,4 +1,7 @@
 {{- $machineDeploymentClasses := dict "compute-plane" false "gpu-compute-plane" true -}}
+{{- range $name, $spec := .Values.nodePools -}}
+  {{- $machineDeploymentClasses = set $machineDeploymentClasses $name ($spec.flavor | contains "gpu") -}}
+{{- end -}}
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: ClusterClass
 metadata:
