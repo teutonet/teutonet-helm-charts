@@ -1,0 +1,19 @@
+apiVersion: v2
+name: teuto-portal
+description: A Helm chart for deploying the portal worker application to k8s
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+maintainers:
+  - name: cwrau
+    email: cwr@teuto.net
+  - name: marvinWolff
+    email: mw@teuto.net
+  - name: tasches
+    email: st@teuto.net
+
+dependencies:
+  - name: common
+    version: 2.11.1
+    repository: https://charts.bitnami.com/bitnami

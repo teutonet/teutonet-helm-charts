@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" $ | nindent 8 }}
+    spec:
+      {{- include "common.images.renderPullSecrets" ( dict "images" (list .Values.worker.image) "context" $) | indent 6 }}
+      securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext: {{- toYaml .Values.global.podSecurityContext | nindent 12 }}
+          image: {{ template "portalworker.image". }}
+          {{- if .Values.worker.image.digest }}
+          imagePullPolicy: IfNotPresent
+          {{- else }}
+          imagePullPolicy: Always
+          {{- end }}
+          env:
+            - name: JDBC_URL
+              value: {{ include "portalworker.jdbc" . | quote }}
+            - name: DB_PORT
+              value: {{ .Values.worker.database.port | quote }}
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "common.secrets.name" (dict "existingSecret" .Values.worker.existingSecret "defaultNameSuffix" "db-credentials" "context" $) }}
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "common.secrets.name" (dict "existingSecret" .Values.worker.existingSecret "defaultNameSuffix" "db-credentials" "context" $) }}
+                  key: password
+
+            {{- range $k, $v := .Values.worker.config }}
+            {{- if or (typeIs "bool" $v) ($v) }}
+            - name: {{ regexReplaceAll `_(\d+)` ($k | snakecase | upper) "$1" }}
+              value: {{ $v | quote }}
+            {{- end -}}
+            {{- end }}
+          ports:
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: metrics
+          resources: {{- toYaml .Values.worker.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /kubeconfig
+              name: clusterconfig
+              readOnly: true
+            - mountPath: /tmp
+              name: tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: clusterconfig
+          secret:
+            secretName: {{ required "k8s access token for the management cluster must be provided" .Values.worker.kubeconfig.secret.name }}

@@ -1,0 +1,50 @@
+global:
+  imageRegistry: registry-gitlab.teuto.net
+  imagePullSecrets: []
+  podSecurityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    capabilities:
+      drop:
+        - ALL
+    runAsGroup: 1000
+    runAsUser: 1000
+
+  securityContext:
+    fsGroup: 1000
+    runAsUser: 1000
+    runAsGroup: 1000
+    runAsNonRoot: true
+    fsGroupChangePolicy: OnRootMismatch
+
+worker:
+  image:
+    repository: 4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker
+    tag: 1.0.0
+  database:
+    user: root
+    password: ""
+    host: localhost
+    port: 5432
+  kubeconfig:
+    secret:
+      name: ""
+  config:
+    dryRun: false
+    singleRun: false
+    otelExporterTracesEndpoint: ""
+    syncInterval: 10s
+    watchK8sEvents: false
+    minimumCPUFlavour: 2
+    flavourPrefixFilter: ""
+    clusterNamespace: customer-clusters
+    k8sVersion: 1.26.8
+    loggingFormat: json
+  resources:
+    limits:
+      cpu: 100m
+      memory: 1Gi
+    request:
+      memory: 256Mi
