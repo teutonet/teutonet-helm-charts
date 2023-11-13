@@ -135,6 +135,14 @@
                 "type": "string"
               },
               "minProperties": 1
+            },
+            "ingressLabels": {
+              "type": "object",
+              "description": "The labels used to allow egress to the DNS service",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "minProperties": 1
             }
           },
           "additionalProperties": false
@@ -412,15 +420,6 @@
                     }
                   },
                   "additionalProperties": false
-                }
-              },
-              "additionalProperties": false
-            },
-            "authentication": {
-              "type": "object",
-              "properties": {
-                "enabled": {
-                  "type": "boolean"
                 }
               },
               "additionalProperties": false
@@ -1252,7 +1251,7 @@
         },
         "host": {
           "type": "string",
-          "description": "The subdomain to use under `.global.customerName`.`.global.baseDomain`"
+          "description": "The subdomain to use under `.global.clusterName`.`.global.baseDomain`"
         },
         "customDomain": {
           "type": "string",

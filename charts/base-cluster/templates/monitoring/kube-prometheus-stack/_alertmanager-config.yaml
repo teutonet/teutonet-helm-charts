@@ -2,18 +2,16 @@
 enabled: false # TODO dependent on routes/receivers
 # TODO routes
 # TODO receivers
-  {{- if false }}
+{{- if false }}
 podDisruptionBudget:
   enabled: true
-  {{- if false }} # TODO ingress
-{{/*  {{- if not (empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled) }}*/}}
+{{- if and (empty .Values.global.authentication.config.clientId) .Values.monitoring.prometheus.alertmanager.ingress.enabled }}
   {{- include "base-cluster.monitoring.ingress" (dict "name" "alertmanager" "context" $) | nindent 0 }}
-  {{- end }}
+{{- end }}
 alertmanagerSpec:
   replicas: {{ .Values.monitoring.prometheus.alertmanager.replicas }}
   podAntiAffinity: soft
-  {{- if false }} # TODO ingress
-{{/*    {{- if empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled }}*/}}
+  {{- if and .Values.global.authentication.config.clientId (or (empty .Values.monitoring.prometheus.ingress.enabled) .Values.monitoring.prometheus.ingress.enabled) }}
   externalUrl: https://{{ include "base-cluster.alertmanager.host" $ }}
   {{- end }}
   retention: {{ .Values.monitoring.prometheus.alertmanager.retentionDuration }}
@@ -28,5 +26,5 @@ alertmanagerSpec:
             storage: {{ .Values.monitoring.prometheus.alertmanager.persistence.size }}
   alertmanagerConfigSelector:
     matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
-  {{- end }}
+{{- end }}
 {{- end -}}

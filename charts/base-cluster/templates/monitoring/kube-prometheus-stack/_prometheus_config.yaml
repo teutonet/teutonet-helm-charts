@@ -1,17 +1,15 @@
 {{- define "base-cluster.prometheus-stack.prometheus.config" -}}
 enabled: true
-  {{- if false }} # TODO ingress
-{{/*  {{- if not (empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled) }}*/}}
+{{- if and (empty .Values.global.authentication.config.clientId) .Values.monitoring.prometheus.ingress.enabled }}
   {{- include "base-cluster.monitoring.ingress" (dict "name" "prometheus" "context" $) | nindent 0 }}
-  {{- end }}
+{{- end }}
 prometheusSpec:
   {{- if (lookup "v1" "Secret" "monitoring" "additional-alertmanager-configs") }}
   additionalAlertManagerConfigsSecret:
     name: additional-alertmanager-configs
     key: prometheus-additional-alertmanager-configs.yaml
   {{- end }}
-  {{- if false }} # TODO ingress
-{{/*    {{- if empty .Values.monitoring.prometheus.authentication.enabled | ternary .Values.global.authentication.enabled .Values.monitoring.prometheus.authentication.enabled }}*/}}
+  {{- if and .Values.global.authentication.config.clientId (or (empty .Values.monitoring.prometheus.ingress.enabled) .Values.monitoring.prometheus.ingress.enabled) }}
   externalUrl: {{ printf "https://%s" (include "base-cluster.prometheus.host" $) }}
   {{- end }}
   resources: {{- .Values.monitoring.prometheus.resources | toYaml | nindent 4 }}

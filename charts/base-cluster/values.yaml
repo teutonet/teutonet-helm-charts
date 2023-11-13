@@ -77,6 +77,9 @@ global:
     metricsLabels:
       io.kubernetes.pod.namespace: monitoring
       app.kubernetes.io/name: prometheus
+    ingressLabels:
+      io.kubernetes.pod.namespace: ingress-nginx
+      app.kubernetes.io/name: ingress-nginx
   # it's important that the `url` is the first key and `charts` is right below, otherwise renovate won't detect it
   helmRepositories:
     prometheus:
@@ -148,6 +151,21 @@ global:
       charts:
         opentelemetry-collector:  0.x.x
       condition: "{{ and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}"
+  authentication:
+    config:
+      clientId: ""
+      clientSecret: ""
+      issuerHost: ""
+      issuerPath: ""
+    oauthProxy:
+      emailDomains: []
+      resources:
+        limits:
+          cpu: 100m
+          memory: 32Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
 
 kyverno:
   enabled: false
@@ -167,7 +185,6 @@ monitoring:
       customDomain: ""
     additionalDashboards: {}
     additionalPlugins: []
-    config: {}
     notifiers: []
     resources:
       requests:
@@ -244,12 +261,10 @@ monitoring:
           cpu: "2"
           memory: 128Mi
     ingress:
-      enabled: false
       host: prometheus
       customDomain: ""
     alertmanager:
       ingress:
-        enabled: false
         host: alertmanager
         customDomain: ""
       replicas: 1
