@@ -1,6 +1,6 @@
 {{- define "base-cluster.prometheus-stack.prometheus.config" -}}
 enabled: true
-{{- if and (empty .Values.global.authentication.config.clientId) .Values.monitoring.prometheus.ingress.enabled }}
+{{- if include "base-cluster.monitoring.unauthenticated-ingress.enabled" (dict "name" "prometheus" "context" .) }}
   {{- include "base-cluster.monitoring.ingress" (dict "name" "prometheus" "context" $) | nindent 0 }}
 {{- end }}
 prometheusSpec:
@@ -9,7 +9,7 @@ prometheusSpec:
     name: additional-alertmanager-configs
     key: prometheus-additional-alertmanager-configs.yaml
   {{- end }}
-  {{- if and .Values.global.authentication.config.clientId (or (empty .Values.monitoring.prometheus.ingress.enabled) .Values.monitoring.prometheus.ingress.enabled) }}
+  {{- if include "base-cluster.monitoring.authenticated-ingress.enabled" (dict "name" "prometheus" "context" .) }}
   externalUrl: {{ printf "https://%s" (include "base-cluster.prometheus.host" $) }}
   {{- end }}
   resources: {{- .Values.monitoring.prometheus.resources | toYaml | nindent 4 }}

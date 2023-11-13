@@ -1,0 +1,14 @@
+global:
+  authentication:
+    config:
+      clientId: clientId
+      clientSecret: clientSecret
+      issuerHost: host.de
+      issuerPath: /oidc
+monitoring:
+  prometheus:
+    ingress:
+      enabled: false
+    alertmanager:
+      ingress:
+        enabled: false

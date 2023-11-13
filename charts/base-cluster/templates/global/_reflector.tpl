@@ -9,5 +9,5 @@
       {{- $needsReflector = not (empty (.context.Values.global.imageCredentials | keys)) -}}
     {{- end -}}
   {{- end -}}
-  {{- $needsReflector -}}
+  {{- $needsReflector | ternary true "" -}}
 {{- end }}

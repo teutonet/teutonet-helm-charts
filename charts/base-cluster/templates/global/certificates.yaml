@@ -45,7 +45,7 @@ spec:
     name: letsencrypt-production
   dnsNames: {{- $cert.dnsNames | toYaml | nindent 4 }}
   secretName: {{ printf "%s-certificate" $name | quote }}
-  {{- if eq (include "base-cluster.reflector.enabled" (dict "context" $.context)) "true" }}
+  {{- if include "base-cluster.reflector.enabled" (dict "context" $.context) }}
   secretTemplate:
     annotations:
       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"

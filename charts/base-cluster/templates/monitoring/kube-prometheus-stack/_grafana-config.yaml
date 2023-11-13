@@ -137,6 +137,21 @@ dashboards:
 grafana.ini:
   auth:
     signout_redirect_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
+  {{- if .Values.global.authentication.config.clientId }}
+    oauth_auto_login: true
+    disable_login_form: true
+  auth.generic_oauth:
+    enabled: true
+    allow_sign_up: true
+    api_url: {{ printf "https://%s%s" .Values.global.authentication.config.issuerHost .Values.global.authentication.grafana.apiPath }}
+    auth_url: {{ printf "https://%s%s" .Values.global.authentication.config.issuerHost .Values.global.authentication.grafana.authenticationPath }}
+    token_url: {{ printf "https://%s%s" .Values.global.authentication.config.issuerHost .Values.global.authentication.grafana.tokenPath }}
+    client_id: {{ .Values.global.authentication.config.clientId }}
+    client_secret: {{ .Values.global.authentication.config.clientSecret }}
+    name: OAuth
+    role_attribute_path: {{ .Values.global.authentication.grafana.roleAttributePath }}
+    scopes: openid profile email
+  {{- end }}
   server:
     root_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
 {{- end }}

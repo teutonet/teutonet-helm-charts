@@ -140,7 +140,7 @@ global:
       url: https://emberstack.github.io/helm-charts
       charts:
         reflector: 7.x
-      condition: '{{ eq (include "base-cluster.reflector.enabled" (dict "context" .)) "true" }}'
+      condition: '{{ include "base-cluster.reflector.enabled" (dict "context" .) }}'
     vmware:
       url: https://vmware-tanzu.github.io/helm-charts
       charts:
@@ -157,6 +157,11 @@ global:
       clientSecret: ""
       issuerHost: ""
       issuerPath: ""
+    grafana:
+      authenticationPath: ""
+      apiPath: ""
+      tokenPath: ""
+      roleAttributePath: Viewer
     oauthProxy:
       emailDomains: []
       resources:
@@ -341,7 +346,6 @@ dns:
   provider: null
 
 certManager:
-  email: null
   resources:
     limits:
       cpu: 250m
@@ -391,7 +395,6 @@ ingress:
     limits:
       cpu: 1
       memory: 256Mi
-  IP: null
 
 storage:
   readWriteMany:

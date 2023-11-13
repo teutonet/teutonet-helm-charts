@@ -44,7 +44,7 @@ privileged: false
   {{- if not $ingress -}}
     {{- $ingress = include (printf "base-cluster.%s.ingress" .name) .context | fromYaml -}}
   {{- end -}}
-  {{- and (empty .Values.global.authentication.config.clientId) $ingress.enabled -}}
+  {{- and (empty .Values.global.authentication.config.clientId) $ingress.enabled | ternary true "" -}}
 {{- end -}}
 
 {{- define "base-cluster.monitoring.authenticated-ingress.enabled" -}}
@@ -53,5 +53,5 @@ privileged: false
   {{- if not $ingress -}}
     {{- $ingress = include (printf "base-cluster.%s.ingress" .name) .context | fromYaml -}}
   {{- end -}}
-  {{- and .Values.global.authentication.config.clientId (or (empty $ingress.enabled) $ingress.enabled) -}}
+  {{- and .Values.global.authentication.config.clientId (dig "enabled" true $ingress) | ternary true "" -}}
 {{- end -}}
