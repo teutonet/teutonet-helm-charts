@@ -10,7 +10,7 @@ global:
       url: https://helm.ngc.nvidia.com/nvidia
       charts:
         gpu-operator: 23.x.x
-      condition: '{{ eq (include "t8s-cluster.hasGPUNodes" (dict "context" $)) "true" }}'
+      condition: '{{ include "t8s-cluster.hasGPUNodes" (dict "context" $) }}'
     cloud-provider-openstack:
       url: https://kubernetes.github.io/cloud-provider-openstack
     cetic:
