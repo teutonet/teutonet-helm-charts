@@ -120,7 +120,7 @@ spec:
               op: add
               path: /spec/template/spec/image
               valueFrom:
-                template: {{ .Values.imageNameTemplate.computePlane }}
+                template: {{ printf "t8s-engine-%s-{{ .builtin.machineDeployment.version }}" .Values.openstackImageNamePrefix }}
           selector: &imagePatchSelector
             apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
             kind: OpenStackMachineTemplate
@@ -130,7 +130,7 @@ spec:
         - jsonPatches:
             - <<: *imagePatch
               valueFrom:
-                template: {{ .Values.imageNameTemplate.controlPlane }}
+                template: {{ printf "t8s-engine-%s-{{ .builtin.controlPlane.version }}" .Values.openstackImageNamePrefix }}
           selector:
             <<: *imagePatchSelector
             matchResources:
