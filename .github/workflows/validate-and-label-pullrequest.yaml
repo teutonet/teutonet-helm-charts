@@ -33,7 +33,7 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: helm/chart-testing-action@v2.4.0
+      - uses: helm/chart-testing-action@v2.6.1
       - name: Conventional commit check
         uses: cocogitto/cocogitto-action@v3
         with:
