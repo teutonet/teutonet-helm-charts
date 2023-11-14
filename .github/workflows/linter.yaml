@@ -43,7 +43,7 @@ jobs:
           python-version: 3.7
 
       - run: ./.github/scripts/prepare-values.sh "charts/$CHART"
-      - uses: helm/chart-testing-action@v2.4.0
+      - uses: helm/chart-testing-action@v2.6.1
 
       - name: Lint chart
         run: ct lint --check-version-increment=false
