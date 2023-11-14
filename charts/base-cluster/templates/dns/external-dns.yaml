@@ -36,7 +36,7 @@ spec:
       imageRegistry: {{ $.Values.global.imageRegistry }}
     {{- end }}
     podAnnotations:
-      checksum/provider-secret: {{ include (print $.Template.BasePath (printf "/dns/%s/external-dns.yaml" (.Values.dns.provider | keys | first))) . | sha256sum }}
+      checksum/provider-secret: {{ include "common.utils.checksumTemplate" (dict "path" (printf "/dns/%s/external-dns.yaml" (.Values.dns.provider | keys | first)) "context" $) }}
     provider: {{ .Values.dns.provider | keys | first | quote }}
     {{- if .Values.dns.provider.cloudflare }}
     cloudflare:

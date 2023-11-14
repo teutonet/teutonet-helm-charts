@@ -30,7 +30,7 @@ serviceMonitor:
   labels: {{- .Values.monitoring.labels | toYaml | nindent 4 }}
 podAnnotations:
   # This might change on every `template` call, this can be ignored
-  checksum/secret: {{ include (print $.Template.BasePath "/monitoring/kube-prometheus-stack/grafana-secret.yaml") . | sha256sum }}
+  checksum/secret: {{ include "common.utils.checksumTemplate" (dict "path" "/monitoring/kube-prometheus-stack/grafana-secret.yaml" "context" $) }}
 admin:
   existingSecret: {{ include "common.secrets.name" (dict "defaultNameSuffix" "grafana" "context" $) }}
   userKey: username
