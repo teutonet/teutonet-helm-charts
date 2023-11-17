@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-4.0.0...t8s-cluster-v4.0.1) (2023-11-17)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** adjust containerd config to work with cgroupv2 ([#636](https://github.com/teutonet/teutonet-helm-charts/issues/636)) ([23f6e70](https://github.com/teutonet/teutonet-helm-charts/commit/23f6e70573de46c6c9e4f7162a7778482819069c))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update helm release common to v2.13.3 ([#616](https://github.com/teutonet/teutonet-helm-charts/issues/616)) ([f13471a](https://github.com/teutonet/teutonet-helm-charts/commit/f13471a619d5613863f7a4283a3d57d93a6512da))
+
 ## [4.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-3.4.0...t8s-cluster-v4.0.0) (2023-10-23)
 
 
