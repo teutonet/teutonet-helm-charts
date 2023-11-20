@@ -28,16 +28,18 @@ spec:
               value: {{ include "portalworker.jdbc" . | quote }}
             - name: DB_PORT
               value: {{ .Values.worker.database.port | quote }}
+            {{- with (include "portalworker.dbcredentials" $) }}
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "common.secrets.name" (dict "existingSecret" .Values.worker.existingSecret "defaultNameSuffix" "db-credentials" "context" $) }}
+                  name: {{ . }}
                   key: username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "common.secrets.name" (dict "existingSecret" .Values.worker.existingSecret "defaultNameSuffix" "db-credentials" "context" $) }}
+                  name: {{ . }}
                   key: password
+            {{- end }}
 
             {{- range $k, $v := .Values.worker.config }}
             {{- if or (typeIs "bool" $v) ($v) }}

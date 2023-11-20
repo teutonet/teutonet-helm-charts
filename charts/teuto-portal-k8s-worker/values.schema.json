@@ -113,11 +113,24 @@
         "database": {
           "type": "object",
           "properties": {
-            "user": {
-              "type": "string"
-            },
-            "password": {
-              "type": "string"
+            "credentials": {
+              "type": "object",
+              "properties": {
+                "secret": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "name"
+                  ]
+                },
+                "additionalProperties": false
+              },
+              "additionalProperties": false
             },
             "host": {
               "type": "string"
@@ -130,8 +143,6 @@
           },
           "additionalProperties": false,
           "required": [
-            "user",
-            "password",
             "host"
           ]
         },
@@ -194,37 +205,20 @@
           "additionalProperties": false
         },
         "resources": {
-          "type": "object",
-          "properties": {
-            "limits": {
-              "type": "object",
-              "properties": {
-                "cpu": {
-                  "type": "string"
-                },
-                "memory": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false
-            },
-            "request": {
-              "type": "object",
-              "properties": {
-                "cpu": {
-                  "type": "string"
-                },
-                "memory": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false
-            }
-          },
-          "additionalProperties": false
+          "$ref": "#/$defs/resourceRequirements"
         }
       },
       "additionalProperties": false
+    },
+    "common": {
+      "type": "object",
+      "description": "Values for sub-chart"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "resourceRequirements": {
+      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
     }
   }
 }

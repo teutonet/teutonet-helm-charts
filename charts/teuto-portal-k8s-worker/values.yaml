@@ -21,11 +21,12 @@ global:
 
 worker:
   image:
-    repository: 4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker
+    repository: 4teuto/dev/teuto-portal-k8s-worker/teuto-portal-k8s-worker-k8s-worker/teuto-portal-k8s-worker-k8s-worker
     tag: 1.0.0
   database:
-    user: root
-    password: ""
+    credentials:
+      secret:
+        name: ""
     host: localhost
     port: 5432
   kubeconfig:
@@ -46,5 +47,5 @@ worker:
     limits:
       cpu: 100m
       memory: 1Gi
-    request:
+    requests:
       memory: 256Mi
