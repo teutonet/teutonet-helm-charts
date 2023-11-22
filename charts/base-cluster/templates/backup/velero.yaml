@@ -29,7 +29,7 @@ spec:
     cleanUpCRDs: true
     initContainers:
       - name: velero-plugin-for-aws
-        image: docker.io/velero/velero-plugin-for-aws:v1.7.0
+        image: {{ printf "%s/velero/velero-plugin-for-aws:v1.7.0" (.Values.global.imageRegistry | default "docker.io") }}
         imagePullPolicy: IfNotPresent
         volumeMounts:
           - mountPath: /target
