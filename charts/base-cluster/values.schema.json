@@ -221,7 +221,7 @@
         },
         "namespaces": {
           "type": "object",
-          "description": "Namespaces to create. AND *delete* if removed",
+          "description": "Namespaces to create. AND *delete* if removed. These will also be the only ones, including the builtin namespaces, for which alerts will be sent if `monitoring.monitorAllNamespaces=false`",
           "additionalProperties": {
             "type": "object",
             "properties": {
@@ -310,6 +310,9 @@
     "monitoring": {
       "type": "object",
       "properties": {
+        "monitorAllNamespaces": {
+          "type": "boolean"
+        },
         "labels": {
           "type": "object",
           "description": "The labels to set on ServiceMonitors, ... and which the prometheus uses to search for",
