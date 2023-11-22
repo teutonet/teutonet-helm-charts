@@ -19,7 +19,7 @@ global:
     image:
       registry: registry.k8s.io
       repository: etcd
-      tag: 3.5.9-0
+      tag: 3.5.10-0
   kubectl:
     image:
       registry: docker.io
