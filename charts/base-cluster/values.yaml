@@ -57,7 +57,7 @@ global:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: 1.28.2
+      tag: 1.28.4
   flux:
     image:
       registry: docker.io
