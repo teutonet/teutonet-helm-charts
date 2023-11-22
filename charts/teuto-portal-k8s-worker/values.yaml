@@ -32,20 +32,9 @@ worker:
   kubeconfig:
     secret:
       name: ""
-  config:
-    dryRun: false
-    singleRun: false
-    otelExporterTracesEndpoint: ""
-    syncInterval: 10s
-    watchK8sEvents: false
-    minimumCPUFlavour: 2
-    flavourPrefixFilter: ""
-    clusterNamespace: customer-clusters
-    k8sVersion: 1.26.8
-    loggingFormat: json
   resources:
     limits:
-      cpu: 100m
+      cpu: 500m
       memory: 1Gi
     requests:
       memory: 256Mi

@@ -14,6 +14,7 @@ spec:
     spec:
       {{- include "common.images.renderPullSecrets" ( dict "images" (list .Values.worker.image) "context" $) | indent 6 }}
       securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}
+      automountServiceAccountToken: false
       containers:
         - name: {{ .Chart.Name }}
           securityContext: {{- toYaml .Values.global.podSecurityContext | nindent 12 }}
@@ -28,6 +29,8 @@ spec:
               value: {{ include "portalworker.jdbc" . | quote }}
             - name: DB_PORT
               value: {{ .Values.worker.database.port | quote }}
+            - name: KUBECONFIG
+              value: "/kubeconfig"
             {{- with (include "portalworker.dbcredentials" $) }}
             - name: DB_USERNAME
               valueFrom:
@@ -40,7 +43,6 @@ spec:
                   name: {{ . }}
                   key: password
             {{- end }}
-
             {{- range $k, $v := .Values.worker.config }}
             {{- if or (typeIs "bool" $v) ($v) }}
             - name: {{ regexReplaceAll `_(\d+)` ($k | snakecase | upper) "$1" }}
@@ -59,6 +61,7 @@ spec:
           volumeMounts:
             - mountPath: /kubeconfig
               name: clusterconfig
+              subPath: config
               readOnly: true
             - mountPath: /tmp
               name: tmp
