@@ -89,10 +89,11 @@ spec:
     # This only works in clusters >=1.22 because it relies on the
     # kubernetes.io/metadata.name label on namespaces, which is active by
     # default since 1.22.
-    webhooks:
-      - namespaceSelector:
-          matchExpressions:
-            - key: kubernetes.io/metadata.name
-              operator: NotIn
-              values: {{- include "base-cluster.kyverno.ignoredNamespaces" . | nindent 18 }}
+    config:
+      webhooks:
+        - namespaceSelector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: NotIn
+                values: {{- include "base-cluster.kyverno.ignoredNamespaces" . | nindent 18 }}
 {{- end }}
