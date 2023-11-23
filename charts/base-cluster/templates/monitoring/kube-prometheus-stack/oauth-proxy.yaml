@@ -55,8 +55,13 @@ spec:
         skip_provider_button = true
         {{- if $.Values.global.authentication.oauthProxy.emailDomains }}
         email_domains = [ "{{ $.Values.global.authentication.oauthProxy.emailDomains | join "\", \"" }}" ]
+        {{- else }}
+        email_domains = "*"
         {{- end }}
         upstreams = [ {{ printf "http://%s:%d" $targetServiceName $port | quote }} ]
+    podAnnotations:
+      # This might change on every `template` call, this can be ignored
+      checksum/secret: {{ include "common.utils.checksumTemplate" (dict "path" "/monitoring/kube-prometheus-stack/oauth-proxy-secret.yaml" "context" $) }}
 {{- if eq (include "common.networkPolicy.type" $) "cilium" }}
 ---
 apiVersion: cilium.io/v2
