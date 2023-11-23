@@ -141,7 +141,7 @@ grafana.ini:
     {{- if .config.clientId }}
     {{- $issuerUrl := printf "https://%s%s" .config.issuerHost .config.issuerPath}}
     oauth_auto_login: true
-    disable_login_form: true
+    disable_login_form: false
   auth.generic_oauth:
     enabled: true
     allow_sign_up: true
