@@ -1,8 +1,8 @@
 global:
   serviceLevelAgreement: None
-  clusterName: null
-  baseDomain: null
-  imageRegistry: null
+  clusterName: ""
+  baseDomain: ""
+  imageRegistry: ""
   imageCredentials: {}
   priorityClasses: {}
   namespaces:
@@ -52,7 +52,7 @@ global:
         {{- end }}
       targetNamespaces: ALL
       condition: "{{ not (empty .Values.global.baseDomain) }}"
-  storageClass: null
+  storageClass: ""
   kubectl:
     image:
       registry: docker.io
@@ -82,7 +82,7 @@ global:
     prometheus:
       url: https://prometheus-community.github.io/helm-charts
       charts:
-        kube-prometheus-stack: 51.x
+        kube-prometheus-stack: 54.x
       condition: "{{ .Values.monitoring.prometheus.enabled }}"
       interval: 5m
     grafana:
@@ -160,11 +160,11 @@ monitoring:
   labels:
     managed.by/monitoring: teutonet
   grafana:
-    adminPassword: null
+    adminPassword: ""
     ingress:
       enabled: true
       host: grafana
-      customDomain: null
+      customDomain: ""
     additionalDashboards: {}
     additionalPlugins: []
     config: {}
@@ -196,7 +196,7 @@ monitoring:
     retentionDuration: 4w
     retentionSize: 90GB
     persistence:
-      storageClass: null
+      storageClass: ""
       size: 100Gi
     resources:
       requests:
@@ -246,21 +246,21 @@ monitoring:
     ingress:
       enabled: false
       host: prometheus
-      customDomain: null
+      customDomain: ""
     alertmanager:
       ingress:
         enabled: false
         host: alertmanager
-        customDomain: null
+        customDomain: ""
       replicas: 1
       retentionDuration: 120h
       persistence:
-        storageClass: null
+        storageClass: ""
         size: 1Gi
   loki:
     enabled: true
     persistence:
-      storageClass: null
+      storageClass: ""
       size: 10Gi
     replicas: 1
     resources:
@@ -384,7 +384,7 @@ storage:
     storageClass:
       name: teutostack-nfs
     persistence:
-      storageClass: null
+      storageClass: ""
       size: 5Gi
 
 reflector:

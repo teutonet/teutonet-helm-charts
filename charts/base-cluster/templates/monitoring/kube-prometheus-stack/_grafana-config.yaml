@@ -1,12 +1,4 @@
 {{- define "base-cluster.prometheus-stack.grafana.config" -}}
-  {{- if $.Values.global.imageRegistry }}
-testFramework:
-  image: {{ printf "%s/bats/bats" .Values.global.imageRegistry }}
-image:
-  repository: {{ printf "%s/grafana/grafana" .Values.global.imageRegistry }}
-downloadDashboardsImage:
-  repository: {{ printf "%s/curlimages/curl" .Values.global.imageRegistry }}
-  {{- end }}
 imageRenderer:
   enabled: true
   securityContext:
@@ -15,10 +7,6 @@ imageRenderer:
     runAsNonRoot: true
     runAsUser: 472
     runAsGroup: 472
-  {{- if $.Values.global.imageRegistry }}
-  image:
-    repository: {{ printf "%s/grafana/grafana-image-renderer" .Values.global.imageRegistry }}
-  {{- end }}
 enabled: true
 securityContext:
   seccompProfile:
@@ -62,10 +50,6 @@ dashboardProviders:
         options:
           path: /var/lib/grafana/dashboards/custom
 sidecar:
-  {{- if .Values.global.imageRegistry }}
-  image:
-    repository: {{ printf "%s/kiwigrid/k8s-sidecar" .Values.global.imageRegistry }}
-  {{- end }}
   dashboards:
     enabled: true
     resource: configmap

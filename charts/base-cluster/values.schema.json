@@ -17,30 +17,21 @@
           "default": "None"
         },
         "clusterName": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "description": "The name of the cluster, used as subdomain under `baseDomain` and as label `cluster` on all alerts",
           "examples": [
             "eu-2"
           ]
         },
         "baseDomain": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "description": "The base domain to be used for cluster ingress",
           "examples": [
             "teuto.net"
           ]
         },
         "imageRegistry": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "description": "The global container image proxy, e.g. [Nexus](https://artifacthub.io/packages/helm/sonatype/nexus-repository-manager), this needs to support various registries",
           "examples": [
             "nexus.teuto.net"
@@ -260,7 +251,9 @@
                 "default": "PreemptLowerPriority"
               }
             },
-            "required": ["value"],
+            "required": [
+              "value"
+            ],
             "additionalProperties": false
           },
           "propertyNames": {
@@ -439,10 +432,7 @@
           "type": "object",
           "properties": {
             "adminPassword": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": "string"
             },
             "ingress": {
               "$ref": "#/$defs/toolIngress"
@@ -1251,10 +1241,7 @@
       "default": "ALL"
     },
     "storageClass": {
-      "type": [
-        "string",
-        "null"
-      ],
+      "type": "string",
       "description": "The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd)"
     },
     "toolIngress": {
@@ -1268,10 +1255,7 @@
           "description": "The subdomain to use under `.global.customerName`.`.global.baseDomain`"
         },
         "customDomain": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "description": "The full custom domain to use"
         }
       },
