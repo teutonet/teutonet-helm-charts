@@ -82,11 +82,11 @@ dashboards:
       <<: *dashboard
       gnetId: 9614
       revision: 1
+    {{- end}}
     cert-manager:
       <<: *dashboard
       gnetId: 11001
       revision: 1
-    {{- end}}
     flux:
       <<: *dashboard
       gnetId: 16714
