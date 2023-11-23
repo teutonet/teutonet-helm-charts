@@ -158,9 +158,9 @@ global:
       issuerHost: ""
       issuerPath: ""
     grafana:
-      authenticationPath: ""
-      apiPath: ""
-      tokenPath: ""
+      authenticationPath: /protocol/openid-connect/auth
+      apiPath: /protocol/openid-connect/userinfo
+      tokenPath: /protocol/openid-connect/token
       roleAttributePath: Viewer
     oauthProxy:
       emailDomains: []
