@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.11.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.10.0...base-cluster-v4.11.0) (2023-11-23)
+
+
+### Features
+
+* **base-cluster/monitoring:** allow admin login even with oidc ([#645](https://github.com/teutonet/teutonet-helm-charts/issues/645)) ([c4b8b89](https://github.com/teutonet/teutonet-helm-charts/commit/c4b8b8924ed455637f1d2a3dc1a59c4a33ee0edb))
+
+
+### Bug Fixes
+
+* **base-cluster/ingress:** fix templating when no baseDomain is set ([#647](https://github.com/teutonet/teutonet-helm-charts/issues/647)) ([46dae44](https://github.com/teutonet/teutonet-helm-charts/commit/46dae449bd66c4f4a9d66c21b982fa258a71d232))
+* **base-cluster:** notes formatting ([#644](https://github.com/teutonet/teutonet-helm-charts/issues/644)) ([c23ca9c](https://github.com/teutonet/teutonet-helm-charts/commit/c23ca9c70f039b5af48256e368bf1fa8c90d1628))
+
 ## [4.10.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.9.1...base-cluster-v4.10.0) (2023-11-23)
 
 
