@@ -1,0 +1,7 @@
+monitoring:
+  prometheus:
+    ingress:
+      enabled: true
+    alertmanager:
+      ingress:
+        enabled: true

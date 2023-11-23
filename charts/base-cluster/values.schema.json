@@ -135,6 +135,14 @@
                 "type": "string"
               },
               "minProperties": 1
+            },
+            "ingressLabels": {
+              "type": "object",
+              "description": "The labels used to allow egress to the DNS service",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "minProperties": 1
             }
           },
           "additionalProperties": false
@@ -259,6 +267,66 @@
           "propertyNames": {
             "maxLength": 63
           }
+        },
+        "authentication": {
+          "type": "object",
+          "properties": {
+            "config": {
+              "type": "object",
+              "properties": {
+                "clientId": {
+                  "type": "string"
+                },
+                "clientSecret": {
+                  "type": "string"
+                },
+                "issuerHost": {
+                  "type": "string"
+                },
+                "issuerPath": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "grafana": {
+              "type": "object",
+              "properties": {
+                "roleAttributePath": {
+                  "type": "string"
+                },
+                "authenticationPath": {
+                  "type": "string"
+                },
+                "apiPath": {
+                  "type": "string"
+                },
+                "tokenPath": {
+                  "type": "string"
+                }
+              },
+              "description": "See https://grafana.com/docs/grafana/latest/setup-grafana/configure-security/configure-authentication/generic-oauth/#configuration-options",
+              "additionalProperties": false
+            },
+            "oauthProxy": {
+              "type": "object",
+              "properties": {
+                "emailDomains": {
+                  "type": "array",
+                  "additionalItems": {
+                    "type": "string",
+                    "$ref": "#/$defs/email"
+                  }
+                },
+                "resources": {
+                  "type": "object",
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
         }
       },
       "required": [
@@ -412,15 +480,6 @@
                     }
                   },
                   "additionalProperties": false
-                }
-              },
-              "additionalProperties": false
-            },
-            "authentication": {
-              "type": "object",
-              "properties": {
-                "enabled": {
-                  "type": "boolean"
                 }
               },
               "additionalProperties": false
@@ -693,10 +752,7 @@
           "$ref": "#/$defs/resourceRequirements"
         },
         "email": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "description": "Setting an email enables cert-manager's IngressShim and will be used for Let's Encrypt",
           "$ref": "#/$defs/email"
         },
@@ -930,10 +986,7 @@
           "description": "Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets"
         },
         "IP": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "pattern": "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$",
           "description": "Try to use specified IP as loadbalancer IP"
         }
@@ -1252,7 +1305,7 @@
         },
         "host": {
           "type": "string",
-          "description": "The subdomain to use under `.global.customerName`.`.global.baseDomain`"
+          "description": "The subdomain to use under `.global.clusterName`.`.global.baseDomain`"
         },
         "customDomain": {
           "type": "string",

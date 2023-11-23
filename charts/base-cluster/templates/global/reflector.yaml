@@ -1,4 +1,4 @@
-{{- if eq (include "base-cluster.reflector.enabled" (dict "context" .)) "true" -}}
+{{- if include "base-cluster.reflector.enabled" (dict "context" .) -}}
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:

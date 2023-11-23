@@ -77,6 +77,9 @@ global:
     metricsLabels:
       io.kubernetes.pod.namespace: monitoring
       app.kubernetes.io/name: prometheus
+    ingressLabels:
+      io.kubernetes.pod.namespace: ingress-nginx
+      app.kubernetes.io/name: ingress-nginx
   # it's important that the `url` is the first key and `charts` is right below, otherwise renovate won't detect it
   helmRepositories:
     prometheus:
@@ -137,7 +140,7 @@ global:
       url: https://emberstack.github.io/helm-charts
       charts:
         reflector: 7.x
-      condition: '{{ eq (include "base-cluster.reflector.enabled" (dict "context" .)) "true" }}'
+      condition: '{{ include "base-cluster.reflector.enabled" (dict "context" .) }}'
     vmware:
       url: https://vmware-tanzu.github.io/helm-charts
       charts:
@@ -148,6 +151,26 @@ global:
       charts:
         opentelemetry-collector:  0.x.x
       condition: "{{ and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}"
+  authentication:
+    config:
+      clientId: ""
+      clientSecret: ""
+      issuerHost: ""
+      issuerPath: ""
+    grafana:
+      authenticationPath: /protocol/openid-connect/auth
+      apiPath: /protocol/openid-connect/userinfo
+      tokenPath: /protocol/openid-connect/token
+      roleAttributePath: Viewer
+    oauthProxy:
+      emailDomains: []
+      resources:
+        limits:
+          cpu: 100m
+          memory: 32Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
 
 kyverno:
   enabled: false
@@ -167,7 +190,6 @@ monitoring:
       customDomain: ""
     additionalDashboards: {}
     additionalPlugins: []
-    config: {}
     notifiers: []
     resources:
       requests:
@@ -244,12 +266,10 @@ monitoring:
           cpu: "2"
           memory: 128Mi
     ingress:
-      enabled: false
       host: prometheus
       customDomain: ""
     alertmanager:
       ingress:
-        enabled: false
         host: alertmanager
         customDomain: ""
       replicas: 1
@@ -326,7 +346,6 @@ dns:
   provider: null
 
 certManager:
-  email: null
   resources:
     limits:
       cpu: 250m
@@ -376,7 +395,6 @@ ingress:
     limits:
       cpu: 1
       memory: 256Mi
-  IP: null
 
 storage:
   readWriteMany:

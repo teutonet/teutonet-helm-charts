@@ -132,19 +132,34 @@ dashboards:
   {{- with .Values.monitoring.grafana.additionalDashboards }}
   {{ . | toYaml | nindent 4 }}
   {{- end }}
-  {{- include "base-cluster.monitoring.ingress" (dict "name" "grafana" "context" $) | nindent 0 }}
-grafana.ini: {{- .Values.monitoring.grafana.config | mergeOverwrite (include "base-cluster.prometheus-stack.grafana.config-ini" . | fromYaml) | toYaml | nindent 2 }}
+{{- include "base-cluster.monitoring.ingress" (dict "name" "grafana" "context" $) | nindent 0 }}
+{{- if and .Values.ingress.enabled .Values.monitoring.grafana.ingress.enabled .Values.certManager.email (or .Values.global.baseDomain .Values.monitoring.grafana.ingress.customDomain) }}
+grafana.ini:
+  auth:
+    signout_redirect_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
+  {{- with .Values.global.authentication }}
+    {{- if .config.clientId }}
+    {{- $issuerUrl := printf "https://%s%s" .config.issuerHost .config.issuerPath}}
+    oauth_auto_login: true
+    disable_login_form: true
+  auth.generic_oauth:
+    enabled: true
+    allow_sign_up: true
+    api_url: {{ printf "%s%s" $issuerUrl .grafana.apiPath }}
+    auth_url: {{ printf "%s%s" $issuerUrl .grafana.authenticationPath }}
+    token_url: {{ printf "%s%s" $issuerUrl .grafana.tokenPath }}
+    client_id: {{ .config.clientId }}
+    client_secret: {{ .config.clientSecret }}
+    name: OAuth
+    role_attribute_path: {{ .grafana.roleAttributePath }}
+    scopes: openid profile email
+    {{- end }}
+  {{- end }}
+  server:
+    root_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
+{{- end }}
 downloadDashboards:
   securityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 4 }}
 initChownData:
   enabled: false
-{{- end -}}
-
-{{- define "base-cluster.prometheus-stack.grafana.config-ini" -}}
-  {{- if and .Values.certManager.email .Values.global.baseDomain -}}
-auth:
-  signout_redirect_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
-server:
-  root_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
-  {{- end -}}
 {{- end -}}
