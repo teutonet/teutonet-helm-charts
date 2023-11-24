@@ -2,11 +2,6 @@ name: Get single changed chart in last commit
 
 on:
   workflow_call:
-    inputs:
-      chart:
-        type: string
-        required: false
-        description: The name of the chart to run against
     outputs:
       chart:
         description: The name of the changed cart in the last commit
@@ -16,7 +11,7 @@ jobs:
   getChangedChart:
     runs-on: ubuntu-latest
     outputs:
-      chart: ${{ steps.getChartName.outputs.chart }}
+      chart: ${{ steps.getChangedChart.outputs.chart }}
     env:
       CT_TARGET_BRANCH: ${{ github.event.repository.default_branch }}
     steps:
@@ -25,26 +20,24 @@ jobs:
           fetch-depth: 0
 
       - uses: helm/chart-testing-action@v2.6.1
-        if: ${{ !inputs.chart }}
 
       - id: getChangedChart
-        if: ${{ !inputs.chart }}
         name: Get changed chart in this commit
         run: |
           set -x
           set -o pipefail
-          (
-            echo -n chart=
-            ct list-changed --since "HEAD~" | cut -d / -f 2
-          ) | tee "$GITHUB_OUTPUT"
-      - id: getChartName
-        name: Get name for changed chart
-        run: |
-          set -x
-          set -o pipefail
-          chart="${{ inputs.chart }}"
-          chart="${chart:-${{ steps.getChangedChart.outputs.chart }}}"
-          chart=${chart:?chart variable is empty}
-          (
-            echo "chart=${chart}"
-          ) | tee "$GITHUB_OUTPUT"
+          changed="$(ct list-changed --since "HEAD~" | cut -d / -f 2)"
+
+          if [[ -z "$changed" ]]; then
+            echo chart= | tee "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          num_changed=$(wc -l <<<"$changed")
+
+          if ((num_changed > 1)); then
+            echo "This PR has changes to multiple charts. Please create individual PRs per chart." >&2
+            exit 1
+          fi
+
+          echo chart="$changed" | tee "$GITHUB_OUTPUT"
