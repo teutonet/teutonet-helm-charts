@@ -5,6 +5,8 @@
 
 The code is provided as-is with no warranties.
 
+![Alt](https://repobeats.axiom.co/api/embed/5c630a6ef0a76216b945e57a49c747e4ad9851f8.svg "Repobeats analytics image")
+
 ## Charts
 
 ### base-cluster - Probably the chart you're looking for 😉
