@@ -7,6 +7,6 @@
 {{ printf "jdbc:postgresql://%s:%d/teuto_domain?currentSchema=app_public" .Values.worker.database.host $port }}
 {{- end -}}
 
-{{- define "portalworker.dbcredentials" -}}
+{{- define "portalworker.dbcredentials.secretName" -}}
 {{ required "A secretName containing the database credentials is required" .Values.worker.database.credentials.secret.name }}
 {{- end -}}
