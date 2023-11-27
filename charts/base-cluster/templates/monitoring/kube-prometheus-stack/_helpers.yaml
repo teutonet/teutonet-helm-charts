@@ -1,10 +1,11 @@
 {{- define "base-cluster.monitoring.ingress" -}}
-  {{- $ingress := dig .name "ingress" nil .context.Values.monitoring | required (printf "You need to set the `ingress` for %s" .name) -}}
-  {{- if and .context.Values.certManager.email $ingress.enabled .context.Values.ingress.enabled (or .context.Values.global.baseDomain $ingress.customDomain) -}}
+  {{- $_ := set . "Values" .context.Values -}}
+  {{- $ingress := include "base-cluster.monitoring.ingress.config" (dict "name" .name "context" .context) | fromYaml -}}
+  {{- if include "base-cluster.monitoring.ingress.enabled" (dict "name" .name "context" .context) -}}
     {{- $host := include (printf "base-cluster.%s.host" .name) .context -}}
 ingress:
   enabled: true
-  {{- if or (not .context.Values.dns.provider) $ingress.customDomain }}
+  {{- if or (not .Values.dns.provider) $ingress.customDomain }}
   annotations:
     kubernetes.io/tls-acme: "true"
   {{- end }}
@@ -23,4 +24,42 @@ capabilities:
     - ALL
 allowPrivilegeEscalation: false
 privileged: false
+{{- end -}}
+
+{{- define "base-cluster.alertmanager.ingress" -}}
+  {{- .Values.monitoring.prometheus.alertmanager.ingress | toYaml -}}
+{{- end -}}
+
+{{- define "base-cluster.monitoring.ingress.config" -}}
+  {{- $_ := set . "Values" .context.Values -}}
+  {{- $ingress := dig .name "ingress" nil .Values.monitoring -}}
+  {{- if not $ingress -}}
+    {{- $ingress = include (printf "base-cluster.%s.ingress" .name) .context | fromYaml -}}
+  {{- end -}}
+  {{- $ingress | toYaml -}}
+{{- end -}}
+
+{{- define "base-cluster.monitoring.ingress.enabled" -}}
+  {{- $_ := set . "Values" .context.Values -}}
+  {{- $ingress := include "base-cluster.monitoring.ingress.config" (dict "name" .name "context" .context) | fromYaml -}}
+  {{- $domainIsConfigured := or (not (empty .Values.global.baseDomain)) (not (empty $ingress.customDomain)) -}}
+  {{- $certManagerIsConfigured := not (empty .Values.certManager.email) -}}
+  {{- $ingressSpecificallyDisabled := eq false $ingress.enabled -}}
+  {{- and $certManagerIsConfigured (not $ingressSpecificallyDisabled) .Values.ingress.enabled $domainIsConfigured | ternary true "" -}}
+{{- end -}}
+
+{{- define "base-cluster.monitoring.unauthenticated-ingress.enabled" -}}
+  {{- $_ := set . "Values" .context.Values -}}
+  {{- $ingress := include "base-cluster.monitoring.ingress.config" (dict "name" .name "context" .context) | fromYaml -}}
+  {{- if include "base-cluster.monitoring.ingress.enabled" (dict "name" .name "context" .context) -}}
+    {{- and (empty .Values.global.authentication.config.clientId) (dig "enabled" false $ingress) | ternary true "" -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "base-cluster.monitoring.authenticated-ingress.enabled" -}}
+  {{- $_ := set . "Values" .context.Values -}}
+  {{- $ingress := include "base-cluster.monitoring.ingress.config" (dict "name" .name "context" .context) | fromYaml -}}
+  {{- if include "base-cluster.monitoring.ingress.enabled" (dict "name" .name "context" .context) -}}
+    {{- and (not (empty .Values.global.authentication.config.clientId)) (dig "enabled" true $ingress) | ternary true "" -}}
+  {{- end -}}
 {{- end -}}

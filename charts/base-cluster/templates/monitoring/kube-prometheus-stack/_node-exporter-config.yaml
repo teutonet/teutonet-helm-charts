@@ -1,7 +1,7 @@
 {{- define "base-cluster.prometheus-stack.node-exporter.config" -}}
   {{- if .Values.global.imageRegistry }}
 image:
-  repository: {{ printf "%s/prometheus/node-exporter" .Values.global.imageRegistry }}
+  registry: {{ .Values.global.imageRegistry }}
   {{- end }}
 resources: {{- .Values.monitoring.prometheus.nodeExporter.resources | toYaml | nindent 2 }}
 priorityClassName: monitoring-components

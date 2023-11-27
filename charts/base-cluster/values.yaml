@@ -1,8 +1,8 @@
 global:
   serviceLevelAgreement: None
-  clusterName: null
-  baseDomain: null
-  imageRegistry: null
+  clusterName: ""
+  baseDomain: ""
+  imageRegistry: ""
   imageCredentials: {}
   priorityClasses: {}
   namespaces:
@@ -52,12 +52,12 @@ global:
         {{- end }}
       targetNamespaces: ALL
       condition: "{{ not (empty .Values.global.baseDomain) }}"
-  storageClass: null
+  storageClass: ""
   kubectl:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: 1.28.2
+      tag: 1.28.4
   flux:
     image:
       registry: docker.io
@@ -77,12 +77,15 @@ global:
     metricsLabels:
       io.kubernetes.pod.namespace: monitoring
       app.kubernetes.io/name: prometheus
+    ingressLabels:
+      io.kubernetes.pod.namespace: ingress-nginx
+      app.kubernetes.io/name: ingress-nginx
   # it's important that the `url` is the first key and `charts` is right below, otherwise renovate won't detect it
   helmRepositories:
     prometheus:
       url: https://prometheus-community.github.io/helm-charts
       charts:
-        kube-prometheus-stack: 51.x
+        kube-prometheus-stack: 54.x
       condition: "{{ .Values.monitoring.prometheus.enabled }}"
       interval: 5m
     grafana:
@@ -137,7 +140,7 @@ global:
       url: https://emberstack.github.io/helm-charts
       charts:
         reflector: 7.x
-      condition: '{{ eq (include "base-cluster.reflector.enabled" (dict "context" .)) "true" }}'
+      condition: '{{ include "base-cluster.reflector.enabled" (dict "context" .) }}'
     vmware:
       url: https://vmware-tanzu.github.io/helm-charts
       charts:
@@ -148,6 +151,26 @@ global:
       charts:
         opentelemetry-collector:  0.x.x
       condition: "{{ and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}"
+  authentication:
+    config:
+      clientId: ""
+      clientSecret: ""
+      issuerHost: ""
+      issuerPath: ""
+    grafana:
+      authenticationPath: /protocol/openid-connect/auth
+      apiPath: /protocol/openid-connect/userinfo
+      tokenPath: /protocol/openid-connect/token
+      roleAttributePath: Viewer
+    oauthProxy:
+      emailDomains: []
+      resources:
+        limits:
+          cpu: 100m
+          memory: 32Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
 
 kyverno:
   enabled: false
@@ -156,17 +179,17 @@ kyverno:
   validationFailureAction: audit
 
 monitoring:
+  monitorAllNamespaces: true
   labels:
     managed.by/monitoring: teutonet
   grafana:
-    adminPassword: null
+    adminPassword: ""
     ingress:
       enabled: true
       host: grafana
-      customDomain: null
+      customDomain: ""
     additionalDashboards: {}
     additionalPlugins: []
-    config: {}
     notifiers: []
     resources:
       requests:
@@ -195,7 +218,7 @@ monitoring:
     retentionDuration: 4w
     retentionSize: 90GB
     persistence:
-      storageClass: null
+      storageClass: ""
       size: 100Gi
     resources:
       requests:
@@ -243,23 +266,21 @@ monitoring:
           cpu: "2"
           memory: 128Mi
     ingress:
-      enabled: false
       host: prometheus
-      customDomain: null
+      customDomain: ""
     alertmanager:
       ingress:
-        enabled: false
         host: alertmanager
-        customDomain: null
+        customDomain: ""
       replicas: 1
       retentionDuration: 120h
       persistence:
-        storageClass: null
+        storageClass: ""
         size: 1Gi
   loki:
     enabled: true
     persistence:
-      storageClass: null
+      storageClass: ""
       size: 10Gi
     replicas: 1
     resources:
@@ -325,7 +346,6 @@ dns:
   provider: null
 
 certManager:
-  email: null
   resources:
     limits:
       cpu: 250m
@@ -375,7 +395,6 @@ ingress:
     limits:
       cpu: 1
       memory: 256Mi
-  IP: null
 
 storage:
   readWriteMany:
@@ -383,7 +402,7 @@ storage:
     storageClass:
       name: teutostack-nfs
     persistence:
-      storageClass: null
+      storageClass: ""
       size: 5Gi
 
 reflector:

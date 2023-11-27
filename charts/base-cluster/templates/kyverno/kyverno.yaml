@@ -24,9 +24,6 @@ spec:
       repository: {{ printf "%s/kyverno/kyverno" $.Values.global.imageRegistry }}
     initImage:
       repository: {{ printf "%s/kyverno/kyvernopre" $.Values.global.imageRegistry }}
-    cleanupController:
-      image:
-        repository: {{ printf "%s/kyverno/cleanup-controller" $.Values.global.imageRegistry }}
     {{- end }}
     installCRDs: true
     networkPolicy:
@@ -40,15 +37,24 @@ spec:
     priorityClassName: system-cluster-critical
     # this only works in version 3
     {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
-    admissionController: &tracingConfig
-      tracing:
+    admissionController:
+      tracing: &tracingConfig
         enabled: true
         address: open-telemetry-collector-opentelemetry-collector.monitoring
         port: 14250 # jaeger-grpc
-    backgroundController: *tracingConfig
-    cleanupController: *tracingConfig
-    reportsController: *tracingConfig
+    backgroundController:
+      tracing: *tracingConfig
+    reportsController:
+      tracing: *tracingConfig
     {{- end }}
+    cleanupController:
+      {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
+      tracing: *tracingConfig
+      {{- end }}
+      {{- if .Values.global.imageRegistry }}
+      image:
+        repository: {{ printf "%s/kyverno/cleanup-controller" $.Values.global.imageRegistry }}
+      {{- end }}
     podDisruptionBudget:
       enabled: true
       minAvailable: 1
@@ -83,10 +89,11 @@ spec:
     # This only works in clusters >=1.22 because it relies on the
     # kubernetes.io/metadata.name label on namespaces, which is active by
     # default since 1.22.
-    webhooks:
-      - namespaceSelector:
-          matchExpressions:
-            - key: kubernetes.io/metadata.name
-              operator: NotIn
-              values: {{- include "base-cluster.kyverno.ignoredNamespaces" . | nindent 18 }}
+    config:
+      webhooks:
+        - namespaceSelector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: NotIn
+                values: {{- include "base-cluster.kyverno.ignoredNamespaces" . | nindent 18 }}
 {{- end }}

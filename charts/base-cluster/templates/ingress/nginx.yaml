@@ -28,6 +28,10 @@ spec:
       {{- if .Values.monitoring.tracing.enabled }}
       opentelemetry:
         enabled: true
+        {{- if and .Values.global.imageRegistry false }}
+        # TODO: this is not really viable, therefore we skip this image for mirroring until this is adjusted upstream
+        image: {{ printf "%s/ingress-nginx/opentelemetry:v20230721-3e2062ee5@sha256:13bee3f5223883d3ca62fee7309ad02d22ec00ff0d7033e3e9aca7a9f60fd472" .Values.global.imageRegistry }}
+        {{- end }}
       {{- end }}
       config:
         use-proxy-protocol: true

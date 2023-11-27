@@ -1,0 +1,12 @@
+global:
+  authentication:
+    config:
+      clientId: clientId
+      clientSecret: clientSecret
+      issuerHost: keycloak.de
+      issuerPath: /auth/realms/test
+    grafana:
+      apiPath: /outh2/userinfo/grafana
+      authenticationPath: /OAuth2/Authorize/grafana
+      tokenPath: /OAuth2/Token/grafana
+      roleAttributePath: "contains(groups, 'admin') && 'Admin' || Viewer"

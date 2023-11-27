@@ -1,15 +1,14 @@
 {{- if .Values.flux.gitRepositories }}
-  {{- range $name, $instance := .Values.flux.gitRepositories -}}
-    {{- if regexMatch "^ssh://" $instance.url }}
+  {{- range $name, $instance := .Values.flux.gitRepositories }}
+    {{ if regexMatch "^ssh://" $instance.url -}}
       {{- $authenticationSecretName := printf "%s-flux-%s" (include "common.names.fullname" $) $name -}}
-You should configure {{ $instance.url | quote }} to accept the following key:
+      {{- printf `You should configure "%s" to accept the following key:` $instance.url | nindent 0 }}
       {{- printf `$ kubectl -n %s get secret %s -o json | jq -r '.data["identity.pub"]' | base64 -d` $.Release.Namespace ($authenticationSecretName | quote) | nindent 2 }}
     {{- end }}
-
-    {{ if $instance.decryption -}}
-      {{- if eq $instance.decryption.provider "sops" }}
+    {{- if $instance.decryption }}
+      {{ if eq $instance.decryption.provider "sops" }}
         {{- $decryptionSecretName := printf "%s-flux-%s-gpg" (include "common.names.fullname" $) $name -}}
-You should configure {{ $instance.url | quote }} to add the following key as a sops recipient and store the public key in a way that it is accessible (probably a git repository):
+        {{- printf `You should configure "%s" to add the following key as a sops recipient and store the public key in a way that it is accessible (probably a git repository):` $instance.url | nindent 0 }}
         {{- printf `$ kubectl -n %s get secret %s -o json | jq -r '.data["pub.asc"]' | base64 -d` $.Release.Namespace ($decryptionSecretName | quote) | nindent 2 }}
       {{- end }}
     {{- end }}
@@ -28,7 +27,10 @@ You can access your grafana instance via
 
 http://localhost:3000
 {{- end }}
+{{ if .Values.global.authentication.config.clientId }}
+Login via your OIDC provider, or via;
 
+{{- end }}
 Username: admin
 {{- $secretName := include "common.secrets.name" (dict "defaultNameSuffix" "grafana" "context" $) -}}
 {{- if lookup "v1" "Secret" "monitoring" $secretName }}

@@ -17,30 +17,21 @@
           "default": "None"
         },
         "clusterName": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "description": "The name of the cluster, used as subdomain under `baseDomain` and as label `cluster` on all alerts",
           "examples": [
             "eu-2"
           ]
         },
         "baseDomain": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "description": "The base domain to be used for cluster ingress",
           "examples": [
             "teuto.net"
           ]
         },
         "imageRegistry": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "description": "The global container image proxy, e.g. [Nexus](https://artifacthub.io/packages/helm/sonatype/nexus-repository-manager), this needs to support various registries",
           "examples": [
             "nexus.teuto.net"
@@ -144,6 +135,14 @@
                 "type": "string"
               },
               "minProperties": 1
+            },
+            "ingressLabels": {
+              "type": "object",
+              "description": "The labels used to allow egress to the DNS service",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "minProperties": 1
             }
           },
           "additionalProperties": false
@@ -221,7 +220,7 @@
         },
         "namespaces": {
           "type": "object",
-          "description": "Namespaces to create. AND *delete* if removed",
+          "description": "Namespaces to create. AND *delete* if removed. These will also be the only ones, including the builtin namespaces, for which alerts will be sent if `monitoring.monitorAllNamespaces=false`",
           "additionalProperties": {
             "type": "object",
             "properties": {
@@ -260,12 +259,74 @@
                 "default": "PreemptLowerPriority"
               }
             },
-            "required": ["value"],
+            "required": [
+              "value"
+            ],
             "additionalProperties": false
           },
           "propertyNames": {
             "maxLength": 63
           }
+        },
+        "authentication": {
+          "type": "object",
+          "properties": {
+            "config": {
+              "type": "object",
+              "properties": {
+                "clientId": {
+                  "type": "string"
+                },
+                "clientSecret": {
+                  "type": "string"
+                },
+                "issuerHost": {
+                  "type": "string"
+                },
+                "issuerPath": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "grafana": {
+              "type": "object",
+              "properties": {
+                "roleAttributePath": {
+                  "type": "string"
+                },
+                "authenticationPath": {
+                  "type": "string"
+                },
+                "apiPath": {
+                  "type": "string"
+                },
+                "tokenPath": {
+                  "type": "string"
+                }
+              },
+              "description": "See https://grafana.com/docs/grafana/latest/setup-grafana/configure-security/configure-authentication/generic-oauth/#configuration-options",
+              "additionalProperties": false
+            },
+            "oauthProxy": {
+              "type": "object",
+              "properties": {
+                "emailDomains": {
+                  "type": "array",
+                  "additionalItems": {
+                    "type": "string",
+                    "$ref": "#/$defs/email"
+                  }
+                },
+                "resources": {
+                  "type": "object",
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
         }
       },
       "required": [
@@ -310,6 +371,9 @@
     "monitoring": {
       "type": "object",
       "properties": {
+        "monitorAllNamespaces": {
+          "type": "boolean"
+        },
         "labels": {
           "type": "object",
           "description": "The labels to set on ServiceMonitors, ... and which the prometheus uses to search for",
@@ -419,15 +483,6 @@
                 }
               },
               "additionalProperties": false
-            },
-            "authentication": {
-              "type": "object",
-              "properties": {
-                "enabled": {
-                  "type": "boolean"
-                }
-              },
-              "additionalProperties": false
             }
           },
           "additionalProperties": false
@@ -436,10 +491,7 @@
           "type": "object",
           "properties": {
             "adminPassword": {
-              "type": [
-                "string",
-                "null"
-              ]
+              "type": "string"
             },
             "ingress": {
               "$ref": "#/$defs/toolIngress"
@@ -700,10 +752,7 @@
           "$ref": "#/$defs/resourceRequirements"
         },
         "email": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "description": "Setting an email enables cert-manager's IngressShim and will be used for Let's Encrypt",
           "$ref": "#/$defs/email"
         },
@@ -937,10 +986,7 @@
           "description": "Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets"
         },
         "IP": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "pattern": "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$",
           "description": "Try to use specified IP as loadbalancer IP"
         }
@@ -1248,10 +1294,7 @@
       "default": "ALL"
     },
     "storageClass": {
-      "type": [
-        "string",
-        "null"
-      ],
+      "type": "string",
       "description": "The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd)"
     },
     "toolIngress": {
@@ -1262,13 +1305,10 @@
         },
         "host": {
           "type": "string",
-          "description": "The subdomain to use under `.global.customerName`.`.global.baseDomain`"
+          "description": "The subdomain to use under `.global.clusterName`.`.global.baseDomain`"
         },
         "customDomain": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "description": "The full custom domain to use"
         }
       },

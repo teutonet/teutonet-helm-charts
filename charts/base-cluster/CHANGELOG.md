@@ -1,5 +1,43 @@
 # Changelog
 
+## [4.11.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.10.0...base-cluster-v4.11.0) (2023-11-23)
+
+
+### Features
+
+* **base-cluster/monitoring:** allow admin login even with oidc ([#645](https://github.com/teutonet/teutonet-helm-charts/issues/645)) ([c4b8b89](https://github.com/teutonet/teutonet-helm-charts/commit/c4b8b8924ed455637f1d2a3dc1a59c4a33ee0edb))
+
+
+### Bug Fixes
+
+* **base-cluster/ingress:** fix templating when no baseDomain is set ([#647](https://github.com/teutonet/teutonet-helm-charts/issues/647)) ([46dae44](https://github.com/teutonet/teutonet-helm-charts/commit/46dae449bd66c4f4a9d66c21b982fa258a71d232))
+* **base-cluster:** notes formatting ([#644](https://github.com/teutonet/teutonet-helm-charts/issues/644)) ([c23ca9c](https://github.com/teutonet/teutonet-helm-charts/commit/c23ca9c70f039b5af48256e368bf1fa8c90d1628))
+
+## [4.10.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.9.1...base-cluster-v4.10.0) (2023-11-23)
+
+
+### Features
+
+* **base-cluster/monitoring:** improve strength of generated grafana adminPassword ([#640](https://github.com/teutonet/teutonet-helm-charts/issues/640)) ([c605812](https://github.com/teutonet/teutonet-helm-charts/commit/c6058127e9a8732f3025277ae9a108c6ebc63b03))
+* **base-cluster/monitoring:** monitor all namespaces by default ([#545](https://github.com/teutonet/teutonet-helm-charts/issues/545)) ([fd8168b](https://github.com/teutonet/teutonet-helm-charts/commit/fd8168b88d8c4d575fcb66efc270f0f895eacef7))
+* **base-cluster/monitoring:** oidc authentication ([#623](https://github.com/teutonet/teutonet-helm-charts/issues/623)) ([1ae3499](https://github.com/teutonet/teutonet-helm-charts/commit/1ae3499f70afd2c92d0c8e6b1ccfddbe86ae6caa))
+
+
+### Bug Fixes
+
+* **base-cluster/kyverno:** fix excluded namespaces ([#608](https://github.com/teutonet/teutonet-helm-charts/issues/608)) ([5a6a6ea](https://github.com/teutonet/teutonet-helm-charts/commit/5a6a6ea1039cd95d7e07c5d400289d6d504cc056))
+* **base-cluster/monitoring:** cert-manager is always deployed, so should its dashboard ([#642](https://github.com/teutonet/teutonet-helm-charts/issues/642)) ([ae7fee2](https://github.com/teutonet/teutonet-helm-charts/commit/ae7fee25ba552da183b3adff646f5a7c59185f9f))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** improve conditions ([#632](https://github.com/teutonet/teutonet-helm-charts/issues/632)) ([5b23701](https://github.com/teutonet/teutonet-helm-charts/commit/5b2370154f4e8e0e12d1417b7e9e2c226ac51bb8))
+* **base-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.28.2 ([#589](https://github.com/teutonet/teutonet-helm-charts/issues/589)) ([bb7edba](https://github.com/teutonet/teutonet-helm-charts/commit/bb7edba302539f410689d26dea2796dad433740e))
+* **base-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.28.4 ([#628](https://github.com/teutonet/teutonet-helm-charts/issues/628)) ([729772e](https://github.com/teutonet/teutonet-helm-charts/commit/729772ec48c33321a96a90ee500543e7b39892a2))
+* **base-cluster/dependencies:** update docker.io/fluxcd/flux-cli docker tag to v2.1.2 ([#586](https://github.com/teutonet/teutonet-helm-charts/issues/586)) ([80531f3](https://github.com/teutonet/teutonet-helm-charts/commit/80531f3e342bbb3f7b12d84abb3983a7d6ab5c81))
+* **base-cluster/dependencies:** update helm release common to v2.13.3 ([#613](https://github.com/teutonet/teutonet-helm-charts/issues/613)) ([8ec0f38](https://github.com/teutonet/teutonet-helm-charts/commit/8ec0f38a4d926f3b3adaa19013de0dcc9a76e25c))
+* **base-cluster/dependencies:** update helm release kube-prometheus-stack to v54 ([#631](https://github.com/teutonet/teutonet-helm-charts/issues/631)) ([14a7d58](https://github.com/teutonet/teutonet-helm-charts/commit/14a7d58dba4c1ce372955f80b109b1a007a989bf))
+
 ## [4.9.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.9.0...base-cluster-v4.9.1) (2023-10-06)
 
 

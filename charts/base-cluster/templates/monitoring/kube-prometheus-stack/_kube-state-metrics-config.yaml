@@ -1,7 +1,7 @@
 {{- define "base-cluster.prometheus-stack.kube-state-metrics.config" -}}
   {{- if .Values.global.imageRegistry }}
 image:
-  repository: {{ printf "%s/kube-state-metrics/kube-state-metrics" .Values.global.imageRegistry }}
+  registry: {{ .Values.global.imageRegistry }}
   {{- end }}
 resources: {{- .Values.monitoring.prometheus.kubeStateMetrics.resources | toYaml | nindent 2 }}
   {{- $metricLabelsAllowList := list -}}
