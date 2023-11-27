@@ -31,7 +31,7 @@ spec:
               value: {{ .Values.worker.database.port | quote }}
             - name: KUBECONFIG
               value: "/kubeconfig"
-            {{- with (include "portalworker.dbcredentials" $) }}
+            {{- with (include "portalworker.dbcredentials.secretName" $) }}
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -46,7 +46,7 @@ spec:
             {{- range $k, $v := .Values.worker.config }}
             {{- if or (typeIs "bool" $v) ($v) }}
             - name: {{ regexReplaceAll `_(\d+)` ($k | snakecase | upper) "$1" }}
-              value: {{ $v | quote }}
+              value: {{ $v | join "," | quote }}
             {{- end -}}
             {{- end }}
           ports:
