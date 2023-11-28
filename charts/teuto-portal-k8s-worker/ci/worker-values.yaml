@@ -1,0 +1,15 @@
+worker:
+  database:
+    host: localhost
+    credentials:
+      secret:
+        name: db-credentials
+  config:
+    flavourPrefixFilter:
+      - teuto
+      - teuto-net
+    syncInterval: 10s
+    loggingFormat: json
+  kubeconfig:
+    secret:
+      name: k8s-access-token

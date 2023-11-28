@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "portal worker helmchart",
+  "properties": {
+    "global": {
+      "imageRegistry": {
+        "type": "string"
+      },
+      "imagePullSecrets": {
+        "type": "array",
+         "items": {
+           "type": "object",
+           "properties": {
+             "name": {
+               "type": "string"
+             }
+           },
+           "additionalProperties": false
+         }
+      },
+      "podSecurityContext": {
+        "type": "object",
+        "properties": {
+          "runAsNonRoot": {
+            "type": "boolean"
+          },
+          "readOnlyRootFilesystem": {
+            "type": "boolean"
+          },
+          "allowPrivilegeEscalation": {
+            "type": "boolean"
+          },
+          "privileged": {
+            "type": "boolean"
+          },
+          "capabilities": {
+            "type": "object",
+            "properties": {
+              "drop": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "runAsGroup": {
+                "type": "integer"
+              },
+              "runAsUser": {
+                "type": "integer"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "securityContext": {
+        "type": "object",
+        "properties": {
+          "fsGroup": {
+            "type": "integer"
+          },
+          "runAsUser": {
+            "type": "integer"
+          },
+          "runAsGroup": {
+            "type": "integer"
+          },
+          "runAsNonRoot": {
+            "type": "boolean"
+          },
+          "fsGroupChangePolicy": {
+            "type": "string",
+            "enum": [
+              "Always",
+              "OnRootMismatch"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "worker": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "object",
+          "properties": {
+            "registry": {
+              "type": "string",
+              "description": "The host of the registry",
+              "examples": [
+                "docker.io"
+              ]
+            },
+            "repository": {
+              "type": "string",
+              "description": "The image path in the registry",
+              "examples": [
+                "bitnami/kubectl"
+              ]
+            },
+            "tag": {
+              "type": "string"
+            },
+            "digest": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "database": {
+          "type": "object",
+          "properties": {
+            "credentials": {
+              "type": "object",
+              "properties": {
+                "secret": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "name"
+                  ]
+                },
+                "additionalProperties": false
+              },
+              "additionalProperties": false
+            },
+            "host": {
+              "type": "string"
+            },
+            "port": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "host"
+          ]
+        },
+        "kubeconfig": {
+          "type": "object",
+          "properties": {
+            "secret": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "name"
+              ]
+            },
+            "additionalProperties": false
+          },
+          "additionalProperties": false
+        },
+        "config": {
+          "type": "object",
+          "properties": {
+            "dryRun": {
+              "type": "boolean"
+            },
+            "singleRun": {
+              "type": "boolean"
+            },
+            "otelExporterTracesEndpoint": {
+              "type": "string"
+            },
+            "syncInterval": {
+              "type": "string",
+              "pattern": "(^(\\d+[h,m,s] *){1,3}$)"
+            },
+            "watchK8sEvents": {
+              "type": "boolean"
+            },
+            "minimumCPUFlavour": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "flavourPrefixFilter": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "clusterNamespace": {
+              "type": "string"
+            },
+            "loggingFormat": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "resources": {
+          "$ref": "#/$defs/resourceRequirements"
+        }
+      },
+      "additionalProperties": false
+    },
+    "common": {
+      "type": "object",
+      "description": "Values for sub-chart"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "resourceRequirements": {
+      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+    }
+  }
+}
