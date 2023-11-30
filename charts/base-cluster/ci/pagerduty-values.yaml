@@ -1,0 +1,7 @@
+monitoring:
+  prometheus:
+    alertmanager:
+      receivers:
+        pagerduty:
+          enabled: true
+          integrationKey: INTEGRATION_KEY

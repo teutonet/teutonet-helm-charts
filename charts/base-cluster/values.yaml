@@ -68,7 +68,11 @@ global:
       registry: docker.io
       repository: vladgh/gpg
       digest: sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
-
+  curl:
+    image:
+      registry: docker.io
+      repository: curlimages/curl
+      tag: 8.4.0
   networkPolicy:
     type: none
     dnsLabels:
@@ -149,7 +153,7 @@ global:
     open-telemetry:
       url: https://open-telemetry.github.io/opentelemetry-helm-charts
       charts:
-        opentelemetry-collector:  0.x.x
+        opentelemetry-collector: 0.x.x
       condition: "{{ and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}"
   authentication:
     config:
@@ -212,6 +216,10 @@ monitoring:
     storageClassMapping:
       teutostack-hdd: 0.002
       teutostack-ssd: 0.0067
+  deadMansSwitch:
+    enabled: false
+    apiKey: ""
+    pingKey: ""
   prometheus:
     enabled: true
     replicas: 2
@@ -269,10 +277,15 @@ monitoring:
       host: prometheus
       customDomain: ""
     alertmanager:
+      receivers:
+        pagerduty:
+          enabled: false
+          integrationKey: ""
+          url: https://events.pagerduty.com/v2/enqueue
       ingress:
         host: alertmanager
         customDomain: ""
-      replicas: 1
+      replicas: 3
       retentionDuration: 120h
       persistence:
         storageClass: ""

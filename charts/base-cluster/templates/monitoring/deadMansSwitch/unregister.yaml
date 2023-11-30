@@ -1,0 +1,68 @@
+{{- if lookup "v1" "Secret" "monitoring" "dead-mans-switch" }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dead-mans-switch-unregister
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: dead-mans-switch
+  annotations:
+    helm.sh/hook: pre-delete
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded,hook-failed
+spec:
+  template:
+    spec:
+      securityContext:
+        runAsGroup: 1000
+        runAsUser: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+      automountServiceAccountToken: false
+      restartPolicy: OnFailure
+      containers:
+        - name: unregister
+          image: {{ include "base-cluster.curl.image" . }}
+          {{- if .Values.global.kubectl.image.repository | contains "@" }}
+          imagePullPolicy: IfNotPresent
+          {{- else }}
+          imagePullPolicy: Always
+          {{- end }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+          env:
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: dead-mans-switch
+                  key: apiKey
+          command:
+            - ash
+            - -e
+            - -c
+            - |
+              set -o pipefail
+
+              set -x
+              function deleteCheck() {
+                local checkName="$1"
+                local existingChecks
+                local existingCheckUUID
+                existingChecks="$(curl --silent --fail --retry 5 --max-time 30 --header "X-Api-Key: $apiKey" https://healthchecks.io/api/v3/checks/)"
+                existingCheckUUID="$(jq -r ".checks[] | select(.name == \"$checkName\") | .ping_url | split(\"/\") | last" <<< "$existingChecks")"
+
+                if curl --silent --show-error --fail --retry 5 --max-time 30 --header "X-Api-Key: $API_KEY" "https://healthchecks.io/api/v3/checks/$existingCheckUUID" > /dev/null; then
+                  curl --silent --show-error --fail --retry 5 --max-time 30 --header "X-Api-Key: $API_KEY" "https://healthchecks.io/api/v3/checks/$existingCheckUUID" --request DELETE
+                fi
+              }
+
+              checkName={{- printf "k8s-cluster-%s-%s" (.Values.global.baseDomain | replace "." "-") .Values.global.clusterName | quote }}
+              {{- if .Values.monitoring.prometheus.enabled }}
+              deleteCheck "$checkName-monitoring"
+              {{- end }}
+              deleteCheck "$checkName-scheduling"
+{{- end }}

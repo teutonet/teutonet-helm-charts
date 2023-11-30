@@ -1,0 +1,69 @@
+{{- if .Values.monitoring.deadMansSwitch.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dead-mans-switch-registration
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: dead-mans-switch
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded,hook-failed
+spec:
+  template:
+    spec:
+      securityContext:
+        runAsGroup: 1000
+        runAsUser: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+      automountServiceAccountToken: false
+      restartPolicy: OnFailure
+      containers:
+        - name: register
+          image: {{ include "base-cluster.curl.image" . }}
+          {{- if .Values.global.kubectl.image.repository | contains "@" }}
+          imagePullPolicy: IfNotPresent
+          {{- else }}
+          imagePullPolicy: Always
+          {{- end }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+          env:
+              - name: PING_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: dead-mans-switch
+                    key: pingKey
+              - name: API_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: dead-mans-switch
+                    key: apiKey
+          command:
+            - ash
+            - -e
+            - -c
+            - |
+              set -o pipefail
+
+              set -x
+              function createCheck() {
+                local checkName="$1"
+                local data='{"name": "'"$checkName"'", "slug": "'"$checkName"'", "tags": "k8s {{ .Values.global.clusterName -}}", "timeout": 120, "grace": 60, "channels": "{{- .Values.global.clusterName -}}", "unique": ["name"]}'
+
+                curl --silent --show-error --fail --retry 5 --max-time 30 --header "X-Api-Key: $API_KEY" https://healthchecks.io/api/v3/checks/ --data "$data"
+                curl --silent --show-error --fail --retry 5 --max-time 30 "https://hc-ping.com/$PING_KEY/$checkName"
+              }
+
+              checkName={{- printf "k8s-cluster-%s-%s" (.Values.global.baseDomain | replace "." "-") .Values.global.clusterName | quote }}
+              {{- if .Values.monitoring.prometheus.enabled }}
+              createCheck "$checkName-monitoring"
+              {{- end }}
+              createCheck "$checkName-scheduling"
+{{- end }}

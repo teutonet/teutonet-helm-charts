@@ -1,0 +1,5 @@
+monitoring:
+  deadMansSwitch:
+    enabled: true
+    pingKey: PING_KEY
+    apiKey: API_KEY

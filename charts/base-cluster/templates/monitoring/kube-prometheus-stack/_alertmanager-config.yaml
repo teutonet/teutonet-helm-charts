@@ -1,8 +1,10 @@
 {{- define "base-cluster.prometheus-stack.alertmanager.config" -}}
-enabled: false # TODO dependent on routes/receivers
-# TODO routes
-# TODO receivers
-{{- if false }}
+{{- $enabled := false -}}
+{{- range $_, $receiver := .Values.monitoring.prometheus.alertmanager.receivers -}}
+  {{- $enabled = or $enabled $receiver.enabled -}}
+{{- end -}}
+enabled: {{ $enabled }}
+{{- if $enabled }}
 podDisruptionBudget:
   enabled: true
 {{- if include "base-cluster.monitoring.unauthenticated-ingress.enabled" (dict "name" "alertmanager" "context" .) }}
@@ -26,5 +28,38 @@ alertmanagerSpec:
             storage: {{ .Values.monitoring.prometheus.alertmanager.persistence.size }}
   alertmanagerConfigSelector:
     matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
+config:
+  {{- if .Values.monitoring.prometheus.alertmanager.receivers.pagerduty.enabled }}
+  global:
+    pagerduty_url: {{ .Values.monitoring.prometheus.alertmanager.receivers.pagerduty.url | required "You need to provide the `.Values.monitoring.promteheus.alertmanager.receivers.pagerduty.url`" | quote }}
+  {{- end }}
+  receivers:
+    {{- if .Values.monitoring.prometheus.alertmanager.receivers.pagerduty.enabled }}
+    - name: pagerduty
+      pagerduty_configs:
+        - routing_key: {{ .Values.monitoring.prometheus.alertmanager.receivers.pagerduty.integrationKey | required "You need to provide the `.Values.monitoring.prometheus.alertmanager.receivers.pagerduty.integrationKey`" }}
+          send_resolved: true
+          http_config:
+            follow_redirects: true
+    {{- end }}
+    {{- if and .Values.monitoring.deadMansSwitch.enabled .Values.global.baseDomain .Values.global.clusterName }}
+    - name: healthchecks.io
+      webhook_configs:
+        - url: {{ printf "https://hc-ping.com/%s/k8s-cluster-%s-%s-monitoring" .Values.monitoring.deadMansSwitch.pingKey (.Values.global.baseDomain | replace "." "-") .Values.global.clusterName }}
+          send_resolved: false
+    {{- end }}
+    - name: "null"
+  route:
+    {{- if .Values.monitoring.prometheus.alertmanager.receivers.pagerduty.enabled }}
+    receiver: pagerduty
+    {{- end }}
+    routes:
+    {{- if .Values.monitoring.deadMansSwitch.enabled }}
+      - match:
+          alertname: Watchdog
+        receiver: healthchecks.io
+        group_interval: 1m
+        repeat_interval: 1m
+    {{- end }}
 {{- end }}
 {{- end -}}

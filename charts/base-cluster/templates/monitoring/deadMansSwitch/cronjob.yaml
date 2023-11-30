@@ -1,0 +1,69 @@
+{{- if .Values.monitoring.deadMansSwitch.enabled }}
+{{- if false }}
+apiVersion: batch/v1
+{{- else }}
+apiVersion: {{ include "common.capabilities.cronjob.apiVersion" . }}
+{{- end }}
+kind: CronJob
+metadata:
+  name: dead-mans-switch
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: dead-mans-switch
+spec:
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 50
+  schedule: "* * * * *" # Every minute
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels: {{- include "common.labels.standard" $ | nindent 12 }}
+            app.kubernetes.io/component: dead-mans-switch
+        spec:
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+            runAsNonRoot: true
+            fsGroup: 1000
+          automountServiceAccountToken: false
+          restartPolicy: OnFailure
+          containers:
+            - name: watchdog
+              image: {{ template "base-cluster.curl.image" . }}
+              {{- if .Values.global.kubectl.image.repository | contains "@" }}
+              imagePullPolicy: IfNotPresent
+              {{- else }}
+              imagePullPolicy: Always
+              {{- end }}
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                privileged: false
+                readOnlyRootFilesystem: true
+              env:
+                - name: PING_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: dead-mans-switch
+                      key: pingKey
+              command:
+                - curl
+                - --silent
+                - --show-error
+                - --fail
+                - --retry
+                - '5'
+                - --max-time
+                - '30'
+                - {{ printf "https://hc-ping.com/$(PING_KEY)/k8s-cluster-%s-%s-scheduling" (.Values.global.baseDomain | replace "." "-") .Values.global.clusterName }}
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 16Mi
+                limits:
+                  cpu: 100m
+                  memory: 16Mi
+{{- end }}
