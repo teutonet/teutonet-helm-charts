@@ -61,5 +61,8 @@ config:
         group_interval: 1m
         repeat_interval: 1m
     {{- end }}
+      - match:
+          alertname: InfoInhibitor
+        receiver: "null"
 {{- end }}
 {{- end -}}
