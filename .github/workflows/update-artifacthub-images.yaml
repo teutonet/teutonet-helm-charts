@@ -21,7 +21,7 @@ jobs:
           (
             echo -n charts=
             for chart in charts/*; do
-              if [[ "$chart" != "charts/*" ]]; then
+              if [[ "$chart" != "charts/*" ]] && [[ -f "$chart/ci/artifacthub-values.yaml" ]]; then
                 echo "$chart"
               fi
             done | cut -d / -f 2 | jq -c -Rn '[inputs]'
