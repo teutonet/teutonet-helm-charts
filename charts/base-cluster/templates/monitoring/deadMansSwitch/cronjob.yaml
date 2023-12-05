@@ -31,7 +31,7 @@ spec:
           containers:
             - name: watchdog
               image: {{ template "base-cluster.curl.image" . }}
-              {{- if .Values.global.kubectl.image.repository | contains "@" }}
+              {{- if .Values.global.kubectl.image.digest }}
               imagePullPolicy: IfNotPresent
               {{- else }}
               imagePullPolicy: Always
