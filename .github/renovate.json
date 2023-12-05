@@ -42,6 +42,16 @@
         "charts/stellio-context-broker/**"
       ],
       "dependencyDashboardApproval": true
+    },
+    {
+      "matchPackageNames": "registry-gitlab.teuto.net/4teuto/dev/teuto-portal-k8s-worker/teuto-portal-k8s-worker-k8s-worker/teuto-portal-k8s-worker-k8s-worker",
+      "hostRules": [
+        {
+          "matchHost": "https://registry-gitlab.teuto.net",
+          "username": "github-renovate",
+          "password": "wcFMA/xDdHCJBTolAQ/9EBJ+j/kxeVrmwQvCqvZj8cvlOFuY5kaFcbE/c242PMdM8pm62gzFiGtvbfFl1Bk8veKJ3E//3XqaLZ47T7q3PTxt5I2FXbzuwbXQxjp1s6b69e5HOGk0KOFbFcnP9T7e2wRWi3mek8Zx9fg4wt5CcGGuSkoimAoGzttbaciZ434ep+vZHpD/Jt9uG3BzNy0A8ovh+jn4oMsHtPN2u54MJc36u4HgWW5TZRpSisGoJLeu9ZcqiwlR/1iWM3qy/83egN9FyycuoNVhsT2IjXX02EOncbbf838ki8UYrP1o4a9uWsGq1AbAdf5oubNoT8oYACZ0VBFc3jbmo7jd1mrnVfxRnxTiz621++4R7fgWDLHOu3AdeowyzS4CcVYXiLD36/tV1Q01gGQc9fk5Uo8t9LrZpCE/ZopQ+OiSqLe31B5Zvep6cBOZw/qBU7dFreFmv3ThcnphQ18iaeKudWu2nbTqKMCkeC/eS1fCPA2EE0iyFS0rgijZe2kWFaJmW0puBUjwKXODMiN2g07g4/oMOkT3EZq/q5r5k3nekqR/JgqiDvwt4tgi9yN1b0aaQkuG5pHpKzY7rVXoF4nBXBIy9d2tdXY63fFUvMDPdn85V77a9HQ78RU4xboVZhiGZNLTN76fhZqAPGD8yc3vRJKP1yssDEwPhOzNoxQ0qDHECVnSdwFVfiIc2WCPMAUMsXQfse61eoCm+cRHcbAtkK3piP5OLac1NBd5EwwsldJGCfZskQ74WX0HpVL1Zl8EBF+OFTuRNMUY2cM8cg8GG7PxRjuxKGNmeDwZXzsg0MI0xER5ykRdENbrb8jubMz3g9ImKASxJLHwzfyg"
+        }
+      ]
     }
   ]
 }
