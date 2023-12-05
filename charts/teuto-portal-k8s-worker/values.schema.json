@@ -4,9 +4,6 @@
   "title": "portal worker helmchart",
   "properties": {
     "global": {
-      "imageRegistry": {
-        "type": "string"
-      },
       "imagePullSecrets": {
         "type": "array",
          "items": {
