@@ -52,8 +52,7 @@ spec:
                 local checkName="$1"
                 local existingChecks
                 local existingCheckUUID
-                existingChecks="$(curl --silent --fail --retry 5 --max-time 30 --header "X-Api-Key: $apiKey" https://healthchecks.io/api/v3/checks/)"
-                existingCheckUUID="$(jq -r ".checks[] | select(.name == \"$checkName\") | .ping_url | split(\"/\") | last" <<< "$existingChecks")"
+                existingCheckUUID="$(curl --silent --fail --retry 5 --max-time 30 --header "X-Api-Key: $apiKey" "https://healthchecks.io/api/v3/checks/?slug=$checkName" | sed -r 's#^.*ping_url":\s*"[^"]+/([^"]+)".*$#\1#')"
 
                 if curl --silent --show-error --fail --retry 5 --max-time 30 --header "X-Api-Key: $API_KEY" "https://healthchecks.io/api/v3/checks/$existingCheckUUID" > /dev/null; then
                   curl --silent --show-error --fail --retry 5 --max-time 30 --header "X-Api-Key: $API_KEY" "https://healthchecks.io/api/v3/checks/$existingCheckUUID" --request DELETE
