@@ -18,38 +18,32 @@ jobs:
     needs: getChangedChart
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.ACTIONS_BOT_TOKEN }}
-
-      - name: Configure Git
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email 'github-actions[bot]@users.noreply.github.com'
 
       - run: pip install yq
-      - name: Extract and add helm repos and single out the changed chart
+      - name: Extract and add helm repos
         id: helm-repos
         env:
           CHART: ${{ needs.getChangedChart.outputs.chart }}
         run: |
           set -ex
           set -o pipefail
-          mkdir changed_charts
           chart_dir="charts/${CHART}"
           file="${chart_dir}/Chart.yaml"
           yq -r '.dependencies[] | .repository' "$file" | sort -u | awk '{print NR " " $1}' | xargs -r -n 2 helm repo add
-          mv "${chart_dir}" changed_charts/
-          rm -rf charts
-          mv changed_charts charts
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.6.0
-        env:
-          CR_TOKEN: "${{ secrets.ACTIONS_BOT_TOKEN }}"
-          config: .github/cr.yaml
-      - name: Login to GitHub Container Registry
+      - run: helm package --dependency-update charts/${{ needs.getChangedChart.outputs.chart }}
+      - run: helm registry login ghcr.io --username teutonet-bot --password ${{ secrets.ACTIONS_BOT_TOKEN }}
+      - run: helm push ${{ needs.getChangedChart.outputs.chart }}-* "oci://ghcr.io/${GITHUB_REPOSITORY}"
+      - name: Change to github-actions[bot]
         run: |
-          helm registry login ghcr.io --username teutonet-bot --password ${{ secrets.ACTIONS_BOT_TOKEN }}
-      - name: push chart to GHCR
-        run: helm push .cr-release-packages/${{ needs.getChangedChart.outputs.chart }}-* "oci://ghcr.io/${GITHUB_REPOSITORY}"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+
+      - uses: google-github-actions/release-please-action@v3
+        with:
+          path: charts/${{ inputs.chart }}
+          package-name: ${{ inputs.chart }}
+          command: github-release
+          changelog-types: '[{"type":"feat","section":"Features"},{"type":"fix","section":"Bug Fixes"},{"type":"chore","section":"Miscellaneous Chores"}]'
+          release-type: helm
+          token: ${{ secrets.ACTIONS_BOT_TOKEN }}
