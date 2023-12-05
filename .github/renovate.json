@@ -1,5 +1,7 @@
 {
-  "extends": ["config:base"],
+  "extends": [
+    "config:base"
+  ],
   "assigneesFromCodeOwners": true,
   "assigneesSampleSize": 1,
   "platformAutomerge": true,
@@ -9,7 +11,9 @@
   "automerge": true,
   "regexManagers": [
     {
-      "fileMatch": ["(^|/)values\\.yaml$"],
+      "fileMatch": [
+        "(^|/)values\\.yaml$"
+      ],
       "matchStrings": [
         " {4}\\S+:\\n {6}url: (?<registryUrl>https://\\S+)\\n {6}charts:(?:\\s+\\S+: [0-9.x]+\\s)+",
         " {8}(?<depName>\\S+): (?<currentValue>\\S+)\\s"
@@ -19,7 +23,9 @@
       "datasourceTemplate": "helm"
     },
     {
-      "fileMatch": ["(^|/)values\\.yaml$"],
+      "fileMatch": [
+        "(^|/)values\\.yaml$"
+      ],
       "matchStrings": [
         " {4}\\S+:\\n {6}url: oci://(?<ociUrl>\\S+)\\n {6}charts:(?:\\s+\\S+: [0-9.x]+\\s)+",
         " {8}(?<depName>\\S+): (?<currentValue>\\S+)\\s"
@@ -28,6 +34,14 @@
       "versioningTemplate": "helm",
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://{{{ociUrl}}}"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchFileNames": [
+        "charts/stellio-context-broker/**"
+      ],
+      "dependencyDashboardApproval": true
     }
   ]
 }
