@@ -38,7 +38,7 @@ api_gateway:
     pullPolicy: IfNotPresent
     pullSecrets: []
     repository: stellio/stellio-api-gateway
-    tag: 2.1.0
+    tag: 2.10.1
     digest: ""
 
   podAnnotations: {}
