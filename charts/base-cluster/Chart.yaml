@@ -33,7 +33,7 @@ annotations:
     - image: docker.io/curlimages/curl:7.85.0
     - image: docker.io/fluxcd/flux-cli:v2.1.2
     - image: docker.io/grafana/grafana-image-renderer:latest
-    - image: docker.io/grafana/grafana:10.1.5
+    - image: docker.io/grafana/grafana:10.2.2
     - image: docker.io/grafana/loki:2.6.1
     - image: docker.io/grafana/promtail:2.8.3
     - image: docker.io/otel/opentelemetry-collector-contrib:0.90.1
@@ -49,7 +49,7 @@ annotations:
     - image: quay.io/jetstack/cert-manager-ctl:v1.13.2
     - image: quay.io/jetstack/cert-manager-webhook:v1.13.2
     - image: quay.io/kiwigrid/k8s-sidecar:1.25.2
-    - image: quay.io/prometheus-operator/prometheus-operator:v0.69.1
+    - image: quay.io/prometheus-operator/prometheus-operator:v0.70.0
     - image: quay.io/prometheus/node-exporter:v1.7.0
     - image: quay.io/prometheus/prometheus:v2.48.0
     - image: registry.k8s.io/descheduler/descheduler:v0.28.1
