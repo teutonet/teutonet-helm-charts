@@ -113,6 +113,7 @@ global:
       url: https://kubernetes.github.io/ingress-nginx
       charts:
         ingress-nginx: 4.x.x
+      condition: "{{ .Values.ingress.enabled }}"
     kyverno:
       url: https://kyverno.github.io/kyverno
       charts:
