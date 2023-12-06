@@ -43,14 +43,11 @@ jobs:
         run: sudo apt-get -yq install moreutils
       - run: ./.github/scripts/prepare-values.sh
 
-      - name: extract images for ${{ matrix.chart }}
-        run: ./.github/scripts/extract-artifacthub-images.sh "charts/${{ matrix.chart }}"
+      - run: ./.github/scripts/extract-artifacthub-images.sh "charts/${{ matrix.chart }}"
 
-      - name: enforce trusted registries
-        run: ./.github/scripts/enforce-trusted-registries.sh "charts/${{ matrix.chart }}"
+      - run: ./.github/scripts/enforce-trusted-registries.sh "charts/${{ matrix.chart }}"
 
-      - name: Create PR
-        id: create-pr
+      - id: create-pr
         uses: peter-evans/create-pull-request@v5
         with:
           add-paths: |
@@ -59,10 +56,17 @@ jobs:
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           branch: chore/${{ matrix.chart }}-update-artifacthub-images
           title: "chore(${{ matrix.chart }}/artifacthub-images): Update ArtifactHUB images"
-      - name: Set PR to auto-merge
-        if: ${{ steps.create-pr.outputs.pull-request-number }}
+          body: |
+            Updates the ArtifactHUB images to the really deployed ones.
+      - if: ${{ steps.create-pr.outputs.pull-request-number }}
         run: gh pr merge --auto --squash "$PR_NUMBER"
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
           PR_NUMBER: ${{ steps.create-pr.outputs.pull-request-number }}
+          merge-method: squash
+      - if: ${{ steps.create-pr.outputs.pull-request-number }}
+        uses: juliangruber/approve-pull-request-action@v2.0.0
+        with:
+          github-token: ${{ secrets.ACTIONS_BOT_TOKEN }}
+          number: ${{ steps.create-pr.outputs.pull-request-number }}
           merge-method: squash
