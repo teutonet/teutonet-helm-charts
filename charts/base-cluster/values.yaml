@@ -161,7 +161,7 @@ global:
       authenticationPath: /protocol/openid-connect/auth
       apiPath: /protocol/openid-connect/userinfo
       tokenPath: /protocol/openid-connect/token
-      roleAttributePath: Viewer
+      roleAttributePath: '"''Viewer''"'
     oauthProxy:
       emailDomains: []
       resources:
