@@ -10,21 +10,76 @@ global:
       condition: "{{ not (empty .Values.dns.provider) }}"
       additionalLabels:
         app.kubernetes.io/component: ingress
+      resources:
+        defaults:
+          requests:
+            cpu: 20m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 200Mi
+        quotas:
+          limits.cpu: "1"
+          limits.memory: 500Mi
     cert-manager:
       additionalLabels:
         app.kubernetes.io/component: cert-manager
+      resources:
+        defaults:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 300Mi
+        quotas:
+          limits.cpu: "1"
+          limits.memory: 1Gi
     ingress-nginx:
       condition: "{{ .Values.ingress.enabled }}"
       additionalLabels:
         app.kubernetes.io/component: ingress
+      resources:
+        defaults:
+          requests:
+            cpu: 20m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 200Mi
+        quotas:
+          limits.cpu: "1"
+          limits.memory: 500Mi
     kyverno:
       condition: "{{ .Values.kyverno.enabled }}"
       additionalLabels:
         app.kubernetes.io/component: kyverno
+      resources:
+        defaults:
+          requests:
+            cpu: 350m
+            memory: 350Mi
+          limits:
+            cpu: 800m
+            memory: 800Mi
+        quotas:
+          limits.cpu: 1500m
+          limits.memory: 1500Mi
     monitoring:
       condition: "{{ or .Values.monitoring.prometheus.enabled .Values.monitoring.metricsServer.enabled }}"
       additionalLabels:
         app.kubernetes.io/component: monitoring
+      resources:
+        defaults:
+          requests:
+            cpu: 20m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 200Mi
+        quotas:
+          limits.cpu: "1"
+          limits.memory: 4000Mi
     loki:
       condition: "{{ .Values.monitoring.loki.enabled }}"
       additionalLabels:
@@ -34,6 +89,17 @@ global:
       condition: "{{ .Values.monitoring.securityScanning.enabled }}"
       additionalLabels:
         app.kubernetes.io/component: security
+      resources:
+        defaults:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 300m
+            memory: 1500Mi
+        quotas:
+          limits.cpu: 500Mi
+          limits.memory: 4Gi
     nfs-server-provisioner:
       condition: "{{ .Values.storage.readWriteMany.enabled }}"
       additionalLabels:
@@ -43,6 +109,17 @@ global:
       condition: "{{ .Values.backup.enabled }}"
       additionalLabels:
         app.kubernetes.io/component: backup
+      resources:
+        defaults:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+        quotas:
+          limits.cpu: 1500Mi
+          limits.memory: 2Gi
   certificates:
     cluster-wildcard:
       dnsNames: |-

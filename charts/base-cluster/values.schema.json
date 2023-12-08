@@ -232,6 +232,38 @@
               },
               "condition": {
                 "$ref": "#/$defs/condition"
+              },
+              "resources": {
+                "type": "object",
+                "properties": {
+                  "defaults": {
+                    "type": "object",
+                    "minProperties": 1,
+                    "properties": {
+                      "requests": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "$ref": "#/$defs/quantity"
+                        }
+                      },
+                      "limits": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "$ref": "#/$defs/quantity"
+                        }
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "quotas": {
+                    "type": "object",
+                    "description": "See https://kubernetes.io/docs/concepts/policy/resource-quotas/",
+                    "additionalProperties": {
+                      "$ref": "#/$defs/quantity"
+                    }
+                  }
+                },
+                "additionalProperties": false
               }
             },
             "additionalProperties": false

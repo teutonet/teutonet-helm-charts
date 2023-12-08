@@ -7,5 +7,45 @@ metadata:
   {{- with $namespace.additionalLabels -}}
     {{- . | toYaml | nindent 4 -}}
   {{- end }}
+{{ if $namespace.resources }}
+---
+  {{- if $namespace.resources.defaults }}
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: {{ $name }}
+  namespace: {{ $name }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  {{- $limits := dict "type" "Container" -}}
+  {{/* this section defines default limits */}}
+  {{- with $namespace.resources.defaults.limits -}}
+    {{- $limits = set $limits "default" . -}}
+  {{- end -}}
+
+  {{/* this section defines default requests */}}
+  {{- with $namespace.resources.defaults.requests -}}
+    {{- $limits = set $limits "defaultRequest" . -}}
+  {{- end }}
+  limits: {{- list $limits | toYaml | nindent 4 }}
+{{- end }}
+{{- end }}
+{{ if $namespace.resources }}
+{{ if $namespace.resources.quotas }}
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: {{ $name }}
+  namespace: {{ $name }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  {{- $quotas := dict -}}
+  {{- with $namespace.resources.quotas -}}
+  {{- $quotas = . }}
+  hard: {{- $quotas | toYaml | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}
 ---
 {{ end -}}
