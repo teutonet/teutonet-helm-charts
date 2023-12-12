@@ -21,7 +21,7 @@ global:
 worker:
   image:
     registry: registry-gitlab.teuto.net
-    repository: 4teuto/dev/teuto-portal-k8s-worker/teuto-portal-k8s-worker-k8s-worker/teuto-portal-k8s-worker-k8s-worker
+    repository: 4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker
     tag: 1.0.0
   database:
     credentials:
