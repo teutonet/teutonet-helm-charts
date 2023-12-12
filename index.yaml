@@ -3297,6 +3297,27 @@ entries:
   teuto-portal-k8s-worker:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-12-12T17:29:19.376929267Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.13.3
+    description: A Helm chart for deploying the portal worker application to k8s
+    digest: 84aa0abe75b6fb443e811a538e73cd80f8da7e56feaaa98cda9b020672b50923
+    maintainers:
+    - email: cwr@teuto.net
+      name: cwrau
+    - email: mw@teuto.net
+      name: marvinWolff
+    - email: st@teuto.net
+      name: tasches
+    name: teuto-portal-k8s-worker
+    type: application
+    urls:
+    - https://github.com/teutonet/teutonet-helm-charts/releases/download/teuto-portal-k8s-worker-1.0.1/teuto-portal-k8s-worker-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-12-05T09:13:22.686465146Z"
     dependencies:
     - name: common
@@ -3337,4 +3358,4 @@ entries:
     urls:
     - https://github.com/teutonet/teutonet-helm-charts/releases/download/teuto-portal-k8s-worker-0.1.0/teuto-portal-k8s-worker-0.1.0.tgz
     version: 0.1.0
-generated: "2023-12-05T09:13:22.686606361Z"
+generated: "2023-12-12T17:29:19.377087722Z"
