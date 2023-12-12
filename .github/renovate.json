@@ -44,7 +44,7 @@
       "dependencyDashboardApproval": true
     },
     {
-      "matchPackageNames": "registry-gitlab.teuto.net/4teuto/dev/teuto-portal-k8s-worker/teuto-portal-k8s-worker-k8s-worker/teuto-portal-k8s-worker-k8s-worker",
+      "matchPackageNames": "registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker",
       "hostRules": [
         {
           "matchHost": "https://registry-gitlab.teuto.net",
