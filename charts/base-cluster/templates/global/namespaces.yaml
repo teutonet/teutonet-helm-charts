@@ -7,9 +7,7 @@ metadata:
   {{- with $namespace.additionalLabels -}}
     {{- . | toYaml | nindent 4 -}}
   {{- end }}
-{{ if $namespace.resources }}
 ---
-  {{- if $namespace.resources.defaults }}
 apiVersion: v1
 kind: LimitRange
 metadata:
@@ -17,19 +15,20 @@ metadata:
   namespace: {{ $name }}
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
 spec:
-  {{- $limits := dict "type" "Container" -}}
-  {{/* this section defines default limits */}}
-  {{- with $namespace.resources.defaults.limits -}}
-    {{- $limits = set $limits "default" . -}}
-  {{- end -}}
-
-  {{/* this section defines default requests */}}
-  {{- with $namespace.resources.defaults.requests -}}
-    {{- $limits = set $limits "defaultRequest" . -}}
+  {{- $limits := dict "type" "Container" "defaultRequest" (dict "cpu" "100m" "memory" "100Mi")  -}}
+  {{ if $namespace.resources }}
+    {{- if $namespace.resources.defaults -}}
+      {{/* this section defines default limits */}}
+      {{- with $namespace.resources.defaults.limits -}}
+        {{- $limits = set $limits "default" . -}}
+      {{- end -}}
+      {{/* this section defines default requests */}}
+      {{- with $namespace.resources.defaults.requests -}}
+        {{- $limits = set $limits "defaultRequest" . -}}
+      {{- end -}}
+    {{- end }}
   {{- end }}
   limits: {{- list $limits | toYaml | nindent 4 }}
-{{- end }}
-{{- end }}
 {{ if $namespace.resources }}
 {{ if $namespace.resources.quotas }}
 ---
