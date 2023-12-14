@@ -47,9 +47,8 @@
       "matchPackageNames": "registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker",
       "hostRules": [
         {
-          "matchHost": "https://registry-gitlab.teuto.net",
           "username": "github-renovate",
-          "password": "wcFMA/xDdHCJBTolAQ/9EBJ+j/kxeVrmwQvCqvZj8cvlOFuY5kaFcbE/c242PMdM8pm62gzFiGtvbfFl1Bk8veKJ3E//3XqaLZ47T7q3PTxt5I2FXbzuwbXQxjp1s6b69e5HOGk0KOFbFcnP9T7e2wRWi3mek8Zx9fg4wt5CcGGuSkoimAoGzttbaciZ434ep+vZHpD/Jt9uG3BzNy0A8ovh+jn4oMsHtPN2u54MJc36u4HgWW5TZRpSisGoJLeu9ZcqiwlR/1iWM3qy/83egN9FyycuoNVhsT2IjXX02EOncbbf838ki8UYrP1o4a9uWsGq1AbAdf5oubNoT8oYACZ0VBFc3jbmo7jd1mrnVfxRnxTiz621++4R7fgWDLHOu3AdeowyzS4CcVYXiLD36/tV1Q01gGQc9fk5Uo8t9LrZpCE/ZopQ+OiSqLe31B5Zvep6cBOZw/qBU7dFreFmv3ThcnphQ18iaeKudWu2nbTqKMCkeC/eS1fCPA2EE0iyFS0rgijZe2kWFaJmW0puBUjwKXODMiN2g07g4/oMOkT3EZq/q5r5k3nekqR/JgqiDvwt4tgi9yN1b0aaQkuG5pHpKzY7rVXoF4nBXBIy9d2tdXY63fFUvMDPdn85V77a9HQ78RU4xboVZhiGZNLTN76fhZqAPGD8yc3vRJKP1yssDEwPhOzNoxQ0qDHECVnSdwFVfiIc2WCPMAUMsXQfse61eoCm+cRHcbAtkK3piP5OLac1NBd5EwwsldJGCfZskQ74WX0HpVL1Zl8EBF+OFTuRNMUY2cM8cg8GG7PxRjuxKGNmeDwZXzsg0MI0xER5ykRdENbrb8jubMz3g9ImKASxJLHwzfyg"
+          "password": "wcFMA/xDdHCJBTolAQ//V+Qb2mRvIjC8T8Y2U2i6LUJvqlkk/EnW4cIpHcSxqhhFw2KYScc7I96ftKiepUDFixYR/0IT/ucyfnUC18jGkU1e1oW3guOfHHjGpRbE1DTpBQt0Yi7v6kODu2riKNLvClujhkF2uINLOJIna8hwRKzZUWho6Tjkb28Hf+iHtVOvQdImKhsqrrmWHust4aLAXBM58QkNEO+T4D7MKeZwYUonJ9GxQdC+IK5ONcWRdGivk7Jt2jhEY+DB81spxsd2IIFBRe9OlUVnHJm7PBGdAASzvl6vR9zfUUI6L2fVgQIEymbRjvhZrDV9z7qn99CDFlKweJWDqfo6HyWQ0HcmgC/Z6n1vbsEU8CiPvOS1wkaBiLsMeK0cTqndIw5CWq47GDochqGlrJqXEBR/y/hV58LD2AN8cKf2+EKga7gMvBedQTKgOAhACdYiyBYc44TRkjcvLZAGRsq1MV2EQzz7wd0K5P8fA5/SJH3ZnkM3bn6JBGMkrHFkipTVHXOdahlx0Gfbhqa6z2VvWYH5fiiuCNYmVW5h37za8SbZTT9pndGCATbJaqk6VfxCQtacxirkLds+OjYZ4VB4wQQZnBfW6Jg9d10Otxt04lNmckz/QLgYd2TwGiN7Qm9kwlOvroYvZIEgoC01b2plgGHzZ2CqsStb1q7j0UHAyaMhP7oXDGXSdwFwvP1pTU9S82kqgD3rf1EaNj1ALeNfFOhm/jebgjgyaaaJXzYGINsQ4hq0NYKL8ROxi9mAUsM/dHKCvEGEWQwllZyMm3tSFo9Dqgv/9hSfzwpV/6ep/CFSRgIn9uWpz+WWDFRmspx8z1mfgYsNmf9Dgi+5rzTm"
         }
       ]
     }
