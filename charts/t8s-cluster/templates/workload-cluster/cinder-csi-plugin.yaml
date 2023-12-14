@@ -37,3 +37,9 @@ spec:
     secret:
       enabled: true
       name: cloud-config
+    csi:
+      plugin:
+        controllerPlugin:
+          tolerations:
+            - effect: NoSchedule
+              key: node-role.kubernetes.io/control-plane
