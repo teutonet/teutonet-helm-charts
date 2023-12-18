@@ -1,5 +1,5 @@
 * @teutonet/k8s
-/charts/base-cluster/ @cwrau @marvinWolff @tasches 
-/charts/stellio-context-broker/ @cwrau @ocaner-biz 
-/charts/t8s-cluster/ @cwrau @marvinWolff @tasches 
-/charts/teuto-portal-k8s-worker/ @cwrau @marvinWolff @tasches 
+/charts/base-cluster/ @cwrau @marvinWolff @tasches  @teutonet-bot
+/charts/stellio-context-broker/ @cwrau @ocaner-biz  @teutonet-bot
+/charts/t8s-cluster/ @cwrau @marvinWolff @tasches  @teutonet-bot
+/charts/teuto-portal-k8s-worker/ @cwrau @marvinWolff @tasches  @teutonet-bot
