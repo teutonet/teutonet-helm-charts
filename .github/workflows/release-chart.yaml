@@ -41,8 +41,8 @@ jobs:
 
       - uses: google-github-actions/release-please-action@v3
         with:
-          path: charts/${{ inputs.chart }}
-          package-name: ${{ inputs.chart }}
+          path: charts/${{ needs.getChangedChart.outputs.chart }}
+          package-name: ${{ needs.getChangedChart.outputs.chart }}
           command: github-release
           changelog-types: '[{"type":"feat","section":"Features"},{"type":"fix","section":"Bug Fixes"},{"type":"chore","section":"Miscellaneous Chores"}]'
           release-type: helm
