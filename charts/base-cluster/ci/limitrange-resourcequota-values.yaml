@@ -1,0 +1,59 @@
+global:
+  serviceLevelAgreement: None
+  namespaces:
+    main0:
+      resources:
+        defaults:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 300Mi
+        quotas:
+          limits.cpu: "1"
+          limits.memory: 1Gi
+    main1:
+      resources:
+        defaults:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 300Mi
+    main2:
+      resources:
+        defaults:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+        quotas:
+          limits.cpu: "1"
+          limits.memory: 1Gi
+    main3:
+      resources:
+        defaults:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+    main4:
+      resources:
+        defaults:
+          limits:
+            cpu: 500m
+            memory: 300Mi
+        quotas:
+          limits.cpu: "1"
+          limits.memory: 1Gi
+    main5:
+      resources:
+        defaults:
+          limits:
+            cpu: 500m
+            memory: 300Mi
+    main6:
+      resources:
+        quotas:
+          limits.cpu: "1"
+          limits.memory: 1Gi

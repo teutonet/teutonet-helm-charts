@@ -20,11 +20,19 @@ spec:
     {{- if $namespace.resources.defaults -}}
       {{/* this section defines default limits */}}
       {{- with $namespace.resources.defaults.limits -}}
-        {{- $limits = set $limits "default" . -}}
+        {{- $defaultLimits := dict -}}
+        {{- range $resource, $limit := . -}}
+          {{- $defaultLimits = set $defaultLimits $resource (include "common.tplvalues.render" (dict "value" $limit "context" $)) -}}
+        {{- end -}}
+        {{- $limits = set $limits "default" $defaultLimits -}}
       {{- end -}}
       {{/* this section defines default requests */}}
       {{- with $namespace.resources.defaults.requests -}}
-        {{- $limits = set $limits "defaultRequest" . -}}
+        {{- $defaultRequests := dict -}}
+        {{- range $resource, $request := . -}}
+          {{- $defaultRequests = set $defaultRequests $resource (include "common.tplvalues.render" (dict "value" $request "context" $)) -}}
+        {{- end -}}
+        {{- $limits = set $limits "defaultRequest" $defaultRequests -}}
       {{- end -}}
     {{- end }}
   {{- end }}
@@ -39,9 +47,11 @@ metadata:
   namespace: {{ $name }}
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
 spec:
-  {{- $quotas := dict -}}
   {{- with $namespace.resources.quotas -}}
-  {{- $quotas = . }}
+    {{- $quotas := dict -}}
+    {{- range $resource, $quota := . -}}
+      {{- $quotas = set $quotas $resource (include "common.tplvalues.render" (dict "value" $quota "context" $)) -}}
+    {{- end }}
   hard: {{- $quotas | toYaml | nindent 4 }}
   {{- end }}
 {{- end }}
