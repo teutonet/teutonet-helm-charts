@@ -36,7 +36,7 @@ annotations:
     - image: docker.io/grafana/grafana:10.2.2
     - image: docker.io/grafana/loki:2.6.1
     - image: docker.io/grafana/promtail:2.8.3
-    - image: docker.io/otel/opentelemetry-collector-contrib:0.90.1
+    - image: docker.io/otel/opentelemetry-collector-contrib:0.91.0
     - image: docker.io/velero/velero-plugin-for-aws:v1.7.0
     - image: docker.io/velero/velero:v1.12.2
     - image: docker.io/vladgh/gpg@sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
@@ -44,14 +44,14 @@ annotations:
     - image: ghcr.io/kyverno/cleanup-controller:v1.9.5
     - image: ghcr.io/kyverno/kyverno:v1.9.5
     - image: ghcr.io/kyverno/kyvernopre:v1.9.5
-    - image: quay.io/jetstack/cert-manager-cainjector:v1.13.2
-    - image: quay.io/jetstack/cert-manager-controller:v1.13.2
-    - image: quay.io/jetstack/cert-manager-ctl:v1.13.2
-    - image: quay.io/jetstack/cert-manager-webhook:v1.13.2
+    - image: quay.io/jetstack/cert-manager-cainjector:v1.13.3
+    - image: quay.io/jetstack/cert-manager-controller:v1.13.3
+    - image: quay.io/jetstack/cert-manager-ctl:v1.13.3
+    - image: quay.io/jetstack/cert-manager-webhook:v1.13.3
     - image: quay.io/kiwigrid/k8s-sidecar:1.25.2
     - image: quay.io/prometheus-operator/prometheus-operator:v0.70.0
     - image: quay.io/prometheus/node-exporter:v1.7.0
-    - image: quay.io/prometheus/prometheus:v2.48.0
+    - image: quay.io/prometheus/prometheus:v2.48.1
     - image: registry.k8s.io/descheduler/descheduler:v0.28.1
     - image: registry.k8s.io/ingress-nginx/controller:v1.9.4@sha256:5b161f051d017e55d358435f295f5e9a297e66158f136321d9b04520ec6c48a3
     - image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20221220-controller-v1.5.1-58-g787ea74b6
