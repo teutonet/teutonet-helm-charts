@@ -1,5 +1,25 @@
 # Changelog
 
+## [4.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-4.0.1...t8s-cluster-v4.1.0) (2023-12-18)
+
+
+### Features
+
+* **t8s-cluster/cinder-csi-plugin:** allow to run on control-plane ([#679](https://github.com/teutonet/teutonet-helm-charts/issues/679)) ([b7a4831](https://github.com/teutonet/teutonet-helm-charts/commit/b7a4831db903098ba34561df218a71aa124df58d))
+
+
+### Bug Fixes
+
+* **t8s-cluster:** allow greater than one gpu requests ([#638](https://github.com/teutonet/teutonet-helm-charts/issues/638)) ([a9553e8](https://github.com/teutonet/teutonet-helm-charts/commit/a9553e881db95c7f4db0ba0badf125202268494a))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#641](https://github.com/teutonet/teutonet-helm-charts/issues/641)) ([c87eed0](https://github.com/teutonet/teutonet-helm-charts/commit/c87eed01e25370cc4214962ab6f674c1449e425e))
+* **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#678](https://github.com/teutonet/teutonet-helm-charts/issues/678)) ([29bde5b](https://github.com/teutonet/teutonet-helm-charts/commit/29bde5b975bd44f28b8e60d0721c0d93f6ae0071))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.28.4 ([#629](https://github.com/teutonet/teutonet-helm-charts/issues/629)) ([0912613](https://github.com/teutonet/teutonet-helm-charts/commit/0912613e812ca4c0f4da995bddb31128808553e3))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.5.10 ([#630](https://github.com/teutonet/teutonet-helm-charts/issues/630)) ([54a6512](https://github.com/teutonet/teutonet-helm-charts/commit/54a6512ddc6154edb3052587b55ee5d7f5ce5d17))
+
 ## [4.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-4.0.0...t8s-cluster-v4.0.1) (2023-11-17)
 
 
