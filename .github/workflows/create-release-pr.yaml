@@ -58,12 +58,12 @@ jobs:
       - uses: google-github-actions/release-please-action@v3
         with:
           path: charts/${{ inputs.chart }}
-          token: ${{ secrets.ACTIONS_BOT_TOKEN }}
-          release-type: helm
-          monorepo-tags: true
-          changelog-types: '[{"type":"feat","section":"Features"},{"type":"fix","section":"Bug Fixes"},{"type":"chore","section":"Miscellaneous Chores"}]'
-          pull-request-title-pattern: "chore${scope}: [bot] release${component}:${version}"
-          separate-pull-requests: true
           package-name: ${{ inputs.chart }}
           command: release-pr
+          changelog-types: '[{"type":"feat","section":"Features"},{"type":"fix","section":"Bug Fixes"},{"type":"chore","section":"Miscellaneous Chores"}]'
           last-release-sha: ${{ steps.getLatestReleaseHash.outputs.hash }}
+          monorepo-tags: true
+          pull-request-title-pattern: "chore${scope}: [bot] release${component}:${version}"
+          release-type: helm
+          separate-pull-requests: true
+          token: ${{ secrets.ACTIONS_BOT_TOKEN }}
