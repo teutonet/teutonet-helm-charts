@@ -22,7 +22,7 @@ spec:
             summary: Certificate is expiring soon.
           expr: |-
             certmanager_certificate_expiration_timestamp_seconds and (certmanager_certificate_expiration_timestamp_seconds - time() <= (60 * 60 * 24 * 14))
-          for: 1s
+          for: 5m
           labels:
             severity: warning
         - alert: CertificateExpiringSoon
@@ -31,7 +31,7 @@ spec:
             summary: Certificate is expiring soon.
           expr: |-
             certmanager_certificate_expiration_timestamp_seconds and (certmanager_certificate_expiration_timestamp_seconds - time() <= (60 * 60 * 24 * 7))
-          for: 1s
+          for: 5m
           labels:
             severity: critical
   {{- end }}
