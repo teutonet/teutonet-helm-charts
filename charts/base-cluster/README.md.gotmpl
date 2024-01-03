@@ -172,7 +172,7 @@ to present the results.
 #### Sub-Component [tracing](#monitoring_tracing)
 
 The included [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
-collects traces via otlp-grpc on every node on the host IP.
+collects traces via otlp-grpc on every node via the `open-telemetry-collector-opentelemetry-collector.monitoring` service.
 These traces are then sent to [Grafana Tempo](https://grafana.com/oss/tempo/),
 which is included as a datasource in Grafana by default.
 
@@ -187,9 +187,7 @@ spec:
       containers:
         - env:
             - name: OTEL_HOST <- change this to your framework's environment variable
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP
+              value: open-telemetry-collector-opentelemetry-collector.monitoring
             - name: OTEL_PORT
               value: "4317"
 ```

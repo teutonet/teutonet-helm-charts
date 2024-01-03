@@ -17,3 +17,13 @@ monitoring:
     adminPassword: test
   tracing:
     enabled: true
+  deadMansSwitch:
+    enabled: true
+    pingKey: PING_KEY
+    apiKey: API_KEY
+  prometheus:
+    alertmanager:
+      receivers:
+        pagerduty:
+          enabled: true
+          integrationKey: INTEGRATION_KEY

@@ -77,9 +77,9 @@
           },
           "additionalProperties": false
         },
-        "pause": {
+        "curl": {
           "type": "object",
-          "description": "Image to be used for pause containers",
+          "description": "Image with `curl` binary",
           "properties": {
             "image": {
               "$ref": "#/$defs/image"
@@ -381,6 +381,23 @@
             "type": "string"
           }
         },
+        "deadMansSwitch": {
+          "type": "object",
+          "description": "This needs `.global.clusterName` to be set up as an integration in healthchecks.io. Also, `.global.baseDomain` has to be set.",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "apiKey": {
+              "type": "string",
+              "description": "Used for registration and unregistration"
+            },
+            "pingKey": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
         "prometheus": {
           "type": "object",
           "properties": {
@@ -458,6 +475,27 @@
             "alertmanager": {
               "type": "object",
               "properties": {
+                "receivers": {
+                  "type": "object",
+                  "properties": {
+                    "pagerduty": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "url": {
+                          "type": "string"
+                        },
+                        "integrationKey": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "additionalProperties": false
+                },
                 "ingress": {
                   "$ref": "#/$defs/toolIngress"
                 },
