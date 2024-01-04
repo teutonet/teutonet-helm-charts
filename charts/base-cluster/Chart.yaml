@@ -31,6 +31,7 @@ annotations:
     - image: docker.io/bitnami/metrics-server:0.6.4-debian-11-r73
     - image: docker.io/busybox:1.35
     - image: docker.io/curlimages/curl:7.85.0
+    - image: docker.io/curlimages/curl:8.4.0
     - image: docker.io/fluxcd/flux-cli:v2.1.2
     - image: docker.io/grafana/grafana-image-renderer:latest
     - image: docker.io/grafana/grafana:10.2.2
@@ -50,6 +51,7 @@ annotations:
     - image: quay.io/jetstack/cert-manager-webhook:v1.13.3
     - image: quay.io/kiwigrid/k8s-sidecar:1.25.2
     - image: quay.io/prometheus-operator/prometheus-operator:v0.70.0
+    - image: quay.io/prometheus/alertmanager:v0.26.0
     - image: quay.io/prometheus/node-exporter:v1.7.0
     - image: quay.io/prometheus/prometheus:v2.48.1
     - image: registry.k8s.io/descheduler/descheduler:v0.28.1
