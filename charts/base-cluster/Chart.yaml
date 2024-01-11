@@ -22,13 +22,13 @@ annotations:
   artifacthub.io/images: |
     - image: docker.io/bats/bats:1.8.2
     - image: docker.io/bats/bats:v1.4.1
-    - image: docker.io/bitnami/grafana-tempo-query:2.3.1-debian-11-r1
-    - image: docker.io/bitnami/grafana-tempo-vulture:2.3.1-debian-11-r1
-    - image: docker.io/bitnami/grafana-tempo:2.3.1-debian-11-r1
+    - image: docker.io/bitnami/grafana-tempo-query:2.3.1-debian-11-r3
+    - image: docker.io/bitnami/grafana-tempo-vulture:2.3.1-debian-11-r2
+    - image: docker.io/bitnami/grafana-tempo:2.3.1-debian-11-r3
     - image: docker.io/bitnami/kubectl:1.28
     - image: docker.io/bitnami/kubectl:1.29.0
-    - image: docker.io/bitnami/memcached:1.6.22-debian-11-r1
-    - image: docker.io/bitnami/metrics-server:0.6.4-debian-11-r73
+    - image: docker.io/bitnami/memcached:1.6.22-debian-11-r2
+    - image: docker.io/bitnami/metrics-server:0.6.4-debian-11-r75
     - image: docker.io/busybox:1.35
     - image: docker.io/curlimages/curl:7.85.0
     - image: docker.io/curlimages/curl:8.5.0
@@ -37,7 +37,7 @@ annotations:
     - image: docker.io/grafana/grafana:10.2.2
     - image: docker.io/grafana/loki:2.6.1
     - image: docker.io/grafana/promtail:2.9.2
-    - image: docker.io/otel/opentelemetry-collector-contrib:0.91.0
+    - image: docker.io/otel/opentelemetry-collector-contrib:0.92.0
     - image: docker.io/velero/velero-plugin-for-aws:v1.7.0
     - image: docker.io/velero/velero:v1.12.2
     - image: docker.io/vladgh/gpg@sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
