@@ -73,9 +73,6 @@ dashboards:
     namespace-view:
       <<: *dashboard
       gnetId: 15758
-    monitoring-by-namespace:
-      <<: *dashboard
-      gnetId: 15826
     node-exporter-full:
       <<: *dashboard
       gnetId: 1860
