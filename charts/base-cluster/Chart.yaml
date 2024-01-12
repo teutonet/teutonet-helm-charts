@@ -34,7 +34,7 @@ annotations:
     - image: docker.io/curlimages/curl:8.5.0
     - image: docker.io/fluxcd/flux-cli:v2.2.2
     - image: docker.io/grafana/grafana-image-renderer:latest
-    - image: docker.io/grafana/grafana:10.2.2
+    - image: docker.io/grafana/grafana:10.2.3
     - image: docker.io/grafana/loki:2.6.1
     - image: docker.io/grafana/promtail:2.9.2
     - image: docker.io/otel/opentelemetry-collector-contrib:0.92.0
