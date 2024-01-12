@@ -1308,6 +1308,60 @@
       ],
       "additionalProperties": false
     },
+    "weaveworks": {
+      "type": "object",
+      "description": "Values for the gitops-chart",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "ingress": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "host": {
+              "type": "string"
+            },
+            "tls": {
+              "type": "array"
+            }
+          }
+        },
+        "oidcSecret": {
+          "type": "object",
+          "properties": {
+            "additionalKeys": {
+              "type": "object"
+            },
+            "create": {
+              "type": "boolean"
+            }
+          }
+        },
+        "replicaCount": {
+          "type": "integer"
+        },
+        "rbac": {
+          "additionalRules": {
+            "type": "array"
+          },
+          "create": {
+            "type": "boolean"
+          },
+          "impersonationResourceNames": {
+            "type": "array"
+          },
+          "impersonationResources": {
+            "type": "array"
+          },
+          "viewSecretsResourceNames": {
+            "type": "array"
+          }
+        }
+      }
+    },
     "common": {
       "type": "object",
       "description": "Values for sub-chart"
