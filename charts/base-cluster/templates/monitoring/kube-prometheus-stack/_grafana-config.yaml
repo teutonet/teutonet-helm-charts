@@ -151,7 +151,7 @@ grafana.ini:
     client_id: {{ .config.clientId }}
     client_secret: {{ .config.clientSecret }}
     name: OAuth
-    role_attribute_path: {{ .grafana.roleAttributePath }}
+    role_attribute_path: {{ .grafana.roleAttributePath | quote }}
     scopes: openid profile email
     {{- end }}
   {{- end }}
