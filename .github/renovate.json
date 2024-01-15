@@ -1,6 +1,6 @@
 {
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
   "assigneesFromCodeOwners": true,
   "assigneesSampleSize": 1,
@@ -9,8 +9,9 @@
   "additionalBranchPrefix": "{{parentDir}}-",
   "separateMinorPatch": true,
   "automerge": true,
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/)values\\.yaml$"
       ],
@@ -23,6 +24,7 @@
       "datasourceTemplate": "helm"
     },
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|/)values\\.yaml$"
       ],
@@ -44,7 +46,9 @@
       "dependencyDashboardApproval": true
     },
     {
-      "matchPackageNames": "registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker",
+      "matchPackageNames": [
+        "registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker"
+      ],
       "hostRules": [
         {
           "matchHost": "registry-gitlab.teuto.net",
