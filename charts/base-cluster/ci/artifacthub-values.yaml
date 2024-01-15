@@ -36,7 +36,7 @@ weaveworks:
     createClusterRole: false
   ingress:
     enabled: true
-    host: "ww-dashboard.local"
+    host: ww-dashboard.local
   rbac:
     create: false
   oidcSecret:
