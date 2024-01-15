@@ -16,5 +16,18 @@ spec:
         name: weaveworks
   interval: 5m
   values:
-  {{- .Values.weaveworks | toYaml | nindent 4 }}
+    replicaCount: 1
+    {{- if .Values.weaveworks.adminUser.create }}
+    adminUser:
+      create: true
+      username: {{ .Values.weaveworks.adminUser.username }}
+      createSecret: true
+    {{- end }}
+    {{- if .Values.weaveworks.ingress.enabled }}
+    ingress:
+      enabled: true
+      host: {{ .Values.weaveworks.ingress.host }}
+    {{- end }}
+    metrics:
+      enabled: {{ .Values.monitoring.prometheus.enabled }}
 {{- end }}
