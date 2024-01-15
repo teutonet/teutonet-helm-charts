@@ -1315,6 +1315,26 @@
         "enabled": {
           "type": "boolean"
         },
+        "adminUser": {
+          "type": "object",
+          "properties": {
+            "create": {
+              "type": "boolean"
+            },
+            "username": {
+              "type": "string"
+            },
+            "createSecret": {
+              "type": "boolean"
+            },
+            "createClusterRole": {
+              "type": "boolean"
+            },
+            "passwordHash": {
+              "type": "string"
+            }
+          }
+        },
         "ingress": {
           "type": "object",
           "properties": {
@@ -1326,6 +1346,9 @@
             },
             "tls": {
               "type": "array"
+            },
+            "className": {
+              "type": "string"
             }
           }
         },
@@ -1358,6 +1381,25 @@
           },
           "viewSecretsResourceNames": {
             "type": "array"
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "service": {
+              "type": "object",
+              "properties": {
+                "annotations": {
+                  "type": "object"
+                },
+                "port": {
+                  "type": "integer"
+                }
+              }
+            }
           }
         }
       }

@@ -16,9 +16,5 @@ spec:
         name: weaveworks
   interval: 5m
   values:
-    ingress:
-      enabled: false
-      host: ""
-    metrics:
-      enabled: {{ and .Values.weaveworks.metrics.enabled .Values.monitoring.prometheus.enabled }}
+  {{- .Values.weaveworks | toYaml | nindent 4 }}
 {{- end }}

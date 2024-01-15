@@ -466,3 +466,5 @@ backup:
 
 weaveworks:
   enabled: false
+  metrics:
+    enabled: false

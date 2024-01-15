@@ -27,3 +27,17 @@ monitoring:
         pagerduty:
           enabled: true
           integrationKey: INTEGRATION_KEY
+weaveworks:
+  enabled: true
+  adminUser:
+    create: true
+    username: admin
+    createSecret: true
+    createClusterRole: false
+  ingress:
+    enabled: true
+    host: "ww-dashboard.local"
+  rbac:
+    create: false
+  oidcSecret:
+    create: true
