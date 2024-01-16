@@ -1323,8 +1323,23 @@
             },
             "username": {
               "type": "string"
+            },
+            "password": {
+              "type": "string"
             }
-          }
+          },
+          "if": {
+            "properties": {
+              "create": {
+                "const": true
+              }
+            },
+            "required": ["create"]
+          },
+          "then": {
+            "required": ["username","password"]
+          },
+          "additionalProperties": false
         },
         "ingress": {
           "type": "object",
@@ -1335,9 +1350,38 @@
             "host": {
               "type": "string"
             }
-          }
+          },
+          "additionalProperties": false
+        },
+        "oidcSecret": {
+          "type": "object",
+          "properties": {
+            "create": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
         }
-      }
+      },
+      "if": {
+        "properties": {
+          "enabled": {
+            "const": true
+          }
+        },
+        "required": ["enabled"]
+      },
+      "then": {
+        "anyOf": [
+          {
+            "required": ["adminUser"]
+          },
+          {
+            "required": ["oidcSecret"]
+          }
+        ]
+      },
+      "additionalProperties": false
     },
     "common": {
       "type": "object",

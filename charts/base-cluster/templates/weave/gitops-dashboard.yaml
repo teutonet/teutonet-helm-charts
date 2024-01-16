@@ -5,7 +5,7 @@ metadata:
   annotations:
     metadata.weave.works/description: This is the Weave GitOps Dashboard.  It provides
       a simple way to get insights into your GitOps workloads.
-  name: weave-dashboard
+  name: gitops-dashboard
   namespace: weave
 spec:
   chart:
@@ -17,17 +17,32 @@ spec:
   interval: 5m
   values:
     replicaCount: 1
-    {{- if .Values.weaveworks.adminUser.create }}
+    {{- if and .Values.weaveworks.adminUser .Values.weaveworks.adminUser.create }}
     adminUser:
       create: true
       username: {{ .Values.weaveworks.adminUser.username }}
       createSecret: true
+      {{- if .Values.weaveworks.adminUser.password }}
+      passwordHash: {{htpasswd .Values.weaveworks.adminUser.username .Values.weaveworks.adminUser.password }}
+      {{- end }}
     {{- end }}
-    {{- if .Values.weaveworks.ingress.enabled }}
+    {{- if and .Values.weaveworks.ingress .Values.weaveworks.ingress.enabled }}
     ingress:
       enabled: true
       host: {{ .Values.weaveworks.ingress.host }}
     {{- end }}
     metrics:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
+    {{- if and .Values.weaveworks.oidcSecret .Values.weaveworks.oidcSecret.create }}
+    oidcSecret:
+      create: true
+    {{- with .Values.global.authentication }}
+      {{- if .config.clientId }}
+      issuerURL: {{ printf "https://%s%s" .config.issuerHost .config.issuerPath }}
+      clientID: {{ .config.clientId }}
+      clientSecret: {{ .config.clientSecret }}
+      redirectURL: {{printf "%s/oauth2/callback" $.Values.weaveworks.ingress.host }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
 {{- end }}
