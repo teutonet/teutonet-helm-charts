@@ -40,7 +40,7 @@
   ],
   "hostRules": [
     {
-      "matchHost": "https://registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker",
+      "matchHost": "gitlab.teuto.net",
       "hostType": "docker",
       "username": "github-renovate",
       "encrypted": {
