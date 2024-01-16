@@ -41,6 +41,13 @@
   "hostRules": [
     {
       "matchHost": "gitlab.teuto.net",
+      "username": "github-renovate",
+      "encrypted": {
+        "password": "wcFMA/xDdHCJBTolAQ//V+Qb2mRvIjC8T8Y2U2i6LUJvqlkk/EnW4cIpHcSxqhhFw2KYScc7I96ftKiepUDFixYR/0IT/ucyfnUC18jGkU1e1oW3guOfHHjGpRbE1DTpBQt0Yi7v6kODu2riKNLvClujhkF2uINLOJIna8hwRKzZUWho6Tjkb28Hf+iHtVOvQdImKhsqrrmWHust4aLAXBM58QkNEO+T4D7MKeZwYUonJ9GxQdC+IK5ONcWRdGivk7Jt2jhEY+DB81spxsd2IIFBRe9OlUVnHJm7PBGdAASzvl6vR9zfUUI6L2fVgQIEymbRjvhZrDV9z7qn99CDFlKweJWDqfo6HyWQ0HcmgC/Z6n1vbsEU8CiPvOS1wkaBiLsMeK0cTqndIw5CWq47GDochqGlrJqXEBR/y/hV58LD2AN8cKf2+EKga7gMvBedQTKgOAhACdYiyBYc44TRkjcvLZAGRsq1MV2EQzz7wd0K5P8fA5/SJH3ZnkM3bn6JBGMkrHFkipTVHXOdahlx0Gfbhqa6z2VvWYH5fiiuCNYmVW5h37za8SbZTT9pndGCATbJaqk6VfxCQtacxirkLds+OjYZ4VB4wQQZnBfW6Jg9d10Otxt04lNmckz/QLgYd2TwGiN7Qm9kwlOvroYvZIEgoC01b2plgGHzZ2CqsStb1q7j0UHAyaMhP7oXDGXSdwFwvP1pTU9S82kqgD3rf1EaNj1ALeNfFOhm/jebgjgyaaaJXzYGINsQ4hq0NYKL8ROxi9mAUsM/dHKCvEGEWQwllZyMm3tSFo9Dqgv/9hSfzwpV/6ep/CFSRgIn9uWpz+WWDFRmspx8z1mfgYsNmf9Dgi+5rzTm"
+      }
+    },
+    {
+      "matchHost": "https://registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker",
       "hostType": "docker",
       "username": "github-renovate",
       "encrypted": {
