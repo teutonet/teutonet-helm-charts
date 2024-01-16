@@ -40,6 +40,24 @@ Password: $ kubectl -n monitoring get secret {{ $secretName | quote }} -o json |
 {{- end }}
 {{- end }}
 
+{{- if .Values.weaveworks.enabled }}
+
+===
+You can enter your gitops-dashboard via
+{{- if and .Values.weaveworks.ingress .Values.weaveworks.ingress.enabled }}
+{{- printf "https://%s" .Values.weaveworks.ingress.host | nindent 2 }}
+{{- else }}
+{{- printf "$ kubectl -n monitoring port-forward svc/gitops-dashboard 9901:http" | nindent 2 }}
+{{- end }}
+{{- if and .Values.weaveworks.oidcSecret .Values.weaveworks.oidcSecret.create }}
+Login via your OIDC provider
+{{- else}}
+{{- if .Values.weaveworks.adminUser }}
+{{- printf "Login: %s\n%s" .Values.weaveworks.adminUser.username .Values.weaveworks.adminUser.password | nindent 2}}
+{{- end }}
+{{- end }}
+{{- end }}
+
 {{- if .Values.rbac.accounts }}
 
 ===
