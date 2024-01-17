@@ -70,6 +70,9 @@ dashboards:
       datasource: Prometheus
       gnetId: 315
       revision: 3
+    namespace-view:
+      <<: *dashboard
+      gnetId: 15758
     node-exporter-full:
       <<: *dashboard
       gnetId: 1860
