@@ -30,11 +30,8 @@ monitoring:
 weaveworks:
   enabled: true
   adminUser:
-    create: true
     username: admin
     password: test
   ingress:
     enabled: true
     host: ww-dashboard.local
-  oidcSecret:
-    create: true

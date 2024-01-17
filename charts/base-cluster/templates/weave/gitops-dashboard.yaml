@@ -24,7 +24,7 @@ spec:
   interval: 5m
   values:
     replicaCount: 1
-    {{- if and .Values.weaveworks.adminUser .Values.weaveworks.adminUser.create }}
+    {{- if .Values.weaveworks.adminUser }}
     adminUser:
       create: true
       username: {{ .Values.weaveworks.adminUser.username }}
@@ -41,13 +41,13 @@ spec:
     metrics:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
     {{- with .Values.global.authentication }}
+    {{- if .config.clientId }}
     oidcSecret:
       create: true
-      {{- if .config.clientId }}
-      issuerURL: {{ printf "https://%s%s" .config.issuerHost .config.issuerPath }}
       clientID: {{ .config.clientId }}
+      issuerURL: {{ printf "https://%s%s" .config.issuerHost .config.issuerPath }}
       clientSecret: {{ .config.clientSecret }}
       redirectURL: {{printf "%s/oauth2/callback" $.Values.weaveworks.ingress.host }}
-      {{- end }}
+    {{- end }}
     {{- end }}
 {{- end }}

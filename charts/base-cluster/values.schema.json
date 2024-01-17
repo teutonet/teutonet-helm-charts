@@ -1318,26 +1318,12 @@
         "adminUser": {
           "type": "object",
           "properties": {
-            "create": {
-              "type": "boolean"
-            },
             "username": {
               "type": "string"
             },
             "password": {
               "type": "string"
             }
-          },
-          "if": {
-            "properties": {
-              "create": {
-                "const": true
-              }
-            },
-            "required": ["create"]
-          },
-          "then": {
-            "required": ["username","password"]
           },
           "additionalProperties": false
         },
@@ -1352,34 +1338,7 @@
             }
           },
           "additionalProperties": false
-        },
-        "oidcSecret": {
-          "type": "object",
-          "properties": {
-            "create": {
-              "type": "boolean"
-            }
-          },
-          "additionalProperties": false
         }
-      },
-      "if": {
-        "properties": {
-          "enabled": {
-            "const": true
-          }
-        },
-        "required": ["enabled"]
-      },
-      "then": {
-        "anyOf": [
-          {
-            "required": ["adminUser"]
-          },
-          {
-            "required": ["oidcSecret"]
-          }
-        ]
       },
       "additionalProperties": false
     },
