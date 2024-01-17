@@ -30,8 +30,7 @@ spec:
       username: {{ .Values.weaveworks.adminUser.username }}
       createSecret: true
       {{- if .Values.weaveworks.adminUser.password }}
-      {{- $password := split ":" (htpasswd .Values.weaveworks.adminUser.username .Values.weaveworks.adminUser.password) }}
-      passwordHash: {{  $password._1 }}
+      passwordHash: {{  .Values.weaveworks.adminUser.password | bcrypt }}
       {{- end }}
     {{- end }}
     {{- if and .Values.weaveworks.ingress .Values.weaveworks.ingress.enabled }}
@@ -41,16 +40,14 @@ spec:
     {{- end }}
     metrics:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
-    {{- if and .Values.weaveworks.oidcSecret .Values.weaveworks.oidcSecret.create }}
+    {{- with .Values.global.authentication }}
     oidcSecret:
       create: true
-    {{- with .Values.global.authentication }}
       {{- if .config.clientId }}
       issuerURL: {{ printf "https://%s%s" .config.issuerHost .config.issuerPath }}
       clientID: {{ .config.clientId }}
       clientSecret: {{ .config.clientSecret }}
       redirectURL: {{printf "%s/oauth2/callback" $.Values.weaveworks.ingress.host }}
       {{- end }}
-    {{- end }}
     {{- end }}
 {{- end }}
