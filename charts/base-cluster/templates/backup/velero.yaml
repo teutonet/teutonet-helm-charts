@@ -91,4 +91,8 @@ spec:
     metrics:
       serviceMonitor:
         additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
+        {{- if .Values.monitoring.prometheus.enabled }}
+        enabled: true
+        {{- end }}
+        additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
 {{- end }}
