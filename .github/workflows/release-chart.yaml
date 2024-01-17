@@ -34,16 +34,10 @@ jobs:
       - run: helm package --dependency-update charts/${{ needs.getChangedChart.outputs.chart }}
       - run: helm registry login ghcr.io --username teutonet-bot --password ${{ secrets.ACTIONS_BOT_TOKEN }}
       - run: helm push ${{ needs.getChangedChart.outputs.chart }}-* "oci://ghcr.io/${GITHUB_REPOSITORY}"
-      - name: Change to github-actions[bot]
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
 
-      - uses: google-github-actions/release-please-action@v3
+      - uses: google-github-actions/release-please-action@v4
         with:
-          path: charts/${{ needs.getChangedChart.outputs.chart }}
-          package-name: ${{ needs.getChangedChart.outputs.chart }}
-          command: github-release
-          changelog-types: '[{"type":"feat","section":"Features"},{"type":"fix","section":"Bug Fixes"},{"type":"chore","section":"Miscellaneous Chores"}]'
-          release-type: helm
+          skip-github-pull-request: true
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
+          config-file: .github/release-please/config.json
+          manifest-file: .github/release-please/manifest.json
