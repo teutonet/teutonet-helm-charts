@@ -1,4 +1,10 @@
 {{- if .Values.weaveworks.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: weave
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
