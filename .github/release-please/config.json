@@ -1,0 +1,37 @@
+{
+  "release-type": "helm",
+  "changelog-sections": [
+    {
+      "type": "feat",
+      "section": "Features"
+    },
+    {
+      "type": "fix",
+      "section": "Bug Fixes"
+    },
+    {
+      "type": "chore",
+      "section": "Miscellaneous Chores"
+    }
+  ],
+  "include-component-in-tag": true,
+  "pull-request-title-pattern": "chore${scope}: [bot] release${component}:${version}",
+  "separate-pull-requests": true,
+  "packages": {
+    "charts/base-cluster": {
+      "package-name": "base-cluster"
+    },
+    "charts/chirpstack": {
+      "package-name": "chirpstack"
+    },
+    "charts/stellio-context-broker": {
+      "package-name": "stellio-context-broker"
+    },
+    "charts/t8s-cluster": {
+      "package-name": "t8s-cluster"
+    },
+    "charts/teuto-portal-k8s-worker": {
+      "package-name": "teuto-portal-k8s-worker"
+    }
+  }
+}
