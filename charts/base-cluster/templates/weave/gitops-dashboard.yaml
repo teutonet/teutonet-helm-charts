@@ -20,6 +20,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: weaveworks
+        namespace: flux-system
   interval: 5m
   values:
     replicaCount: 1
@@ -29,7 +30,8 @@ spec:
       username: {{ .Values.weaveworks.adminUser.username }}
       createSecret: true
       {{- if .Values.weaveworks.adminUser.password }}
-      passwordHash: {{htpasswd .Values.weaveworks.adminUser.username .Values.weaveworks.adminUser.password }}
+      {{- $password := split ":" (htpasswd .Values.weaveworks.adminUser.username .Values.weaveworks.adminUser.password) }}
+      passwordHash: {{  $password._1 }}
       {{- end }}
     {{- end }}
     {{- if and .Values.weaveworks.ingress .Values.weaveworks.ingress.enabled }}

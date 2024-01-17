@@ -53,7 +53,7 @@ You can enter your gitops-dashboard via
 Login via your OIDC provider
 {{- else}}
 {{- if .Values.weaveworks.adminUser }}
-{{- printf "Login: %s\n%s" .Values.weaveworks.adminUser.username .Values.weaveworks.adminUser.password | nindent 2}}
+{{- printf "username: %s\npassword: %s" .Values.weaveworks.adminUser.username .Values.weaveworks.adminUser.password | nindent 2}}
 {{- end }}
 {{- end }}
 {{- end }}
