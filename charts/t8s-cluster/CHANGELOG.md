@@ -1,6 +1,6 @@
 # Changelog
 
-## [4.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-4.0.1...t8s-cluster-v4.1.0) (2023-12-18)
+## [4.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-4.0.1...t8s-cluster-v4.1.0) (2024-01-18)
 
 
 ### Features
@@ -15,10 +15,15 @@
 
 ### Miscellaneous Chores
 
+* **main:** [bot] release t8s-cluster:4.1.0 ([#639](https://github.com/teutonet/teutonet-helm-charts/issues/639)) ([f8becdc](https://github.com/teutonet/teutonet-helm-charts/commit/f8becdca9a56d946ebc13940706b619f28c49d20))
 * **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#641](https://github.com/teutonet/teutonet-helm-charts/issues/641)) ([c87eed0](https://github.com/teutonet/teutonet-helm-charts/commit/c87eed01e25370cc4214962ab6f674c1449e425e))
 * **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#678](https://github.com/teutonet/teutonet-helm-charts/issues/678)) ([29bde5b](https://github.com/teutonet/teutonet-helm-charts/commit/29bde5b975bd44f28b8e60d0721c0d93f6ae0071))
+* **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#707](https://github.com/teutonet/teutonet-helm-charts/issues/707)) ([590321b](https://github.com/teutonet/teutonet-helm-charts/commit/590321b211d996d3726f678fdfdf5b3c02d61fb2))
 * **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.28.4 ([#629](https://github.com/teutonet/teutonet-helm-charts/issues/629)) ([0912613](https://github.com/teutonet/teutonet-helm-charts/commit/0912613e812ca4c0f4da995bddb31128808553e3))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.29.0 ([#705](https://github.com/teutonet/teutonet-helm-charts/issues/705)) ([4cfac13](https://github.com/teutonet/teutonet-helm-charts/commit/4cfac1379e132c6d163733a5e87d8139f3a130da))
+* **t8s-cluster/dependencies:** update helm release common to v2.13.4 ([#683](https://github.com/teutonet/teutonet-helm-charts/issues/683)) ([3cd4ec4](https://github.com/teutonet/teutonet-helm-charts/commit/3cd4ec48506259c3f6b730399b5f7ace9f757433))
 * **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.5.10 ([#630](https://github.com/teutonet/teutonet-helm-charts/issues/630)) ([54a6512](https://github.com/teutonet/teutonet-helm-charts/commit/54a6512ddc6154edb3052587b55ee5d7f5ce5d17))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.5.11 ([#691](https://github.com/teutonet/teutonet-helm-charts/issues/691)) ([33b33f4](https://github.com/teutonet/teutonet-helm-charts/commit/33b33f472ec529272a38123a1b6dddd1054de7c6))
 
 ## [4.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-4.0.0...t8s-cluster-v4.0.1) (2023-11-17)
 

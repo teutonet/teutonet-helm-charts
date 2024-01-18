@@ -23,7 +23,7 @@ t8s-operator cluster with necessary addons
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.13.3 |
+| https://charts.bitnami.com/bitnami | common | 2.13.4 |
 
 ## Initial installation
 
