@@ -34,7 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: helm package --dependency-update "charts/${CHART}"
+      - run: helm package --dependency-update "${CHART}"
       - run: helm registry login ghcr.io --username teutonet-bot --password ${{ secrets.ACTIONS_BOT_TOKEN }}
       - run: helm push "${CHART}"-* "oci://ghcr.io/${GITHUB_REPOSITORY}"
   abort:
