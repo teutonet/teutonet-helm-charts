@@ -45,7 +45,7 @@ Password: $ kubectl -n monitoring get secret {{ $secretName | quote }} -o json |
 ===
 You can enter your gitops-dashboard via
 {{- if and .Values.weaveworks.ingress .Values.weaveworks.ingress.enabled }}
-{{- printf "https://%s" .Values.weaveworks.ingress.host | nindent 2 }}
+{{- printf "https://%s" (include "base-cluster.weaveworks.host" $) | nindent 2 }}
 {{- else }}
 {{- printf "$ kubectl -n monitoring port-forward svc/gitops-dashboard 9901:http" | nindent 2 }}
 {{- end }}

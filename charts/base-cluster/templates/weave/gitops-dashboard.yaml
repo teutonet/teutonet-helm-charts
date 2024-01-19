@@ -25,7 +25,7 @@ spec:
     {{- if and .Values.weaveworks.ingress .Values.weaveworks.ingress.enabled }}
     ingress:
       enabled: true
-      host: {{ .Values.weaveworks.ingress.host }}
+      host: {{ include "base-cluster.weaveworks.host" $ }}
     {{- end }}
     metrics:
       enabled: {{ .Values.monitoring.prometheus.enabled }}

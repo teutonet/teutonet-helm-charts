@@ -25,3 +25,11 @@
     {{- printf "%s.%s" (required "You must provide a host for the prometheus alertmanager server" .Values.monitoring.prometheus.alertmanager.ingress.host) (include "base-cluster.domain" $) -}}
   {{- end -}}
 {{- end -}}
+
+{{- define "base-cluster.weaveworks.host" -}}
+  {{- if .Values.weaveworks.ingress.customDomain -}}
+    {{- .Values.weaveworks.ingress.customDomain -}}
+  {{- else -}}
+    {{- printf "%s.%s" (required "You must provide a host for the gitops-server" .Values.weaveworks.ingress.host) (include "base-cluster.domain" $) -}}
+  {{- end -}}
+{{- end -}}

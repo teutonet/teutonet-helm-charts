@@ -34,4 +34,4 @@ weaveworks:
     password: test
   ingress:
     enabled: true
-    host: ww-dashboard.local
+    customDomain: ww-dashboard.local
