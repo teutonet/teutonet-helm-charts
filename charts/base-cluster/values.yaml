@@ -59,6 +59,8 @@ global:
       condition: "{{ not (empty .Values.backup.backupStorageLocations) }}"
       additionalLabels:
         app.kubernetes.io/component: backup
+    weave:
+      condition: "{{ .Values.weaveworks.enabled }}"
   certificates:
     cluster-wildcard:
       dnsNames: |-
