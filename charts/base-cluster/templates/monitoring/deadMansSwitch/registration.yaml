@@ -25,6 +25,13 @@ spec:
         - name: register
           image: {{ include "base-cluster.curl.image" . }}
           imagePullPolicy: {{ empty .Values.global.kubectl.image.digest | ternary "Always" "IfNotPresent" }}
+          resources:
+            limits:
+              cpu: 50m
+              memory: 100m
+            requests:
+              cpu: 10m
+              memory: 10m
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

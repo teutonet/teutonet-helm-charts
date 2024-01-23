@@ -4,6 +4,15 @@ global:
   imageRegistry: {{ .Values.global.imageRegistry }}
   {{- end }}
 prometheusOperator:
+  admissionWebhooks:
+    patch:
+      resources:
+        limits:
+          cpu: 50m
+          memory: 100m
+        requests:
+          cpu: 10m
+          memory: 10m
   secretFieldSelector: 'type!=helm.sh/release.v1'
   resources: {{- include "common.resources" .Values.monitoring.prometheus.operator | nindent 4 }}
   priorityClassName: monitoring-components

@@ -23,10 +23,19 @@ spec:
     {{- if .Values.global.imageRegistry }}
     image:
       repository: {{ printf "%s/jetstack/cert-manager-controller" $.Values.global.imageRegistry }}
+    {{- end }}
     startupapicheck:
+      resources:
+        limits:
+          cpu: 50m
+          memory: 100m
+        requests:
+          cpu: 10m
+          memory: 10m
+    {{- if .Values.global.imageRegistry }}
       image:
         repository: {{ printf "%s/jetstack/cert-manager-ctl" $.Values.global.imageRegistry }}
-    {{- end }}
+    {{- end}}
     {{- if .Values.certManager.email }}
     ingressShim:
       defaultIssuerName: letsencrypt-production

@@ -1,16 +1,16 @@
 {{- if .Values.descheduler.enabled -}}
 {{- $kubeMinorVersion := .Capabilities.KubeVersion.Minor -}}
-{{- $versionMatrix := dict 18 "0.20.x" 19 "0.21.x" 20 "0.22.x" 21 "0.23.x" 22 "0.24.x" 23 "0.25.x" 24 "0.26.x" 25 "0.27.x" 26 "0.28.x" -}}
+{{- $versionMatrix := dict 18 "0.20.x" 19 "0.21.x" 20 "0.22.x" 21 "0.23.x" 22 "0.24.x" 23 "0.25.x" 24 "0.26.x" 25 "0.27.x" -}}
 {{- $latestVersion := .Values.global.helmRepositories.descheduler.charts.descheduler -}}
 {{- $selectedVersion := (hasKey $versionMatrix $kubeMinorVersion) | ternary (index $versionMatrix $kubeMinorVersion) $latestVersion -}}
-apiVersion: helm.toolkit.fluxcd.io/v2
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: descheduler
   namespace: kube-system
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     app.kubernetes.io/component: descheduler
-    {{- if ne $selectedVersion $latestVersion }}
+    {{- if not (eq $selectedVersion $latestVersion) }}
     helmrelease-metrics/ignore: "true"
     {{- end }}
 spec:
@@ -23,28 +23,13 @@ spec:
         namespace: {{ .Release.Namespace }}
       version: {{ $selectedVersion }}
   interval: 1h
-  driftDetection:
-    mode: enabled
-  {{- if .Values.monitoring.prometheus.enabled }}
-  dependsOn:
-    - name: kube-prometheus-stack
-      namespace: monitoring
-  {{- end }}
   values:
+    cronJobApiVersion: {{ include "common.capabilities.cronjob.apiVersion" . }}
     startingDeadlineSeconds: 120
     priorityClassName: system-cluster-critical
-    kind: Deployment
-    resources: {{- include "common.resources" .Values.descheduler | nindent 6 }}
-    {{- if .Values.monitoring.prometheus.enabled }}
-    service:
-      enabled: true
-    serviceMonitor:
-      enabled: true
-      additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 8 }}
-    {{- end }}
     deschedulerPolicy:
       evictLocalStoragePods: true
-      strategies: {{- toYaml .Values.descheduler.strategies | nindent 8 }}
+      strategies: {{- .Values.descheduler.strategies | toYaml | nindent 8 }}
     {{- if .Values.global.imageRegistry }}
     image:
       repository: {{ printf "%s/descheduler/descheduler" .Values.global.imageRegistry }}

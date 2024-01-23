@@ -29,6 +29,85 @@ spec:
           thriftHttp: false
         otlp:
           grpc: true
+      resources:
+        limits:
+          cpu: 50m
+          memory: 50Mi
+        requests:
+          cpu: 10
+          memory: 30Mi
+    ingester:
+      resources:
+        limits:
+          cpu: 50m
+          memory: 50Mi
+        requests:
+          cpu: 10
+          memory: 30Mi
+    query:
+      resources:
+        limits:
+          cpu: 50m
+          memory: 100Mi
+        requests:
+          cpu: 10
+          memory: 70Mi
+    querier:
+      resources:
+        limits:
+          cpu: 50m
+          memory: 100Mi
+        requests:
+          cpu: 10
+          memory: 70Mi
+    distributor:
+      resources:
+        limits:
+          cpu: 50m
+          memory: 100Mi
+        requests:
+          cpu: 10
+          memory: 70Mi
+    memcached:
+      resources:
+        limits:
+          cpu: 50m
+          memory: 100Mi
+        requests:
+          cpu: 10
+          memory: 70Mi
+    compactor:
+      resources:
+        limits:
+          cpu: 50m
+          memory: 100Mi
+        requests:
+          cpu: 10
+          memory: 70Mi
+    metricsGenerator:
+      resources:
+        limits:
+          cpu: 50m
+          memory: 100Mi
+        requests:
+          cpu: 10
+          memory: 70Mi
+    queryFrontend:
+      resources:
+        limits:
+          cpu: 50m
+          memory: 100Mi
+        requests:
+          cpu: 10
+          memory: 70Mi
+    vulture:
+      resources:
+        limits:
+          cpu: 100m
+          memory: 250Mi
+        requests:
+          cpu: 10
+          memory: 100Mi
     metrics:
       enabled: true
       serviceMonitor:

@@ -23,6 +23,13 @@ spec:
   upgrade:
     crds: CreateReplace
   values:
+    resources:
+      requests:
+        cpu: 20m
+        memory: 256Mi
+      limits:
+        cpu: 50m
+        memory: 4Gi
     {{- if .Values.global.imageRegistry }}
     image:
       registry: {{ $.Values.global.imageRegistry }}
@@ -44,11 +51,6 @@ spec:
         registry: {{ $.Values.global.imageRegistry }}
     {{- end }}
       ignoreUnfixed: true
-      resources:
-        requests:
-          memory: 256Mi
-        limits:
-          memory: 4Gi
     operator:
       scanJobsConcurrentLimit: 3
       metricsVulnIdEnabled: true
