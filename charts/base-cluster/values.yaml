@@ -22,8 +22,8 @@ global:
             cpu: 500m
             memory: 300Mi
         quotas:
-          limits.cpu: "1"
-          limits.memory: 1Gi
+          limits.cpu: "2"
+          limits.memory: 2Gi
     ingress-nginx:
       condition: "{{ .Values.ingress.enabled }}"
       additionalLabels:
