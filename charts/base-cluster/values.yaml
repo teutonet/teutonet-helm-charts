@@ -13,6 +13,17 @@ global:
     cert-manager:
       additionalLabels:
         app.kubernetes.io/component: cert-manager
+      resources:
+        defaults:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 300Mi
+        quotas:
+          limits.cpu: "1"
+          limits.memory: 1Gi
     ingress-nginx:
       condition: "{{ .Values.ingress.enabled }}"
       additionalLabels:
@@ -25,6 +36,11 @@ global:
       condition: "{{ or .Values.monitoring.prometheus.enabled .Values.monitoring.metricsServer.enabled }}"
       additionalLabels:
         app.kubernetes.io/component: monitoring
+      resources:
+        defaults:
+          requests:
+            cpu: 20m
+            memory: 100Mi
     loki:
       condition: "{{ .Values.monitoring.loki.enabled }}"
       additionalLabels:
