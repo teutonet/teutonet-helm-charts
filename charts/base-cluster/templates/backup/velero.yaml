@@ -87,8 +87,8 @@ spec:
       volumeSnapshotLocation: []
     metrics:
       serviceMonitor:
-        {{- if .Values.monitoring.prometheus.enabled }}
         enabled: true
-        {{- end }}
         additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
+      prometheusRule:
+        enabled: true
 {{- end }}
