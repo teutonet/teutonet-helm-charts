@@ -28,7 +28,7 @@ annotations:
     - image: docker.io/bitnami/kubectl:1.28
     - image: docker.io/bitnami/kubectl:1.29.1
     - image: docker.io/bitnami/memcached:1.6.23-debian-11-r0
-    - image: docker.io/bitnami/metrics-server:0.6.4-debian-11-r75
+    - image: docker.io/bitnami/metrics-server:0.7.0-debian-11-r0
     - image: docker.io/busybox:1.35
     - image: docker.io/curlimages/curl:7.85.0
     - image: docker.io/curlimages/curl:8.5.0
