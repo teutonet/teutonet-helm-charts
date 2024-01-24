@@ -95,4 +95,6 @@ spec:
         enabled: true
         {{- end }}
         additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
+      prometheusRule:
+        enabled: true
 {{- end }}
