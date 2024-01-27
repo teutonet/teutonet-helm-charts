@@ -37,7 +37,7 @@ annotations:
     - image: docker.io/grafana/grafana:10.2.3
     - image: docker.io/grafana/loki:2.6.1
     - image: docker.io/grafana/promtail:2.9.2
-    - image: docker.io/otel/opentelemetry-collector-contrib:0.92.0
+    - image: docker.io/otel/opentelemetry-collector-contrib:0.93.0
     - image: docker.io/velero/velero-plugin-for-aws:v1.7.0
     - image: docker.io/velero/velero:v1.12.3
     - image: docker.io/vladgh/gpg@sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
