@@ -137,6 +137,14 @@ dashboards:
   {{- end }}
 {{- include "base-cluster.monitoring.ingress" (dict "name" "grafana" "context" $) | nindent 0 }}
 {{- if and .Values.ingress.enabled .Values.monitoring.grafana.ingress.enabled .Values.certManager.email (or .Values.global.baseDomain .Values.monitoring.grafana.ingress.customDomain) }}
+  {{- if .Values.global.authentication }}
+envValueFrom:
+  OIDC_CLIENT_SECRET:
+    secretKeyRef:
+      key: client-secret
+      name: {{ include "common.secrets.name" (dict "defaultNameSuffix" "oauth-proxy" "context" $) }}
+      optional: false
+  {{- end }}
 grafana.ini:
   auth:
     signout_redirect_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
@@ -152,7 +160,7 @@ grafana.ini:
     auth_url: {{ printf "%s%s" $issuerUrl .grafana.authenticationPath }}
     token_url: {{ printf "%s%s" $issuerUrl .grafana.tokenPath }}
     client_id: {{ .config.clientId }}
-    client_secret: {{ .config.clientSecret }}
+    client_secret: ${OIDC_CLIENT_SECRET}
     name: OAuth
     role_attribute_path: {{ .grafana.roleAttributePath | quote }}
     scopes: openid profile email
