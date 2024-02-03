@@ -45,10 +45,10 @@ annotations:
     - image: ghcr.io/kyverno/cleanup-controller:v1.9.5
     - image: ghcr.io/kyverno/kyverno:v1.9.5
     - image: ghcr.io/kyverno/kyvernopre:v1.9.5
-    - image: quay.io/jetstack/cert-manager-cainjector:v1.13.3
-    - image: quay.io/jetstack/cert-manager-controller:v1.13.3
-    - image: quay.io/jetstack/cert-manager-ctl:v1.13.3
-    - image: quay.io/jetstack/cert-manager-webhook:v1.13.3
+    - image: quay.io/jetstack/cert-manager-cainjector:v1.14.1
+    - image: quay.io/jetstack/cert-manager-controller:v1.14.1
+    - image: quay.io/jetstack/cert-manager-startupapicheck:v1.14.1
+    - image: quay.io/jetstack/cert-manager-webhook:v1.14.1
     - image: quay.io/kiwigrid/k8s-sidecar:1.25.2
     - image: quay.io/prometheus-operator/prometheus-operator:v0.70.0
     - image: quay.io/prometheus/alertmanager:v0.26.0
