@@ -290,4 +290,11 @@ leaving them in the cluster on upgrade.
 The new [t8s-cluster](../t8s-cluster) is going to provide these, the enduser can
 ignore this change.
 
+### 4.x.x -> 5.0.0
+The condition if velero gets deployed changed. Velero will not be deployed if you
+have not configured its backupstoragelocation. This change is necessary, because
+in the current version of velero this value is mandatory. Please move
+your exiting backupstoragelocation configuration to the base-cluster chart if you
+haven't already.
+
 {{ .Files.Get "values.md"  }}
