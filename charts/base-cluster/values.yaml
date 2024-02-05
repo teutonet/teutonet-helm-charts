@@ -166,7 +166,7 @@ global:
       url: https://vmware-tanzu.github.io/helm-charts
       charts:
         velero: 5.x
-      condition: "{{ .Values.backup.enabled }}"
+      condition: "{{ .Values.backup.backupStorageLocations }}"
     open-telemetry:
       url: https://open-telemetry.github.io/opentelemetry-helm-charts
       charts:
@@ -443,7 +443,7 @@ rbac:
   accounts: {}
 
 backup:
-  enabled: true
+  enabled: false
   backupStorageLocations: {}
   resources:
     requests:

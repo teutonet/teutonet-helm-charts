@@ -1,4 +1,4 @@
-{{- if and .Values.backup.enabled .Values.backup.defaultLocation -}}
+{{- if .Values.backup.defaultLocation -}}
   {{- if not (index .Values.backup.backupStorageLocations .Values.backup.defaultLocation) -}}
     {{- fail (printf "The `defaultLocation` '%s' must exist in `backupStorageLocations`" .Values.backup.defaultLocation) -}}
   {{- end -}}
