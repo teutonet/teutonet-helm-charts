@@ -56,7 +56,7 @@ global:
         app.kubernetes.io/component: storage
         app.kubernetes.io/part-of: nfs-server-provisioner
     backup:
-      condition: "{{ .Values.backup.enabled }}"
+      condition: "{{ .Values.backup.backupStorageLocations }}"
       additionalLabels:
         app.kubernetes.io/component: backup
   certificates:
