@@ -443,7 +443,6 @@ rbac:
   accounts: {}
 
 backup:
-  enabled: false
   backupStorageLocations: {}
   resources:
     requests:

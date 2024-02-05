@@ -1166,9 +1166,6 @@
     "backup": {
       "type": "object",
       "properties": {
-        "enabled": {
-          "type": "boolean"
-        },
         "resources": {
           "$ref": "#/$defs/resourceRequirements"
         },
