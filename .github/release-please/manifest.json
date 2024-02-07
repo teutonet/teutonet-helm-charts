@@ -1,1 +1,1 @@
-{"charts/base-cluster":"4.12.0","charts/teuto-portal-k8s-worker":"1.0.1","charts/t8s-cluster":"4.1.0","charts/stellio-context-broker":"0.1.0","charts/chirpstack":"0.1.0"}
+{"charts/base-cluster":"4.12.0","charts/teuto-portal-k8s-worker":"1.0.2","charts/t8s-cluster":"4.1.0","charts/stellio-context-broker":"0.1.0","charts/chirpstack":"0.1.0"}

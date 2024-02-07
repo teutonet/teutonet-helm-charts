@@ -1,0 +1,9 @@
+worker:
+  database:
+    host: test
+    credentials:
+      secret:
+        name: test
+  kubeconfig:
+    secret:
+      name: test
