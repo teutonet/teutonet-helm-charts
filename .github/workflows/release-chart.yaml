@@ -36,7 +36,7 @@ jobs:
 
       - run: helm package --dependency-update "${CHART}"
       - run: helm registry login ghcr.io --username teutonet-bot --password ${{ secrets.ACTIONS_BOT_TOKEN }}
-      - run: helm push "${CHART}"-* "oci://ghcr.io/${GITHUB_REPOSITORY}"
+      - run: helm push *.tgz "oci://ghcr.io/${GITHUB_REPOSITORY}"
   abort:
     runs-on: ubuntu-latest
     needs: release_please
