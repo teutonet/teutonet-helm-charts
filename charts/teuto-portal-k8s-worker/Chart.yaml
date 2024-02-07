@@ -17,3 +17,6 @@ dependencies:
   - name: common
     version: 2.14.1
     repository: https://charts.bitnami.com/bitnami
+annotations:
+  artifacthub.io/images: |
+    - image: registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker:1.1.0
