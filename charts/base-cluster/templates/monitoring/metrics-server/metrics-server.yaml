@@ -1,5 +1,5 @@
 {{- if .Values.monitoring.metricsServer.enabled -}}
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: metrics-server
@@ -11,6 +11,8 @@ spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "bitnami" "chart" "metrics-server" "context" $) | nindent 6 }}
   interval: 1h
+  driftDetection:
+    mode: enabled
   values:
     apiService:
       create: true

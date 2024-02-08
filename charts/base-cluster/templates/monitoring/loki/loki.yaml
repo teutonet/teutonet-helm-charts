@@ -1,5 +1,5 @@
 {{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.loki.enabled -}}
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: loki
@@ -11,6 +11,8 @@ spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "grafana" "chart" "loki-stack" "context" $) | nindent 6 }}
   interval: 1h
+  driftDetection:
+    mode: enabled
   install:
     timeout: 10m0s
   upgrade:

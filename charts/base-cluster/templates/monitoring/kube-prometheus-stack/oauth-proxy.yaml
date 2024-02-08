@@ -11,7 +11,7 @@
   {{- $port := $backend.port -}}
   {{- $targetServiceName := printf "%s-%s" (include "common.names.dependency.fullname" (dict "chartName" "kube-prometheus-stack" "chartValues" (dict) "context" (dict "Release" (dict "Name" "kube-prometheus-stack")))) $host -}}
   {{- $ingress := include "base-cluster.monitoring.ingress.config" (dict "name" $host "context" $) | fromYaml -}}
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: cluster-{{ $host }}-oauth-proxy
@@ -23,6 +23,8 @@ spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "bitnami" "chart" "oauth2-proxy" "context" $) | nindent 6 }}
   interval: 1h
+  driftDetection:
+    mode: enabled
   values:
     redis:
       enabled: false

@@ -1,5 +1,5 @@
 {{ if .Values.ingress.enabled }}
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: ingress-nginx
@@ -10,6 +10,8 @@ spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "nginx" "chart" "ingress-nginx" "context" $) | nindent 6 }}
   interval: 1h
+  driftDetection:
+    mode: enabled
   {{- if .Values.monitoring.prometheus.enabled }}
   dependsOn:
     - name: kube-prometheus-stack
