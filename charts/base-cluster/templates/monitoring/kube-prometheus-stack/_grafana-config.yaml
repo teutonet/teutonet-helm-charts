@@ -120,7 +120,7 @@ dashboards:
       gnetId: 17813
       revision: 2
     {{- end }}
-    {{- if .Values.backup.enabled }}
+    {{- if .Values.backup.backupStorageLocations }}
     velero:
       <<: *dashboard
       gnetId: 11055

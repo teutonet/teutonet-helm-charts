@@ -56,7 +56,7 @@ global:
         app.kubernetes.io/component: storage
         app.kubernetes.io/part-of: nfs-server-provisioner
     backup:
-      condition: "{{ .Values.backup.enabled }}"
+      condition: "{{ not (empty .Values.backup.backupStorageLocations) }}"
       additionalLabels:
         app.kubernetes.io/component: backup
   certificates:
@@ -166,7 +166,7 @@ global:
       url: https://vmware-tanzu.github.io/helm-charts
       charts:
         velero: 5.x
-      condition: "{{ .Values.backup.enabled }}"
+      condition: "{{ not (empty .Values.backup.backupStorageLocations) }}"
     open-telemetry:
       url: https://open-telemetry.github.io/opentelemetry-helm-charts
       charts:
@@ -443,7 +443,6 @@ rbac:
   accounts: {}
 
 backup:
-  enabled: true
   backupStorageLocations: {}
   resources:
     requests:
