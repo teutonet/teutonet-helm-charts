@@ -41,14 +41,14 @@ annotations:
     - image: docker.io/velero/velero-plugin-for-aws:v1.7.0
     - image: docker.io/velero/velero:v1.13.0
     - image: docker.io/vladgh/gpg@sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
-    - image: ghcr.io/aquasecurity/trivy-operator:0.18.4
+    - image: ghcr.io/aquasecurity/trivy-operator:0.18.5
     - image: ghcr.io/kyverno/cleanup-controller:v1.9.5
     - image: ghcr.io/kyverno/kyverno:v1.9.5
     - image: ghcr.io/kyverno/kyvernopre:v1.9.5
-    - image: quay.io/jetstack/cert-manager-cainjector:v1.14.1
-    - image: quay.io/jetstack/cert-manager-controller:v1.14.1
-    - image: quay.io/jetstack/cert-manager-startupapicheck:v1.14.1
-    - image: quay.io/jetstack/cert-manager-webhook:v1.14.1
+    - image: quay.io/jetstack/cert-manager-cainjector:v1.14.2
+    - image: quay.io/jetstack/cert-manager-controller:v1.14.2
+    - image: quay.io/jetstack/cert-manager-startupapicheck:v1.14.2
+    - image: quay.io/jetstack/cert-manager-webhook:v1.14.2
     - image: quay.io/kiwigrid/k8s-sidecar:1.25.2
     - image: quay.io/prometheus-operator/prometheus-operator:v0.70.0
     - image: quay.io/prometheus/alertmanager:v0.26.0
