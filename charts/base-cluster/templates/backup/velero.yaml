@@ -55,7 +55,7 @@ spec:
       resources: {{- .Values.backup.nodeAgent.resources | toYaml | nindent 8 }}
       priorityClassName: system-cluster-critical
     configuration:
-      {{- if .Values.backup.backupStorageLocations }}
+      defaultBackupStorageLocation: {{ .Values.backup.defaultLocation | quote }}
       backupStorageLocation: {{- range $name, $spec := .Values.backup.backupStorageLocations }}
         {{- $providerName := include "base-cluster.backup.getProviderName" $spec.provider }}
         - name: {{ $name | quote }}
@@ -64,9 +64,7 @@ spec:
           {{- if $spec.prefix }}
           prefix: {{ $spec.prefix | quote }}
           {{- end }}
-          {{- if $.Values.backup.defaultLocation }}
           default: {{ eq $name $.Values.backup.defaultLocation }}
-          {{- end }}
           {{- $credentialType := include "base-cluster.backup.credentialType" $spec.provider }}
           {{- if eq $credentialType "direct" }}
           credential:
@@ -85,9 +83,6 @@ spec:
             s3ForcePathStyle: {{ $providerSpec.forcePathStyle | default true }}
             s3Url: {{ $providerSpec.url | quote }}
           {{- end }}
-      {{- end }}
-      {{- else }}
-      backupStorageLocation: []
       {{- end }}
       volumeSnapshotLocation: []
     metrics:
