@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v5.0.0...base-cluster-v5.0.1) (2024-02-12)
+
+
+### Bug Fixes
+
+* **base-cluster/backup:** add defaultBackupStorageLocation flag for velero 🙄 ([#779](https://github.com/teutonet/teutonet-helm-charts/issues/779)) ([d0e9ff9](https://github.com/teutonet/teutonet-helm-charts/commit/d0e9ff973aec296c550c0e34f009459345e82d32))
+
 ## [5.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-4.12.0...base-cluster-v5.0.0) (2024-02-10)
 
 
