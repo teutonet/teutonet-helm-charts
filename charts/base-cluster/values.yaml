@@ -123,7 +123,7 @@ global:
     descheduler:
       url: https://kubernetes-sigs.github.io/descheduler
       charts:
-        descheduler: 0.28.x
+        descheduler: 0.29.x
       condition: "{{ .Values.descheduler.enabled }}"
     jetstack:
       url: https://charts.jetstack.io
