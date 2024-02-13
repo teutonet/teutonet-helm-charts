@@ -1,5 +1,4 @@
 {{- if .Values.kyverno.enabled }}
-# https://github.com/kyverno/kyverno/tree/main/charts/kyverno
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -17,43 +16,42 @@ spec:
       namespace: monitoring
   {{- end }}
   values:
-    testImage:
-      registry: {{ $.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict)) }}
     {{- if .Values.global.imageRegistry }}
-    image:
-      repository: {{ printf "%s/kyverno/kyverno" $.Values.global.imageRegistry }}
-    initImage:
-      repository: {{ printf "%s/kyverno/kyvernopre" $.Values.global.imageRegistry }}
+    global:
+      registry: {{ .Values.global.imageRegistry }}
     {{- end }}
     installCRDs: true
     networkPolicy:
       enabled: false
     webhooksCleanup:
       enable: true
-      image: {{ include "base-cluster.kubectl.image" . }}
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
       additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
     priorityClassName: system-cluster-critical
     # this only works in version 3
-    {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
     admissionController:
+      replicas: 3
+      {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
       tracing: &tracingConfig
         enabled: true
         address: open-telemetry-collector-opentelemetry-collector.monitoring
         port: 14250 # jaeger-grpc
+      {{- end }}
     backgroundController:
-      tracing: *tracingConfig
-    reportsController:
-      tracing: *tracingConfig
-    {{- end }}
-    cleanupController:
+      replicas: 2
       {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
       tracing: *tracingConfig
       {{- end }}
-      {{- if .Values.global.imageRegistry }}
-      image:
-        repository: {{ printf "%s/kyverno/cleanup-controller" $.Values.global.imageRegistry }}
+    reportsController:
+      replicas: 2
+      {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
+      tracing: *tracingConfig
+      {{- end }}
+    cleanupController:
+      replicas: 2
+      {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
+      tracing: *tracingConfig
       {{- end }}
     podDisruptionBudget:
       enabled: true
