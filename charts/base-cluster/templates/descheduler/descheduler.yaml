@@ -27,6 +27,10 @@ spec:
     cronJobApiVersion: {{ include "common.capabilities.cronjob.apiVersion" . }}
     startingDeadlineSeconds: 120
     priorityClassName: system-cluster-critical
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
     deschedulerPolicy:
       evictLocalStoragePods: true
       strategies: {{- .Values.descheduler.strategies | toYaml | nindent 8 }}

@@ -25,6 +25,13 @@ spec:
           {{- else }}
           imagePullPolicy: Always
           {{- end }}
+          resources:
+            limits:
+              cpu: 50m
+              memory: 100m
+            requests:
+              cpu: 10m
+              memory: 10m
           securityContext:
             readOnlyRootFilesystem: true
             privileged: false
