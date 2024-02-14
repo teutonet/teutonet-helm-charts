@@ -70,5 +70,5 @@ sshKeyName: null
 cni: cilium
 
 imageNameTemplate:
-  computePlane: t8s-engine-2004-kube-{{ .builtin.machineDeployment.version }}
-  controlPlane: t8s-engine-2004-kube-{{ .builtin.controlPlane.version }}
+  computePlane: t8s-engine-{{ .builtin.machineDeployment.version }}
+  controlPlane: t8s-engine-{{ .builtin.controlPlane.version }}
