@@ -137,9 +137,8 @@ global:
     kyverno:
       url: https://kyverno.github.io/kyverno
       charts:
-        # TODO: migrate to v3 https://artifacthub.io/packages/helm/kyverno/kyverno#migrating-from-v2-to-v3
-        kyverno: 2.x.x
-        kyverno-policies: 2.x.x
+        kyverno: 3.x.x
+        kyverno-policies: 3.x.x
       condition: "{{ .Values.kyverno.enabled }}"
     cetic:
       url: https://cetic.github.io/helm-charts
