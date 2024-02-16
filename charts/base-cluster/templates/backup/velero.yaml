@@ -97,6 +97,7 @@ spec:
         additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
       prometheusRule:
         enabled: true
+        additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
         spec:
           - alert: VeleroBackupPartialFailures
             annotations:
