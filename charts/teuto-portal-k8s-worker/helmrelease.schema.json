@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "https://raw.githubusercontent.com/fluxcd/helm-controller/main/config/crd/bases/helm.toolkit.fluxcd.io_helmreleases.yaml#/spec.schema.openAPIV3Schema"
+    },
+    {
+      "properties": {
+        "spec": {
+          "properties": {
+            "values": {
+              "$ref": "./values.schema.json"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
