@@ -52,10 +52,10 @@ jobs:
         with:
           add-paths: |
             charts/${{ matrix.chart }}/Chart.yaml
-          commit-message: "chore(${{ matrix.chart }}/artifacthub-images): Update images in 'Chart.yaml'"
+          commit-message: "ci(${{ matrix.chart }}/artifacthub-images): Update images in 'Chart.yaml'"
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
-          branch: chore/${{ matrix.chart }}-update-artifacthub-images
-          title: "chore(${{ matrix.chart }}/artifacthub-images): Update ArtifactHUB images"
+          branch: ci/${{ matrix.chart }}-update-artifacthub-images
+          title: "ci(${{ matrix.chart }}/artifacthub-images): Update ArtifactHUB images"
           body: |
             Updates the ArtifactHUB images to the really deployed ones.
       - if: ${{ steps.create-pr.outputs.pull-request-number }}
