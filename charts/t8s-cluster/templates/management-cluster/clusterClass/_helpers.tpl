@@ -8,7 +8,7 @@ openstack
 
 {{- define "t8s-cluster.clusterClass.getIdentityRefSecretName" -}}
   {{- $_ := set . "Release" .context.Release -}}
-  {{- printf "cloud-config-%s" .Release.Name -}}
+  {{- printf "%s-cloud-config" .Release.Name -}}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.tlsCipherSuites" -}}
