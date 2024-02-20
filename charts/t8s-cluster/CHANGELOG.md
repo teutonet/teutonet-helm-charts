@@ -1,5 +1,35 @@
 # Changelog
 
+## [5.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-4.1.0...t8s-cluster-v5.0.0) (2024-02-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **t8s-cluster/management-cluster:** migrate to new secret naming ([#795](https://github.com/teutonet/teutonet-helm-charts/issues/795))
+* **t8s-cluster:** migrate to new image names ([#787](https://github.com/teutonet/teutonet-helm-charts/issues/787))
+
+### Features
+
+* add helmrelease schemas 😍 ([#792](https://github.com/teutonet/teutonet-helm-charts/issues/792)) ([89ed7eb](https://github.com/teutonet/teutonet-helm-charts/commit/89ed7eb540c647cb3e15b590d20a6a83331a61b7))
+* **t8s-cluster/management-cluster:** migrate to new secret naming ([#795](https://github.com/teutonet/teutonet-helm-charts/issues/795)) ([edda640](https://github.com/teutonet/teutonet-helm-charts/commit/edda640e1ce8b5d60a601013b3bd6581dcfc047d))
+* **t8s-cluster:** migrate to new image names ([#787](https://github.com/teutonet/teutonet-helm-charts/issues/787)) ([5137557](https://github.com/teutonet/teutonet-helm-charts/commit/513755798d5ae231670195f1f5cd3c6bf28f3fe2))
+
+
+### Bug Fixes
+
+* helmrelease-schemas ([#794](https://github.com/teutonet/teutonet-helm-charts/issues/794)) ([6544385](https://github.com/teutonet/teutonet-helm-charts/commit/65443857c75d07b245c14e05d1fae76f0c0de479))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#734](https://github.com/teutonet/teutonet-helm-charts/issues/734)) ([c5bbe56](https://github.com/teutonet/teutonet-helm-charts/commit/c5bbe5608dbc1274ae42d0d0bf8b753b333fa11e))
+* **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#737](https://github.com/teutonet/teutonet-helm-charts/issues/737)) ([829a379](https://github.com/teutonet/teutonet-helm-charts/commit/829a379f43824e1e49b220a871a7b92e53a50492))
+* **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#759](https://github.com/teutonet/teutonet-helm-charts/issues/759)) ([71639d0](https://github.com/teutonet/teutonet-helm-charts/commit/71639d0e57263f91b740220dab555f81fcaa0a86))
+* **t8s-cluster/artifacthub-images:** Update ArtifactHUB images ([#790](https://github.com/teutonet/teutonet-helm-charts/issues/790)) ([1bce1a3](https://github.com/teutonet/teutonet-helm-charts/commit/1bce1a3061ecabf50cea46c62960fb0aaca29b10))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.29.1 ([#727](https://github.com/teutonet/teutonet-helm-charts/issues/727)) ([9727139](https://github.com/teutonet/teutonet-helm-charts/commit/9727139109211237e47f186bb6203e5b1d36b262))
+* **t8s-cluster/dependencies:** update helm release common to v2.14.1 ([#693](https://github.com/teutonet/teutonet-helm-charts/issues/693)) ([b5630db](https://github.com/teutonet/teutonet-helm-charts/commit/b5630dba17e57e3d406c6ab18a39c2536cef980f))
+* **t8s-cluster:** streamline imagePullPolicy ([#768](https://github.com/teutonet/teutonet-helm-charts/issues/768)) ([4c080a5](https://github.com/teutonet/teutonet-helm-charts/commit/4c080a552e23d08f55d3ffd189804028ef171b9c))
+
 ## [4.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-4.0.1...t8s-cluster-v4.1.0) (2024-01-18)
 
 
