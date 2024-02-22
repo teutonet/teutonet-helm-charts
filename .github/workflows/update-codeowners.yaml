@@ -19,12 +19,11 @@ jobs:
 
       - name: Create PR
         id: create-pr
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v6
         with:
           add-paths: |
             .github/CODEOWNERS
           commit-message: "ci: [bot] Update 'CODEOWNERS'"
-          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           branch: ci/update-codeowners
           title: "ci: Update CODEOWNERS"
       - name: Set PR to auto-merge
