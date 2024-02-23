@@ -28,7 +28,6 @@ openstack
 
 {{- define "t8s-cluster.clusterClass.postKubeadmCommands" -}}
   {{- $commands := list -}}
-  {{- $commands = append $commands "bash -xc 'if systemctl -q is-failed kubelet; then journalctl -u kubelet; else echo kubelet startup successful; fi | tee -a /dev/console'" }}
   {{- $commands | toYaml }}
 {{- end -}}
 
