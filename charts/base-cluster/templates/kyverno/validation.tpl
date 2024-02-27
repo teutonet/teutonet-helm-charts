@@ -1,4 +1,4 @@
-{{- $existingKyverno := lookup "helm.toolkit.fluxcd.io/v2beta1" "HelmRelease" "kyverno" "kyverno" -}}
+{{- $existingKyverno := lookup "helm.toolkit.fluxcd.io/v2beta2" "HelmRelease" "kyverno" "kyverno" -}}
 {{- $lastAttemptedRevision := dig "status" "lastAttemptedRevision" "" $existingKyverno }}
 {{- $lastAppliedRevision := dig "status" "lastAppliedRevision" "" $existingKyverno }}
 {{- if or $lastAppliedRevision $lastAttemptedRevision -}}
