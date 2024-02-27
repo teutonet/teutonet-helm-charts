@@ -85,6 +85,7 @@ spec:
           {{- end }}
       {{- end }}
       volumeSnapshotLocation: []
+      uploaderType: restic
     metrics:
       serviceMonitor:
         additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
