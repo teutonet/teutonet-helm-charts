@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+[[ $- == *x* ]] && export RUNNER_DEBUG=1
 
 set -eu
 set -o pipefail
@@ -115,11 +116,9 @@ function templateSubHelmCharts() {
   yaml=$(cat -)
   numberOfHelmReleases=$(yq <<<"$yaml" -ers '[.[] | select(.kind == "HelmRelease")] | length')
   echo "$yaml"
-  if [[ "$numberOfHelmReleases" -gt 0 ]]; then
-    for index in $(seq 0 $((numberOfHelmReleases - 1))); do
-      yq <<<"$yaml" -erys '([.[] | select(.kind == "HelmRelease")]['"$index"']),(.[] | select(.kind | IN(["GitRepository", "HelmRepository"][])))' | templateHelmRelease >"$tmpDir/$index.yaml" &
-    done
-  fi
+  for index in $(seq 0 $((numberOfHelmReleases - 1))); do
+    yq <<<"$yaml" -erys '([.[] | select(.kind == "HelmRelease")]['"$index"']),(.[] | select(.kind | IN(["GitRepository", "HelmRepository"][])))' | templateHelmRelease >"$tmpDir/$index.yaml" &
+  done
   wait
   for index in $(seq 0 $((numberOfHelmReleases - 1))); do
     echo ---
