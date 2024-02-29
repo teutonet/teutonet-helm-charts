@@ -19,12 +19,26 @@ spec:
     {{- if .Values.global.imageRegistry }}
     global:
       registry: {{ .Values.global.imageRegistry }}
+    {{- else }}
+    test:
+      image: &defaultImage
+        registry: docker.io
+    policyReportsCleanup:
+      image: *defaultImage
+    cleanupJobs:
+      admissionReports:
+        image: *defaultImage
+      clusterAdmissionReports:
+        image: *defaultImage
     {{- end }}
     installCRDs: true
     networkPolicy:
       enabled: false
     webhooksCleanup:
       enable: true
+      {{- if not .Values.global.imageRegistry }}
+      image: *defaultImage
+      {{- end }}
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
       additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
