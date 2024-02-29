@@ -1,5 +1,23 @@
 # Changelog
 
+## [6.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v5.0.0...t8s-cluster-v6.0.0) (2024-02-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* **t8s-cluster/management-cluster:** add environment parameter ([#806](https://github.com/teutonet/teutonet-helm-charts/issues/806))
+
+### Features
+
+* **t8s-cluster/management-cluster:** add environment parameter ([#806](https://github.com/teutonet/teutonet-helm-charts/issues/806)) ([e452f9e](https://github.com/teutonet/teutonet-helm-charts/commit/e452f9ed4317a17418689312fcab8b27e75931a1))
+* **t8s-cluster/management-cluster:** automatically roll cluster if certs are going to expire ([#722](https://github.com/teutonet/teutonet-helm-charts/issues/722)) ([6fd3ab1](https://github.com/teutonet/teutonet-helm-charts/commit/6fd3ab163a00bf0c53ac94cc18bfad41f12ed1a3))
+* **t8s-cluster:** update all HRs and enable driftDetection ([#774](https://github.com/teutonet/teutonet-helm-charts/issues/774)) ([139d6df](https://github.com/teutonet/teutonet-helm-charts/commit/139d6df254d547817bfa71aa681df24a79cc4612))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update helm release common to v2.16.1 ([#783](https://github.com/teutonet/teutonet-helm-charts/issues/783)) ([fb06ada](https://github.com/teutonet/teutonet-helm-charts/commit/fb06adade8d153c1fdb5998176dc7a57e33f7375))
+
 ## [5.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-4.1.0...t8s-cluster-v5.0.0) (2024-02-20)
 
 

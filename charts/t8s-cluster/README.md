@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # t8s-cluster
 
-![Version: 5.0.0](https://img.shields.io/badge/Version-5.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 6.0.0](https://img.shields.io/badge/Version-6.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -23,7 +23,7 @@ t8s-operator cluster with necessary addons
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.14.1 |
+| https://charts.bitnami.com/bitnami | common | 2.16.1 |
 
 ## Initial installation
 
@@ -309,6 +309,7 @@ bitnami/kubectl
 | - [configGroupUrl](#metadata_configGroupUrl )               | No      | string           | No         | -          | -                 |
 | - [gopassName](#metadata_gopassName )                       | No      | string           | No         | -          | -                 |
 | - [remarks](#metadata_remarks )                             | No      | string           | No         | -          | -                 |
+| - [environment](#metadata_environment )                     | No      | string           | No         | -          | -                 |
 
 ### <a name="metadata_serviceLevelAgreement"></a>2.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > metadata > serviceLevelAgreement`
 
@@ -358,6 +359,12 @@ Must be one of:
 | **Type** | `string` |
 
 ### <a name="metadata_remarks"></a>2.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > metadata > remarks`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+### <a name="metadata_environment"></a>2.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > metadata > environment`
 
 |          |          |
 | -------- | -------- |
