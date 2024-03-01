@@ -6,15 +6,15 @@
     "global": {
       "imagePullSecrets": {
         "type": "array",
-         "items": {
-           "type": "object",
-           "properties": {
-             "name": {
-               "type": "string"
-             }
-           },
-           "additionalProperties": false
-         }
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
       },
       "podSecurityContext": {
         "type": "object",
@@ -195,6 +195,9 @@
               "type": "string"
             },
             "loggingFormat": {
+              "type": "string"
+            },
+            "environment": {
               "type": "string"
             }
           },
