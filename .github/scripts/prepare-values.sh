@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+[[ "$RUNNER_DEBUG" == 1 ]] && set -x
+[[ $- == *x* ]] && export RUNNER_DEBUG=1
+
 function mergeYaml() {
   local valuesFile="${1?}"
   local overrideJson="${2?}"
