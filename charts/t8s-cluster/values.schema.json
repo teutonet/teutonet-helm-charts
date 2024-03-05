@@ -149,10 +149,14 @@
       "type": "object",
       "properties": {
         "major": {
-          "type": "integer"
+          "type": "integer",
+          "const": 1
         },
         "minor": {
-          "type": "integer"
+          "type": "integer",
+          "description": "The minor version of the k8s cluster. Must be below 29, as CAPO does not support 1.29 yet.",
+          "minimum": 25,
+          "maximum": 28
         },
         "patch": {
           "type": "integer"
