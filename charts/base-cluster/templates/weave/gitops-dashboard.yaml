@@ -6,7 +6,7 @@ metadata:
     metadata.weave.works/description: This is the Weave GitOps Dashboard.  It provides
       a simple way to get insights into your GitOps workloads.
   name: gitops-dashboard
-  namespace: weave
+  namespace: flux-system
 spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "weaveworks" "chart" "weave-gitops" "context" $) | nindent 6 }}
