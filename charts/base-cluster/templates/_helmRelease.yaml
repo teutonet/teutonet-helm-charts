@@ -1,5 +1,5 @@
 {{- define "base-cluster.helm.resourceWithDependencies" -}}
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: {{ .name }}
@@ -12,6 +12,8 @@ spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "cetic" "chart" "static" "context" .context) | nindent 6 }}
   interval: 1h
+  driftDetection:
+    mode: enabled
   dependsOn:
     {{- range $namespace, $name := .dependencies }}
     - name: {{ $name }}

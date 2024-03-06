@@ -1,6 +1,6 @@
 {{- if .Values.kyverno.enabled }}
 # https://github.com/kyverno/kyverno/tree/main/charts/kyverno-policies
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: kyverno-policies
@@ -12,6 +12,8 @@ spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "kyverno" "chart" "kyverno-policies" "context" $) | nindent 6 }}
   interval: 1h
+  driftDetection:
+    mode: enabled
   dependsOn:
     - name: kyverno
       namespace: kyverno
