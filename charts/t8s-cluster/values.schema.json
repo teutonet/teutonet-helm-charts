@@ -244,21 +244,8 @@
         "calico"
       ]
     },
-    "imageNameTemplate": {
-      "type": "object",
-      "properties": {
-        "computePlane": {
-          "type": "string"
-        },
-        "controlPlane": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "computePlane",
-        "controlPlane"
-      ],
-      "additionalProperties": false
+    "openstackImageNamePrefix": {
+      "type": "string"
     },
     "common": {
       "type": "object",
@@ -269,6 +256,7 @@
     "metadata",
     "version",
     "controlPlane",
+    "openstackImageNamePrefix",
     "nodePools"
   ],
   "additionalProperties": false,
