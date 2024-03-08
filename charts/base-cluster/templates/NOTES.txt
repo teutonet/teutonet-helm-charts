@@ -53,7 +53,13 @@ You can access the gitops-dashboard via
 Login via your OIDC provider
 {{- else}}
 {{- if .Values.weaveworks.adminUser }}
-{{- printf "username: %s\npassword: %s" .Values.weaveworks.adminUser.username .Values.weaveworks.adminUser.password | nindent 2}}
+Username: {{.Values.weaveworks.adminUser.username }}
+{{- $secretName := "cluster-user-auth"}}
+{{- if lookup "v1" "Secret" "flux-system" $secretName }}
+Password: {{ include "common.secrets.passwords.manage" (dict "secret" $secretName "key" "password-dec" "providedValues" (list "weaveworks.adminUser.password") "length" 20 "strong" false "skipB64enc" true "skipQuote" true "context" $) }}}}
+{{- else }}
+Password: $ kubectl -n flux-system get secret {{ $secretName | quote }} -o json | jq -r .data.password-dec | base64 -d
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

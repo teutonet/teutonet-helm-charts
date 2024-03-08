@@ -17,8 +17,7 @@ spec:
     adminUser:
       create: true
       username: {{ .Values.weaveworks.adminUser.username }}
-      createSecret: true
-      passwordHash: {{  include "weaveworks.password" $ }}
+      createSecret: false
     {{- end }}
     {{- if and .Values.weaveworks.ingress .Values.weaveworks.ingress.enabled }}
     ingress:
