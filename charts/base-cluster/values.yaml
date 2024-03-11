@@ -466,5 +466,4 @@ backup:
 
 weaveworks:
   enabled: false
-  adminUser:
-    username: admin
+  username: admin

@@ -1315,17 +1315,11 @@
         "enabled": {
           "type": "boolean"
         },
-        "adminUser": {
-          "type": "object",
-          "properties": {
-            "username": {
-              "type": "string"
-            },
-            "password": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
         },
         "ingress": {
           "$ref": "#/$defs/toolIngress"
