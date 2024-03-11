@@ -29,9 +29,5 @@ monitoring:
           integrationKey: INTEGRATION_KEY
 weaveworks:
   enabled: true
-  adminUser:
-    username: admin
-    password: test
-  ingress:
-    enabled: true
-    customDomain: ww-dashboard.local
+  username: admin
+  password: test
