@@ -16,7 +16,6 @@ spec:
     {{- if .Values.weaveworks.username }}
     adminUser:
       create: true
-      username: {{ .Values.weaveworks.username }}
       createSecret: false
     {{- end }}
     {{- if and .Values.weaveworks.ingress .Values.weaveworks.ingress.enabled }}
