@@ -13,11 +13,10 @@ spec:
   interval: 5m
   values:
     replicaCount: 1
-    {{- if .Values.weaveworks.username }}
     adminUser:
       create: true
       createSecret: false
-    {{- end }}
+      username: {{ include "weaveworks.username" $ }}
     {{- if and .Values.weaveworks.ingress .Values.weaveworks.ingress.enabled }}
     ingress:
       enabled: true
