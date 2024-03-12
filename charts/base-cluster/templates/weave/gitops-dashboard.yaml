@@ -1,5 +1,5 @@
 {{- if .Values.weaveworks.enabled }}
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   annotations:
@@ -13,10 +13,6 @@ spec:
   interval: 5m
   values:
     replicaCount: 1
-    adminUser:
-      create: true
-      createSecret: false
-      username: {{ include "weaveworks.username" $ }}
     {{- if and .Values.weaveworks.ingress .Values.weaveworks.ingress.enabled }}
     ingress:
       enabled: true
@@ -32,6 +28,11 @@ spec:
       issuerURL: {{ printf "https://%s%s" .config.issuerHost .config.issuerPath }}
       clientSecret: {{ .config.clientSecret }}
       redirectURL: {{printf "%s/oauth2/callback" $.Values.weaveworks.ingress.host }}
+    {{- else }}
+    adminUser:
+      create: true
+      createSecret: false
+      username: {{ include "weaveworks.username" $ }}
     {{- end }}
     {{- end }}
 {{- end }}
