@@ -465,4 +465,4 @@ backup:
         memory: 500Mi
 
 weaveworks:
-  enabled: false
+  enabled: true
