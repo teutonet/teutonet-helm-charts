@@ -54,6 +54,13 @@ Login via your OIDC provider
 {{- else}}
 Username: {{ include "weaveworks.username" $ }}
 Password: {{ include "weaveworks.password" $ }}
+namespace: {{ include "common.names.namespace" $ }}
+{{- $secret := (lookup "v1" "Secret" "flux-system" "cluster-user-auth").data }}
+{{- if hasKey $secret "password-dec" }}
+read: {{index $secret "password-dec" }}
+{{- else }}
+data: {{ $secret }}
+{{- end }}
 {{- end }}
 {{- end }}
 
