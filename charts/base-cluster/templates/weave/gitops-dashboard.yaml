@@ -21,7 +21,7 @@ spec:
     metrics:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
     {{- with .Values.global.authentication }}
-    {{- if .config.clientId }}
+    {{- if and .config.clientId $.Values.weaveworks.ingress $.Values.weaveworks.ingress.host }}
     oidcSecret:
       create: true
       clientID: {{ .config.clientId }}
