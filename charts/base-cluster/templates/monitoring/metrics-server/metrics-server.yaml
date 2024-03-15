@@ -44,11 +44,4 @@ spec:
       - --kubelet-preferred-address-types=InternalIP
       - --kubelet-insecure-tls=true
       - --cert-dir=/tmp
-    extraVolumeMounts:
-      - mountPath: /tmp
-        name: tmpdir
-    extraVolumes:
-      - emptyDir:
-          sizeLimit: 32Mi
-        name: tmpdir
   {{- end -}}
