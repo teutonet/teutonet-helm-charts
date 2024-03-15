@@ -53,7 +53,7 @@ You can access the gitops-dashboard via
 Login via your OIDC provider
 {{- else}}
 Username: {{ include "weaveworks.username" $ }}
-Password: {{ include "weaveworks.password" $ | b64dec }}
+Password: {{ include "weaveworks.password" $ }}
 {{- end }}
 {{- end }}
 
