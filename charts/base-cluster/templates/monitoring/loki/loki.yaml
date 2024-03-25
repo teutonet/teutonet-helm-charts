@@ -68,6 +68,8 @@ spec:
               object_store: filesystem
               schema: v9
               store: boltdb
+      datasource:
+        uid: loki
 {{/* TODO: Implement */}}
 {{/*            - from: 2022-09-15*/}}
 {{/*              store: boltdb-shipper*/}}
