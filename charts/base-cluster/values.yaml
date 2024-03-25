@@ -118,7 +118,7 @@ global:
       charts:
         oauth2-proxy: 4.x
         metrics-server: 7.x
-        external-dns: 6.x.x
+        external-dns: 7.x
         grafana-tempo: 3.x
     descheduler:
       url: https://kubernetes-sigs.github.io/descheduler
