@@ -50,9 +50,19 @@ data:
       - name: Tempo
         type: tempo
         access: proxy
+        uid: tempo
         url: "http://grafana-tempo-query-frontend.monitoring:3200"
         version: 1
         isDefault: false
         jsonData:
-          {}
+          tracesToLogsV2:
+            datasourceUid: loki
+          tracesToMetrics:
+            datasourceUid: prometheus
+          nodeGraph:
+            enabled: true
+          serviceMap:
+            datasourceUid: prometheus
+          lokiSearch:
+            datasourceUid: loki
 {{- end -}}
