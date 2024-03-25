@@ -20,23 +20,8 @@ spec:
     global:
       imageRegistry: {{ $.Values.global.imageRegistry }}
     {{- end }}
-    resources:
-      limits:
-        cpu: 100m
-        memory: 64Mi
     replicas: 2
     priorityClassName: cluster-components
-    podSecurityContext:
-      enabled: true
-      seccompProfile:
-        type: RuntimeDefault
-    containerSecurityContext:
-      capabilities:
-        drop:
-          - ALL
-      allowPrivilegeEscalation: false
-      privileged: false
-      readOnlyRootFilesystem: true
     podDisruptionBudget:
       enabled: true
       minAvailable: 1
