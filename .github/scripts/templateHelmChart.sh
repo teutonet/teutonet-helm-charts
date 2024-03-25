@@ -6,8 +6,8 @@
 set -eu
 set -o pipefail
 
-TMP_DIR="$(mktemp -d)"
-trap 'rm -rf "$TMP_DIR"' EXIT
+[[ ! -v TMP_DIR ]] && trap 'rm -rf "$TMP_DIR"' EXIT
+TMP_DIR="${TMP_DIR:-$(mktemp -d)}"
 
 function templateGitHelmRelease() {
   local gitUrl="$1"
