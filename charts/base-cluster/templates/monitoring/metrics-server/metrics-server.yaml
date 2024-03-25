@@ -28,5 +28,4 @@ spec:
     extraArgs:
       - --kubelet-preferred-address-types=InternalIP
       - --kubelet-insecure-tls=true
-      - --cert-dir=/tmp
   {{- end -}}
