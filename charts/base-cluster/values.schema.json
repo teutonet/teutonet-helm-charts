@@ -1323,6 +1323,10 @@
     "common": {
       "type": "object",
       "description": "Values for sub-chart"
+    },
+    "t8s-common": {
+      "type": "object",
+      "description": "Values for sub-chart"
     }
   },
   "additionalProperties": false,

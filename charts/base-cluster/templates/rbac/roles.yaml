@@ -11,5 +11,5 @@ metadata:
   name: {{ printf "%s-%s" (include "common.names.fullname" $) $name }}
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     app.kubernetes.io/component: rbac
-rules: {{- $spec | toYaml | nindent 2 }}
+rules: {{- toYaml $spec | nindent 2 }}
 {{- end -}}

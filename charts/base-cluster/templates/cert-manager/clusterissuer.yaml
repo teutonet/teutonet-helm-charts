@@ -9,7 +9,7 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-{{ .name }}
-  labels: {{- include "base-cluster.helm.labels" (dict) | nindent 4 }}
+  labels: {{- include "common.helm.labels" (dict) | nindent 4 }}
     app.kubernetes.io/component: {{ .name }}
     app.kubernetes.io/part-of: cert-manager
 spec:
@@ -27,7 +27,7 @@ spec:
           {{- end }}
         {{- with .context.Values.dns.domains }}
         selector:
-          dnsZones: {{- . | toYaml | nindent 12 }}
+          dnsZones: {{- toYaml . | nindent 12 }}
         {{- end }}
       {{- end }}
       - http01:

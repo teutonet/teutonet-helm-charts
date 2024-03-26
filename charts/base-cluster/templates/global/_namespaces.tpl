@@ -13,5 +13,5 @@
     {{- $namespaces := set $namespaces $name (omit $namespace "condition") -}}
   {{- end -}}
 {{- end -}}
-{{- $namespaces | toYaml -}}
+{{- toYaml $namespaces -}}
 {{- end -}}

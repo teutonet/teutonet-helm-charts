@@ -51,7 +51,7 @@ metadata:
 spec:
   interval: {{ $instance.gitInterval | default "1m" | quote }}
   url: {{ $instance.url | quote }}
-  {{- if not (eq $authenticationMethod "none") }}
+  {{- if ne $authenticationMethod "none" }}
   secretRef:
     name: {{ $authenticationSecretName }}
   {{- end -}}

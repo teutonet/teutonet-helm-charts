@@ -65,5 +65,5 @@ spec:
     excludeNamespaces: ""
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
-      labels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
+      labels: {{- toYaml .Values.monitoring.labels | nindent 8 }}
 {{- end }}

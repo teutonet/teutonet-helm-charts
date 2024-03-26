@@ -3,7 +3,7 @@
 image:
   registry: {{ .Values.global.imageRegistry }}
   {{- end }}
-resources: {{- .Values.monitoring.prometheus.kubeStateMetrics.resources | toYaml | nindent 2 }}
+resources: {{- include "common.resources" .Values.monitoring.prometheus.kubeStateMetrics | nindent 2 }}
   {{- $metricLabelsAllowList := list -}}
   {{- range $resource, $labels := .Values.monitoring.prometheus.kubeStateMetrics.metricLabelsAllowList -}}
     {{- $metricLabelsAllowList = append $metricLabelsAllowList (printf "%s=[%s]" $resource ($labels | join ",") ) -}}
@@ -19,5 +19,5 @@ securityContext:
 containerSecurityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 2 }}
 prometheus:
   monitor:
-    additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
+    additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 6 }}
 {{- end -}}
