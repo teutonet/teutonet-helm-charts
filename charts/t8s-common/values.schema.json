@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "t8s-common defs",
+  "additionalProperties": false,
+  "$defs": {
+    "resourcesPreset": {
+      "type": "string",
+      "enum": [
+        "nano",
+        "micro",
+        "small",
+        "medium",
+        "large",
+        "xlarge",
+        "2xlarge"
+      ]
+    }
+  },
+  "properties": {
+    "global": {
+      "type": "object",
+      "description": "global values for all charts"
+    },
+    "common": {
+      "type": "object",
+      "description": "Values for sub-chart"
+    }
+  }
+}
