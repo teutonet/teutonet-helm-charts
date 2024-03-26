@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .context.Release.Namespace }}
   labels: {{- include "common.labels.standard" .context | nindent 4 }}
     {{- with .additionalLabels }}
-    {{- . | toYaml | nindent 4 }}
+      {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
   chart:
@@ -31,10 +31,10 @@ spec:
   releaseName: {{ .name }}
   values:
     {{- if eq .render nil }}
-    static: {{ .resource | toYaml | indent 6 }}
+    static: {{ toYaml .resource | indent 6 }}
     {{- else if .render }}
     static: {{ include "common.tplvalues.render" (dict "value" .resource "context" .context) | indent 6 }}
     {{- else }}
-    static: {{ .resource | toYaml | replace "{{" "{{ `{{` }}" | indent 6 }}
+    static: {{ toYaml .resource | replace "{{" "{{ `{{` }}" | indent 6 }}
     {{- end }}
 {{- end -}}
