@@ -3,11 +3,14 @@ Return a resource request/limit object based on a given preset or provided resou
 {{ include "common.resources" (dict "resources" (dict) "resourcesPreset" "small") -}}
 */}}
 {{- define "common.resources" -}}
+  {{- $resources := dict -}}
   {{- if .resources -}}
-    {{- toYaml .resources -}}
-  {{- else if ne .resourcesPreset "none" -}}
-    {{- include "common.resources.preset" (dict "type" .resourcesPreset) -}}
+    {{- $resources = .resources | merge $resources -}}
   {{- end -}}
+  {{- if and .resourcesPreset (ne .resourcesPreset "none") -}}
+    {{- $resources = include "common.resources.preset" (dict "type" .resourcesPreset) | fromYaml | merge $resources -}}
+  {{- end -}}
+  {{- toYaml $resources -}}
 {{- end -}}
 
 {{/*
