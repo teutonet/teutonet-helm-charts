@@ -12,10 +12,10 @@ securityContext:
   seccompProfile:
     type: RuntimeDefault
 containerSecurityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 2 }}
-resources: {{- .Values.monitoring.grafana.resources | toYaml | nindent 2 }}
+resources: {{- include "common.resources" .Values.monitoring.grafana | nindent 2 }}
 serviceMonitor:
   interval: "30s"
-  labels: {{- .Values.monitoring.labels | toYaml | nindent 4 }}
+  labels: {{- toYaml .Values.monitoring.labels | nindent 4 }}
 podAnnotations:
   # This might change on every `template` call, this can be ignored
   checksum/secret: {{ include "common.utils.checksumTemplate" (dict "path" "/monitoring/kube-prometheus-stack/grafana-secret.yaml" "context" $) }}
@@ -26,7 +26,7 @@ admin:
 plugins:
   - grafana-piechart-panel
   {{- with .Values.monitoring.grafana.additionalPlugins }}
-  {{- . | toYaml | nindent 2 }}
+  {{- toYaml . | nindent 2 }}
   {{- end }}
 defaultDashboardsEnabled: true
   {{- if .Values.monitoring.grafana.notifiers }}
@@ -35,7 +35,7 @@ extraEmptyDirMounts:
     mountPath: /etc/grafana/provisioning/notifiers
 notifiers:
   notifiers.yaml:
-    notifiers: {{- .Values.monitoring.grafana.notifiers | toYaml | nindent 6 }}
+    notifiers: {{- toYaml .Values.monitoring.grafana.notifiers | nindent 6 }}
   {{- end }}
 dashboardProviders:
   dashboardproviders.yaml:
@@ -58,7 +58,7 @@ sidecar:
     enabled: true
     resource: configmap
     searchNamespace: ALL
-  resources: {{- .Values.monitoring.grafana.sidecar.resources | toYaml | nindent 4 }}
+  resources: {{- include "common.resources" .Values.monitoring.grafana.sidecar | nindent 4 }}
   securityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 4 }}
 dashboards:
   custom:
@@ -133,7 +133,7 @@ dashboards:
       revision: 9
     {{- end }}
   {{- with .Values.monitoring.grafana.additionalDashboards }}
-  {{ . | toYaml | nindent 4 }}
+  {{ toYaml . | nindent 4 }}
   {{- end }}
 {{- include "base-cluster.monitoring.ingress" (dict "name" "grafana" "context" $) | nindent 0 }}
 {{- if and .Values.ingress.enabled .Values.monitoring.grafana.ingress.enabled .Values.certManager.email (or .Values.global.baseDomain .Values.monitoring.grafana.ingress.customDomain) }}

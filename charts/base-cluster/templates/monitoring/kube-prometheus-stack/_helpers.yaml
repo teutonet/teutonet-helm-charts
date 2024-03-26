@@ -27,7 +27,7 @@ privileged: false
 {{- end -}}
 
 {{- define "base-cluster.alertmanager.ingress" -}}
-  {{- .Values.monitoring.prometheus.alertmanager.ingress | toYaml -}}
+  {{- toYaml .Values.monitoring.prometheus.alertmanager.ingress -}}
 {{- end -}}
 
 {{- define "base-cluster.monitoring.ingress.config" -}}
@@ -36,7 +36,7 @@ privileged: false
   {{- if not $ingress -}}
     {{- $ingress = include (printf "base-cluster.%s.ingress" .name) .context | fromYaml -}}
   {{- end -}}
-  {{- $ingress | toYaml -}}
+  {{- toYaml $ingress -}}
 {{- end -}}
 
 {{- define "base-cluster.monitoring.ingress.enabled" -}}

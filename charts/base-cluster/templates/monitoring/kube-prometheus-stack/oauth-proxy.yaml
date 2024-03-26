@@ -48,7 +48,7 @@ spec:
       enabled: true
     containerSecurityContext:
       enabled: true
-    resources: {{- toYaml $.Values.global.authentication.oauthProxy.resources | nindent 6 }}
+    resources: {{- include "common.resources" $.Values.global.authentication.oauthProxy | nindent 6 }}
     configuration:
       existingSecret: {{ include "common.secrets.name" (dict "defaultNameSuffix" "oauth-proxy" "context" $) }}
       content: |-

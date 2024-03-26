@@ -1,5 +1,5 @@
 {{/* Don't fail in namespace default -> this allows artifacthub to check for images */}}
-{{- if not (eq .Release.Namespace "default") -}}
+{{- if ne .Release.Namespace "default" -}}
   {{- if not .Values.global.clusterName }}
     {{- fail "You need to specify a .Values.global.clusterName" -}}
   {{- end -}}
