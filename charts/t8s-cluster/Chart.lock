@@ -1,6 +1,6 @@
 dependencies:
 - name: common
-  repository: https://charts.bitnami.com/bitnami
-  version: 2.19.1
-digest: sha256:4f539b1fbde383dd5bc020d77d70655108ed4c188b7329c1639df3f1e65de2e0
-generated: "2024-03-27T14:50:36.326942273Z"
+  repository: oci://ghcr.io/teutonet/teutonet-helm-charts
+  version: 1.0.0
+digest: sha256:acfa022eb3ff1b32622813ee173a127c23c729abb6fe8235795b668bb496ed2e
+generated: "2024-04-12T13:35:37.943968007+02:00"

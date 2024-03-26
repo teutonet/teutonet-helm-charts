@@ -19,5 +19,5 @@
   {{- if and (eq (int .Values.version.major) 1) (ge (int .Values.version.minor) 27) (gt (int .Values.global.kubeletExtraConfig.maxParallelImagePulls) 1) -}}
     {{- $patches = append $patches (include "t8s-cluster.patches.kubelet.imagePulls" (dict "context" .context) | fromYaml) -}}
   {{- end -}}
-  {{- $patches | toYaml -}}
+  {{- toYaml $patches -}}
 {{- end -}}
