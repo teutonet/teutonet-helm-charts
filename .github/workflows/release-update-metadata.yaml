@@ -47,6 +47,10 @@ jobs:
       - name: generate values.md
         run: |
           set -ex
+          if ! [[ -f "charts/$CHART/values.schema.json" ]]; then
+            echo "No values.schema.json found for $CHART" >/dev/stderr
+            exit 0
+          fi
           generate-schema-doc --config-file .github/json-schema-to-md.yaml "charts/$CHART/values.schema.json" "charts/$CHART/values.md"
       - name: generate Docs
         uses: docker://jnorwood/helm-docs:latest
