@@ -27,7 +27,7 @@
       {{- $certs = set $certs $name $cert -}}
     {{- end -}}
   {{- end -}}
-  {{- $certs | toYaml -}}
+  {{- toYaml $certs -}}
 {{- end -}}
 
 {{- define "base-cluster.cert-manager.custom-certificates-yaml" -}}
@@ -37,13 +37,13 @@ kind: Certificate
 metadata:
   name: {{ $name | quote }}
   namespace: {{ $.context.Release.Namespace }}
-  labels: {{- include "base-cluster.helm.labels" (dict) | nindent 4 }}
+  labels: {{- include "common.helm.labels" (dict) | nindent 4 }}
 spec:
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
     name: letsencrypt-production
-  dnsNames: {{- $cert.dnsNames | toYaml | nindent 4 }}
+  dnsNames: {{- toYaml $cert.dnsNames | nindent 4 }}
   secretName: {{ printf "%s-certificate" $name | quote }}
   {{- if include "base-cluster.reflector.enabled" (dict "context" $.context) }}
   secretTemplate:

@@ -5,7 +5,7 @@ metadata:
   name: {{ $name }}
   labels: {{- include "common.labels.standard" $ | nindent 4 -}}
   {{- with $namespace.additionalLabels -}}
-    {{- . | toYaml | nindent 4 -}}
+    {{- toYaml . | nindent 4 -}}
   {{- end }}
 ---
 apiVersion: v1
@@ -52,7 +52,7 @@ spec:
     {{- range $resource, $quota := . -}}
       {{- $quotas = set $quotas $resource (include "common.tplvalues.render" (dict "value" $quota "context" $)) -}}
     {{- end }}
-  hard: {{- $quotas | toYaml | nindent 4 }}
+  hard: {{- toYaml $quotas | nindent 4 }}
   {{- end }}
 {{- end }}
 {{- end }}

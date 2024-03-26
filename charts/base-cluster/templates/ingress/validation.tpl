@@ -20,7 +20,7 @@
       {{- end -}}
     {{- end -}}
   {{- end -}}
-  {{- if and $loadBalancerIP (not (eq $loadBalancerIP .Values.ingress.IP)) -}}
+  {{- if and $loadBalancerIP (ne $loadBalancerIP .Values.ingress.IP) -}}
       {{- fail "You cannot change the LoadBalancerIP on an existing service, if you really want to, please delete the service 'ingress-nginx/ingress-nginx-controller' beforehand" -}}
   {{- end -}}
 {{- end -}}

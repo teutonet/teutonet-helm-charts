@@ -50,11 +50,11 @@ spec:
       allowPrivilegeEscalation: false
       seccompProfile:
         type: RuntimeDefault
-    resources: {{- .Values.backup.resources | toYaml | nindent 6 }}
+    resources: {{- include "common.resources" .Values.backup | nindent 6 }}
     priorityClassName: system-cluster-critical
     deployNodeAgent: true # enable FSB
     nodeAgent:
-      resources: {{- .Values.backup.nodeAgent.resources | toYaml | nindent 8 }}
+      resources: {{- include "common.resources" .Values.backup.nodeAgent | nindent 8 }}
       priorityClassName: system-cluster-critical
     configuration:
       defaultBackupStorageLocation: {{ .Values.backup.defaultLocation | quote }}
@@ -90,5 +90,5 @@ spec:
       uploaderType: restic
     metrics:
       serviceMonitor:
-        additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
+        additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
 {{- end }}

@@ -34,5 +34,5 @@
     {{- $roles = set $roles $roleName $existingRole -}}
   {{- end -}}
 {{- end -}}
-{{- $roles | toYaml -}}
+{{- toYaml $roles -}}
 {{- end -}}

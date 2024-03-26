@@ -16,8 +16,8 @@ home: https://teuto.net
 description: A common base for every kubernetes cluster
 dependencies:
   - name: common
-    version: 2.19.1
-    repository: https://charts.bitnami.com/bitnami
+    version: 1.0.0
+    repository: oci://ghcr.io/teutonet/teutonet-helm-charts
 annotations:
   artifacthub.io/images: |
     - image: docker.io/bats/bats:1.8.2                                                                                                                #  loki/HelmRelease/loki/null/Pod/loki-loki-stack-test.yaml

@@ -40,7 +40,7 @@ spec:
     extraArgs:
       - --dns01-recursive-nameservers={{- $nameservers | sortAlpha | join "," }}
     {{- end }}
-    resources: {{- $.Values.certManager.resources | toYaml | nindent 6 }}
+    resources: {{- include "common.resources" $.Values.certManager | nindent 6 }}
     replicaCount: 1
     securityContext: &securityContext
       runAsNonRoot: true
@@ -48,14 +48,14 @@ spec:
       runAsGroup: 1001
       fsGroup: 1001
     cainjector:
-      resources: {{- $.Values.certManager.caInjector.resources | toYaml | nindent 8 }}
+      resources: {{- include "common.resources" $.Values.certManager.caInjector | nindent 8 }}
       securityContext: *securityContext
       {{- if .Values.global.imageRegistry }}
       image:
         repository: {{ printf "%s/jetstack/cert-manager-cainjector" $.Values.global.imageRegistry }}
       {{- end }}
     webhook:
-      resources: {{- $.Values.certManager.webhook.resources | toYaml | nindent 8 }}
+      resources: {{- include "common.resources" $.Values.certManager.webhook | nindent 8 }}
       securityContext: *securityContext
       {{- if .Values.global.imageRegistry }}
       image:
@@ -65,4 +65,4 @@ spec:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
       servicemonitor:
         enabled: {{ .Values.monitoring.prometheus.enabled }}
-        labels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
+        labels: {{- toYaml .Values.monitoring.labels | nindent 10 }}

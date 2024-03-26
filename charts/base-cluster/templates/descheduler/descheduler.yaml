@@ -10,7 +10,7 @@ metadata:
   namespace: kube-system
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     app.kubernetes.io/component: descheduler
-    {{- if not (eq $selectedVersion $latestVersion) }}
+    {{- if ne $selectedVersion $latestVersion }}
     helmrelease-metrics/ignore: "true"
     {{- end }}
 spec:
@@ -43,7 +43,7 @@ spec:
     {{- end }}
     deschedulerPolicy:
       evictLocalStoragePods: true
-      strategies: {{- .Values.descheduler.strategies | toYaml | nindent 8 }}
+      strategies: {{- toYaml .Values.descheduler.strategies | nindent 8 }}
     {{- if .Values.global.imageRegistry }}
     image:
       repository: {{ printf "%s/descheduler/descheduler" .Values.global.imageRegistry }}
