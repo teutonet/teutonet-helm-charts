@@ -203,6 +203,9 @@
           },
           "additionalProperties": false
         },
+        "resourcesPreset": {
+          "$ref": "#/$defs/resourcesPreset"
+        },
         "resources": {
           "$ref": "#/$defs/resourceRequirements"
         }
@@ -218,6 +221,9 @@
   "$defs": {
     "resourceRequirements": {
       "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+    },
+    "resourcesPreset": {
+      "$ref": "https://raw.githubusercontent.com/teutonet/teutonet-helm-charts/main/charts/t8s-common/values.schema.json#/$defs/resourcesPreset"
     }
   }
 }
