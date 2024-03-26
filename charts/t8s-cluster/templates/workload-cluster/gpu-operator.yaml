@@ -7,7 +7,7 @@ metadata:
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   chart:
-    spec: {{- include "t8s-cluster.helm.chartSpec" (dict "repo" "nvidia" "chart" "gpu-operator" "context" $) | nindent 6 }}
+    spec: {{- include "common.helm.chartSpec" (dict "repo" "nvidia" "chart" "gpu-operator" "context" $) | nindent 6 }}
   interval: 1h
   driftDetection:
     mode: enabled
@@ -53,5 +53,5 @@ spec:
                           {{- $gpuFlavours = append $gpuFlavours $machineDeploymentClass.flavor -}}
                         {{- end -}}
                       {{- end }}
-                      values: {{- $gpuFlavours | toYaml | nindent 24 }}
+                      values: {{- toYaml $gpuFlavours | nindent 24 }}
 {{- end }}
