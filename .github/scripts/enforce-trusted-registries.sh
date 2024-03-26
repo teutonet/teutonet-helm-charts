@@ -21,6 +21,10 @@ function getUntrustedImages() {
 function enforceTrustedImages() {
   local chart="${1?}"
   local untrustedImages=()
+  if yq -e '.type == "library"' "$chart/Chart.yaml" >/dev/null; then
+    echo "Skipping library chart '$chart'" >/dev/stderr
+    return 0
+  fi
 
   mapfile -t untrustedImages < <(getUntrustedImages "$chart")
   if [[ "${#untrustedImages[@]}" -gt 0 ]]; then
