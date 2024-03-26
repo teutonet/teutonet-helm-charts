@@ -65,38 +65,38 @@ spec:
     policyExclude:
     {{- if $disallowHostPath }}
       disallow-host-path:
-        any: {{- $disallowHostPath | toYaml | nindent 10 }}
+        any: {{- toYaml $disallowHostPath | nindent 10 }}
       restrict-volume-types:
-        any: {{- $disallowHostPath | toYaml | nindent 10 }}
+        any: {{- toYaml $disallowHostPath | nindent 10 }}
     {{- end -}}
     {{- if $disallowHostPorts }}
       disallow-host-ports:
-        any: {{- $disallowHostPorts | toYaml | nindent 10 }}
+        any: {{- toYaml $disallowHostPorts | nindent 10 }}
     {{- end -}}
     {{- if $disallowHostNamespaces }}
       disallow-host-namespaces:
-        any: {{- $disallowHostNamespaces | toYaml | nindent 10 }}
+        any: {{- toYaml $disallowHostNamespaces | nindent 10 }}
     {{- end -}}
     {{- if $runAsNonRoot }}
       require-run-as-non-root-user:
-        any: {{- $runAsNonRoot | toYaml | nindent 10 }}
+        any: {{- toYaml $runAsNonRoot | nindent 10 }}
       require-run-as-nonroot:
-        any: {{- $runAsNonRoot | toYaml | nindent 10 }}
+        any: {{- toYaml $runAsNonRoot | nindent 10 }}
     {{- end -}}
     {{- if $restrictSeccomp }}
       restrict-seccomp:
-        any: {{- $restrictSeccomp | toYaml | nindent 10 }}
+        any: {{- toYaml $restrictSeccomp | nindent 10 }}
       restrict-seccomp-strict:
-        any: {{- $restrictSeccomp | toYaml | nindent 10 }}
+        any: {{- toYaml $restrictSeccomp | nindent 10 }}
     {{- end -}}
     {{- if $disallowPrivilegeEscalation }}
       disallow-privilege-escalation:
-        any: {{- $disallowPrivilegeEscalation | toYaml | nindent 10 }}
+        any: {{- toYaml $disallowPrivilegeEscalation | nindent 10 }}
     {{- end -}}
     {{- if $disallowCapabilities }}
       disallow-capabilities:
-        any: {{- $disallowCapabilities | toYaml | nindent 10 }}
+        any: {{- toYaml $disallowCapabilities | nindent 10 }}
       disallow-capabilities-strict:
-        any: {{- $disallowCapabilities | toYaml | nindent 10 }}
+        any: {{- toYaml $disallowCapabilities | nindent 10 }}
     {{- end -}}
 {{- end }}

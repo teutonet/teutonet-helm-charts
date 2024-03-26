@@ -26,7 +26,7 @@ spec:
         enabled: {{ .Values.monitoring.prometheus.enabled }}
         serviceMonitor:
           enabled: {{ .Values.monitoring.prometheus.enabled }}
-          additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 12 }}
+          additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 12 }}
       {{- if .Values.monitoring.tracing.enabled }}
       opentelemetry:
         enabled: true
@@ -57,7 +57,7 @@ spec:
         loadBalancerIP: {{ .Values.ingress.IP | quote }}
       {{- end }}
       replicaCount: {{ .Values.ingress.replicas }}
-      resources: {{- .Values.ingress.resources | toYaml | nindent 8 }}
+      resources: {{- include "common.resources" .Values.ingress | nindent 8 }}
       podSecurityContext:
         runAsNonRoot: true
         runAsGroup: 101

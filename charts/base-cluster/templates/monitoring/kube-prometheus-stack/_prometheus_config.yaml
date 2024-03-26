@@ -12,7 +12,7 @@ prometheusSpec:
   {{- if include "base-cluster.monitoring.authenticated-ingress.enabled" (dict "name" "prometheus" "context" .) }}
   externalUrl: {{ printf "https://%s" (include "base-cluster.prometheus.host" $) }}
   {{- end }}
-  resources: {{- .Values.monitoring.prometheus.resources | toYaml | nindent 4 }}
+  resources: {{- include "common.resources" .Values.monitoring.prometheus | nindent 4 }}
   priorityClassName: monitoring-components
   securityContext:
     seccompProfile:
@@ -33,13 +33,13 @@ prometheusSpec:
             storage: {{ .Values.monitoring.prometheus.persistence.size }}
   replicas: {{ .Values.monitoring.prometheus.replicas }}
   ruleSelector:
-    matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
+    matchLabels: {{- toYaml .Values.monitoring.labels | nindent 6 }}
   serviceMonitorSelector:
-    matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
+    matchLabels: {{- toYaml .Values.monitoring.labels | nindent 6 }}
   podMonitorSelector:
-    matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
+    matchLabels: {{- toYaml .Values.monitoring.labels | nindent 6 }}
   probeSelector:
-    matchLabels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
+    matchLabels: {{- toYaml .Values.monitoring.labels | nindent 6 }}
   additionalAlertRelabelConfigs:
     {{- if not .Values.monitoring.monitorAllNamespaces }}
       {{- $namespaces := list .Release.Namespace "kube-node-lease" "kube-public" "kube-system" -}}

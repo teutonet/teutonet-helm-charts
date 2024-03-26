@@ -21,9 +21,7 @@ spec:
     global:
       imageRegistry: {{ $.Values.global.imageRegistry }}
     {{- end }}
-    ingester:
-      resourcesPreset: {{ .Values.monitoring.tracing.ingester.resourcesPreset }}
-      resources: {{- toYaml .Values.monitoring.tracing.ingester.resources | nindent 8 }}
+    ingester: {{- include "common.resourcesWithPreset" .Values.monitoring.tracing.ingester | nindent 6 }}
     tempo:
       traces:
         jaeger:
@@ -35,7 +33,7 @@ spec:
       enabled: true
       serviceMonitor:
         enabled: true
-        labels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
+        labels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
 ---
 apiVersion: v1
 kind: ConfigMap

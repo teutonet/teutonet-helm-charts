@@ -10,11 +10,11 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: {{ .name }}
-  labels: {{- include "base-cluster.helm.labels" (dict) | nindent 4 }}
+  labels: {{- include "common.helm.labels" (dict) | nindent 4 }}
     app.kubernetes.io/component: {{ .name }}
     app.kubernetes.io/part-of: kyverno-policies
   {{- with (dig "metadata" "annotations" nil $policy) }}
-  annotations: {{- . | toYaml | nindent 4 }}
+  annotations: {{- toYaml . | nindent 4 }}
   {{- end }}
 spec: {{- get $policy "spec" | toYaml | replace "{{" "{{ `{{` }}" | nindent 2 }}
 {{- end -}}

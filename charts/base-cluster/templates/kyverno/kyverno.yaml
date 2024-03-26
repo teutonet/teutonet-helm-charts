@@ -43,7 +43,7 @@ spec:
       {{- end }}
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
-      additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
+      additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 8 }}
     priorityClassName: system-cluster-critical
     # this only works in version 3
     admissionController:
