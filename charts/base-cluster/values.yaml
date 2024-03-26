@@ -184,6 +184,7 @@ global:
       roleAttributePath: '"''Viewer''"'
     oauthProxy:
       emailDomains: []
+      resourcesPreset: nano
       resources:
         limits:
           cpu: 100m
@@ -211,21 +212,11 @@ monitoring:
     additionalDashboards: {}
     additionalPlugins: []
     notifiers: []
-    resources:
-      requests:
-        cpu: 50m
-        memory: 256Mi
-      limits:
-        cpu: 500m
-        memory: 256Mi
+    resourcesPreset: nano
+    resources: {}
     sidecar:
-      resources:
-        requests:
-          cpu: 10m
-          memory: 128Mi
-        limits:
-          cpu: 500m
-          memory: 128Mi
+      resourcesPreset: nano
+      resources: {}
   storageCostAnalysis:
     currency: currencyEUR
     period: Day
@@ -244,29 +235,14 @@ monitoring:
     persistence:
       storageClass: ""
       size: 100Gi
-    resources:
-      requests:
-        cpu: "250m"
-        memory: 2Gi
-      limits:
-        cpu: "500m"
-        memory: 2Gi
+    resourcesPreset: large
+    resources: {}
     operator:
-      resources:
-        requests:
-          cpu: 50m
-          memory: 256Mi
-        limits:
-          cpu: 500m
-          memory: 512Mi
+      resourcesPreset: nano
+      resources: {}
     kubeStateMetrics:
-      resources:
-        requests:
-          cpu: 50m
-          memory: 128Mi
-        limits:
-          cpu: 100m
-          memory: 512Mi
+      resourcesPreset: nano
+      resources: {}
       metricLabelsAllowList:
         pods:
           - app.kubernetes.io/name
@@ -282,13 +258,14 @@ monitoring:
           - app.kubernetes.io/component
           - app.kubernetes.io/instance
     nodeExporter:
+      resourcesPreset: nano
       resources:
         requests:
-          cpu: 50m
-          memory: 64Mi
+          cpu: 10m
+          memory: 32Mi
         limits:
-          cpu: "2"
-          memory: 128Mi
+          cpu: 2
+          memory: 64Mi
     ingress:
       host: prometheus
       customDomain: ""
@@ -312,6 +289,7 @@ monitoring:
       storageClass: ""
       size: 10Gi
     replicas: 1
+    resourcesPreset: nano
     resources:
       requests:
         cpu: 100m
@@ -320,6 +298,7 @@ monitoring:
         cpu: 1
         memory: 1Gi
     promtail:
+      resourcesPreset: nano
       resources:
         requests:
           cpu: 50m
@@ -378,40 +357,26 @@ dns:
   provider: null
 
 certManager:
-  resources:
-    limits:
-      cpu: 250m
-      memory: 512Mi
-    requests:
-      cpu: 100m
-      memory: 512Mi
+  resourcesPreset: nano
+  resources: {}
   caInjector:
-    resources:
-      limits:
-        cpu: 250m
-        memory: 512Mi
-      requests:
-        cpu: 50m
-        memory: 512Mi
+    resourcesPreset: nano
+    resources: {}
   webhook:
-    resources:
-      limits:
-        cpu: 1
-        memory: 512Mi
-      requests:
-        cpu: 100m
-        memory: 512Mi
+    resourcesPreset: nano
+    resources: {}
   dnsChallengeNameservers:
     1.1.1.1: 53
 
 externalDNS:
+  resourcesPreset: nano
   resources:
-    limits:
-      cpu: 50m
-      memory: 128Mi
     requests:
       cpu: 10m
       memory: 64Mi
+    limits:
+      cpu: 50m
+      memory: 128Mi
 
 flux:
   gitRepositories: {}
@@ -420,13 +385,10 @@ ingress:
   enabled: true
   allowNginxConfigurationSnippets: false
   replicas: 2
+  resourcesPreset: nano
   resources:
-    requests:
-      cpu: 100m
-      memory: 90Mi
     limits:
       cpu: 1
-      memory: 256Mi
 
 storage:
   readWriteMany:
