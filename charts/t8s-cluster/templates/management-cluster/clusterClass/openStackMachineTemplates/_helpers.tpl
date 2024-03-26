@@ -28,5 +28,5 @@
   {{- range $name := $securityGroups -}}
     {{- $securityGroupsObject = append $securityGroupsObject (dict "filter" (dict) "name" $name)}}
   {{- end -}}
-  {{- $securityGroupsObject | toYaml -}}
+  {{- toYaml $securityGroupsObject -}}
 {{- end -}}

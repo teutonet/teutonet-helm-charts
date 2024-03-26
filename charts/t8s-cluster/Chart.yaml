@@ -18,6 +18,9 @@ dependencies:
   - name: common
     version: 2.19.1
     repository: https://charts.bitnami.com/bitnami
+  - name: t8s-common
+    version: 1.0.0
+    repository: oci://ghcr.io/teutonet/teutonet-helm-charts
 annotations:
   artifacthub.io/images: |
     - image: docker.io/bitnami/kubectl:1.29.1

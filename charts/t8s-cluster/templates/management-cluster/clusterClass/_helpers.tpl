@@ -23,15 +23,15 @@ openstack
   {{- if .Values.global.injectedCertificateAuthorities -}}
     {{- $commands = append $commands "update-ca-certificates" -}}
   {{- end -}}
-  {{- $commands | toYaml }}
+  {{- toYaml $commands }}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.postKubeadmCommands" -}}
   {{- $commands := list -}}
-  {{- $commands | toYaml }}
+  {{- toYaml $commands }}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.kubeletExtraArgs" -}}
   {{- $args := dict "cloud-provider" "external" -}}
-  {{- $args | toYaml -}}
+  {{- toYaml $args -}}
 {{- end -}}
