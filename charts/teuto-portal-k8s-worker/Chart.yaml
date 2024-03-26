@@ -15,6 +15,9 @@ dependencies:
   - name: common
     version: 2.19.1
     repository: https://charts.bitnami.com/bitnami
+  - name: t8s-common
+    version: 1.0.0
+    repository: oci://ghcr.io/teutonet/teutonet-helm-charts
 annotations:
   artifacthub.io/images: |
     - image: registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker:2.0.0  #  default/Deployment/teuto-portal-k8s-worker.yaml
