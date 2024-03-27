@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # base-cluster
 
-![Version: 5.0.1](https://img.shields.io/badge/Version-5.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 6.0.0](https://img.shields.io/badge/Version-6.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -242,7 +242,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.14.1 |
+| https://charts.bitnami.com/bitnami | common | 2.19.0 |
 
 This helm chart requires [flux v2 to be installed](https://fluxcd.io/docs/installation),
 see [bootstrap](#cluster-bootstrap)
@@ -302,11 +302,23 @@ The new [t8s-cluster](../t8s-cluster) is going to provide these, the enduser can
 ignore this change.
 
 ### 4.x.x -> 5.0.0
+
 The condition if velero gets deployed changed. Velero will not be deployed if you
 have not configured its backupstoragelocation. This change is necessary, because
 in the current version of velero this value is mandatory. Please move
-your exiting backupstoragelocation configuration to the base-cluster chart if you
+your existing backupstoragelocation configuration to the base-cluster chart if you
 haven't already.
+
+### 5.x.x -> 6.0.0
+
+The kyverno 2.x.x -> 3.x.x upgrade cannot be done without manual intervention, see
+https://artifacthub.io/packages/helm/kyverno/kyverno#option-1---uninstallation-and-reinstallation
+
+So you have to backup your resources and delete the kyverno HelmReleases before the
+upgrade, they will be recreated in version 6.
+
+This also makes kyverno HA, so be aware that kyverno will need more resources in
+you cluster.
 
 # base cluster configuration
 
@@ -343,7 +355,7 @@ haven't already.
 
 | Property                                                  | Pattern | Type             | Deprecated | Definition              | Title/Description                                                                                                                                                                             |
 | --------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| + [serviceLevelAgreement](#global_serviceLevelAgreement ) | No      | enum (of string) | No         | -                       | The ServiceLevelAgreement with teutonet, will be applied to all alerts as label \`teutosla\`                                                                                                  |
+| - [serviceLevelAgreement](#global_serviceLevelAgreement ) | No      | enum (of string) | No         | -                       | The ServiceLevelAgreement with teutonet, will be applied to all alerts as label \`teutosla\`                                                                                                  |
 | - [clusterName](#global_clusterName )                     | No      | string           | No         | -                       | The name of the cluster, used as subdomain under \`baseDomain\` and as label \`cluster\` on all alerts                                                                                        |
 | - [baseDomain](#global_baseDomain )                       | No      | string           | No         | -                       | The base domain to be used for cluster ingress                                                                                                                                                |
 | - [imageRegistry](#global_imageRegistry )                 | No      | string           | No         | -                       | The global container image proxy, e.g. [Nexus](https://artifacthub.io/packages/helm/sonatype/nexus-repository-manager), this needs to support various registries                              |
@@ -360,7 +372,7 @@ haven't already.
 | - [priorityClasses](#global_priorityClasses )             | No      | object           | No         | -                       | -                                                                                                                                                                                             |
 | - [authentication](#global_authentication )               | No      | object           | No         | -                       | -                                                                                                                                                                                             |
 
-### <a name="global_serviceLevelAgreement"></a>1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > serviceLevelAgreement`
+### <a name="global_serviceLevelAgreement"></a>1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > serviceLevelAgreement`
 
 |             |                    |
 | ----------- | ------------------ |
