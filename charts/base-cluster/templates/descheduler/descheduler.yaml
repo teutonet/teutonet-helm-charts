@@ -25,10 +25,22 @@ spec:
   interval: 1h
   driftDetection:
     mode: enabled
+  {{- if .Values.monitoring.prometheus.enabled }}
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
+  {{- end }}
   values:
-    cronJobApiVersion: {{ include "common.capabilities.cronjob.apiVersion" . }}
     startingDeadlineSeconds: 120
     priorityClassName: system-cluster-critical
+    kind: Deployment
+    {{- if .Values.monitoring.prometheus.enabled }}
+    service:
+      enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 8 }}
+    {{- end }}
     deschedulerPolicy:
       evictLocalStoragePods: true
       strategies: {{- .Values.descheduler.strategies | toYaml | nindent 8 }}
