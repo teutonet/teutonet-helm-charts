@@ -333,6 +333,9 @@ monitoring:
     enabled: true
   tracing:
     enabled: false
+    ingester:
+      resourcesPreset: small
+      resources: {}
 
 descheduler:
   enabled: true

@@ -21,6 +21,9 @@ spec:
     global:
       imageRegistry: {{ $.Values.global.imageRegistry }}
     {{- end }}
+    ingester:
+      resourcesPreset: {{ .Values.monitoring.tracing.ingester.resourcesPreset }}
+      resources: {{- toYaml .Values.monitoring.tracing.ingester.resources | nindent 8 }}
     tempo:
       traces:
         jaeger:

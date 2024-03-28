@@ -739,10 +739,22 @@
           "properties": {
             "enabled": {
               "type": "boolean"
+            },
+            "ingester": {
+              "type": "object",
+              "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
             }
-          },
-          "additionalProperties": false
-        }
+          }
+        },
+        "additionalProperties": false
       },
       "additionalProperties": false
     },
@@ -1317,6 +1329,18 @@
   "$defs": {
     "resourceRequirements": {
       "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+    },
+    "resourcesPreset": {
+      "type": "string",
+      "enum": [
+        "nano",
+        "micro",
+        "small",
+        "medium",
+        "large",
+        "xlarge",
+        "2xlarge"
+      ]
     },
     "quantity": {
       "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
