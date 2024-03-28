@@ -1,5 +1,26 @@
 # Changelog
 
+## [6.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.0.0...base-cluster-v6.1.0) (2024-03-28)
+
+
+### Features
+
+* **base-cluster/descheduler:** run as deployment and enable prometheus ([#838](https://github.com/teutonet/teutonet-helm-charts/issues/838)) ([47b7cdf](https://github.com/teutonet/teutonet-helm-charts/commit/47b7cdf5e2453d7b243a701cc20354574cbc23f7))
+* **base-cluster/tracing:** add resources settings for ingester ([#832](https://github.com/teutonet/teutonet-helm-charts/issues/832)) ([eb211e5](https://github.com/teutonet/teutonet-helm-charts/commit/eb211e53ece17d917fe22bc763e3d6fbcfe89c13))
+
+
+### Bug Fixes
+
+* **base-cluster/tracing:** remove undefined exporter ([#845](https://github.com/teutonet/teutonet-helm-charts/issues/845)) ([f514b24](https://github.com/teutonet/teutonet-helm-charts/commit/f514b241dab81341daf2d25d8420f30e88cc4449))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update docker.io/curlimages/curl docker tag to v8.7.1 ([#842](https://github.com/teutonet/teutonet-helm-charts/issues/842)) ([d36d4f9](https://github.com/teutonet/teutonet-helm-charts/commit/d36d4f95de8cf71e61ebb73403edcff7ccfb2911))
+* **base-cluster/dependencies:** update helm release common to v2.19.1 ([#839](https://github.com/teutonet/teutonet-helm-charts/issues/839)) ([eb07e18](https://github.com/teutonet/teutonet-helm-charts/commit/eb07e1872f0ea22a317341020776e4c2b510c53c))
+* **base-cluster/monitoring:** remove unnecessary arg ([#829](https://github.com/teutonet/teutonet-helm-charts/issues/829)) ([f9cdd7d](https://github.com/teutonet/teutonet-helm-charts/commit/f9cdd7def3645b275b08235f7213065febdc612c))
+* **base-cluster:** use tag instead of digest for gpg image ([#844](https://github.com/teutonet/teutonet-helm-charts/issues/844)) ([13be21b](https://github.com/teutonet/teutonet-helm-charts/commit/13be21b475aff338565363df61554290041b9a59))
+
 ## [6.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v5.0.1...base-cluster-v6.0.0) (2024-03-25)
 
 
