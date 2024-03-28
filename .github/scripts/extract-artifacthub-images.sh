@@ -6,8 +6,8 @@
 set -eu
 set -o pipefail
 
-TMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TMP_DIR"' EXIT
+[[ ! -v TMP_DIR ]] && trap 'rm -rf "$TMP_DIR"' EXIT
+TMP_DIR="${TMP_DIR:-$(mktemp -d)}"
 
 function templateHelmChart() {
   local chart="$1"
@@ -36,7 +36,7 @@ function getImages() {
   (
     cd "$tmpDir/helmRelease"
     rm -f -- */HelmRelease/*.yaml
-    grep -Er '\s+image: \S+' |
+    grep -Er '\s+image: \S+$' |
       grep -v 'artifacthub-ignore' |
       awk '{print $3 " # " $1}' |
       tr -d '"' |

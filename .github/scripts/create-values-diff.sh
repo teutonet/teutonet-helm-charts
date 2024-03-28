@@ -39,8 +39,9 @@ GITHUB_WORKSPACE="${GITHUB_WORKSPACE:-$(git rev-parse --show-toplevel)}"
 GITHUB_DEFAULT_BRANCH="${GITHUB_DEFAULT_BRANCH:-main}"
 GITHUB_SERVER_URL="${GITHUB_SERVER_URL:-https://github.com}"
 GITHUB_REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
-TMP_DIR="$(mktemp -d)"
-trap 'rm -rf "$TMP_DIR"' EXIT
+
+[[ ! -v TMP_DIR ]] && trap 'rm -rf "$TMP_DIR"' EXIT
+TMP_DIR="${TMP_DIR:-$(mktemp -d)}"
 
 cd "$GITHUB_WORKSPACE"
 
