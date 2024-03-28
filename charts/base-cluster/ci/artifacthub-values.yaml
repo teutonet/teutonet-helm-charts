@@ -27,3 +27,7 @@ monitoring:
         pagerduty:
           enabled: true
           integrationKey: INTEGRATION_KEY
+weaveworks:
+  enabled: true
+  username: admin
+  password: test
