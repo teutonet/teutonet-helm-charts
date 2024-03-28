@@ -82,6 +82,10 @@ function updateChartYaml() {
 }
 
 if [[ "$#" == 1 ]] && [[ -d "$1" ]]; then
+  if yq -e '.type == "library"' "$1/Chart.yaml" >/dev/null; then
+    echo "Skipping library chart '$1'" >/dev/stderr
+    exit 0
+  fi
   if ! [[ -f "$1/ci/artifacthub-values.yaml" ]]; then
     echo "There is no 'artifacthub-values.yaml' in 'charts/$1/ci', exiting" >/dev/stderr
     exit 1
@@ -92,6 +96,10 @@ else
     [[ "$chart" == "charts/*" ]] && continue
     [[ -f "$chart/ci/artifacthub-values.yaml" ]] || continue
 
+    if yq -e '.type == "library"' "$chart/Chart.yaml" >/dev/null; then
+      echo "Skipping library chart '$chart'" >/dev/stderr
+      exit 0
+    fi
     updateChartYaml "$chart"
   done
 fi
