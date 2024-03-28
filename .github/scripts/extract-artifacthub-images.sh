@@ -35,7 +35,7 @@ function getImages() {
 
   (
     cd "$tmpDir/helmRelease"
-    rm -- */HelmRelease/*.yaml
+    rm -f -- */HelmRelease/*.yaml
     grep -Er '\s+image: \S+' |
       grep -v 'artifacthub-ignore' |
       awk '{print $3 " # " $1}' |
