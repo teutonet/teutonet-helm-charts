@@ -17,4 +17,4 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
 annotations:
   artifacthub.io/images: |
-    - image: registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker:1.2.0
+    - image: registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker:2.0.0  #  default/Deployment/teuto-portal-k8s-worker.yaml
