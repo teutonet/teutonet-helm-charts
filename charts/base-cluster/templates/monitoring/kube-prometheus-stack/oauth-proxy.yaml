@@ -35,10 +35,9 @@ spec:
     ingress:
       enabled: true
       hostname: {{ include (printf "base-cluster.%s.host" $host) $ }}
-      extraTls: |-
-        - hosts:
-          - {{ "{{ .Values.ingress.hostname }}" }}
-          secretName: {{ include "base-cluster.certificate" (dict "name" $host "customDomain" $ingress.customDomain "context" $) }}
+      tls: true
+      certManager: true
+      existingSecretName: {{ include "base-cluster.certificate" (dict "name" $host "customDomain" $ingress.customDomain "context" $) | quote }}
     replicaCount: 2
     pdb:
       create: true
