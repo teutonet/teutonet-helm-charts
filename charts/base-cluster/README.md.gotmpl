@@ -24,6 +24,7 @@ kubectl get node -o jsonpath='{.items[0].metadata.annotations.cluster\.x-k8s\.io
 
 # configure according to your needs, at least `.global.clusterName` is needed
 # additionally, you should add your git repo to `.flux.gitRepositories`, see [the documentation](https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster#81--property-base-cluster-configuration--flux--gitrepositories)
+# make sure to use the correct url format, see [the documentation](https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster#81112-property-base-cluster-configuration--flux--gitrepositories--additionalproperties--allof--item-0--oneof--item-1)
 vi cluster.yaml
 
 # create HelmRelease for flux to manage itself
@@ -70,7 +71,7 @@ for your Ingresses (and [other needs](https://cert-manager.io/docs/usage))
 
 To create wildcard certificates, you need to enable a [DNS Provider](#component-dns)
 
-Then you can just create a [`Certiticate`](https://cert-manager.io/docs/usage/certificate)
+Then you can just create a [`Certificate`](https://cert-manager.io/docs/usage/certificate)
 resource.
 
 ### Component [descheduler](#descheduler)
@@ -97,7 +98,7 @@ deletes and syncs DNS records for your Ingresses.
 
 If you need a different provider than cloudflare, please open a ticket for one of
 the [supported ones](https://github.com/kubernetes-sigs/external-dns#status-of-providers)
-which is also supprted by [cert-manager](https://cert-manager.io/docs/configuration/acme/dns01/#supported-dns01-providers)
+which is also supported by [cert-manager](https://cert-manager.io/docs/configuration/acme/dns01/#supported-dns01-providers)
 
 ### Component [ingress](#ingress)
 
@@ -115,10 +116,10 @@ only works for the `IngressClassName: nginx`.
 #### IP Address
 
 If you want to make sure that, in the event of a catastrophic failure, you keep the
-same IP adress, you should roll this out, get the assigned IP
+same IP address, you should roll this out, get the assigned IP
 (`kubectl -n ingress-nginx get svc ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress}'`)
 and set `.ingress.IP=<ip>` in the values. This makes sure the IP is kept in your
-project (may incur cost!), which means you can re-use it later or after recovery.
+project (may incur cost!), which means you can reuse it later or after recovery.
 
 ### Component [flux](#flux)
 
