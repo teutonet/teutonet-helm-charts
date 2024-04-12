@@ -3,7 +3,7 @@
 image:
   registry: {{ .Values.global.imageRegistry }}
   {{- end }}
-resources: {{- .Values.monitoring.prometheus.nodeExporter.resources | toYaml | nindent 2 }}
+resources: {{- include "common.resources" .Values.monitoring.prometheus.nodeExporter | nindent 2 }}
 priorityClassName: monitoring-components
 securityContext:
   seccompProfile:
@@ -11,5 +11,5 @@ securityContext:
 containerSecurityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 2 }}
 prometheus:
   monitor:
-    additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 6 }}
+    additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 6 }}
 {{- end -}}

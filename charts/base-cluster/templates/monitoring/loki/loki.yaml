@@ -31,7 +31,7 @@ spec:
       url: {{ `http://{{ (include "loki.serviceName" .) }}.{{ .Release.Namespace }}:{{ .Values.loki.service.port }}` }}
       image:
         repository: {{ printf "%s/grafana/loki" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
-      resources: {{- .Values.monitoring.loki.resources | toYaml | nindent 8 }}
+      resources: {{- include "common.resources" .Values.monitoring.loki | nindent 8 }}
       replicas: {{ .Values.monitoring.loki.replicas }}
       persistence: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.loki.persistence "global" $.Values.global) | nindent 8 }}
         enabled: true
@@ -46,7 +46,7 @@ spec:
             - ALL
       serviceMonitor:
         enabled: true
-        additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
+        additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
       config:
         table_manager:
           retention_deletes_enabled: true
@@ -83,14 +83,14 @@ spec:
       image:
         registry: {{ $.Values.global.imageRegistry }}
       {{- end }}
-      resources: {{- .Values.monitoring.loki.promtail.resources | toYaml | nindent 8 }}
+      resources: {{- include "common.resources" .Values.monitoring.loki.promtail | nindent 8 }}
       containerSecurityContext:
         seccompProfile:
           type: RuntimeDefault
       priorityClassName: monitoring-components
       serviceMonitor:
         enabled: true
-        labels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
+        labels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
     grafana:
       enabled: false
       sidecar:

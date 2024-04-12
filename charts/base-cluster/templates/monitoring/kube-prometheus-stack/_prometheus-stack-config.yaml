@@ -5,7 +5,7 @@ global:
   {{- end }}
 prometheusOperator:
   secretFieldSelector: 'type!=helm.sh/release.v1'
-  resources: {{- .Values.monitoring.prometheus.operator.resources | toYaml | nindent 4 }}
+  resources: {{- include "common.resources" .Values.monitoring.prometheus.operator | nindent 4 }}
   priorityClassName: monitoring-components
   securityContext:
     seccompProfile:
@@ -20,7 +20,7 @@ defaultRules:
 kubelet:
   serviceMonitor:
     resource: false
-commonLabels: {{- .Values.monitoring.labels | toYaml | nindent 2 }}
+commonLabels: {{- toYaml .Values.monitoring.labels | nindent 2 }}
 grafana: {{- include "base-cluster.prometheus-stack.grafana.config" . | nindent 2 }}
 kube-state-metrics: {{- include "base-cluster.prometheus-stack.kube-state-metrics.config" . | nindent 2 }}
 prometheus-node-exporter: {{- include "base-cluster.prometheus-stack.node-exporter.config" . | nindent 2 }}
