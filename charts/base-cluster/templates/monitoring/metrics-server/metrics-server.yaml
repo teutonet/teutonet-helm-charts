@@ -1,5 +1,5 @@
 {{- if .Values.monitoring.metricsServer.enabled -}}
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: metrics-server
@@ -11,6 +11,8 @@ spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "bitnami" "chart" "metrics-server" "context" $) | nindent 6 }}
   interval: 1h
+  driftDetection:
+    mode: enabled
   values:
     apiService:
       create: true
@@ -27,29 +29,10 @@ spec:
         memory: 64Mi
     replicas: 2
     priorityClassName: cluster-components
-    podSecurityContext:
-      enabled: true
-      seccompProfile:
-        type: RuntimeDefault
-    containerSecurityContext:
-      capabilities:
-        drop:
-          - ALL
-      allowPrivilegeEscalation: false
-      privileged: false
-      readOnlyRootFilesystem: true
     podDisruptionBudget:
       enabled: true
       minAvailable: 1
     extraArgs:
       - --kubelet-preferred-address-types=InternalIP
       - --kubelet-insecure-tls=true
-      - --cert-dir=/tmp
-    extraVolumeMounts:
-      - mountPath: /tmp
-        name: tmpdir
-    extraVolumes:
-      - emptyDir:
-          sizeLimit: 32Mi
-        name: tmpdir
   {{- end -}}

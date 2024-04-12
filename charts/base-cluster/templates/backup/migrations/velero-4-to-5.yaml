@@ -1,4 +1,4 @@
-{{- if and .Values.backup.enabled (hasPrefix "4." (dig "spec" "chart" "spec" "version" "" (lookup "helm.toolkit.fluxcd.io/v2beta1" "HelmRelease" "backup" "velero"))) }}
+{{- if and .Values.backup.backupStorageLocations (hasPrefix "4." (dig "spec" "chart" "spec" "version" "" (lookup "helm.toolkit.fluxcd.io/v2beta2" "HelmRelease" "backup" "velero"))) }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -23,11 +23,7 @@ spec:
       containers:
         - name: remove-backup-storage-locations
           image: {{ include "common.images.image" (dict "imageRoot" .Values.global.kubectl.image "global" .Values.global) }}
-          {{- if .Values.global.kubectl.image.digest }}
-          imagePullPolicy: IfNotPresent
-          {{- else }}
-          imagePullPolicy: Always
-          {{- end }}
+          imagePullPolicy: {{ empty .Values.global.kubectl.image.digest | ternary "Always" "IfNotPresent" }}
           securityContext:
             readOnlyRootFilesystem: true
             privileged: false

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+[[ $- == *x* ]] && export RUNNER_DEBUG=1
 
 set -eu
 set -o pipefail
@@ -21,6 +22,11 @@ else
   dryRun=false
 fi
 
+if yq -e '.type == "library"' "$chart/Chart.yaml" >/dev/null; then
+  echo "Skipping library chart '$chart'" >/dev/stderr
+  exit 0
+fi
+
 GITHUB_API_URL="${GITHUB_API_URL:-https://api.github.com}"
 
 if command -v gh &>/dev/null; then
@@ -38,48 +44,14 @@ GITHUB_WORKSPACE="${GITHUB_WORKSPACE:-$(git rev-parse --show-toplevel)}"
 GITHUB_DEFAULT_BRANCH="${GITHUB_DEFAULT_BRANCH:-main}"
 GITHUB_SERVER_URL="${GITHUB_SERVER_URL:-https://github.com}"
 GITHUB_REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
-SCRIPTS="$GITHUB_WORKSPACE/.github/scripts/"
-TMP_DIR="$(mktemp -d)"
-trap 'rm -rf "$TMP_DIR"' EXIT
+
+[[ ! -v TMP_DIR ]] && trap 'rm -rf "$TMP_DIR"' EXIT
+TMP_DIR="${TMP_DIR:-$(mktemp -d)}"
 
 cd "$GITHUB_WORKSPACE"
 
-function splitYamlIntoDir() {
-  local yaml="${1?}"
-  local dir="${2?}"
-  local IFS=$'\n'
-  local selector
-
-  for selector in $(yq -c -s '.[] | select(.kind and .metadata.name) | {kind: .kind, namespace: .metadata.namespace, name: .metadata.name}' <"$yaml"); do
-    local resourceName
-    local kind
-    local namespace
-    local name
-    kind="$(jq --argjson selector "$selector" -n -r '$selector.kind')"
-    namespace="$(jq --argjson selector "$selector" -n -r '$selector.namespace')"
-    name="$(jq --argjson selector "$selector" -n -r '$selector.name')"
-
-    resourceName="$dir/$namespace/$kind/$name.yaml"
-    if [[ -f "$resourceName" ]]; then
-      echo "'$resourceName' shouldn't already exist" >/dev/stderr
-      return 1
-    fi
-    mkdir -p "$(dirname "$resourceName")"
-    # shellcheck disable=SC2016
-    yq -y -s --argjson selector "$selector" '.[] | select((.kind == $selector.kind) and (.metadata.namespace == $selector.namespace) and (.metadata.name == $selector.name)) | del(.metadata.labels.chart) | del(.metadata.labels["helm.sh/chart"])' <"$yaml" >"$resourceName"
-    if [[ "$kind" == "HelmRelease" ]]; then
-      (
-        "$SCRIPTS/templateHelmRelease" -1 <<<"$(sed -s '$a---' <(yq -s -y '.[] | select(.apiVersion | contains("source.toolkit.fluxcd.io"))' <"$yaml") "$resourceName")" >"${resourceName}_templated"
-        splitYamlIntoDir "${resourceName}_templated" "$(dirname "$resourceName")/$(basename -s .yaml "$resourceName")"
-        rm "${resourceName}_templated"
-      ) &
-    fi
-  done
-  wait
-}
-
 function generateComment() {
-  local chart="charts/${1?}"
+  local chart="${1?}"
   local -A diffs
   local newResourcesDir
   local originalResourcesDir
@@ -93,13 +65,13 @@ function generateComment() {
       mkdir "$originalResourcesDir" "$newResourcesDir"
 
       (
-        "$SCRIPTS/templateGitHelmChart" -1 "$GITHUB_REPO_URL" "$chart" "${GITHUB_DEFAULT_BRANCH}" "$values" | yq -y -S >"$originalResourcesDir.yaml"
-        splitYamlIntoDir "$originalResourcesDir.yaml" "$originalResourcesDir"
+        "$(dirname "$0")/templateGitHelmChart" -1 "$GITHUB_REPO_URL" "$chart" "${GITHUB_DEFAULT_BRANCH}" "$values" | yq -y -S >"$originalResourcesDir.yaml"
+        "$(dirname "$0")/splitYamlIntoDir" "$originalResourcesDir.yaml" "$originalResourcesDir"
       ) &
 
       (
-        "$SCRIPTS/templateLocalHelmChart" -1 "$chart" "$values" | yq -y -S >"$newResourcesDir.yaml"
-        splitYamlIntoDir "$newResourcesDir.yaml" "$newResourcesDir"
+        "$(dirname "$0")/templateLocalHelmChart" -1 "$chart" "$values" | yq -y -S >"$newResourcesDir.yaml"
+        "$(dirname "$0")/splitYamlIntoDir" "$newResourcesDir.yaml" "$newResourcesDir"
       ) &
 
       wait

@@ -13,6 +13,17 @@ global:
     cert-manager:
       additionalLabels:
         app.kubernetes.io/component: cert-manager
+      resources:
+        defaults:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 300Mi
+        quotas:
+          limits.cpu: "2"
+          limits.memory: 2Gi
     ingress-nginx:
       condition: "{{ .Values.ingress.enabled }}"
       additionalLabels:
@@ -25,6 +36,11 @@ global:
       condition: "{{ or .Values.monitoring.prometheus.enabled .Values.monitoring.metricsServer.enabled }}"
       additionalLabels:
         app.kubernetes.io/component: monitoring
+      resources:
+        defaults:
+          requests:
+            cpu: 20m
+            memory: 100Mi
     loki:
       condition: "{{ .Values.monitoring.loki.enabled }}"
       additionalLabels:
@@ -40,7 +56,7 @@ global:
         app.kubernetes.io/component: storage
         app.kubernetes.io/part-of: nfs-server-provisioner
     backup:
-      condition: "{{ .Values.backup.enabled }}"
+      condition: "{{ not (empty .Values.backup.backupStorageLocations) }}"
       additionalLabels:
         app.kubernetes.io/component: backup
   certificates:
@@ -57,22 +73,22 @@ global:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: 1.29.0
+      tag: 1.29.3
   flux:
     image:
       registry: docker.io
       repository: fluxcd/flux-cli
-      tag: v2.2.2
+      tag: v2.2.3
   gpg:
     image:
       registry: docker.io
       repository: vladgh/gpg
-      digest: sha256:8514acc9c94607895e3dea724bd85d885252666212567f6632d2654580539ed3
+      tag: 1.3.5
   curl:
     image:
       registry: docker.io
       repository: curlimages/curl
-      tag: 8.5.0
+      tag: 8.7.1
   networkPolicy:
     type: none
     dnsLabels:
@@ -89,7 +105,7 @@ global:
     prometheus:
       url: https://prometheus-community.github.io/helm-charts
       charts:
-        kube-prometheus-stack: 55.x
+        kube-prometheus-stack: 58.x
       condition: "{{ .Values.monitoring.prometheus.enabled }}"
       interval: 5m
     grafana:
@@ -100,14 +116,14 @@ global:
     bitnami:
       url: oci://docker.io/bitnamicharts
       charts:
-        oauth2-proxy: 4.x
-        metrics-server: 6.x.x
-        external-dns: 6.x.x
-        grafana-tempo: 2.x.x
+        oauth2-proxy: 5.x
+        metrics-server: 7.x
+        external-dns: 7.x
+        grafana-tempo: 3.x
     descheduler:
       url: https://kubernetes-sigs.github.io/descheduler
       charts:
-        descheduler: 0.28.x
+        descheduler: 0.29.x
       condition: "{{ .Values.descheduler.enabled }}"
     jetstack:
       url: https://charts.jetstack.io
@@ -121,9 +137,8 @@ global:
     kyverno:
       url: https://kyverno.github.io/kyverno
       charts:
-        # TODO: migrate to v3 https://artifacthub.io/packages/helm/kyverno/kyverno#migrating-from-v2-to-v3
-        kyverno: 2.x.x
-        kyverno-policies: 2.x.x
+        kyverno: 3.x.x
+        kyverno-policies: 3.x.x
       condition: "{{ .Values.kyverno.enabled }}"
     cetic:
       url: https://cetic.github.io/helm-charts
@@ -149,8 +164,8 @@ global:
     vmware:
       url: https://vmware-tanzu.github.io/helm-charts
       charts:
-        velero: 5.x
-      condition: "{{ .Values.backup.enabled }}"
+        velero: 6.0.0
+      condition: "{{ not (empty .Values.backup.backupStorageLocations) }}"
     open-telemetry:
       url: https://open-telemetry.github.io/opentelemetry-helm-charts
       charts:
@@ -318,6 +333,9 @@ monitoring:
     enabled: true
   tracing:
     enabled: false
+    ingester:
+      resourcesPreset: small
+      resources: {}
 
 descheduler:
   enabled: true
@@ -427,7 +445,6 @@ rbac:
   accounts: {}
 
 backup:
-  enabled: true
   backupStorageLocations: {}
   resources:
     requests:

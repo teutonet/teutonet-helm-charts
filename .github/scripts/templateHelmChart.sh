@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
 [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+[[ $- == *x* ]] && export RUNNER_DEBUG=1
 
 set -eu
 set -o pipefail
 
-TMP_DIR="$(mktemp -d)"
-trap 'rm -rf "$TMP_DIR"' EXIT
+[[ ! -v TMP_DIR ]] && trap 'rm -rf "$TMP_DIR"' EXIT
+TMP_DIR="${TMP_DIR:-$(mktemp -d)}"
 
 function templateGitHelmRelease() {
   local gitUrl="$1"
@@ -115,11 +116,9 @@ function templateSubHelmCharts() {
   yaml=$(cat -)
   numberOfHelmReleases=$(yq <<<"$yaml" -ers '[.[] | select(.kind == "HelmRelease")] | length')
   echo "$yaml"
-  if [[ "$numberOfHelmReleases" -gt 0 ]]; then
-    for index in $(seq 0 $((numberOfHelmReleases - 1))); do
-      yq <<<"$yaml" -erys '([.[] | select(.kind == "HelmRelease")]['"$index"']),(.[] | select(.kind | IN(["GitRepository", "HelmRepository"][])))' | templateHelmRelease >"$tmpDir/$index.yaml" &
-    done
-  fi
+  for index in $(seq 0 $((numberOfHelmReleases - 1))); do
+    yq <<<"$yaml" -erys '([.[] | select(.kind == "HelmRelease")]['"$index"']),(.[] | select(.kind | IN(["GitRepository", "HelmRepository"][])))' | templateHelmRelease >"$tmpDir/$index.yaml" &
+  done
   wait
   for index in $(seq 0 $((numberOfHelmReleases - 1))); do
     echo ---

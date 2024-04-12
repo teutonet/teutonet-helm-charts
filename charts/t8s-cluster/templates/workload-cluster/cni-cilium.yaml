@@ -1,5 +1,5 @@
 {{- if eq .Values.cni "cilium" }}
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: {{ printf "%s-cni" .Release.Name }}
@@ -9,6 +9,8 @@ spec:
   chart:
     spec: {{- include "t8s-cluster.helm.chartSpec" (dict "repo" "cilium" "chart" "cilium" "context" $) | nindent 6 }}
   interval: 1h
+  driftDetection:
+    mode: enabled
   kubeConfig:
     secretRef:
       name: {{ .Release.Name }}-kubeconfig

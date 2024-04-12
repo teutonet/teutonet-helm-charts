@@ -36,3 +36,4 @@ registries:
     provider-os: ALL_IMAGES
   k8s.gcr.io:
     sig-storage: ALL_IMAGES
+  registry-gitlab.teuto.net: ALL_IMAGES

@@ -8,7 +8,7 @@ openstack
 
 {{- define "t8s-cluster.clusterClass.getIdentityRefSecretName" -}}
   {{- $_ := set . "Release" .context.Release -}}
-  {{- printf "cloud-config-%s" .Release.Name -}}
+  {{- printf "%s-cloud-config" .Release.Name -}}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.tlsCipherSuites" -}}
@@ -28,7 +28,6 @@ openstack
 
 {{- define "t8s-cluster.clusterClass.postKubeadmCommands" -}}
   {{- $commands := list -}}
-  {{- $commands = append $commands "bash -xc 'if systemctl -q is-failed kubelet; then journalctl -u kubelet; else echo kubelet startup successful; fi | tee -a /dev/console'" }}
   {{- $commands | toYaml }}
 {{- end -}}
 

@@ -22,11 +22,7 @@ spec:
       containers:
         - name: uninstall-cleanup
           image: {{ include "common.images.image" (dict "imageRoot" .Values.global.kubectl.image "global" .Values.global) }}
-          {{- if .Values.global.kubectl.image.digest }}
-          imagePullPolicy: IfNotPresent
-          {{- else }}
-          imagePullPolicy: Always
-          {{- end }}
+          imagePullPolicy: {{ empty .Values.global.kubectl.image.digest | ternary "Always" "IfNotPresent" }}
           securityContext:
             readOnlyRootFilesystem: true
             privileged: false

@@ -6,5 +6,4 @@ metadata:
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
 spec:
   template:
-    spec:
-      kubeadmConfigSpec: {{/* the full context is needed for .Files.Get */}}{{- include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.spec" . | nindent 8 }}
+    spec: {{/* the full context is needed for .Files.Get */}}{{- include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.spec" . | nindent 6 }}

@@ -1,5 +1,5 @@
-{{- if .Values.backup.enabled }}
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+{{- if .Values.backup.backupStorageLocations }}
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: velero
@@ -10,6 +10,8 @@ spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "vmware" "chart" "velero" "context" $) | nindent 6 }}
   interval: 1h
+  driftDetection:
+    mode: enabled
   {{- if .Values.monitoring.prometheus.enabled }}
   dependsOn:
     - name: kube-prometheus-stack
@@ -62,7 +64,7 @@ spec:
       resources: {{- .Values.backup.nodeAgent.resources | toYaml | nindent 8 }}
       priorityClassName: system-cluster-critical
     configuration:
-      {{- if .Values.backup.backupStorageLocations }}
+      defaultBackupStorageLocation: {{ .Values.backup.defaultLocation | quote }}
       backupStorageLocation: {{- range $name, $spec := .Values.backup.backupStorageLocations }}
         {{- $providerName := include "base-cluster.backup.getProviderName" $spec.provider }}
         - name: {{ $name | quote }}
@@ -71,9 +73,7 @@ spec:
           {{- if $spec.prefix }}
           prefix: {{ $spec.prefix | quote }}
           {{- end }}
-          {{- if $.Values.backup.defaultLocation }}
           default: {{ eq $name $.Values.backup.defaultLocation }}
-          {{- end }}
           {{- $credentialType := include "base-cluster.backup.credentialType" $spec.provider }}
           {{- if eq $credentialType "direct" }}
           credential:
@@ -93,10 +93,8 @@ spec:
             s3Url: {{ $providerSpec.url | quote }}
           {{- end }}
       {{- end }}
-      {{- else }}
-      backupStorageLocation: []
-      {{- end }}
       volumeSnapshotLocation: []
+      uploaderType: restic
     metrics:
       serviceMonitor:
         additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}

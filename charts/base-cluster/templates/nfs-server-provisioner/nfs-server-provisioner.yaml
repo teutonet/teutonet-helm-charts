@@ -1,5 +1,5 @@
 {{- if .Values.storage.readWriteMany.enabled }}
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: nfs-server-provisioner
@@ -11,6 +11,8 @@ spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "nfs-server-provisioner" "chart" "nfs-server-provisioner" "context" $) | nindent 6 }}
   interval: 1h
+  driftDetection:
+    mode: enabled
   values:
     storageClass:
       name: {{ .Values.storage.readWriteMany.storageClass.name }}

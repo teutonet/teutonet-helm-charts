@@ -1,5 +1,5 @@
 {{- if include "base-cluster.reflector.enabled" (dict "context" .) -}}
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: reflector
@@ -10,6 +10,8 @@ spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "emberstack" "chart" "reflector" "context" $) | nindent 6 }}
   interval: 1h
+  driftDetection:
+    mode: enabled
   values:
     priorityClassName: cluster-components
     {{- if .Values.global.imageRegistry }}

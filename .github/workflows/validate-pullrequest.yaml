@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: getChangedChart
     env:
-      CT_TARGET_BRANCH: ${{ github.event.repository.default_branch }}
+      CT_TARGET_BRANCH: ${{ github.event.pull_request.base.ref || github.event.repository.default_branch }}
     steps:
       - uses: actions/checkout@v4
         with:

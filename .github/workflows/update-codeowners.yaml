@@ -19,14 +19,13 @@ jobs:
 
       - name: Create PR
         id: create-pr
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v6
         with:
           add-paths: |
             .github/CODEOWNERS
-          commit-message: "chore: [bot] Update 'CODEOWNERS'"
-          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
-          branch: chore/update-codeowners
-          title: "chore: Update CODEOWNERS"
+          commit-message: "ci: [bot] Update 'CODEOWNERS'"
+          branch: ci/update-codeowners
+          title: "ci: Update CODEOWNERS"
       - name: Set PR to auto-merge
         if: ${{ steps.create-pr.outputs.pull-request-number }}
         run: gh pr merge --auto --squash "$PR_NUMBER"

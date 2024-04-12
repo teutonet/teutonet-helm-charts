@@ -1,6 +1,5 @@
 {{- if .Values.kyverno.enabled }}
-# https://github.com/kyverno/kyverno/tree/main/charts/kyverno
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: kyverno
@@ -11,49 +10,64 @@ spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "kyverno" "chart" "kyverno" "context" $) | nindent 6 }}
   interval: 1h
+  driftDetection:
+    mode: enabled
   {{- if .Values.monitoring.prometheus.enabled }}
   dependsOn:
     - name: kube-prometheus-stack
       namespace: monitoring
   {{- end }}
   values:
-    testImage:
-      registry: {{ $.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict)) }}
     {{- if .Values.global.imageRegistry }}
-    image:
-      repository: {{ printf "%s/kyverno/kyverno" $.Values.global.imageRegistry }}
-    initImage:
-      repository: {{ printf "%s/kyverno/kyvernopre" $.Values.global.imageRegistry }}
+    global:
+      registry: {{ .Values.global.imageRegistry }}
+    {{- else }}
+    test:
+      image: &defaultImage
+        registry: docker.io
+    policyReportsCleanup:
+      image: *defaultImage
+    cleanupJobs:
+      admissionReports:
+        image: *defaultImage
+      clusterAdmissionReports:
+        image: *defaultImage
     {{- end }}
     installCRDs: true
     networkPolicy:
       enabled: false
     webhooksCleanup:
       enable: true
-      image: {{ include "base-cluster.kubectl.image" . }}
+      {{- if not .Values.global.imageRegistry }}
+      image: *defaultImage
+      {{- end }}
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
       additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 8 }}
     priorityClassName: system-cluster-critical
     # this only works in version 3
-    {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
     admissionController:
+      replicas: 3
+      {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
       tracing: &tracingConfig
         enabled: true
         address: open-telemetry-collector-opentelemetry-collector.monitoring
         port: 14250 # jaeger-grpc
+      {{- end }}
     backgroundController:
-      tracing: *tracingConfig
-    reportsController:
-      tracing: *tracingConfig
-    {{- end }}
-    cleanupController:
+      replicas: 2
       {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
       tracing: *tracingConfig
       {{- end }}
-      {{- if .Values.global.imageRegistry }}
-      image:
-        repository: {{ printf "%s/kyverno/cleanup-controller" $.Values.global.imageRegistry }}
+    reportsController:
+      replicas: 2
+      {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
+      tracing: *tracingConfig
+      {{- end }}
+    cleanupController:
+      replicas: 2
+      {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
+      tracing: *tracingConfig
       {{- end }}
     podDisruptionBudget:
       enabled: true

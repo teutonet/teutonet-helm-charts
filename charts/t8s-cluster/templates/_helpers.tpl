@@ -30,5 +30,5 @@ sourceRef:
       {{- $hasGPUFlavor = true -}}
     {{- end -}}
   {{- end -}}
-  {{- $hasGPUFlavor -}}
+  {{- $hasGPUFlavor | ternary true "" -}}
 {{- end -}}

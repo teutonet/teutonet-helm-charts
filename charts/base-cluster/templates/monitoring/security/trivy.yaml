@@ -1,5 +1,5 @@
 {{- if .Values.monitoring.securityScanning.enabled }}
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: trivy
@@ -11,6 +11,8 @@ spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "trivy" "chart" "trivy-operator" "context" $) | nindent 6 }}
   interval: 1h
+  driftDetection:
+    mode: enabled
   {{- if .Values.monitoring.prometheus.enabled }}
   dependsOn:
     - name: kube-prometheus-stack

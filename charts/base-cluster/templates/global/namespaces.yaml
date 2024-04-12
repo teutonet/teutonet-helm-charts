@@ -8,4 +8,53 @@ metadata:
     {{- . | toYaml | nindent 4 -}}
   {{- end }}
 ---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: {{ $name }}
+  namespace: {{ $name }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  {{- $limits := dict "type" "Container" "defaultRequest" (dict "cpu" "100m" "memory" "100Mi")  -}}
+  {{ if $namespace.resources }}
+    {{- if $namespace.resources.defaults -}}
+      {{/* this section defines default limits */}}
+      {{- with $namespace.resources.defaults.limits -}}
+        {{- $defaultLimits := dict -}}
+        {{- range $resource, $limit := . -}}
+          {{- $defaultLimits = set $defaultLimits $resource (include "common.tplvalues.render" (dict "value" $limit "context" $)) -}}
+        {{- end -}}
+        {{- $limits = set $limits "default" $defaultLimits -}}
+      {{- end -}}
+      {{/* this section defines default requests */}}
+      {{- with $namespace.resources.defaults.requests -}}
+        {{- $defaultRequests := dict -}}
+        {{- range $resource, $request := . -}}
+          {{- $defaultRequests = set $defaultRequests $resource (include "common.tplvalues.render" (dict "value" $request "context" $)) -}}
+        {{- end -}}
+        {{- $limits = set $limits "defaultRequest" $defaultRequests -}}
+      {{- end -}}
+    {{- end }}
+  {{- end }}
+  limits: {{- list $limits | toYaml | nindent 4 }}
+{{ if $namespace.resources }}
+{{ if $namespace.resources.quotas }}
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: {{ $name }}
+  namespace: {{ $name }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  {{- with $namespace.resources.quotas -}}
+    {{- $quotas := dict -}}
+    {{- range $resource, $quota := . -}}
+      {{- $quotas = set $quotas $resource (include "common.tplvalues.render" (dict "value" $quota "context" $)) -}}
+    {{- end }}
+  hard: {{- $quotas | toYaml | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}
+---
 {{ end -}}

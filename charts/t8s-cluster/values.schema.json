@@ -106,6 +106,9 @@
         },
         "remarks": {
           "type": "string"
+        },
+        "environment": {
+          "type": "string"
         }
       },
       "required": [
@@ -146,10 +149,14 @@
       "type": "object",
       "properties": {
         "major": {
-          "type": "integer"
+          "type": "integer",
+          "const": 1
         },
         "minor": {
-          "type": "integer"
+          "type": "integer",
+          "description": "The minor version of the k8s cluster. Must be below 29, as CAPO does not support 1.29 yet.",
+          "minimum": 25,
+          "maximum": 28
         },
         "patch": {
           "type": "integer"
@@ -237,21 +244,8 @@
         "calico"
       ]
     },
-    "imageNameTemplate": {
-      "type": "object",
-      "properties": {
-        "computePlane": {
-          "type": "string"
-        },
-        "controlPlane": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "computePlane",
-        "controlPlane"
-      ],
-      "additionalProperties": false
+    "openstackImageNamePrefix": {
+      "type": "string"
     },
     "common": {
       "type": "object",
@@ -262,6 +256,7 @@
     "metadata",
     "version",
     "controlPlane",
+    "openstackImageNamePrefix",
     "nodePools"
   ],
   "additionalProperties": false,
