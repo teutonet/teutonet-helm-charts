@@ -22,6 +22,11 @@ else
   dryRun=false
 fi
 
+if yq -e '.type == "library"' "$chart/Chart.yaml" >/dev/null; then
+  echo "Skipping library chart '$chart'" >/dev/stderr
+  exit 0
+fi
+
 GITHUB_API_URL="${GITHUB_API_URL:-https://api.github.com}"
 
 if command -v gh &>/dev/null; then
@@ -46,7 +51,7 @@ TMP_DIR="${TMP_DIR:-$(mktemp -d)}"
 cd "$GITHUB_WORKSPACE"
 
 function generateComment() {
-  local chart="charts/${1?}"
+  local chart="${1?}"
   local -A diffs
   local newResourcesDir
   local originalResourcesDir

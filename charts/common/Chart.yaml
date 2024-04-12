@@ -1,0 +1,16 @@
+apiVersion: v2
+name: common
+description: A library chart for common resources
+type: library
+version: 1.0.0
+maintainers:
+  - name: cwrau
+    email: cwr@teuto.net
+  - name: marvinWolff
+    email: mw@teuto.net
+  - name: tasches
+    email: st@teuto.net
+dependencies:
+  - name: common
+    version: 2.19.0
+    repository: https://charts.bitnami.com/bitnami
