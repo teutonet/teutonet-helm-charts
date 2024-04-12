@@ -34,7 +34,7 @@ jobs:
         run: |
           (
             echo -n "repos="
-            yq -r '.dependencies[] | .repository' "charts/$CHART/Chart.yaml" | sort -u | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
+            yq -r '.dependencies[] | .repository' "charts/$CHART/Chart.yaml" | sort -u | grep https:// | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
             echo
           ) | tee "$GITHUB_OUTPUT"
 
