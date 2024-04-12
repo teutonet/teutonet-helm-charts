@@ -18,3 +18,14 @@ jobs:
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
           config-file: .github/release-please/config.json
           manifest-file: .github/release-please/manifest.json
+        id: release-please
+      - name: Set PRs to auto-merge
+        if: ${{ steps.release-please.outputs.prs_created }}
+        run: |
+          for pr_number in ${PR_NUMBERS};do
+            gh pr merge --auto --squash "$pr_number"
+          done
+        env:
+          GH_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
+          PR_NUMBERS: ${{ join(fromJSON(steps.release-please.outputs.prs).*.number, ' ') }}
+          merge-method: squash
