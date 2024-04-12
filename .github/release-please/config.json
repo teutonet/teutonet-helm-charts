@@ -32,6 +32,9 @@
     },
     "charts/teuto-portal-k8s-worker": {
       "package-name": "teuto-portal-k8s-worker"
+    },
+    "charts/common": {
+      "package-name": "common"
     }
   }
 }
