@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # t8s-cluster
 
-![Version: 6.0.0](https://img.shields.io/badge/Version-6.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 6.0.1](https://img.shields.io/badge/Version-6.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -23,7 +23,7 @@ t8s-operator cluster with necessary addons
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.16.1 |
+| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.0.0 |
 
 ## Initial installation
 
@@ -62,7 +62,7 @@ delete the cloud-config secret, as these will just be recreated during installat
 | - [containerRegistryMirror](#containerRegistryMirror )                           | No      | object           | No         | -                                                                           | -                    |
 | - [sshKeyName](#sshKeyName )                                                     | No      | string or null   | No         | -                                                                           | -                    |
 | - [cni](#cni )                                                                   | No      | enum (of string) | No         | -                                                                           | -                    |
-| - [imageNameTemplate](#imageNameTemplate )                                       | No      | object           | No         | -                                                                           | -                    |
+| + [openstackImageNamePrefix](#openstackImageNamePrefix )                         | No      | string           | No         | -                                                                           | -                    |
 | - [common](#common )                                                             | No      | object           | No         | -                                                                           | Values for sub-chart |
 
 ## <a name="global"></a>1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global`
@@ -462,23 +462,32 @@ Must be one of:
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                   | Pattern | Type    | Deprecated | Definition | Title/Description |
-| -------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
-| + [major](#version_major ) | No      | integer | No         | -          | -                 |
-| + [minor](#version_minor ) | No      | integer | No         | -          | -                 |
-| + [patch](#version_patch ) | No      | integer | No         | -          | -                 |
+| Property                   | Pattern | Type    | Deprecated | Definition | Title/Description                                                                          |
+| -------------------------- | ------- | ------- | ---------- | ---------- | ------------------------------------------------------------------------------------------ |
+| + [major](#version_major ) | No      | const   | No         | -          | -                                                                                          |
+| + [minor](#version_minor ) | No      | integer | No         | -          | The minor version of the k8s cluster. Must be below 29, as CAPO does not support 1.29 yet. |
+| + [patch](#version_patch ) | No      | integer | No         | -          | -                                                                                          |
 
 ### <a name="version_major"></a>5.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > major`
 
-|          |           |
-| -------- | --------- |
-| **Type** | `integer` |
+|          |         |
+| -------- | ------- |
+| **Type** | `const` |
+
+Specific value: `1`
 
 ### <a name="version_minor"></a>5.2. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > minor`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `integer` |
+
+**Description:** The minor version of the k8s cluster. Must be below 29, as CAPO does not support 1.29 yet.
+
+| Restrictions |         |
+| ------------ | ------- |
+| **Minimum**  | &ge; 25 |
+| **Maximum**  | &le; 28 |
 
 ### <a name="version_patch"></a>5.3. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > patch`
 
@@ -628,25 +637,7 @@ Must be one of:
 * "cilium"
 * "calico"
 
-## <a name="imageNameTemplate"></a>12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > imageNameTemplate`
-
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-
-| Property                                           | Pattern | Type   | Deprecated | Definition | Title/Description |
-| -------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| + [computePlane](#imageNameTemplate_computePlane ) | No      | string | No         | -          | -                 |
-| + [controlPlane](#imageNameTemplate_controlPlane ) | No      | string | No         | -          | -                 |
-
-### <a name="imageNameTemplate_computePlane"></a>12.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > imageNameTemplate > computePlane`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
-
-### <a name="imageNameTemplate_controlPlane"></a>12.2. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > imageNameTemplate > controlPlane`
+## <a name="openstackImageNamePrefix"></a>12. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > openstackImageNamePrefix`
 
 |          |          |
 | -------- | -------- |
