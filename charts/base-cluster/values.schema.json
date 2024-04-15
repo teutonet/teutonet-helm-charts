@@ -350,8 +350,10 @@
                     "$ref": "#/$defs/email"
                   }
                 },
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
                 "resources": {
-                  "type": "object",
                   "$ref": "#/$defs/resourceRequirements"
                 }
               },
@@ -437,6 +439,9 @@
               "type": "integer",
               "minimum": 1
             },
+            "resourcesPreset": {
+              "$ref": "#/$defs/resourcesPreset"
+            },
             "resources": {
               "$ref": "#/$defs/resourceRequirements"
             },
@@ -463,6 +468,9 @@
             "operator": {
               "type": "object",
               "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
                 "resources": {
                   "$ref": "#/$defs/resourceRequirements"
                 }
@@ -472,6 +480,9 @@
             "kubeStateMetrics": {
               "type": "object",
               "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
                 "resources": {
                   "$ref": "#/$defs/resourceRequirements"
                 },
@@ -492,6 +503,9 @@
             "nodeExporter": {
               "type": "object",
               "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
                 "resources": {
                   "$ref": "#/$defs/resourceRequirements"
                 }
@@ -633,12 +647,18 @@
                 "type": "string"
               }
             },
+            "resourcesPreset": {
+              "$ref": "#/$defs/resourcesPreset"
+            },
             "resources": {
               "$ref": "#/$defs/resourceRequirements"
             },
             "sidecar": {
               "type": "object",
               "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
                 "resources": {
                   "$ref": "#/$defs/resourceRequirements"
                 }
@@ -670,12 +690,18 @@
               "type": "integer",
               "minimum": 1
             },
+            "resourcesPreset": {
+              "$ref": "#/$defs/resourcesPreset"
+            },
             "resources": {
               "$ref": "#/$defs/resourceRequirements"
             },
             "promtail": {
               "type": "object",
               "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
                 "resources": {
                   "$ref": "#/$defs/resourceRequirements"
                 }
@@ -827,6 +853,9 @@
     "certManager": {
       "type": "object",
       "properties": {
+        "resourcesPreset": {
+          "$ref": "#/$defs/resourcesPreset"
+        },
         "resources": {
           "$ref": "#/$defs/resourceRequirements"
         },
@@ -838,6 +867,9 @@
         "webhook": {
           "type": "object",
           "properties": {
+            "resourcesPreset": {
+              "$ref": "#/$defs/resourcesPreset"
+            },
             "resources": {
               "$ref": "#/$defs/resourceRequirements"
             }
@@ -847,6 +879,9 @@
         "caInjector": {
           "type": "object",
           "properties": {
+            "resourcesPreset": {
+              "$ref": "#/$defs/resourcesPreset"
+            },
             "resources": {
               "$ref": "#/$defs/resourceRequirements"
             }
@@ -870,6 +905,9 @@
     "externalDNS": {
       "type": "object",
       "properties": {
+        "resourcesPreset": {
+          "$ref": "#/$defs/resourcesPreset"
+        },
         "resources": {
           "$ref": "#/$defs/resourceRequirements"
         }
@@ -1054,6 +1092,9 @@
           "type": "integer",
           "minimum": 1
         },
+        "resourcesPreset": {
+          "$ref": "#/$defs/resourcesPreset"
+        },
         "resources": {
           "$ref": "#/$defs/resourceRequirements"
         },
@@ -1175,6 +1216,9 @@
     "backup": {
       "type": "object",
       "properties": {
+        "resourcesPreset": {
+          "$ref": "#/$defs/resourcesPreset"
+        },
         "resources": {
           "$ref": "#/$defs/resourceRequirements"
         },
@@ -1292,6 +1336,9 @@
         "nodeAgent": {
           "type": "object",
           "properties": {
+            "resourcesPreset": {
+              "$ref": "#/$defs/resourcesPreset"
+            },
             "resources": {
               "$ref": "#/$defs/resourceRequirements"
             }
@@ -1331,16 +1378,7 @@
       "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
     },
     "resourcesPreset": {
-      "type": "string",
-      "enum": [
-        "nano",
-        "micro",
-        "small",
-        "medium",
-        "large",
-        "xlarge",
-        "2xlarge"
-      ]
+      "$ref": "https://raw.githubusercontent.com/teutonet/teutonet-helm-charts/main/charts/common/values.schema.json#/$defs/resourcesPreset"
     },
     "quantity": {
       "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
