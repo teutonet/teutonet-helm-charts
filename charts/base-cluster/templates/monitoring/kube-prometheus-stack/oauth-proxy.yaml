@@ -36,7 +36,11 @@ spec:
       enabled: true
       hostname: {{ include (printf "base-cluster.%s.host" $host) $ }}
       tls: true
+      {{- if $.Values.dns.provider }}
+      selfSigned: true # `certManager: true` leads to overwritten wildcard certificates
+      {{- else }}
       certManager: true
+      {{- end }}
       existingSecretName: {{ include "base-cluster.certificate" (dict "name" $host "customDomain" $ingress.customDomain "context" $) | quote }}
     replicaCount: 2
     pdb:
