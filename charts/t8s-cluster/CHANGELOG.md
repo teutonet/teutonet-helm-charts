@@ -1,5 +1,24 @@
 # Changelog
 
+## [6.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v6.0.0...t8s-cluster-v6.0.1) (2024-04-15)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** openstackImageNamePrefix ([#625](https://github.com/teutonet/teutonet-helm-charts/issues/625)) ([3ff1cf4](https://github.com/teutonet/teutonet-helm-charts/commit/3ff1cf43c27dd3a1e90358dcc71658a6a472b2e8))
+* **t8s-cluster/management-cluster:** the branch is for pre-release and not for real releases ([#802](https://github.com/teutonet/teutonet-helm-charts/issues/802)) ([a85c39e](https://github.com/teutonet/teutonet-helm-charts/commit/a85c39ed55597cfa1c4314ff8c9381b46cf16db5))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.29.3 ([#789](https://github.com/teutonet/teutonet-helm-charts/issues/789)) ([d285efb](https://github.com/teutonet/teutonet-helm-charts/commit/d285efb5dcb42eabaee465894f894a267f8ccebb))
+* **t8s-cluster/dependencies:** update helm release common to v2.19.0 ([#815](https://github.com/teutonet/teutonet-helm-charts/issues/815)) ([d9115bc](https://github.com/teutonet/teutonet-helm-charts/commit/d9115bc18b45eb70ebdbc19c2a6ad92801d5c9c0))
+* **t8s-cluster/dependencies:** update helm release common to v2.19.1 ([#840](https://github.com/teutonet/teutonet-helm-charts/issues/840)) ([61fdd54](https://github.com/teutonet/teutonet-helm-charts/commit/61fdd54fdcc52fd5fb6f4731846ea94f4c69e918))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.5.12 ([#766](https://github.com/teutonet/teutonet-helm-charts/issues/766)) ([4b7a631](https://github.com/teutonet/teutonet-helm-charts/commit/4b7a631f917ce3a759fb413a2732a7749f310ef7))
+* **t8s-cluster:** disallow versions above 28 ([#801](https://github.com/teutonet/teutonet-helm-charts/issues/801)) ([dbc02cf](https://github.com/teutonet/teutonet-helm-charts/commit/dbc02cf1944bab575abf6aad96ae48a27425cfd4))
+* **t8s-cluster:** remove unneeded comment ([#846](https://github.com/teutonet/teutonet-helm-charts/issues/846)) ([a1119f8](https://github.com/teutonet/teutonet-helm-charts/commit/a1119f870c4ab9cba2e905f943e8ed7d027fe2d2))
+* **t8s-cluster:** use teutonet common chart ([#856](https://github.com/teutonet/teutonet-helm-charts/issues/856)) ([7189ddf](https://github.com/teutonet/teutonet-helm-charts/commit/7189ddf7bf9b9b71a216d77696dfd72b3a794f23))
+
 ## [6.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v5.0.0...t8s-cluster-v6.0.0) (2024-02-29)
 
 
