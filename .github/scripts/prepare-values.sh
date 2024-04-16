@@ -21,11 +21,13 @@ function prepare-values() {
     commonValues="$("$chart/ci/_common.sh")"
     values="$chart/values.yaml"
     mergeYaml "$values" "$commonValues" | sponge "$values"
+    [[ "$RUNNER_DEBUG" == 1 ]] && cat "$values" >/dev/stderr
   fi
   for valuesScript in "$chart/ci/"*-values.sh; do
     [[ -f "$valuesScript" ]] || continue
     values="${valuesScript/.sh/.yaml}"
     mergeYaml "$values" "$("$valuesScript")" | sponge "$values"
+    [[ "$RUNNER_DEBUG" == 1 ]] && cat "$values" >/dev/stderr
   done
 }
 
