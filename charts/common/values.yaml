@@ -1,0 +1,5 @@
+global:
+  telemetry:
+    otlp:
+      endpoint: auto
+      insecure: true

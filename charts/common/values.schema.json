@@ -15,12 +15,39 @@
         "xlarge",
         "2xlarge"
       ]
+    },
+    "telemetry": {
+      "type": "object",
+      "properties": {
+        "otlp": {
+          "type": "object",
+          "properties": {
+            "endpoint": {
+              "type": "string",
+              "default": "auto",
+              "examples": [
+                "http://otel-collector:4317",
+                "auto"
+              ],
+              "description": "'auto' tries to figure it out automatically"
+            },
+            "insecure": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
     }
   },
   "properties": {
     "global": {
       "type": "object",
-      "description": "global values for all charts"
+      "description": "global values for all charts",
+      "properties": {
+        "telemetry": {
+          "$ref": "#/$defs/telemetry"
+        }
+      }
     },
     "common": {
       "type": "object",
