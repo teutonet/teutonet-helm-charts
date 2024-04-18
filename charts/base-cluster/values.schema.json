@@ -1054,6 +1054,9 @@
               "tag": {
                 "type": "string"
               },
+              "path": {
+                "type": "string"
+              },
               "gitInterval": {
                 "type": "string",
                 "description": "The interval in which to sync the repository",
