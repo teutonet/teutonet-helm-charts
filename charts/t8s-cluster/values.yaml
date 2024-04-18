@@ -24,7 +24,7 @@ global:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: 1.29.3
+      tag: 1.29.4
   semver:
     image:
       registry: docker.io
