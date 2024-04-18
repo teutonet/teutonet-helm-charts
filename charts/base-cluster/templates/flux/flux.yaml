@@ -2,7 +2,7 @@
   {{- $authenticationMethod := (list nil) | first -}}
   {{- if and $instance.username $instance.password -}}
     {{- $authenticationMethod = "password" -}}
-  {{- else if regexMatch "^ssh://" $instance.url -}}
+  {{- else if hasPrefix "ssh://" $instance.url -}}
     {{- $authenticationMethod = "ssh" -}}
   {{- end -}}
   {{- $authenticationSecretName := printf "%s-flux-%s" (include "common.names.fullname" $) $name -}}
@@ -81,6 +81,9 @@ spec:
     kind: GitRepository
     name: {{ printf "%s-flux-%s" (include "common.names.fullname" $) $name }}
     namespace: {{ $.Release.Namespace }}
+  {{- if $instance.path }}
+  path: {{ include "common.tplvalues.render" (dict "value" $instance.path "context" $) | quote }}
+  {{- end }}
   {{- if $instance.decryption }}
   decryption:
     provider: {{ $instance.decryption.provider | quote }}
