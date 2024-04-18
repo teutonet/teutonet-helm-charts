@@ -4,3 +4,4 @@
 .DS_Store
 /charts/*/charts
 /charts/*/values.md
+/charts/*/ci/*-gen-values.yaml
