@@ -20,9 +20,9 @@ jobs:
           manifest-file: .github/release-please/manifest.json
         id: release-please
       - uses: actions/checkout@v4
-        if: ${{ steps.release-please.outputs.prs_created }}
+        if: ${{ steps.release-please.outputs.prs_created == 'true' }}
       - name: Set PRs to auto-merge
-        if: ${{ steps.release-please.outputs.prs_created }}
+        if: ${{ steps.release-please.outputs.prs_created == 'true' }}
         run: |
           for pr_number in ${PR_NUMBERS};do
             gh pr merge --auto --squash "$pr_number"
