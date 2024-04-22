@@ -7,7 +7,7 @@ set -o pipefail
 
 i=0
 for url in 'url="https://github.com"' 'url="ssh://git@github.com/group/name.git"'; do
-  for path in 'path="prod"' ''; do
+  for path in 'path="prod"' 'path="{{ .global.clusterName }}"' ''; do
     for extra in 'branch="main"' 'commit="549aee1"' 'semver="1.0.0"' 'tag="2.0.1"' ''; do
       for decr in 'decryption={provider:"sops"}' ''; do
         for auth in 'username="user" | .password="pass"' ''; do
