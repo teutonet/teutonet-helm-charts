@@ -1,5 +1,35 @@
 # Changelog
 
+## [6.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.0.0...base-cluster-v6.1.0) (2024-04-22)
+
+
+### Features
+
+* **base-cluster/descheduler:** run as deployment and enable prometheus ([#838](https://github.com/teutonet/teutonet-helm-charts/issues/838)) ([47b7cdf](https://github.com/teutonet/teutonet-helm-charts/commit/47b7cdf5e2453d7b243a701cc20354574cbc23f7))
+* **base-cluster/flux:** add option to add a path inside the kustomiz… ([#876](https://github.com/teutonet/teutonet-helm-charts/issues/876)) ([358b9e2](https://github.com/teutonet/teutonet-helm-charts/commit/358b9e26bdcd525debac397f5c3aafa0a0c274ba))
+* **base-cluster/monitoring:** use different setup for tls for oauth-… ([#852](https://github.com/teutonet/teutonet-helm-charts/issues/852)) ([cc2e6a9](https://github.com/teutonet/teutonet-helm-charts/commit/cc2e6a90f2b7f89eb7702a6807894c4c56aca98c))
+* **base-cluster/tracing:** add resources settings for ingester ([#832](https://github.com/teutonet/teutonet-helm-charts/issues/832)) ([eb211e5](https://github.com/teutonet/teutonet-helm-charts/commit/eb211e53ece17d917fe22bc763e3d6fbcfe89c13))
+* **base-cluster:** overhaul resources ([#835](https://github.com/teutonet/teutonet-helm-charts/issues/835)) ([f39dba8](https://github.com/teutonet/teutonet-helm-charts/commit/f39dba8cc3f9de055216d6b0f676b5c3e328b657))
+
+
+### Bug Fixes
+
+* **base-cluster/monitoring:** overwritten wildcard certificates ([#868](https://github.com/teutonet/teutonet-helm-charts/issues/868)) ([26cf112](https://github.com/teutonet/teutonet-helm-charts/commit/26cf11221a5998e2c0d9440fc80ab9418ba97913))
+* **base-cluster/tracing:** remove undefined exporter ([#845](https://github.com/teutonet/teutonet-helm-charts/issues/845)) ([f514b24](https://github.com/teutonet/teutonet-helm-charts/commit/f514b241dab81341daf2d25d8420f30e88cc4449))
+* **ci:** better handling of generated values ([#875](https://github.com/teutonet/teutonet-helm-charts/issues/875)) ([f1300f8](https://github.com/teutonet/teutonet-helm-charts/commit/f1300f87a1f5215b490d1cc531c1341a4f39c304))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.29.4 ([#871](https://github.com/teutonet/teutonet-helm-charts/issues/871)) ([95d8c22](https://github.com/teutonet/teutonet-helm-charts/commit/95d8c227964e2afe2fd59716e42207053db0718d))
+* **base-cluster/dependencies:** update docker.io/curlimages/curl docker tag to v8.7.1 ([#842](https://github.com/teutonet/teutonet-helm-charts/issues/842)) ([d36d4f9](https://github.com/teutonet/teutonet-helm-charts/commit/d36d4f95de8cf71e61ebb73403edcff7ccfb2911))
+* **base-cluster/dependencies:** update helm release common to v2.19.1 ([#839](https://github.com/teutonet/teutonet-helm-charts/issues/839)) ([eb07e18](https://github.com/teutonet/teutonet-helm-charts/commit/eb07e1872f0ea22a317341020776e4c2b510c53c))
+* **base-cluster/dependencies:** update helm release kube-prometheus-stack to v58 ([#851](https://github.com/teutonet/teutonet-helm-charts/issues/851)) ([6e79448](https://github.com/teutonet/teutonet-helm-charts/commit/6e794482caa26ba69a60edb55d9c9093d6f95ce7))
+* **base-cluster/dependencies:** update oauth2-proxy docker tag to v5 ([#849](https://github.com/teutonet/teutonet-helm-charts/issues/849)) ([fa4c495](https://github.com/teutonet/teutonet-helm-charts/commit/fa4c4956b9981fb32c532f8838a9793861373c26))
+* **base-cluster/monitoring:** remove unnecessary arg ([#829](https://github.com/teutonet/teutonet-helm-charts/issues/829)) ([f9cdd7d](https://github.com/teutonet/teutonet-helm-charts/commit/f9cdd7def3645b275b08235f7213065febdc612c))
+* **base-cluster:** use tag instead of digest for gpg image ([#844](https://github.com/teutonet/teutonet-helm-charts/issues/844)) ([13be21b](https://github.com/teutonet/teutonet-helm-charts/commit/13be21b475aff338565363df61554290041b9a59))
+* **base-cluster:** use teutonet common chart ([#857](https://github.com/teutonet/teutonet-helm-charts/issues/857)) ([a35b63c](https://github.com/teutonet/teutonet-helm-charts/commit/a35b63c0199ad1f2521706ceaacd832fe5261a70))
+
 ## [6.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v5.0.1...base-cluster-v6.0.0) (2024-03-25)
 
 
