@@ -82,7 +82,7 @@ spec:
     name: {{ printf "%s-flux-%s" (include "common.names.fullname" $) $name }}
     namespace: {{ $.Release.Namespace }}
   {{- if $instance.path }}
-  path: {{ include "common.tplvalues.render" (dict "value" $instance.path "context" $) | quote }}
+  path: {{ include "common.tplvalues.render" (dict "value" $instance.path "context" $.Values) | quote }}
   {{- end }}
   {{- if $instance.decryption }}
   decryption:
