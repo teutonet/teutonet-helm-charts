@@ -45,6 +45,7 @@ spec:
               value: {{ $v | join "," | quote }}
             {{- end -}}
             {{- end }}
+            {{- include "common.telemetry.env" (dict "protocol" "otlp" "global" .Values.global) | nindent 12 }}
           ports:
             - name: metrics
               containerPort: 9090
