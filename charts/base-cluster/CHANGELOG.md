@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.1.0...base-cluster-v6.1.1) (2024-04-22)
+
+
+### Bug Fixes
+
+* **base-cluster/flux:** kustomization path templating ([#890](https://github.com/teutonet/teutonet-helm-charts/issues/890)) ([7e67787](https://github.com/teutonet/teutonet-helm-charts/commit/7e677871a251686174e6802d25a86a53a50a2291))
+
 ## [6.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.0.0...base-cluster-v6.1.0) (2024-04-22)
 
 
