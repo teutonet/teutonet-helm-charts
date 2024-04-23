@@ -1,0 +1,113 @@
+defaultPodSecurityContext: &defaultPodSecurityContext
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+
+defaultSecurityContext: &defaultSecurityContext
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  privileged: false
+  readOnlyRootFilesystem: true
+
+ckan:
+  replicas: 1
+  image:
+    registry: ""
+    pullPolicy: IfNotPresent
+    pullSecrets: [ ]
+    repository: syeklu/ckan
+    tag: 0.1.0
+    digest: ""
+  ingress:
+    enabled: true
+    className: ""
+    annotations:
+      # kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
+    host: ckan.local
+    existingCertificate: ""
+  persistence:
+    accessMode: ReadWriteOnce
+    storageClass: ""
+    size: 100Mi
+  sysadmin:
+    name: ckan_admin
+    password: test1234
+    email: your_email@example.com
+  podSecurityContext: *defaultPodSecurityContext
+  securityContext: *defaultSecurityContext
+  storagePath: "/var/lib/ckan/default"
+  podAnnotations: {}
+  resources: {}
+
+datapusher:
+  replicas: 1
+  image:
+    registry: ""
+    pullPolicy: IfNotPresent
+    pullSecrets: [ ]
+    repository: ckan/ckan-base-datapusher
+    tag: 0.0.20
+    digest: ""
+  podSecurityContext: *defaultPodSecurityContext
+  securityContext: *defaultSecurityContext
+  podAnnotations: {}
+  resources: {}
+
+postgresql:
+  nameOverride: "ckan-postgresql"
+  enabled: true
+  auth:
+    postgresPassword: &postgresPassword postgres
+    username: ckandbuser
+    password: ckandbpassword
+    database: ckandb
+    datastoreUsername:  datastore_ro
+    datastorePassword: datastore
+    datastoreDb: datastore
+    datapusherUsername: datapusher
+    datapusherPassword: datapusherpassword
+    datapusherDb: datapusher
+  primary:
+    initdb:
+      user: postgres
+      password: *postgresPassword
+      scriptsSecret: main-ckan-postgres-initconfig
+
+redis:
+  nameOverride: "ckan-redis"
+  enabled: true
+  auth:
+    enabled: false
+    password: redis
+  replica:
+    replicaCount: 1
+
+solr:
+  nameOverride: "ckan-solr"
+  enabled: true
+  image:
+    registry: ""
+    pullPolicy: IfNotPresent
+    pullSecrets: [ ]
+    repository: syeklu/ckan-solr
+    tag: 0.1.0
+    digest: ""
+  extraEnvVars:
+    - name: SOLR_CORE_CONF_DIR
+      value: /opt/bitnami/solr/server/solr/configsets/ckan/conf
+  coreNames:
+    - ckan
+  auth:
+    enabled: false
+    adminUsername: solr
+    adminPassword: solrpass
+  cloudEnabled: false
+  cloudBootstrap: false
+  collectionReplicas: 1
+  replicaCount: 1
+  zookeeper:
+    replicaCount: 1
+    nameOverride: "ckan-zookeper"

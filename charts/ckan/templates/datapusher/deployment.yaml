@@ -1,0 +1,36 @@
+{{- $name := "datapusher" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ printf "%s-%s" (include "common.names.fullname" $) $name | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: {{ $name }}
+spec:
+  replicas: {{ .Values.datapusher.replicas }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: {{ $name }}
+  template:
+    metadata:
+      {{- with .Values.datapusher.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels: {{- include "common.labels.matchLabels" . | nindent 8 }}
+        app.kubernetes.io/component: {{ $name }}
+    spec:
+      {{- include "common.images.renderPullSecrets" ( dict "images" (list .Values.datapusher.image) "context" $) | indent 6 }}
+      automountServiceAccountToken: false
+      containers:
+        - name: {{ printf "%s-%s" .Chart.Name $name }}
+          #env: TODO Container ned psycopg2
+          #  - name: DATAPUSHER_SQLALCHEMY_DATABASE_URI
+          #    value: "postgresql://{{ .Values.postgresql.auth.username }}:{{ .Values.postgresql.auth.password }}@main-postgresql/{{ .Values.postgresql.auth.database}}"
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.datapusher.image "global" .Values.global) }}
+          imagePullPolicy: {{ .Values.datapusher.image.pullPolicy }}
+          ports:
+            - name: ckan
+              containerPort: {{ include "ckan.ckan.service.port" $ }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.datapusher.resources | nindent 12 }}
