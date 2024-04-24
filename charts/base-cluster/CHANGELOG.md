@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.1.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.1.1...base-cluster-v6.1.2) (2024-04-24)
+
+
+### Bug Fixes
+
+* **base-cluster/flux:** set fixed values for gpg key creation as defa… ([#894](https://github.com/teutonet/teutonet-helm-charts/issues/894)) ([f0afff3](https://github.com/teutonet/teutonet-helm-charts/commit/f0afff3acd06e320080300dea8f093b2195e766f))
+
 ## [6.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.1.0...base-cluster-v6.1.1) (2024-04-22)
 
 
