@@ -1,7 +1,7 @@
 apiVersion: v2
 name: base-cluster
 type: application
-version: 6.1.1
+version: 6.1.2
 icon: https://teuto.net/favicon.ico
 maintainers:
   - name: cwrau
@@ -55,7 +55,7 @@ annotations:
     - image: docker.io/grafana/promtail:2.9.3                                                                                                         #  loki/HelmRelease/loki/loki/DaemonSet/loki-promtail.yaml
     - image: docker.io/otel/opentelemetry-collector-contrib:0.98.0                                                                                    #  monitoring/HelmRelease/open-telemetry-collector/monitoring/DaemonSet/open-telemetry-collector-opentelemetry-collector-agent.yaml
     - image: docker.io/vladgh/gpg:1.3.5                                                                                                               #  default/Job/flux-generate-gpg-key-secret-main.yaml
-    - image: ghcr.io/aquasecurity/trivy-operator:0.20.0                                                                                               #  trivy/HelmRelease/trivy/trivy/Deployment/trivy-trivy-operator.yaml
+    - image: ghcr.io/aquasecurity/trivy-operator:0.20.1                                                                                               #  trivy/HelmRelease/trivy/trivy/Deployment/trivy-trivy-operator.yaml
     - image: ghcr.io/kyverno/background-controller:v1.11.4                                                                                            #  kyverno/HelmRelease/kyverno/kyverno/Deployment/kyverno-background-controller.yaml
     - image: ghcr.io/kyverno/cleanup-controller:v1.11.4                                                                                               #  kyverno/HelmRelease/kyverno/kyverno/Deployment/kyverno-cleanup-controller.yaml
     - image: ghcr.io/kyverno/kyverno:v1.11.4                                                                                                          #  kyverno/HelmRelease/kyverno/kyverno/Deployment/kyverno-admission-controller.yaml
