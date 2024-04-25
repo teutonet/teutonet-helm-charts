@@ -24,9 +24,6 @@ spec:
   teutonetesCloudRef:
     kind: TeutonetesCloud
     name: {{ required "You need to set the `cloud`" .Values.cloud }}
-  {{- with .Values.metadata.environment }}
-  environment: {{ . | quote }}
-  {{- end }}
   {{- with .Values.version }}
   version: {{ printf "v%d.%d.%d" (.major | int) (.minor | int) (.patch | int) }}
   {{- end }}
