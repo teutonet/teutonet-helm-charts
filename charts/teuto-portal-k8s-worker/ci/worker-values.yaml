@@ -10,7 +10,6 @@ worker:
       - teuto-net
     syncInterval: 10s
     loggingFormat: json
-    environment: production
   kubeconfig:
     secret:
       name: k8s-access-token
