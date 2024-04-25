@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.1.3](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.1.2...base-cluster-v6.1.3) (2024-04-25)
+
+
+### Bug Fixes
+
+* **base-cluster/kyverno+flux:** remove old policy they don't exist upstream anymore as well ([#898](https://github.com/teutonet/teutonet-helm-charts/issues/898)) ([ab5055e](https://github.com/teutonet/teutonet-helm-charts/commit/ab5055e89cb71e9563a4944bcd216397f08665fc))
+
 ## [6.1.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.1.1...base-cluster-v6.1.2) (2024-04-24)
 
 
