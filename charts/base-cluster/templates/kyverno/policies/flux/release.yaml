@@ -1,3 +1,0 @@
-{{- if .Values.kyverno.enabled }}
-{{- include "base-cluster.kyverno.policy" (dict "name" "flux-multi-tenancy" "context" .) }}
-{{- end }}
