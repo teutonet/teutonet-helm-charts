@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v2.0.0...teuto-portal-k8s-worker-v3.0.0) (2024-04-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* **teuto-portal-k8s-worker:** Revert "feat(teuto-portal-k8s-worker… ([#904](https://github.com/teutonet/teutonet-helm-charts/issues/904))
+
+### Features
+
+* **teuto-portal-k8s-worker:** use otel auto-detection instead of manual configuration ([#886](https://github.com/teutonet/teutonet-helm-charts/issues/886)) ([21cf05e](https://github.com/teutonet/teutonet-helm-charts/commit/21cf05e88277ebd367b1b828810c3322a413147b))
+
+
+### Miscellaneous Chores
+
+* **teuto-portal-k8s-worker:** Revert "feat(teuto-portal-k8s-worker… ([#904](https://github.com/teutonet/teutonet-helm-charts/issues/904)) ([5776f0f](https://github.com/teutonet/teutonet-helm-charts/commit/5776f0f113724cd67c011b33152a8f9873247703))
+
 ## [2.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v1.0.2...teuto-portal-k8s-worker-v2.0.0) (2024-04-12)
 
 
