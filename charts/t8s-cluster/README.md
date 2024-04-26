@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # t8s-cluster
 
-![Version: 6.0.1](https://img.shields.io/badge/Version-6.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 7.0.0](https://img.shields.io/badge/Version-7.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -39,6 +39,10 @@ The resources of the ccm and the csi are now managed via helm instead of
 kustomize, which means that you have to either manually add the required labels to
 everything or, which we would recommend, just uninstall the ccm, the csi and
 delete the cloud-config secret, as these will just be recreated during installation.
+
+### 5.x.x -> 7.x.x
+
+Just skip version 6.x.x, as there was a mistake and it has been reverted.
 
 # t8s cluster configuration
 
@@ -309,7 +313,6 @@ bitnami/kubectl
 | - [configGroupUrl](#metadata_configGroupUrl )               | No      | string           | No         | -          | -                 |
 | - [gopassName](#metadata_gopassName )                       | No      | string           | No         | -          | -                 |
 | - [remarks](#metadata_remarks )                             | No      | string           | No         | -          | -                 |
-| - [environment](#metadata_environment )                     | No      | string           | No         | -          | -                 |
 
 ### <a name="metadata_serviceLevelAgreement"></a>2.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > metadata > serviceLevelAgreement`
 
@@ -359,12 +362,6 @@ Must be one of:
 | **Type** | `string` |
 
 ### <a name="metadata_remarks"></a>2.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > metadata > remarks`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
-
-### <a name="metadata_environment"></a>2.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > metadata > environment`
 
 |          |          |
 | -------- | -------- |

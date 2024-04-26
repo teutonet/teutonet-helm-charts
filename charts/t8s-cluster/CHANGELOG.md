@@ -1,5 +1,22 @@
 # Changelog
 
+## [7.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v6.0.1...t8s-cluster-v7.0.0) (2024-04-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* **t8s-cluster/management-cluster:** Revert "feat(t8s-cluster/mana… ([#903](https://github.com/teutonet/teutonet-helm-charts/issues/903))
+
+### Bug Fixes
+
+* **t8s-cluster/workload-cluster:** helmrepository references ([#893](https://github.com/teutonet/teutonet-helm-charts/issues/893)) ([86c314d](https://github.com/teutonet/teutonet-helm-charts/commit/86c314dcc3db35fdc023935122940025b47261aa))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.29.4 ([#872](https://github.com/teutonet/teutonet-helm-charts/issues/872)) ([fe9037b](https://github.com/teutonet/teutonet-helm-charts/commit/fe9037b432f3bae6d790d1e23cd9dafa75d1f01d))
+* **t8s-cluster/management-cluster:** Revert "feat(t8s-cluster/mana… ([#903](https://github.com/teutonet/teutonet-helm-charts/issues/903)) ([d59bc9e](https://github.com/teutonet/teutonet-helm-charts/commit/d59bc9e1dbeae46d10e816b2fcc8d9299f4ac9e4))
+
 ## [6.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v6.0.0...t8s-cluster-v6.0.1) (2024-04-15)
 
 
