@@ -20,15 +20,20 @@ dependencies:
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
 annotations:
   artifacthub.io/images: |
-    - image: docker.io/bitnami/kubectl:1.29.4                                        #  default/Job/t8s-cluster-uninstall-cleanup.yaml
-    - image: k8s.gcr.io/sig-storage/csi-attacher:v3.4.0                              #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
-    - image: k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.5.0                 #  default/HelmRelease/t8s-cluster-csi/kube-system/DaemonSet/openstack-cinder-csi-nodeplugin.yaml
-    - image: k8s.gcr.io/sig-storage/csi-provisioner:v3.1.0                           #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
-    - image: k8s.gcr.io/sig-storage/csi-resizer:v1.4.0                               #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
-    - image: k8s.gcr.io/sig-storage/csi-snapshotter:v5.0.1                           #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
-    - image: k8s.gcr.io/sig-storage/livenessprobe:v2.6.0                             #  default/HelmRelease/t8s-cluster-csi/kube-system/DaemonSet/openstack-cinder-csi-nodeplugin.yaml
-    - image: k8s.gcr.io/sig-storage/livenessprobe:v2.6.0                             #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
-    - image: registry.k8s.io/etcd:3.5.12-0                                           #  default/HelmRelease/t8s-cluster-etcd-defrag/kube-system/CronJob/kube-etcd-defrag.yaml
-    - image: registry.k8s.io/provider-os/cinder-csi-plugin:v1.25.6                   #  default/HelmRelease/t8s-cluster-csi/kube-system/DaemonSet/openstack-cinder-csi-nodeplugin.yaml
-    - image: registry.k8s.io/provider-os/cinder-csi-plugin:v1.25.6                   #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
-    - image: registry.k8s.io/provider-os/openstack-cloud-controller-manager:v1.25.6  #  default/HelmRelease/t8s-cluster-ccm/kube-system/DaemonSet/openstack-cloud-controller-manager.yaml
+    - image: docker.io/bitnami/kubectl:1.29.4                                                                                  #  default/Job/t8s-cluster-uninstall-cleanup.yaml
+    - image: k8s.gcr.io/sig-storage/csi-attacher:v3.4.0                                                                        #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
+    - image: k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.5.0                                                           #  default/HelmRelease/t8s-cluster-csi/kube-system/DaemonSet/openstack-cinder-csi-nodeplugin.yaml
+    - image: k8s.gcr.io/sig-storage/csi-provisioner:v3.1.0                                                                     #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
+    - image: k8s.gcr.io/sig-storage/csi-resizer:v1.4.0                                                                         #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
+    - image: k8s.gcr.io/sig-storage/csi-snapshotter:v5.0.1                                                                     #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
+    - image: k8s.gcr.io/sig-storage/livenessprobe:v2.6.0                                                                       #  default/HelmRelease/t8s-cluster-csi/kube-system/DaemonSet/openstack-cinder-csi-nodeplugin.yaml
+    - image: k8s.gcr.io/sig-storage/livenessprobe:v2.6.0                                                                       #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
+    - image: quay.io/cilium/cilium:v1.15.4@sha256:b760a4831f5aab71c711f7537a107b751d0d0ce90dd32d8b358df3c5da385426             #  default/HelmRelease/t8s-cluster-cni/kube-system/DaemonSet/cilium.yaml
+    - image: quay.io/cilium/hubble-relay:v1.15.4@sha256:03ad857feaf52f1b4774c29614f42a50b370680eb7d0bfbc1ae065df84b1070a       #  default/HelmRelease/t8s-cluster-cni/kube-system/Deployment/hubble-relay.yaml
+    - image: quay.io/cilium/hubble-ui-backend:v0.13.0@sha256:1e7657d997c5a48253bb8dc91ecee75b63018d16ff5e5797e5af367336bc8803  #  default/HelmRelease/t8s-cluster-cni/kube-system/Deployment/hubble-ui.yaml
+    - image: quay.io/cilium/hubble-ui:v0.13.0@sha256:7d663dc16538dd6e29061abd1047013a645e6e69c115e008bee9ea9fef9a6666          #  default/HelmRelease/t8s-cluster-cni/kube-system/Deployment/hubble-ui.yaml
+    - image: quay.io/cilium/operator-generic:v1.15.4@sha256:404890a83cca3f28829eb7e54c1564bb6904708cdb7be04ebe69c2b60f164e9a   #  default/HelmRelease/t8s-cluster-cni/kube-system/Deployment/cilium-operator.yaml
+    - image: registry.k8s.io/etcd:3.5.12-0                                                                                     #  default/HelmRelease/t8s-cluster-etcd-defrag/kube-system/CronJob/kube-etcd-defrag.yaml
+    - image: registry.k8s.io/provider-os/cinder-csi-plugin:v1.25.6                                                             #  default/HelmRelease/t8s-cluster-csi/kube-system/DaemonSet/openstack-cinder-csi-nodeplugin.yaml
+    - image: registry.k8s.io/provider-os/cinder-csi-plugin:v1.25.6                                                             #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
+    - image: registry.k8s.io/provider-os/openstack-cloud-controller-manager:v1.25.6                                            #  default/HelmRelease/t8s-cluster-ccm/kube-system/DaemonSet/openstack-cloud-controller-manager.yaml
