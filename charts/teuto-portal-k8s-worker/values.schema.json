@@ -196,9 +196,6 @@
             },
             "loggingFormat": {
               "type": "string"
-            },
-            "environment": {
-              "type": "string"
             }
           },
           "additionalProperties": false
