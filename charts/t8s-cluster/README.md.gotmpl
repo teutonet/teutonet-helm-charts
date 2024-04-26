@@ -29,4 +29,9 @@ kustomize, which means that you have to either manually add the required labels 
 everything or, which we would recommend, just uninstall the ccm, the csi and
 delete the cloud-config secret, as these will just be recreated during installation.
 
+
+### 5.x.x -> 7.x.x
+
+Just skip version 6.x.x, as there was a mistake and it has been reverted.
+
 {{ .Files.Get "values.md"  }}

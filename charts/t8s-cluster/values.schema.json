@@ -106,9 +106,6 @@
         },
         "remarks": {
           "type": "string"
-        },
-        "environment": {
-          "type": "string"
         }
       },
       "required": [
