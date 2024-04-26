@@ -2,7 +2,7 @@ apiVersion: v2
 name: teuto-portal-k8s-worker
 description: A Helm chart for deploying the portal worker application to k8s
 type: application
-version: 2.0.0
+version: 3.0.0
 appVersion: 2.0.0
 maintainers:
   - name: cwrau
