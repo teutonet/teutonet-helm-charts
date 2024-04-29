@@ -7,17 +7,22 @@ nameOverride: ""
 fullnameOverride: ""
 
 defaultPodSecurityContext: &defaultPodSecurityContext
-  runAsNonRoot: true
+  fsGroup: 1000
   runAsUser: 1000
   runAsGroup: 1000
+  runAsNonRoot: true
+  fsGroupChangePolicy: OnRootMismatch
 
 defaultSecurityContext: &defaultSecurityContext
+  runAsNonRoot: true
+  readOnlyRootFilesystem: true
   allowPrivilegeEscalation: false
+  privileged: false
   capabilities:
     drop:
       - ALL
-  privileged: false
-  readOnlyRootFilesystem: true
+  runAsGroup: 1000
+  runAsUser: 1000
 
 ckan:
   replicas: 1
@@ -38,11 +43,11 @@ ckan:
     storageClass: ""
     size: 100Mi
   sysadmin:
-    name: ckan_admin
-    password: test1234
-    email: your_email@example.com
-  podSecurityContext: *defaultPodSecurityContext
-  securityContext: *defaultSecurityContext
+    name: ""
+    password: ""
+    email: ""
+  podSecurityContext: {}
+  securityContext: {}
   resources: {}
 
 datapusher:
@@ -62,17 +67,17 @@ postgresql:
   nameOverride: "ckan-postgresql"
   enabled: true
   auth:
-    postgresPassword: &postgresPassword postgres
-    username: ckandbuser
-    password: ckandbpassword
-    database: ckandb
+    postgresPassword: &postgresPassword ""
+    username: ""
+    password: ""
+    database: ""
   ckanDbs:
-    datastoreUsername:  datastore_ro
-    datastorePassword: datastore
-    datastoreDb: datastore
-    datapusherUsername: datapusher
-    datapusherPassword: datapusherpassword
-    datapusherDb: datapusher
+    datastoreUsername: ""
+    datastorePassword: ""
+    datastoreDb: ""
+    datapusherUsername: ""
+    datapusherPassword: ""
+    datapusherDb: ""
   primary:
     initdb:
       user: postgres
@@ -84,7 +89,6 @@ redis:
   enabled: true
   auth:
     enabled: false
-    password: redis
   replica:
     replicaCount: 1
 
@@ -105,8 +109,8 @@ solr:
     - ckan
   auth:
     enabled: false
-    adminUsername: solr
-    adminPassword: solrpass
+    adminUsername: ""
+    adminPassword: ""
   cloudEnabled: false
   cloudBootstrap: false
   collectionReplicas: 1

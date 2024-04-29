@@ -17,11 +17,18 @@ spec:
     spec:
       {{- include "common.images.renderPullSecrets" ( dict "images" (list .Values.datapusher.image) "context" $) | indent 6 }}
       automountServiceAccountToken: false
+      securityContext:
+      {{- toYaml .Values.datapusher.podSecurityContext | default dict | nindent 8 }}
+      volumes:
+        - name: cache-volume
+          emptyDir: {}
       containers:
         - name: {{ printf "%s-%s" .Chart.Name $name }}
           #env: TODO Container ned psycopg2
           #  - name: DATAPUSHER_SQLALCHEMY_DATABASE_URI
           #    value: "postgresql://{{ .Values.postgresql.auth.username }}:{{ .Values.postgresql.auth.password }}@main-postgresql/{{ .Values.postgresql.auth.database}}"
+          securityContext:
+          {{- toYaml .Values.datapusher.securityContext | default dict | nindent 12 }}
           image: {{ include "common.images.image" (dict "imageRoot" .Values.datapusher.image "global" .Values.global) }}
           imagePullPolicy: {{ .Values.datapusher.image.pullPolicy }}
           ports:
@@ -30,3 +37,6 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.datapusher.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /tmp
+              name: cache-volume

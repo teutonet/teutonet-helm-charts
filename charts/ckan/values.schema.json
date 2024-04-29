@@ -15,7 +15,16 @@
           ]
         },
         "imagePullSecrets": {
-          "type": "array"
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
         },
         "storageClass": {
           "$ref": "#/$defs/storageClass"
@@ -78,6 +87,11 @@
           "sysadmin": {
             "type": "object",
             "additionalProperties": false,
+            "required": [
+              "name",
+              "password",
+              "email"
+            ],
             "properties": {
               "name": {
                 "type": "string"
@@ -105,13 +119,6 @@
               },
               "mailFrom": {
                 "$ref": "#/$defs/email"
-              },
-              "tls": {
-                "type": "string",
-                "enum": [
-                  "enabled",
-                  "disabled"
-                ]
               },
               "starttls": {
                 "type": "boolean"
@@ -156,8 +163,35 @@
           "enabled": {
             "type": "boolean"
           },
+          "auth": {
+            "type": "object",
+            "required": [
+              "postgresPassword",
+              "username",
+              "password",
+              "database"
+            ],
+            "properties": {
+              "postgresPassword": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "database": {
+                "type": "string"
+              }
+            }
+          },
           "ckanDbs": {
             "type": "object",
+            "required": [
+              "datastore",
+              "datapusher"
+            ],
             "patternProperties": {
               "datastore|datapusher": {
                 "type": "object",

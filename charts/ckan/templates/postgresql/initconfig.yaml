@@ -7,13 +7,13 @@ metadata:
     app.kubernetes.io/component: {{ $name }}
 stringData:
   00_initdb.sql: |
-    CREATE ROLE {{ .Values.postgresql.auth.datastoreUsername }} WITH NOSUPERUSER NOCREATEDB NOCREATEROLE LOGIN PASSWORD '{{ .Values.postgresql.auth.datastorePassword }}';
-    CREATE DATABASE {{ .Values.postgresql.auth.datastoreDb }} OWNER {{ .Values.postgresql.auth.datastoreUsername }} ENCODING 'utf-8';
-    CREATE ROLE {{ .Values.postgresql.auth.datapusherUsername }} WITH NOSUPERUSER NOCREATEDB NOCREATEROLE LOGIN PASSWORD '{{ .Values.postgresql.auth.datapusherPassword }}';
-    CREATE DATABASE {{ .Values.postgresql.auth.datapusherDb }} OWNER {{ .Values.postgresql.auth.datapusherUsername }} ENCODING 'utf-8';
+    CREATE ROLE {{ .Values.postgresql.ckanDbs.datastoreUsername }} WITH NOSUPERUSER NOCREATEDB NOCREATEROLE LOGIN PASSWORD '{{ .Values.postgresql.ckanDbs.datastorePassword }}';
+    CREATE DATABASE {{ .Values.postgresql.ckanDbs.datastoreDb }} OWNER {{ .Values.postgresql.ckanDbs.datastoreUsername }} ENCODING 'utf-8';
+    CREATE ROLE {{ .Values.postgresql.ckanDbs.datapusherUsername }} WITH NOSUPERUSER NOCREATEDB NOCREATEROLE LOGIN PASSWORD '{{ .Values.postgresql.ckanDbs.datapusherPassword }}';
+    CREATE DATABASE {{ .Values.postgresql.ckanDbs.datapusherDb }} OWNER {{ .Values.postgresql.ckanDbs.datapusherUsername }} ENCODING 'utf-8';
 
   10_set_permissions.sql: |
-    \c {{ .Values.postgresql.auth.datastoreDb }};
+    \c {{ .Values.postgresql.ckanDbs.datastoreDb }};
     -- revoke permissions for the read-only user
     REVOKE CREATE ON SCHEMA public FROM PUBLIC;
     REVOKE USAGE ON SCHEMA public FROM PUBLIC;
@@ -22,18 +22,18 @@ stringData:
     GRANT USAGE ON SCHEMA public TO {{ .Values.postgresql.auth.username }};
 
     -- take connect permissions from main db
-    REVOKE CONNECT ON DATABASE {{ .Values.postgresql.auth.database }} FROM {{ .Values.postgresql.auth.datastoreUsername }};
+    REVOKE CONNECT ON DATABASE {{ .Values.postgresql.auth.database }} FROM {{ .Values.postgresql.ckanDbs.datastoreUsername }};
 
     -- grant select permissions for read-only user
-    GRANT CONNECT ON DATABASE {{ .Values.postgresql.auth.datastoreDb }} TO {{ .Values.postgresql.auth.datastoreUsername }};
-    GRANT USAGE ON SCHEMA public TO {{ .Values.postgresql.auth.datastoreUsername }};
+    GRANT CONNECT ON DATABASE {{ .Values.postgresql.ckanDbs.datastoreDb }} TO {{ .Values.postgresql.ckanDbs.datastoreUsername }};
+    GRANT USAGE ON SCHEMA public TO {{ .Values.postgresql.ckanDbs.datastoreUsername }};
 
     -- grant access to current tables and views to read-only user
-    GRANT SELECT ON ALL TABLES IN SCHEMA public TO {{ .Values.postgresql.auth.datastoreUsername }};
+    GRANT SELECT ON ALL TABLES IN SCHEMA public TO {{ .Values.postgresql.ckanDbs.datastoreUsername }};
 
     -- grant access to new tables and views by default
     ALTER DEFAULT PRIVILEGES FOR USER {{ .Values.postgresql.auth.username }} IN SCHEMA public
-    GRANT SELECT ON TABLES TO {{ .Values.postgresql.auth.datastoreUsername }};
+    GRANT SELECT ON TABLES TO {{ .Values.postgresql.ckanDbs.datastoreUsername }};
 
     -- a view for listing valid table (resource id) and view names
     CREATE OR REPLACE VIEW "_table_metadata" AS
@@ -56,7 +56,7 @@ stringData:
                 SELECT oid FROM pg_namespace WHERE nspname='public')
         ORDER BY dependee.oid DESC;
     ALTER VIEW "_table_metadata" OWNER TO {{ .Values.postgresql.auth.username }};
-    GRANT SELECT ON "_table_metadata" TO {{ .Values.postgresql.auth.datastoreUsername }};
+    GRANT SELECT ON "_table_metadata" TO {{ .Values.postgresql.ckanDbs.datastoreUsername }};
 
     -- _full_text fields are now updated by a trigger when set to NULL
     CREATE OR REPLACE FUNCTION populate_full_text_trigger() RETURNS trigger

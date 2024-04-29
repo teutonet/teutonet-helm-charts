@@ -24,12 +24,14 @@ spec:
         - name: "ckan"
           persistentVolumeClaim:
             claimName: {{ $claimName }}
+      securityContext:
+      {{- toYaml .Values.ckan.podSecurityContext | default dict | nindent 8 }}
       containers:
         - name: {{ printf "%s-%s" .Chart.Name $name }}
           env:
             - name: CKAN_SITE_ID
               value: {{ .Values.ckan.siteId }}
-            - name: CKAN_SITE_TITLE
+            - name: CKAN__SITE_TITLE
               value: {{ .Values.ckan.siteTitle | quote }}
             {{- if .Values.ckan.ingress.host }}
             - name: CKAN_SITE_URL
@@ -62,8 +64,6 @@ spec:
                   key: smtpPassword
             - name: CKAN_SMTP_MAIL_FROM
               value: {{ .Values.ckan.smtp.mailFrom }}
-            - name: CKAN_SMTP_TLS
-              value: {{ .Values.ckan.smtp.tls }}
             - name: CKAN_SMTP_STARTTLS
               value: {{ .Values.ckan.smtp.starttls | quote}}
             {{- end }}
@@ -103,13 +103,22 @@ spec:
             - name: DATASTORE_DB
               value: {{ .Values.postgresql.ckanDbs.datastoreDb }}
             - name: CKAN_SQLALCHEMY_URL
-              value: "postgresql://{{ .Values.postgresql.auth.username }}:{{ .Values.postgresql.auth.password }}@{{ printf "%s-%s" (include "common.names.fullname" $) "postgresql" }}/{{ .Values.postgresql.auth.database}}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
+                  key: ckanSqlAlchemyUrl
             - name: CKAN_DATASTORE_WRITE_URL
-              value: "postgresql://{{ .Values.postgresql.auth.username }}:{{ .Values.postgresql.auth.password }}@{{ printf "%s-%s" (include "common.names.fullname" $) "postgresql" }}/{{ .Values.postgresql.auth.datastoreDb}}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
+                  key: datastoreWriteUrl
             - name: CKAN_DATASTORE_READ_URL
-              value: "postgresql://{{ .Values.postgresql.auth.datastoreUsername }}:{{ .Values.postgresql.auth.datastorePassword }}@{{ printf "%s-%s" (include "common.names.fullname" $) "postgresql" }}/{{ .Values.postgresql.auth.datastoreDb}}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
+                  key: datastoreReadUrl
             - name: CKAN_SOLR_URL
-              value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "solr-headles" }}:{{ include "ckan.solr.service.port" $ }}/solr/ckan"
+              value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "solr-headless" }}:{{ include "ckan.solr.service.port" $ }}/solr/ckan"
             {{- if .Values.solr.auth.enabled }}
             - name: CKAN_SOLR_USER
               valueFrom:
@@ -123,13 +132,15 @@ spec:
                   key: solrPassword
             {{- end }}
             - name: CKAN_REDIS_URL
-              value: "redis://{{ printf "%s-%s" (include "common.names.fullname" $) "redis-headles" }}:{{ include "ckan.redis.service.port" $}}/0"
+              value: "redis://{{ printf "%s-%s" (include "common.names.fullname" $) "redis-headless" }}:{{ include "ckan.redis.service.port" $}}/0"
             - name: CKAN_DATAPUSHER_URL
               value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "datapusher" }}:{{ include "ckan.datapusher.service.port" $ }}"
-            - name: CKAN_DATAPUSHER_CALLBACK_URL_BASE
-              value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "ckan" }}:{{ include "ckan.ckan.service.port" $ }}"
-            - name: CKAN_PLUGINS
+            - name: CKAN__DATAPUSHER__CALLBACK_URL_BASE
+              value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "ckan" }}:{{ include "ckan.ckan.service.port" $ }}/"
+            - name: CKAN__PLUGINS
               value: "envvars image_view text_view recline_view datastore datapusher"
+          securityContext:
+          {{- toYaml .Values.ckan.securityContext | default dict | nindent 12 }}
           image: {{ include "common.images.image" (dict "imageRoot" .Values.ckan.image "global" .Values.global) }}
           imagePullPolicy: {{ .Values.ckan.image.pullPolicy }}
           volumeMounts:
@@ -144,5 +155,4 @@ spec:
             {{- toYaml .Values.ckan.resources | nindent 12 }}
 
 #TODO Email notification
-#TODO Security context
-#TODO Security options
+#TODO persist datapusher token else allway regen if ckan restart
