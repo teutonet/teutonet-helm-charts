@@ -12,10 +12,6 @@ spec:
       app.kubernetes.io/component: {{ $name }}
   template:
     metadata:
-      {{- with .Values.datapusher.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels: {{- include "common.labels.matchLabels" . | nindent 8 }}
         app.kubernetes.io/component: {{ $name }}
     spec:
@@ -29,8 +25,8 @@ spec:
           image: {{ include "common.images.image" (dict "imageRoot" .Values.datapusher.image "global" .Values.global) }}
           imagePullPolicy: {{ .Values.datapusher.image.pullPolicy }}
           ports:
-            - name: ckan
-              containerPort: {{ include "ckan.ckan.service.port" $ }}
+            - name: datapusher
+              containerPort: {{ include "ckan.datapusher.service.port" $ }}
               protocol: TCP
           resources:
             {{- toYaml .Values.datapusher.resources | nindent 12 }}

@@ -1,3 +1,11 @@
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: ""
+
+nameOverride: ""
+fullnameOverride: ""
+
 defaultPodSecurityContext: &defaultPodSecurityContext
   runAsNonRoot: true
   runAsUser: 1000
@@ -21,13 +29,10 @@ ckan:
     tag: 0.1.0
     digest: ""
   ingress:
-    enabled: true
     className: ""
     annotations:
-      # kubernetes.io/ingress.class: nginx
       kubernetes.io/tls-acme: "true"
-    host: ckan.local
-    existingCertificate: ""
+    host: ""
   persistence:
     accessMode: ReadWriteOnce
     storageClass: ""
@@ -38,8 +43,6 @@ ckan:
     email: your_email@example.com
   podSecurityContext: *defaultPodSecurityContext
   securityContext: *defaultSecurityContext
-  storagePath: "/var/lib/ckan/default"
-  podAnnotations: {}
   resources: {}
 
 datapusher:
@@ -53,7 +56,6 @@ datapusher:
     digest: ""
   podSecurityContext: *defaultPodSecurityContext
   securityContext: *defaultSecurityContext
-  podAnnotations: {}
   resources: {}
 
 postgresql:
@@ -64,6 +66,7 @@ postgresql:
     username: ckandbuser
     password: ckandbpassword
     database: ckandb
+  ckanDbs:
     datastoreUsername:  datastore_ro
     datastorePassword: datastore
     datastoreDb: datastore

@@ -1,4 +1,4 @@
-{{- if .Values.ckan.ingress.enabled -}}
+{{- if .Values.ckan.ingress.host -}}
 {{- $fullName := include "common.names.fullname" . -}}
 {{- $svcName := printf "%s-%s" (include "common.names.fullname" .) "ckan"  -}}
 apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
@@ -8,8 +8,7 @@ metadata:
   labels:
     {{- include "common.labels.standard" . | nindent 4 }}
   {{- with .Values.ckan.ingress.annotations }}
-  annotations:
-    {{- toYaml . | nindent 4 }}
+  annotations: {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   {{- if .Values.ckan.ingress.className }}
@@ -18,7 +17,7 @@ spec:
   tls:
     - hosts:
         - {{ required "You must provide a host, when enabling ingress" .Values.ckan.ingress.host | quote }}
-      secretName: {{ include "common.secrets.name" (dict "existingSecret" .Values.ckan.ingress.existingCertificate "defaultNameSuffix" "custom-certificate" "context" $) }}
+      secretName: {{ include "common.secrets.name" (dict "existingSecret" .Values.ckan.ingress.existingCertificate "defaultNameSuffix" "certificate" "context" $) }}
   rules:
     - host: {{ required "You must provide a host, when enabling ingress" .Values.ckan.ingress.host | quote }}
       http:
