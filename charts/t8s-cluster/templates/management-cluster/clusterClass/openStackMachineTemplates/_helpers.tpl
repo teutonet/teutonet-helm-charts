@@ -26,7 +26,7 @@
   {{- $securityGroups = append $securityGroups "default" | sortAlpha | uniq }}
   {{- $securityGroupsObject := list -}}
   {{- range $name := $securityGroups -}}
-    {{- $securityGroupsObject = append $securityGroupsObject (dict "filter" (dict) "name" $name)}}
+    {{- $securityGroupsObject = append $securityGroupsObject (dict "name" $name)}}
   {{- end -}}
   {{- toYaml $securityGroupsObject -}}
 {{- end -}}
