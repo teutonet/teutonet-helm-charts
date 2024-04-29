@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v7.0.0...t8s-cluster-v7.0.1) (2024-04-29)
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/management-cluster:** remove removed field ([#913](https://github.com/teutonet/teutonet-helm-charts/issues/913)) ([d30cf03](https://github.com/teutonet/teutonet-helm-charts/commit/d30cf038a751cca2b0b781fee1657f31eb132050))
+
 ## [7.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v6.0.1...t8s-cluster-v7.0.0) (2024-04-26)
 
 
