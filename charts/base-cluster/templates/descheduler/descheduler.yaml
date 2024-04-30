@@ -34,14 +34,6 @@ spec:
     kind: Deployment
     startingDeadlineSeconds: 120
     priorityClassName: system-cluster-critical
-    kind: Deployment
-    {{- if .Values.monitoring.prometheus.enabled }}
-    service:
-      enabled: true
-    serviceMonitor:
-      enabled: true
-      additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 8 }}
-    {{- end }}
     deschedulerPolicy:
       evictLocalStoragePods: true
       strategies: {{- toYaml .Values.descheduler.strategies | nindent 8 }}
