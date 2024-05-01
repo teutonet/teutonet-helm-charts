@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.0.0...teuto-portal-k8s-worker-v3.1.0) (2024-05-01)
+
+
+### Features
+
+* **teuto-portal-k8s-worker:** update image ([#910](https://github.com/teutonet/teutonet-helm-charts/issues/910)) ([a2572e5](https://github.com/teutonet/teutonet-helm-charts/commit/a2572e50a7bf227b3777a204e5878a2c7821ac52))
+
 ## [3.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v2.0.0...teuto-portal-k8s-worker-v3.0.0) (2024-04-26)
 
 
