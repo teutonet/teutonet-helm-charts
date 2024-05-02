@@ -17,4 +17,4 @@ dependencies:
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
 annotations:
   artifacthub.io/images: |
-    - image: registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker:3.0.1  #  default/Deployment/teuto-portal-k8s-worker.yaml
+    - image: registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker:3.1.0  #  default/Deployment/teuto-portal-k8s-worker.yaml
