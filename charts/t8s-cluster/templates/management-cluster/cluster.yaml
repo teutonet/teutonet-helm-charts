@@ -10,7 +10,6 @@ metadata:
   annotations:
     t8s.teuto.net/cluster_support_project_url: {{ .Values.metadata.supportProjectUrl | quote}}
     t8s.teuto.net/cluster_config_group_url: {{ .Values.metadata.configGroupUrl | quote }}
-    t8s.teuto.net/gopass_name: {{ .Values.metadata.gopassName | quote }}
     t8s.teuto.net/remarks: {{ .Values.metadata.remarks | quote }}
 spec:
   customerID: {{ .Values.metadata.customerID }}
