@@ -29,180 +29,72 @@
         "storageClass": {
           "$ref": "#/$defs/storageClass"
         }
-      },
-      "ckan": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "replicas": {
-            "type": "integer"
-          },
-          "siteId":{
-            "type": "string",
-            "description": "The search index is linked to the value of the ckan.site_id, so if you have more than one CKAN instance using the same solr_url, they will each have a separate search index as long as their ckan.site_id values are different."
-          },
-          "siteTitle": {
-            "type": "string",
-            "description": "This sets the name of the site, as displayed in the CKAN web interface."
-          },
-          "image": {
-            "$ref": "#/$defs/image"
-          },
-          "ingress": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "className": {
-                "type": "string"
-              },
-              "annotations": {
-                "type": "object"
-              },
-              "host": {
-                "type": "string"
-              }
+      }
+    },
+    "ckan": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "readiness|liveness": {
+          "type": "object",
+          "properties": {
+            "initialDelaySeconds": {
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "type": "integer"
+            },
+            "failureThreshold": {
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "type": "integer"
             }
           },
-          "persistence": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "accessMode": {
-                "type": "string",
-                "enum": [
-                  "ReadWriteOnce",
-                  "ReadOnlyMany",
-                  "ReadWriteMany",
-                  "ReadWriteOncePod"
-                ]
-              },
-              "storageClass": {
-                "$ref": "#/$defs/storageClass"
-              },
-              "size": {
-                "$ref": "#/$defs/quantity"
-              }
-            }
-          },
-          "sysadmin": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "name",
-              "password",
-              "email"
-            ],
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              },
-              "email": {
-                "$ref": "#/$defs/email"
-              }
-            }
-          },
-          "smtp": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "server": {
-                "type": "string"
-              },
-              "user": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              },
-              "mailFrom": {
-                "$ref": "#/$defs/email"
-              },
-              "starttls": {
-                "type": "boolean"
-              }
-            }
-          },
-          "podSecurityContext": {
-            "type": "object"
-          },
-          "securityContext": {
-            "type": "object"
-          },
-          "resources": {
-            "type": "object"
-          }
+          "additionalProperties": false
         }
       },
-      "datapuscher": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "replicas": {
-            "type": "integer"
-          },
-          "image": {
-            "$ref": "#/$defs/image"
-          },
-          "podSecurityContext": {
-            "type": "object"
-          },
-          "securityContext": {
-            "type": "object"
-          },
-          "resources": {
-            "type": "object"
-          }
-        }
-      },
-      "postgresql": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
-          },
-          "auth": {
-            "type": "object",
-            "required": [
-              "postgresPassword",
-              "username",
-              "password",
-              "database"
-            ],
-            "properties": {
-              "postgresPassword": {
-                "type": "string"
-              },
-              "username": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              },
-              "database": {
-                "type": "string"
-              }
-            }
-          },
-          "ckanDbs": {
-            "type": "object",
-            "required": [
-              "datastore",
-              "datapusher"
-            ],
-            "patternProperties": {
-              "datastore|datapusher": {
+      "properties": {
+        "siteId":{
+          "type": "string",
+          "description": "The search index is linked to the value of the ckan.site_id, so if you have more than one CKAN instance using the same solr_url, they will each have a separate search index as long as their ckan.site_id values are different."
+        },
+        "siteTitle": {
+          "type": "string",
+          "description": "This sets the name of the site, as displayed in the CKAN web interface."
+        },
+        "image": {
+          "$ref": "#/$defs/image"
+        },
+        "ingress": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ingressClassName": {
+              "type": "string"
+            },
+            "annotations": {
+              "type": "object"
+            },
+            "tls": {
+              "type": "boolean",
+              "title": "Create a TLS secret"
+            },
+            "hostname": {
+              "type": "string"
+            },
+            "selfSigned": {
+              "type": "boolean"
+            },
+            "existingSecret": {
+              "type": "string"
+            },
+            "extraTls": {
+              "type": "array",
+              "items": {
                 "type": "object",
                 "properties": {
-                  "username": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string"
-                  },
-                  "db": {
+                  "name": {
                     "type": "string"
                   }
                 },
@@ -210,22 +102,142 @@
               }
             }
           }
+        },
+        "persistence": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "accessMode": {
+              "type": "string",
+              "enum": [
+                "ReadWriteOnce",
+                "ReadOnlyMany",
+                "ReadWriteMany",
+                "ReadWriteOncePod"
+              ]
+            },
+            "storageClass": {
+              "$ref": "#/$defs/storageClass"
+            },
+            "size": {
+              "$ref": "#/$defs/quantity"
+            }
+          }
+        },
+        "sysadmin": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "email": {
+              "$ref": "#/$defs/email"
+            }
+          }
+        },
+        "smtp": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "server": {
+              "type": "string"
+            },
+            "user": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "mailFrom": {
+              "$ref": "#/$defs/email"
+            },
+            "starttls": {
+              "type": "boolean"
+            }
+          }
+        },
+        "podSecurityContext": {
+          "type": "object"
+        },
+        "securityContext": {
+          "type": "object"
+        },
+        "resources": {
+          "type": "object"
         }
-      },
-      "redis": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
+      }
+    },
+    "datapuscher": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "image": {
+          "$ref": "#/$defs/image"
+        },
+        "podSecurityContext": {
+          "type": "object"
+        },
+        "securityContext": {
+          "type": "object"
+        },
+        "resources": {
+          "type": "object"
+        }
+      }
+    },
+    "postgresql": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "ckanDbs": {
+          "type": "object",
+          "properties": {
+            "postgresPassword": {
+              "type": "string"
+            },
+            "replicationPassword": {
+              "type": "string"
+            }
+          },
+          "patternProperties": {
+            "datastore|datapusher|ckan": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "db": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
           }
         }
-      },
-      "solr": {
-        "type": "object",
-        "properties": {
-          "enabled": {
-            "type": "boolean"
-          }
+      }
+    },
+    "redis": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "solr": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
         }
       }
     }

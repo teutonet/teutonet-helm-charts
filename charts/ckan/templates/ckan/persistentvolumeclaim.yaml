@@ -5,6 +5,7 @@ metadata:
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: {{ $name }}
   name: {{ printf "%s-%s" (include "common.names.fullname" $) $name | quote }}
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   accessModes:
     - {{ .Values.ckan.persistence.accessMode }}

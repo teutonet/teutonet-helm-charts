@@ -2,4 +2,4 @@ Thanks for installing ckan.
 
 Use the following URL to access ckan UI:
 
-https://{{ .Values.ckan.ingress.host }}
+https://{{ .Values.ckan.ingress.hostname }}

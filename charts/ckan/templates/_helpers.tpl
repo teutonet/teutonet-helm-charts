@@ -13,3 +13,15 @@
 {{- define "ckan.solr.service.port" -}}
 8983
 {{- end -}}
+
+{{- define "ckan.postgresql.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "postgresql" "chartValues" .Values.postgresql "context" $) -}}
+{{- end -}}
+
+{{- define "ckan.solr.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "solr" "chartValues" .Values.solr "context" $) -}}
+{{- end -}}
+
+{{- define "ckan.redis.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "redis" "chartValues" .Values.redis "context" $) -}}
+{{- end -}}

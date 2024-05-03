@@ -1,24 +1,4 @@
 ckan:
   ingress:
-    host: "ckan.test"
-  sysadmin:
-    name: "ckan_admin"
-    password: "test1234"
-    email: "admin@test.com"
-
-postgresql:
-  auth:
-    postgresPassword: &postgresPassword "postgres"
-    username: "ckan"
-    password: "ckanpass"
-    database: "ckandb"
-  ckanDbs:
-    datastoreUsername: "datastore"
-    datastorePassword: "datastorepass"
-    datastoreDb: "datastoredb"
-    datapusherUsername: "datapusher"
-    datapusherPassword: "datapusherpass"
-    datapusherDb: "datapusherdb"
-  primary:
-    initdb:
-      password: *postgresPassword
+    hostname: "ckan.test"
+    tls: true

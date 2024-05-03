@@ -4,12 +4,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ printf "%s-%s" (include "common.names.fullname" $) $name | quote }}
+  namespace: {{ .Release.Namespace | quote }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: {{ $name }}
 spec:
-  replicas: {{ .Values.ckan.replicas }}
+  replicas: 1
   strategy:
-    type: RollingUpdate
+    type: Recreate
   selector:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
       app.kubernetes.io/component: {{ $name }}
@@ -17,6 +18,8 @@ spec:
     metadata:
       labels: {{- include "common.labels.matchLabels" . | nindent 8 }}
         app.kubernetes.io/component: {{ $name }}
+      annotations:
+        checksum/secret: {{ include "common.utils.checksumTemplate" (dict "path" "/postgresql/secret.yaml" "context" $) }}-{{ include "common.utils.checksumTemplate" (dict "path" "/postgresql/secret.yaml" "context" $) }}{{ if .Values.solr.auth.enabled}}-{{ include "common.utils.checksumTemplate" (dict "path" "/solr/secret.yaml" "context" $) }}{{ end }}
     spec:
       {{- include "common.images.renderPullSecrets" ( dict "images" (list .Values.ckan.image) "context" $) | indent 6 }}
       automountServiceAccountToken: false
@@ -33,9 +36,9 @@ spec:
               value: {{ .Values.ckan.siteId }}
             - name: CKAN__SITE_TITLE
               value: {{ .Values.ckan.siteTitle | quote }}
-            {{- if .Values.ckan.ingress.host }}
+            {{- if .Values.ckan.ingress.hostname }}
             - name: CKAN_SITE_URL
-              value: "https://{{ .Values.ckan.ingress.host }}"
+              value: "https://{{ .Values.ckan.ingress.hostname }}"
             {{- end }}
             - name: CKAN_SYSADMIN_NAME
               valueFrom:
@@ -72,67 +75,64 @@ spec:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
-                  key: postgresUsername
+                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
+                  key: postgresPassword
             - name: POSTGRES_DB
               value: postgres
             - name: POSTGRES_HOST
-              value: {{ printf "%s-%s" (include "common.names.fullname" $) "postgresql" }}
+              value: {{ printf "%s-%s" (include "ckan.postgresql.fullname" . ) "primary" }}
             - name: CKAN_DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
+                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
                   key: ckanDatabaseUsername
             - name: CKAN_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
+                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
                   key: ckanDatabasePassword
             - name: CKAN_DB
-              value: {{ .Values.postgresql.auth.database }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
+                  key: ckanDatabase
             - name: DATASTORE_READONLY_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
+                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
                   key: datastoreUsername
             - name: DATASTORE_READONLY_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
+                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
                   key: datastorePassword
             - name: DATASTORE_DB
-              value: {{ .Values.postgresql.ckanDbs.datastoreDb }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
+                  key: datastoreDatabase
             - name: CKAN_SQLALCHEMY_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
-                  key: ckanSqlAlchemyUrl
+              value: "postgresql://$(CKAN_DB_USER):$(CKAN_DB_PASSWORD)@{{ printf "%s-%s" (include "ckan.postgresql.fullname" . ) "primary" }}/$(CKAN_DB)"
             - name: CKAN_DATASTORE_WRITE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
-                  key: datastoreWriteUrl
+              value: "postgresql://$(CKAN_DB_USER):$(CKAN_DB_PASSWORD)@{{ printf "%s-%s" (include "ckan.postgresql.fullname" . ) "primary" }}/$(DATASTORE_DB)"
             - name: CKAN_DATASTORE_READ_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
-                  key: datastoreReadUrl
+              value: "postgresql://$(DATASTORE_READONLY_USER):$(DATASTORE_READONLY_PASSWORD)@{{ printf "%s-%s" (include "ckan.postgresql.fullname" . ) "read" }}/$(DATASTORE_DB)"
             - name: CKAN_SOLR_URL
-              value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "solr-headless" }}:{{ include "ckan.solr.service.port" $ }}/solr/ckan"
+              value: "http://{{ printf "%s-%s" (include "ckan.solr.fullname" . ) "headless" }}:{{ include "ckan.solr.service.port" $ }}/solr/ckan"
             {{- if .Values.solr.auth.enabled }}
             - name: CKAN_SOLR_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
+                  name: {{ printf "%s-config" (include "ckan.solr.fullname" . ) }}
                   key: solrUsername
             - name: CKAN_SOLR_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
+                  name: {{ printf "%s-config" (include "ckan.solr.fullname" . ) }}
                   key: solrPassword
             {{- end }}
             - name: CKAN_REDIS_URL
-              value: "redis://{{ printf "%s-%s" (include "common.names.fullname" $) "redis-headless" }}:{{ include "ckan.redis.service.port" $}}/0"
+              value: "redis://{{ printf "%s-%s" (include "ckan.redis.fullname" . ) "headless" }}:{{ include "ckan.redis.service.port" $}}/0"
             - name: CKAN_DATAPUSHER_URL
               value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "datapusher" }}:{{ include "ckan.datapusher.service.port" $ }}"
             - name: CKAN__DATAPUSHER__CALLBACK_URL_BASE
@@ -141,6 +141,22 @@ spec:
               value: "envvars image_view text_view recline_view datastore datapusher"
           securityContext:
           {{- toYaml .Values.ckan.securityContext | default dict | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /api/3/action/status_show
+              port: http
+            initialDelaySeconds: {{ .Values.ckan.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.ckan.readiness.periodSeconds }}
+            failureThreshold: {{ .Values.ckan.readiness.failureThreshold }}
+            timeoutSeconds: {{ .Values.ckan.readiness.timeoutSeconds }}
+          livenessProbe:
+            httpGet:
+              path: /api/3/action/status_show
+              port: http
+            initialDelaySeconds: {{ .Values.ckan.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.ckan.liveness.periodSeconds }}
+            failureThreshold: {{ .Values.ckan.liveness.failureThreshold }}
+            timeoutSeconds: {{ .Values.ckan.liveness.timeoutSeconds }}
           image: {{ include "common.images.image" (dict "imageRoot" .Values.ckan.image "global" .Values.global) }}
           imagePullPolicy: {{ .Values.ckan.image.pullPolicy }}
           volumeMounts:
@@ -156,3 +172,4 @@ spec:
 
 #TODO Email notification
 #TODO persist datapusher token else allway regen if ckan restart
+#TODO support CKAN HA

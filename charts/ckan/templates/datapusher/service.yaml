@@ -5,6 +5,7 @@ metadata:
   name: {{ printf "%s-%s" (include "common.names.fullname" .) $name }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: {{ $name }}
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   type: ClusterIP
   ports:

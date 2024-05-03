@@ -5,8 +5,11 @@ metadata:
   name: {{ printf "%s-%s" (include "common.names.fullname" $) $name | quote }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: {{ $name }}
+  namespace: {{ .Release.Namespace | quote }}
 spec:
-  replicas: {{ .Values.datapusher.replicas }}
+  replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
       app.kubernetes.io/component: {{ $name }}
