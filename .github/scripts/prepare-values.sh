@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 [[ "$RUNNER_DEBUG" == 1 ]] && set -x
-[[ $- == *x* ]] && export RUNNER_DEBUG=1
+[[ -o xtrace ]] && export RUNNER_DEBUG=1
 
 function mergeYaml() {
   local valuesFile="${1?}"
