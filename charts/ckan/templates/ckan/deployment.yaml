@@ -19,7 +19,7 @@ spec:
       labels: {{- include "common.labels.matchLabels" . | nindent 8 }}
         app.kubernetes.io/component: {{ $name }}
       annotations:
-        checksum/secret: {{ include "common.utils.checksumTemplate" (dict "path" "/postgresql/secret.yaml" "context" $) }}-{{ include "common.utils.checksumTemplate" (dict "path" "/postgresql/secret.yaml" "context" $) }}{{ if .Values.solr.auth.enabled}}-{{ include "common.utils.checksumTemplate" (dict "path" "/solr/secret.yaml" "context" $) }}{{ end }}
+        checksum/secret: {{ include "common.utils.checksumTemplate" (dict "path" "/postgresql/secret.yaml" "context" $) }}-{{ include "common.utils.checksumTemplate" (dict "path" "/postgresql/secret.yaml" "context" $) }}-{{ include "common.utils.checksumTemplate" (dict "path" "/solr/secret.yaml" "context" $) }}
     spec:
       {{- include "common.images.renderPullSecrets" ( dict "images" (list .Values.ckan.image) "context" $) | indent 6 }}
       automountServiceAccountToken: false
@@ -143,7 +143,7 @@ spec:
           {{- toYaml .Values.ckan.securityContext | default dict | nindent 12 }}
           readinessProbe:
             httpGet:
-              path: /api/3/action/status_show
+              path: /api/3/action/group_list
               port: http
             initialDelaySeconds: {{ .Values.ckan.readiness.initialDelaySeconds }}
             periodSeconds: {{ .Values.ckan.readiness.periodSeconds }}
@@ -151,7 +151,7 @@ spec:
             timeoutSeconds: {{ .Values.ckan.readiness.timeoutSeconds }}
           livenessProbe:
             httpGet:
-              path: /api/3/action/status_show
+              path: /api/3/action/group_list
               port: http
             initialDelaySeconds: {{ .Values.ckan.liveness.initialDelaySeconds }}
             periodSeconds: {{ .Values.ckan.liveness.periodSeconds }}

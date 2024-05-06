@@ -76,30 +76,22 @@
             "annotations": {
               "type": "object"
             },
-            "tls": {
-              "type": "boolean",
-              "title": "Create a TLS secret"
-            },
             "hostname": {
               "type": "string"
             },
             "selfSigned": {
               "type": "boolean"
             },
+            "tls": {
+              "type": "object",
+              "properties": {
+                "existingSecret": {
+                  "type": "string"
+                }
+              }
+            },
             "existingSecret": {
               "type": "string"
-            },
-            "extraTls": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": false
-              }
             }
           }
         },

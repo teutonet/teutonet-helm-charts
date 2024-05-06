@@ -9,7 +9,7 @@ metadata:
   labels:
     {{- include "common.labels.standard" . | nindent 4 }}
   annotations:
-    {{- if .Values.ckan.ingress.certManager }}
+    {{- if not .Values.ckan.ingress.tls.existingSecret }}
     kubernetes.io/tls-acme: "true"
     {{- end }}
     {{- if or .Values.ckan.ingress.annotations .Values.commonAnnotations }}
@@ -17,7 +17,7 @@ metadata:
     {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
     {{- end }}
 spec:
-  {{- if and .Values.ckan.ingress.ingressClassName (eq "true" (include "common.ingress.supportsIngressClassname" .)) }}
+  {{- if .Values.ckan.ingress.ingressClassName }}
   ingressClassName: {{ .Values.ckan.ingress.ingressClassName | quote }}
   {{- end }}
   rules:
@@ -29,7 +29,7 @@ spec:
             pathType: Prefix
             backend: {{- include "common.ingress.backend" (dict "serviceName" $svcName "servicePort" "http" "context" $) | nindent 14 }}
     {{- end }}
-  {{- if or (and .Values.ckan.ingress.tls (or (include "common.ingress.certManagerRequest" ( dict "annotations" .Values.ckan.ingress.annotations )) .Values.ckan.ingress.selfSigned)) .Values.ckan.ingress.extraTls }}
+  {{- if .Values.ckan.ingress.tls }}
   tls:
   {{- if and .Values.ckan.ingress.tls (or .Values.ckan.ingress.existingSecret (include "common.ingress.certManagerRequest" ( dict "annotations" .Values.ckan.ingress.annotations )) .Values.ckan.ingress.selfSigned) }}
     - hosts:
@@ -40,8 +40,5 @@ spec:
       secretName: {{ printf "%s-tls" (tpl .Values.ckan.ingress.hostname .) | trunc 63 | trimSuffix "-" }}
       {{- end }}
     {{- end }}
-    {{- if .Values.ckan.ingress.extraTls }}
-    {{- toYaml .Values.ckan.ingress.extraTls | nindent 4 }}
-    {{- end }}
-    {{- end }}
+  {{- end }}
 {{- end }}

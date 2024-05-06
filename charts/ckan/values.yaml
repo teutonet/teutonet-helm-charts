@@ -29,18 +29,18 @@ ckan:
   image:
     registry: ""
     pullPolicy: IfNotPresent
-    pullSecrets: [ ]
+    pullSecrets: []
     repository: syeklu/ckan
-    tag: 0.1.0
+    tag: 0.2.0
     digest: ""
   ingress:
     ingressClassName: ""
     annotations: {}
-    tls: false
     hostname: ""
     selfSigned: false
+    tls:
+      existingSecret: ""
     existingSecret: ""
-    extraTls: []
   persistence:
     accessMode: ReadWriteOnce
     storageClass: ""
@@ -67,7 +67,7 @@ datapusher:
   image:
     registry: ""
     pullPolicy: IfNotPresent
-    pullSecrets: [ ]
+    pullSecrets: []
     repository: ckan/ckan-base-datapusher
     tag: 0.0.20
     digest: ""
@@ -168,19 +168,24 @@ solr:
   image:
     registry: ""
     pullPolicy: IfNotPresent
-    pullSecrets: [ ]
+    pullSecrets: []
     repository: syeklu/ckan-solr
     tag: 0.1.0
     digest: ""
   extraEnvVars:
     - name: SOLR_CORE_CONF_DIR
       value: /opt/bitnami/solr/server/solr/configsets/ckan/conf
+    - name: SOLR_ADMIN_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
+          key: solrUsername
   coreNames:
     - ckan
   auth:
-    enabled: false
-    adminUsername: ""
+    enabled: true
     adminPassword: ""
+    adminUsername: ""
     existingSecret: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
     existingSecretPasswordKey: solrPassword
   cloudEnabled: false
