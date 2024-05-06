@@ -101,9 +101,6 @@
         "configGroupUrl": {
           "type": "string"
         },
-        "gopassName": {
-          "type": "string"
-        },
         "remarks": {
           "type": "string"
         }

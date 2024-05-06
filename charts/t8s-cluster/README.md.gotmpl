@@ -34,4 +34,8 @@ delete the cloud-config secret, as these will just be recreated during installat
 
 Just skip version 6.x.x, as there was a mistake and it has been reverted.
 
+### 7.x.x -> 8.x.x
+
+Removed the unused `.metadata.gopassName` field.
+
 {{ .Files.Get "values.md"  }}
