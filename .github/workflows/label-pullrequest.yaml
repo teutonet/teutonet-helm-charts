@@ -1,7 +1,7 @@
 name: Label Chart Pull Request
 
 on:
-  pull_request:
+  pull_request_target:
     paths:
       - charts/**
     types:
