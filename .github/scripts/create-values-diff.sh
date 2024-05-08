@@ -121,15 +121,18 @@ function createComment() {
       -d @-
 }
 
-function deleteComment() {
+function updateComment() {
   local issue="$1"
-  local comment="$2"
+  local commentId="$2"
+  local body="$3"
 
-  curl --silent --fail-with-body \
-    -X DELETE \
-    -H 'Accept: application/vnd.github+json' \
-    -H "Authorization: token ${GITHUB_TOKEN}" \
-    "${GITHUB_API_REPO_URL}/issues/comments/${comment}"
+  jq -cn --rawfile body <(echo "$body") '{body: $body}' |
+    curl --silent --fail-with-body \
+      -X PATCH \
+      -H 'Accept: application/vnd.github+json' \
+      -H "Authorization: token ${GITHUB_TOKEN}" \
+      "${GITHUB_API_REPO_URL}/issues/comments/${commentId}" \
+      -d @-
 }
 
 body=$(generateComment "$chart")
@@ -140,12 +143,13 @@ if [[ "$dryRun" == false ]]; then
       -H 'Accept: application/vnd.github+json' \
       -H "Authorization: token ${GITHUB_TOKEN}" \
       "${GITHUB_API_REPO_URL}/issues/${issue}/comments" |
-      jq '. | map(select(.body | contains(":robot: I have diffed this *beep* *boop*")))[0].id'
+      jq -er 'map(select(.body | contains(":robot: I have diffed this *beep* *boop*")))[0].id'
   )"
   if [[ "$existingCommentId" != null ]]; then
-    deleteComment "$issue" "$existingCommentId"
+    updateComment "$issue" "$existingCommentId" "$body"
+  else
+    createComment "$issue" "$body"
   fi
-  createComment "$issue" "$body"
 else
   echo "$body"
 fi
