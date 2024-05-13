@@ -21,5 +21,5 @@
 {{- end -}}
 
 {{- define "base-cluster.helm.chartSpec" -}}
-  {{- include "common.helm.chartSpec" (dict "context" .context "repo" .repo "chart" .chart "prependReleaseName" false) -}}
+  {{- include "common.helm.chartSpec" (dict "context" .context "repo" .repo "chart" .chart "prependReleaseName" false "reconcileStrategy" .reconcileStrategy) -}}
 {{- end -}}
