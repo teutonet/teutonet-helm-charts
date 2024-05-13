@@ -21,15 +21,29 @@ Returns a HelmRelease.spec.chart.spec for a given chart in a given repository.
 */}}
 {{- define "common.helm.chartSpec" -}}
   {{- $_ := set . "Release" .context.Release -}}
-  {{- dict
-        "chart" .chart
-        "version" (include "common.helm.chartVersion" (dict "repo" .repo "chart" .chart "context" .context))
-        "sourceRef" (dict
-          "kind" "HelmRepository"
-          "name" (eq .prependReleaseName true | ternary (printf "%s-%s" .Release.Name .repo) .repo)
-          "namespace" .Release.Namespace
-        )
-      | toYaml
-   -}}
+  {{- $_ = set . "Values" .context.Values -}}
+  {{- $spec := dict -}}
+  {{- if eq (dig .repo "type" "helm" .Values.global.helmRepositories) "helm" -}}
+    {{- $spec = merge (dict
+          "chart" .chart
+          "sourceRef" (dict
+            "kind" "HelmRepository"
+            "name" (eq .prependReleaseName true | ternary (printf "%s-%s" .Release.Name .repo) .repo)
+            "namespace" .Release.Namespace)
+          "version" (include "common.helm.chartVersion" (dict "repo" .repo "chart" .chart "context" .context))
+      ) $spec
+    -}}
+  {{- else -}}
+    {{- $spec = merge (dict
+          "chart" (dig .repo "charts" .chart "path" (printf "charts/%s" .chart) .Values.global.helmRepositories)
+          "sourceRef" (dict
+            "kind" "GitRepository"
+            "name" (eq .prependReleaseName true | ternary (printf "%s-%s-%s" .Release.Name .repo .chart) (printf "%s-%s" .repo .chart))
+            "namespace" .Release.Namespace)
+          "reconcileStrategy" (.reconcileStrategy | default "Revision")
+      ) $spec
+    -}}
+  {{- end -}}
+  {{- $spec | toYaml -}}
 {{- end -}}
 
