@@ -25,7 +25,7 @@ jobs:
                 echo "$chart"
               fi
             done | cut -d / -f 2 | jq -c -Rn '[inputs]'
-          ) | tee "$GITHUB_OUTPUT"
+          ) | tee -a "$GITHUB_OUTPUT"
 
   extractImagesForMultipleCharts:
     runs-on: ubuntu-22.04

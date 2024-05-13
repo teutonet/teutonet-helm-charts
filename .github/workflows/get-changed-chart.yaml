@@ -12,24 +12,25 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       chart: ${{ steps.getChangedChart.outputs.chart }}
-    env:
-      CT_TARGET_BRANCH: ${{ github.event.pull_request.base.ref || github.event.repository.default_branch }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: helm/chart-testing-action@v2.6.1
 
       - id: getChangedChart
         name: Get changed chart in this commit
+        env:
+          CT_TARGET_BRANCH: ${{ github.event.pull_request.base.ref || github.event.repository.default_branch }}
         run: |
           set -x
           set -o pipefail
           changed="$(ct list-changed | cut -d / -f 2)"
 
           if [[ -z "$changed" ]]; then
-            echo chart= | tee "$GITHUB_OUTPUT"
+            echo chart= | tee -a "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -40,4 +41,4 @@ jobs:
             exit 1
           fi
 
-          echo chart="$changed" | tee "$GITHUB_OUTPUT"
+          echo chart="$changed" | tee -a "$GITHUB_OUTPUT"
