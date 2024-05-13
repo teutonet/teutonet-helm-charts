@@ -172,6 +172,14 @@ global:
       charts:
         opentelemetry-collector: 0.x.x
       condition: "{{ and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}"
+    kdave:
+      url: https://github.com/amelbakry/kdave-chart
+      charts:
+        kdave:
+          commit: 47a46848222969d60bae87b4650614a9b7a85d00
+          path: .
+      type: git
+      condition: "{{ and .Values.monitoring.kdave.enabled .Values.monitoring.prometheus.enabled }}"
   authentication:
     config:
       clientId: ""
@@ -228,6 +236,8 @@ monitoring:
     enabled: false
     apiKey: ""
     pingKey: ""
+  kdave:
+    enabled: true
   prometheus:
     enabled: true
     replicas: 2
