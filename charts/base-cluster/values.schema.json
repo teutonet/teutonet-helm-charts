@@ -169,11 +169,156 @@
                 "type": "object",
                 "description": "Which charts are deployed in which version using this repo, used internally",
                 "additionalProperties": {
-                  "type": "string"
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "branch": {
+                          "type": "string"
+                        },
+                        "commit": {
+                          "type": "string"
+                        },
+                        "semver": {
+                          "type": "string"
+                        },
+                        "tag": {
+                          "type": "string"
+                        },
+                        "path": {
+                          "type": "string",
+                          "description": "Path of the chart in the repository"
+                        },
+                        "interval": {
+                          "type": "string",
+                          "description": "The interval in which to update the repository",
+                          "pattern": "[0-9]+[mhd]"
+                        }
+                      },
+                      "oneOf": [
+                        {
+                          "required": [
+                            "branch"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "commit"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "semver"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "tag"
+                          ]
+                        },
+                        {
+                          "not": {
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "branch"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "commit"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "semver"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "tag"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
                 }
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "git",
+                  "helm"
+                ],
+                "default": "helm"
               }
             },
-            "additionalProperties": false
+            "oneOf": [
+              {
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "pattern": "(https|oci)://.+"
+                  },
+                  "charts": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "oneOf": [
+                  {
+                    "not": {
+                      "required": [
+                        "type"
+                      ]
+                    }
+                  },
+                  {
+                    "properties": {
+                      "type": {
+                        "const": "helm"
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ]
+                  }
+                ]
+              },
+              {
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "pattern": "https://.+"
+                  },
+                  "type": {
+                    "const": "git"
+                  }
+                },
+                "not": {
+                  "required": [
+                    "interval"
+                  ]
+                },
+                "required": [
+                  "charts",
+                  "type"
+                ]
+              }
+            ],
+            "additionalProperties": false,
+            "required": [
+              "url"
+            ]
           }
         },
         "certificates": {
