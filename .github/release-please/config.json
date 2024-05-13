@@ -35,6 +35,9 @@
     },
     "charts/common": {
       "package-name": "common"
+    },
+    "charts/ckan": {
+      "package-name": "ckan"
     }
   }
 }
