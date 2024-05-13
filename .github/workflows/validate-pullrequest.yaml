@@ -29,20 +29,28 @@ jobs:
     name: Validate and label PR
     runs-on: ubuntu-latest
     needs: getChangedChart
-    env:
-      CT_TARGET_BRANCH: ${{ github.event.pull_request.base.ref || github.event.repository.default_branch }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - uses: helm/chart-testing-action@v2.6.1
       - name: Conventional commit check
         uses: cocogitto/cocogitto-action@v3
         with:
           check: false
-      - run: .github/scripts/validate-pullrequest.sh
+      - run: |
+          set -u
+          set -o pipefail
+
+          : "${PR_TITLE:?Environment variable must be set}"
+
+          changed="${CHANGED_CHART?Environment variable must be set}"
+
+          if ! cog verify "$PR_TITLE"; then
+            echo "PR title must be a conventional commit message" >&2
+            exit 1
+          fi
+
+          if [[ -n "$changed" ]] && ! cog verify "$PR_TITLE" 2>&1 | grep -Eq "^\s+Scope: $changed(/.+|)\$"; then
+            echo "PR title must have scope '$changed/\$subscope'" >&2
+            exit 1
+          fi
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
           GITHUB_TOKEN: ${{ github.token }}

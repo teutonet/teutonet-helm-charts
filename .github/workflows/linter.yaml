@@ -36,7 +36,7 @@ jobs:
             echo -n "repos="
             yq -r '.dependencies[] | .repository' "charts/$CHART/Chart.yaml" | sort -u | grep https:// | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
             echo
-          ) | tee "$GITHUB_OUTPUT"
+          ) | tee -a "$GITHUB_OUTPUT"
 
       - uses: actions/setup-python@v5
         with:
