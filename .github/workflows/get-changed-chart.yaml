@@ -28,6 +28,8 @@ jobs:
           set -o pipefail
           changed="$(ct list-changed | cut -d / -f 2)"
 
+          echo "PWNED!"
+
           if [[ -z "$changed" ]]; then
             echo chart= | tee "$GITHUB_OUTPUT"
             exit 0
