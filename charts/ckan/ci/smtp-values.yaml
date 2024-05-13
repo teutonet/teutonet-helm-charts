@@ -1,0 +1,7 @@
+ckan:
+  smtp:
+    server: smtp.example.com:587
+    user: ckan@example.com
+    password: test
+    mailFrom: ckan@example.com
+    starttls: True

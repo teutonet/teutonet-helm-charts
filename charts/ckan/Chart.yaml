@@ -1,0 +1,25 @@
+apiVersion: v2
+name: ckan
+type: application
+version: 0.1.0
+appVersion: 2.11.0
+maintainers:
+  - name: syeklu
+    email: sk@teuto.net
+description: A Helm chart for Kubernetes
+dependencies:
+  - name: common
+    version: 1.0.0
+    repository: oci://ghcr.io/teutonet/teutonet-helm-charts
+  - condition: postgresql.enabled
+    name: postgresql
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 15.x.x
+  - condition: redis.enabled
+    name: redis
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 19.x.x
+  - condition: solr.enabled
+    name: solr
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 9.x.x

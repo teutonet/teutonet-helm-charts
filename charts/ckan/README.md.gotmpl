@@ -1,0 +1,13 @@
+[modeline]: # ( vim: set ft=markdown: )
+{{ template "chart.header" . }}
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+{{ template "chart.maintainersSection" . }}
+
+{{ .Files.Get "values.md"  }}

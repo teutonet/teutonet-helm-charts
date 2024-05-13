@@ -1,0 +1,196 @@
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: ""
+
+nameOverride: ""
+fullnameOverride: ""
+commonAnnotations: {}
+
+defaultPodSecurityContext: &defaultPodSecurityContext
+  fsGroup: 1000
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  fsGroupChangePolicy: OnRootMismatch
+
+defaultSecurityContext: &defaultSecurityContext
+  runAsNonRoot: true
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  privileged: false
+  capabilities:
+    drop:
+      - ALL
+  runAsGroup: 1000
+  runAsUser: 1000
+
+ckan:
+  image:
+    registry: ""
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+    repository: syeklu/ckan
+    tag: 0.2.0
+    digest: ""
+  ingress:
+    ingressClassName: ""
+    annotations: {}
+    hostname: ""
+    selfSigned: false
+    tls:
+      existingSecret: ""
+    existingSecret: ""
+  persistence:
+    accessMode: ReadWriteOnce
+    storageClass: ""
+    size: 100Mi
+  sysadmin:
+    name: ""
+    password: ""
+    email: null
+  readiness:
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    failureThreshold: 6
+    timeoutSeconds: 10
+  liveness:
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    failureThreshold: 6
+    timeoutSeconds: 10
+  podSecurityContext: {}
+  securityContext: {}
+  resources: {}
+
+datapusher:
+  image:
+    registry: ""
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+    repository: ckan/ckan-base-datapusher
+    tag: 0.0.20
+    digest: ""
+  podSecurityContext: *defaultPodSecurityContext
+  securityContext: *defaultSecurityContext
+  resources: {}
+
+postgresql:
+  enabled: true
+  global:
+    postgresql:
+      auth:
+        existingSecret: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
+        secretKeys:
+          adminPasswordKey: postgresPassword
+          replicationPasswordKey: replicationPassword
+  architecture: replication
+  ckanDbs:
+    ckan:
+      db: ""
+      username: ""
+      password: ""
+    datastore:
+      username: ""
+      password: ""
+      db: ""
+    datapusher:
+      username: ""
+      password: ""
+      db: ""
+    postgresPassword: ""
+    replicationPassword: ""
+
+  primary:
+    initdb:
+      user: postgres
+      scriptsSecret: '{{ printf "%s-initconfig" (include "common.names.fullname" .) }}'
+    extraEnvVars:
+      - name: PGPASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
+            key: postgresPassword
+      - name: DATASTORE_DB
+        valueFrom:
+          secretKeyRef:
+            name: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
+            key: datastoreDatabase
+      - name: DATASTORE_USER
+        valueFrom:
+          secretKeyRef:
+            name: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
+            key: datastoreUsername
+      - name: DATASTORE_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
+            key: datastorePassword
+      - name: CKANDB_USER
+        valueFrom:
+          secretKeyRef:
+            name: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
+            key: ckanDatabaseUsername
+      - name: CKANDB_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
+            key: ckanDatabasePassword
+      - name: CKANDB_DB
+        valueFrom:
+          secretKeyRef:
+            name: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
+            key: ckanDatabase
+      - name: DATAPUSHER_USER
+        valueFrom:
+          secretKeyRef:
+            name: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
+            key: datapusherUsername
+      - name: DATAPUSHER_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
+            key: datapusherPassword
+      - name: DATAPUSHER_DB
+        valueFrom:
+          secretKeyRef:
+            name: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
+            key: datapusherDatabase
+redis:
+  enabled: true
+  auth:
+    enabled: false
+  replica:
+    replicaCount: 1
+
+solr:
+  enabled: true
+  image:
+    registry: ""
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+    repository: syeklu/ckan-solr
+    tag: 0.1.0
+    digest: ""
+  extraEnvVars:
+    - name: SOLR_CORE_CONF_DIR
+      value: /opt/bitnami/solr/server/solr/configsets/ckan/conf
+    - name: SOLR_ADMIN_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
+          key: solrUsername
+  coreNames:
+    - ckan
+  auth:
+    enabled: true
+    adminPassword: ""
+    adminUsername: ""
+    existingSecret: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
+    existingSecretPasswordKey: solrPassword
+  cloudEnabled: false
+  cloudBootstrap: false
+  collectionReplicas: 1
+  replicaCount: 2
+  zookeeper:
+    replicaCount: 2

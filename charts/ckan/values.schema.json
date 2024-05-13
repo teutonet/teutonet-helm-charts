@@ -1,0 +1,290 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "ckan configuration",
+  "properties": {
+    "global": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "imageRegistry": {
+          "type": "string",
+          "description": "The global container image proxy, e.g. [Nexus](https://artifacthub.io/packages/helm/sonatype/nexus-repository-manager), this needs to support various registries",
+          "examples": [
+            "nexus.teuto.net"
+          ]
+        },
+        "imagePullSecrets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "storageClass": {
+          "$ref": "#/$defs/storageClass"
+        }
+      }
+    },
+    "ckan": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "readiness|liveness": {
+          "type": "object",
+          "properties": {
+            "initialDelaySeconds": {
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "type": "integer"
+            },
+            "failureThreshold": {
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "type": "integer"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "properties": {
+        "siteId":{
+          "type": "string",
+          "description": "The search index is linked to the value of the ckan.site_id, so if you have more than one CKAN instance using the same solr_url, they will each have a separate search index as long as their ckan.site_id values are different."
+        },
+        "siteTitle": {
+          "type": "string",
+          "description": "This sets the name of the site, as displayed in the CKAN web interface."
+        },
+        "image": {
+          "$ref": "#/$defs/image"
+        },
+        "ingress": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ingressClassName": {
+              "type": "string"
+            },
+            "annotations": {
+              "type": "object"
+            },
+            "hostname": {
+              "type": "string"
+            },
+            "selfSigned": {
+              "type": "boolean"
+            },
+            "tls": {
+              "type": "object",
+              "properties": {
+                "existingSecret": {
+                  "type": "string"
+                }
+              }
+            },
+            "existingSecret": {
+              "type": "string"
+            }
+          }
+        },
+        "persistence": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "accessMode": {
+              "type": "string",
+              "enum": [
+                "ReadWriteOnce",
+                "ReadOnlyMany",
+                "ReadWriteMany",
+                "ReadWriteOncePod"
+              ]
+            },
+            "storageClass": {
+              "$ref": "#/$defs/storageClass"
+            },
+            "size": {
+              "$ref": "#/$defs/quantity"
+            }
+          }
+        },
+        "sysadmin": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "email": {
+              "$ref": "#/$defs/email"
+            }
+          }
+        },
+        "smtp": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "server": {
+              "type": "string"
+            },
+            "user": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "mailFrom": {
+              "$ref": "#/$defs/email"
+            },
+            "starttls": {
+              "type": "boolean"
+            }
+          }
+        },
+        "podSecurityContext": {
+          "type": "object"
+        },
+        "securityContext": {
+          "type": "object"
+        },
+        "resources": {
+          "type": "object"
+        }
+      }
+    },
+    "datapuscher": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "image": {
+          "$ref": "#/$defs/image"
+        },
+        "podSecurityContext": {
+          "type": "object"
+        },
+        "securityContext": {
+          "type": "object"
+        },
+        "resources": {
+          "type": "object"
+        }
+      }
+    },
+    "postgresql": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "ckanDbs": {
+          "type": "object",
+          "properties": {
+            "postgresPassword": {
+              "type": "string"
+            },
+            "replicationPassword": {
+              "type": "string"
+            }
+          },
+          "patternProperties": {
+            "datastore|datapusher|ckan": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "db": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      }
+    },
+    "redis": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "solr": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "registry": {
+          "type": "string",
+          "description": "The host of the registry",
+          "examples": [
+            "docker.io"
+          ]
+        },
+        "pullPolicy": {
+          "type": "string",
+          "examples": [
+            "Always"
+          ]
+        },
+        "repository": {
+          "type": "string",
+          "description": "The image path in the registry",
+          "examples": [
+            "bitnami/kubectl"
+          ]
+        },
+        "tag": {
+          "type": "string"
+        },
+        "digest": {
+          "type": "string"
+        },
+        "pullSecrets": {
+          "$ref": "#/$defs/pullSecrets"
+        }
+      }
+    },
+    "pullSecrets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "storageClass": {
+      "type": "string",
+      "description": "The storageClass to use for persistence, otherwise use the cluster default (e.g. teutostack-ssd)"
+    },
+    "quantity": {
+      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+    },
+    "email": {
+      "pattern": "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])"
+    }
+  }
+}
