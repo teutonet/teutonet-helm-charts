@@ -44,8 +44,11 @@
       {{- /* no LOGS for now, loki is running anyways, so we'd even have to deduplicate the logs somehow */ -}}
 
       {{- range $signal := list "TRACES" -}}
-        {{- if not (hasPrefix "http" $endpoint)}}
+        {{- if not (hasPrefix "https://" $endpoint) -}}
           {{- $env = set $env (printf "OTEL_EXPORTER_OTLP_%s_INSECURE" $signal) $insecure -}}
+        {{- end -}}
+        {{- if not (mustRegexMatch "https?://" $endpoint) -}}
+          {{- $endpoint = printf "http://%s" $endpoint -}}
         {{- end -}}
         {{- if $serviceProtocol -}}
           {{- $env = set $env (printf "OTEL_EXPORTER_OTLP_%s_PROTOCOL" $signal) $serviceProtocol -}}
