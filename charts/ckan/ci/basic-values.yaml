@@ -1,3 +1,0 @@
-ckan:
-  ingress:
-    hostname: "ckan.test"
