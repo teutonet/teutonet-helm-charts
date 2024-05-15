@@ -31,6 +31,7 @@ spec:
   storageNamespace: kube-system
   targetNamespace: kube-system
   releaseName: ccm
+  # TODO: I tried to run the ccm on the management cluster, but various resources are cluster wide, mainly RBAC.
   kubeConfig:
     secretRef:
       name: {{ .Release.Name }}-kubeconfig
@@ -55,7 +56,8 @@ spec:
                 value: Deployment
   {{- end }}
   values:
-  {{- if le (.Values.version.minor | int) 28 }}
+
+    {{- if le (.Values.version.minor | int) 28 }}
     tolerations:
       - key: node.cloudprovider.kubernetes.io/uninitialized
         value: "true"
