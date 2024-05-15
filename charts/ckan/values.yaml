@@ -26,6 +26,13 @@ defaultSecurityContext: &defaultSecurityContext
   runAsUser: 1000
 
 ckan:
+  plugins:
+    - envvars
+    - image_view
+    - text_view
+    - recline_view
+    - datastore
+    - datapusher
   image:
     registry: ""
     pullPolicy: IfNotPresent
