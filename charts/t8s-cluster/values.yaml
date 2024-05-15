@@ -43,6 +43,7 @@ metadata:
   friendlyName: ""
 
 controlPlane:
+  hosted: false
   flavor: standard.2.1905
   singleNode: false
   allowedCIDRs: []
