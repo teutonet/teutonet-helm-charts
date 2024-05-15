@@ -1,3 +1,4 @@
+{{- if not .Values.controlPlane.hosted -}}
 apiVersion: controlplane.cluster.x-k8s.io/v1beta1
 kind: KubeadmControlPlaneTemplate
 metadata:
@@ -7,3 +8,4 @@ metadata:
 spec:
   template:
     spec: {{/* the full context is needed for .Files.Get */}}{{- include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.spec" . | nindent 6 }}
+{{- end -}}

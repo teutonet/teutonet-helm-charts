@@ -103,6 +103,10 @@
     "controlPlane": {
       "type": "object",
       "properties": {
+        "hosted": {
+          "type": "boolean",
+          "description": "Whether the control plane is hosted on the management cluster"
+        },
         "flavor": {
           "type": "string"
         },
