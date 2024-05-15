@@ -31,7 +31,6 @@ spec:
       namespace: monitoring
   {{- end }}
   values:
-    kind: Deployment
     startingDeadlineSeconds: 120
     priorityClassName: system-cluster-critical
     kind: Deployment
