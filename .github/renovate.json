@@ -1,6 +1,6 @@
 {
   "extends": [
-    "config:recommended"
+    "config:best-practices"
   ],
   "assigneesFromCodeOwners": true,
   "assigneesSampleSize": 1,
