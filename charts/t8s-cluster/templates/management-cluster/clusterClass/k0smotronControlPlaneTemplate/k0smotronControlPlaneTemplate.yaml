@@ -1,0 +1,11 @@
+{{- if .Values.controlPlane.hosted -}}
+apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+kind: K0smotronControlPlaneTemplate
+metadata:
+  name: {{/* the full context is needed for .Files.Get */}}{{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.k0smotronControlPlaneTemplate.specHash" .) }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  template:
+    spec: {{/* the full context is needed for .Files.Get */}}{{- include "t8s-cluster.clusterClass.k0smotronControlPlaneTemplate.spec" . | nindent 6 }}
+{{- end -}}

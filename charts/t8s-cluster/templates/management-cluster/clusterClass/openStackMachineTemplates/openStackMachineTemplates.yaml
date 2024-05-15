@@ -1,9 +1,10 @@
 {{- range $name := list "compute-plane" "control-plane" }}
-{{- if false }}
+  {{- if or (ne $name "control-plane") (not $.Values.controlPlane.hosted) }}
+    {{- if false }}
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha7
-{{- else }}
+    {{- else }}
 apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
-{{- end }}
+    {{- end }}
 kind: OpenStackMachineTemplate
 metadata:
   name: {{ printf "%s-%s-%s" $.Release.Name $name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHash" (dict "name" $name "context" $)) }}
@@ -13,4 +14,5 @@ spec:
   template:
     spec: {{- include "t8s-cluster.clusterClass.openStackMachineTemplate.spec" (dict "name" $name "context" $) | nindent 6 }}
 ---
-{{- end }}
+  {{- end }}
+{{- end -}}
