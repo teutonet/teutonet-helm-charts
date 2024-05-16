@@ -6,6 +6,12 @@ appVersion: 2.11.0
 maintainers:
   - name: syeklu
     email: sk@teuto.net
+  - name: cwrau
+    email: cwr@teuto.net
+  - name: marvinWolff
+    email: mw@teuto.net
+  - name: tasches
+    email: st@teuto.net
 description: A Helm chart for Kubernetes
 dependencies:
   - name: common
