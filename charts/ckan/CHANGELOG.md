@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.1.0...ckan-v1.1.1) (2024-05-16)
+
+
+### Bug Fixes
+
+* **ckan:** change ingress tls template ([#968](https://github.com/teutonet/teutonet-helm-charts/issues/968)) ([ccd62ac](https://github.com/teutonet/teutonet-helm-charts/commit/ccd62aca21be53595d398b1ef69bdf3f3bdb8679))
+
 ## [1.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.0.0...ckan-v1.1.0) (2024-05-16)
 
 
