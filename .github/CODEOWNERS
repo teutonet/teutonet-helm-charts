@@ -1,6 +1,6 @@
 * @teutonet/k8s
 /charts/base-cluster/ @cwrau @marvinWolff @tasches  @teutonet-bot
-/charts/ckan/ @syeklu  @teutonet-bot
+/charts/ckan/ @syeklu @cwrau @marvinWolff @tasches @teutonet-bot
 /charts/common/ @cwrau @marvinWolff @tasches  @teutonet-bot
 /charts/stellio-context-broker/ @cwrau @ocaner-biz  @teutonet-bot
 /charts/t8s-cluster/ @cwrau @marvinWolff @tasches  @teutonet-bot
