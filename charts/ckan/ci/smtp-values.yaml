@@ -4,4 +4,4 @@ ckan:
     user: ckan@example.com
     password: test
     mailFrom: ckan@example.com
-    starttls: True
+    starttls: true

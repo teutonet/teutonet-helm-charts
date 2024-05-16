@@ -138,7 +138,7 @@ spec:
             - name: CKAN__DATAPUSHER__CALLBACK_URL_BASE
               value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "ckan" }}:{{ include "ckan.ckan.service.port" $ }}/"
             - name: CKAN__PLUGINS
-              value: "envvars image_view text_view recline_view datastore datapusher"
+              value: {{ .Values.ckan.plugins | join " " | quote }}
           securityContext:
           {{- toYaml .Values.ckan.securityContext | default dict | nindent 12 }}
           readinessProbe:

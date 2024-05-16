@@ -63,6 +63,15 @@
           "type": "string",
           "description": "This sets the name of the site, as displayed in the CKAN web interface."
         },
+        "plugins":{
+          "type": "array",
+          "items": {
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": "The enabled plugins in the Ckan instance."
+        },
         "image": {
           "$ref": "#/$defs/image"
         },
