@@ -31,7 +31,6 @@ spec:
     {{- end }}
   {{- if .Values.ckan.ingress.tls }}
   tls:
-  {{- if and .Values.ckan.ingress.tls (or .Values.ckan.ingress.existingSecret (include "common.ingress.certManagerRequest" ( dict "annotations" .Values.ckan.ingress.annotations )) .Values.ckan.ingress.selfSigned) }}
     - hosts:
         - {{ tpl .Values.ckan.ingress.hostname . | quote }}
       {{- if .Values.ckan.ingress.existingSecret }}
@@ -39,6 +38,5 @@ spec:
       {{- else }}
       secretName: {{ printf "%s-tls" (tpl .Values.ckan.ingress.hostname .) | trunc 63 | trimSuffix "-" }}
       {{- end }}
-    {{- end }}
   {{- end }}
 {{- end }}
