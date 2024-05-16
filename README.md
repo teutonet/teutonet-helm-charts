@@ -26,15 +26,7 @@ This chart deploys a TeutonetesCluster and all it's necessary infrastructure com
 [Helm](https://helm.sh) must be installed to use the charts.
 Please refer to Helm's [documentation](https://helm.sh/docs/) to get started.
 
-Once Helm is set up properly, add the repo as follows:
-
-```console
-helm repo add teutonet https://teutonet.github.io/teutonet-helm-charts
-```
-
-You can then run `helm search repo teutonet` to see the charts.
-
-Or you can use the new OCI registry; `oci://ghcr.io/teutonet/teutonet-helm-charts`
+You can use the OCI registry; `oci://ghcr.io/teutonet/teutonet-helm-charts`
 
 ## License
 
