@@ -43,6 +43,11 @@ spec:
     {{- end }}
     deschedulerPolicy:
       evictLocalStoragePods: true
+      {{- if .Values.monitoring.tracing.enabled }}
+      tracing:
+        collectorEndpoint: open-telemetry-collector-opentelemetry-collector.monitoring:4317
+        sampleRate: 1.0
+      {{- end }}
       strategies: {{- toYaml .Values.descheduler.strategies | nindent 8 }}
     {{- if .Values.global.imageRegistry }}
     image:
