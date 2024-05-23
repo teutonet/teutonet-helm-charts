@@ -26,8 +26,15 @@ spec:
     {{- if .Values.global.imageRegistry }}
     image:
       registry: {{ $.Values.global.imageRegistry }}
+    {{- end }}
+    {{- if or .Values.global.imageRegistry .Values.monitoring.securityScanning.nodeCollector.tolerations }}
     nodeCollector:
+      {{- if .Values.global.imageRegistry }}
       registry: {{ $.Values.global.imageRegistry }}
+      {{- end}}
+      {{- with .Values.monitoring.securityScanning.nodeCollector.tolerations }}
+      tolerations: {{ toYaml . | nindent 8 }}
+      {{- end }}
     {{- end }}
     trivy:
     {{- if .Values.global.imageRegistry }}

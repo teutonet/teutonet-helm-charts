@@ -310,6 +310,11 @@ monitoring:
     enabled: true
   securityScanning:
     enabled: true
+    nodeCollector:
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
   tracing:
     enabled: false
     ingester:
