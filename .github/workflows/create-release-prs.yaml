@@ -12,7 +12,7 @@ jobs:
   createReleasePR:
     runs-on: ubuntu-latest
     steps:
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         with:
           skip-github-release: true
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
