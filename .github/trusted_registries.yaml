@@ -19,6 +19,7 @@ registries:
   ghcr.io:
     aquasecurity: ALL_IMAGES
     kyverno: ALL_IMAGES
+    teutonet: ALL_IMAGES
   quay.io:
     cilium: ALL_IMAGES
     jetstack: ALL_IMAGES

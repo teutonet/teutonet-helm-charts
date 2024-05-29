@@ -34,11 +34,11 @@ ckan:
     - datastore
     - datapusher
   image:
-    registry: ""
+    registry: "ghcr.io"
     pullPolicy: IfNotPresent
     pullSecrets: []
-    repository: syeklu/ckan
-    tag: 0.2.0
+    repository: teutonet/oci-images/ckan
+    tag: 1.0.0
     digest: ""
   ingress:
     ingressClassName: ""
@@ -173,11 +173,11 @@ redis:
 solr:
   enabled: true
   image:
-    registry: ""
+    registry: "ghcr.io"
     pullPolicy: IfNotPresent
     pullSecrets: []
-    repository: syeklu/ckan-solr
-    tag: 0.1.0
+    repository: teutonet/oci-images/solr-ckan
+    tag: 1.0.0
     digest: ""
   extraEnvVars:
     - name: SOLR_CORE_CONF_DIR
