@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.1.1...ckan-v1.1.2) (2024-05-29)
+
+
+### Bug Fixes
+
+* **ckan:** change images to teutonet image repo ([#976](https://github.com/teutonet/teutonet-helm-charts/issues/976)) ([177d28e](https://github.com/teutonet/teutonet-helm-charts/commit/177d28e34bfa8d41192ef927976e5c3f1e592b78))
+
 ## [1.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.1.0...ckan-v1.1.1) (2024-05-16)
 
 
