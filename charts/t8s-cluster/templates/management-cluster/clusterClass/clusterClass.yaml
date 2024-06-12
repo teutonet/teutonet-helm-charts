@@ -32,7 +32,7 @@ spec:
       apiVersion: controlplane.cluster.x-k8s.io/v1beta1
       {{- if .Values.controlPlane.hosted }}
       kind: K0smotronControlPlaneTemplate
-      name: {{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.k0smotronControlPlaneTemplate.specHash" .) }}
+      name: {{/* the full context is needed for .Files.Get */}}{{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.k0smotronControlPlaneTemplate.specHash" .) }}
       {{- else }}
       kind: KubeadmControlPlaneTemplate
       name: {{/* the full context is needed for .Files.Get */}}{{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.specHash" .) }}
@@ -203,7 +203,7 @@ spec:
           bootstrap:
             ref:
               apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
-              kind: KubeadmConfigTemplate
+              kind: {{ $.Values.controlPlane.hosted | ternary "K0sWorkerConfigTemplate" "KubeadmConfigTemplate" }}
               name: {{ printf "%s-%s-compute-plane" $.Release.Name ($isGpuDeploymentClass | ternary "gpu" "standard") }}
           infrastructure:
             ref:
