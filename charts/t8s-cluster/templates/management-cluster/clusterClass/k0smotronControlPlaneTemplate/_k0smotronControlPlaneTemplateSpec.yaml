@@ -50,4 +50,30 @@ k0sConfig:
 etcd:
   persistence:
     size: 5Gi
+{{/*rolloutBefore:*/}}
+{{/*  certificatesExpiryDays: 60*/}}
+{{/*kubeadmConfigSpec:*/}}
+{{/*  clusterConfiguration:*/}}
+{{/*    apiServer:*/}}
+{{/*      extraVolumes:*/}}
+{{/*        - hostPath: *admissionControlConfigFilePath*/}}
+{{/*          mountPath: *admissionControlConfigFilePath*/}}
+{{/*          name: admission-control-config*/}}
+{{/*          readOnly: true*/}}
+{{/*        - hostPath: &eventRateLimitConfigFilePath /etc/kubernetes/event-rate-limit-config.yaml*/}}
+{{/*          mountPath: *eventRateLimitConfigFilePath*/}}
+{{/*          name: event-rate-limit-config*/}}
+{{/*          readOnly: true*/}}
+{{/*  files:*/}}
+{{/*    - content: |- {{- .Files.Get "files/admission-control-config.yaml" | nindent 8 }}*/}}
+{{/*      path: *admissionControlConfigFilePath*/}}
+{{/*    - content: |- {{- .Files.Get "files/event-rate-limit-config.yaml" | nindent 8 }}*/}}
+{{/*      path: *eventRateLimitConfigFilePath*/}}
+{{/*    - content: |- {{- .Files.Get "files/kube-proxy.patch.sh" | nindent 8 }}*/}}
+{{/*      path: /etc/kube-proxy-patch.sh*/}}
+{{/*      permissions: "0700"*/}}
+{{/*    - content: |- {{- .Files.Get "files/kube-proxy.config.yaml" | nindent 8 }}*/}}
+{{/*      path: /etc/kube-proxy-config.yaml*/}}
+{{/*  preKubeadmCommands: {{- include "t8s-cluster.clusterClass.preKubeadmCommands" (dict "context" $) | nindent 4 }}*/}}
+{{/*  postKubeadmCommands: {{- include "t8s-cluster.clusterClass.postKubeadmCommands" (dict) | nindent 4 }}*/}}
 {{- end -}}
