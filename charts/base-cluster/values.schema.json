@@ -901,6 +901,17 @@
           "properties": {
             "enabled": {
               "type": "boolean"
+            },
+            "nodeCollector": {
+              "type": "object",
+              "properties": {
+                "tolerations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/tolerations"
+                  }
+                }
+              }
             }
           },
           "additionalProperties": false
@@ -1530,6 +1541,9 @@
     },
     "quantity": {
       "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+    },
+    "tolerations": {
+      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.api.core.v1.Toleration"
     },
     "image": {
       "type": "object",
