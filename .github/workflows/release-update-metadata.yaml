@@ -32,6 +32,7 @@ jobs:
         run: |
           set -ex
           version="$(jq -er --arg chart "${CHART}" '.["charts/\($chart)"]' .github/release-please/manifest.json)"
+          #shellcheck disable=SC2016
           yq -e -y -S -i --arg tagSource "https://github.com/${GITHUB_REPOSITORY}/tree/${CHART}-v${version}/charts/${CHART}" --arg branchSource "https://github.com/${GITHUB_REPOSITORY}/tree/${{ github.event.repository.default_branch }}/charts/${CHART}" '.sources=[$tagSource, $branchSource]' "charts/${CHART}/Chart.yaml"
       - name: Commit Chart.yaml
         uses: EndBug/add-and-commit@v9

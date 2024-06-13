@@ -23,9 +23,10 @@ jobs:
         if: ${{ steps.release-please.outputs.prs_created == 'true' }}
       - name: Set PRs to auto-merge
         if: ${{ steps.release-please.outputs.prs_created == 'true' }}
-        run: |
-          for pr_number in ${{ join(fromJSON(steps.release-please.outputs.prs).*.number, ' ') }};do
-            gh pr merge --auto --squash "$pr_number"
-          done
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
+        run: |
+          PRs=( ${{ join(fromJSON(steps.release-please.outputs.prs).*.number, ' ') }} )
+          for pr_number in "${PRs[@]}";do
+            gh pr merge --auto --squash "$pr_number"
+          done
