@@ -1,5 +1,18 @@
 # Changelog
 
+## [6.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.1.4...base-cluster-v6.2.0) (2024-06-13)
+
+
+### Features
+
+* **base-cluster:** allow creating git helmRepositories ([#946](https://github.com/teutonet/teutonet-helm-charts/issues/946)) ([e35415e](https://github.com/teutonet/teutonet-helm-charts/commit/e35415e48745a16a85144ebe20d7dd1c91cfe6f6))
+
+
+### Bug Fixes
+
+* **base-cluster:** fix nodeCollector is not scheduleable ([#974](https://github.com/teutonet/teutonet-helm-charts/issues/974)) ([c7df73b](https://github.com/teutonet/teutonet-helm-charts/commit/c7df73bad95cd0066442b3da94c969ab228c675f))
+* **base-cluster:** set correct label for workinghours ([#980](https://github.com/teutonet/teutonet-helm-charts/issues/980)) ([06153d0](https://github.com/teutonet/teutonet-helm-charts/commit/06153d00cec263b6458ba03c0c24bdfadfbb30f5))
+
 ## [6.1.4](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.1.3...base-cluster-v6.1.4) (2024-04-25)
 
 
