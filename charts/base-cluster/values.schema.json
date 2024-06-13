@@ -12,7 +12,7 @@
           "enum": [
             "None",
             "24x7",
-            "Working-Hours"
+            "WorkingHours"
           ],
           "default": "None"
         },
