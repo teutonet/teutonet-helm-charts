@@ -1,5 +1,24 @@
 # Changelog
 
+## [8.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v7.0.1...t8s-cluster-v8.0.0) (2024-06-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* **t8s-cluster:** remove unused gopassName field ([#922](https://github.com/teutonet/teutonet-helm-charts/issues/922))
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** remove uninstall job this should still work and help with the resource orphanage (HelmCharts, ...) ([#929](https://github.com/teutonet/teutonet-helm-charts/issues/929)) ([afbe7f0](https://github.com/teutonet/teutonet-helm-charts/commit/afbe7f00d05bdd4a8f047612be41fa99f630ebd8))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update helm release gpu-operator to v24 ([#920](https://github.com/teutonet/teutonet-helm-charts/issues/920)) ([70b8d59](https://github.com/teutonet/teutonet-helm-charts/commit/70b8d59e4fa699827d4aded52e1c0af9cd873adc))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.5.13 ([#892](https://github.com/teutonet/teutonet-helm-charts/issues/892)) ([5436cfa](https://github.com/teutonet/teutonet-helm-charts/commit/5436cfa3d7ca8f768699abb58d0d151f857545e4))
+* **t8s-cluster/management-cluster:** update flux resources they are deprecated ([#930](https://github.com/teutonet/teutonet-helm-charts/issues/930)) ([29a7b8f](https://github.com/teutonet/teutonet-helm-charts/commit/29a7b8fed1124c610d8864689787a16c04f9deea))
+* **t8s-cluster:** remove unused gopassName field ([#922](https://github.com/teutonet/teutonet-helm-charts/issues/922)) ([1a222bf](https://github.com/teutonet/teutonet-helm-charts/commit/1a222bf03b19e4f30bef344cc01ac8e95fd1ee2e))
+
 ## [7.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v7.0.0...t8s-cluster-v7.0.1) (2024-04-29)
 
 
