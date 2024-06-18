@@ -42,7 +42,9 @@ spec:
       clusterAdmissionReports: *defaultImage
     policyReportsCleanup: *defaultImage
     crds:
-      migration: *defaultImage
+      migration:
+        image:
+          registry: ghcr.io
     {{- end }}
     installCRDs: true
     networkPolicy:
