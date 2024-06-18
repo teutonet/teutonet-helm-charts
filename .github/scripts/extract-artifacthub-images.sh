@@ -9,29 +9,16 @@ set -o pipefail
 [[ ! -v TMP_DIR ]] && trap 'rm -rf "$TMP_DIR"' EXIT
 TMP_DIR="${TMP_DIR:-$(mktemp -d)}"
 
-function templateHelmChart() {
-  local chart="$1"
-  local yaml
-  local numberOfHelmReleases
-  echo "Templating '$chart'" >/dev/stderr
-  helm dependency update "$chart"
-  yaml=$(helm template "$(basename "$chart")" "$chart" --values "$chart/ci/artifacthub-values.yaml")
-  numberOfHelmReleases=$(yq <<<"$yaml" -ers '[.[] | select(.kind == "HelmRelease")] | length')
-  yq <<<"$yaml" -erys '.[] | select(.kind != "HelmRelease") | select(.)'
-  if [[ "$numberOfHelmReleases" -gt 0 ]]; then
-    for index in $(seq 0 $((numberOfHelmReleases - 1))); do
-      echo ---
-      yq <<<"$yaml" -erys '([.[] | select(.kind == "HelmRelease")]['"$index"']),(.[] | select(.kind | IN(["GitRepository", "HelmRepository"][])))' | "$(dirname "$0")/templateRemoteHelmChart"
-    done
-  fi
-}
-
 function getImages() {
   local chart="$1"
   local tmpDir
   tmpDir="$(mktemp -d -p "$TMP_DIR")"
-  "$(dirname "$0")/templateLocalHelmChart" -1 "$chart" >"$tmpDir/helmRelease.yaml"
-  "$(dirname "$0")/splitYamlIntoDir" "$tmpDir/helmRelease.yaml" "$tmpDir/helmRelease"
+  if [[ -v 2 ]] && [[ -n "$2" ]]; then
+    cp -r "$2/artifacthub-values" "$tmpDir/helmRelease"
+  else
+    "$(dirname "$0")/templateLocalHelmChart" -1 "$chart" >"$tmpDir/helmRelease.yaml"
+    "$(dirname "$0")/splitYamlIntoDir" "$tmpDir/helmRelease.yaml" "$tmpDir/helmRelease"
+  fi
 
   (
     cd "$tmpDir/helmRelease"
@@ -52,25 +39,21 @@ function getImages() {
 
 function updateChartYaml() {
   local chart="$1"
+  local existingDir="${2:-}"
   local tmpDir
   tmpDir="$(mktemp -d -p "$TMP_DIR")"
-  echo "Working on '$chart'" >/dev/stderr
-  echo "Images:" >/dev/stderr
   (
     echo "artifacthub.io/images: |"
-    getImages "$chart" | awk '{print "  " $0}'
+    getImages "$chart" "$existingDir" | awk '{print "  " $0}'
   ) | tee "$tmpDir/images.yaml" >/dev/stderr
 
   if yq -e .annotations "$chart/Chart.yaml" >/dev/null; then
-    echo "Existing annotations:" >/dev/stderr
-    yq -y '.annotations | del(.["artifacthub.io/images"])' "$chart/Chart.yaml" | tee "$tmpDir/annotations.yaml" >/dev/stderr
-    echo "Cleaned Chart.yaml:" >/dev/stderr
-    yq -y '. | del(.annotations)' "$chart/Chart.yaml" | tee >(sponge "$chart/Chart.yaml") >/dev/stderr
+    yq -y '.annotations | del(.["artifacthub.io/images"])' "$chart/Chart.yaml" >"$tmpDir/annotations.yaml"
+    yq -y '. | del(.annotations)' "$chart/Chart.yaml" | sponge "$chart/Chart.yaml"
   else
     touch "$tmpDir/annotations.yaml"
   fi
 
-  echo "New Chart.yaml:" >/dev/stderr
   (
     cat "$chart/Chart.yaml"
     echo "annotations:"
@@ -78,10 +61,14 @@ function updateChartYaml() {
       grep -v '{}' "$tmpDir/annotations.yaml" || true
       cat "$tmpDir/images.yaml"
     ) | awk '{print "  " $0}'
-  ) | tee >(sponge "$chart/Chart.yaml")
+  ) | sponge "$chart/Chart.yaml"
 }
 
-if [[ "$#" == 1 ]] && [[ -d "$1" ]]; then
+if [[ "$#" -ge 1 ]]; then
+  if ! [[ -d "$1" ]]; then
+    echo "Invalid chart directory '$1', exiting" >/dev/stderr
+    exit 1
+  fi
   if yq -e '.type == "library"' "$1/Chart.yaml" >/dev/null; then
     echo "Skipping library chart '$1'" >/dev/stderr
     exit 0
@@ -90,7 +77,11 @@ if [[ "$#" == 1 ]] && [[ -d "$1" ]]; then
     echo "There is no 'artifacthub-values.yaml' in 'charts/$1/ci', exiting" >/dev/stderr
     exit 1
   fi
-  updateChartYaml "$1"
+  if [[ -v 2 ]] && ! [[ -d "$2/artifacthub-values" ]]; then
+    echo "Missing artifacthub-values directory '$2', exiting" >/dev/stderr
+    exit 1
+  fi
+  updateChartYaml "$1" "${2:-}"
 else
   for chart in charts/*; do
     [[ "$chart" == "charts/*" ]] && continue
