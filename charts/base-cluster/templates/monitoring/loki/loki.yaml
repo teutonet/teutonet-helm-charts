@@ -1,5 +1,5 @@
 {{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.loki.enabled -}}
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: loki

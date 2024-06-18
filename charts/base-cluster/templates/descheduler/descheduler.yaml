@@ -3,7 +3,7 @@
 {{- $versionMatrix := dict 18 "0.20.x" 19 "0.21.x" 20 "0.22.x" 21 "0.23.x" 22 "0.24.x" 23 "0.25.x" 24 "0.26.x" 25 "0.27.x" 26 "0.28.x" -}}
 {{- $latestVersion := .Values.global.helmRepositories.descheduler.charts.descheduler -}}
 {{- $selectedVersion := (hasKey $versionMatrix $kubeMinorVersion) | ternary (index $versionMatrix $kubeMinorVersion) $latestVersion -}}
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: descheduler

@@ -25,9 +25,6 @@ spec:
             - Pod
       preconditions:
         any:
-          - key: {{ `{{ request.object.spec.serviceAccountName || '' }}` | quote }}
-            operator: Equals
-            value: ""
           - key: {{ `{{ request.object.spec.serviceAccountName || 'default' }}` | quote }}
             operator: Equals
             value: default
