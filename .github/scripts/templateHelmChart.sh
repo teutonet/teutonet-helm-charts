@@ -9,6 +9,9 @@ set -o pipefail
 [[ ! -v TMP_DIR ]] && trap 'rm -rf "$TMP_DIR"' EXIT
 TMP_DIR="${TMP_DIR:-$(mktemp -d)}"
 
+source <(helm env)
+mkdir -p "${HELM_REPOSITORY_CACHE}"
+
 function templateGitHelmRelease() {
   local gitUrl="$1"
   local gitRef="$2"
@@ -25,7 +28,6 @@ function templateGitHelmRelease() {
     git checkout -q "$gitRef"
   ) >/dev/null
 
-  source <(helm env)
   flock --close "${HELM_REPOSITORY_CACHE}" helm dependency update "$tmpDir/$gitPath" >/dev/null
   helm template ${namespace:+--namespace "$namespace"} "$releaseName" "$tmpDir/$gitPath" --values <(if [[ -f "$values" ]]; then cat "$values"; else echo "$values"; fi)
 }
