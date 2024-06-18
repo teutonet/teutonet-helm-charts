@@ -5,7 +5,7 @@
   {{- end -}}
   {{- if $create -}}
     {{- if eq ($config.type | default "helm") "helm" }}
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: {{ $name | quote }}
@@ -20,7 +20,7 @@ spec:
 ---
     {{ else -}}
       {{- range $chartName, $chartConfig := $config.charts -}}
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
   name: {{ printf "%s-%s" $name $chartName | quote }}

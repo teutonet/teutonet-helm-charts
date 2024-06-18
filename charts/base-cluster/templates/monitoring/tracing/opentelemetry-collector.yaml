@@ -1,5 +1,5 @@
 {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled -}}
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: open-telemetry-collector

@@ -1,5 +1,5 @@
 {{- if .Values.monitoring.securityScanning.enabled }}
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: trivy

@@ -1,5 +1,5 @@
 {{- if .Values.monitoring.prometheus.enabled }}
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: kube-prometheus-stack
@@ -21,15 +21,13 @@ spec:
     crds: CreateReplace
   postRenderers:
     - kustomize:
-        patchesStrategicMerge:
-          - apiVersion: apps/v1
-            kind: Deployment
-            metadata:
+        patches:
+          - target:
+              kind: Deployment
               name: kube-prometheus-stack-grafana-image-renderer
-              namespace: monitoring
-            spec:
-              template:
-                spec:
-                  automountServiceAccountToken: false
+            patch: |-
+              - op: add
+                path: /spec/template/spec/automountServiceAccountToken
+                value: false
   values: {{- include "base-cluster.prometheus.config" . | nindent 4 }}
 {{- end }}

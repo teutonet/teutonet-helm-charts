@@ -1,4 +1,4 @@
-{{- if and .Values.backup.backupStorageLocations (hasPrefix "4." (dig "spec" "chart" "spec" "version" "" (lookup "helm.toolkit.fluxcd.io/v2beta2" "HelmRelease" "backup" "velero"))) }}
+{{- if and .Values.backup.backupStorageLocations (hasPrefix "4." (dig "spec" "chart" "spec" "version" "" (lookup "helm.toolkit.fluxcd.io/v2" "HelmRelease" "backup" "velero"))) }}
 apiVersion: batch/v1
 kind: Job
 metadata:
