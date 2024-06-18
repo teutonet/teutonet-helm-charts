@@ -57,10 +57,14 @@ jobs:
           CT_CHART_REPOS: ${{ steps.helm-repos.outputs.repos }}
           CT_CHARTS: charts/${{ matrix.chart }}
 
-      - run: ./.github/scripts/enforce-trusted-registries.sh "charts/$CHART"
-      - name: Download Pluto
-        uses: FairwindsOps/pluto/github-action@master
       - run: ./.github/scripts/templateHelmChartRecursivelyToFolder.sh "charts/$CHART" /tmp/templated
         id: templateChart
+      - run: ./.github/scripts/extract-artifacthub-images.sh "charts/$CHART" /tmp/templated
+        if: ${{ steps.templateChart.outputs.skipped == 'false' }}
+      - run: ./.github/scripts/enforce-trusted-registries.sh "charts/$CHART"
+        if: ${{ steps.templateChart.outputs.skipped == 'false' }}
+      - name: Download Pluto
+        uses: FairwindsOps/pluto/github-action@master
+        if: ${{ steps.templateChart.outputs.skipped == 'false' }}
       - run: pluto detect-files -d /tmp/templated -o custom --columns 'FILEPATH,NAME,KIND,VERSION,REPLACEMENT,REMOVED,DEPRECATED,REPL AVAIL'
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
