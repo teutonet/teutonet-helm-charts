@@ -19,19 +19,25 @@ spec:
   {{- end }}
   values:
     {{- if .Values.global.imageRegistry }}
-    global:
-      registry: {{ .Values.global.imageRegistry }}
+    global: &registryImage
+      image:
+        registry: {{ .Values.global.imageRegistry }}
+    test: *registryImage
     {{- else }}
     test:
-      image: &defaultImage
-        registry: docker.io
-    policyReportsCleanup:
-      image: *defaultImage
+      image:
+        registry: ghcr.io
     cleanupJobs:
-      admissionReports:
-        image: *defaultImage
-      clusterAdmissionReports:
-        image: *defaultImage
+      admissionReports: &defaultImage
+        image:
+          registry: docker.io
+      updateRequests: *defaultImage
+      ephemeralReports: *defaultImage
+      clusterEphemeralReports: *defaultImage
+      clusterAdmissionReports: *defaultImage
+    policyReportsCleanup: *defaultImage
+    crds:
+      migration: *defaultImage
     {{- end }}
     installCRDs: true
     networkPolicy:
@@ -39,7 +45,8 @@ spec:
     webhooksCleanup:
       enable: true
       {{- if not .Values.global.imageRegistry }}
-      image: *defaultImage
+      image:
+        registry: docker.io
       {{- end }}
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
