@@ -18,6 +18,11 @@ spec:
       namespace: monitoring
   {{- end }}
   values:
+    apiVersionOverride:
+      # the smart check for the correct version fails when offline
+      # the old version is removed since 1.25, so this doesn't hurt
+      # this is just to make pluto happy
+      podDisruptionBudget: policy/v1
     {{- if .Values.global.imageRegistry }}
     global:
       registry: {{ .Values.global.imageRegistry }}
