@@ -324,6 +324,14 @@ monitoring:
 
 descheduler:
   enabled: true
+  resourcesPreset: nano
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
   strategies:
     RemoveDuplicates:
       enabled: true

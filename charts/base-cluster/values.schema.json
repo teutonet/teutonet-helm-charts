@@ -962,6 +962,12 @@
             },
             "additionalProperties": false
           }
+        },
+        "resourcesPreset": {
+          "$ref": "#/$defs/resourcesPreset"
+        },
+        "resources": {
+          "$ref": "#/$defs/resourceRequirements"
         }
       },
       "additionalProperties": false
