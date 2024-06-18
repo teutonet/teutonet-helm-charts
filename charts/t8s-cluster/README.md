@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # t8s-cluster
 
-![Version: 7.0.1](https://img.shields.io/badge/Version-7.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 8.0.0](https://img.shields.io/badge/Version-8.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -43,6 +43,10 @@ delete the cloud-config secret, as these will just be recreated during installat
 ### 5.x.x -> 7.x.x
 
 Just skip version 6.x.x, as there was a mistake and it has been reverted.
+
+### 7.x.x -> 8.x.x
+
+Removed the unused `.metadata.gopassName` field.
 
 # t8s cluster configuration
 
@@ -134,7 +138,7 @@ Just skip version 6.x.x, as there was a mistake and it has been reverted.
 | -------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [](#global_helmRepositories_additionalProperties_charts_additionalProperties ) | No      | string | No         | -          | -                 |
 
-##### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties"></a>1.1.1.2.1. Property `t8s cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties`
+###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties"></a>1.1.1.2.1. Property `t8s cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties`
 
 |          |          |
 | -------- | -------- |
@@ -311,7 +315,6 @@ bitnami/kubectl
 | - [friendlyName](#metadata_friendlyName )                   | No      | string           | No         | -          | -                 |
 | - [supportProjectUrl](#metadata_supportProjectUrl )         | No      | string           | No         | -          | -                 |
 | - [configGroupUrl](#metadata_configGroupUrl )               | No      | string           | No         | -          | -                 |
-| - [gopassName](#metadata_gopassName )                       | No      | string           | No         | -          | -                 |
 | - [remarks](#metadata_remarks )                             | No      | string           | No         | -          | -                 |
 
 ### <a name="metadata_serviceLevelAgreement"></a>2.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > metadata > serviceLevelAgreement`
@@ -355,13 +358,7 @@ Must be one of:
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="metadata_gopassName"></a>2.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > metadata > gopassName`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
-
-### <a name="metadata_remarks"></a>2.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > metadata > remarks`
+### <a name="metadata_remarks"></a>2.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > metadata > remarks`
 
 |          |          |
 | -------- | -------- |
