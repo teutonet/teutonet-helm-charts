@@ -17,6 +17,8 @@ spec:
         runAsGroup: 1000
         runAsUser: 1000
         fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: fail
           image: {{ template "base-cluster.kubectl.image" . }}
