@@ -1,6 +1,5 @@
 {{- define "t8s-cluster.helm.resourceIntoCluster" -}}
   {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: {{ printf "%s-%s" .Release.Name .name }}

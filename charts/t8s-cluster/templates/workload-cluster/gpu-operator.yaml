@@ -1,5 +1,5 @@
 {{- if eq (include "t8s-cluster.hasGPUNodes" (dict "context" $)) "true" }}
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: {{ printf "%s-gpu-operator" .Release.Name }}
