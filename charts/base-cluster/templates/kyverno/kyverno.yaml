@@ -31,7 +31,7 @@ spec:
     {{- else }}
     test:
       image:
-        registry: ghcr.io
+        registry: docker.io
     cleanupJobs:
       admissionReports: &defaultImage
         image:
