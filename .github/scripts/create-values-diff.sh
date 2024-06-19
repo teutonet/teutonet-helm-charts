@@ -143,7 +143,7 @@ if [[ "$dryRun" == false ]]; then
       -H 'Accept: application/vnd.github+json' \
       -H "Authorization: token ${GITHUB_TOKEN}" \
       "${GITHUB_API_REPO_URL}/issues/${issue}/comments" |
-      jq -er 'map(select(.body | contains(":robot: I have diffed this *beep* *boop*")))[0].id'
+      jq -r 'map(select(.body | contains(":robot: I have diffed this *beep* *boop*")))[0].id'
   )"
   if [[ "$existingCommentId" != null ]]; then
     updateComment "$issue" "$existingCommentId" "$body"
