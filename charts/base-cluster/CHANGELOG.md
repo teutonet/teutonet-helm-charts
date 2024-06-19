@@ -1,5 +1,26 @@
 # Changelog
 
+## [6.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.2.0...base-cluster-v6.3.0) (2024-06-19)
+
+
+### Features
+
+* **base-cluster/raise_api_version:** raise api version for helm.tool… ([#983](https://github.com/teutonet/teutonet-helm-charts/issues/983)) ([1439938](https://github.com/teutonet/teutonet-helm-charts/commit/143993801cafd568a97d8be07e78144feb529b97))
+
+
+### Bug Fixes
+
+* **base-cluster/kyverno:** change image registry for the test image ([#996](https://github.com/teutonet/teutonet-helm-charts/issues/996)) ([1b77a34](https://github.com/teutonet/teutonet-helm-charts/commit/1b77a34823f4a5582a8341d139cd6f32cd55a003))
+* **base-cluster:** add missing seccompProfiles ([#988](https://github.com/teutonet/teutonet-helm-charts/issues/988)) ([18b59c6](https://github.com/teutonet/teutonet-helm-charts/commit/18b59c634787e7366747f1afa1c14df31ec8673c))
+* **base-cluster:** kyverno image registries ([#987](https://github.com/teutonet/teutonet-helm-charts/issues/987)) ([a931a2e](https://github.com/teutonet/teutonet-helm-charts/commit/a931a2ecf525add514f58ca9b541ae71302f4e1b))
+* **base-cluster:** wrong image for crds.migration ([#993](https://github.com/teutonet/teutonet-helm-charts/issues/993)) ([3c43f0f](https://github.com/teutonet/teutonet-helm-charts/commit/3c43f0fa6326475981334202f610c603794628e5))
+
+
+### Miscellaneous Chores
+
+* **base-cluster:** add missing resources for descheduler ([#989](https://github.com/teutonet/teutonet-helm-charts/issues/989)) ([39b3389](https://github.com/teutonet/teutonet-helm-charts/commit/39b33896326e3775dc037367a189de4998d7ee26))
+* **base-cluster:** fix kyverno pdb version ([#990](https://github.com/teutonet/teutonet-helm-charts/issues/990)) ([fb08b9d](https://github.com/teutonet/teutonet-helm-charts/commit/fb08b9db13e0d761a04bb7005baa0fc5c80a59c6))
+
 ## [6.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.1.4...base-cluster-v6.2.0) (2024-06-13)
 
 
