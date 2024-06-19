@@ -20,7 +20,6 @@ registries:
     aquasecurity: ALL_IMAGES
     kyverno: ALL_IMAGES
     teutonet: ALL_IMAGES
-    busybox: ALL_TAGS
   quay.io:
     cilium: ALL_IMAGES
     jetstack: ALL_IMAGES
