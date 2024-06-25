@@ -151,11 +151,7 @@ envValueFrom:
       optional: false
   {{- end }}
 grafana.ini:
-{{- if $.Values.monitoring.grafana.config -}}
-  {{ merge $.Values.monitoring.grafana.config (include "base-cluster.grafana.config" $ | fromYaml) | toYaml | nindent 4 -}}
-{{- else -}}
-  {{ include "base-cluster.grafana.config" $ | nindent 4 -}}
-{{- end }}
+  {{ merge ($.Values.monitoring.grafana.config | default (dict)) (include "base-cluster.grafana.config" $ | fromYaml) | toYaml | nindent 4 -}}
 {{- end }}
 downloadDashboards:
   securityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 4 }}
