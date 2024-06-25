@@ -18,28 +18,23 @@ k0sConfig:
     network:
       provider: custom
     api:
-      extraArgs:
-{{/*        admission-control-config-file: &admissionControlConfigFilePath /etc/kubernetes/admission-control-config.yaml*/}}
-        cloud-provider: external
-{{/*        enable-admission-plugins: AlwaysPullImages,EventRateLimit,NodeRestriction*/}}
-        enable-admission-plugins: AlwaysPullImages,NodeRestriction
-        profiling: 'false'
-        tls-cipher-suites: {{ include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) }}
-        event-ttl: 4h
+      extraArgs: {{- include "t8s-cluster.clusterClass.args.apiServer" (dict "context" .) | nindent 8 }}
+        # TODO: figure out how to make this work
+        # admission-control-config-file: &admissionControlConfigFilePath /etc/kubernetes/admission-control-config.yaml
     controllerManager:
-      extraArgs:
-        authorization-always-allow-paths: /healthz,/readyz,/livez,/metrics
-        bind-address: 0.0.0.0
-        cloud-provider: external
-        profiling: 'false'
-        terminated-pod-gc-threshold: '100'
+      extraArgs: {{- include "t8s-cluster.clusterClass.args.controllerManager" (dict "context" .) | nindent 8 }}
     scheduler:
-      extraArgs:
-        authorization-always-allow-paths: /healthz,/readyz,/livez,/metrics
-        bind-address: 0.0.0.0
-        profiling: 'false'
+      extraArgs: {{- include "t8s-cluster.clusterClass.args.scheduler" (dict) | nindent 8 }}
     telemetry:
       enabled: false
+    workerProfiles:
+      - name: compute-plane
+        values: {{- include "t8s-cluster.kubelet.options" (dict) | nindent 10 }}
+    featureGates: {{- range $featureGate, $components := include "t8s-cluster.featureGates" (dict) | fromYaml }}
+      - name: {{ $featureGate }}
+        enabled: true
+        components: {{- $components | toYaml | nindent 10 }}
+      {{- end }}
 etcd:
   persistence:
     size: 5Gi

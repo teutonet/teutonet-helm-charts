@@ -5,14 +5,13 @@
 {{- end -}}
 
 {{- define "t8s-cluster.etcd-defrag" -}}
-  {{- $_ := set . "Values" .context.Values -}}
-  {{- $_ = set . "Release" .context.Release -}}
+  {{- $_ := merge . (pick .context "Values" "Release" "Chart") -}}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: kube-etcd-defrag
   namespace: {{ .Values.controlPlane.hosted | ternary .Release.Namespace "kube-system" }}
-  labels: {{- include "common.labels.standard" .context | nindent 4 }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 10

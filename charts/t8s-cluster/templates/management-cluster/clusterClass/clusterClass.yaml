@@ -203,7 +203,7 @@ spec:
           bootstrap:
             ref:
               apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
-              kind: KubeadmConfigTemplate
+              kind: {{ $.Values.controlPlane.hosted | ternary "K0sWorkerConfigTemplate" "KubeadmConfigTemplate" }}
               name: {{ printf "%s-%s-compute-plane" $.Release.Name ($isGpuDeploymentClass | ternary "gpu" "standard") }}
           infrastructure:
             ref:

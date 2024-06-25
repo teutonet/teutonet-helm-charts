@@ -1,0 +1,14 @@
+{{- define "t8s-cluster.clusterClass.bootstrapConfigTemplate.kubeadm.spec" -}}
+  {{- $_ := merge . (pick .context "Values") -}}
+joinConfiguration:
+  nodeRegistration:
+    kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict "context" .context) | nindent 6 }}
+  patches:
+    directory: /etc/kubernetes/patches
+files: {{- include "t8s-cluster.clusterClass.configTemplate.files" (dict "context" .context "gpu" .gpu) | nindent 2 }}
+  {{ if .Values.global.injectedCertificateAuthorities }}
+preKubeadmCommands:
+  - update-ca-certificates
+  {{- end }}
+postKubeadmCommands: {{- include "t8s-cluster.clusterClass.postKubeadmCommands" (dict) | nindent 2 }}
+{{- end -}}

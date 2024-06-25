@@ -1,0 +1,16 @@
+{{- define "t8s-cluster.clusterClass.bootstrapConfigTemplate.k0smotron.spec" -}}
+  {{- $_ := merge . (pick .context "Values") -}}
+  {{- $kubeletExtraArgs := list -}}
+  {{- range $key, $value := include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict "context" .context) | fromYaml -}}
+    {{- $kubeletExtraArgs = append $kubeletExtraArgs (printf "%s=%s" $key $value) -}}
+  {{- end -}}
+args:
+  - {{ printf `--kubelet-extra-args="%s"` ($kubeletExtraArgs | join " ") }}
+files: {{- include "t8s-cluster.clusterClass.configTemplate.files" (dict "context" .context "gpu" .gpu "excludePatches" true) | nindent 2 }}
+  {{ $preStartCommands := list -}}
+  {{ if .Values.global.injectedCertificateAuthorities -}}
+    {{- $preStartCommands = append $preStartCommands "update-ca-certificates" -}}
+  {{- end -}}
+  {{- $preStartCommands = append $preStartCommands (include "t8s-cluster.clusterClass.postKubeadmCommands" (dict) | fromYamlArray) }}
+preStartCommands: {{- $preStartCommands | toYaml | nindent 2 }}
+{{- end -}}
