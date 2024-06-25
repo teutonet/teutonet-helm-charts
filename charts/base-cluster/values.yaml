@@ -215,6 +215,9 @@ monitoring:
     notifiers: []
     resourcesPreset: nano
     resources: {}
+    persistence:
+      enabled: false
+    config: {}
     sidecar:
       resourcesPreset: nano
       resources: {}

@@ -18,6 +18,31 @@ ingress:
   {{- end -}}
 {{- end -}}
 
+{{- define "base-cluster.grafana.config" -}}
+  auth:
+    signout_redirect_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
+  {{- with .Values.global.authentication }}
+    {{- if .config.clientId }}
+    {{- $issuerUrl := printf "https://%s%s" .config.issuerHost .config.issuerPath}}
+    oauth_auto_login: true
+    disable_login_form: false
+    auth.generic_oauth:
+      enabled: true
+      allow_sign_up: true
+      api_url: {{ printf "%s%s" $issuerUrl .grafana.apiPath }}
+      auth_url: {{ printf "%s%s" $issuerUrl .grafana.authenticationPath }}
+      token_url: {{ printf "%s%s" $issuerUrl .grafana.tokenPath }}
+      client_id: {{ .config.clientId }}
+      client_secret: ${OIDC_CLIENT_SECRET}
+      name: OAuth
+      role_attribute_path: {{ .grafana.roleAttributePath | quote }}
+      scopes: openid profile email
+    {{- end }}
+  {{- end }}
+    server:
+      root_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
+{{- end -}}
+
 {{- define "base-cluster.prometheus-stack.containerSecurityContext" -}}
 capabilities:
   drop:
