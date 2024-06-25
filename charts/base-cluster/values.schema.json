@@ -806,6 +806,9 @@
                 },
                 "size": {
                   "$ref": "#/$defs/quantity"
+                },
+                "storageClassName": {
+                  "type": "string"
                 }
               },
               "additionalProperties": false
