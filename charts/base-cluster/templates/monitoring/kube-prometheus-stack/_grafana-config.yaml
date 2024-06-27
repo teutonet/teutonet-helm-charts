@@ -1,4 +1,4 @@
-{{- define "base-cluster.grafana.config" -}}
+{{- define "base-cluster.prometheus-stack.grafana.ini" -}}
 auth:
   signout_redirect_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
   {{- with .Values.global.authentication }}
@@ -176,7 +176,7 @@ envValueFrom:
       optional: false
   {{- end }}
 grafana.ini:
-  {{ merge ($.Values.monitoring.grafana.config | default (dict)) (include "base-cluster.grafana.config" $ | fromYaml) | toYaml | nindent 4 -}}
+  {{ merge ($.Values.monitoring.grafana.config | default (dict)) (include "base-cluster.prometheus-stack.grafana.ini" $ | fromYaml) | toYaml | nindent 4 -}}
 {{- end }}
 downloadDashboards:
   securityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 4 }}
