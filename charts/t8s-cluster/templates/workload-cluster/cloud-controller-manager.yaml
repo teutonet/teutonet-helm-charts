@@ -56,8 +56,10 @@ spec:
       - key: node.cloudprovider.kubernetes.io/uninitialized
         value: "true"
         effect: NoSchedule
+    {{- if not .Values.controlPlane.hosted }}
       - key: node-role.kubernetes.io/control-plane
         effect: NoSchedule
     nodeSelector:
       node-role.kubernetes.io/control-plane: ""
+    {{- end }}
   {{- end }}

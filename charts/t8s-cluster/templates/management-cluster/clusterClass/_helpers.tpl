@@ -16,6 +16,15 @@ openstack
   {{- $cipherSuites | toYaml -}}
 {{- end -}}
 
+{{- define "t8s-cluster.clusterClass.preKubeadmCommands" -}}
+  {{- $_ := merge . (pick .context "Values") -}}
+  {{- $commands := list -}}
+  {{- if .Values.global.injectedCertificateAuthorities -}}
+    {{- $commands = append $commands "update-ca-certificates" -}}
+  {{- end -}}
+  {{- toYaml $commands }}
+{{- end -}}
+
 {{- define "t8s-cluster.clusterClass.postKubeadmCommands" -}}
   {{- $commands := list -}}
   {{- toYaml $commands }}
@@ -150,10 +159,18 @@ server = {{ printf "https://%s" .registry | quote }}
   {{- $args | toYaml -}}
 {{- end }}
 
+{{- define "t8s-cluster.clusterClass.apiServer.admissionPlugins" -}}
+  {{- $admissionPlugins := list "AlwaysPullImages" -}}
+  {{- if not .excludePatches -}}
+    {{- $admissionPlugins = concat $admissionPlugins (list "EventRateLimit" "NodeRestriction") -}}
+  {{- end -}}
+  {{- $admissionPlugins | toYaml -}}
+{{- end -}}
+
 {{- define "t8s-cluster.clusterClass.args.apiServer" -}}
   {{- $args := include "t8s-cluster.clusterClass.args.base" (dict "context" .context) | fromYaml -}}
   {{- $args = merge (include "t8s-cluster.clusterClass.args.sharedController" (dict "context" .context) | fromYaml) $args -}}
-  {{- $args = set $args "enable-admission-plugins" (list "AlwaysPullImages" "EventRateLimit" "NodeRestriction" | join ",") -}}
+  {{- $args = set $args "enable-admission-plugins" (include "t8s-cluster.clusterClass.apiServer.admissionPlugins" (dict "excludePatches" .excludePatches) | fromYamlArray | join ",") -}}
   {{- $args = set $args "event-ttl" "4h" -}}
   {{- $args = set $args "tls-cipher-suites" (include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) | fromYamlArray | join ",") -}}
   {{- $args | toYaml -}}

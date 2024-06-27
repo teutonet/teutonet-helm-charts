@@ -31,6 +31,8 @@ kubeadmConfigSpec:
     scheduler:
       extraArgs: {{- include "t8s-cluster.clusterClass.args.scheduler" (dict) | nindent 8 }}
   files: {{- include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.files" (merge . (dict "admissionControlConfigFilePath" $admissionControlConfigFilePath "eventRateLimitConfigFilePath" $eventRateLimitConfigFilePath)) | nindent 4 }}
+  {{- $apiserverPatch := dict "spec" (dict "containers" (list (dict "name" "kube-apiserver" "resources" (dict "requests" (dict "memory" "2Gi") "limits" (dict "memory" "4Gi"))))) }}
+  {{- list (include "t8s-cluster.patches.patchFile" (dict "values" $apiserverPatch "target" "kube-apiserver" "component" "memory") | fromYaml) | toYaml | nindent 4 }}
   initConfiguration: &configuration
     nodeRegistration:
       kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict "context" .) | nindent 8 }}
