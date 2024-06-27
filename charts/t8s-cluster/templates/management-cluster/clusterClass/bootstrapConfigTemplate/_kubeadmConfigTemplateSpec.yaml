@@ -6,9 +6,6 @@ joinConfiguration:
   patches:
     directory: /etc/kubernetes/patches
 files: {{- include "t8s-cluster.clusterClass.configTemplate.files" (dict "context" .context "gpu" .gpu) | nindent 2 }}
-  {{ if .Values.global.injectedCertificateAuthorities }}
-preKubeadmCommands:
-  - update-ca-certificates
-  {{- end }}
+preKubeadmCommands: {{- include "t8s-cluster.clusterClass.preKubeadmCommands" (dict "context" .context) | nindent 2 }}
 postKubeadmCommands: {{- include "t8s-cluster.clusterClass.postKubeadmCommands" (dict) | nindent 2 }}
 {{- end -}}

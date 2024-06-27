@@ -57,13 +57,15 @@ spec:
   values:
     cluster:
       name: {{ .Values.metadata.friendlyName | default .Release.Name }}
-    {{- if le (.Values.version.minor | int) 28 }}
+  {{- if le (.Values.version.minor | int) 28 }}
     tolerations:
       - key: node.cloudprovider.kubernetes.io/uninitialized
         value: "true"
         effect: NoSchedule
+    {{- if not .Values.controlPlane.hosted }}
       - key: node-role.kubernetes.io/control-plane
         effect: NoSchedule
     nodeSelector:
       node-role.kubernetes.io/control-plane: ""
     {{- end }}
+  {{- end }}
