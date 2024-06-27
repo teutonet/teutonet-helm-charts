@@ -39,11 +39,9 @@ securityContext:
 containerSecurityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 2 }}
 resources: {{- include "common.resources" .Values.monitoring.grafana | nindent 2 }}
 {{- if .Values.monitoring.grafana.persistence.enabled }}
-persistence:
+persistence: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.grafana.persistence "global" $.Values.global) | nindent 2 }}
   enabled: true
-  size: {{ .Values.monitoring.grafana.persistence.size | default "10Gi" }}
-  {{- $storageClass := include "common.storage.class" (dict "persistence" .Values.storage.readWriteMany.persistence "global" $.Values.global) | fromYaml -}}
-  storageClassName: {{ $storageClass.storageClassName  | default "default" | quote }}
+  size: {{ .Values.monitoring.grafana.persistence.size }}
 {{- end }}
 serviceMonitor:
   interval: "30s"
