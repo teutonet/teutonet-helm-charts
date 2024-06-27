@@ -1,6 +1,10 @@
 {{- define "t8s-cluster.patches.kubelet.imagePulls" -}}
   {{- $_ := mustMerge . (pick .context "Values") -}}
-  {{- include "t8s-cluster.patches.patchFile" (dict "values" (dict "serializeImagePulls" false "maxParallelImagePulls" .Values.global.kubeletExtraConfig.maxParallelImagePulls) "target" "kubeletconfiguration" "component" "imagePulls") -}}
+  {{- $values := dict -}}
+  {{- if and (or (gt (.Values.version.major | int) 1) (ge (.Values.version.minor | int) 27)) (gt (int .Values.global.kubeletExtraConfig.maxParallelImagePulls) 1) -}}
+    {{- $values = merge $values (dict "serializeImagePulls" false "maxParallelImagePulls" .Values.global.kubeletExtraConfig.maxParallelImagePulls) -}}
+  {{- end -}}
+  {{- $values | toYaml -}}
 {{- end -}}
 
 {{- define "t8s-cluster.kubelet.featureGates"}}
@@ -28,8 +32,8 @@
 {{- define "t8s-cluster.patches.kubelet.patches" -}}
   {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- $patches := list (include "t8s-cluster.patches.kubelet.default" (dict) | fromYaml) -}}
-  {{- if and (or (gt (.Values.version.major | int) 1) (ge (.Values.version.minor | int) 27)) (gt (int .Values.global.kubeletExtraConfig.maxParallelImagePulls) 1) -}}
-    {{- $patches = append $patches (include "t8s-cluster.patches.kubelet.imagePulls" (dict "context" .context) | fromYaml) -}}
+  {{- with include "t8s-cluster.patches.kubelet.imagePulls" (dict "context" .context) | fromYaml -}}
+    {{- $patches = append $patches (include "t8s-cluster.patches.patchFile" (dict "values" . "target" "kubeletconfiguration" "component" "imagePulls") | fromYaml) -}}
   {{- end -}}
   {{- toYaml $patches -}}
 {{- end -}}

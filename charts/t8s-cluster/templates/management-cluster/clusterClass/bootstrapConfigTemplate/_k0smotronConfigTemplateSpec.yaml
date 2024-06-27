@@ -2,15 +2,32 @@
   {{- $_ := merge . (pick .context "Values") -}}
   {{- $kubeletExtraArgs := list -}}
   {{- range $key, $value := include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict "context" .context) | fromYaml -}}
-    {{- $kubeletExtraArgs = append $kubeletExtraArgs (printf "%s=%s" $key $value) -}}
+    {{- $kubeletExtraArgs = append $kubeletExtraArgs (printf "--%s=%s" $key $value) -}}
   {{- end -}}
 args:
+  - --cri-socket=remote:/run/containerd/containerd.sock
+  {{- if le (.Values.version.minor | int) 28 }}
+  - --enable-cloud-provider
+  {{- end }}
   - {{ printf `--kubelet-extra-args="%s"` ($kubeletExtraArgs | join " ") }}
 files: {{- include "t8s-cluster.clusterClass.configTemplate.files" (dict "context" .context "gpu" .gpu "excludePatches" true) | nindent 2 }}
-  {{ $preStartCommands := list -}}
-  {{ if .Values.global.injectedCertificateAuthorities -}}
-    {{- $preStartCommands = append $preStartCommands "update-ca-certificates" -}}
+  {{/* for seamless usage of the `/var/lib/kubelet` directory, these folders need to be linked */}}
+  {{- $subfolders := list "pods" "plugins_registry" "registration-dir" "pods-mount-dir" "plugins" "device-plugins" -}}
+  {{- $foldersToCreate := list -}}
+  {{- range $subfolder := $subfolders -}}
+    {{- $foldersToCreate = append $foldersToCreate (printf "/var/lib/k0s/kubelet/%s" $subfolder) -}}
   {{- end -}}
-  {{- $preStartCommands = append $preStartCommands (include "t8s-cluster.clusterClass.postKubeadmCommands" (dict) | fromYamlArray) }}
-preStartCommands: {{- $preStartCommands | toYaml | nindent 2 }}
+  {{/* this service isn't needed by k0s */}}
+  {{- $preStartCommands := list
+    "systemctl disable --now kubelet.service"
+    (printf "mkdir -p %s" ($foldersToCreate | join " "))
+  }}
+  {{ range $subfolder := $subfolders -}}
+    {{- $preStartCommands = append $preStartCommands (printf "ln -s /var/lib/k0s/kubelet/%s /var/lib/kubelet/%s" $subfolder $subfolder) -}}
+  {{- end -}}
+  {{- $preStartCommands = concat $preStartCommands
+    (include "t8s-cluster.clusterClass.preKubeadmCommands" (dict "context" .context) | fromYamlArray)
+    (include "t8s-cluster.clusterClass.postKubeadmCommands" (dict) | fromYamlArray)
+  }}
+preStartCommands: {{- $preStartCommands | default (list) | toYaml | nindent 2 }}
 {{- end -}}
