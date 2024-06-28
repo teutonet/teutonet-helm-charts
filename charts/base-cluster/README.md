@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # base-cluster
 
-![Version: 6.3.0](https://img.shields.io/badge/Version-6.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 6.4.0](https://img.shields.io/badge/Version-6.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -2239,6 +2239,7 @@ Must be one of:
 | - [additionalPlugins](#monitoring_grafana_additionalPlugins )       | No      | array of string  | No         | -                                                                             | -                                                                       |
 | - [resourcesPreset](#monitoring_grafana_resourcesPreset )           | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                       |
 | - [resources](#monitoring_grafana_resources )                       | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements.       |
+| - [persistence](#monitoring_grafana_persistence )                   | No      | object           | No         | -                                                                             | -                                                                       |
 | - [sidecar](#monitoring_grafana_sidecar )                           | No      | object           | No         | -                                                                             | -                                                                       |
 
 #### <a name="monitoring_grafana_adminPassword"></a>3.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > adminPassword`
@@ -2436,7 +2437,40 @@ Must be one of:
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-#### <a name="monitoring_grafana_sidecar"></a>3.5.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > sidecar`
+#### <a name="monitoring_grafana_persistence"></a>3.5.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > persistence`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                                                | Pattern | Type    | Deprecated | Definition                                                                                                                                         | Title/Description |
+| ----------------------------------------------------------------------- | ------- | ------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| - [enabled](#monitoring_grafana_persistence_enabled )                   | No      | boolean | No         | -                                                                                                                                                  | -                 |
+| - [size](#monitoring_grafana_persistence_size )                         | No      | object  | No         | Same as [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties ) | -                 |
+| - [storageClassName](#monitoring_grafana_persistence_storageClassName ) | No      | string  | No         | -                                                                                                                                                  | -                 |
+
+##### <a name="monitoring_grafana_persistence_enabled"></a>3.5.9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > persistence > enabled`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+##### <a name="monitoring_grafana_persistence_size"></a>3.5.9.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > persistence > size`
+
+|                           |                                                                                                                                           |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                  |
+| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.")         |
+| **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
+
+##### <a name="monitoring_grafana_persistence_storageClassName"></a>3.5.9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > persistence > storageClassName`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+#### <a name="monitoring_grafana_sidecar"></a>3.5.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > sidecar`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2448,14 +2482,14 @@ Must be one of:
 | - [resourcesPreset](#monitoring_grafana_sidecar_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
 | - [resources](#monitoring_grafana_sidecar_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
 
-##### <a name="monitoring_grafana_sidecar_resourcesPreset"></a>3.5.9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > sidecar > resourcesPreset`
+##### <a name="monitoring_grafana_sidecar_resourcesPreset"></a>3.5.10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > sidecar > resourcesPreset`
 
 |                        |                                                                      |
 | ---------------------- | -------------------------------------------------------------------- |
 | **Type**               | `enum (of string)`                                                   |
 | **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
 
-##### <a name="monitoring_grafana_sidecar_resources"></a>3.5.9.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > sidecar > resources`
+##### <a name="monitoring_grafana_sidecar_resources"></a>3.5.10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > sidecar > resources`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
