@@ -1,4 +1,5 @@
 {{- define "base-cluster.kyverno.policies.restrict-automount-sa-token" -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
 # Source: https://kyverno.io/policies/other/restrict_automount_sa_token/restrict_automount_sa_token/
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -15,7 +16,7 @@ metadata:
       be followed if Pods do not need to speak to the API server to function.
       This policy ensures that mounting of the default ServiceAccount is blocked.
 spec:
-  validationFailureAction: {{ .context.Values.kyverno.validationFailureAction }}
+  validationFailureAction: {{ .Values.kyverno.validationFailureAction }}
   background: true
   rules:
     - name: validate-automountServiceAccountToken
