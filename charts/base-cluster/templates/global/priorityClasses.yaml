@@ -1,5 +1,5 @@
 {{- $defaultClasses := dict "cluster-components" (dict "value" 500000000) "monitoring-components" (dict "value" 250000000) -}}
-{{- $priorityClasses := merge $defaultClasses .Values.global.priorityClasses -}}
+{{- $priorityClasses := mustMerge $defaultClasses .Values.global.priorityClasses -}}
   {{- range $priorityClassName, $priorityClass := $priorityClasses }}
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
