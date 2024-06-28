@@ -1,9 +1,9 @@
 {{- define "base-cluster.prometheus-stack.grafana.ini.ingress" -}}
   {{- $host := printf "https://%s" (include "base-cluster.grafana.host" .context) -}}
+server:
+  root_url: {{ $host }}
 auth:
   signout_redirect_url: {{ $host }}
-  server:
-    root_url: {{ $host }}
 {{- end -}}
 
 {{- define "base-cluster.prometheus-stack.grafana.ini.oauth" -}}
