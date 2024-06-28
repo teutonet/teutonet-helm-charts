@@ -1,6 +1,5 @@
 {{- define "t8s-cluster.patches.patchFile" -}}
-content: |- {{- toYaml .values | nindent 2 }}
-path: {{ printf "%s/%s-%s.yaml" (include "t8s-cluster.patches.directory" (dict)) .target .component }}
+  {{- dict "content" (toYaml .values) "path" (printf "%s/%s-%s.yaml" (include "t8s-cluster.patches.directory" (dict)) .target .component) | toYaml -}}
 {{- end -}}
 
 {{- define "t8s-cluster.patches.directory" -}}

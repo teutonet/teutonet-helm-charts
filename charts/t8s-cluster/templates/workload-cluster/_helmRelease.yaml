@@ -1,5 +1,5 @@
 {{- define "t8s-cluster.helm.resourceIntoCluster" -}}
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: {{ printf "%s-%s" .context.Release.Name .name }}
