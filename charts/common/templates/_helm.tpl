@@ -24,7 +24,7 @@ Returns a HelmRelease.spec.chart.spec for a given chart in a given repository.
   {{- $_ = set . "Values" .context.Values -}}
   {{- $spec := dict -}}
   {{- if eq (dig .repo "type" "helm" .Values.global.helmRepositories) "helm" -}}
-    {{- $spec = merge (dict
+    {{- $spec = mustMerge (dict
           "chart" .chart
           "sourceRef" (dict
             "kind" "HelmRepository"
@@ -34,7 +34,7 @@ Returns a HelmRelease.spec.chart.spec for a given chart in a given repository.
       ) $spec
     -}}
   {{- else -}}
-    {{- $spec = merge (dict
+    {{- $spec = mustMerge (dict
           "chart" (dig .repo "charts" .chart "path" (printf "charts/%s" .chart) .Values.global.helmRepositories)
           "sourceRef" (dict
             "kind" "GitRepository"
@@ -46,4 +46,3 @@ Returns a HelmRelease.spec.chart.spec for a given chart in a given repository.
   {{- end -}}
   {{- $spec | toYaml -}}
 {{- end -}}
-

@@ -5,10 +5,10 @@ Return a resource request/limit object based on a given preset or provided resou
 {{- define "common.resources" -}}
   {{- $resources := dict -}}
   {{- if .resources -}}
-    {{- $resources = .resources | merge $resources -}}
+    {{- $resources = .resources | mustMerge $resources -}}
   {{- end -}}
   {{- if and .resourcesPreset (ne .resourcesPreset "none") -}}
-    {{- $resources = include "common.resources.preset" (dict "type" .resourcesPreset) | fromYaml | merge $resources -}}
+    {{- $resources = include "common.resources.preset" (dict "type" .resourcesPreset) | fromYaml | mustMerge $resources -}}
   {{- end -}}
   {{- toYaml $resources -}}
 {{- end -}}
