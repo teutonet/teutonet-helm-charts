@@ -1,15 +1,14 @@
 {{- define "t8s-cluster.workload.uninstall-job" -}}
   {{- $name := .name -}}
   {{- $clusterResourceSet := .clusterResourceSet -}}
-  {{- $_ := set . "Values" .context.Values -}}
-  {{- $_ = set . "Release" .context.Release -}}
+  {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
   {{- if lookup "addons.cluster.x-k8s.io/v1beta1" "ClusterResourceSet" .Release.Namespace $clusterResourceSet -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ $name }}-uninstall
   namespace: {{ .Release.Namespace }}
-  labels: {{- include "common.labels.standard" .context | nindent 4 }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: {{ $name }}
     app.kubernetes.io/part-of: pre-install-upgrade-cleanup
   annotations:
@@ -88,7 +87,7 @@ kind: ServiceAccount
 metadata:
   name: {{ $name }}-uninstall
   namespace: {{ .Release.Namespace }}
-  labels: {{- include "common.labels.standard" .context | nindent 4 }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: {{ $name }}
     app.kubernetes.io/part-of: pre-install-cleanup
   annotations:
@@ -100,7 +99,7 @@ kind: Role
 metadata:
   name: {{ $name }}-uninstall
   namespace: {{ .Release.Namespace }}
-  labels: {{- include "common.labels.standard" .context | nindent 4 }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: {{ $name }}
     app.kubernetes.io/part-of: pre-install-cleanup
   annotations:
@@ -124,7 +123,7 @@ kind: RoleBinding
 metadata:
   name: {{ $name }}-uninstall
   namespace: {{ .Release.Namespace }}
-  labels: {{- include "common.labels.standard" .context | nindent 4 }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: {{ $name }}
     app.kubernetes.io/part-of: pre-install-cleanup
   annotations:

@@ -1,5 +1,5 @@
 {{- define "t8s-cluster.clusterClass.containerdConfig.plugins" -}}
-  {{- $_ := set . "Values" .context.Values -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
 [plugins]
   [plugins."io.containerd.grpc.v1.cri"]
     {{- if .Values.containerRegistryMirror.mirrorEndpoint }}
@@ -27,7 +27,7 @@
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.containerdConfig.containerRegistryMirrorConfigs" -}}
-  {{- $_ := set . "Values" .context.Values -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- $defaultMirroredRegistries := list
     "gcr.io"
     "ghcr.io"

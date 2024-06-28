@@ -3,7 +3,7 @@ OpenStackClusterTemplate is immutable. We need to create new versions during upg
 Here we are generating a hash suffix.
 */}}
 {{- define "t8s-cluster.clusterClass.openStackClusterTemplate.spec" -}}
-  {{- $_ := set . "Values" .context.Values -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
 apiServerLoadBalancer:
   enabled: true
   {{- with .Values.controlPlane.allowedCIDRs }}

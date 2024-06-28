@@ -7,7 +7,7 @@ openstack
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.getIdentityRefSecretName" -}}
-  {{- $_ := set . "Release" .context.Release -}}
+  {{- $_ := mustMerge . (pick .context "Release") -}}
   {{- printf "%s-cloud-config" .Release.Name -}}
 {{- end -}}
 
@@ -17,7 +17,7 @@ openstack
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.preKubeadmCommands" -}}
-  {{- $_ := set . "Values" .context.Values -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- $commands := list -}}
   {{- $commands = append $commands "bash /etc/kube-proxy-patch.sh" }}
   {{- if .Values.global.injectedCertificateAuthorities -}}

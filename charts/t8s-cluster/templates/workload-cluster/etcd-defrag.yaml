@@ -1,13 +1,13 @@
 {{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "etcd-defrag" "resource" (include "t8s-cluster.etcd-defrag" (dict "context" $)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "etcd")) | nindent 0 }}
 
 {{- define "t8s-cluster.etcd-defrag" -}}
-  {{- $_ := set . "Values" .context.Values -}}
+  {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: kube-etcd-defrag
   namespace: kube-system
-  labels: {{- include "common.labels.standard" .context | nindent 4 }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 10
