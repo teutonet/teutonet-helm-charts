@@ -215,6 +215,10 @@ monitoring:
     notifiers: []
     resourcesPreset: nano
     resources: {}
+    persistence:
+      enabled: false
+      size: 10Gi
+    config: {}
     sidecar:
       resourcesPreset: nano
       resources: {}

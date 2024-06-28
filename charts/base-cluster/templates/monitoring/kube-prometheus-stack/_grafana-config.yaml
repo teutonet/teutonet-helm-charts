@@ -1,3 +1,32 @@
+{{- define "base-cluster.prometheus-stack.grafana.ini.ingress" -}}
+  {{- $host := printf "https://%s" (include "base-cluster.grafana.host" .context) -}}
+server:
+  root_url: {{ $host }}
+auth:
+  signout_redirect_url: {{ $host }}
+{{- end -}}
+
+{{- define "base-cluster.prometheus-stack.grafana.ini.oauth" -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
+  {{- with .Values.global.authentication -}}
+    {{- $issuerUrl := printf "https://%s%s" .config.issuerHost .config.issuerPath -}}
+auth:
+  oauth_auto_login: true
+  disable_login_form: false
+  auth.generic_oauth:
+    enabled: true
+    allow_sign_up: true
+    api_url: {{ printf "%s%s" $issuerUrl .grafana.apiPath }}
+    auth_url: {{ printf "%s%s" $issuerUrl .grafana.authenticationPath }}
+    token_url: {{ printf "%s%s" $issuerUrl .grafana.tokenPath }}
+    client_id: {{ .config.clientId }}
+    client_secret: ${OIDC_CLIENT_SECRET}
+    name: OAuth
+    role_attribute_path: {{ .grafana.roleAttributePath | quote }}
+    scopes: openid profile email
+  {{- end -}}
+{{- end -}}
+
 {{- define "base-cluster.prometheus-stack.grafana.config" -}}
 imageRenderer:
   enabled: true
@@ -13,6 +42,11 @@ securityContext:
     type: RuntimeDefault
 containerSecurityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 2 }}
 resources: {{- include "common.resources" .Values.monitoring.grafana | nindent 2 }}
+{{- if .Values.monitoring.grafana.persistence.enabled }}
+persistence: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.grafana.persistence "global" $.Values.global) | nindent 2 }}
+  enabled: true
+  size: {{ .Values.monitoring.grafana.persistence.size }}
+{{- end }}
 serviceMonitor:
   interval: "30s"
   labels: {{- toYaml .Values.monitoring.labels | nindent 4 }}
@@ -136,8 +170,11 @@ dashboards:
   {{ toYaml . | nindent 4 }}
   {{- end }}
 {{- include "base-cluster.monitoring.ingress" (dict "name" "grafana" "context" $) | nindent 0 }}
+{{- $grafanaIni := .Values.monitoring.grafana.config | default (dict) }}
 {{- if and .Values.ingress.enabled .Values.monitoring.grafana.ingress.enabled .Values.certManager.email (or .Values.global.baseDomain .Values.monitoring.grafana.ingress.customDomain) }}
-  {{- if .Values.global.authentication }}
+  {{- $grafanaIni = mustMerge $grafanaIni (include "base-cluster.prometheus-stack.grafana.ini.ingress" (dict "context" $) | fromYaml) }}
+  {{- if .Values.global.authentication.config }}
+    {{- $grafanaIni = mustMerge $grafanaIni (include "base-cluster.prometheus-stack.grafana.ini.oauth" (dict "context" $) | fromYaml) }}
 envValueFrom:
   OIDC_CLIENT_SECRET:
     secretKeyRef:
@@ -145,29 +182,9 @@ envValueFrom:
       name: {{ include "common.secrets.name" (dict "defaultNameSuffix" "oauth-proxy" "context" $) }}
       optional: false
   {{- end }}
-grafana.ini:
-  auth:
-    signout_redirect_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
-  {{- with .Values.global.authentication }}
-    {{- if .config.clientId }}
-    {{- $issuerUrl := printf "https://%s%s" .config.issuerHost .config.issuerPath}}
-    oauth_auto_login: true
-    disable_login_form: false
-  auth.generic_oauth:
-    enabled: true
-    allow_sign_up: true
-    api_url: {{ printf "%s%s" $issuerUrl .grafana.apiPath }}
-    auth_url: {{ printf "%s%s" $issuerUrl .grafana.authenticationPath }}
-    token_url: {{ printf "%s%s" $issuerUrl .grafana.tokenPath }}
-    client_id: {{ .config.clientId }}
-    client_secret: ${OIDC_CLIENT_SECRET}
-    name: OAuth
-    role_attribute_path: {{ .grafana.roleAttributePath | quote }}
-    scopes: openid profile email
-    {{- end }}
-  {{- end }}
-  server:
-    root_url: {{ printf "https://%s" (include "base-cluster.grafana.host" .) }}
+{{- end }}
+{{- if $grafanaIni }}
+grafana.ini: {{- $grafanaIni | toYaml | nindent 2 }}
 {{- end }}
 downloadDashboards:
   securityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 4 }}
