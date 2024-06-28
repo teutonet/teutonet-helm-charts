@@ -173,11 +173,6 @@ global:
         opentelemetry-collector: 0.x.x
       condition: "{{ and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}"
   authentication:
-    config:
-      clientId: ""
-      clientSecret: ""
-      issuerHost: ""
-      issuerPath: ""
     grafana:
       authenticationPath: /protocol/openid-connect/auth
       apiPath: /protocol/openid-connect/userinfo

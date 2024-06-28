@@ -27,7 +27,7 @@ You can access your grafana instance via
 
 http://localhost:3000
 {{- end }}
-{{ if .Values.global.authentication.config.clientId }}
+{{ if .Values.global.authentication.config }}
 Login via your OIDC provider, or via;
 
 {{- end }}
