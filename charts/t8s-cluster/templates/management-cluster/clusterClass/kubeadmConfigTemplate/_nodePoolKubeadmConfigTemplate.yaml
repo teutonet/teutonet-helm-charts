@@ -1,10 +1,11 @@
 {{- define "t8s-cluster.clusterClass.kubeadmConfigTemplate" -}}
+  {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
 metadata:
-  name: {{ printf "%s-%s-compute-plane" .context.Release.Name (.gpu | ternary "gpu" "standard") }}
-  namespace: {{ .context.Release.Namespace }}
-  labels: {{- include "common.labels.standard" .context | nindent 4 }}
+  name: {{ printf "%s-%s-compute-plane" .Release.Name (.gpu | ternary "gpu" "standard") }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   template:
     spec: {{- include "t8s-cluster.clusterClass.kubeadmConfigTemplate.spec" (dict "gpu" .gpu "context" .context) | nindent 6 }}

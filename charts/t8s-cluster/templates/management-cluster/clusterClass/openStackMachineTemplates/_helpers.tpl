@@ -15,7 +15,7 @@
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.securityGroups" -}}
-  {{- $_ := set . "Values" .context.Values -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- $additionalSecurityGroups := list -}}
   {{- if eq .name "control-plane" -}}
     {{- $additionalSecurityGroups = .Values.controlPlane.additionalSecurityGroups -}}

@@ -5,7 +5,7 @@
 {{- end -}}
 
 {{- define "t8s-cluster.hasGPUNodes" -}}
-  {{- $_ := set . "Values" .context.Values -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- $hasGPUFlavor := false -}}
   {{- range $name, $machineDeploymentClass := .Values.nodePools -}}
     {{- if contains "gpu" (lower $machineDeploymentClass.flavor) -}}

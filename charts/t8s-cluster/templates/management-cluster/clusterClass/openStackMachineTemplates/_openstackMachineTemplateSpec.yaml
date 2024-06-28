@@ -3,7 +3,7 @@ OpenStackMachineTemplate is immutable. We need to create new versions during upg
 Here we are generating a hash suffix.
 */}}
 {{- define "t8s-cluster.clusterClass.openStackMachineTemplate.spec" -}}
-  {{- $_ := set . "Values" .context.Values -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
 cloudName: {{ include "t8s-cluster.clusterClass.cloudName" (dict) }}
 flavor: {{ eq .name "control-plane" | ternary .Values.controlPlane.flavor "compute-plane-placeholder" }}
 identityRef:
