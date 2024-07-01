@@ -12,14 +12,14 @@ jobs:
   createReleasePR:
     runs-on: ubuntu-latest
     steps:
-      - uses: googleapis/release-please-action@v4
+      - uses: googleapis/release-please-action@7987652d64b4581673a76e33ad5e98e3dd56832f # v4
         with:
           skip-github-release: true
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
           config-file: .github/release-please/config.json
           manifest-file: .github/release-please/manifest.json
         id: release-please
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         if: ${{ steps.release-please.outputs.prs_created == 'true' }}
       - name: Set PRs to auto-merge
         if: ${{ steps.release-please.outputs.prs_created == 'true' }}

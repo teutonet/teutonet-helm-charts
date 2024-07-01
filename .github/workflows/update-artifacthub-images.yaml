@@ -11,7 +11,7 @@ jobs:
     outputs:
       charts: ${{ steps.getCharts.outputs.charts }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
       - name: Get all charts
         id: getCharts
@@ -34,7 +34,7 @@ jobs:
       matrix:
         chart: ${{ fromJson(needs.getAllCharts.outputs.charts) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
 
@@ -48,7 +48,7 @@ jobs:
       - run: ./.github/scripts/enforce-trusted-registries.sh "charts/${{ matrix.chart }}"
 
       - id: create-pr
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6
         with:
           add-paths: |
             charts/${{ matrix.chart }}/Chart.yaml
@@ -64,7 +64,7 @@ jobs:
           PR_NUMBER: ${{ steps.create-pr.outputs.pull-request-number }}
           merge-method: squash
       - if: ${{ steps.create-pr.outputs.pull-request-number }}
-        uses: juliangruber/approve-pull-request-action@v2.0.6
+        uses: juliangruber/approve-pull-request-action@b71c44ff142895ba07fad34389f1938a4e8ee7b0 # v2.0.6
         with:
           github-token: ${{ secrets.ACTIONS_BOT_TOKEN }}
           number: ${{ steps.create-pr.outputs.pull-request-number }}

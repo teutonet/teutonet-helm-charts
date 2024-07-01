@@ -22,7 +22,7 @@ jobs:
       CT_TARGET_BRANCH: ${{ github.event.pull_request.base.ref || github.event.repository.default_branch }}
       CHART: ${{ matrix.chart }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           fetch-depth: 0
 
@@ -38,12 +38,12 @@ jobs:
             echo
           ) | tee -a "$GITHUB_OUTPUT"
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
         with:
           python-version: 3.7
 
       - run: ./.github/scripts/prepare-values.sh "charts/$CHART"
-      - uses: helm/chart-testing-action@v2.6.1
+      - uses: helm/chart-testing-action@e6669bcd63d7cb57cb4380c33043eebe5d111992 # v2.6.1
 
       - name: Lint chart
         run: |
