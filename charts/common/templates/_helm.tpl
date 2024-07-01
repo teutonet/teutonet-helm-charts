@@ -11,7 +11,7 @@ Returns the chart version for a given chart in a given repository.
 {{ include "common.helm.chartVersion" (dict "context" $ "repo" "bitnami" "chart" "redis") -}}
 */}}
 {{- define "common.helm.chartVersion" -}}
-  {{- $_ := set . "Values" .context.Values -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- dig .repo "charts" .chart nil .Values.global.helmRepositories | required (printf "The repo '%s' is either missing or doesn't contain the chart '%s'" .repo .chart) -}}
 {{- end -}}
 
@@ -20,8 +20,7 @@ Returns a HelmRelease.spec.chart.spec for a given chart in a given repository.
 {{ include "common.helm.chartSpec" (dict "context" $ "repo" "bitnami" "chart" "redis" "prependReleaseName" true) -}}
 */}}
 {{- define "common.helm.chartSpec" -}}
-  {{- $_ := set . "Release" .context.Release -}}
-  {{- $_ = set . "Values" .context.Values -}}
+  {{- $_ := mustMerge . (pick .context "Values" "Release") -}}
   {{- $spec := dict -}}
   {{- if eq (dig .repo "type" "helm" .Values.global.helmRepositories) "helm" -}}
     {{- $spec = mustMerge (dict
