@@ -167,6 +167,11 @@ global:
       charts:
         velero: 6.0.0
       condition: "{{ not (empty .Values.backup.backupStorageLocations) }}"
+    weaveworks:
+      url: oci://ghcr.io/weaveworks/charts
+      charts:
+        weave-gitops: 4.x.x
+      condition: "{{ .Values.weaveworks.enabled }}"
     open-telemetry:
       url: https://open-telemetry.github.io/opentelemetry-helm-charts
       charts:
@@ -436,3 +441,6 @@ backup:
       limits:
         cpu: 500m
         memory: 500Mi
+
+weaveworks:
+  enabled: true
