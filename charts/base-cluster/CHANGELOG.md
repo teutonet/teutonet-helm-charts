@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.3.0...base-cluster-v6.4.0) (2024-06-28)
+
+
+### Features
+
+* **base-cluster/grafana:** add persistence and configuration options ([#999](https://github.com/teutonet/teutonet-helm-charts/issues/999)) ([ce0fff7](https://github.com/teutonet/teutonet-helm-charts/commit/ce0fff742a4d3f880ccbf63ec6b41f6b615076cb))
+
+
+### Miscellaneous Chores
+
+* **base-cluster:** mustMerge* is the safer option ([#1001](https://github.com/teutonet/teutonet-helm-charts/issues/1001)) ([95a932b](https://github.com/teutonet/teutonet-helm-charts/commit/95a932b47a8b6149d591afce4342474205390a2c))
+
 ## [6.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.2.0...base-cluster-v6.3.0) (2024-06-19)
 
 
