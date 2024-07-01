@@ -31,12 +31,13 @@
 {{- end -}}
 
 {{- define "base-cluster.cert-manager.custom-certificates-yaml" -}}
-{{- range $name, $cert := .certs -}}
+  {{- $_ := mustMerge . (pick .context "Release") -}}
+  {{- range $name, $cert := .certs -}}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: {{ $name | quote }}
-  namespace: {{ $.context.Release.Namespace }}
+  namespace: {{ $.Release.Namespace }}
   labels: {{- include "common.helm.labels" (dict) | nindent 4 }}
 spec:
   issuerRef:
@@ -56,5 +57,5 @@ spec:
       {{- end }}
   {{- end }}
 ---
-{{ end -}}
+  {{ end -}}
 {{- end -}}

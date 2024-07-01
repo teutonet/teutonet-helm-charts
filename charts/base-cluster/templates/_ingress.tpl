@@ -1,5 +1,6 @@
 {{- define "base-cluster.certificate" -}}
-  {{- if and .context.Values.dns.provider (not .customDomain) -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
+  {{- if and .Values.dns.provider (not .customDomain) -}}
     cluster-wildcard-certificate
   {{- else -}}
     {{- printf "%s-certificate" .name -}}

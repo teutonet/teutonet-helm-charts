@@ -1,4 +1,5 @@
 {{- define "base-cluster.kyverno.policies.disallow-default-namespace" -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
 # Source: https://kyverno.io/policies/best-practices/disallow_default_namespace/disallow_default_namespace/
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -16,7 +17,7 @@ metadata:
       and the default (empty) Namespace should not be used. This policy validates that Pods
       specify a Namespace name other than `default`.
 spec:
-  validationFailureAction: {{ .context.Values.kyverno.validationFailureAction }}
+  validationFailureAction: {{ .Values.kyverno.validationFailureAction }}
   background: true
   rules:
     - name: validate-namespace

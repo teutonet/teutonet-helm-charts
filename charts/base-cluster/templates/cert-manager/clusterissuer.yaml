@@ -5,6 +5,7 @@
 {{- end -}}
 
 {{- define "base-cluster.cert-manager.clusterIssuer" -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
@@ -14,18 +15,18 @@ metadata:
     app.kubernetes.io/part-of: cert-manager
 spec:
   acme:
-    email: {{ .context.Values.certManager.email }}
+    email: {{ .Values.certManager.email }}
     solvers:
-      {{- if .context.Values.dns.provider }}
+      {{- if .Values.dns.provider }}
       - dns01:
-          {{- $_ := required "You must choose a DNS provider" .context.Values.dns.provider -}}
-          {{- if .context.Values.dns.provider.cloudflare }}
+          {{- $_ := required "You must choose a DNS provider" .Values.dns.provider -}}
+          {{- if .Values.dns.provider.cloudflare }}
           cloudflare:
             apiTokenSecretRef:
               name: cert-manager-dns
               key: credentials
           {{- end }}
-        {{- with .context.Values.dns.domains }}
+        {{- with .Values.dns.domains }}
         selector:
           dnsZones: {{- toYaml . | nindent 12 }}
         {{- end }}

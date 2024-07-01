@@ -1,10 +1,11 @@
 {{- define "base-cluster.helm.resourceWithDependencies" -}}
+  {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: {{ .name }}
-  namespace: {{ .namespace | default .context.Release.Namespace }}
-  labels: {{- include "common.labels.standard" .context | nindent 4 }}
+  namespace: {{ .namespace | default .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
     {{- with .additionalLabels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
