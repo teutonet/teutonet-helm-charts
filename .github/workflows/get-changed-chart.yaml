@@ -13,12 +13,12 @@ jobs:
     outputs:
       chart: ${{ steps.getChangedChart.outputs.chart }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: helm/chart-testing-action@v2.6.1
+      - uses: helm/chart-testing-action@e6669bcd63d7cb57cb4380c33043eebe5d111992 # v2.6.1
 
       - id: getChangedChart
         name: Get changed chart in this commit

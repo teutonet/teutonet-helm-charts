@@ -15,7 +15,7 @@ jobs:
       releases_created: ${{ steps.release.outputs.releases_created }}
       paths_released: ${{ steps.release.outputs.paths_released }}
     steps:
-      - uses: googleapis/release-please-action@v4
+      - uses: googleapis/release-please-action@7987652d64b4581673a76e33ad5e98e3dd56832f # v4
         id: release
         with:
           skip-github-pull-request: true
@@ -32,7 +32,7 @@ jobs:
     env:
       CHART: ${{ matrix.chart }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
       - run: helm package --dependency-update "${CHART}"
       - run: helm registry login ghcr.io --username teutonet-bot --password ${{ secrets.ACTIONS_BOT_TOKEN }}
