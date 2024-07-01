@@ -813,7 +813,7 @@
               },
               "additionalProperties": false
             },
-              "sidecar": {
+            "sidecar": {
               "type": "object",
               "properties": {
                 "resourcesPreset": {
