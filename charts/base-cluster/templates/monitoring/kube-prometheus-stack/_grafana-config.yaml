@@ -173,7 +173,7 @@ dashboards:
 {{- $grafanaIni := .Values.monitoring.grafana.config | default (dict) }}
 {{- if and .Values.ingress.enabled .Values.monitoring.grafana.ingress.enabled .Values.certManager.email (or .Values.global.baseDomain .Values.monitoring.grafana.ingress.customDomain) }}
   {{- $grafanaIni = mustMerge $grafanaIni (include "base-cluster.prometheus-stack.grafana.ini.ingress" (dict "context" $) | fromYaml) }}
-  {{- if .Values.global.authentication.config }}
+  {{- if .Values.global.authentication }}
     {{- $grafanaIni = mustMerge $grafanaIni (include "base-cluster.prometheus-stack.grafana.ini.oauth" (dict "context" $) | fromYaml) }}
 envValueFrom:
   OIDC_CLIENT_SECRET:

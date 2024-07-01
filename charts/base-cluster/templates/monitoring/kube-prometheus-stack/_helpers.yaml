@@ -52,7 +52,7 @@ privileged: false
   {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- $ingress := include "base-cluster.monitoring.ingress.config" (dict "name" .name "context" .context) | fromYaml -}}
   {{- if include "base-cluster.monitoring.ingress.enabled" (dict "name" .name "context" .context) -}}
-    {{- and (empty .Values.global.authentication.config.clientId) (dig "enabled" false $ingress) | ternary true "" -}}
+    {{- and (empty .Values.global.authentication.config) (dig "enabled" false $ingress) | ternary true "" -}}
   {{- end -}}
 {{- end -}}
 
@@ -60,6 +60,6 @@ privileged: false
   {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- $ingress := include "base-cluster.monitoring.ingress.config" (dict "name" .name "context" .context) | fromYaml -}}
   {{- if include "base-cluster.monitoring.ingress.enabled" (dict "name" .name "context" .context) -}}
-    {{- and (not (empty .Values.global.authentication.config.clientId)) (dig "enabled" true $ingress) | ternary true "" -}}
+    {{- and (not (empty .Values.global.authentication.config)) (dig "enabled" true $ingress) | ternary true "" -}}
   {{- end -}}
 {{- end -}}

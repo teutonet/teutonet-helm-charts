@@ -464,6 +464,11 @@
                   "type": "string"
                 }
               },
+              "required": [
+                "clientId",
+                "clientSecret",
+                "issuerHost"
+              ],
               "additionalProperties": false
             },
             "grafana": {

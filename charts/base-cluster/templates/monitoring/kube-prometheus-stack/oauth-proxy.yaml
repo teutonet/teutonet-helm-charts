@@ -1,4 +1,4 @@
-{{- if and .Values.global.authentication.config.clientId .Values.monitoring.prometheus.enabled }}
+{{- if and .Values.global.authentication.config .Values.monitoring.prometheus.enabled }}
 {{- $backends := list -}}
 {{- if include "base-cluster.monitoring.authenticated-ingress.enabled" (dict "name" "prometheus" "context" .) -}}
   {{- $backends = append $backends (dict "host" "prometheus" "port" 9090) -}}
