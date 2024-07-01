@@ -12,5 +12,5 @@ maintainers:
     email: st@teuto.net
 dependencies:
   - name: common
-    version: 2.19.2
+    version: 2.19.3
     repository: https://charts.bitnami.com/bitnami
