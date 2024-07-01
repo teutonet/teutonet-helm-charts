@@ -24,6 +24,13 @@ spec:
     mode: daemonset
     service:
       enabled: true
+    resources:
+      limits:
+        cpu: 250m
+        memory: 512Mi
+      requests:
+        cpu: 10m
+        memory: 60Mi
     config:
       receivers:
         prometheus: null

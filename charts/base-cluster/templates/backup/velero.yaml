@@ -36,6 +36,13 @@ spec:
         volumeMounts:
           - mountPath: /target
             name: plugins
+        resources:
+          limits:
+            cpu: 50m
+            memory: 100m
+          requests:
+            cpu: 10m
+            memory: 10m
     podSecurityContext:
       fsGroup: 1000
       runAsUser: 1000

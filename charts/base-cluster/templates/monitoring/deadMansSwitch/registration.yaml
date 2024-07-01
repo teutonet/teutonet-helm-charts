@@ -24,6 +24,13 @@ spec:
       containers:
         - name: register
           image: {{ include "base-cluster.curl.image" . }}
+          resources:
+            limits:
+              cpu: 50m
+              memory: 100m
+            requests:
+              cpu: 10m
+              memory: 10m
           imagePullPolicy: {{ empty .Values.global.kubectl.image.digest | ternary "Always" "IfNotPresent" }}
           securityContext:
             allowPrivilegeEscalation: false

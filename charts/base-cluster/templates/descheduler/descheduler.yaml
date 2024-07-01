@@ -33,6 +33,10 @@ spec:
   values:
     startingDeadlineSeconds: 120
     priorityClassName: system-cluster-critical
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
     kind: Deployment
     resources: {{- include "common.resources" .Values.descheduler | nindent 6 }}
     {{- if .Values.monitoring.prometheus.enabled }}
