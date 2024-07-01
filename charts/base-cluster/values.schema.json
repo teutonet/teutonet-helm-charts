@@ -1547,6 +1547,15 @@
       ],
       "additionalProperties": false
     },
+    "kube-janitor": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
     "common": {
       "type": "object",
       "description": "Values for sub-chart"
