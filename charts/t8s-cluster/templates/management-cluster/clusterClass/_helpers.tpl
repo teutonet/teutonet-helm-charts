@@ -160,9 +160,9 @@ server = {{ printf "https://%s" .registry | quote }}
 {{- end }}
 
 {{- define "t8s-cluster.clusterClass.apiServer.admissionPlugins" -}}
-  {{- $admissionPlugins := list "AlwaysPullImages" -}}
+  {{- $admissionPlugins := list "AlwaysPullImages" "NodeRestriction" -}}
   {{- if not .excludePatches -}}
-    {{- $admissionPlugins = concat $admissionPlugins (list "EventRateLimit" "NodeRestriction") -}}
+    {{- $admissionPlugins = concat $admissionPlugins (list "EventRateLimit") -}}
   {{- end -}}
   {{- $admissionPlugins | toYaml -}}
 {{- end -}}
