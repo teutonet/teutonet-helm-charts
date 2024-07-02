@@ -76,7 +76,7 @@ datapusher:
     pullPolicy: IfNotPresent
     pullSecrets: []
     repository: ckan/ckan-base-datapusher
-    tag: 0.0.20
+    tag: 0.0.21@sha256:90e71b5a5fd6f1de99dd2dd1cac68990a813b21a0fff10e0eaef912f4a64f872
     digest: ""
   podSecurityContext: *defaultPodSecurityContext
   securityContext: *defaultSecurityContext
