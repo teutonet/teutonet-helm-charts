@@ -1,0 +1,52 @@
+{{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.kdave.enabled -}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kdave
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: kdave
+    app.kubernetes.io/part-of: monitoring
+spec:
+  chart:
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "kdave" "chart" "kdave" "context" $ "reconcileStrategy" "ChartVersion") | nindent 6 }}
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  install:
+    timeout: 10m0s
+  upgrade:
+    timeout: 10m0s
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
+  values:
+    helmBinary: helm3
+    image:
+      repository: {{ printf "%s/aelbakry/kdave-server" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
+      tag: 2.1.5
+    rbac:
+      pspEnabled: false
+    apiVersionsInspector:
+      enabled: false
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kdave
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}{{- toYaml .Values.monitoring.labels | nindent 4 }}
+    app.kubernetes.io/component: kdave
+    app.kubernetes.io/part-of: monitoring
+spec:
+  endpoints:
+    - port: metrics
+  namespaceSelector:
+    matchNames:
+      - monitoring
+  selector:
+    matchLabels:
+      app: kdave
+      project: kdave
+      release: kdave
+{{- end -}}
