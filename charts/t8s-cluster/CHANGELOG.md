@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v8.0.0...t8s-cluster-v8.0.1) (2024-07-02)
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster:** improve developer experience by providing tab-completion ([#1005](https://github.com/teutonet/teutonet-helm-charts/issues/1005)) ([e01ea6a](https://github.com/teutonet/teutonet-helm-charts/commit/e01ea6ad79d67bcee179ea4ffceccd630ac7b237))
+
 ## [8.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v7.0.1...t8s-cluster-v8.0.0) (2024-06-15)
 
 
