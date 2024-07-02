@@ -165,7 +165,7 @@ global:
     vmware:
       url: https://vmware-tanzu.github.io/helm-charts
       charts:
-        velero: 6.0.0
+        velero: 6.7.0
       condition: "{{ not (empty .Values.backup.backupStorageLocations) }}"
     open-telemetry:
       url: https://open-telemetry.github.io/opentelemetry-helm-charts
