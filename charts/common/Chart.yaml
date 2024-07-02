@@ -2,7 +2,7 @@ apiVersion: v2
 name: common
 description: A library chart for common resources
 type: library
-version: 1.2.0
+version: 1.2.1
 maintainers:
   - name: cwrau
     email: cwr@teuto.net
