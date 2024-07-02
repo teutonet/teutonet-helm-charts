@@ -1,5 +1,22 @@
 # Changelog
 
+## [6.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.4.0...base-cluster-v6.5.0) (2024-07-02)
+
+
+### Features
+
+* **base-cluster:** add kube-janitor ([#1011](https://github.com/teutonet/teutonet-helm-charts/issues/1011)) ([2f8a414](https://github.com/teutonet/teutonet-helm-charts/commit/2f8a4145ed6a22d412b1be43391e747518d5e99a))
+
+
+### Bug Fixes
+
+* **base-cluster/oidc:** this fixes the wrongly rolled out outh config ([#1000](https://github.com/teutonet/teutonet-helm-charts/issues/1000)) ([798a7c7](https://github.com/teutonet/teutonet-helm-charts/commit/798a7c77331bab25cb6cb9dce297a89cdaebf5c8))
+
+
+### Miscellaneous Chores
+
+* **base-cluster:** mustMerge* is the safer option ([#1003](https://github.com/teutonet/teutonet-helm-charts/issues/1003)) ([4b49283](https://github.com/teutonet/teutonet-helm-charts/commit/4b4928317eadc4bee0c5a3eb646303dc36311e95))
+
 ## [6.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.3.0...base-cluster-v6.4.0) (2024-06-28)
 
 
