@@ -10,6 +10,8 @@ registries:
       curl: ALL_TAGS
     fluxcd: ALL_IMAGES
     grafana: ALL_IMAGES
+    minio:
+      mc: ALL_TAGS
     stellio: ALL_IMAGES
     velero: ALL_IMAGES
     vladgh:
