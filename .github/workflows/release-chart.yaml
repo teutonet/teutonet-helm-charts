@@ -35,9 +35,9 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
       - run: helm package --dependency-update "${CHART}"
-      - run: helm registry login ghcr.io --username teutonet-bot --password ${{ secrets.ACTIONS_BOT_TOKEN }}
+      - run: helm registry login ghcr.io --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }}
       - run: helm push -- *.tgz "oci://ghcr.io/${GITHUB_REPOSITORY}"
-      - run: oras login ghcr.io --username teutonet-bot --password ${{ secrets.ACTIONS_BOT_TOKEN }}
+      - run: oras login ghcr.io --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }}
       - run: oras push "ghcr.io/${GITHUB_REPOSITORY}/${CHART#charts/}:artifacthub.io" --config /dev/null:application/vnd.cncf.artifacthub.config.v1+yaml .github/artifacthub-repo.yaml:application/vnd.cncf.artifacthub.repository-metadata.layer.v1.yaml
   abort:
     runs-on: ubuntu-latest
