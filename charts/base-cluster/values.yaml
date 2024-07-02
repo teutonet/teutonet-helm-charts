@@ -172,6 +172,14 @@ global:
       charts:
         opentelemetry-collector: 0.x.x
       condition: "{{ and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}"
+    kube-janitor:
+      url: https://codeberg.org/hjacobs/kube-janitor
+      charts:
+        kube-janitor:
+          path: unsupported/helm
+          tag: 23.7.0
+      type: git
+      condition: '{{ dig "kube-janitor" "enabled" false .Values.AsMap }}'
   authentication:
     grafana:
       authenticationPath: /protocol/openid-connect/auth
@@ -436,3 +444,6 @@ backup:
       limits:
         cpu: 500m
         memory: 500Mi
+
+kube-janitor:
+  enabled: false

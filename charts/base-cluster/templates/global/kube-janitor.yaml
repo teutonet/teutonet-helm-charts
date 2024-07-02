@@ -1,0 +1,30 @@
+{{- if dig "kube-janitor" "enabled" false .Values.AsMap -}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kube-janitor
+  namespace: kube-system
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: kube-janitor
+spec:
+  chart:
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "kube-janitor" "chart" "kube-janitor" "context" $) | nindent 6 }}
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    priorityClassName: cluster-components
+    {{- $image := dict -}}
+      {{- if .Values.global.imageRegistry -}}
+        {{- $image = set $image "repository" (printf "%s/hjacobs/kube-janitor" $.Values.global.imageRegistry) -}}
+      {{- end }}
+      {{- with dig "kube-janitor" "charts" "kube-janitor" "tag" "" .Values.global.helmRepositories -}}
+        {{- $image = set $image "tag" . -}}
+      {{- end }}
+    {{- with $image }}
+    image: {{- toYaml $image | nindent 6 }}
+    {{- end }}
+    resources:
+      limits:
+        memory: 1Gi
+{{- end -}}

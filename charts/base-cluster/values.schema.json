@@ -818,7 +818,7 @@
               },
               "additionalProperties": false
             },
-              "sidecar": {
+            "sidecar": {
               "type": "object",
               "properties": {
                 "resourcesPreset": {
@@ -1550,6 +1550,15 @@
           }
         }
       ],
+      "additionalProperties": false
+    },
+    "kube-janitor": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        }
+      },
       "additionalProperties": false
     },
     "common": {
