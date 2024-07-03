@@ -1,5 +1,5 @@
 {{- define "t8s-cluster.clusterClass.bootstrapConfigTemplate" -}}
-  {{- $_ := merge . (pick .context "Values" "Release" "Chart") -}}
+  {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: {{ .Values.controlPlane.hosted | ternary "K0sWorkerConfigTemplate" "KubeadmConfigTemplate" }}
 metadata:

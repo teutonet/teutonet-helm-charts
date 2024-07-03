@@ -7,7 +7,7 @@
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.preKubeadmCommands" -}}
-  {{- $_ := merge . (pick .context "Values") -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- $commands := list -}}
   {{- $commands = append $commands "bash /etc/kube-proxy-patch.sh" -}}
   {{- if .Values.global.injectedCertificateAuthorities -}}

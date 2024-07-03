@@ -36,7 +36,7 @@ openstack
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.containerdConfig.plugins" -}}
-  {{- $_ := merge . (pick .context "Values") -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
 [plugins]
   [plugins."io.containerd.grpc.v1.cri"]
     {{- if .Values.containerRegistryMirror.mirrorEndpoint }}
@@ -86,7 +86,7 @@ server = {{ printf "https://%s" .registry | quote }}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.containerdConfig.containerRegistryMirrorConfigs" -}}
-  {{- $_ := merge . (pick .context "Values") -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- $defaultMirroredRegistries := list
     "gcr.io"
     "ghcr.io"
@@ -108,7 +108,7 @@ server = {{ printf "https://%s" .registry | quote }}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.configTemplate.files" -}}
-  {{- $_ := merge . (pick .context "Values") -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- $files := list -}}
   {{- if not .excludePatches -}}
     {{- $files = concat $files (include "t8s-cluster.patches.kubelet.patches" (dict "context" .context) | fromYamlArray) -}}
@@ -129,7 +129,7 @@ server = {{ printf "https://%s" .registry | quote }}
 
 {{- define "t8s-cluster.clusterClass.args.shared" -}}
   {{- $args := include "t8s-cluster.clusterClass.args.base" (dict) | fromYaml -}}
-  {{- $args = merge (dict
+  {{- $args = mustMerge (dict
     "authorization-always-allow-paths" (list "/healthz" "/readyz" "/livez" "/metrics" | join ",")
     "bind-address" "0.0.0.0"
     ) $args -}}
@@ -147,7 +147,7 @@ server = {{ printf "https://%s" .registry | quote }}
 
 {{- define "t8s-cluster.clusterClass.args.controllerManager" -}}
   {{- $args := include "t8s-cluster.clusterClass.args.shared" (dict) | fromYaml -}}
-  {{- $args = merge (include "t8s-cluster.clusterClass.args.sharedController" (dict "context" .context) | fromYaml) $args -}}
+  {{- $args = mustMerge (include "t8s-cluster.clusterClass.args.sharedController" (dict "context" .context) | fromYaml) $args -}}
   {{- $args = set $args "terminated-pod-gc-threshold" "100" -}}
   {{- $args | toYaml -}}
 {{- end }}
@@ -162,7 +162,7 @@ server = {{ printf "https://%s" .registry | quote }}
 
 {{- define "t8s-cluster.clusterClass.args.apiServer" -}}
   {{- $args := include "t8s-cluster.clusterClass.args.base" (dict "context" .context) | fromYaml -}}
-  {{- $args = merge (include "t8s-cluster.clusterClass.args.sharedController" (dict "context" .context) | fromYaml) $args -}}
+  {{- $args = mustMerge (include "t8s-cluster.clusterClass.args.sharedController" (dict "context" .context) | fromYaml) $args -}}
   {{- $args = set $args "enable-admission-plugins" (include "t8s-cluster.clusterClass.apiServer.admissionPlugins" (dict "excludePatches" .excludePatches) | fromYamlArray | join ",") -}}
   {{- $args = set $args "event-ttl" "4h" -}}
   {{- $args = set $args "tls-cipher-suites" (include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) | fromYamlArray | join ",") -}}

@@ -2,7 +2,7 @@
   {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- $values := dict -}}
   {{- if and (or (gt (.Values.version.major | int) 1) (ge (.Values.version.minor | int) 27)) (gt (int .Values.global.kubeletExtraConfig.maxParallelImagePulls) 1) -}}
-    {{- $values = merge $values (dict "serializeImagePulls" false "maxParallelImagePulls" .Values.global.kubeletExtraConfig.maxParallelImagePulls) -}}
+    {{- $values = mustMerge $values (dict "serializeImagePulls" false "maxParallelImagePulls" .Values.global.kubeletExtraConfig.maxParallelImagePulls) -}}
   {{- end -}}
   {{- $values | toYaml -}}
 {{- end -}}
