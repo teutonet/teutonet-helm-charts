@@ -16,7 +16,7 @@ home: https://teuto.net
 description: t8s-operator cluster with necessary addons
 dependencies:
   - name: common
-    version: 1.0.0
+    version: 1.2.0
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
 annotations:
   artifacthub.io/images: |
