@@ -19,7 +19,7 @@ global:
     image:
       registry: registry.k8s.io
       repository: etcd
-      tag: 3.5.13-0
+      tag: 3.5.14-0@sha256:661a9ab3d439dcf93593726a9ecbefa44e246709aa813a95d64c3848716710ce
   kubectl:
     image:
       registry: docker.io
