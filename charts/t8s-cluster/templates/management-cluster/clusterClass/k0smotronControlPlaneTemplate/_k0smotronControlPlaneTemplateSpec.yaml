@@ -39,8 +39,8 @@ k0sConfig:
     workerProfiles:
       - name: default
         {{- $values := dict "cgroupDriver" "systemd" }}
-        {{ $values = merge $values (include "t8s-cluster.kubelet.options" (dict) | fromYaml) }}
-        {{ $values = merge $values (include "t8s-cluster.patches.kubelet.imagePulls" (dict "context" .) | fromYaml) }}
+        {{ $values = mustMerge $values (include "t8s-cluster.kubelet.options" (dict) | fromYaml) }}
+        {{ $values = mustMerge $values (include "t8s-cluster.patches.kubelet.imagePulls" (dict "context" .) | fromYaml) }}
         values: {{- $values | toYaml | nindent 10 }}
     featureGates: {{- range $featureGate, $components := include "t8s-cluster.featureGates" (dict) | fromYaml }}
       - name: {{ $featureGate }}

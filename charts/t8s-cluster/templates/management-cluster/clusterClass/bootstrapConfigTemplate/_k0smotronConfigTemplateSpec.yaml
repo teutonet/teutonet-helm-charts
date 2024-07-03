@@ -1,5 +1,5 @@
 {{- define "t8s-cluster.clusterClass.bootstrapConfigTemplate.k0smotron.spec" -}}
-  {{- $_ := merge . (pick .context "Values") -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- $kubeletExtraArgs := list -}}
   {{- range $key, $value := include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict "context" .context) | fromYaml -}}
     {{- $kubeletExtraArgs = append $kubeletExtraArgs (printf "--%s=%s" $key $value) -}}
