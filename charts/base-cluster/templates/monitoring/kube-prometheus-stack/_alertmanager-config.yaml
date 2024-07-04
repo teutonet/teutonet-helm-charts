@@ -33,36 +33,40 @@ config:
   global:
     pagerduty_url: {{ .Values.monitoring.prometheus.alertmanager.receivers.pagerduty.url | required "You need to provide the `.Values.monitoring.promteheus.alertmanager.receivers.pagerduty.url`" | quote }}
   {{- end }}
-  receivers:
-    {{- if .Values.monitoring.prometheus.alertmanager.receivers.pagerduty.enabled }}
-    - name: pagerduty
-      pagerduty_configs:
-        - routing_key: {{ .Values.monitoring.prometheus.alertmanager.receivers.pagerduty.integrationKey | required "You need to provide the `.Values.monitoring.prometheus.alertmanager.receivers.pagerduty.integrationKey`" }}
-          send_resolved: true
-          http_config:
-            follow_redirects: true
-    {{- end }}
-    {{- if and .Values.monitoring.deadMansSwitch.enabled .Values.global.baseDomain .Values.global.clusterName }}
-    - name: healthchecks.io
-      webhook_configs:
-        - url: {{ printf "https://hc-ping.com/%s/k8s-cluster-%s-%s-monitoring" .Values.monitoring.deadMansSwitch.pingKey (.Values.global.baseDomain | replace "." "-") .Values.global.clusterName }}
-          send_resolved: false
-    {{- end }}
-    - name: "null"
-  route:
-    {{- if .Values.monitoring.prometheus.alertmanager.receivers.pagerduty.enabled }}
+  {{- $receivers := dict "null" (dict) -}}
+  {{- if .Values.monitoring.prometheus.alertmanager.receivers.pagerduty.enabled -}}
+    {{- $receivers = set $receivers "pagerduty" (dict
+          "pagerduty_configs" (list (dict
+              "routing_key" (.Values.monitoring.prometheus.alertmanager.receivers.pagerduty.integrationKey | required "You need to provide the `.Values.monitoring.prometheus.alertmanager.receivers.pagerduty.integrationKey`")
+              "send_resolved" true
+              "http_config" (dict "follow_redirects" true)
+            )
+          )
+      )
+    -}}
+  {{- end -}}
+  {{- if and .Values.monitoring.deadMansSwitch.enabled .Values.global.baseDomain .Values.global.clusterName -}}
+    {{- $receivers = set $receivers "healthchecks.io" (dict
+          "webhook_configs" (list (dict
+              "url" (printf "https://hc-ping.com/%s/k8s-cluster-%s-%s-monitoring" .Values.monitoring.deadMansSwitch.pingKey (.Values.global.baseDomain | replace "." "-") .Values.global.clusterName)
+              "send_resolved" false
+            )
+          )
+      )
+    -}}
+  {{- end -}}
+  {{- $receiversList := list -}}
+  {{- range $name, $receiver := $receivers -}}
+    {{- $receiversList = append $receiversList (mustMerge (dict "name" $name) $receiver) -}}
+  {{- end }}
+  receivers: {{- $receiversList | toYaml | nindent 4 }}
+  route: {{- if hasKey $receivers "pagerduty" }}
     receiver: pagerduty
     {{- end }}
-    routes:
-    {{- if and .Values.monitoring.deadMansSwitch.enabled .Values.global.baseDomain .Values.global.clusterName }}
-      - match:
-          alertname: Watchdog
-        receiver: healthchecks.io
-        group_interval: 1m
-        repeat_interval: 1m
+    {{- $routes := list (dict "match" (dict "alertname" "InfoInhibitor") "receiver" "null") -}}
+    {{- if hasKey $receivers "healthchecks.io" -}}
+      {{- $routes = append $routes (dict "match" (dict "alertname" "Watchdog") "receiver" "healthchecks.io" "group_interval" "1m" "repeat_interval" "1m") -}}
     {{- end }}
-      - match:
-          alertname: InfoInhibitor
-        receiver: "null"
+    routes: {{- $routes | toYaml | nindent 6 }}
 {{- end }}
 {{- end -}}
