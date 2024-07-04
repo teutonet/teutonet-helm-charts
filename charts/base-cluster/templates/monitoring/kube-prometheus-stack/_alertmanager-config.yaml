@@ -54,7 +54,7 @@ config:
     receiver: pagerduty
     {{- end }}
     routes:
-    {{- if .Values.monitoring.deadMansSwitch.enabled }}
+    {{- if and .Values.monitoring.deadMansSwitch.enabled .Values.global.baseDomain .Values.global.clusterName }}
       - match:
           alertname: Watchdog
         receiver: healthchecks.io
