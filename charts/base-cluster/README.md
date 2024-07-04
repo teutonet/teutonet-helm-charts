@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # base-cluster
 
-![Version: 6.4.0](https://img.shields.io/badge/Version-6.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 6.5.0](https://img.shields.io/badge/Version-6.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -243,7 +243,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.0.0 |
+| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.2.0 |
 
 This helm chart requires [flux v2 to be installed](https://fluxcd.io/docs/installation),
 see [bootstrap](#cluster-bootstrap)
@@ -330,22 +330,23 @@ you cluster.
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                       | Pattern | Type        | Deprecated | Definition | Title/Description    |
-| ------------------------------ | ------- | ----------- | ---------- | ---------- | -------------------- |
-| - [global](#global )           | No      | object      | No         | -          | -                    |
-| - [kyverno](#kyverno )         | No      | object      | No         | -          | -                    |
-| - [monitoring](#monitoring )   | No      | object      | No         | -          | -                    |
-| - [descheduler](#descheduler ) | No      | object      | No         | -          | -                    |
-| - [dns](#dns )                 | No      | object      | No         | -          | -                    |
-| - [certManager](#certManager ) | No      | object      | No         | -          | -                    |
-| - [externalDNS](#externalDNS ) | No      | object      | No         | -          | -                    |
-| - [flux](#flux )               | No      | object      | No         | -          | -                    |
-| - [ingress](#ingress )         | No      | object      | No         | -          | -                    |
-| - [storage](#storage )         | No      | object      | No         | -          | -                    |
-| - [reflector](#reflector )     | No      | object      | No         | -          | -                    |
-| - [rbac](#rbac )               | No      | object      | No         | -          | -                    |
-| - [backup](#backup )           | No      | Combination | No         | -          | -                    |
-| - [common](#common )           | No      | object      | No         | -          | Values for sub-chart |
+| Property                         | Pattern | Type        | Deprecated | Definition | Title/Description    |
+| -------------------------------- | ------- | ----------- | ---------- | ---------- | -------------------- |
+| - [global](#global )             | No      | object      | No         | -          | -                    |
+| - [kyverno](#kyverno )           | No      | object      | No         | -          | -                    |
+| - [monitoring](#monitoring )     | No      | object      | No         | -          | -                    |
+| - [descheduler](#descheduler )   | No      | object      | No         | -          | -                    |
+| - [dns](#dns )                   | No      | object      | No         | -          | -                    |
+| - [certManager](#certManager )   | No      | object      | No         | -          | -                    |
+| - [externalDNS](#externalDNS )   | No      | object      | No         | -          | -                    |
+| - [flux](#flux )                 | No      | object      | No         | -          | -                    |
+| - [ingress](#ingress )           | No      | object      | No         | -          | -                    |
+| - [storage](#storage )           | No      | object      | No         | -          | -                    |
+| - [reflector](#reflector )       | No      | object      | No         | -          | -                    |
+| - [rbac](#rbac )                 | No      | object      | No         | -          | -                    |
+| - [backup](#backup )             | No      | Combination | No         | -          | -                    |
+| - [kube-janitor](#kube-janitor ) | No      | object      | No         | -          | -                    |
+| - [common](#common )             | No      | object      | No         | -          | Values for sub-chart |
 
 ## <a name="global"></a>1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global`
 
@@ -1489,24 +1490,24 @@ Must be one of:
 
 | Property                                                      | Pattern | Type   | Deprecated | Definition | Title/Description |
 | ------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [clientId](#global_authentication_config_clientId )         | No      | string | No         | -          | -                 |
-| - [clientSecret](#global_authentication_config_clientSecret ) | No      | string | No         | -          | -                 |
-| - [issuerHost](#global_authentication_config_issuerHost )     | No      | string | No         | -          | -                 |
+| + [clientId](#global_authentication_config_clientId )         | No      | string | No         | -          | -                 |
+| + [clientSecret](#global_authentication_config_clientSecret ) | No      | string | No         | -          | -                 |
+| + [issuerHost](#global_authentication_config_issuerHost )     | No      | string | No         | -          | -                 |
 | - [issuerPath](#global_authentication_config_issuerPath )     | No      | string | No         | -          | -                 |
 
-##### <a name="global_authentication_config_clientId"></a>1.16.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > authentication > config > clientId`
+##### <a name="global_authentication_config_clientId"></a>1.16.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > authentication > config > clientId`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="global_authentication_config_clientSecret"></a>1.16.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > authentication > config > clientSecret`
+##### <a name="global_authentication_config_clientSecret"></a>1.16.1.2. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > authentication > config > clientSecret`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="global_authentication_config_issuerHost"></a>1.16.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > authentication > config > issuerHost`
+##### <a name="global_authentication_config_issuerHost"></a>1.16.1.3. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > authentication > config > issuerHost`
 
 |          |          |
 | -------- | -------- |
@@ -4164,7 +4165,24 @@ Specific value: `"auto"`
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-## <a name="common"></a>14. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > common`
+## <a name="kube-janitor"></a>14. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > kube-janitor`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                            | Pattern | Type    | Deprecated | Definition | Title/Description |
+| ----------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
+| - [enabled](#kube-janitor_enabled ) | No      | boolean | No         | -          | -                 |
+
+### <a name="kube-janitor_enabled"></a>14.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > kube-janitor > enabled`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+## <a name="common"></a>15. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > common`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
