@@ -60,6 +60,8 @@ kubeadmConfigSpec:
     - content: |- {{- .Values.global.injectedCertificateAuthorities | nindent 8 }}
       path: /usr/local/share/ca-certificates/injected-ca-certs.crt
     {{- end }}
+    {{- $apiserverPatch := dict "spec" (dict "containers" (list (dict "name" "kube-apiserver" "resources" (dict "requests" (dict "memory" "2Gi") "limits" (dict "memory" "4Gi"))))) }}
+    {{- list (include "t8s-cluster.patches.patchFile" (dict "values" $apiserverPatch "target" "kube-apiserver" "component" "memory") | fromYaml) | toYaml | nindent 4 }}
   initConfiguration:
     nodeRegistration:
       kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict) | nindent 8 }}
