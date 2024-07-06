@@ -177,7 +177,7 @@ solr:
     pullPolicy: IfNotPresent
     pullSecrets: []
     repository: teutonet/oci-images/solr-ckan
-    tag: 1.0.3@sha256:b2dd713e8d341bc96db4fc611f66d359fde5c026f5eaad8060390cfdb270fb36
+    tag: 1.0.4@sha256:39387d06a72b24ee493f8d06cd5a1c800a9230ed78652481433760b649aefa04
     digest: ""
   extraEnvVars:
     - name: SOLR_CORE_CONF_DIR
