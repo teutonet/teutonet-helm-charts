@@ -51,7 +51,7 @@ jobs:
           fi
           generate-schema-doc --config-file .github/json-schema-to-md.yaml "charts/$CHART/values.schema.json" "charts/$CHART/values.md"
       - name: generate Docs
-        uses: docker://jnorwood/helm-docs:latest@sha256:717bd8f770bd1d25ccf79c876f1420e105832f2d6bbde12170405f58f540cb2d
+        uses: docker://jnorwood/helm-docs:latest@sha256:2b0681670e69ebd28163abdc276a419ef4a8c0ba9258699847a5ed001fd7de0e
         with:
           args: -g charts/${{ needs.getChangedChart.outputs.chart }}
 
