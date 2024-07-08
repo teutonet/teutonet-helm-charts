@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.1.3...ckan-v1.1.4) (2024-07-06)
+
+
+### Miscellaneous Chores
+
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/solr-ckan docker tag to v1.0.4 ([#1032](https://github.com/teutonet/teutonet-helm-charts/issues/1032)) ([b1250ab](https://github.com/teutonet/teutonet-helm-charts/commit/b1250ab6cae71427da7d533c8786e51f28d8d57c))
+
 ## [1.1.3](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.1.2...ckan-v1.1.3) (2024-07-04)
 
 
