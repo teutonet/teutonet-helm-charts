@@ -7,7 +7,7 @@
   {{- $values := dict -}}
   {{- $values = set $values "eventRecordQPS" 0 -}}
   {{- $values = set $values "protectKernelDefaults" true -}}
-  {{- $values = set $values "featureGates" (dict "SeccompDefault" true) -}}
+  {{- $values = set $values "featureGates" (dict) -}}
   {{- $values = set $values "SeccompDefault" true -}}
   {{- $values = set $values "tlsCipherSuites" (include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) | splitList ",") -}}
   {{- include "t8s-cluster.patches.patchFile" (dict "values" $values "target" "kubeletconfiguration" "component" "default") -}}
