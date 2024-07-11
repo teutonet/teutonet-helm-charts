@@ -66,4 +66,8 @@ spec:
     nodeSelector:
       node-role.kubernetes.io/control-plane: ""
     {{- end }}
+  {{- else }}
+    {{- if .Values.controlPlane.hosted }}
+    nodeSelector: null
+    {{- end }}
   {{- end }}
