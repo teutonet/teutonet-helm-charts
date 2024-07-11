@@ -148,9 +148,8 @@
         },
         "minor": {
           "type": "integer",
-          "description": "The minor version of the k8s cluster. Must be below 29, as CAPO does not support 1.29 yet.",
-          "minimum": 25,
-          "maximum": 28
+          "description": "The minor version of the k8s cluster.",
+          "minimum": 25
         },
         "patch": {
           "type": "integer"

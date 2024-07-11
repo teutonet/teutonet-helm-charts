@@ -42,8 +42,9 @@ spec:
     - <<: *valuesFrom
       targetPath: cloudConfig.metadata.hash
   values:
-    controllerExtraArgs: |
-      - --use-service-account-credentials=false
+    cluster:
+      name: {{ .Values.metadata.friendlyName | default .Release.Name }}
+  {{- if le (.Values.version.minor | int) 28 }}
     tolerations:
       - key: node.cloudprovider.kubernetes.io/uninitialized
         value: "true"
@@ -52,3 +53,4 @@ spec:
         effect: NoSchedule
     nodeSelector:
       node-role.kubernetes.io/control-plane: ""
+  {{- end }}
