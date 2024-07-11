@@ -30,6 +30,11 @@ global:
       registry: docker.io
       repository: alpine/semver
       tag: 7.5.4
+  minioCli:
+    image:
+      registry: docker.io
+      repository: minio/mc
+      tag: RELEASE.2024-06-24T19-40-33Z
   injectedCertificateAuthorities: ""
   kubeletExtraConfig:
     # This is only used when using 1.27 or later

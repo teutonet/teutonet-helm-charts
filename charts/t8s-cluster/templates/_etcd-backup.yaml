@@ -1,0 +1,150 @@
+{{- define "t8s-cluster.etcd-backup" -}}
+  {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: kube-etcd-backup
+  namespace: {{ .hosted | ternary .Release.Namespace "kube-system" }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 10
+  successfulJobsHistoryLimit: 1
+  schedule: '0 0 * * *'
+  jobTemplate:
+    spec:
+      backoffLimit: 6
+      template:
+        spec:
+          initContainers:
+            - name: etcd-backup
+              command:
+                - sh
+                - -ec
+                - |
+                  etcdctl snapshot save /tmp/etcd-snapshot.db --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/peer.crt --key=/etc/kubernetes/pki/etcd/peer.key
+                  etcdctl snapshot status -w table /tmp/etcd-snapshot.db
+              env:
+                - name: ETCDCTL_API
+                  value: "3"
+                - name: ETCDCTL_ENDPOINTS
+                  value: {{ .hosted | ternary (printf "kmc-%s-etcd:2379" .Release.Name) "localhost:2379" }}
+              image: {{ include "common.images.image" (dict "imageRoot" .Values.global.etcd.image "global" .Values.global) }}
+              imagePullPolicy: IfNotPresent
+              securityContext:
+                runAsGroup: 1000
+                runAsUser: {{ .hosted | ternary 1000 0 }}
+                runAsNonRoot: {{ .hosted }}
+                privileged: false
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+              volumeMounts:
+                - mountPath: /etc/kubernetes/pki/etcd
+                  name: etcd-certs
+                  readOnly: true
+          containers:
+            - name: upload-backup
+              command:
+                - bash
+                - -xec
+                - mc cp /tmp/etcd-snapshot.db container/$(S3_BUCKET)/$(date --iso-8601=hours).db
+              env:
+                - name: S3_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      key: host
+                      name: etcd-backup-config
+                - name: S3_PORT
+                  valueFrom:
+                    secretKeyRef:
+                      key: port
+                      name: etcd-backup-config
+                - name: S3_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      key: access_key_id
+                      name: etcd-backup-config
+                - name: S3_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      key: secret_access_key
+                      name: etcd-backup-config
+                - name: S3_BUCKET
+                  valueFrom:
+                    secretKeyRef:
+                      key: bucket
+                      name: etcd-backup-config
+                - name: MC_HOST_container
+                  value: https://$(S3_ACCESS_KEY_ID):$(S3_SECRET_ACCESS_KEY)@$(S3_HOST):$(S3_PORT)
+                - name: MC_CONFIG_DIR
+                  value: /tmp/wtf-mc
+              image: {{ include "common.images.image" (dict "imageRoot" .Values.global.minioCli.image "global" .Values.global) }}
+              imagePullPolicy: IfNotPresent
+              securityContext:
+                runAsGroup: 1000
+                runAsUser: {{ .hosted | ternary 1000 0 }}
+                runAsNonRoot: {{ .hosted }}
+                privileged: false
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+              volumeMounts:
+                - mountPath: /tmp/etcd-snapshot.db
+                  name: tmp
+                  subPath: etcd-snapshot.db
+                  readOnly: true
+                - mountPath: /tmp/wtf-mc
+                  name: tmp
+                  subPath: wtf-mc
+          dnsPolicy: ClusterFirst
+          hostNetwork: true
+          nodeSelector:
+            node-role.kubernetes.io/control-plane: ""
+          restartPolicy: OnFailure
+          {{- if not .hosted }}
+          hostNetwork: true
+          nodeSelector:
+            node-role.kubernetes.io/control-plane: ""
+          tolerations:
+            - effect: NoSchedule
+              key: node-role.kubernetes.io/control-plane
+              operator: Exists
+            - effect: NoSchedule
+              key: node-role.kubernetes.io/master
+              operator: Exists
+          {{- end }}
+          volumes:
+            - name: etcd-certs
+              {{- if .hosted }}
+              projected:
+                defaultMode: 420
+                sources:
+                  - secret:
+                      items:
+                        - key: tls.crt
+                          path: ca.crt
+                      name: {{ printf "%s-etcd" .Release.Name }}
+                  - secret:
+                      items:
+                        - key: tls.crt
+                          path: peer.crt
+                        - key: tls.key
+                          path: peer.key
+                      name: {{ printf "%s-etcd-peer" .Release.Name }}
+              {{- else }}
+              hostPath:
+                path: /etc/kubernetes/pki/etcd
+                type: Directory
+              {{- end }}
+            - emptyDir: {}
+              name: tmp
+{{- end -}}
