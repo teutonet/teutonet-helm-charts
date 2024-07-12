@@ -1,5 +1,26 @@
 # Changelog
 
+## [8.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v8.0.0...t8s-cluster-v8.1.0) (2024-07-12)
+
+
+### Features
+
+* **t8s-cluster/management-cluster:** set a memory limit for the kube-apiserver, so things like kyverno won't take out the whole node ([#1025](https://github.com/teutonet/teutonet-helm-charts/issues/1025)) ([85dee99](https://github.com/teutonet/teutonet-helm-charts/commit/85dee99e4496f1731d9361ffdb580cd84a8f7b8c))
+* **t8s-cluster/raise_api_version:** raise api version for helm.toolk… ([#984](https://github.com/teutonet/teutonet-helm-charts/issues/984)) ([ac8cf96](https://github.com/teutonet/teutonet-helm-charts/commit/ac8cf9691ab94715fd53f59695fdb27cd4ebe4b2))
+
+
+### Bug Fixes
+
+* **t8s-cluster:** adjust for 1.29 the SeccompDefault featureGate is enabled by default anyways ([#1036](https://github.com/teutonet/teutonet-helm-charts/issues/1036)) ([62078a9](https://github.com/teutonet/teutonet-helm-charts/commit/62078a9c58150fd1fd4586d41b53cdeab9148be7))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update common docker tag to v1.2.0 ([#882](https://github.com/teutonet/teutonet-helm-charts/issues/882)) ([14825a8](https://github.com/teutonet/teutonet-helm-charts/commit/14825a80ff76a4d415d7c55afa65622dc599fe11))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.29.6 ([#961](https://github.com/teutonet/teutonet-helm-charts/issues/961)) ([455f3e5](https://github.com/teutonet/teutonet-helm-charts/commit/455f3e5116bce1ce33e3b0f7cc8cb5bca592b8cb))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.5.14 ([#1013](https://github.com/teutonet/teutonet-helm-charts/issues/1013)) ([a0f31fd](https://github.com/teutonet/teutonet-helm-charts/commit/a0f31fd1e9326eccab4e4138b473cef2824944df))
+* **t8s-cluster:** improve developer experience by providing tab-completion ([#1005](https://github.com/teutonet/teutonet-helm-charts/issues/1005)) ([e01ea6a](https://github.com/teutonet/teutonet-helm-charts/commit/e01ea6ad79d67bcee179ea4ffceccd630ac7b237))
+
 ## [8.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v7.0.1...t8s-cluster-v8.0.0) (2024-06-15)
 
 
