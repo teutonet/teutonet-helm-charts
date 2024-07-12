@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # t8s-cluster
 
-![Version: 8.0.0](https://img.shields.io/badge/Version-8.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 8.1.0](https://img.shields.io/badge/Version-8.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -23,7 +23,7 @@ t8s-operator cluster with necessary addons
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.0.0 |
+| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.2.0 |
 
 ## Initial installation
 
@@ -456,11 +456,11 @@ Must be one of:
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                   | Pattern | Type    | Deprecated | Definition | Title/Description                                                                          |
-| -------------------------- | ------- | ------- | ---------- | ---------- | ------------------------------------------------------------------------------------------ |
-| + [major](#version_major ) | No      | const   | No         | -          | -                                                                                          |
-| + [minor](#version_minor ) | No      | integer | No         | -          | The minor version of the k8s cluster. Must be below 29, as CAPO does not support 1.29 yet. |
-| + [patch](#version_patch ) | No      | integer | No         | -          | -                                                                                          |
+| Property                   | Pattern | Type    | Deprecated | Definition | Title/Description                     |
+| -------------------------- | ------- | ------- | ---------- | ---------- | ------------------------------------- |
+| + [major](#version_major ) | No      | const   | No         | -          | -                                     |
+| + [minor](#version_minor ) | No      | integer | No         | -          | The minor version of the k8s cluster. |
+| + [patch](#version_patch ) | No      | integer | No         | -          | -                                     |
 
 ### <a name="version_major"></a>5.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > major`
 
@@ -476,12 +476,11 @@ Specific value: `1`
 | -------- | --------- |
 | **Type** | `integer` |
 
-**Description:** The minor version of the k8s cluster. Must be below 29, as CAPO does not support 1.29 yet.
+**Description:** The minor version of the k8s cluster.
 
 | Restrictions |         |
 | ------------ | ------- |
 | **Minimum**  | &ge; 25 |
-| **Maximum**  | &le; 28 |
 
 ### <a name="version_patch"></a>5.3. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > patch`
 
