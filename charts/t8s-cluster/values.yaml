@@ -25,11 +25,6 @@ global:
       registry: docker.io
       repository: bitnami/kubectl
       tag: 1.29.6@sha256:4b4b33a40764b0dc1243b6f4fc6f62dd877cd632d49131fff8df3744602a3ec0
-  semver:
-    image:
-      registry: docker.io
-      repository: alpine/semver
-      tag: 7.5.4
   injectedCertificateAuthorities: ""
   kubeletExtraConfig:
     # This is only used when using 1.27 or later
