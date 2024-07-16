@@ -1,4 +1,4 @@
-{{- if eq .Values.cni "calico" }}
+{{- if eq (include "t8s-cluster.cni" .) "calico" }}
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:

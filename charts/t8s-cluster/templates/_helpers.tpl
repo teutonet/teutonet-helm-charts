@@ -14,3 +14,15 @@
   {{- end -}}
   {{- $hasGPUFlavor | ternary true "" -}}
 {{- end -}}
+
+{{- define "t8s-cluster.cni" -}}
+  {{- if eq .Values.cni "auto" -}}
+    {{- if lookup "kustomize.toolkit.fluxcd.io/v1" "Kustomization" .Release.Namespace (printf "%s-cni" .Release.Name) -}}
+      calico
+    {{- else -}}
+      cilium
+    {{- end -}}
+  {{- else -}}
+    {{- .Values.cni -}}
+  {{- end -}}
+{{- end -}}
