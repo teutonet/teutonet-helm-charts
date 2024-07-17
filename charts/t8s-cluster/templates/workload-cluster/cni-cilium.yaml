@@ -17,6 +17,8 @@ spec:
   install:
     remediation:
       retries: -1
+  uninstall:
+    disableWait: true
   upgrade:
     timeout: 5m
   storageNamespace: kube-system
