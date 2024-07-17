@@ -1,5 +1,21 @@
 # Changelog
 
+## [6.5.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.5.0...base-cluster-v6.5.1) (2024-07-16)
+
+
+### Bug Fixes
+
+* **base-cluster/monitoring:** 🤦 ([#1026](https://github.com/teutonet/teutonet-helm-charts/issues/1026)) ([20f57c1](https://github.com/teutonet/teutonet-helm-charts/commit/20f57c1d0df7a4783a6fa335678737d41b02c19c))
+* **base-cluster/monitoring:** don't configure route without receiver ([#1024](https://github.com/teutonet/teutonet-helm-charts/issues/1024)) ([fe3d87a](https://github.com/teutonet/teutonet-helm-charts/commit/fe3d87a583a7a320e18e80edd3354e4f3ba0d984))
+* **base-cluster/monitoring:** slipped through review as well... ([#1033](https://github.com/teutonet/teutonet-helm-charts/issues/1033)) ([9a242a0](https://github.com/teutonet/teutonet-helm-charts/commit/9a242a073479a924146b5008d569d2c8dc1d6bbb))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update docker.io/curlimages/curl docker tag to v8.8.0 ([#1014](https://github.com/teutonet/teutonet-helm-charts/issues/1014)) ([b7fe8f8](https://github.com/teutonet/teutonet-helm-charts/commit/b7fe8f87006bfc131b9e9d37449c340c362b4aaf))
+* **base-cluster/dependencies:** update helm release descheduler to 0.30.x ([#1015](https://github.com/teutonet/teutonet-helm-charts/issues/1015)) ([26a8e26](https://github.com/teutonet/teutonet-helm-charts/commit/26a8e26a37940143a7a019e147a119512e11f2a6))
+* **base-cluster/dependencies:** update helm release kube-prometheus-stack to v61 ([#1022](https://github.com/teutonet/teutonet-helm-charts/issues/1022)) ([49c905c](https://github.com/teutonet/teutonet-helm-charts/commit/49c905cc3af8254d30003d3d2bc7400dbea6ee0a))
+
 ## [6.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.4.0...base-cluster-v6.5.0) (2024-07-04)
 
 
