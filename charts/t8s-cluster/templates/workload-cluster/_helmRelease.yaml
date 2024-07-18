@@ -27,6 +27,8 @@ spec:
   install:
     remediation:
       retries: -1
+  uninstall:
+    disableWait: true
   storageNamespace: kube-system
   targetNamespace: kube-system
   releaseName: {{ .name }}
