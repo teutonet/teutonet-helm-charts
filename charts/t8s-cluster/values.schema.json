@@ -41,17 +41,7 @@
         },
         "etcd": {
           "type": "object",
-          "description": "Image with `kubectl` binary",
-          "properties": {
-            "image": {
-              "$ref": "#/$defs/image"
-            }
-          },
-          "additionalProperties": false
-        },
-        "semver": {
-          "type": "object",
-          "description": "Image with `semver` binary",
+          "description": "Image with `etcdctl` binary",
           "properties": {
             "image": {
               "$ref": "#/$defs/image"
