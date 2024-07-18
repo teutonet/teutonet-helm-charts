@@ -16,7 +16,7 @@ spec:
   interval: 1h
   driftDetection:
     mode: enabled
-  {{- if eq .Values.cni "cilium" }}
+  {{- if eq (include "t8s-cluster.cni" .) "cilium" }}
   dependsOn:
     - name: {{ printf "%s-cni" .Release.Name }}
       namespace: {{ .Release.Namespace }}

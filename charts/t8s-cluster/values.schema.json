@@ -222,8 +222,10 @@
     },
     "cni": {
       "type": "string",
+      "description": "The CNI plugin to use. `auto` means to keep the current one or use cilium for a new cluster.",
       "enum": [
         "cilium",
+        "auto",
         "calico"
       ]
     },

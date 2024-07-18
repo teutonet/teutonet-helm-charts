@@ -61,6 +61,6 @@ containerRegistryMirror:
 
 sshKeyName: null
 
-cni: cilium
+cni: auto
 
 openstackImageNamePrefix: ""
