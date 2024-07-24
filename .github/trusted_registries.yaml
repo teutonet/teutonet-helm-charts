@@ -1,5 +1,7 @@
 registries:
   docker.io:
+    aelbakry:
+      kdave-server: ALL_TAGS
     bats:
       bats: ALL_TAGS
     bitnami: ALL_IMAGES
