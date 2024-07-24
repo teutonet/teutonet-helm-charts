@@ -14,16 +14,11 @@ spec:
     mode: enabled
   values:
     priorityClassName: cluster-components
-    {{- $image := dict -}}
-      {{- if .Values.global.imageRegistry -}}
-        {{- $image = set $image "repository" (printf "%s/hjacobs/kube-janitor" $.Values.global.imageRegistry) -}}
-      {{- end }}
-      {{- with dig "kube-janitor" "charts" "kube-janitor" "tag" "" .Values.global.helmRepositories -}}
-        {{- $image = set $image "tag" . -}}
-      {{- end }}
-    {{- with $image }}
-    image: {{- toYaml $image | nindent 6 }}
+    {{- $image := dict "repository" (printf "%s/hjacobs/kube-janitor" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict)))) -}}
+    {{- with dig "kube-janitor" "charts" "kube-janitor" "tag" "" .Values.global.helmRepositories -}}
+      {{- $image = set $image "tag" . -}}
     {{- end }}
+    image: {{- toYaml $image | nindent 6 }}
     resources:
       limits:
         memory: 1Gi
