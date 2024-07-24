@@ -31,11 +31,11 @@ spec:
     {{- else }}
     test:
       image:
-        registry: docker.io
+        registry: {{ include "base-cluster.defaultRegistry" (dict) }}
     cleanupJobs:
       admissionReports: &defaultImage
         image:
-          registry: docker.io
+          registry: {{ include "base-cluster.defaultRegistry" (dict) }}
       updateRequests: *defaultImage
       ephemeralReports: *defaultImage
       clusterEphemeralReports: *defaultImage
@@ -53,7 +53,7 @@ spec:
       enable: true
       {{- if not .Values.global.imageRegistry }}
       image:
-        registry: docker.io
+        registry: {{ include "base-cluster.defaultRegistry" (dict) }}
       {{- end }}
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
