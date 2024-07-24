@@ -9,7 +9,7 @@ on:
 
 jobs:
   getChangedCharts:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     outputs:
       charts: ${{ steps.getCharts.outputs.charts }}
     steps:
