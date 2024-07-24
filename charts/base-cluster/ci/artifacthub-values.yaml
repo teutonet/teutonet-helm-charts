@@ -27,3 +27,5 @@ monitoring:
         pagerduty:
           enabled: true
           integrationKey: INTEGRATION_KEY
+kube-janitor:
+  enabled: true
