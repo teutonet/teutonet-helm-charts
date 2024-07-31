@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.6.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.6.0...base-cluster-v6.6.1) (2024-07-31)
+
+
+### Bug Fixes
+
+* **base-cluster/velero:** remove dupplicated additionalLabels ([#1058](https://github.com/teutonet/teutonet-helm-charts/issues/1058)) ([82a2aa7](https://github.com/teutonet/teutonet-helm-charts/commit/82a2aa750371e7d1a74176167a6fce2526ec6e37))
+
 ## [6.6.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.5.1...base-cluster-v6.6.0) (2024-07-31)
 
 
