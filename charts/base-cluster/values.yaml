@@ -28,6 +28,10 @@ global:
       condition: "{{ .Values.ingress.enabled }}"
       additionalLabels:
         app.kubernetes.io/component: ingress
+    tetragon:
+      condition: "{{ .Values.tetragon.enabled }}"
+      additionalLabels:
+        app.kubernetes.io/component: tetragon
     kyverno:
       condition: "{{ .Values.kyverno.enabled }}"
       additionalLabels:
@@ -141,6 +145,10 @@ global:
         kyverno: 3.x.x
         kyverno-policies: 3.x.x
       condition: "{{ .Values.kyverno.enabled }}"
+    tetragon:
+      url: https://helm.cilium.io
+      charts:
+        tetragon: 1.x.x
     cetic:
       url: https://cetic.github.io/helm-charts
       charts:
@@ -457,3 +465,9 @@ backup:
 
 kube-janitor:
   enabled: false
+
+tetragon:
+  enabled: true
+  serviceMonitor:
+    labelsOverride:
+      managed.by/monitoring: teutonet
