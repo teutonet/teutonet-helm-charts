@@ -91,4 +91,19 @@ spec:
     metrics:
       serviceMonitor:
         additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
+        {{- if .Values.monitoring.prometheus.enabled }}
+        enabled: true
+        {{- end }}
+        additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
+      prometheusRule:
+        enabled: true
+        additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
+        spec:
+         - alert: VeleroBackupFailures
+           annotations:
+             message: Velero backup {{ "{{ $labels.schedule }}" }} failed.
+           expr: velero_backup_last_status{schedule!=""}!=1
+           for: 15m
+           labels:
+             severity: warning
 {{- end }}
