@@ -1,5 +1,23 @@
 # Changelog
 
+## [6.6.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.5.1...base-cluster-v6.6.0) (2024-07-31)
+
+
+### Features
+
+* **base-cluster:** add kdave for deprecated CRD metrics ([#947](https://github.com/teutonet/teutonet-helm-charts/issues/947)) ([4609be4](https://github.com/teutonet/teutonet-helm-charts/commit/4609be4a4f7a315a7e419757a2b62c447759ab28))
+* **base-cluster:** enable velero servicemonitor if prometheus is enabled ([#724](https://github.com/teutonet/teutonet-helm-charts/issues/724)) ([4482223](https://github.com/teutonet/teutonet-helm-charts/commit/44822234455e3a0cc59b6df580405643fbb4adaa)), closes [#487](https://github.com/teutonet/teutonet-helm-charts/issues/487)
+
+
+### Bug Fixes
+
+* **base-cluster/kube-janitor:** enable artifacthub-values and correctly prefix docker.io registry ([#1048](https://github.com/teutonet/teutonet-helm-charts/issues/1048)) ([17b9baf](https://github.com/teutonet/teutonet-helm-charts/commit/17b9baf00a49003abbc1ef4d2e91ba609e491418))
+
+
+### Miscellaneous Chores
+
+* **base-cluster:** use template instead of duplicated value ([#1050](https://github.com/teutonet/teutonet-helm-charts/issues/1050)) ([4ef2389](https://github.com/teutonet/teutonet-helm-charts/commit/4ef23899a073c3ed9f9d0867f626a60c028c3fcf))
+
 ## [6.5.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.5.0...base-cluster-v6.5.1) (2024-07-16)
 
 
