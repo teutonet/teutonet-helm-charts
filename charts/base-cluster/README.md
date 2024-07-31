@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # base-cluster
 
-![Version: 6.5.1](https://img.shields.io/badge/Version-6.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 6.6.0](https://img.shields.io/badge/Version-6.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -1652,9 +1652,10 @@ This field is immutable. It can only be set for containers.
 
 **Description:** ResourceClaim references one entry in PodSpec.ResourceClaims.
 
-| Property                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                          |
-| ------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| + [name](#global_authentication_oauthProxy_resources_claims_items_name ) | No      | string | No         | -          | Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container. |
+| Property                                                                       | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                   |
+| ------------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [name](#global_authentication_oauthProxy_resources_claims_items_name )       | No      | string | No         | -          | Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.          |
+| - [request](#global_authentication_oauthProxy_resources_claims_items_request ) | No      | string | No         | -          | Request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request. |
 
 ###### <a name="global_authentication_oauthProxy_resources_claims_items_name"></a>1.16.3.3.1.1.1. Property `base cluster configuration > global > authentication > oauthProxy > resources > claims > claims items > name`
 
@@ -1663,6 +1664,14 @@ This field is immutable. It can only be set for containers.
 | **Type** | `string` |
 
 **Description:** Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+
+###### <a name="global_authentication_oauthProxy_resources_claims_items_request"></a>1.16.3.3.1.1.2. Property `base cluster configuration > global > authentication > oauthProxy > resources > claims > claims items > request`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** Request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request.
 
 ###### <a name="global_authentication_oauthProxy_resources_limits"></a>1.16.3.3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > authentication > oauthProxy > resources > limits`
 
@@ -1775,6 +1784,7 @@ Must be one of:
 | - [monitorAllNamespaces](#monitoring_monitorAllNamespaces ) | No      | boolean | No         | -          | -                                                                                                                                 |
 | - [labels](#monitoring_labels )                             | No      | object  | No         | -          | The labels to set on ServiceMonitors, ... and which the prometheus uses to search for                                             |
 | - [deadMansSwitch](#monitoring_deadMansSwitch )             | No      | object  | No         | -          | This needs \`.global.clusterName\` to be set up as an integration in healthchecks.io. Also, \`.global.baseDomain\` has to be set. |
+| - [kdave](#monitoring_kdave )                               | No      | object  | No         | -          | -                                                                                                                                 |
 | - [prometheus](#monitoring_prometheus )                     | No      | object  | No         | -          | -                                                                                                                                 |
 | - [grafana](#monitoring_grafana )                           | No      | object  | No         | -          | -                                                                                                                                 |
 | - [loki](#monitoring_loki )                                 | No      | object  | No         | -          | -                                                                                                                                 |
@@ -1844,7 +1854,24 @@ Must be one of:
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="monitoring_prometheus"></a>3.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus`
+### <a name="monitoring_kdave"></a>3.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > kdave`
+
+|                           |                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                 |
+| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+
+| Property                                | Pattern | Type    | Deprecated | Definition | Title/Description |
+| --------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
+| - [enabled](#monitoring_kdave_enabled ) | No      | boolean | No         | -          | -                 |
+
+#### <a name="monitoring_kdave_enabled"></a>3.4.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > kdave > enabled`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+### <a name="monitoring_prometheus"></a>3.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -1866,13 +1893,13 @@ Must be one of:
 | - [ingress](#monitoring_prometheus_ingress )                     | No      | object           | No         | In #/$defs/toolIngress                                                        | -                                                                 |
 | - [alertmanager](#monitoring_prometheus_alertmanager )           | No      | object           | No         | -                                                                             | -                                                                 |
 
-#### <a name="monitoring_prometheus_enabled"></a>3.4.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > enabled`
+#### <a name="monitoring_prometheus_enabled"></a>3.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > enabled`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-#### <a name="monitoring_prometheus_replicas"></a>3.4.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > replicas`
+#### <a name="monitoring_prometheus_replicas"></a>3.5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > replicas`
 
 |          |           |
 | -------- | --------- |
@@ -1882,14 +1909,14 @@ Must be one of:
 | ------------ | ------ |
 | **Minimum**  | &ge; 1 |
 
-#### <a name="monitoring_prometheus_resourcesPreset"></a>3.4.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > resourcesPreset`
+#### <a name="monitoring_prometheus_resourcesPreset"></a>3.5.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > resourcesPreset`
 
 |                        |                                                                      |
 | ---------------------- | -------------------------------------------------------------------- |
 | **Type**               | `enum (of string)`                                                   |
 | **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
 
-#### <a name="monitoring_prometheus_resources"></a>3.4.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > resources`
+#### <a name="monitoring_prometheus_resources"></a>3.5.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > resources`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -1899,7 +1926,7 @@ Must be one of:
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-#### <a name="monitoring_prometheus_retentionDuration"></a>3.4.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > retentionDuration`
+#### <a name="monitoring_prometheus_retentionDuration"></a>3.5.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > retentionDuration`
 
 |          |          |
 | -------- | -------- |
@@ -1909,7 +1936,7 @@ Must be one of:
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | **Must match regular expression** | ```[0-9]+(ms\|s\|m\|h\|d\|w\|y)``` [Test](https://regex101.com/?regex=%5B0-9%5D%2B%28ms%7Cs%7Cm%7Ch%7Cd%7Cw%7Cy%29) |
 
-#### <a name="monitoring_prometheus_retentionSize"></a>3.4.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > retentionSize`
+#### <a name="monitoring_prometheus_retentionSize"></a>3.5.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > retentionSize`
 
 |          |          |
 | -------- | -------- |
@@ -1919,7 +1946,7 @@ Must be one of:
 | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | **Must match regular expression** | ```[0-9]+(B\|KB\|MB\|GB\|TB\|PB\|EB)``` [Test](https://regex101.com/?regex=%5B0-9%5D%2B%28B%7CKB%7CMB%7CGB%7CTB%7CPB%7CEB%29) |
 
-#### <a name="monitoring_prometheus_persistence"></a>3.4.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > persistence`
+#### <a name="monitoring_prometheus_persistence"></a>3.5.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > persistence`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -1931,7 +1958,7 @@ Must be one of:
 | - [storageClass](#monitoring_prometheus_persistence_storageClass ) | No      | string | No         | Same as [storageClass](#global_storageClass )                                                                                                      | The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd) |
 | - [size](#monitoring_prometheus_persistence_size )                 | No      | object | No         | Same as [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties ) | -                                                                                                                |
 
-##### <a name="monitoring_prometheus_persistence_storageClass"></a>3.4.7.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > persistence > storageClass`
+##### <a name="monitoring_prometheus_persistence_storageClass"></a>3.5.7.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > persistence > storageClass`
 
 |                        |                                      |
 | ---------------------- | ------------------------------------ |
@@ -1940,7 +1967,7 @@ Must be one of:
 
 **Description:** The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd)
 
-##### <a name="monitoring_prometheus_persistence_size"></a>3.4.7.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > persistence > size`
+##### <a name="monitoring_prometheus_persistence_size"></a>3.5.7.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > persistence > size`
 
 |                           |                                                                                                                                           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1948,7 +1975,7 @@ Must be one of:
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.")         |
 | **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
-#### <a name="monitoring_prometheus_operator"></a>3.4.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > operator`
+#### <a name="monitoring_prometheus_operator"></a>3.5.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > operator`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -1960,14 +1987,14 @@ Must be one of:
 | - [resourcesPreset](#monitoring_prometheus_operator_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
 | - [resources](#monitoring_prometheus_operator_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
 
-##### <a name="monitoring_prometheus_operator_resourcesPreset"></a>3.4.8.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > operator > resourcesPreset`
+##### <a name="monitoring_prometheus_operator_resourcesPreset"></a>3.5.8.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > operator > resourcesPreset`
 
 |                        |                                                                      |
 | ---------------------- | -------------------------------------------------------------------- |
 | **Type**               | `enum (of string)`                                                   |
 | **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
 
-##### <a name="monitoring_prometheus_operator_resources"></a>3.4.8.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > operator > resources`
+##### <a name="monitoring_prometheus_operator_resources"></a>3.5.8.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > operator > resources`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -1977,7 +2004,7 @@ Must be one of:
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-#### <a name="monitoring_prometheus_kubeStateMetrics"></a>3.4.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > kubeStateMetrics`
+#### <a name="monitoring_prometheus_kubeStateMetrics"></a>3.5.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > kubeStateMetrics`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -1990,14 +2017,14 @@ Must be one of:
 | - [resources](#monitoring_prometheus_kubeStateMetrics_resources )                         | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements.         |
 | - [metricLabelsAllowList](#monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList ) | No      | object           | No         | -                                                                             | A map of resource/[label] that will be set as labels on the state metrics |
 
-##### <a name="monitoring_prometheus_kubeStateMetrics_resourcesPreset"></a>3.4.9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > kubeStateMetrics > resourcesPreset`
+##### <a name="monitoring_prometheus_kubeStateMetrics_resourcesPreset"></a>3.5.9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > kubeStateMetrics > resourcesPreset`
 
 |                        |                                                                      |
 | ---------------------- | -------------------------------------------------------------------- |
 | **Type**               | `enum (of string)`                                                   |
 | **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
 
-##### <a name="monitoring_prometheus_kubeStateMetrics_resources"></a>3.4.9.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > kubeStateMetrics > resources`
+##### <a name="monitoring_prometheus_kubeStateMetrics_resources"></a>3.5.9.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > kubeStateMetrics > resources`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -2007,7 +2034,7 @@ Must be one of:
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-##### <a name="monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList"></a>3.4.9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > kubeStateMetrics > metricLabelsAllowList`
+##### <a name="monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList"></a>3.5.9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > kubeStateMetrics > metricLabelsAllowList`
 
 |                           |                                                                                                                                                                                                                           |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -2020,7 +2047,7 @@ Must be one of:
 | ----------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ---------- | ----------------- |
 | - [](#monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList_additionalProperties ) | No      | array of string | No         | -          | -                 |
 
-###### <a name="monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList_additionalProperties"></a>3.4.9.3.1. Property `base cluster configuration > monitoring > prometheus > kubeStateMetrics > metricLabelsAllowList > additionalProperties`
+###### <a name="monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList_additionalProperties"></a>3.5.9.3.1. Property `base cluster configuration > monitoring > prometheus > kubeStateMetrics > metricLabelsAllowList > additionalProperties`
 
 |          |                   |
 | -------- | ----------------- |
@@ -2038,13 +2065,13 @@ Must be one of:
 | ---------------------------------------------------------------------------------------------------------------------- | ----------- |
 | [additionalProperties items](#monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList_additionalProperties_items) | -           |
 
-###### <a name="autogenerated_heading_19"></a>3.4.9.3.1.1. base cluster configuration > monitoring > prometheus > kubeStateMetrics > metricLabelsAllowList > additionalProperties > additionalProperties items
+###### <a name="autogenerated_heading_19"></a>3.5.9.3.1.1. base cluster configuration > monitoring > prometheus > kubeStateMetrics > metricLabelsAllowList > additionalProperties > additionalProperties items
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="monitoring_prometheus_nodeExporter"></a>3.4.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > nodeExporter`
+#### <a name="monitoring_prometheus_nodeExporter"></a>3.5.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > nodeExporter`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2056,14 +2083,14 @@ Must be one of:
 | - [resourcesPreset](#monitoring_prometheus_nodeExporter_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
 | - [resources](#monitoring_prometheus_nodeExporter_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
 
-##### <a name="monitoring_prometheus_nodeExporter_resourcesPreset"></a>3.4.10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > nodeExporter > resourcesPreset`
+##### <a name="monitoring_prometheus_nodeExporter_resourcesPreset"></a>3.5.10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > nodeExporter > resourcesPreset`
 
 |                        |                                                                      |
 | ---------------------- | -------------------------------------------------------------------- |
 | **Type**               | `enum (of string)`                                                   |
 | **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
 
-##### <a name="monitoring_prometheus_nodeExporter_resources"></a>3.4.10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > nodeExporter > resources`
+##### <a name="monitoring_prometheus_nodeExporter_resources"></a>3.5.10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > nodeExporter > resources`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -2073,7 +2100,7 @@ Must be one of:
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-#### <a name="monitoring_prometheus_ingress"></a>3.4.11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > ingress`
+#### <a name="monitoring_prometheus_ingress"></a>3.5.11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > ingress`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2087,13 +2114,13 @@ Must be one of:
 | - [host](#monitoring_prometheus_ingress_host )                 | No      | string  | No         | -          | The subdomain to use under \`.global.clusterName\`.\`.global.baseDomain\` |
 | - [customDomain](#monitoring_prometheus_ingress_customDomain ) | No      | string  | No         | -          | The full custom domain to use                                             |
 
-##### <a name="monitoring_prometheus_ingress_enabled"></a>3.4.11.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > ingress > enabled`
+##### <a name="monitoring_prometheus_ingress_enabled"></a>3.5.11.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > ingress > enabled`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-##### <a name="monitoring_prometheus_ingress_host"></a>3.4.11.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > ingress > host`
+##### <a name="monitoring_prometheus_ingress_host"></a>3.5.11.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > ingress > host`
 
 |          |          |
 | -------- | -------- |
@@ -2101,7 +2128,7 @@ Must be one of:
 
 **Description:** The subdomain to use under `.global.clusterName`.`.global.baseDomain`
 
-##### <a name="monitoring_prometheus_ingress_customDomain"></a>3.4.11.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > ingress > customDomain`
+##### <a name="monitoring_prometheus_ingress_customDomain"></a>3.5.11.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > ingress > customDomain`
 
 |          |          |
 | -------- | -------- |
@@ -2109,7 +2136,7 @@ Must be one of:
 
 **Description:** The full custom domain to use
 
-#### <a name="monitoring_prometheus_alertmanager"></a>3.4.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager`
+#### <a name="monitoring_prometheus_alertmanager"></a>3.5.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2124,7 +2151,7 @@ Must be one of:
 | - [retentionDuration](#monitoring_prometheus_alertmanager_retentionDuration ) | No      | string  | No         | -                                                  | -                 |
 | - [persistence](#monitoring_prometheus_alertmanager_persistence )             | No      | object  | No         | -                                                  | -                 |
 
-##### <a name="monitoring_prometheus_alertmanager_receivers"></a>3.4.12.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers`
+##### <a name="monitoring_prometheus_alertmanager_receivers"></a>3.5.12.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2135,7 +2162,7 @@ Must be one of:
 | ----------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [pagerduty](#monitoring_prometheus_alertmanager_receivers_pagerduty ) | No      | object | No         | -          | -                 |
 
-###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty"></a>3.4.12.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty`
+###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty"></a>3.5.12.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2148,25 +2175,25 @@ Must be one of:
 | - [url](#monitoring_prometheus_alertmanager_receivers_pagerduty_url )                       | No      | string  | No         | -          | -                 |
 | - [integrationKey](#monitoring_prometheus_alertmanager_receivers_pagerduty_integrationKey ) | No      | string  | No         | -          | -                 |
 
-###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty_enabled"></a>3.4.12.1.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty > enabled`
+###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty_enabled"></a>3.5.12.1.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty > enabled`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty_url"></a>3.4.12.1.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty > url`
+###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty_url"></a>3.5.12.1.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty > url`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty_integrationKey"></a>3.4.12.1.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty > integrationKey`
+###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty_integrationKey"></a>3.5.12.1.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty > integrationKey`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="monitoring_prometheus_alertmanager_ingress"></a>3.4.12.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > ingress`
+##### <a name="monitoring_prometheus_alertmanager_ingress"></a>3.5.12.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > ingress`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2174,7 +2201,7 @@ Must be one of:
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 | **Same definition as**    | [ingress](#monitoring_prometheus_ingress)                                                                |
 
-##### <a name="monitoring_prometheus_alertmanager_replicas"></a>3.4.12.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > replicas`
+##### <a name="monitoring_prometheus_alertmanager_replicas"></a>3.5.12.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > replicas`
 
 |          |           |
 | -------- | --------- |
@@ -2184,7 +2211,7 @@ Must be one of:
 | ------------ | ------ |
 | **Minimum**  | &ge; 1 |
 
-##### <a name="monitoring_prometheus_alertmanager_retentionDuration"></a>3.4.12.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > retentionDuration`
+##### <a name="monitoring_prometheus_alertmanager_retentionDuration"></a>3.5.12.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > retentionDuration`
 
 |          |          |
 | -------- | -------- |
@@ -2194,7 +2221,7 @@ Must be one of:
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | **Must match regular expression** | ```[0-9]+(ms\|s\|m\|h\|d\|w\|y)``` [Test](https://regex101.com/?regex=%5B0-9%5D%2B%28ms%7Cs%7Cm%7Ch%7Cd%7Cw%7Cy%29) |
 
-##### <a name="monitoring_prometheus_alertmanager_persistence"></a>3.4.12.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > persistence`
+##### <a name="monitoring_prometheus_alertmanager_persistence"></a>3.5.12.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > persistence`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2206,7 +2233,7 @@ Must be one of:
 | - [storageClass](#monitoring_prometheus_alertmanager_persistence_storageClass ) | No      | string | No         | Same as [storageClass](#global_storageClass )                                                                                                      | The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd) |
 | - [size](#monitoring_prometheus_alertmanager_persistence_size )                 | No      | object | No         | Same as [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties ) | -                                                                                                                |
 
-###### <a name="monitoring_prometheus_alertmanager_persistence_storageClass"></a>3.4.12.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > persistence > storageClass`
+###### <a name="monitoring_prometheus_alertmanager_persistence_storageClass"></a>3.5.12.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > persistence > storageClass`
 
 |                        |                                      |
 | ---------------------- | ------------------------------------ |
@@ -2215,7 +2242,7 @@ Must be one of:
 
 **Description:** The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd)
 
-###### <a name="monitoring_prometheus_alertmanager_persistence_size"></a>3.4.12.5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > persistence > size`
+###### <a name="monitoring_prometheus_alertmanager_persistence_size"></a>3.5.12.5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > persistence > size`
 
 |                           |                                                                                                                                           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
@@ -2223,7 +2250,7 @@ Must be one of:
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.")         |
 | **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
-### <a name="monitoring_grafana"></a>3.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana`
+### <a name="monitoring_grafana"></a>3.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2243,13 +2270,13 @@ Must be one of:
 | - [persistence](#monitoring_grafana_persistence )                   | No      | object           | No         | -                                                                             | -                                                                       |
 | - [sidecar](#monitoring_grafana_sidecar )                           | No      | object           | No         | -                                                                             | -                                                                       |
 
-#### <a name="monitoring_grafana_adminPassword"></a>3.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > adminPassword`
+#### <a name="monitoring_grafana_adminPassword"></a>3.6.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > adminPassword`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="monitoring_grafana_ingress"></a>3.5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > ingress`
+#### <a name="monitoring_grafana_ingress"></a>3.6.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > ingress`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2257,7 +2284,7 @@ Must be one of:
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 | **Same definition as**    | [ingress](#monitoring_prometheus_ingress)                                                                |
 
-#### <a name="monitoring_grafana_additionalDashboards"></a>3.5.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > additionalDashboards`
+#### <a name="monitoring_grafana_additionalDashboards"></a>3.6.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > additionalDashboards`
 
 |                           |                                                                                                                                                                                                      |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -2268,7 +2295,7 @@ Must be one of:
 | -------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [](#monitoring_grafana_additionalDashboards_additionalProperties ) | No      | object | No         | -          | -                 |
 
-##### <a name="monitoring_grafana_additionalDashboards_additionalProperties"></a>3.5.3.1. Property `base cluster configuration > monitoring > grafana > additionalDashboards > additionalProperties`
+##### <a name="monitoring_grafana_additionalDashboards_additionalProperties"></a>3.6.3.1. Property `base cluster configuration > monitoring > grafana > additionalDashboards > additionalProperties`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2281,32 +2308,32 @@ Must be one of:
 | - [revision](#monitoring_grafana_additionalDashboards_additionalProperties_revision )     | No      | integer | No         | -          | -                 |
 | - [datasource](#monitoring_grafana_additionalDashboards_additionalProperties_datasource ) | No      | string  | No         | -          | -                 |
 
-###### <a name="monitoring_grafana_additionalDashboards_additionalProperties_gnetId"></a>3.5.3.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > monitoring > grafana > additionalDashboards > additionalProperties > gnetId`
+###### <a name="monitoring_grafana_additionalDashboards_additionalProperties_gnetId"></a>3.6.3.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > monitoring > grafana > additionalDashboards > additionalProperties > gnetId`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `integer` |
 
-###### <a name="monitoring_grafana_additionalDashboards_additionalProperties_revision"></a>3.5.3.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > additionalDashboards > additionalProperties > revision`
+###### <a name="monitoring_grafana_additionalDashboards_additionalProperties_revision"></a>3.6.3.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > additionalDashboards > additionalProperties > revision`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `integer` |
 
-###### <a name="monitoring_grafana_additionalDashboards_additionalProperties_datasource"></a>3.5.3.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > additionalDashboards > additionalProperties > datasource`
+###### <a name="monitoring_grafana_additionalDashboards_additionalProperties_datasource"></a>3.6.3.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > additionalDashboards > additionalProperties > datasource`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="monitoring_grafana_config"></a>3.5.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > config`
+#### <a name="monitoring_grafana_config"></a>3.6.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > config`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-#### <a name="monitoring_grafana_notifiers"></a>3.5.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > notifiers`
+#### <a name="monitoring_grafana_notifiers"></a>3.6.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > notifiers`
 
 |          |                   |
 | -------- | ----------------- |
@@ -2326,7 +2353,7 @@ Must be one of:
 | ------------------------------------------------------ | ----------- |
 | [notifiers items](#monitoring_grafana_notifiers_items) | -           |
 
-##### <a name="autogenerated_heading_20"></a>3.5.5.1. base cluster configuration > monitoring > grafana > notifiers > notifiers items
+##### <a name="autogenerated_heading_20"></a>3.6.5.1. base cluster configuration > monitoring > grafana > notifiers > notifiers items
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2344,25 +2371,25 @@ Must be one of:
 | - [frequency](#monitoring_grafana_notifiers_items_frequency )         | No      | string  | No         | -          | -                 |
 | - [settings](#monitoring_grafana_notifiers_items_settings )           | No      | object  | No         | -          | -                 |
 
-###### <a name="monitoring_grafana_notifiers_items_name"></a>3.5.5.1.1. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > name`
+###### <a name="monitoring_grafana_notifiers_items_name"></a>3.6.5.1.1. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > name`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-###### <a name="monitoring_grafana_notifiers_items_type"></a>3.5.5.1.2. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > type`
+###### <a name="monitoring_grafana_notifiers_items_type"></a>3.6.5.1.2. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > type`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-###### <a name="monitoring_grafana_notifiers_items_uid"></a>3.5.5.1.3. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > uid`
+###### <a name="monitoring_grafana_notifiers_items_uid"></a>3.6.5.1.3. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > uid`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-###### <a name="monitoring_grafana_notifiers_items_org_id"></a>3.5.5.1.4. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > org_id`
+###### <a name="monitoring_grafana_notifiers_items_org_id"></a>3.6.5.1.4. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > org_id`
 
 |          |           |
 | -------- | --------- |
@@ -2372,32 +2399,32 @@ Must be one of:
 | ------------ | ------ |
 | **Minimum**  | &ge; 1 |
 
-###### <a name="monitoring_grafana_notifiers_items_is_default"></a>3.5.5.1.5. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > is_default`
+###### <a name="monitoring_grafana_notifiers_items_is_default"></a>3.6.5.1.5. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > is_default`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-###### <a name="monitoring_grafana_notifiers_items_send_reminder"></a>3.5.5.1.6. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > send_reminder`
+###### <a name="monitoring_grafana_notifiers_items_send_reminder"></a>3.6.5.1.6. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > send_reminder`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-###### <a name="monitoring_grafana_notifiers_items_frequency"></a>3.5.5.1.7. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > frequency`
+###### <a name="monitoring_grafana_notifiers_items_frequency"></a>3.6.5.1.7. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > frequency`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-###### <a name="monitoring_grafana_notifiers_items_settings"></a>3.5.5.1.8. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > settings`
+###### <a name="monitoring_grafana_notifiers_items_settings"></a>3.6.5.1.8. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > settings`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                          |
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
 
-#### <a name="monitoring_grafana_additionalPlugins"></a>3.5.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > additionalPlugins`
+#### <a name="monitoring_grafana_additionalPlugins"></a>3.6.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > additionalPlugins`
 
 |          |                   |
 | -------- | ----------------- |
@@ -2415,20 +2442,20 @@ Must be one of:
 | ---------------------------------------------------------------------- | ----------- |
 | [additionalPlugins items](#monitoring_grafana_additionalPlugins_items) | -           |
 
-##### <a name="autogenerated_heading_21"></a>3.5.6.1. base cluster configuration > monitoring > grafana > additionalPlugins > additionalPlugins items
+##### <a name="autogenerated_heading_21"></a>3.6.6.1. base cluster configuration > monitoring > grafana > additionalPlugins > additionalPlugins items
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="monitoring_grafana_resourcesPreset"></a>3.5.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > resourcesPreset`
+#### <a name="monitoring_grafana_resourcesPreset"></a>3.6.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > resourcesPreset`
 
 |                        |                                                                      |
 | ---------------------- | -------------------------------------------------------------------- |
 | **Type**               | `enum (of string)`                                                   |
 | **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
 
-#### <a name="monitoring_grafana_resources"></a>3.5.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > resources`
+#### <a name="monitoring_grafana_resources"></a>3.6.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > resources`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -2438,7 +2465,7 @@ Must be one of:
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-#### <a name="monitoring_grafana_persistence"></a>3.5.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > persistence`
+#### <a name="monitoring_grafana_persistence"></a>3.6.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > persistence`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2451,13 +2478,13 @@ Must be one of:
 | - [size](#monitoring_grafana_persistence_size )                         | No      | object  | No         | Same as [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties ) | -                 |
 | - [storageClassName](#monitoring_grafana_persistence_storageClassName ) | No      | string  | No         | -                                                                                                                                                  | -                 |
 
-##### <a name="monitoring_grafana_persistence_enabled"></a>3.5.9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > persistence > enabled`
+##### <a name="monitoring_grafana_persistence_enabled"></a>3.6.9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > persistence > enabled`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-##### <a name="monitoring_grafana_persistence_size"></a>3.5.9.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > persistence > size`
+##### <a name="monitoring_grafana_persistence_size"></a>3.6.9.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > persistence > size`
 
 |                           |                                                                                                                                           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
@@ -2465,13 +2492,13 @@ Must be one of:
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.")         |
 | **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
-##### <a name="monitoring_grafana_persistence_storageClassName"></a>3.5.9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > persistence > storageClassName`
+##### <a name="monitoring_grafana_persistence_storageClassName"></a>3.6.9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > persistence > storageClassName`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="monitoring_grafana_sidecar"></a>3.5.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > sidecar`
+#### <a name="monitoring_grafana_sidecar"></a>3.6.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > sidecar`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2483,14 +2510,14 @@ Must be one of:
 | - [resourcesPreset](#monitoring_grafana_sidecar_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
 | - [resources](#monitoring_grafana_sidecar_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
 
-##### <a name="monitoring_grafana_sidecar_resourcesPreset"></a>3.5.10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > sidecar > resourcesPreset`
+##### <a name="monitoring_grafana_sidecar_resourcesPreset"></a>3.6.10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > sidecar > resourcesPreset`
 
 |                        |                                                                      |
 | ---------------------- | -------------------------------------------------------------------- |
 | **Type**               | `enum (of string)`                                                   |
 | **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
 
-##### <a name="monitoring_grafana_sidecar_resources"></a>3.5.10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > sidecar > resources`
+##### <a name="monitoring_grafana_sidecar_resources"></a>3.6.10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > sidecar > resources`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -2500,7 +2527,7 @@ Must be one of:
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-### <a name="monitoring_loki"></a>3.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki`
+### <a name="monitoring_loki"></a>3.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2516,13 +2543,13 @@ Must be one of:
 | - [resources](#monitoring_loki_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
 | - [promtail](#monitoring_loki_promtail )               | No      | object           | No         | -                                                                             | -                                                                 |
 
-#### <a name="monitoring_loki_enabled"></a>3.6.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > enabled`
+#### <a name="monitoring_loki_enabled"></a>3.7.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > enabled`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-#### <a name="monitoring_loki_persistence"></a>3.6.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > persistence`
+#### <a name="monitoring_loki_persistence"></a>3.7.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > persistence`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2534,7 +2561,7 @@ Must be one of:
 | - [size](#monitoring_loki_persistence_size )                 | No      | object | No         | Same as [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties ) | -                                                                                                                |
 | - [storageClass](#monitoring_loki_persistence_storageClass ) | No      | string | No         | Same as [storageClass](#global_storageClass )                                                                                                      | The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd) |
 
-##### <a name="monitoring_loki_persistence_size"></a>3.6.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > persistence > size`
+##### <a name="monitoring_loki_persistence_size"></a>3.7.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > persistence > size`
 
 |                           |                                                                                                                                           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
@@ -2542,7 +2569,7 @@ Must be one of:
 | **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.")         |
 | **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
-##### <a name="monitoring_loki_persistence_storageClass"></a>3.6.2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > persistence > storageClass`
+##### <a name="monitoring_loki_persistence_storageClass"></a>3.7.2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > persistence > storageClass`
 
 |                        |                                      |
 | ---------------------- | ------------------------------------ |
@@ -2551,7 +2578,7 @@ Must be one of:
 
 **Description:** The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd)
 
-#### <a name="monitoring_loki_replicas"></a>3.6.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > replicas`
+#### <a name="monitoring_loki_replicas"></a>3.7.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > replicas`
 
 |          |           |
 | -------- | --------- |
@@ -2561,14 +2588,14 @@ Must be one of:
 | ------------ | ------ |
 | **Minimum**  | &ge; 1 |
 
-#### <a name="monitoring_loki_resourcesPreset"></a>3.6.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > resourcesPreset`
+#### <a name="monitoring_loki_resourcesPreset"></a>3.7.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > resourcesPreset`
 
 |                        |                                                                      |
 | ---------------------- | -------------------------------------------------------------------- |
 | **Type**               | `enum (of string)`                                                   |
 | **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
 
-#### <a name="monitoring_loki_resources"></a>3.6.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > resources`
+#### <a name="monitoring_loki_resources"></a>3.7.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > resources`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -2578,7 +2605,7 @@ Must be one of:
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-#### <a name="monitoring_loki_promtail"></a>3.6.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > promtail`
+#### <a name="monitoring_loki_promtail"></a>3.7.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > promtail`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2590,14 +2617,14 @@ Must be one of:
 | - [resourcesPreset](#monitoring_loki_promtail_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
 | - [resources](#monitoring_loki_promtail_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
 
-##### <a name="monitoring_loki_promtail_resourcesPreset"></a>3.6.6.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > promtail > resourcesPreset`
+##### <a name="monitoring_loki_promtail_resourcesPreset"></a>3.7.6.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > promtail > resourcesPreset`
 
 |                        |                                                                      |
 | ---------------------- | -------------------------------------------------------------------- |
 | **Type**               | `enum (of string)`                                                   |
 | **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
 
-##### <a name="monitoring_loki_promtail_resources"></a>3.6.6.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > promtail > resources`
+##### <a name="monitoring_loki_promtail_resources"></a>3.7.6.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > promtail > resources`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -2607,7 +2634,7 @@ Must be one of:
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-### <a name="monitoring_metricsServer"></a>3.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > metricsServer`
+### <a name="monitoring_metricsServer"></a>3.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > metricsServer`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2618,13 +2645,13 @@ Must be one of:
 | ----------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
 | - [enabled](#monitoring_metricsServer_enabled ) | No      | boolean | No         | -          | -                 |
 
-#### <a name="monitoring_metricsServer_enabled"></a>3.7.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > metricsServer > enabled`
+#### <a name="monitoring_metricsServer_enabled"></a>3.8.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > metricsServer > enabled`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-### <a name="monitoring_storageCostAnalysis"></a>3.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > storageCostAnalysis`
+### <a name="monitoring_storageCostAnalysis"></a>3.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > storageCostAnalysis`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2639,7 +2666,7 @@ Must be one of:
 | - [currency](#monitoring_storageCostAnalysis_currency )                       | No      | string | No         | -          | -                                                     |
 | - [storageClassMapping](#monitoring_storageCostAnalysis_storageClassMapping ) | No      | object | No         | -          | A map of storageClasses to their cost per GiB/$period |
 
-#### <a name="monitoring_storageCostAnalysis_period"></a>3.8.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > storageCostAnalysis > period`
+#### <a name="monitoring_storageCostAnalysis_period"></a>3.9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > storageCostAnalysis > period`
 
 |             |          |
 | ----------- | -------- |
@@ -2658,7 +2685,7 @@ Day
 Month
 ```
 
-#### <a name="monitoring_storageCostAnalysis_currency"></a>3.8.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > storageCostAnalysis > currency`
+#### <a name="monitoring_storageCostAnalysis_currency"></a>3.9.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > storageCostAnalysis > currency`
 
 |             |                 |
 | ----------- | --------------- |
@@ -2675,7 +2702,7 @@ currencyUSD
 currencyEUR
 ```
 
-#### <a name="monitoring_storageCostAnalysis_storageClassMapping"></a>3.8.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > storageCostAnalysis > storageClassMapping`
+#### <a name="monitoring_storageCostAnalysis_storageClassMapping"></a>3.9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > storageCostAnalysis > storageClassMapping`
 
 |                           |                                                                                                                                                                                                                 |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -2688,13 +2715,13 @@ currencyEUR
 | ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [](#monitoring_storageCostAnalysis_storageClassMapping_additionalProperties ) | No      | number | No         | -          | -                 |
 
-##### <a name="monitoring_storageCostAnalysis_storageClassMapping_additionalProperties"></a>3.8.3.1. Property `base cluster configuration > monitoring > storageCostAnalysis > storageClassMapping > additionalProperties`
+##### <a name="monitoring_storageCostAnalysis_storageClassMapping_additionalProperties"></a>3.9.3.1. Property `base cluster configuration > monitoring > storageCostAnalysis > storageClassMapping > additionalProperties`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `number` |
 
-### <a name="monitoring_securityScanning"></a>3.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > securityScanning`
+### <a name="monitoring_securityScanning"></a>3.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > securityScanning`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2706,13 +2733,13 @@ currencyEUR
 | - [enabled](#monitoring_securityScanning_enabled )             | No      | boolean | No         | -          | -                 |
 | - [nodeCollector](#monitoring_securityScanning_nodeCollector ) | No      | object  | No         | -          | -                 |
 
-#### <a name="monitoring_securityScanning_enabled"></a>3.9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > securityScanning > enabled`
+#### <a name="monitoring_securityScanning_enabled"></a>3.10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > securityScanning > enabled`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-#### <a name="monitoring_securityScanning_nodeCollector"></a>3.9.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > securityScanning > nodeCollector`
+#### <a name="monitoring_securityScanning_nodeCollector"></a>3.10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > securityScanning > nodeCollector`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -2723,7 +2750,7 @@ currencyEUR
 | ------------------------------------------------------------------------ | ------- | ----- | ---------- | ---------- | ----------------- |
 | - [tolerations](#monitoring_securityScanning_nodeCollector_tolerations ) | No      | array | No         | -          | -                 |
 
-##### <a name="monitoring_securityScanning_nodeCollector_tolerations"></a>3.9.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations`
+##### <a name="monitoring_securityScanning_nodeCollector_tolerations"></a>3.10.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations`
 
 |          |         |
 | -------- | ------- |
@@ -2741,7 +2768,7 @@ currencyEUR
 | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | [tolerations](#monitoring_securityScanning_nodeCollector_tolerations_items) | The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>. |
 
-###### <a name="autogenerated_heading_22"></a>3.9.2.1.1. base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations
+###### <a name="autogenerated_heading_22"></a>3.10.2.1.1. base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -2759,7 +2786,7 @@ currencyEUR
 | - [tolerationSeconds](#monitoring_securityScanning_nodeCollector_tolerations_items_tolerationSeconds ) | No      | integer | No         | -          | TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system. |
 | - [value](#monitoring_securityScanning_nodeCollector_tolerations_items_value )                         | No      | string  | No         | -          | Value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string.                                                                                                                                                                                  |
 
-###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_effect"></a>3.9.2.1.1.1. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > effect`
+###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_effect"></a>3.10.2.1.1.1. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > effect`
 
 |          |          |
 | -------- | -------- |
@@ -2767,7 +2794,7 @@ currencyEUR
 
 **Description:** Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
 
-###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_key"></a>3.9.2.1.1.2. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > key`
+###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_key"></a>3.10.2.1.1.2. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > key`
 
 |          |          |
 | -------- | -------- |
@@ -2775,7 +2802,7 @@ currencyEUR
 
 **Description:** Key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys.
 
-###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_operator"></a>3.9.2.1.1.3. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > operator`
+###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_operator"></a>3.10.2.1.1.3. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > operator`
 
 |          |          |
 | -------- | -------- |
@@ -2783,7 +2810,7 @@ currencyEUR
 
 **Description:** Operator represents a key's relationship to the value. Valid operators are Exists and Equal. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category.
 
-###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_tolerationSeconds"></a>3.9.2.1.1.4. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > tolerationSeconds`
+###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_tolerationSeconds"></a>3.10.2.1.1.4. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > tolerationSeconds`
 
 |            |           |
 | ---------- | --------- |
@@ -2792,7 +2819,7 @@ currencyEUR
 
 **Description:** TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.
 
-###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_value"></a>3.9.2.1.1.5. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > value`
+###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_value"></a>3.10.2.1.1.5. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > value`
 
 |          |          |
 | -------- | -------- |
@@ -2800,7 +2827,7 @@ currencyEUR
 
 **Description:** Value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string.
 
-### <a name="monitoring_tracing"></a>3.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing`
+### <a name="monitoring_tracing"></a>3.11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -2812,13 +2839,13 @@ currencyEUR
 | - [enabled](#monitoring_tracing_enabled )   | No      | boolean | No         | -          | -                 |
 | - [ingester](#monitoring_tracing_ingester ) | No      | object  | No         | -          | -                 |
 
-#### <a name="monitoring_tracing_enabled"></a>3.10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > enabled`
+#### <a name="monitoring_tracing_enabled"></a>3.11.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > enabled`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-#### <a name="monitoring_tracing_ingester"></a>3.10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester`
+#### <a name="monitoring_tracing_ingester"></a>3.11.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -2830,14 +2857,14 @@ currencyEUR
 | - [resourcesPreset](#monitoring_tracing_ingester_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
 | - [resources](#monitoring_tracing_ingester_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
 
-##### <a name="monitoring_tracing_ingester_resourcesPreset"></a>3.10.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester > resourcesPreset`
+##### <a name="monitoring_tracing_ingester_resourcesPreset"></a>3.11.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester > resourcesPreset`
 
 |                        |                                                                      |
 | ---------------------- | -------------------------------------------------------------------- |
 | **Type**               | `enum (of string)`                                                   |
 | **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
 
-##### <a name="monitoring_tracing_ingester_resources"></a>3.10.2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester > resources`
+##### <a name="monitoring_tracing_ingester_resources"></a>3.11.2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester > resources`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -2847,7 +2874,7 @@ currencyEUR
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-### <a name="monitoring_additionalProperties"></a>3.11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > additionalProperties`
+### <a name="monitoring_additionalProperties"></a>3.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > additionalProperties`
 
 |                           |                                                                                                                                   |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
