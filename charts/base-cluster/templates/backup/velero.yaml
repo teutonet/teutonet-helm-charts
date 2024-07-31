@@ -100,10 +100,10 @@ spec:
         additionalLabels: {{- .Values.monitoring.labels | toYaml | nindent 10 }}
         spec:
          - alert: VeleroBackupFailures
-            annotations:
-              message: Velero backup {{ "{{ $labels.schedule }}" }} failed.
-            expr: velero_backup_last_status{schedule!=""}!=1
-            for: 15m
-            labels:
-              severity: warning
+           annotations:
+             message: Velero backup {{ "{{ $labels.schedule }}" }} failed.
+           expr: velero_backup_last_status{schedule!=""}!=1
+           for: 15m
+           labels:
+             severity: warning
 {{- end }}
