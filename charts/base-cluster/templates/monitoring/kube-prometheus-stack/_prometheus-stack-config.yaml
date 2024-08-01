@@ -1,7 +1,7 @@
 {{- define "base-cluster.prometheus.config" -}}
   {{- if .Values.global.imageRegistry }}
 global:
-    imageRegistry: {{ .Values.global.imageRegistry }}
+  imageRegistry: {{ .Values.global.imageRegistry }}
   {{- end }}
 prometheusOperator:
   secretFieldSelector: 'type!=helm.sh/release.v1'
