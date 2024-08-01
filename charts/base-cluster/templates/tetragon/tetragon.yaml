@@ -26,6 +26,8 @@ spec:
     tetragonOperator:
       enabled: false
     tetragon:
+      image:
+        repository: {{ printf "%s/cilium/tetragon" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
       enableProcessCred: true
       enableProcessNs: true
       {{- if .Values.monitoring.prometheus.enabled }}
