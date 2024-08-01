@@ -25,7 +25,7 @@ function getImages() {
     rm -f -- */HelmRelease/*.yaml
     grep -Er '\s+image: \S+$' |
       grep -v 'artifacthub-ignore' |
-      awk '{print $3 " # " $1}' |
+      awk '{print ($2 == "-" ? $4 : $3) " # " $1}' |
       tr -d '"' |
       sed 's#:$##' |
       sort -k1 -k2 |
