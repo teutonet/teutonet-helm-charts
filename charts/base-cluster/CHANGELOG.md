@@ -1,5 +1,20 @@
 # Changelog
 
+## [6.6.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.6.1...base-cluster-v6.6.2) (2024-08-01)
+
+
+### Bug Fixes
+
+* **base-cluster/backup:** fix formatting ([#1063](https://github.com/teutonet/teutonet-helm-charts/issues/1063)) ([8da56f2](https://github.com/teutonet/teutonet-helm-charts/commit/8da56f2a20471540e1e33c63847de53626931db5))
+* **base-cluster/kdave:** image 2.x.x is unsupported by the helm chart ([#1062](https://github.com/teutonet/teutonet-helm-charts/issues/1062)) ([e7bc047](https://github.com/teutonet/teutonet-helm-charts/commit/e7bc047d06bb1e3cadaf58a4948f76079f61d136))
+* **base-cluster/kube-prometheus-stack:** set deployment strategy to r… ([#1067](https://github.com/teutonet/teutonet-helm-charts/issues/1067)) ([19854b7](https://github.com/teutonet/teutonet-helm-charts/commit/19854b7824c5e2b399d839ef9721ab3bf936e2f4))
+* **base-cluster:** definitely enable everything for artifacthub ([#1064](https://github.com/teutonet/teutonet-helm-charts/issues/1064)) ([0157971](https://github.com/teutonet/teutonet-helm-charts/commit/01579717c84f97108b82f8fea7beb805a7982a7f))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update helm release velero to v7 ([#1023](https://github.com/teutonet/teutonet-helm-charts/issues/1023)) ([8b1f815](https://github.com/teutonet/teutonet-helm-charts/commit/8b1f8153baddca391ae133e2b75af847b7734741))
+
 ## [6.6.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.6.0...base-cluster-v6.6.1) (2024-07-31)
 
 
