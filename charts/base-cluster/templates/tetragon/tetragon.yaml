@@ -17,6 +17,9 @@ spec:
   {{- end }}
   values:
     export:
+      stdout:
+        image:
+          repository: {{ printf "%s/cilium/hubble-export-stdout" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
       securityContext:
         capabilities:
           drop:
