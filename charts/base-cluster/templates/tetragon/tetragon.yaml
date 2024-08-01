@@ -18,10 +18,12 @@ spec:
       namespace: monitoring
   {{- end }}
   values:
+    {{- if .Values.global.imageRegistry }}
     export:
       stdout:
         image:
           repository: {{ .Values.global.imageRegistry }}
+    {{- end }}
       securityContext:
         capabilities:
           drop:
@@ -31,8 +33,10 @@ spec:
     tetragonOperator:
       enabled: false
     tetragon:
+      {{- if .Values.global.imageRegistry }}
       image:
         repository: {{ .Values.global.imageRegistry }}
+      {{- end }}
       enableProcessCred: true
       enableProcessNs: true
       {{- if .Values.monitoring.prometheus.enabled }}
