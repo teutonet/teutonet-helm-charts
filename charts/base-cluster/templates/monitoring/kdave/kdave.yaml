@@ -24,7 +24,7 @@ spec:
     helmBinary: helm3
     image:
       repository: {{ printf "%s/aelbakry/kdave-server" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
-      tag: 2.1.5
+      tag: 1.0.4
     rbac:
       pspEnabled: false
     apiVersionsInspector:
