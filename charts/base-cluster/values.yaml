@@ -28,10 +28,6 @@ global:
       condition: "{{ .Values.ingress.enabled }}"
       additionalLabels:
         app.kubernetes.io/component: ingress
-    tetragon:
-      condition: "{{ .Values.tetragon.enabled }}"
-      additionalLabels:
-        app.kubernetes.io/component: tetragon
     kyverno:
       condition: "{{ .Values.kyverno.enabled }}"
       additionalLabels:
@@ -468,6 +464,3 @@ kube-janitor:
 
 tetragon:
   enabled: true
-  serviceMonitor:
-    labelsOverride:
-      managed.by/monitoring: teutonet
