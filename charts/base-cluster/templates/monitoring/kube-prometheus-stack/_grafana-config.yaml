@@ -48,8 +48,6 @@ persistence: {{- include "common.storage.class" (dict "persistence" .Values.moni
   size: {{ .Values.monitoring.grafana.persistence.size }}
   accessModes:
     - ReadWriteOnce
-{{- end }}
-{{- .Values.monitoring.grafana.persistence.enabled}}
 deploymentStrategy:
   type: Recreate
 {{- end }}
