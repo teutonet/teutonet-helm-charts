@@ -554,21 +554,6 @@
       "properties": {
         "enabled": {
           "type": "boolean"
-        },
-        "serviceMonitor": {
-          "type": "object",
-          "properties": {
-            "serviceMonitor": {
-              "type": "object",
-              "properties": {
-                "labelsOverride": {
-                  "additionalProperties": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
         }
       },
       "additionalProperties": false
