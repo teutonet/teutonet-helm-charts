@@ -6,6 +6,17 @@ flux:
         provider: sops
 kyverno:
   enabled: true
+backup:
+  defaultLocation: location
+  backupStorageLocations:
+    location:
+      provider:
+        minio:
+          url: https://minio.com
+          existingSecret:
+            name: secret
+      prefix: /prefix
+      bucket: bucket
 storage:
   readWriteMany:
     enabled: true
@@ -21,11 +32,30 @@ monitoring:
     enabled: true
     pingKey: PING_KEY
     apiKey: API_KEY
+  kdave:
+    enabled: true
   prometheus:
+    enabled: true
     alertmanager:
       receivers:
         pagerduty:
           enabled: true
           integrationKey: INTEGRATION_KEY
+  loki:
+    enabled: true
+  metricsServer:
+    enabled: true
+  securityScanning:
+    enabled: true
 kube-janitor:
   enabled: true
+descheduler:
+  enabled: true
+ingress:
+  enabled: true
+reflector:
+  enabled: true
+dns:
+  provider:
+    cloudflare:
+      apiToken: API_TOKEN
