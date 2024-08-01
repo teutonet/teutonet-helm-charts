@@ -46,6 +46,10 @@ resources: {{- include "common.resources" .Values.monitoring.grafana | nindent 2
 persistence: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.grafana.persistence "global" $.Values.global) | nindent 2 }}
   enabled: true
   size: {{ .Values.monitoring.grafana.persistence.size }}
+  accessModes:
+    - ReadWriteOnce
+deploymentStrategy:
+  type: Recreate
 {{- end }}
 serviceMonitor:
   interval: "30s"
