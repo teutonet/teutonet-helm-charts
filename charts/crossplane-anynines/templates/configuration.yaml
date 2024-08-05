@@ -1,0 +1,7 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Configuration
+metadata:
+  name: platform-anynines-dataservices
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  package: {{ include "common.images.image" (dict "imageRoot" .Values.global.configuration.image "global" .Values.global) }}
