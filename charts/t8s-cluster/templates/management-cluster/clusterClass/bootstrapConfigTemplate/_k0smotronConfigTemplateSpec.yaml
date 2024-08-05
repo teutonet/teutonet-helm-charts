@@ -11,20 +11,10 @@ args:
   {{- end }}
   - {{ printf `--kubelet-extra-args="%s"` ($kubeletExtraArgs | join " ") }}
 files: {{- include "t8s-cluster.clusterClass.configTemplate.files" (dict "context" .context "gpu" .gpu "excludePatches" true) | nindent 2 }}
-  {{/* for seamless usage of the `/var/lib/kubelet` directory, these folders need to be linked */}}
-  {{- $subfolders := list "pods" "plugins_registry" "registration-dir" "pods-mount-dir" "plugins" "device-plugins" -}}
-  {{- $foldersToCreate := list -}}
-  {{- range $subfolder := $subfolders -}}
-    {{- $foldersToCreate = append $foldersToCreate (printf "/var/lib/k0s/kubelet/%s" $subfolder) -}}
-  {{- end -}}
   {{/* this service isn't needed by k0s */}}
   {{- $preStartCommands := list
     "systemctl disable --now kubelet.service"
-    (printf "mkdir -p %s" ($foldersToCreate | join " "))
   }}
-  {{ range $subfolder := $subfolders -}}
-    {{- $preStartCommands = append $preStartCommands (printf "ln -s /var/lib/k0s/kubelet/%s /var/lib/kubelet/%s" $subfolder $subfolder) -}}
-  {{- end -}}
   {{- $preStartCommands = concat $preStartCommands
     (include "t8s-cluster.clusterClass.preKubeadmCommands" (dict "context" .context) | fromYamlArray)
     (include "t8s-cluster.clusterClass.postKubeadmCommands" (dict) | fromYamlArray)
