@@ -1,0 +1,72 @@
+{{- if false -}}
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: {{ printf "%s-dex" (include "common.names.fullname" .) }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  url: https://charts.dexidp.io
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: {{ printf "%s-dex" (include "common.names.fullname" .) }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  chart:
+    spec:
+      chart: dex
+      sourceRef:
+        name: {{ printf "%s-dex" (include "common.names.fullname" .) }}
+        kind: HelmRepository
+      version: 0.18.0
+  interval: 1h
+  values:
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/tls-acme: "true"
+      hosts:
+        - host: &host {{ .Values.oidc.ingress.host }}
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - *host
+          secretName: {{ printf "%s-dex-tls" (include "common.names.fullname" .) }}
+    envVars:
+      - name: HELPER_CLI_CLIENT_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: &secretName {{ printf "%s-oidc" (include "common.names.fullname" .)}}
+            key: helper-cli-client-secret
+      - name: KUBE_BIND_CLIENT_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: *secretName
+            key: kube-bind-client-secret
+    config:
+      issuer: {{ printf "https://%s" .Values.oidc.ingress.host }}
+      storage:
+        type: memory
+      # *some* connector has to be enabled...
+      enablePasswordDB: true
+      oauth2:
+        skipApprovalScreen: true
+      staticClients:
+        - id: helper-cli
+          name: Help CLI for automated cluster binding
+          secret: $HELPER_CLI_CLIENT_SECRET
+          public: true
+        - id: kube-bind
+          redirectURIs:
+            - {{ printf "https://%s/callback" .Values.ingress.host }}
+          name: Tenant Cluster Binding
+          secret: $KUBE_BIND_CLIENT_SECRET
+          public: true
+          trustedPeers:
+            - helper-cli
+{{- end -}}

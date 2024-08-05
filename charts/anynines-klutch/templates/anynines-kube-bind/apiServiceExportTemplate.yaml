@@ -1,0 +1,59 @@
+{{- range $name := .Values.dataservices | keys -}}
+---
+kind: APIServiceExportTemplate
+apiVersion: bind.anynines.com/v1alpha1
+metadata:
+  name: {{ printf "%sinstances" $name }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  APIServiceSelector:
+    resource: {{ printf "%sinstances" $name }}
+    group: anynines.com
+{{- end }}
+---
+kind: APIServiceExportTemplate
+apiVersion: bind.anynines.com/v1alpha1
+metadata:
+  name: servicebindings
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  APIServiceSelector:
+    resource: servicebindings
+    group: anynines.com
+  permissionClaims:
+    - group: ""
+      resource: secrets
+      version: v1
+      selector:
+        owner: Provider
+    - group: ""
+      resource: configmaps
+      version: v1
+      selector:
+        owner: Provider
+{{- if .Values.backupManager }}
+---
+kind: APIServiceExportTemplate
+apiVersion: bind.anynines.com/v1alpha1
+metadata:
+  name: backups
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  APIServiceSelector:
+    resource: backups
+    group: anynines.com
+---
+kind: APIServiceExportTemplate
+apiVersion: bind.anynines.com/v1alpha1
+metadata:
+  name: restores
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  APIServiceSelector:
+    resource: restores
+    group: anynines.com
+{{- end }}

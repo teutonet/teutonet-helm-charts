@@ -1,0 +1,112 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: {{ printf "%s-keycloak" (include "common.names.fullname" .) }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  chart:
+    spec:
+      chart: keycloak
+      sourceRef:
+        name: bitnami
+        namespace: flux-system
+        kind: HelmRepository
+      version: 22.x.x
+  interval: 1h
+  values:
+    postgresql:
+      enabled: false
+    extraEnvVars:
+{{/*      - name: KC_DB*/}}
+{{/*        value: dev-mem*/}}
+      - name: KEYCLOAK_DATABASE_VENDOR
+        value: dev-file
+    externalDatabase:
+      existingSecret: {{ printf "%s-stupid-keycloak" (include "common.names.fullname" .) }}
+      existingSecretHostKey: unused
+      existingSecretPortKey: unused
+      existingSecretDatabaseKey: unused
+      existingSecretUserKey: unused
+    extraVolumes:
+      - name: h2
+        persistentVolumeClaim:
+          claimName: {{ printf "%s-keycloak-db" (include "common.names.fullname" .) }}
+    extraVolumeMounts:
+      - name: h2
+        mountPath: /opt/bitnami/keycloak/data/h2
+    proxy: edge
+    auth:
+      adminUser: admin
+    adminIngress:
+      tls: true
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/tls-acme: "true"
+      hostname: {{ .Values.oidc.ingress.host }}
+      tls: true
+    keycloakConfigCli:
+      enabled: true
+      # TODO: workaround, see: https://github.com/bitnami/charts/issues/14279
+      command:
+        - java
+        - -jar
+        - /opt/bitnami/keycloak-config-cli/keycloak-config-cli.jar
+      extraEnvVars:
+        - name: HELPER_CLI_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: &secretName {{ printf "%s-oidc" (include "common.names.fullname" .)}}
+              key: helper-cli-client-secret
+        - name: KUBE_BIND_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: *secretName
+              key: kube-bind-client-secret
+      configuration:
+        a9s.yaml: |
+          enabled: true
+          registrationAllowed: false
+          realm: a9s
+          displayName: a9s platform
+          clients:
+            - clientId: kube-bind
+              enabled: true
+              secret: ${env:KUBE_BIND_CLIENT_SECRET}
+              consentRequired: false
+              authorizationServicesEnabled: true
+              serviceAccountsEnabled: true
+              standardFlowEnabled: true
+              redirectUris:
+                - {{ printf "https://%s/callback" .Values.ingress.host }}
+            - clientId: helper-cli
+              enabled: true
+              secret: ${env:HELPER_CLI_CLIENT_SECRET}
+              consentRequired: false
+              standardFlowEnabled: false
+              serviceAccountsEnabled: true
+              protocolMappers:
+                - name: kube-bind
+                  protocol: openid-connect
+                  protocolMapper: oidc-audience-mapper
+                  config:
+                    included.client.audience: kube-bind
+                    id.token.claim: true
+                    access.token.claim: true
+                    introspection.token.claim: true
+                    lightweight.claim: false
+    config:
+      staticClients:
+        - id: helper-cli
+          name: Help CLI for automated cluster binding
+          secret: $HELPER_CLI_CLIENT_SECRET
+          public: true
+        - id: kube-bind
+          redirectURIs:
+            - {{ printf "https://%s/callback" .Values.ingress.host }}
+          name: Tenant Cluster Binding
+          secret: $KUBE_BIND_CLIENT_SECRET
+          public: true
+          trustedPeers:
+            - helper-cli

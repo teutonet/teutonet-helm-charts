@@ -1,0 +1,4 @@
+backupManager:
+  url: https://sb.test.com:3000
+  username: admin
+  password: admin

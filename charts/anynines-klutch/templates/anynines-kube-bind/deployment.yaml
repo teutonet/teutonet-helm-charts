@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{ include "common.labels.matchLabels" . | nindent 6 }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        checksum/cookies-secret: {{ include "common.utils.checksumTemplate" (dict "path" "/anynines-kube-bind/secret-cookies.yaml" "context" $) | sha256sum }}
+        checksum/oidc-secret: {{ include "common.utils.checksumTemplate" (dict "path" "/oidc/secret.yaml" "context" $) | sha256sum }}
+      labels: {{ include "common.labels.standard" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "common.names.fullname" . }}
+      automountServiceAccountToken: true
+      containers:
+        - name: anynines-backend
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.global.kubebind.image "global" .Values.global) }}
+          args:
+            - --namespace-prefix=cluster
+            - --pretty-name=anynines
+            - --consumer-scope=Namespaced
+            - --oidc-issuer-client-id=$(OIDC-ISSUER-CLIENT-ID)
+            - --oidc-issuer-client-secret=$(OIDC-ISSUER-CLIENT-SECRET)
+            - --oidc-issuer-url=$(OIDC-ISSUER-URL)
+            - --oidc-callback-url=$(OIDC-CALLBACK-URL)
+            - --listen-address=0.0.0.0:9443
+            - --cookie-signing-key=$(COOKIE-SIGNING-KEY)
+            - --cookie-encryption-key=$(COOKIE-ENCRYPTION-KEY)
+            - --external-address={{ .Values.kubernetes.externalAddress }}
+          ports:
+            - containerPort: 9443
+              name: https
+          env:
+            - name: OIDC-ISSUER-CLIENT-ID
+              value: kube-bind
+            - name: OIDC-ISSUER-CLIENT-SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-oidc" (include "common.names.fullname" .) }}
+                  key: kube-bind-client-secret
+            - name: OIDC-ISSUER-URL
+              value: {{ printf "https://%s" .Values.oidc.ingress.host }}
+            - name: OIDC-CALLBACK-URL
+              value: {{ printf "https://%s/callback" .Values.ingress.host }}
+            - name: COOKIE-SIGNING-KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-kube-bind-cookies" (include "common.names.fullname" .) }}
+                  key: signing-key
+            - name: COOKIE-ENCRYPTION-KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-kube-bind-cookies" (include "common.names.fullname" .) }}
+                  key: encryption-key
+          resources:
+            limits:
+              cpu: "2"
+              memory: 2Gi
+            requests:
+              cpu: "100m"
+              memory: 256Mi
