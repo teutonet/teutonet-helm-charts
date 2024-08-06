@@ -12,6 +12,8 @@ jobs:
   getChangedChart:
     if: ${{ !startsWith(github.head_ref, 'release-please--') }}
     uses: ./.github/workflows/get-changed-chart.yaml
+    with:
+      pr_number: ${{ github.event.pull_request.number }}
   validateCommits:
     if: ${{ !startsWith(github.head_ref, 'release-please--') }}
     name: Validate commits
