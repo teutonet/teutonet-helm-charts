@@ -1,5 +1,23 @@
 # Changelog
 
+## [8.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v8.1.0...t8s-cluster-v8.2.0) (2024-08-02)
+
+
+### Features
+
+* **t8s-cluster/workload-cluster:** latch onto legacy cni when used ([#1039](https://github.com/teutonet/teutonet-helm-charts/issues/1039)) ([3513061](https://github.com/teutonet/teutonet-helm-charts/commit/35130617c43764f2d4072ee79648f54c119c5e28))
+* **t8s-cluster/workload-cluster:** skip component uninstall ([#1042](https://github.com/teutonet/teutonet-helm-charts/issues/1042)) ([139ac22](https://github.com/teutonet/teutonet-helm-charts/commit/139ac22f38ce2e701e646bf560c4a5cf82eaa74b))
+
+
+### Bug Fixes
+
+* **t8s-cluster:** use correct condition to include cilium helmrepository ([#1054](https://github.com/teutonet/teutonet-helm-charts/issues/1054)) ([0d1f7f8](https://github.com/teutonet/teutonet-helm-charts/commit/0d1f7f86c0461551f35785d7a16cb163aa8704a4))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster:** cleanup random stuff ([#1040](https://github.com/teutonet/teutonet-helm-charts/issues/1040)) ([d75da99](https://github.com/teutonet/teutonet-helm-charts/commit/d75da996cd287f49b64ccc4137f81acdd3aaa434))
+
 ## [8.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v8.0.0...t8s-cluster-v8.1.0) (2024-07-12)
 
 

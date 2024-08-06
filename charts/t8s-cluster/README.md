@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # t8s-cluster
 
-![Version: 8.1.0](https://img.shields.io/badge/Version-8.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 8.2.0](https://img.shields.io/badge/Version-8.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -17,7 +17,8 @@ t8s-operator cluster with necessary addons
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v8.2.0/charts/t8s-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster>
 
 ## Requirements
 
@@ -57,21 +58,21 @@ Removed the unused `.metadata.gopassName` field.
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                                                                         | Pattern | Type             | Deprecated | Definition                                                                  | Title/Description    |
-| -------------------------------------------------------------------------------- | ------- | ---------------- | ---------- | --------------------------------------------------------------------------- | -------------------- |
-| - [global](#global )                                                             | No      | object           | No         | -                                                                           | -                    |
-| + [metadata](#metadata )                                                         | No      | object           | No         | -                                                                           | -                    |
-| + [controlPlane](#controlPlane )                                                 | No      | object           | No         | -                                                                           | -                    |
-| - [cloud](#cloud )                                                               | No      | string           | No         | -                                                                           | -                    |
-| + [version](#version )                                                           | No      | object           | No         | -                                                                           | -                    |
-| + [nodePools](#nodePools )                                                       | No      | object           | No         | -                                                                           | -                    |
-| - [additionalComputePlaneSecurityGroups](#additionalComputePlaneSecurityGroups ) | No      | array of string  | No         | Same as [additionalSecurityGroups](#controlPlane_additionalSecurityGroups ) | -                    |
-| - [bastion](#bastion )                                                           | No      | object           | No         | -                                                                           | -                    |
-| - [containerRegistryMirror](#containerRegistryMirror )                           | No      | object           | No         | -                                                                           | -                    |
-| - [sshKeyName](#sshKeyName )                                                     | No      | string or null   | No         | -                                                                           | -                    |
-| - [cni](#cni )                                                                   | No      | enum (of string) | No         | -                                                                           | -                    |
-| + [openstackImageNamePrefix](#openstackImageNamePrefix )                         | No      | string           | No         | -                                                                           | -                    |
-| - [common](#common )                                                             | No      | object           | No         | -                                                                           | Values for sub-chart |
+| Property                                                                         | Pattern | Type             | Deprecated | Definition                                                                  | Title/Description                                                                              |
+| -------------------------------------------------------------------------------- | ------- | ---------------- | ---------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| - [global](#global )                                                             | No      | object           | No         | -                                                                           | -                                                                                              |
+| + [metadata](#metadata )                                                         | No      | object           | No         | -                                                                           | -                                                                                              |
+| + [controlPlane](#controlPlane )                                                 | No      | object           | No         | -                                                                           | -                                                                                              |
+| - [cloud](#cloud )                                                               | No      | string           | No         | -                                                                           | -                                                                                              |
+| + [version](#version )                                                           | No      | object           | No         | -                                                                           | -                                                                                              |
+| + [nodePools](#nodePools )                                                       | No      | object           | No         | -                                                                           | -                                                                                              |
+| - [additionalComputePlaneSecurityGroups](#additionalComputePlaneSecurityGroups ) | No      | array of string  | No         | Same as [additionalSecurityGroups](#controlPlane_additionalSecurityGroups ) | -                                                                                              |
+| - [bastion](#bastion )                                                           | No      | object           | No         | -                                                                           | -                                                                                              |
+| - [containerRegistryMirror](#containerRegistryMirror )                           | No      | object           | No         | -                                                                           | -                                                                                              |
+| - [sshKeyName](#sshKeyName )                                                     | No      | string or null   | No         | -                                                                           | -                                                                                              |
+| - [cni](#cni )                                                                   | No      | enum (of string) | No         | -                                                                           | The CNI plugin to use. \`auto\` means to keep the current one or use cilium for a new cluster. |
+| + [openstackImageNamePrefix](#openstackImageNamePrefix )                         | No      | string           | No         | -                                                                           | -                                                                                              |
+| - [common](#common )                                                             | No      | object           | No         | -                                                                           | Values for sub-chart                                                                           |
 
 ## <a name="global"></a>1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global`
 
@@ -84,8 +85,7 @@ Removed the unused `.metadata.gopassName` field.
 | --------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | -------------------------------------------------------- |
 | - [helmRepositories](#global_helmRepositories )                             | No      | object | No         | -          | A map of helmRepositories to create, the key is the name |
 | - [kubectl](#global_kubectl )                                               | No      | object | No         | -          | Image with \`kubectl\` binary                            |
-| - [etcd](#global_etcd )                                                     | No      | object | No         | -          | Image with \`kubectl\` binary                            |
-| - [semver](#global_semver )                                                 | No      | object | No         | -          | Image with \`semver\` binary                             |
+| - [etcd](#global_etcd )                                                     | No      | object | No         | -          | Image with \`etcdctl\` binary                            |
 | - [injectedCertificateAuthorities](#global_injectedCertificateAuthorities ) | No      | string | No         | -          | -                                                        |
 | - [kubeletExtraConfig](#global_kubeletExtraConfig )                         | No      | object | No         | -          | Additional kubelet configuration                         |
 
@@ -238,7 +238,7 @@ bitnami/kubectl
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-**Description:** Image with `kubectl` binary
+**Description:** Image with `etcdctl` binary
 
 | Property                       | Pattern | Type   | Deprecated | Definition                              | Title/Description |
 | ------------------------------ | ------- | ------ | ---------- | --------------------------------------- | ----------------- |
@@ -252,34 +252,13 @@ bitnami/kubectl
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 | **Same definition as**    | [image](#global_kubectl_image)                                                                           |
 
-### <a name="global_semver"></a>1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > semver`
-
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-
-**Description:** Image with `semver` binary
-
-| Property                         | Pattern | Type   | Deprecated | Definition                              | Title/Description |
-| -------------------------------- | ------- | ------ | ---------- | --------------------------------------- | ----------------- |
-| - [image](#global_semver_image ) | No      | object | No         | Same as [image](#global_kubectl_image ) | -                 |
-
-#### <a name="global_semver_image"></a>1.4.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > semver > image`
-
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-| **Same definition as**    | [image](#global_kubectl_image)                                                                           |
-
-### <a name="global_injectedCertificateAuthorities"></a>1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > injectedCertificateAuthorities`
+### <a name="global_injectedCertificateAuthorities"></a>1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > injectedCertificateAuthorities`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="global_kubeletExtraConfig"></a>1.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubeletExtraConfig`
+### <a name="global_kubeletExtraConfig"></a>1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubeletExtraConfig`
 
 |                           |                                                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -292,7 +271,7 @@ bitnami/kubectl
 | ---------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ------------------------------------------------------------------------------------ |
 | - [maxParallelImagePulls](#global_kubeletExtraConfig_maxParallelImagePulls ) | No      | integer | No         | -          | Only valid for k8s version 1.27 and later. The number of images to pull in parallel. |
 
-#### <a name="global_kubeletExtraConfig_maxParallelImagePulls"></a>1.6.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubeletExtraConfig > maxParallelImagePulls`
+#### <a name="global_kubeletExtraConfig_maxParallelImagePulls"></a>1.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubeletExtraConfig > maxParallelImagePulls`
 
 |          |           |
 | -------- | --------- |
@@ -626,8 +605,11 @@ Specific value: `1`
 | -------- | ------------------ |
 | **Type** | `enum (of string)` |
 
+**Description:** The CNI plugin to use. `auto` means to keep the current one or use cilium for a new cluster.
+
 Must be one of:
 * "cilium"
+* "auto"
 * "calico"
 
 ## <a name="openstackImageNamePrefix"></a>12. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > openstackImageNamePrefix`

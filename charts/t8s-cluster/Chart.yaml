@@ -1,23 +1,24 @@
 apiVersion: v2
-name: t8s-cluster
-type: application
-version: 8.1.0
-icon: https://teuto.net/favicon.ico
-maintainers:
-  - name: cwrau
-    email: cwr@teuto.net
-  - name: marvinWolff
-    email: mw@teuto.net
-  - name: tasches
-    email: st@teuto.net
-sources:
-  - https://github.com/teutonet/teutonet-helm-charts
-home: https://teuto.net
-description: t8s-operator cluster with necessary addons
 dependencies:
   - name: common
-    version: 1.2.0
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
+    version: 1.2.0
+description: t8s-operator cluster with necessary addons
+home: https://teuto.net
+icon: https://teuto.net/favicon.ico
+maintainers:
+  - email: cwr@teuto.net
+    name: cwrau
+  - email: mw@teuto.net
+    name: marvinWolff
+  - email: st@teuto.net
+    name: tasches
+name: t8s-cluster
+sources:
+  - https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v8.2.0/charts/t8s-cluster
+  - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster
+type: application
+version: 8.2.0
 annotations:
   artifacthub.io/images: |
     - image: k8s.gcr.io/sig-storage/csi-attacher:v3.4.0                                                                                                            #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
