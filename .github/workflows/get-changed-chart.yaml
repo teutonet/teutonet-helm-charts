@@ -2,48 +2,49 @@ name: Get single changed chart in last commit
 
 on:
   workflow_call:
+    inputs:
+      pr_number:
+        type: number
     outputs:
       chart:
         description: The name of the changed cart in the last commit
         value: ${{ jobs.getChangedChart.outputs.chart }}
+      found:
+        description: A chart was changed
+        value: ${{ jobs.getChangedChart.outputs.found == 'true' }}
 
 jobs:
+  getChangedCharts:
+    uses: ./.github/workflows/get-changed-charts.yaml
+    with:
+      pr_number: ${{ inputs.pr_number }}
   getChangedChart:
     runs-on: ubuntu-latest
+    needs: getChangedCharts
     outputs:
       chart: ${{ steps.getChangedChart.outputs.chart }}
+      found: ${{ needs.getChangedCharts.outputs.count == 1 }}
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - uses: helm/chart-testing-action@e6669bcd63d7cb57cb4380c33043eebe5d111992 # v2.6.1
-
       - id: getChangedChart
-        name: Get changed chart in this commit
-        env:
-          CT_TARGET_BRANCH: ${{ github.event.pull_request.base.ref || github.event.repository.default_branch }}
+        name: Get changed chart in PR
         run: |
-          set -x
+          set -e
           set -o pipefail
-          changed="$(ct list-changed | cut -d / -f 2)"
+          changed='${{ needs.getChangedCharts.outputs.charts }}'
+          num_changed='${{ needs.getChangedCharts.outputs.count }}'
 
-          if [[ -z "$changed" ]]; then
-            echo chart= | tee -a "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          num_changed=$(wc -l <<<"$changed")
-
-          if ((num_changed > 1)); then
-            echo "This PR has changes to multiple charts. Please create individual PRs per chart." >&2
-            exit 1
-          fi
-
-          if ((num_changed < 1)); then
-            echo "This PR has seemingly no changes to any charts?"
-            exit 1
-          fi
-
-          echo chart="$changed" | tee -a "$GITHUB_OUTPUT"
+          case "$num_changed" in
+            0)
+              echo "This PR has seemingly no changes to any charts?"
+              exit 1
+            ;;
+            1)
+              (
+                echo chart="$(<<<"$changed" jq -r first)"
+              ) | tee -a "$GITHUB_OUTPUT"
+            ;;
+            *)
+              echo "This PR has changes to multiple charts. Please create individual PRs per chart." >&2
+              exit 1
+            ;;
+          esac
