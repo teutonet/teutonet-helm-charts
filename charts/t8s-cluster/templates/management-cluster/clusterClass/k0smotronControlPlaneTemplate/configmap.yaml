@@ -1,0 +1,14 @@
+{{- if .Values.controlPlane.hosted -}}
+  {{- $eventRateLimitConfigFileName := include "t8s-cluster.clusterClass.apiServer.eventRateLimitConfigFileName" (dict) -}}
+  {{- $items := dict
+    (include "t8s-cluster.clusterClass.apiServer.admissionControlConfigFileName" (dict)) (include "t8s-cluster.clusterClass.apiServer.admissionControlConfigFile" (dict))
+    $eventRateLimitConfigFileName (.Files.Get (printf "files/%s" $eventRateLimitConfigFileName ))
+  -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-api-server-config" $.Release.Name }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+data: {{- $items | toYaml | nindent 2 -}}
+{{- end -}}

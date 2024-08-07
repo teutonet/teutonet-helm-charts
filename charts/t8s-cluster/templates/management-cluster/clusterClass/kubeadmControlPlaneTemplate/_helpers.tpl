@@ -17,21 +17,24 @@
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.files" -}}
+  {{- $apiServerConfigDir := include "t8s-cluster.clusterClass.apiServer.configDir" (dict) -}}
+  {{- $admissionControlConfigFileName := include "t8s-cluster.clusterClass.apiServer.admissionControlConfigFileName" (dict) -}}
+  {{- $eventRateLimitConfigFileName := include "t8s-cluster.clusterClass.apiServer.eventRateLimitConfigFileName" (dict) -}}
   {{- $files := list -}}
   {{- $files = concat $files (include "t8s-cluster.clusterClass.configTemplate.files" (dict "context" . "gpu" false) | fromYamlArray) -}}
   {{- $configs := dict
-    "admission-control-config.yaml" (required "Missing" .admissionControlConfigFilePath)
-    "event-rate-limit-config.yaml" (required "Missing" .eventRateLimitConfigFilePath)
-    "kube-proxy.config.yaml" "/etc/kube-proxy-config.yaml"
-   -}}
-  {{- range $file, $path := $configs -}}
-    {{- $files = append $files (dict "content" ($.Files.Get (printf "files/%s" $file)) "path" $path) -}}
+    $eventRateLimitConfigFileName $apiServerConfigDir
+    "kube-proxy.config.yaml" "/etc"
+  -}}
+  {{- $files = append $files (dict "content" (include "t8s-cluster.clusterClass.apiServer.admissionControlConfigFile" (dict)) "path" (printf "%s/%s" $apiServerConfigDir $admissionControlConfigFileName)) -}}
+  {{- range $file, $dir := $configs -}}
+    {{- $files = append $files (dict "content" ($.Files.Get (printf "files/%s" $file)) "path" (printf "%s/%s" $dir $file)) -}}
   {{- end -}}
-  {{- $files = append $files (dict "content" (.Files.Get "files/kube-proxy.patch.sh") "path" "/etc/kube-proxy-patch.sh" "permissions" "0700") -}}
+  {{- $files = append $files (dict "content" (.Files.Get "files/kube-proxy.patch.sh") "path" "/etc/kube-proxy-patch.sh" "permissions" "0500") -}}
+  {{- $apiserverPatch := dict "spec" (dict "containers" (list (dict "name" "kube-apiserver" "resources" (dict "requests" (dict "memory" "2Gi") "limits" (dict "memory" "4Gi"))))) -}}
+  {{- $files = append $files (include "t8s-cluster.patches.patchFile" (dict "values" $apiserverPatch "target" "kube-apiserver" "component" "memory") | fromYaml) -}}
   {{- range $file := $files -}}
     {{- $_ := set $file "content" (get $file "content" | trim) -}}
   {{- end -}}
-  {{- $apiserverPatch := dict "spec" (dict "containers" (list (dict "name" "kube-apiserver" "resources" (dict "requests" (dict "memory" "2Gi") "limits" (dict "memory" "4Gi"))))) -}}
-  {{- $files = append $files (include "t8s-cluster.patches.patchFile" (dict "values" $apiserverPatch "target" "kube-apiserver" "component" "memory") | fromYaml) -}}
   {{- $files | toYaml -}}
 {{- end -}}

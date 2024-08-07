@@ -4,6 +4,8 @@ Here we are generating a hash suffix.
 This function needs the whole `$` context to be able to use `.Files.Get`
 */}}
 {{- define "t8s-cluster.clusterClass.k0smotronControlPlaneTemplate.spec" -}}
+  {{- $admissionControlConfigFileName := include "t8s-cluster.clusterClass.apiServer.admissionControlConfigFileName" (dict) -}}
+  {{- $eventRateLimitConfigFileName := include "t8s-cluster.clusterClass.apiServer.eventRateLimitConfigFileName" (dict) -}}
 replicas: {{ $.Values.controlPlane.singleNode | ternary 1 3 }}
 service:
   type: LoadBalancer
@@ -11,6 +13,18 @@ service:
   konnectivityPort: 8132
 controllerPlaneFlags:
   - --disable-components=metrics-server
+
+mounts:
+  - path: {{ include "t8s-cluster.clusterClass.apiServer.configDir" (dict) }}
+    configMap:
+      name: {{ printf "%s-api-server-config" $.Release.Name }}
+      defaultMode: 0444
+      optional: false
+      items:
+        - key: {{ $admissionControlConfigFileName }}
+          path: {{ $admissionControlConfigFileName }}
+        - key: {{ $eventRateLimitConfigFileName }}
+          path: {{ $eventRateLimitConfigFileName }}
 k0sConfig:
   apiVersion: k0s.k0sproject.io/v1beta1
   kind: ClusterConfig
@@ -18,18 +32,7 @@ k0sConfig:
     network:
       provider: custom
     api:
-      extraArgs: {{- include "t8s-cluster.clusterClass.args.apiServer" (dict "context" . "excludePatches" true) | nindent 8 }}
-        # TODO: figure out how to make this work
-        # admission-control-config-file: &admissionControlConfigFilePath /etc/kubernetes/admission-control-config.yaml
-        #  extraVolumes:
-        #    - hostPath: *admissionControlConfigFilePath
-        #      mountPath: *admissionControlConfigFilePath
-        #      name: admission-control-config
-        #      readOnly: true
-        #    - hostPath: &eventRateLimitConfigFilePath {\{ $eventRateLimitConfigFilePath }}
-        #      mountPath: *eventRateLimitConfigFilePath
-        #      name: event-rate-limit-config
-        #      readOnly: true
+      extraArgs: {{- include "t8s-cluster.clusterClass.args.apiServer" (dict "context" .) | nindent 8 }}
     controllerManager:
       extraArgs: {{- include "t8s-cluster.clusterClass.args.controllerManager" (dict "context" .) | nindent 8 }}
     scheduler:

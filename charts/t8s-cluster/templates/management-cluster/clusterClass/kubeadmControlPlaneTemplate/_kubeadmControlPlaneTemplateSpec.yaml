@@ -4,22 +4,22 @@ Here we are generating a hash suffix.
 This function needs the whole `$` context to be able to use `.Files.Get`
 */}}
 {{- define "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.spec" -}}
-  {{- $admissionControlConfigFilePath := "/etc/kubernetes/admission-control-config.yaml" -}}
-  {{- $eventRateLimitConfigFilePath := "/etc/kubernetes/event-rate-limit-config.yaml" -}}
+  {{- $apiServerConfigDir := include "t8s-cluster.clusterClass.apiServer.configDir" (dict) -}}
+  {{- $admissionControlConfigFilePath := printf "%s/%s" $apiServerConfigDir (include "t8s-cluster.clusterClass.apiServer.admissionControlConfigFileName" (dict)) -}}
+  {{- $eventRateLimitConfigFilePath := printf "%s/%s" $apiServerConfigDir (include "t8s-cluster.clusterClass.apiServer.eventRateLimitConfigFileName" (dict)) -}}
 rolloutBefore:
   certificatesExpiryDays: 60
 kubeadmConfigSpec:
   clusterConfiguration:
     apiServer:
       extraArgs: {{- include "t8s-cluster.clusterClass.args.apiServer" (dict "context" .) | nindent 8 }}
-        admission-control-config-file: &admissionControlConfigFilePath {{ $admissionControlConfigFilePath }}
       extraVolumes:
-        - hostPath: *admissionControlConfigFilePath
-          mountPath: *admissionControlConfigFilePath
+        - hostPath: {{ $admissionControlConfigFilePath }}
+          mountPath: {{ $admissionControlConfigFilePath }}
           name: admission-control-config
           readOnly: true
-        - hostPath: &eventRateLimitConfigFilePath {{ $eventRateLimitConfigFilePath }}
-          mountPath: *eventRateLimitConfigFilePath
+        - hostPath: {{ $eventRateLimitConfigFilePath }}
+          mountPath: {{ $eventRateLimitConfigFilePath }}
           name: event-rate-limit-config
           readOnly: true
     controllerManager:
@@ -30,7 +30,7 @@ kubeadmConfigSpec:
           listen-metrics-urls: http://0.0.0.0:2381
     scheduler:
       extraArgs: {{- include "t8s-cluster.clusterClass.args.scheduler" (dict) | nindent 8 }}
-  files: {{- include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.files" (merge . (dict "admissionControlConfigFilePath" $admissionControlConfigFilePath "eventRateLimitConfigFilePath" $eventRateLimitConfigFilePath)) | nindent 4 }}
+  files: {{- include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.files" . | nindent 4 }}
   initConfiguration: &configuration
     nodeRegistration:
       kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict "context" .) | nindent 8 }}

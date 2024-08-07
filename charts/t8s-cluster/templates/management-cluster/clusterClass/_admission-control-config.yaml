@@ -1,0 +1,7 @@
+{{- define "t8s-cluster.clusterClass.apiServer.admissionControlConfigFile" -}}
+apiVersion: apiserver.config.k8s.io/v1
+kind: AdmissionConfiguration
+plugins:
+  - name: EventRateLimit
+    path: {{ include "t8s-cluster.clusterClass.apiServer.eventRateLimitConfigFileName" (dict) }}
+{{- end -}}
