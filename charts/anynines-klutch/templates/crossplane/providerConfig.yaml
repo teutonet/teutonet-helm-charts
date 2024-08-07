@@ -1,0 +1,76 @@
+{{- range $name, $dataservice := .Values.dataservices -}}
+  {{- $resourceName := printf "%s-service-broker" $name -}}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $resourceName }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $name }}
+type: Opaque
+stringData:
+  username: {{ $dataservice.username | quote }}
+  password: {{ $dataservice.password | quote }}
+---
+apiVersion: dataservices.anynines.com/v1
+kind: ProviderConfig
+metadata:
+  name: {{ $resourceName }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $name }}
+spec:
+  url: {{ $dataservice.url | quote }}
+  providerCredentials:
+    source: Secret
+    username:
+      secretRef:
+        namespace: crossplane-system
+        name: {{ $resourceName }}
+        key: username
+    password:
+      secretRef:
+        namespace: crossplane-system
+        name: {{ $resourceName }}
+        key: password
+  {{- if $.Values.backupManager -}}
+    {{- $backupManagerResourceName := printf "%s-backup-manager" $name }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $backupManagerResourceName }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: backup-manager
+    app.kubernetes.io/part-of: {{ $name }}
+type: Opaque
+stringData:
+  username: {{ $.Values.backupManager.username | quote }}
+  password: {{ $.Values.backupManager.password | quote }}
+---
+apiVersion: dataservices.anynines.com/v1
+kind: ProviderConfig
+metadata:
+  name: {{ $backupManagerResourceName }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: backup-manager
+    app.kubernetes.io/part-of: {{ $name }}
+spec:
+  url: {{ $.Values.backupManager.url | quote }}
+  providerCredentials:
+    source: Secret
+    username:
+      secretRef:
+        namespace: crossplane-system
+        name: {{ $backupManagerResourceName }}
+        key: username
+    password:
+      secretRef:
+        namespace: crossplane-system
+        name: {{ $backupManagerResourceName }}
+        key: password
+  {{- end }}
+{{- end -}}

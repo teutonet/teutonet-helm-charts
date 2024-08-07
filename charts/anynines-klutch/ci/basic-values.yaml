@@ -1,0 +1,20 @@
+dataservices:
+  postgresql:
+    url: https://pg.sb.a9s.cwrau.wtf
+    username: admin
+    password: fvGeQ8AIclWj1tN8ViiHghtLROQX9c
+
+backupManager:
+  url: https://backups.a9s.cwrau.wtf
+  username: admin
+  password: FkVFcrX8Fow4ELuwkVhjeURKeocX8I
+
+oidc:
+  ingress:
+    host: dex.a9s.cwrau.wtf
+
+ingress:
+  host: klutch.a9s.cwrau.wtf
+
+kubernetes:
+  externalAddress: https://212.15.214.137:6443

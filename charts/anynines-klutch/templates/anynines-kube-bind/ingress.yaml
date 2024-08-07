@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  annotations:
+    kubernetes.io/tls-acme: "true"
+spec:
+  rules:
+    - host: &host {{ .Values.ingress.host }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: {{ include "common.names.fullname" . }}
+                port:
+                  name: https
+  tls:
+    - secretName: {{ printf "%s-tls" (include "common.names.fullname" .) }}
+      hosts:
+        - *host
