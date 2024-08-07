@@ -53,6 +53,7 @@ spec:
         - java
         - -jar
         - /opt/bitnami/keycloak-config-cli/keycloak-config-cli.jar
+        - --import.var-substitution.enabled=true
       extraEnvVars:
         - name: HELPER_CLI_CLIENT_SECRET
           valueFrom:
@@ -73,7 +74,7 @@ spec:
           clients:
             - clientId: kube-bind
               enabled: true
-              secret: ${env:KUBE_BIND_CLIENT_SECRET}
+              secret: $(env:KUBE_BIND_CLIENT_SECRET)
               consentRequired: false
               authorizationServicesEnabled: true
               serviceAccountsEnabled: true
@@ -82,7 +83,7 @@ spec:
                 - {{ printf "https://%s/callback" .Values.ingress.host }}
             - clientId: helper-cli
               enabled: true
-              secret: ${env:HELPER_CLI_CLIENT_SECRET}
+              secret: $(env:HELPER_CLI_CLIENT_SECRET)
               consentRequired: false
               standardFlowEnabled: false
               serviceAccountsEnabled: true
