@@ -1,16 +1,19 @@
 apiVersion: v2
-name: common
-description: A library chart for common resources
-type: library
-version: 1.2.0
-maintainers:
-  - name: cwrau
-    email: cwr@teuto.net
-  - name: marvinWolff
-    email: mw@teuto.net
-  - name: tasches
-    email: st@teuto.net
 dependencies:
   - name: common
-    version: 2.21.0
     repository: https://charts.bitnami.com/bitnami
+    version: 2.21.0
+description: A library chart for common resources
+maintainers:
+  - email: cwr@teuto.net
+    name: cwrau
+  - email: mw@teuto.net
+    name: marvinWolff
+  - email: st@teuto.net
+    name: tasches
+name: common
+sources:
+  - https://github.com/teutonet/teutonet-helm-charts/tree/common-v1.2.1/charts/common
+  - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/common
+type: library
+version: 1.2.1

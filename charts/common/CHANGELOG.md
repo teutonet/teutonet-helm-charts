@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.2.0...common-v1.2.1) (2024-08-07)
+
+
+### Miscellaneous Chores
+
+* **common/dependencies:** update helm release common to v2.19.3 ([#973](https://github.com/teutonet/teutonet-helm-charts/issues/973)) ([0187a4a](https://github.com/teutonet/teutonet-helm-charts/commit/0187a4aff3330b08f43ff6271d674e091f90df27))
+* **common/dependencies:** update helm release common to v2.21.0 ([#1017](https://github.com/teutonet/teutonet-helm-charts/issues/1017)) ([edfeb09](https://github.com/teutonet/teutonet-helm-charts/commit/edfeb09ebe30659b97329d46fb554c883a220ac0))
+* **common:** improve developer experience by providing tab-completion ([#1004](https://github.com/teutonet/teutonet-helm-charts/issues/1004)) ([4785b0f](https://github.com/teutonet/teutonet-helm-charts/commit/4785b0f4c1a48a7f15ec8d4f5b62282811e14429))
+
 ## [1.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.1.0...common-v1.2.0) (2024-07-01)
 
 
