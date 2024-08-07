@@ -11,8 +11,7 @@ spec:
   template:
     metadata:
       labels: {{- include "common.labels.standard" $ | nindent 8 }}
-    spec:
-      {{- include "common.images.renderPullSecrets" ( dict "images" (list .Values.worker.image) "context" $) | indent 6 }}
+    spec: {{- include "common.images.renderPullSecrets" ( dict "images" (list .Values.worker.image) "context" $) | nindent 6 }}
       securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}
       automountServiceAccountToken: false
       containers:
