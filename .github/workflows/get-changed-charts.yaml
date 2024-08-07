@@ -1,33 +1,36 @@
-name: Get changed charts in last commit
+name: Get changed charts in PR
 
 on:
   workflow_call:
+    inputs:
+      pr_number:
+        type: number
     outputs:
       charts:
-        description: The names of the changed charts in the last commit
+        description: The names of the changed charts in the PR
         value: ${{ jobs.getChangedCharts.outputs.charts }}
+      count:
+        value: ${{ jobs.getChangedCharts.outputs.count }}
 
 jobs:
   getChangedCharts:
     runs-on: ubuntu-latest
     outputs:
       charts: ${{ steps.getCharts.outputs.charts }}
+      count: ${{ steps.getCharts.outputs.count }}
+    permissions:
+      pull-requests: read
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - uses: helm/chart-testing-action@e6669bcd63d7cb57cb4380c33043eebe5d111992 # v2.6.1
-
       - name: Get all charts
         id: getCharts
         env:
-          CT_TARGET_BRANCH: ${{ github.event.pull_request.base.ref || github.event.repository.default_branch }}
+          PULL_REQUEST_NUMBER: ${{ inputs.pr_number }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
-          set -ex
+          set -e
           set -o pipefail
+          charts="$(gh api --paginate "/repos/${GITHUB_REPOSITORY}/pulls/${PULL_REQUEST_NUMBER}/files" | jq -cr 'map(.filename | select(test("charts/[^/]*")) | split("/") | .[1] | select(.)) | unique')"
           (
-            echo -n charts=
-            ct list-changed | cut -d / -f 2 | jq -c -Rn '[inputs]'
+            echo charts="$charts"
+            echo count="$(<<<"$charts" jq -r length)"
           ) | tee -a "$GITHUB_OUTPUT"
