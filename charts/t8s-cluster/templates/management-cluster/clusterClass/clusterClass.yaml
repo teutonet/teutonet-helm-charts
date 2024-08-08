@@ -10,6 +10,7 @@ metadata:
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
 spec:
   controlPlane:
+    {{- if not .Values.controlPlane.hosted }}
     machineHealthCheck:
       maxUnhealthy: 1
       nodeStartupTimeout: 10m
@@ -26,10 +27,16 @@ spec:
         apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
         kind: OpenStackMachineTemplate
         name: {{ printf "%s-control-plane-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfControlPlane" (dict "context" $)) }}
+    {{- end }}
     ref:
       apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+      {{- if .Values.controlPlane.hosted }}
+      kind: K0smotronControlPlaneTemplate
+      name: {{/* the full context is needed for .Files.Get */}}{{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.k0smotronControlPlaneTemplate.specHash" .) }}
+      {{- else }}
       kind: KubeadmControlPlaneTemplate
       name: {{/* the full context is needed for .Files.Get */}}{{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.specHash" .) }}
+      {{- end }}
   infrastructure:
     ref:
       apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
@@ -72,6 +79,7 @@ spec:
           type: string
           default: compute-plane-placeholder
   patches:
+    {{- if not .Values.controlPlane.hosted }}
     - name: controlPlaneServerGroupID
       description: Sets the ServerGroupID for Control Plane machines.
       definitions:
@@ -85,6 +93,7 @@ spec:
             kind: OpenStackMachineTemplate
             matchResources:
               controlPlane: true
+    {{- end }}
     - name: machineDeploymentServerGroupID
       description: Sets the ServerGroupID for MachineDeployment machines.
       definitions:
@@ -127,6 +136,7 @@ spec:
             matchResources:
               machineDeploymentClass:
                 names: {{- $machineDeploymentClasses | keys | sortAlpha | toYaml | nindent 18 }}
+        {{- if not .Values.controlPlane.hosted }}
         - jsonPatches:
             - <<: *imagePatch
               valueFrom:
@@ -135,6 +145,8 @@ spec:
             <<: *imagePatchSelector
             matchResources:
               controlPlane: true
+        {{- end }}
+    {{- if not .Values.controlPlane.hosted }}
     - name: controlPlaneAvailabilityZones
       enabledIf: {{ `{{ if .controlPlaneAvailabilityZones }}true{{ end }}` | quote }}
       definitions:
@@ -148,6 +160,7 @@ spec:
               path: /spec/template/spec/controlPlaneAvailabilityZones
               valueFrom:
                 variable: controlPlaneAvailabilityZones
+    {{- end }}
     - name: dnsNameservers
       definitions:
         - selector:
@@ -190,7 +203,7 @@ spec:
           bootstrap:
             ref:
               apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
-              kind: KubeadmConfigTemplate
+              kind: {{ $.Values.controlPlane.hosted | ternary "K0sWorkerConfigTemplate" "KubeadmConfigTemplate" }}
               name: {{ printf "%s-%s-compute-plane" $.Release.Name ($isGpuDeploymentClass | ternary "gpu" "standard") }}
           infrastructure:
             ref:

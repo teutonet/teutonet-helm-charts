@@ -1,0 +1,23 @@
+{{- define "t8s-cluster.clusterClass.bootstrapConfigTemplate.k0smotron.spec" -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
+  {{- $kubeletExtraArgs := list -}}
+  {{- range $key, $value := include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict "context" .context) | fromYaml -}}
+    {{- $kubeletExtraArgs = append $kubeletExtraArgs (printf "--%s=%s" $key $value) -}}
+  {{- end -}}
+args:
+  - --cri-socket=remote:/run/containerd/containerd.sock
+  {{- if le (.Values.version.minor | int) 28 }}
+  - --enable-cloud-provider
+  {{- end }}
+  - {{ printf `--kubelet-extra-args="%s"` ($kubeletExtraArgs | join " ") }}
+files: {{- include "t8s-cluster.clusterClass.configTemplate.files" (dict "context" .context "gpu" .gpu "excludePatches" true) | nindent 2 }}
+  {{/* this service isn't needed by k0s */}}
+  {{- $preStartCommands := list
+    "systemctl disable --now kubelet.service"
+  }}
+  {{- $preStartCommands = concat $preStartCommands
+    (include "t8s-cluster.clusterClass.preKubeadmCommands" (dict "context" .context) | fromYamlArray)
+    (include "t8s-cluster.clusterClass.postKubeadmCommands" (dict) | fromYamlArray)
+  }}
+preStartCommands: {{- $preStartCommands | default (list) | toYaml | nindent 2 }}
+{{- end -}}

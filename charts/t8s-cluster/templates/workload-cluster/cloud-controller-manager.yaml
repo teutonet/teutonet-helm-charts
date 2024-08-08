@@ -21,9 +21,6 @@ spec:
     - name: {{ printf "%s-cni" .Release.Name }}
       namespace: {{ .Release.Namespace }}
   {{- end }}
-  kubeConfig:
-    secretRef:
-      name: {{ .Release.Name }}-kubeconfig
   install:
     remediation:
       retries: -1
@@ -34,6 +31,9 @@ spec:
   storageNamespace: kube-system
   targetNamespace: kube-system
   releaseName: ccm
+  kubeConfig:
+    secretRef:
+      name: {{ .Release.Name }}-kubeconfig
   valuesFrom:
     - &valuesFrom
       kind: Secret
@@ -43,6 +43,17 @@ spec:
       valuesKey: cloud.conf
     - <<: *valuesFrom
       targetPath: cloudConfig.metadata.hash
+  {{- if .Values.controlPlane.hosted }}
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: DaemonSet
+            patch: |
+              - op: replace
+                path: /kind
+                value: Deployment
+  {{- end }}
   values:
     cluster:
       name: {{ .Values.metadata.friendlyName | default .Release.Name }}
@@ -51,8 +62,14 @@ spec:
       - key: node.cloudprovider.kubernetes.io/uninitialized
         value: "true"
         effect: NoSchedule
+    {{- if not .Values.controlPlane.hosted }}
       - key: node-role.kubernetes.io/control-plane
         effect: NoSchedule
     nodeSelector:
       node-role.kubernetes.io/control-plane: ""
+    {{- end }}
+  {{- else }}
+    {{- if .Values.controlPlane.hosted }}
+    nodeSelector: null
+    {{- end }}
   {{- end }}

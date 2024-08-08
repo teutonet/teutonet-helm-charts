@@ -5,10 +5,11 @@ Here we are generating a hash suffix.
 {{- define "t8s-cluster.clusterClass.openStackClusterTemplate.spec" -}}
   {{- $_ := mustMerge . (pick .context "Values") -}}
 apiServerLoadBalancer:
-  enabled: true
+  enabled: {{ not .Values.controlPlane.hosted }}
   {{- with .Values.controlPlane.allowedCIDRs }}
   allowedCidrs: {{- toYaml . | nindent 4 }}
   {{- end }}
+disableAPIServerFloatingIP: {{ .Values.controlPlane.hosted }}
 bastion:
   availabilityZone: {{ .Values.bastion.availabilityZone }}
   enabled: {{ .Values.bastion.enabled }}
