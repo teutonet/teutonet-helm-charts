@@ -41,4 +41,9 @@ jobs:
             exit 1
           fi
 
+          if ((num_changed < 1)); then
+            echo "This PR has seemingly no changes to any charts?"
+            exit 1
+          fi
+
           echo chart="$changed" | tee -a "$GITHUB_OUTPUT"
