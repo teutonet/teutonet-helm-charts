@@ -10,6 +10,8 @@ registries:
       cp-kafka: ALL_TAGS
     curlimages:
       curl: ALL_TAGS
+    emberstack:
+      kubernetes-reflector: ALL_TAGS
     fluxcd: ALL_IMAGES
     grafana: ALL_IMAGES
     hjacobs:

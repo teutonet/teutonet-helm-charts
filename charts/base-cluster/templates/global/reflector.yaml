@@ -14,10 +14,8 @@ spec:
     mode: enabled
   values:
     priorityClassName: cluster-components
-    {{- if .Values.global.imageRegistry }}
     image:
-      repository: {{ printf "%s/emberstack/kubernetes-reflector" $.Values.global.imageRegistry }}
-    {{- end }}
+      repository: {{ printf "%s/emberstack/kubernetes-reflector" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
     securityContext:
       privileged: false
       allowPrivilegeEscalation: false
