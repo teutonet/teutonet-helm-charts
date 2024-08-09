@@ -1,3 +1,15 @@
+annotations:
+  artifacthub.io/images: '- image: docker.io/confluentinc/cp-kafka:7.3.1                     #  null/Deployment/stellio-context-broker-kafka.yaml
+
+    - image: docker.io/stellio/stellio-api-gateway:2.1.0               #  null/Deployment/stellio-context-broker-api-gateway.yaml
+
+    - image: docker.io/stellio/stellio-search-service:2.1.0            #  null/Deployment/stellio-context-broker-search.yaml
+
+    - image: docker.io/stellio/stellio-subscription-service:2.1.0      #  null/Deployment/stellio-context-broker-subscription.yaml
+
+    - image: docker.io/stellio/stellio-timescale-postgis:14-2.9.1-3.3  #  null/Deployment/stellio-context-broker-postgres.yaml
+
+    '
 apiVersion: v2
 appVersion: 2.1.0
 dependencies:
@@ -16,10 +28,3 @@ sources:
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/stellio-context-broker
 type: application
 version: 0.1.1
-annotations:
-  artifacthub.io/images: |
-    - image: docker.io/confluentinc/cp-kafka:7.3.1                     #  null/Deployment/stellio-context-broker-kafka.yaml
-    - image: docker.io/stellio/stellio-api-gateway:2.1.0               #  null/Deployment/stellio-context-broker-api-gateway.yaml
-    - image: docker.io/stellio/stellio-search-service:2.1.0            #  null/Deployment/stellio-context-broker-search.yaml
-    - image: docker.io/stellio/stellio-subscription-service:2.1.0      #  null/Deployment/stellio-context-broker-subscription.yaml
-    - image: docker.io/stellio/stellio-timescale-postgis:14-2.9.1-3.3  #  null/Deployment/stellio-context-broker-postgres.yaml
