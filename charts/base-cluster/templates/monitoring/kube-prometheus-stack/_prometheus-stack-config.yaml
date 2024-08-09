@@ -14,7 +14,7 @@ prometheusOperator:
 defaultRules:
   disabled:
     etcdHighNumberOfFailedGRPCRequests: true
-    PrometheusNotConnectedToAlertmanagers: true # TODO dependent on Alertmanagers
+    PrometheusNotConnectedToAlertmanagers: {{- not (include "base-cluster.prometheus-stack.alertmanager.enabled" .) -}}
   rules:
     kubeApiserverAvailability: false
 kubelet:
