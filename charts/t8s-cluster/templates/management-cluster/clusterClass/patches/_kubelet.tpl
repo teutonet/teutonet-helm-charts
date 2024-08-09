@@ -26,12 +26,21 @@
     {{- $values = set $values $option $value -}}
   {{- end -}}
   {{- $values = set $values "featureGates" (include "t8s-cluster.kubelet.featureGates" (dict) | fromYaml) -}}
-  {{- include "t8s-cluster.patches.patchFile" (dict "values" $values "target" "kubeletconfiguration" "component" "default") -}}
+  {{- $patches := list -}}
+  {{/* clear the old stuff beforehand, otherwise they just stay there 😐 */}}
+  {{- $deleteJsonPatch := list -}}
+  {{- $settingsToDelete := list "/featureGates" -}}
+  {{- range $settingToDelete := $settingsToDelete -}}
+    {{- $deleteJsonPatch = append $deleteJsonPatch (dict "op" "remove" "path" $settingToDelete) -}}
+  {{- end -}}
+  {{- $patches = append $patches (include "t8s-cluster.patches.patchFile" (dict "values" $deleteJsonPatch "target" "kubeletconfiguration" "suffix" 0 "patchType" "json") | fromYaml) -}}
+  {{- $patches = append $patches (include "t8s-cluster.patches.patchFile" (dict "values" $values "target" "kubeletconfiguration" "component" "default") | fromYaml) -}}
+  {{- $patches | toYaml -}}
 {{- end -}}
 
 {{- define "t8s-cluster.patches.kubelet.patches" -}}
   {{- $_ := mustMerge . (pick .context "Values") -}}
-  {{- $patches := list (include "t8s-cluster.patches.kubelet.default" (dict) | fromYaml) -}}
+  {{- $patches := include "t8s-cluster.patches.kubelet.default" (dict) | fromYamlArray -}}
   {{- with include "t8s-cluster.patches.kubelet.imagePulls" (dict "context" .context) | fromYaml -}}
     {{- $patches = append $patches (include "t8s-cluster.patches.patchFile" (dict "values" . "target" "kubeletconfiguration" "component" "imagePulls") | fromYaml) -}}
   {{- end -}}
