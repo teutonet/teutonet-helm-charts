@@ -28,10 +28,10 @@
     {{- $files = append $files (dict "content" ($.Files.Get (printf "files/%s" $file)) "path" $path) -}}
   {{- end -}}
   {{- $files = append $files (dict "content" (.Files.Get "files/kube-proxy.patch.sh") "path" "/etc/kube-proxy-patch.sh" "permissions" "0700") -}}
+  {{- $apiserverPatch := dict "spec" (dict "containers" (list (dict "name" "kube-apiserver" "resources" (dict "requests" (dict "memory" "2Gi") "limits" (dict "memory" "4Gi"))))) -}}
+  {{- $files = append $files (include "t8s-cluster.patches.patchFile" (dict "values" $apiserverPatch "target" "kube-apiserver" "component" "memory") | fromYaml) -}}
   {{- range $file := $files -}}
     {{- $_ := set $file "content" (get $file "content" | trim) -}}
   {{- end -}}
-  {{- $apiserverPatch := dict "spec" (dict "containers" (list (dict "name" "kube-apiserver" "resources" (dict "requests" (dict "memory" "2Gi") "limits" (dict "memory" "4Gi"))))) -}}
-  {{- $files = append $files (include "t8s-cluster.patches.patchFile" (dict "values" $apiserverPatch "target" "kube-apiserver" "component" "memory") | fromYaml) -}}
   {{- $files | toYaml -}}
 {{- end -}}
