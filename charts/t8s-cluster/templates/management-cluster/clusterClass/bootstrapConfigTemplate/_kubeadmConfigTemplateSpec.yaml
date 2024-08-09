@@ -1,5 +1,4 @@
 {{- define "t8s-cluster.clusterClass.bootstrapConfigTemplate.kubeadm.spec" -}}
-  {{- $_ := mustMerge . (pick .context "Values") -}}
 joinConfiguration:
   nodeRegistration:
     kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict "context" .context) | nindent 6 }}
