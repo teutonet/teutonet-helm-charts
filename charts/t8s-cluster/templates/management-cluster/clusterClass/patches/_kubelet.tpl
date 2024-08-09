@@ -28,12 +28,12 @@
   {{- $values = set $values "featureGates" (include "t8s-cluster.kubelet.featureGates" (dict) | fromYaml) -}}
   {{- $patches := list -}}
   {{/* clear the old stuff beforehand, otherwise they just stay there 😐 */}}
-  {{- $deleteJsonPatch := list -}}
-  {{- $settingsToDelete := list "/featureGates" -}}
-  {{- range $settingToDelete := $settingsToDelete -}}
-    {{- $deleteJsonPatch = append $deleteJsonPatch (dict "op" "remove" "path" $settingToDelete) -}}
+  {{- $cleanupJsonPatch := list -}}
+  {{- $settingsToClean := dict "/featureGates" (dict) -}}
+  {{- range $settingToClean, $cleanValue := $settingsToClean -}}
+    {{- $cleanupJsonPatch = append $cleanupJsonPatch (dict "op" "add" "path" $settingToClean "value" $cleanValue) -}}
   {{- end -}}
-  {{- $patches = append $patches (include "t8s-cluster.patches.patchFile" (dict "values" $deleteJsonPatch "target" "kubeletconfiguration" "suffix" 0 "patchType" "json") | fromYaml) -}}
+  {{- $patches = append $patches (include "t8s-cluster.patches.patchFile" (dict "values" $cleanupJsonPatch "target" "kubeletconfiguration" "suffix" 0 "patchType" "json") | fromYaml) -}}
   {{- $patches = append $patches (include "t8s-cluster.patches.patchFile" (dict "values" $values "target" "kubeletconfiguration" "component" "default") | fromYaml) -}}
   {{- $patches | toYaml -}}
 {{- end -}}
