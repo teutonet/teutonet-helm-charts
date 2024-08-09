@@ -1,5 +1,17 @@
 # Changelog
 
+## [8.3.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v8.3.1...t8s-cluster-v8.3.2) (2024-08-09)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** replace `remove` with `add` `remove` doesn't work when the `path` doesn't exist 🤦 ([#1088](https://github.com/teutonet/teutonet-helm-charts/issues/1088)) ([850e3fd](https://github.com/teutonet/teutonet-helm-charts/commit/850e3fdcb17a1c0e6b8f1765825140f69b11f90d))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update common docker tag to v1.2.1 ([#1081](https://github.com/teutonet/teutonet-helm-charts/issues/1081)) ([88de484](https://github.com/teutonet/teutonet-helm-charts/commit/88de4843d045d0bd38fb75580fce8f5ead24ec36))
+
 ## [8.3.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v8.3.0...t8s-cluster-v8.3.1) (2024-08-09)
 
 
