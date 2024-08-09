@@ -456,4 +456,4 @@ backup:
         memory: 500Mi
 
 kube-janitor:
-  enabled: false
+  enabled: true
