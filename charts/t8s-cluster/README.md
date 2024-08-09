@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # t8s-cluster
 
-![Version: 8.2.0](https://img.shields.io/badge/Version-8.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 8.3.0](https://img.shields.io/badge/Version-8.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -17,7 +17,7 @@ t8s-operator cluster with necessary addons
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v8.2.0/charts/t8s-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v8.3.0/charts/t8s-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster>
 
 ## Requirements
@@ -350,26 +350,35 @@ Must be one of:
 | **Type**                  | `object`                                                                                                 |
 | **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
 
-| Property                                                              | Pattern | Type            | Deprecated | Definition                | Title/Description |
-| --------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------- | ----------------- |
-| + [flavor](#controlPlane_flavor )                                     | No      | string          | No         | -                         | -                 |
-| - [singleNode](#controlPlane_singleNode )                             | No      | boolean         | No         | -                         | -                 |
-| - [additionalSecurityGroups](#controlPlane_additionalSecurityGroups ) | No      | array of string | No         | In #/$defs/securityGroups | -                 |
-| - [allowedCIDRs](#controlPlane_allowedCIDRs )                         | No      | array of string | No         | -                         | -                 |
+| Property                                                              | Pattern | Type            | Deprecated | Definition                | Title/Description                                             |
+| --------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------- | ------------------------------------------------------------- |
+| - [hosted](#controlPlane_hosted )                                     | No      | boolean         | No         | -                         | Whether the control plane is hosted on the management cluster |
+| + [flavor](#controlPlane_flavor )                                     | No      | string          | No         | -                         | -                                                             |
+| - [singleNode](#controlPlane_singleNode )                             | No      | boolean         | No         | -                         | -                                                             |
+| - [additionalSecurityGroups](#controlPlane_additionalSecurityGroups ) | No      | array of string | No         | In #/$defs/securityGroups | -                                                             |
+| - [allowedCIDRs](#controlPlane_allowedCIDRs )                         | No      | array of string | No         | -                         | -                                                             |
 
-### <a name="controlPlane_flavor"></a>3.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > controlPlane > flavor`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
-
-### <a name="controlPlane_singleNode"></a>3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > singleNode`
+### <a name="controlPlane_hosted"></a>3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > hosted`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-### <a name="controlPlane_additionalSecurityGroups"></a>3.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroups`
+**Description:** Whether the control plane is hosted on the management cluster
+
+### <a name="controlPlane_flavor"></a>3.2. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > controlPlane > flavor`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+### <a name="controlPlane_singleNode"></a>3.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > singleNode`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+### <a name="controlPlane_additionalSecurityGroups"></a>3.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroups`
 
 |                |                        |
 | -------------- | ---------------------- |
@@ -388,13 +397,13 @@ Must be one of:
 | ------------------------------------------------------------------------------ | ----------- |
 | [additionalSecurityGroups items](#controlPlane_additionalSecurityGroups_items) | -           |
 
-#### <a name="autogenerated_heading_2"></a>3.3.1. t8s cluster configuration > controlPlane > additionalSecurityGroups > additionalSecurityGroups items
+#### <a name="autogenerated_heading_2"></a>3.4.1. t8s cluster configuration > controlPlane > additionalSecurityGroups > additionalSecurityGroups items
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="controlPlane_allowedCIDRs"></a>3.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > allowedCIDRs`
+### <a name="controlPlane_allowedCIDRs"></a>3.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > allowedCIDRs`
 
 |          |                   |
 | -------- | ----------------- |
@@ -412,7 +421,7 @@ Must be one of:
 | ------------------------------------------------------ | ----------- |
 | [allowedCIDRs items](#controlPlane_allowedCIDRs_items) | -           |
 
-#### <a name="autogenerated_heading_3"></a>3.4.1. t8s cluster configuration > controlPlane > allowedCIDRs > allowedCIDRs items
+#### <a name="autogenerated_heading_3"></a>3.5.1. t8s cluster configuration > controlPlane > allowedCIDRs > allowedCIDRs items
 
 |          |          |
 | -------- | -------- |

@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v8.2.0...t8s-cluster-v8.3.0) (2024-08-08)
+
+
+### Features
+
+* **t8s-cluster:** add support for HCP ([#962](https://github.com/teutonet/teutonet-helm-charts/issues/962)) ([4307b0b](https://github.com/teutonet/teutonet-helm-charts/commit/4307b0b5e4deb99698db563b1dca47b427fd8803))
+
 ## [8.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v8.1.0...t8s-cluster-v8.2.0) (2024-08-02)
 
 
