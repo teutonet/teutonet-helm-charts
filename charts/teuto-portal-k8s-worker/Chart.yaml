@@ -1,20 +1,24 @@
+annotations:
+  artifacthub.io/images: '- image: registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker:3.3.0  #  default/Deployment/teuto-portal-k8s-worker.yaml
+
+    '
 apiVersion: v2
-name: teuto-portal-k8s-worker
-description: A Helm chart for deploying the portal worker application to k8s
-type: application
-version: 3.1.1
 appVersion: 2.0.0
-maintainers:
-  - name: cwrau
-    email: cwr@teuto.net
-  - name: marvinWolff
-    email: mw@teuto.net
-  - name: tasches
-    email: st@teuto.net
 dependencies:
   - name: common
-    version: 1.2.1
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
-annotations:
-  artifacthub.io/images: |
-    - image: registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker:3.3.0  #  default/Deployment/teuto-portal-k8s-worker.yaml
+    version: 1.2.1
+description: A Helm chart for deploying the portal worker application to k8s
+maintainers:
+  - email: cwr@teuto.net
+    name: cwrau
+  - email: mw@teuto.net
+    name: marvinWolff
+  - email: st@teuto.net
+    name: tasches
+name: teuto-portal-k8s-worker
+sources:
+  - https://github.com/teutonet/teutonet-helm-charts/tree/teuto-portal-k8s-worker-v3.1.2/charts/teuto-portal-k8s-worker
+  - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/teuto-portal-k8s-worker
+type: application
+version: 3.1.2
