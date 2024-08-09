@@ -18,7 +18,7 @@ openstack
 
 {{- define "t8s-cluster.clusterClass.preKubeadmCommands" -}}
   {{- $_ := mustMerge . (pick .context "Values") -}}
-  {{- $commands := list -}}
+  {{- $commands := list "systemctl stop kubelet.service" "systemctl disable --now snapd.service snapd.socket" -}}
   {{- if .Values.global.injectedCertificateAuthorities -}}
     {{- $commands = append $commands "update-ca-certificates" -}}
   {{- end -}}
@@ -26,7 +26,8 @@ openstack
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.postKubeadmCommands" -}}
-  {{- $commands := list "systemctl disable --now snapd.service snapd.socket" -}}
+  {{/* This is to completely wipe and restart the containerd service in the correct slice. */}}
+  {{- $commands := list "systemctl reboot" -}}
   {{- toYaml $commands }}
 {{- end -}}
 
