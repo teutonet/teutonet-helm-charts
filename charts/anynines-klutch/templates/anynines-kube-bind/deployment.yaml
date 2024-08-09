@@ -19,6 +19,7 @@ spec:
     spec:
       serviceAccountName: {{ include "common.names.fullname" . }}
       automountServiceAccountToken: true
+      enableServiceLinks: false
       containers:
         - name: anynines-backend
           image: {{ include "common.images.image" (dict "imageRoot" .Values.global.kubebind.image "global" .Values.global) }}
@@ -33,7 +34,9 @@ spec:
             - --listen-address=0.0.0.0:9443
             - --cookie-signing-key=$(COOKIE-SIGNING-KEY)
             - --cookie-encryption-key=$(COOKIE-ENCRYPTION-KEY)
+            # TODO: a9s will look into just talking to klutch instead of the k8s API
             - --external-address={{ .Values.kubernetes.externalAddress }}
+            - --external-ca-file=/cert/ca.crt
           ports:
             - containerPort: 9443
               name: https
@@ -46,7 +49,7 @@ spec:
                   name: {{ printf "%s-oidc" (include "common.names.fullname" .) }}
                   key: kube-bind-client-secret
             - name: OIDC-ISSUER-URL
-              value: {{ printf "https://%s" .Values.oidc.ingress.host }}
+              value: {{ printf "https://%s/realms/%s" .Values.oidc.ingress.host (include "anynines-klutch.oidc.realm" (dict)) }}
             - name: OIDC-CALLBACK-URL
               value: {{ printf "https://%s/callback" .Values.ingress.host }}
             - name: COOKIE-SIGNING-KEY
@@ -66,3 +69,10 @@ spec:
             requests:
               cpu: "100m"
               memory: 256Mi
+          volumeMounts:
+            - mountPath: /cert
+              name: certificate
+      volumes:
+        - name: certificate
+          secret:
+            secretName: {{ printf "%s-kubernetes-ca-certificate" (include "common.names.fullname" .) }}

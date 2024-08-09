@@ -11,7 +11,7 @@ backupManager:
 
 oidc:
   ingress:
-    host: dex.a9s.cwrau.wtf
+    host: oidc.a9s.cwrau.wtf
 
 ingress:
   host: klutch.a9s.cwrau.wtf

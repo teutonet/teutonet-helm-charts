@@ -105,6 +105,9 @@
       "properties": {
         "externalAddress": {
           "type": "string"
+        },
+        "caCertificate": {
+          "type": "string"
         }
       },
       "required": [

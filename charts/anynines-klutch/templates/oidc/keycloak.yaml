@@ -69,7 +69,7 @@ spec:
         a9s.yaml: |
           enabled: true
           registrationAllowed: false
-          realm: a9s
+          realm: {{ include "anynines-klutch.oidc.realm" (dict) }}
           displayName: a9s platform
           clients:
             - clientId: kube-bind
