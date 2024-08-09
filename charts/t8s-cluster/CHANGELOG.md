@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.3.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v8.3.0...t8s-cluster-v8.3.1) (2024-08-09)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** clean old config before applying new one if the old one stay, they might be incompatible now 🙄 ([#1087](https://github.com/teutonet/teutonet-helm-charts/issues/1087)) ([9ebc0ec](https://github.com/teutonet/teutonet-helm-charts/commit/9ebc0ecca3d6a6ee83766a293f7953d96b06a5a9))
+
 ## [8.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v8.2.0...t8s-cluster-v8.3.0) (2024-08-08)
 
 
