@@ -33,6 +33,17 @@ ckan:
     - recline_view
     - datastore
     - datapusher
+  datapusher:
+    formats:
+      - csv
+      - xls
+      - xlsx
+      - tsv
+      - application/csv
+      - application/vnd.ms-excel
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      - ods
+      - application/vnd.oasis.opendocument.spreadsheet
   image:
     registry: "ghcr.io"
     pullPolicy: IfNotPresent
