@@ -163,7 +163,7 @@ spec:
           imagePullPolicy: {{ .Values.ckan.image.pullPolicy }}
           volumeMounts:
             - name: "ckan"
-              mountPath: /var/lib/ckan/default
+              mountPath: /var/lib/ckan
               readOnly: false
           ports:
             - name: http
