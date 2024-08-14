@@ -1,22 +1,9 @@
 apiVersion: v2
-name: ckan
-type: application
-version: 1.1.5
 appVersion: 2.11.0
-maintainers:
-  - name: syeklu
-    email: sk@teuto.net
-  - name: cwrau
-    email: cwr@teuto.net
-  - name: marvinWolff
-    email: mw@teuto.net
-  - name: tasches
-    email: st@teuto.net
-description: A Helm chart for Kubernetes
 dependencies:
   - name: common
-    version: 1.2.0
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
+    version: 1.2.0
   - condition: postgresql.enabled
     name: postgresql
     repository: oci://registry-1.docker.io/bitnamicharts
@@ -29,3 +16,19 @@ dependencies:
     name: solr
     repository: oci://registry-1.docker.io/bitnamicharts
     version: 9.x.x
+description: A Helm chart for Kubernetes
+maintainers:
+  - email: sk@teuto.net
+    name: syeklu
+  - email: cwr@teuto.net
+    name: cwrau
+  - email: mw@teuto.net
+    name: marvinWolff
+  - email: st@teuto.net
+    name: tasches
+name: ckan
+sources:
+  - https://github.com/teutonet/teutonet-helm-charts/tree/ckan-v1.1.5/charts/ckan
+  - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/ckan
+type: application
+version: 1.1.5
