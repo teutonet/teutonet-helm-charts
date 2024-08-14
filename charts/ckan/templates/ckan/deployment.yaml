@@ -29,6 +29,16 @@ spec:
             claimName: {{ $claimName }}
       securityContext:
       {{- toYaml .Values.ckan.podSecurityContext | default dict | nindent 8 }}
+      {{ if .Values.ckan.persistence -}}
+      initContainers:
+        - name: set-volume-ownsership
+          image: {{ printf "%s/busybox" ($.Values.global.imageRegistry | default (include "ckan.defaultRegistry" (dict))) }}:1.36
+          command: ["sh", "-c", "chown -R 92:92 /var/lib/ckan"] # 92 is the uid and gid of ckan user/group
+          volumeMounts:
+            - name: ckan
+              mountPath: /var/lib/ckan
+              readOnly: false
+      {{ end }}
       containers:
         - name: {{ printf "%s-%s" .Chart.Name $name }}
           env:
