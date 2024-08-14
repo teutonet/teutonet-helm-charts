@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.5](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.1.4...ckan-v1.1.5) (2024-08-14)
+
+
+### Bug Fixes
+
+* **ckan:** add defaults for datapusher formats defaults ([#1094](https://github.com/teutonet/teutonet-helm-charts/issues/1094)) ([f036735](https://github.com/teutonet/teutonet-helm-charts/commit/f0367357ef1890f32fb6555cb61fce427f46623b))
+* **ckan:** volume mount position one level up ([#1095](https://github.com/teutonet/teutonet-helm-charts/issues/1095)) ([a183662](https://github.com/teutonet/teutonet-helm-charts/commit/a18366281613bfa3ed72075c1e5df83f7d9e2e56))
+
 ## [1.1.4](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.1.3...ckan-v1.1.4) (2024-07-06)
 
 
