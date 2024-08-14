@@ -32,7 +32,7 @@ spec:
           #    value: "postgresql://{{ .Values.postgresql.auth.username }}:{{ .Values.postgresql.auth.password }}@main-postgresql/{{ .Values.postgresql.auth.database}}"
           securityContext:
           {{- toYaml .Values.datapusher.securityContext | default dict | nindent 12 }}
-          image: {{ include "common.images.image" (dict "imageRoot" .Values.datapusher.image "global" .Values.global) }}
+          image: {{ printf "%s/%s" ($.Values.global.imageRegistry | default (include "ckan.defaultRegistry" (dict))) (include "common.images.image" (dict "imageRoot" .Values.datapusher.image "global" .Values.global)) }}
           imagePullPolicy: {{ .Values.datapusher.image.pullPolicy }}
           ports:
             - name: datapusher

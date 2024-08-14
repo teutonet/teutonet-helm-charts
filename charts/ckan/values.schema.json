@@ -72,6 +72,21 @@
           },
           "description": "The enabled plugins in the Ckan instance."
         },
+        "datapusher": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "formats": {
+              "type": "array",
+              "items": {
+                "items": {
+                  "type": "string"
+                }
+              },
+              "description": "The enabled formats for the datapusher."
+            }
+          }
+        },
         "image": {
           "$ref": "#/$defs/image"
         },

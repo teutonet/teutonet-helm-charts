@@ -22,6 +22,8 @@ registries:
       gpg: ALL_TAGS
     otel:
       opentelemetry-collector-contrib: ALL_TAGS
+    ckan:
+      ckan-base-datapusher: ALL_TAGS
   ghcr.io:
     aquasecurity: ALL_IMAGES
     kyverno: ALL_IMAGES
