@@ -25,3 +25,7 @@
 {{- define "ckan.redis.fullname" -}}
 {{- include "common.names.dependency.fullname" (dict "chartName" "redis" "chartValues" .Values.redis "context" $) -}}
 {{- end -}}
+
+{{- define "ckan.defaultRegistry" -}}
+docker.io
+{{- end -}}
