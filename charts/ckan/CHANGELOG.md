@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.6](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.1.5...ckan-v1.1.6) (2024-08-14)
+
+
+### Bug Fixes
+
+* **ckan:** init container for volume permissions ([#1098](https://github.com/teutonet/teutonet-helm-charts/issues/1098)) ([c4c45ed](https://github.com/teutonet/teutonet-helm-charts/commit/c4c45ed7aa11d1997f9ccd54cf7f619a6def83c2))
+
 ## [1.1.5](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.1.4...ckan-v1.1.5) (2024-08-14)
 
 
