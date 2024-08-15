@@ -463,4 +463,4 @@ kube-janitor:
   enabled: false
 
 tetragon:
-  enabled: true
+  enabled: false
