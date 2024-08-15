@@ -188,11 +188,9 @@ solr:
     pullPolicy: IfNotPresent
     pullSecrets: []
     repository: teutonet/oci-images/solr-ckan
-    tag: 1.0.4@sha256:39387d06a72b24ee493f8d06cd5a1c800a9230ed78652481433760b649aefa04
+    tag: 1.0.7
     digest: ""
   extraEnvVars:
-    - name: SOLR_CORE_CONF_DIR
-      value: /opt/bitnami/solr/server/solr/configsets/ckan/conf
     - name: SOLR_ADMIN_USERNAME
       valueFrom:
         secretKeyRef:
@@ -200,15 +198,14 @@ solr:
           key: solrUsername
   coreNames:
     - ckan
+  collection: ckan
   auth:
     enabled: true
     adminPassword: ""
     adminUsername: ""
     existingSecret: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
     existingSecretPasswordKey: solrPassword
-  cloudEnabled: false
-  cloudBootstrap: false
-  collectionReplicas: 1
+  collectionReplicas: 2
   replicaCount: 2
   zookeeper:
-    replicaCount: 2
+    replicaCount: 3
