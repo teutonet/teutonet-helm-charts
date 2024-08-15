@@ -1,3 +1,23 @@
+annotations:
+  artifacthub.io/images: '- image: docker.io/bitnami/postgresql:16.4.0-debian-12-r0                                                                     #  default/StatefulSet/ckan-postgresql-primary.yaml
+
+    - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r0                                                                     #  default/StatefulSet/ckan-postgresql-read.yaml
+
+    - image: docker.io/bitnami/redis:7.2.5-debian-12-r4                                                                           #  default/StatefulSet/ckan-redis-master.yaml
+
+    - image: docker.io/bitnami/redis:7.2.5-debian-12-r4                                                                           #  default/StatefulSet/ckan-redis-replicas.yaml
+
+    - image: docker.io/bitnami/zookeeper:3.9.2-debian-12-r10                                                                      #  default/StatefulSet/ckan-zookeeper.yaml
+
+    - image: docker.io/busybox:1.36                                                                                               #  default/Deployment/ckan-ckan.yaml
+
+    - image: docker.io/ckan/ckan-base-datapusher:0.0.21@sha256:90e71b5a5fd6f1de99dd2dd1cac68990a813b21a0fff10e0eaef912f4a64f872   #  default/Deployment/ckan-datapusher.yaml
+
+    - image: ghcr.io/teutonet/oci-images/ckan:1.0.2@sha256:793f8157c7bfaed2b2ddf98bc20e372852281720b76d975e0b6548501238ea12       #  default/Deployment/ckan-ckan.yaml
+
+    - image: ghcr.io/teutonet/oci-images/solr-ckan:1.0.7@sha256:fa9824fe1f4bb50383df192bcd9b521b8ce04a6094e520b3318fbd66aea8fec4  #  default/StatefulSet/ckan-solr.yaml
+
+    '
 apiVersion: v2
 appVersion: 2.11.0
 dependencies:
@@ -28,18 +48,7 @@ maintainers:
     name: tasches
 name: ckan
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/ckan-v1.1.6/charts/ckan
+  - https://github.com/teutonet/teutonet-helm-charts/tree/ckan-v1.1.7/charts/ckan
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/ckan
 type: application
-version: 1.1.6
-annotations:
-  artifacthub.io/images: |
-    - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r0                                                                     #  default/StatefulSet/ckan-postgresql-primary.yaml
-    - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r0                                                                     #  default/StatefulSet/ckan-postgresql-read.yaml
-    - image: docker.io/bitnami/redis:7.2.5-debian-12-r4                                                                           #  default/StatefulSet/ckan-redis-master.yaml
-    - image: docker.io/bitnami/redis:7.2.5-debian-12-r4                                                                           #  default/StatefulSet/ckan-redis-replicas.yaml
-    - image: docker.io/bitnami/zookeeper:3.9.2-debian-12-r10                                                                      #  default/StatefulSet/ckan-zookeeper.yaml
-    - image: docker.io/busybox:1.36                                                                                               #  default/Deployment/ckan-ckan.yaml
-    - image: docker.io/ckan/ckan-base-datapusher:0.0.21@sha256:90e71b5a5fd6f1de99dd2dd1cac68990a813b21a0fff10e0eaef912f4a64f872   #  default/Deployment/ckan-datapusher.yaml
-    - image: ghcr.io/teutonet/oci-images/ckan:1.0.2@sha256:793f8157c7bfaed2b2ddf98bc20e372852281720b76d975e0b6548501238ea12       #  default/Deployment/ckan-ckan.yaml
-    - image: ghcr.io/teutonet/oci-images/solr-ckan:1.0.4@sha256:39387d06a72b24ee493f8d06cd5a1c800a9230ed78652481433760b649aefa04  #  default/StatefulSet/ckan-solr.yaml
+version: 1.1.7
