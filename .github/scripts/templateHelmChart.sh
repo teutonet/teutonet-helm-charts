@@ -50,7 +50,7 @@ function templateHelmRelease() {
   namespace=$(yq <<<"$helmReleaseYaml" -er '.spec.targetNamespace // .metadata.namespace')
   releaseName=$(yq <<<"$helmReleaseYaml" -er '.spec.releaseName // .metadata.name')
   values=$(yq <<<"$helmReleaseYaml" -y -r .spec.values)
-  echo "Templating '$namespace/$releaseName'" >/dev/stderr
+  echo "Templating '$namespace/$releaseName'" >&2
 
   sourceNamespace=$(yq <<<"$helmReleaseYaml" -er ".spec.chart.spec.sourceRef.namespace // \"$namespace\"")
   sourceName=$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.sourceRef.name)
@@ -58,7 +58,7 @@ function templateHelmRelease() {
   sourceYaml=$(yq <<<"$yaml" -rys '[.[] | select(.kind == "'"$sourceKind"'")][]')
   sourceResource=$(yq <<<"$sourceYaml" -rys "[.[] | select( (.metadata.namespace == \"$sourceNamespace\") and (.metadata.name == \"$sourceName\") )][0]")
   if [[ "$sourceResource" =~ .*"null".* ]]; then
-    echo "Failed to get source '$sourceNamespace/$sourceKind/$sourceName'" >/dev/stderr
+    echo "Failed to get source '$sourceNamespace/$sourceKind/$sourceName'" >&2
     return 0
   fi
   chartName="$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.chart)"
@@ -83,7 +83,7 @@ function templateHelmRelease() {
           args+=("$helmRepositoryUrl/$chartName")
           ;;
         *)
-          echo "'$helmRepositoryUrl' is not supported" >/dev/stderr
+          echo "'$helmRepositoryUrl' is not supported" >&2
           return 1
           ;;
       esac
@@ -91,7 +91,7 @@ function templateHelmRelease() {
       helm <<<"$values" template --namespace "$namespace" "${args[@]}" --version "$chartVersion" --values -
       ;;
     *)
-      echo "'$sourceKind' is not implemented" >/dev/stderr
+      echo "'$sourceKind' is not implemented" >&2
       ;;
   esac
 }
@@ -103,7 +103,7 @@ function templateLocalHelmChart() {
   chart="$(basename "$chartPath")"
   local tmpDir
   tmpDir=$(mktemp -d -p "$TMP_DIR")
-  echo "Templating '$chart' with '$values'" >/dev/stderr
+  echo "Templating '$chart' with '$values'" >&2
   cp -r "$chartPath" "$tmpDir/$chart"
   helm dependency update "$tmpDir/$chart" >/dev/null
   helm template "$chart" "$tmpDir/$chart" --values "$values"
@@ -133,7 +133,7 @@ function templateRemoteHelmChart() {
   local chart="${2?}"
   local values="${3:-charts/$chart/ci/artifacthub-values.yaml}"
 
-  echo "Templating '$repo/$chart' with '$values'" >/dev/stderr
+  echo "Templating '$repo/$chart' with '$values'" >&2
 
   helm template --repo "$repo" "$chart" "$chart" --values "$values"
 }
@@ -144,7 +144,7 @@ function templateGitHelmChart() {
   local branch="${3?}"
   local values="${4:-charts/$path/ci/artifacthub-values.yaml}"
 
-  echo "Templating '$repo/$path' with '$values'" >/dev/stderr
+  echo "Templating '$repo/$path' with '$values'" >&2
 
   templateGitHelmRelease "$repo" "$branch" "$path" "" "$(basename "$path")" "$values"
 }
@@ -171,7 +171,7 @@ case "$script" in
     templateHelmRelease "$@"
     ;;
   *)
-    echo "Wrong script: '$0'" >/dev/stderr
+    echo "Wrong script: '$0'" >&2
     exit 1
     ;;
 esac | (if [[ "$recursive" == true ]]; then templateSubHelmCharts; else cat -; fi)

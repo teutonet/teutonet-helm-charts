@@ -14,7 +14,7 @@ if [[ -v 3 ]]; then
       dryRun=true
       ;;
     *)
-      echo "Option '$3' not supported" >/dev/stderr
+      echo "Option '$3' not supported" >&2
       exit 1
       ;;
   esac
@@ -23,7 +23,7 @@ else
 fi
 
 if yq -e '.type == "library"' "$chart/Chart.yaml" >/dev/null; then
-  echo "Skipping library chart '$chart'" >/dev/stderr
+  echo "Skipping library chart '$chart'" >&2
   exit 0
 fi
 

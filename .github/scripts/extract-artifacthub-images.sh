@@ -45,7 +45,7 @@ function updateChartYaml() {
   (
     echo "artifacthub.io/images: |"
     getImages "$chart" "$existingDir" | awk '{print "  " $0}'
-  ) | tee "$tmpDir/images.yaml" >/dev/stderr
+  ) | tee "$tmpDir/images.yaml" >&2
 
   if yq -e .annotations "$chart/Chart.yaml" >/dev/null; then
     yq -y '.annotations | del(.["artifacthub.io/images"])' "$chart/Chart.yaml" >"$tmpDir/annotations.yaml"
@@ -66,19 +66,19 @@ function updateChartYaml() {
 
 if [[ "$#" -ge 1 ]]; then
   if ! [[ -d "$1" ]]; then
-    echo "Invalid chart directory '$1', exiting" >/dev/stderr
+    echo "Invalid chart directory '$1', exiting" >&2
     exit 1
   fi
   if yq -e '.type == "library"' "$1/Chart.yaml" >/dev/null; then
-    echo "Skipping library chart '$1'" >/dev/stderr
+    echo "Skipping library chart '$1'" >&2
     exit 0
   fi
   if ! [[ -f "$1/ci/artifacthub-values.yaml" ]]; then
-    echo "There is no 'artifacthub-values.yaml' in 'charts/$1/ci', exiting" >/dev/stderr
+    echo "There is no 'artifacthub-values.yaml' in 'charts/$1/ci', exiting" >&2
     exit 1
   fi
   if [[ -v 2 ]] && ! [[ -d "$2/artifacthub-values" ]]; then
-    echo "Missing artifacthub-values directory '$2', exiting" >/dev/stderr
+    echo "Missing artifacthub-values directory '$2', exiting" >&2
     exit 1
   fi
   updateChartYaml "$1" "${2:-}"
@@ -88,7 +88,7 @@ else
     [[ -f "$chart/ci/artifacthub-values.yaml" ]] || continue
 
     if yq -e '.type == "library"' "$chart/Chart.yaml" >/dev/null; then
-      echo "Skipping library chart '$chart'" >/dev/stderr
+      echo "Skipping library chart '$chart'" >&2
       exit 0
     fi
     updateChartYaml "$chart"

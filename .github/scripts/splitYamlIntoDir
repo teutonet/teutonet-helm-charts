@@ -23,7 +23,7 @@ function splitYamlIntoDir() {
 
     resourceName="$dir/$namespace/$kind/$name.yaml"
     if [[ -f "$resourceName" ]]; then
-      echo "'$resourceName' shouldn't already exist" >/dev/stderr
+      echo "'$resourceName' shouldn't already exist" >&2
       return 1
     fi
     mkdir -p "$(dirname "$resourceName")"
