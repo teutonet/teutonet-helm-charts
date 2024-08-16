@@ -10,7 +10,7 @@ function getUntrustedImages() {
   local chart="${1?}"
   local trustedImagesRegex
 
-  trustedImagesRegex="$(yq -r -f .github/scripts/trusted_images_regex.jq <.github/trusted_registries.yaml)"
+  trustedImagesRegex="$(yq -r -f .github/scripts/trusted_images_regex.jq .github/trusted_registries.yaml)"
 
   yq -r '.annotations["artifacthub.io/images"]' "$chart/Chart.yaml" |
     yq -r '.[] | .image' |

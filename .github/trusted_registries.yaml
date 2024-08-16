@@ -1,48 +1,47 @@
-registries:
-  docker.io:
-    aelbakry:
-      kdave-server: ALL_TAGS
-    bats:
-      bats: ALL_TAGS
-    bitnami: ALL_IMAGES
-    busybox: ALL_TAGS
-    confluentinc:
-      cp-kafka: ALL_TAGS
-    curlimages:
-      curl: ALL_TAGS
-    emberstack:
-      kubernetes-reflector: ALL_TAGS
-    fluxcd: ALL_IMAGES
-    grafana: ALL_IMAGES
-    hjacobs:
-      kube-janitor: ALL_TAGS
-    stellio: ALL_IMAGES
-    velero: ALL_IMAGES
-    vladgh:
-      gpg: ALL_TAGS
-    otel:
-      opentelemetry-collector-contrib: ALL_TAGS
-    ckan:
-      ckan-base-datapusher: ALL_TAGS
-  ghcr.io:
-    aquasecurity: ALL_IMAGES
-    kyverno: ALL_IMAGES
-    teutonet: ALL_IMAGES
-  quay.io:
-    cilium: ALL_IMAGES
-    jetstack: ALL_IMAGES
-    kiwigrid:
-      k8s-sidecar: ALL_TAGS
-    prometheus: ALL_IMAGES
-    prometheus-operator: ALL_IMAGES
-  registry.k8s.io:
-    descheduler: ALL_IMAGES
-    ingress-nginx: ALL_IMAGES
-    kube-state-metrics: ALL_IMAGES
-    sig-storage:
-      nfs-provisioner: ALL_TAGS
-    etcd: ALL_TAGS
-    provider-os: ALL_IMAGES
-  k8s.gcr.io:
-    sig-storage: ALL_IMAGES
-  registry-gitlab.teuto.net: ALL_IMAGES
+docker.io:
+  aelbakry:
+    kdave-server: ALL_TAGS
+  bats:
+    bats: ALL_TAGS
+  bitnami: ALL_IMAGES
+  busybox: ALL_TAGS
+  confluentinc:
+    cp-kafka: ALL_TAGS
+  curlimages:
+    curl: ALL_TAGS
+  emberstack:
+    kubernetes-reflector: ALL_TAGS
+  fluxcd: ALL_IMAGES
+  grafana: ALL_IMAGES
+  hjacobs:
+    kube-janitor: ALL_TAGS
+  stellio: ALL_IMAGES
+  velero: ALL_IMAGES
+  vladgh:
+    gpg: ALL_TAGS
+  otel:
+    opentelemetry-collector-contrib: ALL_TAGS
+  ckan:
+    ckan-base-datapusher: ALL_TAGS
+ghcr.io:
+  aquasecurity: ALL_IMAGES
+  kyverno: ALL_IMAGES
+  teutonet: ALL_IMAGES
+quay.io:
+  cilium: ALL_IMAGES
+  jetstack: ALL_IMAGES
+  kiwigrid:
+    k8s-sidecar: ALL_TAGS
+  prometheus: ALL_IMAGES
+  prometheus-operator: ALL_IMAGES
+registry.k8s.io:
+  descheduler: ALL_IMAGES
+  ingress-nginx: ALL_IMAGES
+  kube-state-metrics: ALL_IMAGES
+  sig-storage:
+    nfs-provisioner: ALL_TAGS
+  etcd: ALL_TAGS
+  provider-os: ALL_IMAGES
+k8s.gcr.io:
+  sig-storage: ALL_IMAGES
+registry-gitlab.teuto.net: ALL_IMAGES
