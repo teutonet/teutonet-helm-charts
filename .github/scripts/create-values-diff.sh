@@ -89,6 +89,7 @@ function generateComment() {
     sleep 2
   done
 
+  echo "<!--helm-diff-->"
   echo :robot: I have diffed this *beep* *boop*
   echo ---
   # shellcheck disable=SC2016
@@ -112,13 +113,7 @@ function createComment() {
   local issue="$1"
   local body="$2"
 
-  jq -cn --rawfile body <(echo "$body") '{body: $body}' |
-    curl --silent --fail-with-body \
-      -X POST \
-      -H 'Accept: application/vnd.github+json' \
-      -H "Authorization: token ${GITHUB_TOKEN}" \
-      "${GITHUB_API_REPO_URL}/issues/${issue}/comments" \
-      -d @-
+  gh pr comment "${issue}" -b "$body"
 }
 
 function updateComment() {
@@ -126,6 +121,7 @@ function updateComment() {
   local commentId="$2"
   local body="$3"
 
+  # needs to use the "manual" way, as `gh` doesn't support updating a specifc comment; https://github.com/cli/cli/issues/3613
   jq -cn --rawfile body <(echo "$body") '{body: $body}' |
     curl --silent --fail-with-body \
       -X PATCH \
@@ -138,14 +134,7 @@ function updateComment() {
 body=$(generateComment "$chart")
 
 if [[ "$dryRun" == false ]]; then
-  existingCommentId="$(
-    curl --silent --fail-with-body \
-      -H 'Accept: application/vnd.github+json' \
-      -H "Authorization: token ${GITHUB_TOKEN}" \
-      "${GITHUB_API_REPO_URL}/issues/${issue}/comments" |
-      jq -r 'map(select(.body | contains(":robot: I have diffed this *beep* *boop*")))[0].id'
-  )"
-  if [[ "$existingCommentId" != null ]]; then
+  if existingCommentId="$(gh pr view "${issue}" --json comments | jq -er '.comments | map(select(.body | contains("<!--helm-diff-->")))[0].id')"; then
     updateComment "$issue" "$existingCommentId" "$body"
   else
     createComment "$issue" "$body"
