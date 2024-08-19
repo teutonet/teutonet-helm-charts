@@ -22,7 +22,7 @@ function prepare-values() {
     values="$chart/values.yaml"
     mergeYaml "$values" "$commonValues" | sponge "$values"
     if [[ "$RUNNER_DEBUG" == 1 ]]; then
-      cat "$values" >/dev/stderr
+      cat "$values" >&2
     fi
   fi
   for valuesScript in "$chart/ci/"*-gen-values.sh; do
@@ -30,7 +30,7 @@ function prepare-values() {
     values="${valuesScript/.sh/.yaml}"
     "$valuesScript" | yq -y | sponge "$values"
     if [[ "$RUNNER_DEBUG" == 1 ]]; then
-      cat "$values" >/dev/stderr
+      cat "$values" >&2
     fi
   done
 }

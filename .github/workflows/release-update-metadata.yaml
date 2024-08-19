@@ -58,7 +58,7 @@ jobs:
         run: |
           set -ex
           if ! [[ -f "charts/$CHART/values.schema.json" ]]; then
-            echo "No values.schema.json found for $CHART" >/dev/stderr
+            echo "No values.schema.json found for $CHART" >&2
             exit 0
           fi
           generate-schema-doc --config-file .github/json-schema-to-md.yaml "charts/$CHART/values.schema.json" "charts/$CHART/values.md"

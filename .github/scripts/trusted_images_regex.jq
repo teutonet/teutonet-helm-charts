@@ -1,5 +1,5 @@
 [
-  .registries | paths(scalars) as $p | $p + [getpath($p)] |
+  paths(scalars) as $p | $p + [getpath($p)] |
     .[-1] as $type |
       if $type == "ALL_IMAGES" then
         "\(.[0:-1] | join("/"))/.*"

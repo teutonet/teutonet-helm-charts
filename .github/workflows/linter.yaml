@@ -48,7 +48,7 @@ jobs:
       - name: Lint chart
         run: |
           if ! [[ -f "charts/$CHART/values.yaml" ]]; then
-            echo "No values.yaml found for $CHART, skipping 'ct lint'" >/dev/stderr
+            echo "No values.yaml found for $CHART, skipping 'ct lint'" >&2
             helm lint "charts/$CHART"
           else
             ct lint --check-version-increment=false
