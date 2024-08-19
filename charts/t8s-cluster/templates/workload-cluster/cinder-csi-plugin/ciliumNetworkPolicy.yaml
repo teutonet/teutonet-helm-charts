@@ -1,0 +1,39 @@
+{{- if eq (include "t8s-cluster.cni" .) "cilium" -}}
+  {{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "openstack-cinder-csi" "resource" (include "t8s-cluster.networkPolicy.cinder-csi" (dict)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cinder-csi")) | nindent 0 }}
+{{- end }}
+
+{{- define "t8s-cluster.networkPolicy.cinder-csi" -}}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: openstack-cinder-csi
+  namespace: kube-system
+  labels: {{- include "common.helm.labels" (dict) | nindent 4 }}
+spec:
+  endpointSelector:
+    matchLabels:
+      app: openstack-cinder-csi
+  ingress:
+    - fromEntities:
+        - health
+      toPorts:
+        - ports:
+            - port: "9808"
+              protocol: TCP
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEntities:
+        - world # this is the placeholder for the openstack api, as we don't want to pin specific DNS names
+    - toEntities:
+        - kube-apiserver
+{{- end -}}
