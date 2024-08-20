@@ -34,8 +34,8 @@ type: application
 version: 1.1.7
 annotations:
   artifacthub.io/images: |
-    - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r1                                                                     #  default/StatefulSet/ckan-postgresql-primary.yaml
-    - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r1                                                                     #  default/StatefulSet/ckan-postgresql-read.yaml
+    - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r2                                                                     #  default/StatefulSet/ckan-postgresql-primary.yaml
+    - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r2                                                                     #  default/StatefulSet/ckan-postgresql-read.yaml
     - image: docker.io/bitnami/redis:7.2.5-debian-12-r4                                                                           #  default/StatefulSet/ckan-redis-master.yaml
     - image: docker.io/bitnami/redis:7.2.5-debian-12-r4                                                                           #  default/StatefulSet/ckan-redis-replicas.yaml
     - image: docker.io/bitnami/zookeeper:3.9.2-debian-12-r10                                                                      #  default/StatefulSet/ckan-zookeeper.yaml
