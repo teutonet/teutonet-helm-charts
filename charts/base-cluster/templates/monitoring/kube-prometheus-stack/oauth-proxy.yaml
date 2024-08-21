@@ -14,11 +14,11 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: cluster-{{ $host }}-oauth-proxy
+  name: {{ printf "cluster-%s-oauth-proxy" $host }}
   namespace: monitoring
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     app.kubernetes.io/component: oauth-proxy
-    app.kubernetes.io/part-of: prometheus
+    app.kubernetes.io/part-of: {{ $host }}
 spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "bitnami" "chart" "oauth2-proxy" "context" $) | nindent 6 }}
@@ -73,17 +73,17 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: cluster-{{ $host }}-oauth-proxy
+  name: {{ printf "cluster-%s-oauth-proxy" $host }}
   namespace: monitoring
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     app.kubernetes.io/component: oauth
-    app.kubernetes.io/part-of: prometheus
+    app.kubernetes.io/part-of: {{ $host }}
 spec:
   endpointSelector:
     matchLabels:
-      app.kubernetes.io/instance: monitoring-cluster-{{ $host }}-oauth-proxy
+      app.kubernetes.io/instance: {{ printf "monitoring-cluster-%s-oauth-proxy" $host }}
   ingress:
-    - fromRequires:
+    - fromEndpoints:
         - matchLabels: {{- include "common.tplvalues.render" (dict "value" $.Values.global.networkPolicy.ingressLabels "context" $) | nindent 12 }}
       toPorts:
         - ports:
