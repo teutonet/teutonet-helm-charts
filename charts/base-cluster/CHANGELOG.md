@@ -1,5 +1,18 @@
 # Changelog
 
+## [6.6.3](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.6.2...base-cluster-v6.6.3) (2024-08-21)
+
+
+### Bug Fixes
+
+* **base-cluster/cert-manager:** ciliumNetworkPolicy for cert-manager otherwise it can't correctly talk to letsencrypt, ... 🤣 ([#1115](https://github.com/teutonet/teutonet-helm-charts/issues/1115)) ([a6919ca](https://github.com/teutonet/teutonet-helm-charts/commit/a6919caebb25ca105b7bcf33d21f6b727b431f52))
+* **base-cluster/reflector:** pin image to registry and add image to trusted_registries ([#1090](https://github.com/teutonet/teutonet-helm-charts/issues/1090)) ([754c8b8](https://github.com/teutonet/teutonet-helm-charts/commit/754c8b87fa12917dd11f5cc3f5b8d792414c2b0e))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/oauth-proxy:** adjust labels for proxies chore(base-cluster/oauth-proxy): adjust CiliumNetworkPolicy to correctly filter requests from ingress ([#1116](https://github.com/teutonet/teutonet-helm-charts/issues/1116)) ([4f58b28](https://github.com/teutonet/teutonet-helm-charts/commit/4f58b28e6bf60d82a58a3bc424c8e33e4ed44906))
+
 ## [6.6.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.6.1...base-cluster-v6.6.2) (2024-08-01)
 
 
