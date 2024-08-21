@@ -33,10 +33,10 @@ spec:
       defaultIssuerKind: ClusterIssuer
     {{- end }}
     {{ if .Values.certManager.dnsChallengeNameservers }}
-    {{- $nameservers := list -}}
-    {{- range $ip, $port := .Values.certManager.dnsChallengeNameservers }}
-    {{- $nameservers = append $nameservers (printf "%s:%v" $ip $port) -}}
-    {{- end -}}
+      {{- $nameservers := list -}}
+      {{- range $ip, $port := .Values.certManager.dnsChallengeNameservers -}}
+        {{- $nameservers = append $nameservers (printf "%s:%v" $ip $port) -}}
+      {{- end -}}
     extraArgs:
       - --dns01-recursive-nameservers={{- $nameservers | sortAlpha | join "," }}
     {{- end }}
