@@ -64,9 +64,7 @@ config:
     receiver: pagerduty
     {{- end }}
     {{- $routes := list (dict "match" (dict "alertname" "InfoInhibitor") "receiver" "null") -}}
-    {{- if hasKey $receivers "healthchecks.io" -}}
-      {{- $routes = append $routes (dict "match" (dict "alertname" "Watchdog") "receiver" "healthchecks.io" "group_interval" "1m" "repeat_interval" "1m") -}}
-    {{- end }}
+    {{- $routes = append $routes (dict "match" (dict "alertname" "Watchdog") "receiver" (hasKey $receivers "healthchecks.io" | ternary "healthchecks.io" "null") "group_interval" "1m" "repeat_interval" "1m") }}
     routes: {{- $routes | toYaml | nindent 6 }}
 {{- end }}
 {{- end -}}
