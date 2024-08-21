@@ -134,7 +134,8 @@ function updateComment() {
 body=$(generateComment "$chart")
 
 if [[ "$dryRun" == false ]]; then
-  if existingCommentId="$(gh pr view "${issue}" --json comments | jq -er '.comments | map(select(.body | contains("<!--helm-diff-->")))[0].id')"; then
+  # cannot use `gh pr/issue view --json comments` as the returned id is incorrect
+  if existingCommentId="$(gh api "repos/${GITHUB_REPOSITORY}/issues/${issue}/comments" | jq -er 'map(select(.body | contains("<!--helm-diff-->")))[0].id')"; then
     updateComment "$issue" "$existingCommentId" "$body"
   else
     createComment "$issue" "$body"
