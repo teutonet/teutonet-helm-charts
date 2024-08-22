@@ -28,14 +28,16 @@ function generateSarifReport() {
 }
 export -f generateSarifReport
 
+trivy image --download-db-only
+
 if [[ "$#" == 1 ]] && [[ -d "$1" ]]; then
-  generateSarifReports "$1"
+  createSarifReports "$1"
 else
   result=0
   for chart in charts/*; do
     [[ "$chart" == "charts/*" ]] && continue
 
-    if ! generateSarifReports "$chart"; then
+    if ! createSarifReports "$chart"; then
       result=1
     fi
   done
