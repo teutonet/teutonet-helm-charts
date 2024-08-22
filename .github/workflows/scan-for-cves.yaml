@@ -37,10 +37,9 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
-      - name: install trivy
-        run: |
+      - run: /home/linuxbrew/.linuxbrew/bin/brew install trivy
+      - run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          brew install trivy
-      - run: ./.github/scripts/generate-sarif-reports.sh ${{ matrix.chart }}
+          ./.github/scripts/generate-sarif-reports.sh ${{ matrix.chart }}
       - uses: github/codeql-action/upload-sarif@366883a76d75dcee5428da5c3ae7abf9386e35ac # v3
           # TODO: github dependency tree?
