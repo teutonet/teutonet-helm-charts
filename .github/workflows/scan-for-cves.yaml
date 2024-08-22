@@ -38,6 +38,7 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
       - run: /home/linuxbrew/.linuxbrew/bin/brew install trivy
+      - run: pip install yq
       - run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           ./.github/scripts/generate-sarif-reports.sh ${{ matrix.chart }}
