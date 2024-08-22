@@ -10,9 +10,14 @@ function createSarifReports() {
   local chart="${1?}"
   mkdir -p reports
 
+  if yq -e '.type == "library"' "$chart/Chart.yaml" >/dev/null; then
+    echo "Skipping library chart '$chart'" >&2
+    return 0
+  fi
+
   yq -r '.annotations["artifacthub.io/images"]' "$chart/Chart.yaml" |
     yq -r '.[] | .image' |
-    parallel -P 0 -k generateSarifReport "$chart" "{}" "reports/{#}.sarif.json"
+    parallel -P 0 -k generateSarifReport "$chart" "{}" "reports/$(basename "$chart")-{#}.sarif.json"
 }
 
 function generateSarifReport() {
