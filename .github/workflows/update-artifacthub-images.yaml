@@ -53,7 +53,7 @@ jobs:
           add-paths: |
             charts/${{ matrix.chart }}/Chart.yaml
           commit-message: "ci(${{ matrix.chart }}/artifacthub-images): Update images in 'Chart.yaml'"
-          branch: ci/${{ matrix.chart }}-update-artifacthub-images
+          branch: ci/${{ matrix.chart }}/update-artifacthub-images
           title: "ci(${{ matrix.chart }}/artifacthub-images): Update ArtifactHUB images"
           body: |
             Updates the ArtifactHUB images to the really deployed ones.
