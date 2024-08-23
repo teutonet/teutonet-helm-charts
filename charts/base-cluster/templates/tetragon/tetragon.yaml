@@ -1,0 +1,48 @@
+{{- if .Values.tetragon.enabled }}
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: tetragon
+  namespace: kube-system
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: tetragon
+spec:
+  chart:
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "tetragon" "chart" "tetragon" "context" $) | nindent 6 }}
+  interval: 5m
+  driftDetection:
+    mode: enabled
+  {{- if .Values.monitoring.prometheus.enabled }}
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
+  {{- end }}
+  values:
+    export:
+      {{- if .Values.global.imageRegistry }}
+      stdout:
+        image:
+          repository: {{ printf "%s/cilium/hubble-export-stdout" .Values.global.imageRegistry }}
+      {{- end }}
+      securityContext:
+        capabilities:
+          drop:
+            - ALL
+    crds:
+      installMethod: helm
+    tetragonOperator:
+      enabled: false
+    tetragon:
+      {{- if .Values.global.imageRegistry }}
+      image:
+        repository: {{ printf "%s/cilium/tetragon" .Values.global.imageRegistry }}
+      {{- end }}
+      enableProcessCred: true
+      enableProcessNs: true
+      {{- if .Values.monitoring.prometheus.enabled }}
+      prometheus:
+        serviceMonitor:
+          enabled: true
+          labelsOverride: {{- toYaml .Values.monitoring.labels | nindent 12 }}
+      {{- end }}
+  {{- end }}

@@ -549,6 +549,15 @@
       },
       "additionalProperties": false
     },
+    "tetragon": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
     "monitoring": {
       "type": "object",
       "properties": {

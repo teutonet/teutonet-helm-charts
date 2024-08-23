@@ -141,6 +141,10 @@ global:
         kyverno: 3.x.x
         kyverno-policies: 3.x.x
       condition: "{{ .Values.kyverno.enabled }}"
+    tetragon:
+      url: https://helm.cilium.io
+      charts:
+        tetragon: 1.x.x
     cetic:
       url: https://cetic.github.io/helm-charts
       charts:
@@ -456,4 +460,7 @@ backup:
         memory: 500Mi
 
 kube-janitor:
+  enabled: false
+
+tetragon:
   enabled: false
