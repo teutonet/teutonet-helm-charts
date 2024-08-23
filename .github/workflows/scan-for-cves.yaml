@@ -31,7 +31,7 @@ jobs:
     permissions:
       security-events: write
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         chart: ${{ fromJson(needs.getAllCharts.outputs.charts) }}
     steps:
