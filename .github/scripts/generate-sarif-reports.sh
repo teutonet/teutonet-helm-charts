@@ -30,6 +30,8 @@ function generateSarifReport() {
     awk '{print $NF}' |
     jq -r -c -Rn '[inputs] | map({fullyQualifiedName: .})')"
   trivy image "$image" -f sarif --quiet --ignore-unfixed | jq -r --argjson locations "$locationsJson" '.runs |= map(.results |= map(.locations |= ([$locations[], .[]])))' >"$outFile"
+  # delete empty files, otherwise the check if they should be uploaded doesn't work correctly
+  [[ -s "$outFile" ]] || rm -f "$outFile"
 }
 export -f generateSarifReport
 
