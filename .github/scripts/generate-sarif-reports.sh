@@ -29,7 +29,7 @@ function generateSarifReport() {
   locationsJson="$(yq --arg image "$image" -r '.annotations["artifacthub.io/images"] | split("\n")[] | select(contains($image))' "$chart/Chart.yaml" |
     awk '{print $NF}' |
     jq -r -c -Rn '[inputs] | map({fullyQualifiedName: .})')"
-  trivy image "$image" -f sarif --quiet --ignore-unfixed | jq -r --argjson locations "$locationsJson" '.runs |= map(.results |= map(.locations |= ([$locations[], .[]])))' >"$outFile"
+  trivy image "$image" -f sarif --quiet --ignore-unfixed | jq -r --argjson locations "$locationsJson" '.runs |= map(.results |= map(.locations |= ([{logicalLocations: $locations}, .[]])))' >"$outFile"
   # delete empty files, otherwise the check if they should be uploaded doesn't work correctly
   [[ -s "$outFile" ]] || rm -f "$outFile"
 }
