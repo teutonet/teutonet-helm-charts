@@ -2,7 +2,7 @@ apiVersion: v2
 dependencies:
   - name: common
     repository: https://charts.bitnami.com/bitnami
-    version: 2.21.0
+    version: 2.22.0
 description: A library chart for common resources
 maintainers:
   - email: cwr@teuto.net
