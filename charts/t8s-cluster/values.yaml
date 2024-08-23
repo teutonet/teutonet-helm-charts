@@ -24,7 +24,7 @@ global:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: 1.29.8@sha256:c466c706c2389e9c5e413994fda715e6f950e8f6cd1f8e29aa258def23f75b6e
+      tag: 1.31.0@sha256:44f99aa45e3410dae8e288f43800daa8a1bdb4cac204dad1de59c94f9c999bde
   injectedCertificateAuthorities: ""
   kubeletExtraConfig:
     # This is only used when using 1.27 or later
