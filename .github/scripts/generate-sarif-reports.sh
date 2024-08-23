@@ -17,7 +17,7 @@ function createSarifReports() {
 
   yq -r '.annotations["artifacthub.io/images"]' "$chart/Chart.yaml" |
     yq -r '.[] | .image' |
-    parallel -P 0 -k generateSarifReport "$chart" "{}" "reports/$(basename "$chart")-{#}.sarif.json"
+    parallel -P 0 -k generateSarifReport "$chart" "{}" "reports/$(basename "$chart")-{#}.json.sarif"
 }
 
 function generateSarifReport() {
@@ -30,19 +30,17 @@ function generateSarifReport() {
     awk '{print $NF}' |
     jq -r -c -Rn '[inputs] | map({fullyQualifiedName: .})')"
   trivy image "$image" -f sarif --quiet --ignore-unfixed | jq -r --argjson locations "$locationsJson" '.runs |= map(.results |= map(.locations |= ([{logicalLocations: $locations}, .[]])))' >"$outFile"
-  # delete empty files, otherwise the check if they should be uploaded doesn't work correctly
-  [[ -s "$outFile" ]] || rm -f "$outFile"
 }
 export -f generateSarifReport
 
 trivy image --download-db-only
 
-if [[ "$#" == 1 ]] && [[ -d "$1" ]]; then
+if [[ "$#" == 1 && -d "$1" ]]; then
   createSarifReports "$1"
 else
   result=0
   for chart in charts/*; do
-    [[ "$chart" == "charts/*" ]] && continue
+    [[ -d "$chart" ]] || continue
 
     if ! createSarifReports "$chart"; then
       result=1

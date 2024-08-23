@@ -39,7 +39,8 @@ jobs:
 
       - run: /home/linuxbrew/.linuxbrew/bin/brew install trivy
       - run: pip install yq
-      - run: |
+      - name: Generate sarif reports
+        run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           ./.github/scripts/generate-sarif-reports.sh ${{ matrix.chart }}
       - uses: github/codeql-action/upload-sarif@f0f3afee809481da311ca3a6ff1ff51d81dbeb24 # v3
