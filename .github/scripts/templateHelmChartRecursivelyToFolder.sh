@@ -11,10 +11,10 @@ targetDir=${2?You need to provide the target directory}
 
 if yq -e '.type == "library"' "$chart/Chart.yaml" >/dev/null; then
   echo "Skipping library chart '$chart'" >&2
-  [[ -v GITHUB_OUTPUT ]] && [[ -f "$GITHUB_OUTPUT" ]] && echo "skipped=true" | tee -a "$GITHUB_OUTPUT"
+  [[ -v GITHUB_OUTPUT && -f "$GITHUB_OUTPUT" ]] && echo "skipped=true" | tee -a "$GITHUB_OUTPUT"
   exit 0
 else
-  [[ -v GITHUB_OUTPUT ]] && [[ -f "$GITHUB_OUTPUT" ]] && echo "skipped=false" | tee -a "$GITHUB_OUTPUT"
+  [[ -v GITHUB_OUTPUT && -f "$GITHUB_OUTPUT" ]] && echo "skipped=false" | tee -a "$GITHUB_OUTPUT"
 fi
 
 [[ ! -d "$targetDir" ]] && mkdir -p "$targetDir"

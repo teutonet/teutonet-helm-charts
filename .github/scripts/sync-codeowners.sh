@@ -5,8 +5,8 @@
 
 echo "* @teutonet/k8s"
 
-for DIR in ./charts/*; do
-  [[ "$DIR" = "./charts/*" ]] && continue
+for DIR in charts/*; do
+  [[ -f "$DIR/Chart.yaml" ]] || continue
   FILE="$DIR/Chart.yaml"
   DIR="${DIR//\./}"
   MAINTAINERS="$(yq e '.maintainers.[].name' "$FILE" | sed 's/^/@/' | sort --ignore-case | tr '\r\n' ' ')"
