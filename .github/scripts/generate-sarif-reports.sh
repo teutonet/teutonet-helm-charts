@@ -21,7 +21,7 @@ function createSarifReports() {
     yq -r '.[] | .image' |
     parallel --retries 3 -P 0 -k generateSarifReport "$chart" "{}" "reports/$chartName-{#}.json"
   # shellcheck disable=SC1009
-  cat "reports/$chartName-"*.json | jq -r -s '{"$schema": .[0]["$schema"], version: .[0].version, runs: [reduce map(.runs[])[] as $run (null; .+$run as $new | .tool.driver.rules |= (.+$run.tool.driver.rules | unique_by(.id)) | $new*. | .results += ($run.results | map(.locations += [{physicalLocation: {artifactLocation: {uri: $run.properties.imageName}}}])) | del(.properties))]}' >"reports/$chartName.json.sarif"
+  cat "reports/$chartName-"*.json | jq -r -s '{"$schema": .[0]["$schema"], version: .[0].version, runs: [reduce map(.runs[])[] as $run (null; .+$run as $new | .tool.driver.rules |= (.+$run.tool.driver.rules|unique_by(.id)) | $new*. | .results += ($run.results | map(.locations |= (([.[] | select(.physicalLocation)][0].physicalLocation.artifactLocation) as $physicalLocation | .[] | select(.logicalLocations)[] | map({physicalLocation:{artifactLocation:{uri:"\(.fullyQualifiedName)/\($run.properties.imageName)/\($run.originalUriBaseIds[$physicalLocation.uriBaseId].uri)\($physicalLocation.uri)"}}})))) | del(.properties, .originalUriBaseIds))]}' >"reports/$chartName.json.sarif"
 }
 
 function generateSarifReport() {
