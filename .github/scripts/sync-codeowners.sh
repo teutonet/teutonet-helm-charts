@@ -4,6 +4,7 @@
 [[ -o xtrace ]] && export RUNNER_DEBUG=1
 
 echo "* @teutonet/k8s"
+echo ".github/* @cwrau @marvinWolff @tasches"
 
 for DIR in ./charts/*; do
   [[ "$DIR" = "./charts/*" ]] && continue
