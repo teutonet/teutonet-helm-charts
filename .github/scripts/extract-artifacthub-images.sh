@@ -13,7 +13,7 @@ function getImages() {
   local chart="$1"
   local tmpDir
   tmpDir="$(mktemp -d -p "$TMP_DIR")"
-  if [[ -v 2 ]] && [[ -n "$2" ]]; then
+  if [[ -v 2 && -n "$2" ]]; then
     cp -r "$2/artifacthub-values" "$tmpDir/helmRelease"
   else
     "$(dirname "$0")/templateLocalHelmChart" -1 "$chart" >"$tmpDir/helmRelease.yaml"
@@ -77,14 +77,14 @@ if [[ "$#" -ge 1 ]]; then
     echo "There is no 'artifacthub-values.yaml' in 'charts/$1/ci', exiting" >&2
     exit 1
   fi
-  if [[ -v 2 ]] && ! [[ -d "$2/artifacthub-values" ]]; then
+  if [[ -v 2 && ! -d "$2/artifacthub-values" ]]; then
     echo "Missing artifacthub-values directory '$2', exiting" >&2
     exit 1
   fi
   updateChartYaml "$1" "${2:-}"
 else
   for chart in charts/*; do
-    [[ "$chart" == "charts/*" ]] && continue
+    [[ -d "$chart" ]] || continue
     [[ -f "$chart/ci/artifacthub-values.yaml" ]] || continue
 
     if yq -e '.type == "library"' "$chart/Chart.yaml" >/dev/null; then

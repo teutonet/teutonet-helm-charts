@@ -39,12 +39,12 @@ function enforceTrustedImages() {
   fi
 }
 
-if [[ "$#" == 1 ]] && [[ -d "$1" ]]; then
+if [[ "$#" == 1 && -d "$1" ]]; then
   enforceTrustedImages "$1"
 else
   result=0
   for chart in charts/*; do
-    [[ "$chart" == "charts/*" ]] && continue
+    [[ -d "$chart" ]] || continue
 
     if ! enforceTrustedImages "$chart"; then
       result=1
