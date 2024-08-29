@@ -63,7 +63,7 @@ jobs:
           fi
           generate-schema-doc --config-file .github/json-schema-to-md.yaml "charts/$CHART/values.schema.json" "charts/$CHART/values.md"
       - name: generate Docs
-        uses: docker://jnorwood/helm-docs:latest@sha256:2b0681670e69ebd28163abdc276a419ef4a8c0ba9258699847a5ed001fd7de0e
+        uses: docker://jnorwood/helm-docs:v1.14.2@sha256:ba11d6f43370d70c9e251843d6e9aaf3aa32f79fc68b6a0a75f133d8bae744dd
         with:
           args: -g charts/${{ env.CHART }}
       - name: Commit README
