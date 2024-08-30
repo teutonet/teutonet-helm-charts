@@ -1,10 +1,15 @@
-{{- define "base-cluster.prometheus-stack.alertmanager.config" -}}
-{{- $enabled := false -}}
-{{- range $_, $receiver := .Values.monitoring.prometheus.alertmanager.receivers -}}
-  {{- $enabled = or $enabled $receiver.enabled -}}
+{{- define "base-cluster.prometheus-stack.alertmanager.enabled" -}}
+  {{- $enabled := false -}}
+  {{- range $_, $receiver := .Values.monitoring.prometheus.alertmanager.receivers -}}
+    {{- $enabled = or $enabled $receiver.enabled -}}
+  {{- end -}}
+  {{- $enabled | ternary true "" }}
 {{- end -}}
-enabled: {{ $enabled }}
+
+{{- define "base-cluster.prometheus-stack.alertmanager.config" -}}
+  {{- $enabled := include "base-cluster.prometheus-stack.alertmanager.enabled" . -}}
 {{- if $enabled }}
+enabled: true
 podDisruptionBudget:
   enabled: true
 {{- if include "base-cluster.monitoring.unauthenticated-ingress.enabled" (dict "name" "alertmanager" "context" .) }}
@@ -66,5 +71,7 @@ config:
     {{- $routes := list (dict "match" (dict "alertname" "InfoInhibitor") "receiver" "null") -}}
     {{- $routes = append $routes (dict "match" (dict "alertname" "Watchdog") "receiver" (hasKey $receivers "healthchecks.io" | ternary "healthchecks.io" "null") "group_interval" "1m" "repeat_interval" "1m") }}
     routes: {{- $routes | toYaml | nindent 6 }}
+{{- else }}
+enabled: false
 {{- end }}
 {{- end -}}
