@@ -35,7 +35,7 @@ spec:
         imagePullPolicy: IfNotPresent
         volumeMounts:
           - mountPath: /target
-            name: plugin
+            name: plugins
         resources: {{- include "common.resources" .Values.backup.initContainer | nindent 10 }}
     podSecurityContext:
       fsGroup: 1000
