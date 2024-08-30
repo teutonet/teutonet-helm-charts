@@ -1,5 +1,32 @@
 # Changelog
 
+## [6.7.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.6.3...base-cluster-v6.7.0) (2024-08-30)
+
+
+### Features
+
+* **base-cluster/tetragon:** add tetragon ([#1056](https://github.com/teutonet/teutonet-helm-charts/issues/1056)) ([9be7543](https://github.com/teutonet/teutonet-helm-charts/commit/9be75434ea7d2a63a2f64691d30a5038c8f5cdfb))
+
+
+### Bug Fixes
+
+* **base-cluster/kube-prometheus-stack:** only disable PrometheusNotConnectedToAlertmanagers when Alertmanager is disabled as well ([#1053](https://github.com/teutonet/teutonet-helm-charts/issues/1053)) ([dbb007a](https://github.com/teutonet/teutonet-helm-charts/commit/dbb007a9df530af4bd7753d39acfddc3da70868a))
+* **base-cluster/monitoring:** send Watchdog alert to `null` if deadmansswitch is not configured ([#1120](https://github.com/teutonet/teutonet-helm-charts/issues/1120)) ([1e93c60](https://github.com/teutonet/teutonet-helm-charts/commit/1e93c60ffdad8a8c6868213bb00c069145b71514))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** pin docker.io/vladgh/gpg docker tag to 1ba48a7 ([#1076](https://github.com/teutonet/teutonet-helm-charts/issues/1076)) ([23aa2dc](https://github.com/teutonet/teutonet-helm-charts/commit/23aa2dcc29c37ac077dacaa0f909c595a33c9b79))
+* **base-cluster/dependencies:** update common docker tag to v1.2.1 ([#1080](https://github.com/teutonet/teutonet-helm-charts/issues/1080)) ([25ec4e8](https://github.com/teutonet/teutonet-helm-charts/commit/25ec4e82ebf257462551fee42ba4e5c05b1bbd47))
+* **base-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.29.8 ([#1060](https://github.com/teutonet/teutonet-helm-charts/issues/1060)) ([93f059a](https://github.com/teutonet/teutonet-helm-charts/commit/93f059a0b52d18f5680127b3ef89e0f018ec162d))
+* **base-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.31.0 ([#907](https://github.com/teutonet/teutonet-helm-charts/issues/907)) ([8544d01](https://github.com/teutonet/teutonet-helm-charts/commit/8544d01c3a8439b4dd1fe3435dc357bc96e3ac5f))
+* **base-cluster/dependencies:** update docker.io/bitnami/kubectl:1.29.6 docker digest to 6f94559 ([#1027](https://github.com/teutonet/teutonet-helm-charts/issues/1027)) ([075d171](https://github.com/teutonet/teutonet-helm-charts/commit/075d171fd8326e4ae9e913c46684b98738b5b0c8))
+* **base-cluster/dependencies:** update docker.io/curlimages/curl docker tag to v8.9.1 ([#1079](https://github.com/teutonet/teutonet-helm-charts/issues/1079)) ([8f1a39c](https://github.com/teutonet/teutonet-helm-charts/commit/8f1a39c0f45ecf3aeb21f7ce0ccadbf63df3c731))
+* **base-cluster/dependencies:** update external-dns docker tag to v8 ([#1021](https://github.com/teutonet/teutonet-helm-charts/issues/1021)) ([9eb94aa](https://github.com/teutonet/teutonet-helm-charts/commit/9eb94aaad6a9d7aae64e4ad4a233bf609891ca52))
+* **base-cluster/dependencies:** update helm release kube-prometheus-stack to v62 ([#1145](https://github.com/teutonet/teutonet-helm-charts/issues/1145)) ([8ab376a](https://github.com/teutonet/teutonet-helm-charts/commit/8ab376aa99cbfcbf50ee3949514f3b333f9911de))
+* **base-cluster/dependencies:** update helm release velero to v7.1.5 ([#1134](https://github.com/teutonet/teutonet-helm-charts/issues/1134)) ([32e0769](https://github.com/teutonet/teutonet-helm-charts/commit/32e0769a12e3113fcee9a0e59542bb61982c4ad2))
+* **base-cluster/dependencies:** update oauth2-proxy docker tag to v6 ([#1146](https://github.com/teutonet/teutonet-helm-charts/issues/1146)) ([9885aba](https://github.com/teutonet/teutonet-helm-charts/commit/9885aba3b8cfed515a5b5409f6d7559f24510374))
+
 ## [6.6.3](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.6.2...base-cluster-v6.6.3) (2024-08-21)
 
 
