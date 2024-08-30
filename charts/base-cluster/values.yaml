@@ -214,8 +214,31 @@ kyverno:
   podSecurityStandard: baseline
   podSecuritySeverity: medium
   validationFailureAction: audit
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  init:
+    resources:
+      limits:
+        cpu: 100m
+        memory: 512Mi
+      requests:
+        cpu: 10m
+        memory: 256Mi
 
 monitoring:
+  openTelemetryCollector:
+    resourcesPreset: {}
+    resources:
+      limits:
+        cpu: 250m
+        memory: 512Mi
+      requests:
+        cpu: 10m
+        memory: 60Mi
   monitorAllNamespaces: true
   labels:
     managed.by/monitoring: teutonet
@@ -234,6 +257,9 @@ monitoring:
       enabled: false
       size: 10Gi
     config: {}
+    imageRenderer:
+      resourcesPreset: nano
+      resources: {}
     sidecar:
       resourcesPreset: nano
       resources: {}
@@ -332,6 +358,8 @@ monitoring:
     enabled: true
   securityScanning:
     enabled: true
+    resources: {}
+    resourcesPreset: medium
     nodeCollector:
       tolerations:
         - key: node-role.kubernetes.io/control-plane
@@ -340,6 +368,33 @@ monitoring:
   tracing:
     enabled: false
     ingester:
+      resourcesPreset: small
+      resources: {}
+    tempo:
+      resourcesPreset: small
+      resources: {}
+    query:
+      resourcesPreset: small
+      resources: {}
+    querier:
+      resourcesPreset: small
+      resources: {}
+    distributor:
+      resourcesPreset: small
+      resources: {}
+    memcached:
+      resourcesPreset: small
+      resources: {}
+    compactor:
+      resourcesPreset: small
+      resources: {}
+    metricsGenerator:
+      resourcesPreset: small
+      resources: {}
+    queryFrontend:
+      resourcesPreset: small
+      resources: {}
+    vulture:
       resourcesPreset: small
       resources: {}
 
@@ -400,6 +455,14 @@ certManager:
   webhook:
     resourcesPreset: nano
     resources: {}
+  startupapicheck:
+    resources:
+      limits:
+        cpu: 50m
+        memory: 100m
+      requests:
+        cpu: 10m
+        memory: 10m
   dnsChallengeNameservers:
     1.1.1.1: 53
 
@@ -424,7 +487,14 @@ ingress:
   resources:
     limits:
       cpu: 1
-
+  opentelemetry:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 60Mi
+      limits:
+        cpu: 30
+        memory: 100Mi
 storage:
   readWriteMany:
     enabled: false
@@ -458,9 +528,26 @@ backup:
       limits:
         cpu: 500m
         memory: 500Mi
+  initContainer:
+    resources:
+      limits:
+        cpu: 50m
+        memory: 100m
+      requests:
+        cpu: 10m
+        memory: 10m
 
 kube-janitor:
   enabled: false
 
 tetragon:
   enabled: false
+
+nfsServerProvisioner:
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi

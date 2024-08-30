@@ -35,14 +35,8 @@ spec:
         imagePullPolicy: IfNotPresent
         volumeMounts:
           - mountPath: /target
-            name: plugins
-        resources:
-          limits:
-            cpu: 50m
-            memory: 100m
-          requests:
-            cpu: 10m
-            memory: 10m
+            name: plugin
+        resources: {{- include "common.resources" .Values.backup.initContainer | nindent 10 }}
     podSecurityContext:
       fsGroup: 1000
       runAsUser: 1000

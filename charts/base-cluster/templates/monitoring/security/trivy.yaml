@@ -23,13 +23,7 @@ spec:
   upgrade:
     crds: CreateReplace
   values:
-    resources:
-      requests:
-        cpu: 20m
-        memory: 256Mi
-      limits:
-        cpu: 50m
-        memory: 4Gi
+    resources: {{ include "common.resources" .Values.monitoring.securityScanning | nindent 6 }}
     {{- if .Values.global.imageRegistry }}
     image:
       registry: {{ $.Values.global.imageRegistry }}

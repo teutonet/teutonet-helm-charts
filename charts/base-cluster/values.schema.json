@@ -520,6 +520,20 @@
         "enabled": {
           "type": "boolean"
         },
+        "resourcesPreset": {
+          "$ref": "#/$defs/resourcesPreset"
+        },
+        "resources": {
+          "$ref": "#/$defs/resourceRequirements"
+        },
+        "init": {
+          "resourcesPreset": {
+            "$ref": "#/$defs/resourcesPreset"
+          },
+          "resources": {
+            "$ref": "#/$defs/resourceRequirements"
+          }
+        },
         "podSecurityStandard": {
           "type": "string",
           "description": "See https://kyverno.io/policies",
@@ -558,6 +572,14 @@
       },
       "additionalProperties": false
     },
+    "nfsServerProvisioner": {
+      "resourcesPreset": {
+        "$ref": "#/$defs/resourcesPreset"
+      },
+      "resources": {
+        "$ref": "#/$defs/resourceRequirements"
+      }
+    },
     "monitoring": {
       "type": "object",
       "properties": {
@@ -569,6 +591,15 @@
           "description": "The labels to set on ServiceMonitors, ... and which the prometheus uses to search for",
           "additionalProperties": {
             "type": "string"
+          }
+        },
+        "openTelemetryCollector": {
+          "type": "object",
+          "resourcesPreset": {
+            "$ref": "#/$defs/resourcesPreset"
+          },
+          "resources": {
+            "$ref": "#/$defs/resourceRequirements"
           }
         },
         "deadMansSwitch": {
@@ -815,6 +846,14 @@
                 "type": "string"
               }
             },
+            "imageRenderer": {
+              "resourcesPreset": {
+                "$ref": "#/$defs/resourcesPreset"
+              },
+              "resources": {
+                "$ref": "#/$defs/resourceRequirements"
+            }
+            },
             "resourcesPreset": {
               "$ref": "#/$defs/resourcesPreset"
             },
@@ -940,6 +979,12 @@
             "enabled": {
               "type": "boolean"
             },
+            "resourcesPreset": {
+              "$ref": "#/$defs/resourcesPreset"
+            },
+            "resources": {
+              "$ref": "#/$defs/resourceRequirements"
+            },
             "nodeCollector": {
               "type": "object",
               "properties": {
@@ -971,8 +1016,117 @@
                 }
               },
               "additionalProperties": false
+            },
+            "tempo": {
+              "type": "object",
+              "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            },
+            "query": {
+              "type": "object",
+              "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            },
+            "querier": {
+              "type": "object",
+              "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            },
+            "distributor": {
+              "type": "object",
+              "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            },
+            "memcached": {
+              "type": "object",
+              "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            },
+            "compactor": {
+              "type": "object",
+              "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            },
+            "metricsGenerator": {
+              "type": "object",
+              "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            },
+            "queryFrontend": {
+              "type": "object",
+              "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            },
+            "vulture": {
+              "type": "object",
+              "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
             }
-          }
+          },
+          "additionalProperties": false
         },
         "additionalProperties": false
       },
@@ -1058,6 +1212,14 @@
         },
         "resources": {
           "$ref": "#/$defs/resourceRequirements"
+        },
+        "startupapicheck": {
+          "resourcesPreset": {
+            "$ref": "#/$defs/resourcesPreset"
+          },
+          "resources": {
+            "$ref": "#/$defs/resourceRequirements"
+          }
         },
         "email": {
           "type": "string",
@@ -1295,6 +1457,14 @@
           "type": "integer",
           "minimum": 1
         },
+        "opentelemetry": {
+          "resourcesPreset": {
+            "$ref": "#/$defs/resourcesPreset"
+          },
+          "resources": {
+            "$ref": "#/$defs/resourceRequirements"
+          }
+        },
         "resourcesPreset": {
           "$ref": "#/$defs/resourcesPreset"
         },
@@ -1424,6 +1594,14 @@
         },
         "resources": {
           "$ref": "#/$defs/resourceRequirements"
+        },
+        "initContainer": {
+          "resourcesPreset": {
+            "$ref": "#/$defs/resourcesPreset"
+          },
+          "resources": {
+            "$ref": "#/$defs/resourceRequirements"
+          }
         },
         "backupStorageLocations": {
           "type": "object",

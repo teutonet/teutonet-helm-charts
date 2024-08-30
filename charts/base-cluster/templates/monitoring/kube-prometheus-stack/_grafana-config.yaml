@@ -36,13 +36,7 @@ imageRenderer:
     runAsNonRoot: true
     runAsUser: 472
     runAsGroup: 472
-  resources:
-    limits:
-      cpu: 50m
-      memory: 100m
-    requests:
-      cpu: 10m
-      memory: 10m
+  resources: {{- include "common.resources" .Values.monitoring.grafana.imageRenderer | nindent 2 }}
 enabled: true
 securityContext:
   seccompProfile:

@@ -28,8 +28,8 @@ spec:
               cpu: 50m
               memory: 100m
             requests:
-              cpu: 10m
-              memory: 10m
+              cpu: 50m
+              memory: 100m
           securityContext:
             readOnlyRootFilesystem: true
             privileged: false

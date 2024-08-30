@@ -25,7 +25,7 @@ spec:
       repository: {{ printf "%s/jetstack/cert-manager-controller" $.Values.global.imageRegistry }}
     {{- end }}
     startupapicheck:
-      resources:
+      resources: {{- include "common.resources" $.Values.certManager.startupapicheck | nindent 8 }}
         limits:
           cpu: 50m
           memory: 100m

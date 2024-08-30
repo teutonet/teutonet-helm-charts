@@ -27,13 +27,7 @@ spec:
     image:
       repository: {{ printf "%s/sig-storage/nfs-provisioner" $.Values.global.imageRegistry }}
     {{- end }}
-    resources:
-      limits:
-        cpu: 100m
-        memory: 128Mi
-      requests:
-        cpu: 100m
-        memory: 128Mi
+    resources: {{- include "common.resources" .Values.nfsServerProvisioner | nindent 6 }}
     podSecurityContext:
       seccompProfile:
         type: Unconfined

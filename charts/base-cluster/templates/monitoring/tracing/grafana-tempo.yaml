@@ -21,7 +21,6 @@ spec:
     global:
       imageRegistry: {{ $.Values.global.imageRegistry }}
     {{- end }}
-    ingester: {{- include "common.resourcesWithPreset" .Values.monitoring.tracing.ingester | nindent 6 }}
     tempo:
       traces:
         jaeger:
@@ -29,85 +28,25 @@ spec:
           thriftHttp: false
         otlp:
           grpc: true
-      resources:
-        limits:
-          cpu: 50m
-          memory: 50Mi
-        requests:
-          cpu: 10
-          memory: 30Mi
+      resources: {{- include "common.resources" .Values.monitoring.tracing.tempo | nindent 6 }}
     ingester:
-      resources:
-        limits:
-          cpu: 50m
-          memory: 50Mi
-        requests:
-          cpu: 10
-          memory: 30Mi
+      resources: {{- include "common.resources" .Values.monitoring.tracing.ingester | nindent 6 }}
     query:
-      resources:
-        limits:
-          cpu: 50m
-          memory: 100Mi
-        requests:
-          cpu: 10
-          memory: 70Mi
+      resources: {{- include "common.resources" .Values.monitoring.tracing.query | nindent 6 }}
     querier:
-      resources:
-        limits:
-          cpu: 50m
-          memory: 100Mi
-        requests:
-          cpu: 10
-          memory: 70Mi
+      resources: {{- include "common.resources" .Values.monitoring.tracing.querier | nindent 6 }}
     distributor:
-      resources:
-        limits:
-          cpu: 50m
-          memory: 100Mi
-        requests:
-          cpu: 10
-          memory: 70Mi
+      resources: {{- include "common.resources" .Values.monitoring.tracing.distributor | nindent 6 }}
     memcached:
-      resources:
-        limits:
-          cpu: 50m
-          memory: 100Mi
-        requests:
-          cpu: 10
-          memory: 70Mi
+      resources: {{- include "common.resources" .Values.monitoring.tracing.memcached | nindent 6 }}
     compactor:
-      resources:
-        limits:
-          cpu: 50m
-          memory: 100Mi
-        requests:
-          cpu: 10
-          memory: 70Mi
+      resources: {{- include "common.resources" .Values.monitoring.tracing.compactor | nindent 6 }}
     metricsGenerator:
-      resources:
-        limits:
-          cpu: 50m
-          memory: 100Mi
-        requests:
-          cpu: 10
-          memory: 70Mi
+      resources: {{- include "common.resources" .Values.monitoring.tracing.metricsGenerator | nindent 6 }}
     queryFrontend:
-      resources:
-        limits:
-          cpu: 50m
-          memory: 100Mi
-        requests:
-          cpu: 10
-          memory: 70Mi
+      resources: {{- include "common.resources" .Values.monitoring.tracing.queryFrontend | nindent 6 }}
     vulture:
-      resources:
-        limits:
-          cpu: 100m
-          memory: 250Mi
-        requests:
-          cpu: 10
-          memory: 100Mi
+      resources: {{- include "common.resources" .Values.monitoring.tracing.vulture | nindent 6 }}
     metrics:
       enabled: true
       serviceMonitor:
