@@ -11,6 +11,8 @@ on:
 jobs:
   getChangedCharts:
     uses: ./.github/workflows/get-changed-charts.yaml
+    with:
+      pr_number: ${{ github.event.pull_request.number }}
   prepare-helm-chart:
     name: prepare helm chart
     runs-on: ubuntu-latest
