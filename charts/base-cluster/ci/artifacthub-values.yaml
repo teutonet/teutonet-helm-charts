@@ -22,6 +22,7 @@ storage:
     enabled: true
 global:
   clusterName: test
+  baseDomain: example.com
   serviceLevelAgreement: None
 monitoring:
   grafana:
