@@ -64,7 +64,7 @@ spec:
               }
 
               checkName={{- include "base-cluster.deadMansSwitch.checkName" . | quote }}
-              {{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.deadMansSwitch.enabled }}
+              {{- if .Values.monitoring.prometheus.enabled }}
               createCheck "$checkName-monitoring"
               {{- end }}
               createCheck "$checkName-scheduling"

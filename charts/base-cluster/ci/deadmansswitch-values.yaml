@@ -3,3 +3,5 @@ monitoring:
     enabled: true
     pingKey: PING_KEY
     apiKey: API_KEY
+global:
+  baseDomain: example.com
