@@ -33,7 +33,7 @@ spec:
           containers:
             - name: watchdog
               image: {{ template "base-cluster.curl.image" . }}
-              imagePullPolicy: {{ empty .Values.global.kubectl.image.digest | ternary "Always" "IfNotPresent" }}
+              imagePullPolicy: {{ empty .Values.global.curl.image.digest | ternary "Always" "IfNotPresent" }}
               securityContext:
                 allowPrivilegeEscalation: false
                 capabilities:
