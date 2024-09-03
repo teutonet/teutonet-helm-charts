@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.1.2](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.1.1...teuto-portal-k8s-worker-v3.1.2) (2024-09-03)
+
+
+### Bug Fixes
+
+* **teuto-portal-k8s-worker:** adjust for new syntax ([#1082](https://github.com/teutonet/teutonet-helm-charts/issues/1082)) ([8a0dbfa](https://github.com/teutonet/teutonet-helm-charts/commit/8a0dbfa2690ae09aa01ab17b068070d1e37e25fa))
+
+
+### Miscellaneous Chores
+
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v1.2.1 ([#1020](https://github.com/teutonet/teutonet-helm-charts/issues/1020)) ([e1f1a9a](https://github.com/teutonet/teutonet-helm-charts/commit/e1f1a9a4f062a4ac8c7ad6001acc9c039187a6bf))
+* **teuto-portal-k8s-worker:** update image ([#1047](https://github.com/teutonet/teutonet-helm-charts/issues/1047)) ([2a99c58](https://github.com/teutonet/teutonet-helm-charts/commit/2a99c58dce7a41cf6b059c409451d689d51b5e6e))
+* **teuto-portal-k8s-worker:** update image ([#1074](https://github.com/teutonet/teutonet-helm-charts/issues/1074)) ([11a5260](https://github.com/teutonet/teutonet-helm-charts/commit/11a5260f521816b5c914dca6e4385b5bf46105e4))
+* **teuto-portal-k8s-worker:** update image ([#979](https://github.com/teutonet/teutonet-helm-charts/issues/979)) ([5797e73](https://github.com/teutonet/teutonet-helm-charts/commit/5797e73fcbf7e9c517d39a8f18f3dffe0e0c6ee5))
+
 ## [3.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.1.0...teuto-portal-k8s-worker-v3.1.1) (2024-05-02)
 
 
