@@ -21,7 +21,6 @@ spec:
     global:
       imageRegistry: {{ $.Values.global.imageRegistry }}
     {{- end }}
-    ingester: {{- include "common.resourcesWithPreset" .Values.monitoring.tracing.ingester | nindent 6 }}
     tempo:
       traces:
         jaeger:
@@ -29,6 +28,25 @@ spec:
           thriftHttp: false
         otlp:
           grpc: true
+      resources: {{- include "common.resources" .Values.monitoring.tracing.tempo | nindent 6 }}
+    ingester:
+      resources: {{- include "common.resources" .Values.monitoring.tracing.ingester | nindent 6 }}
+    query:
+      resources: {{- include "common.resources" .Values.monitoring.tracing.query | nindent 6 }}
+    querier:
+      resources: {{- include "common.resources" .Values.monitoring.tracing.querier | nindent 6 }}
+    distributor:
+      resources: {{- include "common.resources" .Values.monitoring.tracing.distributor | nindent 6 }}
+    memcached:
+      resources: {{- include "common.resources" .Values.monitoring.tracing.memcached | nindent 6 }}
+    compactor:
+      resources: {{- include "common.resources" .Values.monitoring.tracing.compactor | nindent 6 }}
+    metricsGenerator:
+      resources: {{- include "common.resources" .Values.monitoring.tracing.metricsGenerator | nindent 6 }}
+    queryFrontend:
+      resources: {{- include "common.resources" .Values.monitoring.tracing.queryFrontend | nindent 6 }}
+    vulture:
+      resources: {{- include "common.resources" .Values.monitoring.tracing.vulture | nindent 6 }}
     metrics:
       enabled: true
       serviceMonitor:

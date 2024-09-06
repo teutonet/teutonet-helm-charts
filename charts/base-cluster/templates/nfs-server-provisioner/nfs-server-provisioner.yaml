@@ -27,6 +27,7 @@ spec:
     image:
       repository: {{ printf "%s/sig-storage/nfs-provisioner" $.Values.global.imageRegistry }}
     {{- end }}
+    resources: {{- include "common.resources" .Values.nfsServerProvisioner | nindent 6 }}
     podSecurityContext:
       seccompProfile:
         type: Unconfined

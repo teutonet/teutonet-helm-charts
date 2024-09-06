@@ -36,6 +36,7 @@ imageRenderer:
     runAsNonRoot: true
     runAsUser: 472
     runAsGroup: 472
+  resources: {{- include "common.resources" .Values.monitoring.grafana.imageRenderer | nindent 2 }}
 enabled: true
 securityContext:
   seccompProfile:
@@ -191,6 +192,13 @@ envValueFrom:
 grafana.ini: {{- $grafanaIni | toYaml | nindent 2 }}
 {{- end }}
 downloadDashboards:
+  resources:
+    limits:
+      cpu: 50m
+      memory: 100m
+    requests:
+      cpu: 10m
+      memory: 10m
   securityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 4 }}
 initChownData:
   enabled: false

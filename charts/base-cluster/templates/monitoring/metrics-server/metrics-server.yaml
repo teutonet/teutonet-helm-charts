@@ -20,6 +20,10 @@ spec:
     global:
       imageRegistry: {{ $.Values.global.imageRegistry }}
     {{- end }}
+    resources:
+      limits:
+        cpu: 100m
+        memory: 64Mi
     replicas: 2
     priorityClassName: cluster-components
     podDisruptionBudget:

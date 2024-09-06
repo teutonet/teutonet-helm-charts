@@ -23,6 +23,7 @@ spec:
   upgrade:
     crds: CreateReplace
   values:
+    resources: {{- include "common.resources" .Values.monitoring.securityScanning | nindent 6 }}
     {{- if .Values.global.imageRegistry }}
     image:
       registry: {{ $.Values.global.imageRegistry }}
@@ -44,11 +45,6 @@ spec:
         registry: {{ $.Values.global.imageRegistry }}
     {{- end }}
       ignoreUnfixed: true
-      resources:
-        requests:
-          memory: 256Mi
-        limits:
-          memory: 4Gi
     operator:
       scanJobsConcurrentLimit: 3
       metricsVulnIdEnabled: true
