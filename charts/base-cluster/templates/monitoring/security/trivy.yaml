@@ -23,7 +23,7 @@ spec:
   upgrade:
     crds: CreateReplace
   values:
-    resources: {{ include "common.resources" .Values.monitoring.securityScanning | nindent 6 }}
+    resources: {{- include "common.resources" .Values.monitoring.securityScanning | nindent 6 }}
     {{- if .Values.global.imageRegistry }}
     image:
       registry: {{ $.Values.global.imageRegistry }}
