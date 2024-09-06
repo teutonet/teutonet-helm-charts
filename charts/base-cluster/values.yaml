@@ -231,7 +231,6 @@ kyverno:
 
 monitoring:
   openTelemetryCollector:
-    resourcesPreset: {}
     resources:
       limits:
         cpu: 250m
