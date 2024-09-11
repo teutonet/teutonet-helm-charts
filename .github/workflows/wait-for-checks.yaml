@@ -2,6 +2,7 @@ name: Wait for checks
 
 on:
   pull_request: {}
+  pull_request_target: {}
 
 jobs:
   wait-for-checks:
