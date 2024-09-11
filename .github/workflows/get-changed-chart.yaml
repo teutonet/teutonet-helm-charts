@@ -27,24 +27,10 @@ jobs:
     steps:
       - id: getChangedChart
         name: Get changed chart in PR
+        if: ${{ needs.getChangedCharts.outputs.count == 1 }}
         run: |
           set -e
           set -o pipefail
           changed='${{ needs.getChangedCharts.outputs.charts }}'
-          num_changed='${{ needs.getChangedCharts.outputs.count }}'
 
-          case "$num_changed" in
-            0)
-              echo "This PR has seemingly no changes to any charts?"
-              exit 1
-            ;;
-            1)
-              (
-                echo chart="$(<<<"$changed" jq -r first)"
-              ) | tee -a "$GITHUB_OUTPUT"
-            ;;
-            *)
-              echo "This PR has changes to multiple charts. Please create individual PRs per chart." >&2
-              exit 1
-            ;;
-          esac
+          echo chart="$(<<<"$changed" jq -r first)" | tee -a "$GITHUB_OUTPUT"
