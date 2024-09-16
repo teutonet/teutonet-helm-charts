@@ -55,8 +55,6 @@ spec:
                 value: Deployment
   {{- end }}
   values:
-    cluster:
-      name: {{ .Values.metadata.friendlyName | default .Release.Name }}
   {{- if le (.Values.version.minor | int) 28 }}
     tolerations:
       - key: node.cloudprovider.kubernetes.io/uninitialized
