@@ -1,0 +1,32 @@
+name: Lint Helm Charts
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+    paths:
+      - charts/**
+  merge_group:
+    types:
+      - checks_requested
+
+jobs:
+  getAllCharts:
+    uses: ./.github/workflows/get-all-charts.yaml
+    with:
+      showLibraryCharts: false
+  check-licenses:
+    name: check licenses
+    runs-on: ubuntu-latest
+    needs: getAllCharts
+    strategy:
+      fail-fast: false
+      matrix:
+        chart: ${{ fromJson(needs.getAllCharts.outputs.charts) }}
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - run: pip install yq
+      - run: ./.github/scrips/scan-for-licenses.sh ${{ matrix.chart }}
