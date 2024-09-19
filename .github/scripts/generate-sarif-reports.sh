@@ -12,11 +12,6 @@ function createSarifReports() {
   chartName="$(basename "$chart")"
   mkdir -p reports
 
-  if yq -e '.type == "library"' "$chart/Chart.yaml" >/dev/null; then
-    echo "Skipping library chart '$chart'" >&2
-    return 0
-  fi
-
   # shellcheck disable=SC2046
   yq -r '.annotations["artifacthub.io/images"]' "$chart/Chart.yaml" |
     yq -r '.[] | .image' |
