@@ -7,23 +7,9 @@ on:
 
 jobs:
   getAllCharts:
-    runs-on: ubuntu-latest
-    outputs:
-      charts: ${{ steps.getCharts.outputs.charts }}
-    steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-
-      - name: Get all charts with their images
-        id: getCharts
-        run: |
-          set -ex
-          set -o pipefail
-          (
-            echo -n charts=
-            for chart in charts/*; do
-              [[ -f "$chart/Chart.yaml" ]] && echo "$chart"
-            done | jq -c -Rn '[inputs]'
-          ) | tee -a "$GITHUB_OUTPUT"
+    uses: ./.github/workflows/get-all-charts.yaml
+    with:
+      showLibraryCharts: false
 
   generateSarifReports:
     runs-on: ubuntu-latest

@@ -1,0 +1,36 @@
+name: Get all Charts
+
+on:
+  workflow_call:
+    inputs:
+      showLibraryCharts:
+        type: boolean
+        default: true
+    outputs:
+      charts:
+        description: "All Charts"
+        value: ${{ jobs.getAllCharts.outputs.charts }}
+jobs:
+  getAllCharts:
+    runs-on: ubuntu-latest
+    outputs:
+      charts: ${{ steps.getCharts.outputs.charts }}
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - run: pip install yq
+      - name: Get all charts
+        id: getCharts
+        run: |
+          set -ex
+          set -o pipefail
+          (
+            echo -n charts=
+            for chart in charts/*; do
+              # shellcheck disable=SC2016
+              if [[ -f "$chart/Chart.yaml" ]] && yq --argjson showLibraryCharts '${{ inputs.showLibraryCharts }}' -e '.type != "library" or $showLibraryCharts' "$chart/Chart.yaml" >/dev/null; then
+                echo "$chart"
+              else
+                echo "Skipping library chart: '$chart'" >&2
+              fi
+            done | jq -c -Rn '[inputs]'
+          ) | tee -a "$GITHUB_OUTPUT"
