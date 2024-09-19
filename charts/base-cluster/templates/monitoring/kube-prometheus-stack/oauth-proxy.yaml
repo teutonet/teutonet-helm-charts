@@ -3,7 +3,7 @@
 {{- if include "base-cluster.monitoring.authenticated-ingress.enabled" (dict "name" "prometheus" "context" .) -}}
   {{- $backends = append $backends (dict "host" "prometheus" "port" 9090) -}}
 {{- end -}}
-{{- if include "base-cluster.monitoring.authenticated-ingress.enabled" (dict "name" "alertmanager" "context" .) -}}
+{{- if and (include "base-cluster.prometheus-stack.alertmanager.enabled" .) (include "base-cluster.monitoring.authenticated-ingress.enabled" (dict "name" "alertmanager" "context" .)) -}}
   {{- $backends = append $backends (dict "host" "alertmanager" "port" 9093) -}}
 {{- end -}}
 {{- range $backend := $backends }}
