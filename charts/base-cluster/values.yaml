@@ -126,6 +126,11 @@ global:
       charts:
         descheduler: 0.30.x
       condition: "{{ .Values.descheduler.enabled }}"
+    onechart:
+      url: https://chart.onechart.dev
+      charts:
+        onechart: 0.70.x
+      condition: "{{ .Values.flux.capacitor.enabled }}"
     jetstack:
       url: https://charts.jetstack.io
       charts:
@@ -415,6 +420,12 @@ externalDNS:
 
 flux:
   gitRepositories: {}
+  capacitor:
+    enabled: false
+    ingress:
+      enabled: false
+      host: capacitor
+      customDomain: ""
 
 ingress:
   enabled: true
