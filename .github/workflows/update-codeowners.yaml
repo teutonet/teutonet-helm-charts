@@ -21,6 +21,7 @@ jobs:
         id: create-pr
         uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6
         with:
+          token: ${{ secrets.ACTIONS_BOT_TOKEN }} # otherwise downstream workflows are not being run
           add-paths: |
             .github/CODEOWNERS
           commit-message: "ci: [bot] Update 'CODEOWNERS'"
