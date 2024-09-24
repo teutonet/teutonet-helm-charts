@@ -13,6 +13,8 @@ on:
 jobs:
   getChangedChart:
     uses: ./.github/workflows/get-changed-chart.yaml
+    with:
+      pr_number: ${{ github.event.pull_request.number }}
   check-licenses:
     name: check licenses
     runs-on: ubuntu-latest
