@@ -5,6 +5,7 @@ on:
     inputs:
       pr_number:
         type: number
+        required: true
     outputs:
       charts:
         description: The names of the changed charts in the PR

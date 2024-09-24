@@ -5,6 +5,7 @@ on:
     inputs:
       pr_number:
         type: number
+        required: true
     outputs:
       chart:
         description: The name of the changed cart in the last commit
