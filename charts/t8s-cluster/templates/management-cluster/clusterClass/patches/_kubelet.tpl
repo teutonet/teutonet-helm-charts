@@ -4,7 +4,7 @@
   {{- if and (or (gt (.Values.version.major | int) 1) (ge (.Values.version.minor | int) 27)) (gt (int .Values.global.kubeletExtraConfig.maxParallelImagePulls) 1) -}}
     {{- $values = mustMerge $values (dict "serializeImagePulls" false "maxParallelImagePulls" .Values.global.kubeletExtraConfig.maxParallelImagePulls) -}}
   {{- end -}}
-  {{- $values | toYaml -}}
+  {{- toYaml $values -}}
 {{- end -}}
 
 {{- define "t8s-cluster.kubelet.featureGates"}}
@@ -17,7 +17,7 @@
   {{- $options = set $options "protectKernelDefaults" true -}}
   {{- $options = set $options "tlsCipherSuites" (include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) | fromYamlArray) -}}
   {{- $options = set $options "seccompDefault" true -}}
-  {{- $options | toYaml -}}
+  {{- toYaml $options -}}
 {{- end -}}
 
 {{- define "t8s-cluster.patches.kubelet.default" -}}
@@ -35,7 +35,7 @@
   {{- end -}}
   {{- $patches = append $patches (include "t8s-cluster.patches.patchFile" (dict "values" $cleanupJsonPatch "target" "kubeletconfiguration" "suffix" 0 "patchType" "json") | fromYaml) -}}
   {{- $patches = append $patches (include "t8s-cluster.patches.patchFile" (dict "values" $values "target" "kubeletconfiguration" "component" "default") | fromYaml) -}}
-  {{- $patches | toYaml -}}
+  {{- toYaml $patches -}}
 {{- end -}}
 
 {{- define "t8s-cluster.patches.kubelet.patches" -}}
