@@ -1,8 +1,6 @@
 {{- define "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.specHash" -}}
   {{/* the full context is needed for .Files.Get */}}
-  {{- $inputs := (dict
-    "spec" (include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.spec" $)
-    ) -}}
+  {{- $inputs := dict "spec" (include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.spec" $) -}}
   {{- mustToJson $inputs | toString | quote | sha1sum | trunc 8 -}}
 {{- end -}}
 
@@ -23,7 +21,7 @@
     "admission-control-config.yaml" (required "Missing" .admissionControlConfigFilePath)
     "event-rate-limit-config.yaml" (required "Missing" .eventRateLimitConfigFilePath)
     "kube-proxy.config.yaml" "/etc/kube-proxy-config.yaml"
-   -}}
+  -}}
   {{- range $file, $path := $configs -}}
     {{- $files = append $files (dict "content" ($.Files.Get (printf "files/%s" $file)) "path" $path) -}}
   {{- end -}}
@@ -33,5 +31,5 @@
   {{- end -}}
   {{- $apiserverPatch := dict "spec" (dict "containers" (list (dict "name" "kube-apiserver" "resources" (dict "requests" (dict "memory" "2Gi") "limits" (dict "memory" "4Gi"))))) -}}
   {{- $files = append $files (include "t8s-cluster.patches.patchFile" (dict "values" $apiserverPatch "target" "kube-apiserver" "component" "memory") | fromYaml) -}}
-  {{- $files | toYaml -}}
+  {{- toYaml $files -}}
 {{- end -}}

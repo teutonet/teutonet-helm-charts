@@ -1,8 +1,8 @@
 {{- define "t8s-cluster.clusterClass.openStackMachineTemplate.specHash" -}}
-  {{- $inputs := (dict
+  {{- $inputs := dict
     "spec" (include "t8s-cluster.clusterClass.openStackMachineTemplate.spec" (dict "name" .name "context" .context))
     "infrastructureApiVersion" (include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict))
-    ) -}}
+  -}}
   {{- mustToJson $inputs | toString | quote | sha1sum | trunc 8 -}}
 {{- end -}}
 

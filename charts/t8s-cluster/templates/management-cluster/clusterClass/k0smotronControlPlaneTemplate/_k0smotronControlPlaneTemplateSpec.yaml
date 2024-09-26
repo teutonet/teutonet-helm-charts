@@ -41,11 +41,11 @@ k0sConfig:
         {{- $values := dict "cgroupDriver" "systemd" }}
         {{ $values = mustMerge $values (include "t8s-cluster.kubelet.options" (dict) | fromYaml) }}
         {{ $values = mustMerge $values (include "t8s-cluster.patches.kubelet.imagePulls" (dict "context" .) | fromYaml) }}
-        values: {{- $values | toYaml | nindent 10 }}
+        values: {{- toYaml $values | nindent 10 }}
     featureGates: {{- range $featureGate, $components := include "t8s-cluster.featureGates" (dict) | fromYaml }}
       - name: {{ $featureGate }}
         enabled: true
-        components: {{- $components | toYaml | nindent 10 }}
+        components: {{- toYaml $components | nindent 10 }}
       {{- end }}
 etcd:
   persistence:
