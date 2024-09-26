@@ -24,24 +24,28 @@ Returns a HelmRelease.spec.chart.spec for a given chart in a given repository.
   {{- $spec := dict -}}
   {{- if eq (dig .repo "type" "helm" .Values.global.helmRepositories) "helm" -}}
     {{- $spec = mustMerge (dict
-          "chart" .chart
-          "sourceRef" (dict
-            "kind" "HelmRepository"
-            "name" (eq .prependReleaseName true | ternary (printf "%s-%s" .Release.Name .repo) .repo)
-            "namespace" .Release.Namespace)
-          "version" (include "common.helm.chartVersion" (dict "repo" .repo "chart" .chart "context" .context))
-      ) $spec
+        "chart" .chart
+        "sourceRef" (dict
+          "kind" "HelmRepository"
+          "name" (eq .prependReleaseName true | ternary (printf "%s-%s" .Release.Name .repo) .repo)
+          "namespace" .Release.Namespace
+        )
+        "version" (include "common.helm.chartVersion" (dict "repo" .repo "chart" .chart "context" .context))
+      )
+      $spec
     -}}
   {{- else -}}
     {{- $spec = mustMerge (dict
-          "chart" (dig .repo "charts" .chart "path" (printf "charts/%s" .chart) .Values.global.helmRepositories)
-          "sourceRef" (dict
-            "kind" "GitRepository"
-            "name" (eq .prependReleaseName true | ternary (printf "%s-%s-%s" .Release.Name .repo .chart) (printf "%s-%s" .repo .chart))
-            "namespace" .Release.Namespace)
-          "reconcileStrategy" (.reconcileStrategy | default "Revision")
-      ) $spec
+        "chart" (dig .repo "charts" .chart "path" (printf "charts/%s" .chart) .Values.global.helmRepositories)
+        "sourceRef" (dict
+          "kind" "GitRepository"
+          "name" (eq .prependReleaseName true | ternary (printf "%s-%s-%s" .Release.Name .repo .chart) (printf "%s-%s" .repo .chart))
+          "namespace" .Release.Namespace
+        )
+        "reconcileStrategy" (.reconcileStrategy | default "Revision")
+      )
+      $spec
     -}}
   {{- end -}}
-  {{- $spec | toYaml -}}
+  {{- toYaml $spec -}}
 {{- end -}}
