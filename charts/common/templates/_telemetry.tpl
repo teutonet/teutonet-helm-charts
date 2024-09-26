@@ -64,6 +64,6 @@
     {{- range $key, $value := $env -}}
       {{- $podEnv = append $podEnv (dict "name" $key "value" ($value | toString)) -}}
     {{- end -}}
-    {{- $podEnv | toYaml -}}
+    {{- toYaml $podEnv -}}
   {{- end -}}
 {{- end -}}
