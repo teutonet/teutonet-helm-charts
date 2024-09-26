@@ -11,21 +11,59 @@ apiServerLoadBalancer:
   {{- end }}
 disableAPIServerFloatingIP: {{ .Values.controlPlane.hosted }}
 bastion:
-  availabilityZone: {{ .Values.bastion.availabilityZone }}
   enabled: {{ .Values.bastion.enabled }}
-  instance:
+  {{- if .Values.bastion.enabled }}
+    {{- with .Values.bastion.availabilityZone }}
+  availabilityZone: {{ . }}
+    {{- end }}
+  spec:
     cloudName: {{ include "t8s-cluster.clusterClass.cloudName" (dict) }}
     flavor: standard.1.1905
     identityRef:
       kind: Secret
       name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" (dict "context" .context) }}
-    image: Ubuntu 20.04
-    sshKeyName: {{ .Values.bastion.sshKeyName }}
-cloudName: {{ include "t8s-cluster.clusterClass.cloudName" (dict) }}
+    image:
+      filter:
+        name: Ubuntu 20.04
+    {{- with .Values.bastion.sshKeyName }}
+    sshKeyName: {{ . }}
+    {{- end }}
+  {{- end }}
 disablePortSecurity: false
 identityRef:
-  kind: Secret
   name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" (dict "context" .context) }}
-managedSecurityGroups: true
-nodeCidr: 10.6.0.0/24
+  cloudName: {{ include "t8s-cluster.clusterClass.cloudName" (dict) }}
+  {{- $cniSecurityGroupRules := dict -}}
+    {{- $cni := include "t8s-cluster.cni" .context -}}
+    {{- $remoteManagedGroups := list "worker" -}}
+    {{- if not .Values.controlPlane.hosted -}}
+      {{ $remoteManagedGroups = append $remoteManagedGroups "controlplane" -}}
+    {{- end -}}
+    {{- if eq $cni "calico" }}
+      {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "BGP" (dict "port" 179 "protocol" "tcp") -}}
+      {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "IP-in-IP" (dict "protocol" "4") -}}
+    {{- else if eq $cni "cilium" -}}
+      {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "VXLAN" (dict "port" 8472 "protocol" "udp") -}}
+      {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "health (http)" (dict "port" 4240 "protocol" "tcp") -}}
+      {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "health (ping)" (dict "protocol" "icmp") -}}
+    {{- end }}
+  {{- $allNodesSecurityGroupRules := list -}}
+  {{- range $name, $securityGroupRule := $cniSecurityGroupRules -}}
+    {{- $_securityGroupRule := dict
+      "name" (printf "%s %s" $cni $name)
+      "direction" "Ingress"
+      "etherType" "IPv4"
+      "protocol" ($securityGroupRule.protocol | required "security group rule protocol is required")
+      "remoteManagedGroups" $remoteManagedGroups
+    -}}
+    {{- if or (hasKey $securityGroupRule "port") (hasKey $securityGroupRule "portMin") -}}
+      {{- $_securityGroupRule = set $_securityGroupRule "PortRangeMin" ($securityGroupRule.portMin | default $securityGroupRule.port) -}}
+      {{- $_securityGroupRule = set $_securityGroupRule "PortRangeMax" ($securityGroupRule.portMax | default $securityGroupRule.port) -}}
+    {{- end -}}
+    {{- $allNodesSecurityGroupRules = append $allNodesSecurityGroupRules $_securityGroupRule  -}}
+  {{- end }}
+managedSecurityGroups:
+  allNodesSecurityGroupRules: {{- toYaml $allNodesSecurityGroupRules | nindent 4 }}
+managedSubnets:
+  - cidr: 10.6.0.0/24
 {{- end -}}
