@@ -41,7 +41,8 @@ config:
   {{- $receivers := dict "null" (dict) -}}
   {{- if .Values.monitoring.prometheus.alertmanager.receivers.pagerduty.enabled -}}
     {{- $receivers = set $receivers "pagerduty" (dict
-          "pagerduty_configs" (list (dict
+          "pagerduty_configs" (list
+            (dict
               "routing_key" (.Values.monitoring.prometheus.alertmanager.receivers.pagerduty.integrationKey | required "You need to provide the `.Values.monitoring.prometheus.alertmanager.receivers.pagerduty.integrationKey`")
               "send_resolved" true
               "http_config" (dict "follow_redirects" true)
@@ -52,7 +53,8 @@ config:
   {{- end -}}
   {{- if and .Values.monitoring.deadMansSwitch.enabled .Values.global.baseDomain .Values.global.clusterName -}}
     {{- $receivers = set $receivers "healthchecks.io" (dict
-          "webhook_configs" (list (dict
+          "webhook_configs" (list
+            (dict
               "url" (printf "https://hc-ping.com/%s/k8s-cluster-%s-%s-monitoring" .Values.monitoring.deadMansSwitch.pingKey (.Values.global.baseDomain | replace "." "-") .Values.global.clusterName)
               "send_resolved" false
             )
@@ -64,13 +66,13 @@ config:
   {{- range $name, $receiver := $receivers -}}
     {{- $receiversList = append $receiversList (mustMerge (dict "name" $name) $receiver) -}}
   {{- end }}
-  receivers: {{- $receiversList | toYaml | nindent 4 }}
+  receivers: {{- toYaml $receiversList | nindent 4 }}
   route: {{- if hasKey $receivers "pagerduty" }}
     receiver: pagerduty
     {{- end }}
     {{- $routes := list (dict "match" (dict "alertname" "InfoInhibitor") "receiver" "null") -}}
     {{- $routes = append $routes (dict "match" (dict "alertname" "Watchdog") "receiver" (hasKey $receivers "healthchecks.io" | ternary "healthchecks.io" "null") "group_interval" "1m" "repeat_interval" "1m") }}
-    routes: {{- $routes | toYaml | nindent 6 }}
+    routes: {{- toYaml $routes | nindent 6 }}
 {{- else }}
 enabled: false
 {{- end }}
