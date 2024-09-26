@@ -23,10 +23,9 @@
     {{- $additionalSecurityGroups = .Values.additionalComputePlaneSecurityGroups -}}
   {{- end -}}
   {{- $securityGroups := $additionalSecurityGroups | default (list) -}}
-  {{- $securityGroups = append $securityGroups "default" | sortAlpha | uniq }}
   {{- $securityGroupsObject := list -}}
-  {{- range $name := $securityGroups -}}
-    {{- $securityGroupsObject = append $securityGroupsObject (dict "name" $name)}}
+  {{- range $name := $securityGroups | sortAlpha -}}
+    {{- $securityGroupsObject = append $securityGroupsObject (dict "filter" (dict "name" $name))}}
   {{- end -}}
   {{- toYaml $securityGroupsObject -}}
 {{- end -}}

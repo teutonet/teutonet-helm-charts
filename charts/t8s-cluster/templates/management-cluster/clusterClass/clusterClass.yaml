@@ -43,16 +43,6 @@ spec:
       kind: OpenStackClusterTemplate
       name: {{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackClusterTemplate.specHash" (dict "context" $)) }}
   variables:
-    - name: controlPlaneServerGroupID
-      required: true
-      schema:
-        openAPIV3Schema:
-          type: string
-    - name: machineDeploymentServerGroupID
-      required: false
-      schema:
-        openAPIV3Schema:
-          type: string
     - name: dnsNameservers
       required: true
       schema:
@@ -79,35 +69,6 @@ spec:
           type: string
           default: compute-plane-placeholder
   patches:
-    {{- if not .Values.controlPlane.hosted }}
-    - name: controlPlaneServerGroupID
-      description: Sets the ServerGroupID for Control Plane machines.
-      definitions:
-        - jsonPatches:
-            - op: add
-              path: /spec/template/spec/serverGroupID
-              valueFrom:
-                variable: controlPlaneServerGroupID
-          selector:
-            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
-            kind: OpenStackMachineTemplate
-            matchResources:
-              controlPlane: true
-    {{- end }}
-    - name: machineDeploymentServerGroupID
-      description: Sets the ServerGroupID for MachineDeployment machines.
-      definitions:
-        - jsonPatches:
-            - op: add
-              path: /spec/template/spec/serverGroupID
-              valueFrom:
-                variable: machineDeploymentServerGroupID
-          selector:
-            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
-            kind: OpenStackMachineTemplate
-            matchResources:
-              machineDeploymentClass:
-                names: {{- $machineDeploymentClasses | keys | sortAlpha | toYaml | nindent 18 }}
     - name: machineDeploymentFlavour
       definitions:
         - jsonPatches:
@@ -127,7 +88,7 @@ spec:
         - jsonPatches:
             - &imagePatch
               op: add
-              path: /spec/template/spec/image
+              path: /spec/template/spec/image/id
               valueFrom:
                 template: {{ printf "t8s-engine-%s{{ .builtin.machineDeployment.version }}" .Values.openstackImageNamePrefix }}
           selector: &imagePatchSelector
@@ -170,7 +131,7 @@ spec:
               infrastructureCluster: true
           jsonPatches:
             - op: add
-              path: /spec/template/spec/dnsNameservers
+              path: /spec/template/spec/managedSubnets/0/dnsNameservers
               valueFrom:
                 variable: dnsNameservers
   workers:

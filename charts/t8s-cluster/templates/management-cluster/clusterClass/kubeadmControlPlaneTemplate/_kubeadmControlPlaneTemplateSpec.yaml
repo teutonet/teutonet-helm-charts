@@ -34,6 +34,7 @@ kubeadmConfigSpec:
   initConfiguration: &configuration
     nodeRegistration:
       kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict "context" .) | nindent 8 }}
+      imagePullSerial: false
     patches:
       directory: {{ include "t8s-cluster.patches.directory" (dict) }}
   joinConfiguration: *configuration
