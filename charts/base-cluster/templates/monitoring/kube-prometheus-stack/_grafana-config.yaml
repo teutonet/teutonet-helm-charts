@@ -79,7 +79,7 @@ dashboardProviders:
   dashboardproviders.yaml:
     apiVersion: 1
     providers:
-      - name: 'custom'
+      - name: custom
         orgId: 1
         folder: ''
         type: file
@@ -188,7 +188,7 @@ envValueFrom:
   {{- end }}
 {{- end }}
 {{- if $grafanaIni }}
-grafana.ini: {{- $grafanaIni | toYaml | nindent 2 }}
+grafana.ini: {{- toYaml $grafanaIni | nindent 2 }}
 {{- end }}
 downloadDashboards:
   securityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 4 }}
