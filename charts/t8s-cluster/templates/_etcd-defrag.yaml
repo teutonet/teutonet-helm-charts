@@ -3,7 +3,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: kube-etcd-defrag
+  name: {{ .hosted | ternary (printf "%s-kube-etcd-defrag" .Release.Name) "kube-etcd-defrag" }}
   namespace: {{ .hosted | ternary .Release.Namespace "kube-system" }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
