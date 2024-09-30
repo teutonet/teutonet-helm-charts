@@ -1,5 +1,21 @@
 # Changelog
 
+## [8.3.3](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v8.3.2...t8s-cluster-v8.3.3) (2024-09-17)
+
+
+### Bug Fixes
+
+* **base-cluster:** add missing ciliumNetworkPolicy for cinder-csi-plugin otherwise it can't talk to the openstack api 🤣 ([#1114](https://github.com/teutonet/teutonet-helm-charts/issues/1114)) ([f33e5ad](https://github.com/teutonet/teutonet-helm-charts/commit/f33e5ad2b613eb084c45ece2ef52c453c3c04b5e))
+* **t8s-cluster/workload-cluster:** this field is _actually_ used 🙄 ([#1174](https://github.com/teutonet/teutonet-helm-charts/issues/1174)) ([16a5b12](https://github.com/teutonet/teutonet-helm-charts/commit/16a5b1216c895b7896ed4fb437dff9cb67e1489b))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.29.8 ([#1137](https://github.com/teutonet/teutonet-helm-charts/issues/1137)) ([b343ce2](https://github.com/teutonet/teutonet-helm-charts/commit/b343ce2e97aafc98d280c0fda857db9b008342e8))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.31.0 ([#908](https://github.com/teutonet/teutonet-helm-charts/issues/908)) ([fa57c6e](https://github.com/teutonet/teutonet-helm-charts/commit/fa57c6e77e0054103cf12bbefd1818f1d45acae5))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl:1.29.6 docker digest to 6f94559 ([#1028](https://github.com/teutonet/teutonet-helm-charts/issues/1028)) ([88ea367](https://github.com/teutonet/teutonet-helm-charts/commit/88ea3678b2c6d3e0cec9b6a46a53c4dbee15691a))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.5.15 ([#1078](https://github.com/teutonet/teutonet-helm-charts/issues/1078)) ([bc79a2a](https://github.com/teutonet/teutonet-helm-charts/commit/bc79a2a6c14dfc5c42d43cfefd69c14c4bcf356f))
+
 ## [8.3.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v8.3.1...t8s-cluster-v8.3.2) (2024-08-09)
 
 
