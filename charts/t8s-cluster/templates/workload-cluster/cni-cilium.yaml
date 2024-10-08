@@ -25,6 +25,15 @@ spec:
   targetNamespace: kube-system
   releaseName: cni
   values:
+    # enable eBPF based routing instead of iptables
+    nodePort:
+      enabled: true
+    bpf:
+      masquerade: true
+    # enable eBPF bases host routing
+    # currently not really possible with CAPI, as they don't support disabling the built-in kube-proxy
+    # kubeProxyReplacement: strict
+
     rollOutCiliumPods: true
     encryption:
       enabled: false
