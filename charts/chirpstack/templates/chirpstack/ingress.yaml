@@ -1,0 +1,24 @@
+{{- if .Values.ingress.enabled -}}
+{{- if false }}
+apiVersion: networking.k8s.io/v1
+{{ else }}
+apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
+{{- end }}
+kind: Ingress
+metadata: {{- include "chirpstack.commonMetadata" (dict "context" . "component" "chirpstack") | nindent 2 }}
+  annotations:
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: {{ .Values.ingress.class }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ include "chirpstack.fullname" (dict "context" . "component" "certificate") }}
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - backend: {{- include "common.ingress.backend" (dict "serviceName" (include "chirpstack.fullname" (dict "context" . "component" "chirpstack")) "servicePort" "chirpstack" "context" $) | nindent 14 }}
+            path: /
+            pathType: Prefix
+{{- end }}
