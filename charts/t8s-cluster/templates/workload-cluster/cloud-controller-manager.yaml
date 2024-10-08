@@ -55,7 +55,7 @@ spec:
                 value: Deployment
   {{- end }}
   values:
-  {{- if le (.Values.version.minor | int) 28 }}
+    {{- if le (.Values.version.minor | int) 28 }}
     tolerations:
       - key: node.cloudprovider.kubernetes.io/uninitialized
         value: "true"
