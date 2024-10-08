@@ -23,3 +23,12 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - run: pip install yq
       - run: ./.github/scripts/scan-for-licenses.sh ${{ needs.getChangedChart.outputs.chart }}
+  check-licenses-list:
+    name: check licenses from list
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - run: pip install yq
+      - run: |
+          IMAGES=($(for chart in charts/*; do if [[ -f "$chart/Chart.yaml" ]]; then  cat ./$chart/Chart.yaml | yq -r '.annotations["artifacthub.io/images"] // ""'; fi; done | cut -d ":" -f2 | uniq | sort | sed '/^$/d'))
+          for IMAGE in $IMAGES; do grep -q $IMAGE ./.github/scripts/licenseList || (echo "Image" $IMAGE "not found in accepted list. Please review and add it if acceptable" && return 1); done;
