@@ -22,4 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - run: pip install yq
+      - run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb
+          sudo dpkg -i trivy_0.18.3_Linux-64bit.deb
       - run: ./.github/scripts/scan-for-licenses.sh ${{ needs.getChangedChart.outputs.chart }}
