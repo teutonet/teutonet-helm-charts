@@ -26,13 +26,14 @@ jobs:
   check-licenses-list:
     name: check licenses from list
     runs-on: ubuntu-latest
+    needs: getChangedChart
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - run: pip install yq
       - run: |
-          mapfile -t IMAGES < <(for chart in charts/*; do if [[ -f "$chart/Chart.yaml" ]]; then yq -r '.annotations["artifacthub.io/images"] // ""' <"$chart/Chart.yaml" ; fi; done | cut -d ":" -f2 | uniq | sort | sed '/^$/d')
+          mapfile -t IMAGES < <(if [[ -f "${{ needs.getChangedChart.outputs.chart }}/Chart.yaml" ]]; then yq -r '.annotations["artifacthub.io/images"] // ""' <"${{ needs.getChangedChart.outputs.chart }}/Chart.yaml" ; fi | cut -d ":" -f2 | uniq | sort | sed '/^$/d')
           #shellcheck disable=SC2068
-          mapfile -t RESULT < <(for IMAGE in ${IMAGES[@]}; do grep -q "$IMAGE" ./.github/scripts/licenseList || (echo "$IMAGE";); done;)
+          mapfile -t RESULT < <(for IMAGE in ${IMAGES[@]}; do grep -q "$IMAGE" ./.github/licenseList.yaml || (echo "$IMAGE";); done;)
           if [[ -n "${RESULT[*]}" ]]; then
             echo "The following images are not accepted, please review:"
             printf "%s\n" "${RESULT[@]}"
