@@ -49,7 +49,7 @@ ckan:
     pullPolicy: IfNotPresent
     pullSecrets: []
     repository: teutonet/oci-images/ckan
-    tag: 1.0.3@sha256:cffa2a8968d0a9c43efe332d1bc1cce2b1b47e9448ebdb346000777ed2b3d5ed
+    tag: 1.0.5@sha256:df97fe51f67295fab60bd02153204e0cd12f5cb3eb8033f6cbc43a391b48a29d
     digest: ""
   ingress:
     ingressClassName: ""
