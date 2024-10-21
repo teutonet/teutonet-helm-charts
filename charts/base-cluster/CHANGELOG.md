@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.7.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.7.0...base-cluster-v6.7.1) (2024-10-21)
+
+
+### Bug Fixes
+
+* **base-cluster:** curl images imagePullPolicy ([#1168](https://github.com/teutonet/teutonet-helm-charts/issues/1168)) ([bb1942d](https://github.com/teutonet/teutonet-helm-charts/commit/bb1942d5d45b98cf29a7381759387dac13396658))
+
+
+### Miscellaneous Chores
+
+* **base-cluster:** this is now supported 🥳 ([#1135](https://github.com/teutonet/teutonet-helm-charts/issues/1135)) ([515ce2d](https://github.com/teutonet/teutonet-helm-charts/commit/515ce2da362b67fcf7519462c718a95973c55830))
+
 ## [6.7.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.6.3...base-cluster-v6.7.0) (2024-08-30)
 
 
