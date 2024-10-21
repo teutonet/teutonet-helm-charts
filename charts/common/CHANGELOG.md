@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.2.1...common-v1.2.2) (2024-10-21)
+
+
+### Miscellaneous Chores
+
+* **common/dependencies:** update helm release common to v2.22.0 ([#1143](https://github.com/teutonet/teutonet-helm-charts/issues/1143)) ([3e83b9d](https://github.com/teutonet/teutonet-helm-charts/commit/3e83b9d2c7e9b38c05fe6fc33ffdf00800839087))
+
 ## [1.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.2.0...common-v1.2.1) (2024-08-07)
 
 
