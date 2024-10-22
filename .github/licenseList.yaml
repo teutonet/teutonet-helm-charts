@@ -1,0 +1,211 @@
+licenses:
+  - image: docker.io/aelbakry/kdave-server
+    license: MIT
+    licenseLink: https://github.com/wayfair-incubator/kdave/blob/main/LICENSE
+  - image: docker.io/bats/bats
+    license: MIT
+    licenseLink: https://github.com/bats-core/bats-core/blob/master/LICENSE.md
+  - image: docker.io/bitnami/external-dns
+    license: Apache-2.0
+    licenseLink: https://hub.docker.com/r/bitnami/external-dns
+  - image: docker.io/bitnami/grafana-tempo
+    license: Apache-2.0
+    licenseLink: https://hub.docker.com/r/bitnami/grafana-tempo
+  - image: docker.io/bitnami/grafana-tempo-vulture
+    license: Apache-2.0
+    licenseLink: https://hub.docker.com/r/bitnami/grafana-tempo-vulture
+  - image: docker.io/bitnami/kubectl
+    license: Apache-2.0
+    licenseLink: https://hub.docker.com/r/bitnami/kubectl
+  - image: docker.io/bitnami/memcached
+    license: Apache-2.0
+    licenseLink: https://hub.docker.com/r/bitnami/memcached
+  - image: docker.io/bitnami/metrics-server
+    license: Apache-2.0
+    licenseLink: https://hub.docker.com/r/bitnami/metrics-server
+  - image: docker.io/bitnami/postgresql
+    license: PostgreSQL
+    licenseLink: https://www.postgresql.org/about/licence/
+  - image: docker.io/bitnami/redis
+    license: SSPL-1.0
+    licenseLink: https://redis.io/legal/licenses/
+  - image: docker.io/bitnami/zookeeper
+    license: Apache-2.0
+    licenseLink: https://zookeeper.apache.org/
+  - image: docker.io/busybox
+    license: GPL-2.0
+    licenseLink: http://www.busybox.net/license.html
+  - image: docker.io/ckan/ckan-base-datapusher
+    license: AGPL-3.0-only
+    licenseLink: https://github.com/ckan/datapusher
+  - image: docker.io/confluentinc/cp-kafka
+    license: Apache-2.0
+    licenseLink: https://github.com/confluentinc/kafka-images/blob/master/LICENSE
+  - image: docker.io/curlimages/curl
+    license: curl
+    licenseLink: https://curl.se/docs/copyright.html
+  - image: docker.io/emberstack/kubernetes-reflector
+    license: MIT
+    licenseLink: https://github.com/emberstack/kubernetes-reflector/blob/main/LICENSE
+  - image: docker.io/fluxcd/flux-cli
+    license: Apache-2.0
+    licenseLink: https://github.com/fluxcd/flux2/blob/main/LICENSE
+  - image: docker.io/grafana/grafana
+    license: AGPL-3.0-only
+    licenseLink: https://github.com/grafana/grafana/blob/main/LICENSING.md
+  - image: docker.io/grafana/grafana-image-renderer
+    license: Apache-2.0
+    licenseLink: https://github.com/grafana/grafana-image-renderer/blob/master/LICENSE
+  - image: docker.io/grafana/loki
+    license: AGPL-3.0
+    licenseLink: https://github.com/grafana/loki/blob/main/LICENSE
+  - image: docker.io/grafana/promtail
+    license: AGPL-3.0
+    licenseLink: https://github.com/grafana/loki/blob/main/tools/LICENSE_APACHE2
+  - image: docker.io/hjacobs/kube-janitor
+    license: AGPL-3.0
+    licenseLink: https://github.com/hjacobs/kube-janitor/blob/main/LICENSE
+  - image: docker.io/otel/opentelemetry-collector-contrib
+    license: Apache-2.0
+    licenseLink: https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/LICENSE
+  - image: docker.io/stellio/stellio-api-gateway
+    license: Apache-2.0
+    licenseLink: https://github.com/stellio-hub/stellio-context-broker/blob/develop/LICENSE.txt
+  - image: docker.io/stellio/stellio-search-service
+    license: Apache-2.0
+    licenseLink: https://github.com/stellio-hub/stellio-context-broker/blob/develop/LICENSE.txt
+  - image: docker.io/stellio/stellio-subscription-service
+    license: Apache-2.0
+    licenseLink: https://github.com/stellio-hub/stellio-context-broker/blob/develop/LICENSE.txt
+  - image: docker.io/stellio/stellio-timescale-postgis
+    license: Apache-2.0
+    licenseLink: https://github.com/stellio-hub/stellio-context-broker/blob/develop/LICENSE.txt
+  - image: docker.io/velero/velero
+    license: Apache-2.0
+    licenseLink: https://github.com/vmware-tanzu/velero-plugin-for-aws/blob/main/LICENSE
+  - image: docker.io/velero/velero-plugin-for-aws
+    license: Apache-2.0
+    licenseLink: https://github.com/vmware-tanzu/velero-plugin-for-aws/blob/main/LICENSE
+  - image: docker.io/vladgh/gpg
+    license: Apache-2.0
+    licenseLink: https://github.com/vladgh/docker_base_images/blob/main/LICENSE
+  - image: ghcr.io/aquasecurity/trivy-operator
+    license: Apache-2.0
+    licenseLink: https://github.com/aquasecurity/trivy-operator/blob/main/LICENSE
+  - image: ghcr.io/kyverno/background-controller
+    license: Apache-2.0
+    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/background-controller
+  - image: ghcr.io/kyverno/cleanup-controller
+    license: Apache-2.0
+    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/cleanup-controller
+  - image: ghcr.io/kyverno/kyverno
+    license: Apache-2.0
+    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/kyverno
+  - image: ghcr.io/kyverno/kyverno-cli
+    license: Apache-2.0
+    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/kyverno-cli
+  - image: ghcr.io/kyverno/kyvernopre
+    license: Apache-2.0
+    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/kyvernopre
+  - image: ghcr.io/kyverno/reports-controller
+    license: Apache-2.0
+    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/reports-controller
+  - image: ghcr.io/teutonet/oci-images/ckan
+    license: MIT
+    licenseLink: https://github.com/teutonet/oci-images/blob/main/LICENSE
+  - image: ghcr.io/teutonet/oci-images/solr-ckan
+    license: MIT
+    licenseLink: https://github.com/teutonet/oci-images/blob/main/LICENSE
+  - image: k8s.gcr.io/sig-storage/csi-attacher
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes-csi/external-attacher/blob/master/LICENSE
+  - image: k8s.gcr.io/sig-storage/csi-node-driver-registrar
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes-csi/node-driver-registrar/blob/master/LICENSE
+  - image: k8s.gcr.io/sig-storage/csi-provisioner
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes-csi/external-provisioner/blob/master/LICENSE
+  - image: k8s.gcr.io/sig-storage/csi-resizer
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes-csi/external-resizer/blob/master/LICENSE
+  - image: k8s.gcr.io/sig-storage/csi-snapshotter
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes-csi/external-snapshotter/blob/master/LICENSE
+  - image: k8s.gcr.io/sig-storage/livenessprobe
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes-csi/livenessprobe/blob/master/LICENSE
+  - image: quay.io/cilium/cilium
+    license: Apache-2.0
+    licenseLink: https://github.com/cilium/cilium/blob/main/LICENSE
+  - image: quay.io/cilium/cilium-envoy
+    license: Apache-2.0
+    licenseLink: https://github.com/cilium/cilium/blob/main/LICENSE
+  - image: quay.io/cilium/hubble-relay
+    license: Apache-2.0
+    licenseLink: https://github.com/cilium/cilium/blob/main/LICENSE
+  - image: quay.io/cilium/hubble-ui
+    license: Apache-2.0
+    licenseLink: https://github.com/cilium/cilium/blob/main/LICENSE
+  - image: quay.io/cilium/hubble-ui-backend
+    license: Apache-2.0
+    licenseLink: https://github.com/cilium/hubble-ui/blob/master/LICENSE
+  - image: quay.io/cilium/operator-generic
+    license: Apache-2.0
+    licenseLink: https://hub.docker.com/r/cilium/operator-generic
+  - image: quay.io/jetstack/cert-manager-cainjector
+    license: Apache-2.0
+    licenseLink: https://github.com/cert-manager/cert-manager/blob/master/LICENSE
+  - image: quay.io/jetstack/cert-manager-controller
+    license: Apache-2.0
+    licenseLink: https://github.com/cert-manager/cert-manager/blob/master/LICENSE
+  - image: quay.io/jetstack/cert-manager-startupapicheck
+    license: Apache-2.0
+    licenseLink: https://github.com/cert-manager/cert-manager/blob/master/LICENSE
+  - image: quay.io/jetstack/cert-manager-webhook
+    license: Apache-2.0
+    licenseLink: https://github.com/cert-manager/cert-manager/blob/master/LICENSE
+  - image: quay.io/kiwigrid/k8s-sidecar
+    license: MIT
+    licenseLink: https://github.com/kiwigrid/k8s-sidecar/blob/master/LICENSE
+  - image: quay.io/prometheus/alertmanager
+    license: Apache-2.0
+    licenseLink: https://github.com/prometheus/alertmanager/blob/main/LICENSE
+  - image: quay.io/prometheus/node-exporter
+    license: Apache-2.0
+    licenseLink: https://github.com/prometheus/node_exporter/blob/master/LICENSE
+  - image: quay.io/prometheus-operator/prometheus-operator
+    license: Apache-2.0
+    licenseLink: https://github.com/prometheus-operator/prometheus-operator/blob/main/LICENSE
+  - image: quay.io/prometheus/prometheus
+    license: Apache-2.0
+    licenseLink: https://github.com/prometheus/prometheus/blob/main/LICENSE
+  - image: registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker
+    license: Apache-2.0
+    licenseLink: https://gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/-/blob/main/gradlew?ref_type=heads
+  - image: registry.k8s.io/descheduler/descheduler
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes-sigs/descheduler/blob/master/LICENSE
+  - image: registry.k8s.io/etcd
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes/kubernetes/blob/master/LICENSE
+  - image: registry.k8s.io/ingress-nginx/controller
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes/ingress-nginx/blob/main/LICENSE
+  - image: registry.k8s.io/ingress-nginx/kube-webhook-certgen
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes/ingress-nginx/blob/main/LICENSE
+  - image: registry.k8s.io/ingress-nginx/opentelemetry-1.25.3
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes/ingress-nginx/blob/main/LICENSE
+  - image: registry.k8s.io/kube-state-metrics/kube-state-metrics
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes/kube-state-metrics/blob/main/LICENSE
+  - image: registry.k8s.io/provider-os/cinder-csi-plugin
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes/cloud-provider-openstack/blob/master/LICENSE
+  - image: registry.k8s.io/provider-os/openstack-cloud-controller-manager
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes/cloud-provider-openstack/blob/master/LICENSE
+  - image: registry.k8s.io/sig-storage/nfs-provisioner
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/blob/master/LICENSE
