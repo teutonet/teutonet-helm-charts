@@ -11,7 +11,7 @@ jobs:
     outputs:
       charts: ${{ steps.getCharts.outputs.charts }}
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Get all charts
         id: getCharts
@@ -34,7 +34,7 @@ jobs:
       matrix:
         chart: ${{ fromJson(needs.getAllCharts.outputs.charts) }}
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
 
