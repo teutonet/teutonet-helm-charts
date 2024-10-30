@@ -9,6 +9,9 @@
   "additionalBranchPrefix": "{{parentDir}}-",
   "separateMinorPatch": true,
   "automerge": true,
+  "labels": [
+    "dependencies"
+  ],
   "customManagers": [
     {
       "customType": "regex",
