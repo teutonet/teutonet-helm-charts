@@ -22,6 +22,7 @@ spec:
                 - etcdctl
                 - defrag
                 - --cluster
+                - --command-timeout=15m
                 - --cacert=/etc/kubernetes/pki/etcd/ca.crt
                 - --cert=/etc/kubernetes/pki/etcd/peer.crt
                 - --key=/etc/kubernetes/pki/etcd/peer.key
