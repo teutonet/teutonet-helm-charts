@@ -15,8 +15,7 @@
     }
   ],
   "include-component-in-tag": true,
-  "component-no-space": true,
-  "pull-request-title-pattern": "chore(${component}): [bot] release ${version}",
+  "pull-request-title-pattern": "chore${scope}: [bot] release${component}:${version}",
   "separate-pull-requests": true,
   "packages": {
     "charts/base-cluster": {
