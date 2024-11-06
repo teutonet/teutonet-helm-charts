@@ -29,6 +29,8 @@ spec:
     encryption:
       enabled: false
       nodeEncryption: false
+    egressGateway:
+      enabled: true
     hubble:
       metrics:
         enabled:
