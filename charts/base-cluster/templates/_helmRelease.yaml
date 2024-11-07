@@ -6,9 +6,7 @@ metadata:
   name: {{ .name }}
   namespace: {{ .namespace | default .Release.Namespace }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
-    {{- with .additionalLabels }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
+    {{- with .additionalLabels }}{{- toYaml . | nindent 4 }}{{- end }}
 spec:
   chart:
     spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "cetic" "chart" "static" "context" .context) | nindent 6 }}
