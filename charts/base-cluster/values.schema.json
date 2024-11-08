@@ -1377,7 +1377,7 @@
           "description": "A map of a ClusterRole name to it's rules",
           "additionalProperties": {
             "type": "array",
-            "additionalItems": {
+            "items": {
               "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.api.rbac.v1.PolicyRule"
             },
             "minItems": 1
