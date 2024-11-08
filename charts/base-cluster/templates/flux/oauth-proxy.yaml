@@ -56,7 +56,7 @@ spec:
     podAnnotations:
       # This might change on every `template` call, this can be ignored
       checksum/secret: {{ include "common.utils.checksumTemplate" (dict "path" "/flux/oauth-proxy-secret.yaml" "context" $) }}
-{{- if eq (include "common.networkPolicy.type" $) "cilium" }}
+{{- if .Capabilities.APIVersions.Has "cilium.io/v2/CiliumNetworkPolicy" }}
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
