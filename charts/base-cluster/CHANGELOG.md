@@ -1,5 +1,34 @@
 # Changelog
 
+## [7.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.7.0...base-cluster-v7.0.0) (2024-11-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* **base-cluster/rbac:** allow to use the k8s default ClusterRoles ([#1230](https://github.com/teutonet/teutonet-helm-charts/issues/1230))
+* **base-cluster/dependencies:** update helm release descheduler to 0.31.x ([#1173](https://github.com/teutonet/teutonet-helm-charts/issues/1173))
+
+### Features
+
+* **base-cluster/rbac:** allow to use the k8s default ClusterRoles ([#1230](https://github.com/teutonet/teutonet-helm-charts/issues/1230)) ([a3b24e4](https://github.com/teutonet/teutonet-helm-charts/commit/a3b24e4bf3f7256ac5a168d74830ddd79ba5f8d9))
+
+
+### Bug Fixes
+
+* **base-cluster/monitoring:** only roll out alertmanager oauth-proxy when alertmanager is enabled 🤣 ([#1180](https://github.com/teutonet/teutonet-helm-charts/issues/1180)) ([a1d8888](https://github.com/teutonet/teutonet-helm-charts/commit/a1d888866c2230ca01b364d9c7c2cfe78c5483a6))
+* **base-cluster:** curl images imagePullPolicy ([#1168](https://github.com/teutonet/teutonet-helm-charts/issues/1168)) ([bb1942d](https://github.com/teutonet/teutonet-helm-charts/commit/bb1942d5d45b98cf29a7381759387dac13396658))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.31.2 ([#1191](https://github.com/teutonet/teutonet-helm-charts/issues/1191)) ([e3ffc13](https://github.com/teutonet/teutonet-helm-charts/commit/e3ffc13ac95fa95b6f177a48f6a3a5fbcb32225c))
+* **base-cluster/dependencies:** update docker.io/curlimages/curl docker tag to v8.10.1 ([#1193](https://github.com/teutonet/teutonet-helm-charts/issues/1193)) ([54966a8](https://github.com/teutonet/teutonet-helm-charts/commit/54966a80f61b4da5fe149d42f5f0c2fbc46115e2))
+* **base-cluster/dependencies:** update docker.io/fluxcd/flux-cli docker tag to v2.4.0 ([#1212](https://github.com/teutonet/teutonet-helm-charts/issues/1212)) ([6519edf](https://github.com/teutonet/teutonet-helm-charts/commit/6519edf4852201e474d696c113ce0fe93fa5fe6f))
+* **base-cluster/dependencies:** update helm release descheduler to 0.31.x ([#1173](https://github.com/teutonet/teutonet-helm-charts/issues/1173)) ([784958c](https://github.com/teutonet/teutonet-helm-charts/commit/784958cc9e2508fb8e2afd533fcc6de68154095c))
+* **base-cluster/dependencies:** update helm release kube-prometheus-stack to v65 ([#1214](https://github.com/teutonet/teutonet-helm-charts/issues/1214)) ([5f701ed](https://github.com/teutonet/teutonet-helm-charts/commit/5f701ed3854862b5cb00d258f36119ea6fb67607))
+* **base-cluster:** formatting ([#1198](https://github.com/teutonet/teutonet-helm-charts/issues/1198)) ([b9bd4a4](https://github.com/teutonet/teutonet-helm-charts/commit/b9bd4a4258bba421da8a09fc6040fb7330450307))
+* **base-cluster:** this is now supported 🥳 ([#1135](https://github.com/teutonet/teutonet-helm-charts/issues/1135)) ([515ce2d](https://github.com/teutonet/teutonet-helm-charts/commit/515ce2da362b67fcf7519462c718a95973c55830))
+
 ## [6.7.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.6.3...base-cluster-v6.7.0) (2024-08-30)
 
 
