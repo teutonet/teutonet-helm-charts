@@ -27,10 +27,14 @@ spec:
         - name: "ckan"
           persistentVolumeClaim:
             claimName: {{ $claimName }}
+        - name: configmap-volume
+          configMap:
+            defaultMode: 0777
+            name: my-configmap
       securityContext:
       {{- toYaml .Values.ckan.podSecurityContext | default dict | nindent 8 }}
-      {{ if .Values.ckan.persistence -}}
       initContainers:
+        {{ if .Values.ckan.persistence -}}
         - name: set-volume-ownsership
           image: {{ printf "%s/busybox" ($.Values.global.imageRegistry | default (include "ckan.defaultRegistry" (dict))) }}:1.36
           command: ["sh", "-c", "chown -R 92:92 /var/lib/ckan"] # 92 is the uid and gid of ckan user/group
@@ -38,7 +42,15 @@ spec:
             - name: ckan
               mountPath: /var/lib/ckan
               readOnly: false
-      {{ end }}
+        {{ end }}
+        - name: ckan-initiate
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.ckan.image "global" .Values.global) }}
+          command: ["sh","-c","/srv/app/ckan-init.sh"]
+          volumeMounts:
+            - name: configmap-volume
+              mountPath: /srv/app/ckan-init.sh
+              readOnly: true
+              subPath: ckan-init.sh
       containers:
         - name: {{ printf "%s-%s" .Chart.Name $name }}
           env:
@@ -147,8 +159,28 @@ spec:
               value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "datapusher" }}:{{ include "ckan.datapusher.service.port" $ }}"
             - name: CKAN_DATAPUSHER_FORMATS
               value: {{ .Values.ckan.datapusher.formats | join " " | quote }}
+            - name: CKAN__DATAPUSHER__API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
+                  key: datapusherApiKey
             - name: CKAN__DATAPUSHER__CALLBACK_URL_BASE
               value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "ckan" }}:{{ include "ckan.ckan.service.port" $ }}/"
+            - name: CKAN_BEAKER_SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
+                  key: beakerSessionSecret
+            - name: WTF_CSRF_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
+                  key: wtfCsrfSecretKey
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
+                  key: jwtSecret
             - name: CKAN__PLUGINS
               value: {{ .Values.ckan.plugins | join " " | quote }}
           securityContext:

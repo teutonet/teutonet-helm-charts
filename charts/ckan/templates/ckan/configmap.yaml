@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap
+data:
+  ckan-init.sh: |-
+    #!/bin/bash
+    echo "Do this"
+
+    beaker.session.secret=$(python3 -c 'import secrets; print(secrets.token_urlsafe())');
+    WTF_CSRF_SECRET_KEY=$(python3 -c 'import secrets; print(secrets.token_urlsafe()));
+    JWT_SECRET=$(python3 -c 'import secrets; print("string:" + secrets.token_urlsafe())');
+
+    ckan -c $CKAN_INI user token add ckan_admin test
+    ckan -c $CKAN_INI user token add ckan_admin datapusherApiKey | tail -n 1 | tr -d '\t';
+    ckan -c $CKAN_INI user token add ckan_admin emailApiKey | tail -n 1 | tr -d '\t';
+    echo "Do that"
