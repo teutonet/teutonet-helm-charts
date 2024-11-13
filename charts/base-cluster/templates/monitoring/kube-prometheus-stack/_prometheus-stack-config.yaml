@@ -1,6 +1,8 @@
 {{- define "base-cluster.prometheus.config" -}}
-  {{- if .Values.global.imageRegistry }}
 global:
+  rbac:
+    createAggregateClusterRoles: true
+  {{- if .Values.global.imageRegistry }}
   imageRegistry: {{ .Values.global.imageRegistry }}
   {{- end }}
 prometheusOperator:
