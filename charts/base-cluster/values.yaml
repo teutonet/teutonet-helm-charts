@@ -145,6 +145,7 @@ global:
       url: https://helm.cilium.io
       charts:
         tetragon: 1.x.x
+      condition: "{{ .Values.tetragon.enabled }}"
     cetic:
       url: https://cetic.github.io/helm-charts
       charts:
