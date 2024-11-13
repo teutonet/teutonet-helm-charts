@@ -4,9 +4,7 @@ kind: Namespace
 metadata:
   name: {{ $name }}
   labels: {{- include "common.labels.standard" $ | nindent 4 -}}
-  {{- with $namespace.additionalLabels -}}
-    {{- toYaml . | nindent 4 -}}
-  {{- end }}
+    {{- with $namespace.additionalLabels -}}{{- toYaml . | nindent 4 -}}{{- end }}
 ---
 apiVersion: v1
 kind: LimitRange
