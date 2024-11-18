@@ -1,8 +1,8 @@
 {{- define "t8s-cluster.clusterClass.openStackMachineTemplate.specHash" -}}
-  {{- $inputs := (dict
+  {{- $inputs := dict
     "spec" (include "t8s-cluster.clusterClass.openStackMachineTemplate.spec" (dict "name" .name "context" .context))
     "infrastructureApiVersion" (include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict))
-    ) -}}
+  -}}
   {{- mustToJson $inputs | toString | quote | sha1sum | trunc 8 -}}
 {{- end -}}
 
@@ -23,10 +23,9 @@
     {{- $additionalSecurityGroups = .Values.additionalComputePlaneSecurityGroups -}}
   {{- end -}}
   {{- $securityGroups := $additionalSecurityGroups | default (list) -}}
-  {{- $securityGroups = append $securityGroups "default" | sortAlpha | uniq }}
   {{- $securityGroupsObject := list -}}
-  {{- range $name := $securityGroups -}}
-    {{- $securityGroupsObject = append $securityGroupsObject (dict "name" $name)}}
+  {{- range $name := $securityGroups | sortAlpha -}}
+    {{- $securityGroupsObject = append $securityGroupsObject (dict "filter" (dict "name" $name))}}
   {{- end -}}
   {{- toYaml $securityGroupsObject -}}
 {{- end -}}

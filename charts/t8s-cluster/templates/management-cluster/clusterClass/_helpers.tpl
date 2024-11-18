@@ -1,5 +1,5 @@
 {{- define "t8s-cluster.clusterClass.infrastructureApiVersion" -}}
-infrastructure.cluster.x-k8s.io/v1alpha7
+infrastructure.cluster.x-k8s.io/v1beta1
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.cloudName" -}}
@@ -13,7 +13,7 @@ openstack
 
 {{- define "t8s-cluster.clusterClass.tlsCipherSuites" -}}
   {{- $cipherSuites := list "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256" "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256" "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305" "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384" "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305" "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384" "TLS_RSA_WITH_AES_256_GCM_SHA384" "TLS_RSA_WITH_AES_128_GCM_SHA256" -}}
-  {{- $cipherSuites | toYaml -}}
+  {{- toYaml $cipherSuites -}}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.preKubeadmCommands" -}}
@@ -82,7 +82,7 @@ server = {{ printf "https://%s" .registry | quote }}
       {{- $featureGates = set $featureGates $featureGate true -}}
     {{- end -}}
   {{- end -}}
-  {{- $featureGates | toYaml -}}
+  {{- toYaml $featureGates -}}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.containerdConfig.containerRegistryMirrorConfigs" -}}
@@ -97,14 +97,14 @@ server = {{ printf "https://%s" .registry | quote }}
     "registry.k8s.io"
     "registry.opensource.zalan.do"
     "registry.teuto.io"
-    -}}
+  -}}
   {{- $mirroredRegistries := concat $defaultMirroredRegistries (.Values.containerRegistryMirror.additionallyMirroredRegistries | default list) | sortAlpha | uniq -}}
   {{- $files := list -}}
   {{- range $registry := $mirroredRegistries }}
     {{- $files = append $files (dict "content" (include "t8s-cluster.clusterClass.containerdConfig.containerRegistryMirrorConfigs.content" (dict "registry" $registry "endpoint" $.Values.containerRegistryMirror.mirrorEndpoint)) "path" (printf `/etc/containerd/registries.conf.d/%s/hosts.toml` $registry)) -}}
   {{- end }}
   {{- $files = append $files (dict "content" (include "t8s-cluster.clusterClass.containerdConfig.containerRegistryMirrorConfigs.content" (dict "registry" "registry-1.docker.io" "endpoint" $.Values.containerRegistryMirror.mirrorEndpoint)) "path" "/etc/containerd/registries.conf.d/docker.io/hosts.toml") -}}
-  {{- $files | toYaml -}}
+  {{- toYaml $files -}}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.configTemplate.files" -}}
@@ -120,7 +120,7 @@ server = {{ printf "https://%s" .registry | quote }}
   {{- if .Values.global.injectedCertificateAuthorities }}
     {{- $files = append $files (dict "content" .Values.global.injectedCertificateAuthorities "path" "/usr/local/share/ca-certificates/injected-ca-certs.crt" ) -}}
   {{- end }}
-  {{- $files | toYaml -}}
+  {{- toYaml $files -}}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.args.base" -}}
@@ -130,10 +130,12 @@ server = {{ printf "https://%s" .registry | quote }}
 {{- define "t8s-cluster.clusterClass.args.shared" -}}
   {{- $args := include "t8s-cluster.clusterClass.args.base" (dict) | fromYaml -}}
   {{- $args = mustMerge (dict
-    "authorization-always-allow-paths" (list "/healthz" "/readyz" "/livez" "/metrics" | join ",")
-    "bind-address" "0.0.0.0"
-    ) $args -}}
-  {{- $args | toYaml -}}
+      "authorization-always-allow-paths" (list "/healthz" "/readyz" "/livez" "/metrics" | join ",")
+      "bind-address" "0.0.0.0"
+    )
+    $args
+  -}}
+  {{- toYaml $args -}}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.args.scheduler" -}}
@@ -149,7 +151,7 @@ server = {{ printf "https://%s" .registry | quote }}
   {{- $args := include "t8s-cluster.clusterClass.args.shared" (dict) | fromYaml -}}
   {{- $args = mustMerge (include "t8s-cluster.clusterClass.args.sharedController" (dict "context" .context) | fromYaml) $args -}}
   {{- $args = set $args "terminated-pod-gc-threshold" "100" -}}
-  {{- $args | toYaml -}}
+  {{- toYaml $args -}}
 {{- end }}
 
 {{- define "t8s-cluster.clusterClass.apiServer.admissionPlugins" -}}
@@ -157,7 +159,7 @@ server = {{ printf "https://%s" .registry | quote }}
   {{- if not .excludePatches -}}
     {{- $admissionPlugins = concat $admissionPlugins (list "EventRateLimit") -}}
   {{- end -}}
-  {{- $admissionPlugins | toYaml -}}
+  {{- toYaml $admissionPlugins -}}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.args.apiServer" -}}
@@ -166,5 +168,5 @@ server = {{ printf "https://%s" .registry | quote }}
   {{- $args = set $args "enable-admission-plugins" (include "t8s-cluster.clusterClass.apiServer.admissionPlugins" (dict "excludePatches" .excludePatches) | fromYamlArray | join ",") -}}
   {{- $args = set $args "event-ttl" "4h" -}}
   {{- $args = set $args "tls-cipher-suites" (include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) | fromYamlArray | join ",") -}}
-  {{- $args | toYaml -}}
+  {{- toYaml $args -}}
 {{- end }}
