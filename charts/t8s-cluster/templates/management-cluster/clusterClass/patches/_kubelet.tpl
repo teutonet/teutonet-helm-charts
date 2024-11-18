@@ -17,6 +17,20 @@
   {{- $options = set $options "protectKernelDefaults" true -}}
   {{- $options = set $options "tlsCipherSuites" (include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) | fromYamlArray) -}}
   {{- $options = set $options "seccompDefault" true -}}
+  {{- $options = set $options "enforceNodeAllocatable" (list "pods" "system-reserved" "kube-reserved") -}}
+{{/*  {{- $options = set $options "enforceNodeAllocatable" (list "pods") -}}*/}}
+  {{- $options = set $options "kubeReservedCgroup" (include "t8s-cluster.clusterClass.systemdOverride.slice.runtime" (dict) | trimSuffix ".slice") -}}
+  {{- $options = set $options "systemReservedCgroup" "system" -}}
+  {{/* the *Reserved need to include the memory.available, see https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/#node-pressure-eviction-good-practices */}}
+  {{- $options = set $options "kubeReserved" (dict
+    "memory" "0.6Gi"
+    "ephemeral-storage" "1Gi"
+  ) -}}
+  {{- $options = set $options "systemReserved" (dict
+    "memory" "0.3Gi"
+    "ephemeral-storage" "1Gi"
+  ) -}}
+  {{- $options = set $options "evictionHard" (dict "memory.available" "128Mi" "nodefs.available" "2Gi") -}}
   {{- $options | toYaml -}}
 {{- end -}}
 
@@ -38,7 +52,7 @@
   {{- $patches | toYaml -}}
 {{- end -}}
 
-{{- define "t8s-cluster.patches.kubelet.patches" -}}
+{{- define "t8s-cluster.patches.kubelet" -}}
   {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- $patches := include "t8s-cluster.patches.kubelet.default" (dict) | fromYamlArray -}}
   {{- with include "t8s-cluster.patches.kubelet.imagePulls" (dict "context" .context) | fromYaml -}}

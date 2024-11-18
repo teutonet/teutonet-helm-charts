@@ -18,7 +18,7 @@ openstack
 
 {{- define "t8s-cluster.clusterClass.preKubeadmCommands" -}}
   {{- $_ := mustMerge . (pick .context "Values") -}}
-  {{- $commands := list -}}
+  {{- $commands := list "systemctl stop kubelet.service" "systemctl disable --now snapd.service snapd.socket" -}}
   {{- if .Values.global.injectedCertificateAuthorities -}}
     {{- $commands = append $commands "update-ca-certificates" -}}
   {{- end -}}
@@ -26,7 +26,8 @@ openstack
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.postKubeadmCommands" -}}
-  {{- $commands := list -}}
+  {{/* This is to completely wipe and restart the containerd service in the correct slice. */}}
+  {{- $commands := list "systemctl reboot" -}}
   {{- toYaml $commands }}
 {{- end -}}
 
@@ -109,9 +110,9 @@ server = {{ printf "https://%s" .registry | quote }}
 
 {{- define "t8s-cluster.clusterClass.configTemplate.files" -}}
   {{- $_ := mustMerge . (pick .context "Values") -}}
-  {{- $files := list -}}
+  {{- $files := include "t8s-cluster.clusterClass.node.systemdOverrides" (dict) | fromYamlArray -}}
   {{- if not .excludePatches -}}
-    {{- $files = concat $files (include "t8s-cluster.patches.kubelet.patches" (dict "context" .context) | fromYamlArray) -}}
+    {{- $files = concat $files (include "t8s-cluster.patches.kubelet" (dict "context" .context) | fromYamlArray) -}}
   {{- end -}}
   {{- if .Values.containerRegistryMirror.mirrorEndpoint -}}
     {{- $files = concat $files (include "t8s-cluster.clusterClass.containerdConfig.containerRegistryMirrorConfigs" (dict "context" .context) | fromYamlArray) -}}
@@ -120,6 +121,9 @@ server = {{ printf "https://%s" .registry | quote }}
   {{- if .Values.global.injectedCertificateAuthorities }}
     {{- $files = append $files (dict "content" .Values.global.injectedCertificateAuthorities "path" "/usr/local/share/ca-certificates/injected-ca-certs.crt" ) -}}
   {{- end }}
+  {{- range $file := $files -}}
+    {{- $_ := set $file "content" (get $file "content" | trim) -}}
+  {{- end -}}
   {{- $files | toYaml -}}
 {{- end -}}
 
