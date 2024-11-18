@@ -1,51 +1,39 @@
 {{- $name := "ckan" -}}
-{{- $claimName := printf "%s-%s" (include "common.names.fullname" $) $name -}}
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: {{ printf "%s-%s" (include "common.names.fullname" $) $name | quote }}
-  namespace: {{ .Release.Namespace | quote }}
+  name: {{ printf "%s-%s-post-install" (include "common.names.fullname" $) $name | quote }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: {{ $name }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  namespace: {{ .Release.Namespace | quote }}
 spec:
-  replicas: 1
-  strategy:
-    type: Recreate
-  selector:
-    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
-      app.kubernetes.io/component: {{ $name }}
   template:
-    metadata:
-      labels: {{- include "common.labels.matchLabels" . | nindent 8 }}
-        app.kubernetes.io/component: {{ $name }}
-      annotations:
-        checksum/secret: {{ include "common.utils.checksumTemplate" (dict "path" "/ckan/secret.yaml" "context" $) }}-{{ include "common.utils.checksumTemplate" (dict "path" "/postgresql/secret.yaml" "context" $) }}-{{ include "common.utils.checksumTemplate" (dict "path" "/solr/secret.yaml" "context" $) }}
     spec:
-      automountServiceAccountToken: false
       serviceAccountName: {{ printf "%s-%s-serviceaccount" (include "common.names.fullname" $) $name | quote }}
-      volumes:
-        - name: "ckan"
-          persistentVolumeClaim:
-            claimName: {{ $claimName }}
-        - name: configmap-volume
-          configMap:
-            defaultMode: 0777
-            name: my-configmap
-        - name: api-tokens-volume
-          emptyDir: {}
-      securityContext:
-      {{- toYaml .Values.ckan.podSecurityContext | default dict | nindent 8 }}
-      containers:
-        - name: {{ printf "%s-%s" .Chart.Name $name }}
+      restartPolicy: Never
+      initContainers:
+        - name: wait-for-postgresql
+          image: postgres
+          command: [ 'sh', '-c', 'until pg_isready -U $CKAN_DB_USER -d $CKAN_DB -h {{ printf "%s-%s" (include "ckan.postgresql.fullname" . ) "primary" }} -p 5432; do echo waiting for database; sleep 2; done;' ]
           env:
-            - name: CKAN_SITE_ID
-              value: {{ .Values.ckan.siteId }}
-            - name: CKAN__SITE_TITLE
-              value: {{ .Values.ckan.siteTitle | quote }}
-            {{- if .Values.ckan.ingress.hostname }}
-            - name: CKAN_SITE_URL
-              value: "https://{{ .Values.ckan.ingress.hostname }}"
-            {{- end }}
+            - name: CKAN_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
+                  key: ckanDatabaseUsername
+            - name: CKAN_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
+                  key: ckanDatabase
+        - name: ckan-initiate
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.ckan.image "global" .Values.global) }}
+          command: ["sh","-c","/srv/app/ckan-init.sh"]
+          env:
             - name: CKAN_SYSADMIN_NAME
               valueFrom:
                 secretKeyRef:
@@ -61,25 +49,6 @@ spec:
                 secretKeyRef:
                   name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
                   key: sysAdminEmail
-            {{- if .Values.ckan.smtp }}
-            - name: CKAN_SMTP_SERVER
-              value: {{ .Values.ckan.smtp.server }}
-            - name: CKAN_SMTP_USER
-              value: {{ .Values.ckan.smtp.user }}
-            - name: CKAN_SMTP_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
-                  key: smtpPassword
-            - name: CKAN_SMTP_MAIL_FROM
-              value: {{ .Values.ckan.smtp.mailFrom }}
-            - name: CKAN_SMTP_STARTTLS
-              value: {{ .Values.ckan.smtp.starttls | quote}}
-            {{- end }}
-            - name: CKAN__LOCALE_DEFAULT
-              value: {{ .Values.ckan.locales.default | quote }}
-            - name: CKAN__LOCALES_OFFERED
-              value: {{ .Values.ckan.locales.offered | quote }}
             - name: POSTGRES_USER
               value: postgres
             - name: POSTGRES_PASSWORD
@@ -143,17 +112,11 @@ spec:
             {{- end }}
             - name: CKAN_REDIS_URL
               value: "redis://{{ printf "%s-%s" (include "ckan.redis.fullname" . ) "headless" }}:{{ include "ckan.redis.service.port" $}}/0"
-            - name: CKAN_DATAPUSHER_URL
-              value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "datapusher" }}:{{ include "ckan.datapusher.service.port" $ }}"
-            - name: CKAN_DATAPUSHER_FORMATS
-              value: {{ .Values.ckan.datapusher.formats | join " " | quote }}
-            - name: CKAN__DATAPUSHER__API_TOKEN
+            - name: DATAPUSHER_API_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
                   key: datapusherApiKey
-            - name: CKAN__DATAPUSHER__CALLBACK_URL_BASE
-              value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "ckan" }}:{{ include "ckan.ckan.service.port" $ }}/"
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -169,42 +132,50 @@ spec:
                 secretKeyRef:
                   name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
                   key: jwtSecret
-            - name: CKAN__PLUGINS
-              value: {{ .Values.ckan.plugins | join " " | quote }}
-            - name: CKAN__VIEWS__DEFAULT_VIEWS
-              value: {{ .Values.ckan.defaultViews | join " " | quote }}
-            {{- if .Values.ckan.extraEnvVars }}
-              {{- include "common.tplvalues.render" (dict "value" .Values.ckan.extraEnvVars "context" $) | nindent 12 }}
-            {{- end }}
-          securityContext:
-          {{- toYaml .Values.ckan.securityContext | default dict | nindent 12 }}
-          readinessProbe:
-            httpGet:
-              path: /api/3/action/group_list
-              port: http
-            initialDelaySeconds: {{ .Values.ckan.readiness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.ckan.readiness.periodSeconds }}
-            failureThreshold: {{ .Values.ckan.readiness.failureThreshold }}
-            timeoutSeconds: {{ .Values.ckan.readiness.timeoutSeconds }}
-          livenessProbe:
-            httpGet:
-              path: /api/3/action/group_list
-              port: http
-            initialDelaySeconds: {{ .Values.ckan.liveness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.ckan.liveness.periodSeconds }}
-            failureThreshold: {{ .Values.ckan.liveness.failureThreshold }}
-            timeoutSeconds: {{ .Values.ckan.liveness.timeoutSeconds }}
-          image: {{ include "common.images.image" (dict "imageRoot" .Values.ckan.image "global" .Values.global) }}
-          imagePullPolicy: {{ .Values.ckan.image.pullPolicy }}
+            - name: EMAIL_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) "ckan" }}
+                  key: emailApiKey
           volumeMounts:
-            - name: "ckan"
-              mountPath: /var/lib/ckan
-              readOnly: false
-          ports:
-            - name: http
-              containerPort: {{ include "ckan.ckan.service.port" $ }}
-              protocol: TCP
-          resources:
-            {{- toYaml .Values.ckan.resources | nindent 12 }}
-
-#TODO support CKAN HA
+            - name: configmap-volume
+              mountPath: /srv/app/ckan-init.sh
+              readOnly: true
+              subPath: ckan-init.sh
+            - mountPath: /api-tokens
+              name: api-tokens-volume
+        - name: update-secret
+          image: bitnami/kubectl
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+              if [ "$(ls -A /api-tokens)" ]; then
+              if [ -f "/api-tokens/datapusherApiKey" ]; then
+                DATAPUSHER_API_TOKEN=$(cat /api-tokens/datapusherApiKey | tr -d '\n[:space:]' | base64 -w 0 ) &&
+                PATCH='[{"op": "replace", "path": "/data/datapusherApiKey", "value": "'"$DATAPUSHER_API_TOKEN"'"}]' &&
+                if [ $(kubectl get secret {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }} -o jsonpath='{.data.datapusherApiKey}' | tr -d '\n[:space:]' | wc -m) -eq 0 ];
+                then kubectl patch secrets {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }} --type json -p="$PATCH"; fi
+              fi
+              if [ -f "/api-tokens/emailApiKey" ]; then
+                EMAIL_API_KEY=$(cat /api-tokens/emailApiKey | tr -d '\n[:space:]' | base64 -w 0 ) &&
+                PATCH='[{"op": "replace", "path": "/data/emailApiKey", "value": "'"$EMAIL_API_KEY"'"}]' &&
+                if [ $(kubectl get secret {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }} -o jsonpath='{.data.emailApiKey}' | tr -d '\n[:space:]' | wc -m) -eq 0 ];
+                then kubectl patch secrets {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }} --type json -p="$PATCH"; fi
+              fi
+                kubectl rollout restart deployment/{{ printf "%s-%s" (include "common.names.fullname" $) $name | quote }}
+              fi
+          volumeMounts:
+            - mountPath: /api-tokens
+              name: api-tokens-volume
+      containers:
+        - name: postinstall-config
+          image: busybox:1.28
+          command: ["sh", "-c", "echo upgrade ready!"] # 92 is the uid and gid of ckan user/group
+      volumes:
+        - name: configmap-volume
+          configMap:
+            defaultMode: 0777
+            name: {{ printf "%s-%s-configmap" (include "common.names.fullname" .) "ckan" }}
+        - name: api-tokens-volume
+          emptyDir: {}

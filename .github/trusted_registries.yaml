@@ -12,6 +12,7 @@ docker.io:
   emberstack:
     kubernetes-reflector: ALL_TAGS
   fluxcd: ALL_IMAGES
+  postgres: ALL_IMAGES
   grafana: ALL_IMAGES
   hjacobs:
     kube-janitor: ALL_TAGS

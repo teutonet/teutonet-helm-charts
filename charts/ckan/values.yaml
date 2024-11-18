@@ -26,13 +26,19 @@ defaultSecurityContext: &defaultSecurityContext
   runAsUser: 1000
 
 ckan:
+  locales:
+    default: en
+    offered: en de fr
+  defaultViews:
+    - image_view
+    - datatables_view
   plugins:
-    - envvars
     - image_view
     - text_view
-    - recline_view
+    - datatables_view
     - datastore
     - datapusher
+    - envvars
   datapusher:
     formats:
       - csv
@@ -49,8 +55,9 @@ ckan:
     pullPolicy: IfNotPresent
     pullSecrets: []
     repository: teutonet/oci-images/ckan
-    tag: 1.0.5@sha256:df97fe51f67295fab60bd02153204e0cd12f5cb3eb8033f6cbc43a391b48a29d
+    tag: 1.0.10
     digest: ""
+  extraEnvVars: []
   ingress:
     ingressClassName: ""
     annotations: {}
