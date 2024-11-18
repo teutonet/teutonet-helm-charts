@@ -1,5 +1,37 @@
 # Changelog
 
+## [9.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v8.3.2...t8s-cluster-v9.0.0) (2024-11-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* **t8s-cluster/management-cluster:** update CAPIO and migrate config ([#1197](https://github.com/teutonet/teutonet-helm-charts/issues/1197))
+
+### Features
+
+* **t8s-cluster/cilium:** enable egressGateway ([#1223](https://github.com/teutonet/teutonet-helm-charts/issues/1223)) ([76fb7b0](https://github.com/teutonet/teutonet-helm-charts/commit/76fb7b045cf83866895d3a89319a796d9c8b8c48))
+
+
+### Bug Fixes
+
+* **base-cluster:** add missing ciliumNetworkPolicy for cinder-csi-plugin otherwise it can't talk to the openstack api 🤣 ([#1114](https://github.com/teutonet/teutonet-helm-charts/issues/1114)) ([f33e5ad](https://github.com/teutonet/teutonet-helm-charts/commit/f33e5ad2b613eb084c45ece2ef52c453c3c04b5e))
+* **t8s-cluster/workload-cluster:** this field is _actually_ used 🙄 ([#1174](https://github.com/teutonet/teutonet-helm-charts/issues/1174)) ([16a5b12](https://github.com/teutonet/teutonet-helm-charts/commit/16a5b1216c895b7896ed4fb437dff9cb67e1489b))
+* **t8s-cluster:** create separate etcd defrag jobs per cluster ([#1201](https://github.com/teutonet/teutonet-helm-charts/issues/1201)) ([948868e](https://github.com/teutonet/teutonet-helm-charts/commit/948868e738830e40e3283e90cdc4c590cd833a43))
+* **t8s-cluster:** only `toYaml` if field exists ([#1227](https://github.com/teutonet/teutonet-helm-charts/issues/1227)) ([a98420d](https://github.com/teutonet/teutonet-helm-charts/commit/a98420d2467cc672df535518c84f70f2313757d6))
+* **t8s-cluster:** remove unnecessary require for openstackImageNamePrefix ([#1229](https://github.com/teutonet/teutonet-helm-charts/issues/1229)) ([b9b2154](https://github.com/teutonet/teutonet-helm-charts/commit/b9b2154eacd0ef0ccff1d3724e1c9dadcdcdde08))
+* **t8s-cluster:** up etcd-defrag timeout ([#1178](https://github.com/teutonet/teutonet-helm-charts/issues/1178)) ([292b156](https://github.com/teutonet/teutonet-helm-charts/commit/292b156d176ba652c126dd2da395874e1bed8eb2))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.29.8 ([#1137](https://github.com/teutonet/teutonet-helm-charts/issues/1137)) ([b343ce2](https://github.com/teutonet/teutonet-helm-charts/commit/b343ce2e97aafc98d280c0fda857db9b008342e8))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.31.0 ([#908](https://github.com/teutonet/teutonet-helm-charts/issues/908)) ([fa57c6e](https://github.com/teutonet/teutonet-helm-charts/commit/fa57c6e77e0054103cf12bbefd1818f1d45acae5))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.31.2 ([#1192](https://github.com/teutonet/teutonet-helm-charts/issues/1192)) ([5edddd7](https://github.com/teutonet/teutonet-helm-charts/commit/5edddd7614e9558d13ae56358efd8dcf23807d61))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl:1.29.6 docker digest to 6f94559 ([#1028](https://github.com/teutonet/teutonet-helm-charts/issues/1028)) ([88ea367](https://github.com/teutonet/teutonet-helm-charts/commit/88ea3678b2c6d3e0cec9b6a46a53c4dbee15691a))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.5.15 ([#1078](https://github.com/teutonet/teutonet-helm-charts/issues/1078)) ([bc79a2a](https://github.com/teutonet/teutonet-helm-charts/commit/bc79a2a6c14dfc5c42d43cfefd69c14c4bcf356f))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.5.16 ([#1211](https://github.com/teutonet/teutonet-helm-charts/issues/1211)) ([969e291](https://github.com/teutonet/teutonet-helm-charts/commit/969e2919d99ee7075df7c0a3a49f12df6d330de5))
+* **t8s-cluster/management-cluster:** update CAPIO and migrate config ([#1197](https://github.com/teutonet/teutonet-helm-charts/issues/1197)) ([ff9248b](https://github.com/teutonet/teutonet-helm-charts/commit/ff9248b7b27aa9e03d8a491a6cf0d2ef122418cd))
+
 ## [8.3.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v8.3.1...t8s-cluster-v8.3.2) (2024-08-09)
 
 
