@@ -30,12 +30,12 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - run: pip install yq
-      - run: |
-          mapfile -t IMAGES < <(if [[ -f "${{ needs.getChangedChart.outputs.chart }}/Chart.yaml" ]]; then yq -r '.annotations["artifacthub.io/images"] // ""' <"${{ needs.getChangedChart.outputs.chart }}/Chart.yaml" ; fi | cut -d ":" -f2 | uniq | sort | sed '/^$/d')
-          #shellcheck disable=SC2068
-          mapfile -t RESULT < <(for IMAGE in ${IMAGES[@]}; do grep -q "$IMAGE" ./.github/licenseList.yaml || (echo "$IMAGE";); done;)
-          if [[ -n "${RESULT[*]}" ]]; then
-            echo "The following images are not accepted, please review:"
-            printf "%s\n" "${RESULT[@]}"
+      - env:
+          chart: ${{ needs.getChangedChart.outputs.chart }}
+        run: |
+          # shellcheck disable=SC2016
+          if missingImages="$(yq -r -e -c --argjson usedImages "$(cat "${chart?}/Chart.yaml" .github/image_licenses.yaml | yq -r '.annotations["artifacthub.io/images"]' | yq -r -c 'map(.image | split(":")[0]) | unique')" '$usedImages - (.licenses | keys) | if length == 0 then false else . end')"; then
+            echo "The following images have no license, please review:"
+            echo "$missingImages" | yq -r 'map("  - " + .)[]'
             exit 1
           fi
