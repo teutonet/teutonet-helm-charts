@@ -1,5 +1,5 @@
 annotations:
-  artifacthub.io/images: '- image:
+  artifacthub.io/images: "- image:
     docker.io/aelbakry/kdave-server:1.0.4                                                                                                          #  monitoring/HelmRelease/kdave/null/Deployment/kdave.yaml
 
     - image:
@@ -206,7 +206,9 @@ annotations:
     - image:
     registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8                                                                                             #  nfs-server-provisioner/HelmRelease/nfs-server-provisioner/null/StatefulSet/nfs-server-provisioner.yaml
 
-    '
+    - image:
+    test.test.io/test:1.0.0
+    "
 apiVersion: v2
 dependencies:
   - name: common
