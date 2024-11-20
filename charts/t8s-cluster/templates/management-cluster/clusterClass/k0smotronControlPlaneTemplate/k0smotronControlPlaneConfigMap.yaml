@@ -1,0 +1,16 @@
+{{- if .Values.controlPlane.hosted -}}
+  {{- $data := dict -}}
+  {{- range $name := include "t8s-cluster.clusterClass.apiServer.staticFiles" (dict) | fromYaml | keys -}}
+    {{- $data = set $data $name ($.Files.Get (printf "files/%s" $name)) -}}
+  {{- end -}}
+  {{- range $name, $file := include "t8s-cluster.clusterClass.apiServer.dynamicFiles" (dict "context" .) | fromYaml -}}
+    {{- $data = set $data $name (get $file "content" | required (printf "missing content for %s" $name)) -}}
+  {{- end -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-apiserver" $.Release.Name }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+data: {{- toYaml $data | nindent 2 -}}
+{{- end -}}
