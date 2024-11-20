@@ -7,7 +7,7 @@ set -eu
 set -o pipefail
 
 declare -A IMAGE_PULL_TOKENS=(
-  [registry - gitlab.teuto.net]="${TEUTO_PORTAL_WORKER_PULL_TOKEN}"
+  ["registry-gitlab.teuto.net"]="${TEUTO_PORTAL_WORKER_PULL_TOKEN}"
 )
 
 function createSarifReports() {
