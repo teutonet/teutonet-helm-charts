@@ -87,7 +87,7 @@ spec:
       definitions:
         - jsonPatches:
             - &imagePatch
-              op: add
+              op: replace
               path: /spec/template/spec/image/filter/name
               valueFrom:
                 template: {{ printf "t8s-engine-%s{{ .builtin.machineDeployment.version }}" .Values.openstackImageNamePrefix }}

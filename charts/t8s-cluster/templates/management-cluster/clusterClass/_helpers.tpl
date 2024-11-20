@@ -155,18 +155,70 @@ server = {{ printf "https://%s" .registry | quote }}
 {{- end }}
 
 {{- define "t8s-cluster.clusterClass.apiServer.admissionPlugins" -}}
-  {{- $admissionPlugins := list "AlwaysPullImages" "NodeRestriction" -}}
-  {{- if not .excludePatches -}}
-    {{- $admissionPlugins = concat $admissionPlugins (list "EventRateLimit") -}}
-  {{- end -}}
+  {{- $admissionPlugins := list "AlwaysPullImages" "NodeRestriction" "EventRateLimit" -}}
   {{- toYaml $admissionPlugins -}}
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.configPath" -}}
+/etc/kubernetes
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.authenticationConfigPath" -}}
+{{- include "t8s-cluster.clusterClass.configPath" (dict) -}}/{{- include "t8s-cluster.clusterClass.apiServer.authenticationConfigFileName" (dict) -}}
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.eventRateLimitConfigPath" -}}
+{{- include "t8s-cluster.clusterClass.configPath" (dict) -}}/{{- include "t8s-cluster.clusterClass.apiServer.eventRateLimitConfigFileName" (dict) -}}
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.admissionControlConfigPath" -}}
+{{- include "t8s-cluster.clusterClass.configPath" (dict) -}}/{{- include "t8s-cluster.clusterClass.apiServer.admissionControlConfigFileName" (dict) -}}
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.authenticationConfigFileName" -}}
+authentication-config.yaml
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.eventRateLimitConfigFileName" -}}
+event-rate-limit-config.yaml
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.admissionControlConfigFileName" -}}
+admission-control-config.yaml
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.args.apiServer" -}}
   {{- $args := include "t8s-cluster.clusterClass.args.base" (dict "context" .context) | fromYaml -}}
   {{- $args = mustMerge (include "t8s-cluster.clusterClass.args.sharedController" (dict "context" .context) | fromYaml) $args -}}
-  {{- $args = set $args "enable-admission-plugins" (include "t8s-cluster.clusterClass.apiServer.admissionPlugins" (dict "excludePatches" .excludePatches) | fromYamlArray | join ",") -}}
+  {{- $args = set $args "authentication-config" (include "t8s-cluster.clusterClass.apiServer.authenticationConfigPath" (dict)) -}}
+  {{- $args = set $args "admission-control-config-file" (include "t8s-cluster.clusterClass.apiServer.admissionControlConfigPath" (dict)) -}}
+  {{- $args = set $args "enable-admission-plugins" (include "t8s-cluster.clusterClass.apiServer.admissionPlugins" (dict) | fromYamlArray | join ",") -}}
   {{- $args = set $args "event-ttl" "4h" -}}
   {{- $args = set $args "tls-cipher-suites" (include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) | fromYamlArray | join ",") -}}
   {{- toYaml $args -}}
 {{- end }}
+
+{{- define "t8s-cluster.clusterClass.apiServer.staticFiles" -}}
+  {{- toYaml (dict
+      "admission-control-config.yaml" (dict
+        "path" (include "t8s-cluster.clusterClass.apiServer.admissionControlConfigPath" (dict))
+        "fileName" (include "t8s-cluster.clusterClass.apiServer.admissionControlConfigFileName" (dict))
+      )
+      "event-rate-limit-config.yaml" (dict
+        "path" (include "t8s-cluster.clusterClass.apiServer.eventRateLimitConfigPath" (dict))
+        "fileName" (include "t8s-cluster.clusterClass.apiServer.eventRateLimitConfigFileName" (dict))
+      )
+    )
+  -}}
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.dynamicFiles" -}}
+  {{- toYaml (dict
+      "authentication-config.yaml" (dict
+        "path" (include "t8s-cluster.clusterClass.apiServer.authenticationConfigPath" (dict))
+        "fileName" (include "t8s-cluster.clusterClass.apiServer.authenticationConfigFileName" (dict))
+        "content" (include "t8s-cluster.clusterClass.apiServer.authenticationConfig" (dict "context" .))
+      )
+    )
+  -}}
+{{- end -}}
