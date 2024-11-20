@@ -1,0 +1,5 @@
+{{- define "t8s-cluster.clusterClass.apiServer.authenticationConfig" -}}
+apiVersion: apiserver.config.k8s.io/v1beta1
+kind: AuthenticationConfigurattion
+jwt: []
+{{- end -}}

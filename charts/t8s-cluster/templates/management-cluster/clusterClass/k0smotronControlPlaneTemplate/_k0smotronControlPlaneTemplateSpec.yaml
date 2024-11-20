@@ -11,6 +11,17 @@ service:
   konnectivityPort: 8132
 controllerPlaneFlags:
   - --disable-components=metrics-server
+mounts:
+  configMap:
+    name: $cluster-apiserver
+    {{- $items := list -}}
+    {{- range $file, $path := include "t8s-cluster.clusterClass.apiServer.staticFiles" (dict) | fromYaml -}}
+      {{- $items = append $items (dict "key" $file "path" $path) -}}
+    {{- end }}
+    {{- range $name, $file := include "t8s-cluster.clusterClass.apiServer.dynamicFiles" (dict "context" .) | fromYaml -}}
+      {{- $items = append $items (dict "key" $name "path" (get $file "path")) -}}
+    {{- end }}
+    items: {{- toYaml $items | nindent 6 }}
 k0sConfig:
   apiVersion: k0s.k0sproject.io/v1beta1
   kind: ClusterConfig
@@ -18,18 +29,7 @@ k0sConfig:
     network:
       provider: custom
     api:
-      extraArgs: {{- include "t8s-cluster.clusterClass.args.apiServer" (dict "context" . "excludePatches" true) | nindent 8 }}
-        # TODO: figure out how to make this work
-        # admission-control-config-file: &admissionControlConfigFilePath /etc/kubernetes/admission-control-config.yaml
-        #  extraVolumes:
-        #    - hostPath: *admissionControlConfigFilePath
-        #      mountPath: *admissionControlConfigFilePath
-        #      name: admission-control-config
-        #      readOnly: true
-        #    - hostPath: &eventRateLimitConfigFilePath {\{ $eventRateLimitConfigFilePath }}
-        #      mountPath: *eventRateLimitConfigFilePath
-        #      name: event-rate-limit-config
-        #      readOnly: true
+      extraArgs: {{- include "t8s-cluster.clusterClass.args.apiServer" (dict "context" .) | nindent 8 }}
     controllerManager:
       extraArgs: {{- include "t8s-cluster.clusterClass.args.controllerManager" (dict "context" .) | nindent 8 }}
     scheduler:
