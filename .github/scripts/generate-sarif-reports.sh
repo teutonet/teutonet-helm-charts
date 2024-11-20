@@ -6,6 +6,10 @@
 set -eu
 set -o pipefail
 
+declare -A IMAGE_PULL_TOKENS=(
+  [gitlab.teuto.net]="${TEUTO_PORTAL_WORKER_PULL_TOKEN}"
+)
+
 function createSarifReports() {
   local chart="${1?}"
   local chartName
@@ -44,6 +48,10 @@ function generateSarifReport() {
 export -f generateSarifReport
 
 trivy image --download-db-only
+
+for registry in "${!IMAGE_PULL_TOKENS[@]}"; do
+  TRIVY_PASSWORD="${IMAGE_PULL_TOKENS["$registry"]}" trivy registry login --username github-cve-scanning "$registry"
+done
 
 if [[ "$#" == 1 && -d "$1" ]]; then
   createSarifReports "$1"
