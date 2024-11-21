@@ -15,7 +15,7 @@ docker.io:
   grafana: ALL_IMAGES
   hjacobs:
     kube-janitor: ALL_TAGS
-  postgres: ALL_IMAGES
+  postgres: ALL_TAGS
   stellio: ALL_IMAGES
   velero: ALL_IMAGES
   vladgh:
