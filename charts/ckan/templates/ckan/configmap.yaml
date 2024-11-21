@@ -1,0 +1,76 @@
+{{- $name := (printf "%s-%s-configmap" (include "common.names.fullname" .) "ckan") -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $name }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: {{ $name }}
+  namespace: {{ .Release.Namespace | quote }}
+data:
+  ckan-init.sh: |-
+    #!/bin/bash
+    echo "initiate ckan"
+    if [[ -z "$DATAPUSHER_API_TOKEN" || -z "$EMAIL_API_KEY" ]]; then
+
+      ckan config-tool $CKAN_INI "SECRET_KEY=${SECRET_KEY}"
+      ckan config-tool $CKAN_INI "api_token.jwt.encode.secret=string:${JWT_SECRET}"
+      ckan config-tool $CKAN_INI "api_token.jwt.decode.secret=string:${JWT_SECRET}"
+
+      db_command="ckan -c $CKAN_INI db init"
+      max_retries=3
+      attempt=0
+
+      echo "[prerun] Initializing or upgrading db - start"
+
+      while [ $attempt -lt $max_retries ]; do
+        $db_command 2>&1
+        if [ $? -eq 0 ]; then
+          echo "[prerun] Initializing or upgrading db - end"
+          break
+        else
+          if grep -q "OperationalError" <<< "$($db_command 2>&1)"; then
+            echo "[prerun] Database not ready, retrying in 5 seconds..."
+            sleep 5
+            attempt=$((attempt + 1))
+          else
+            echo "[prerun] Error occurred: $(tail -n 1 <(echo $?))"
+            break
+          fi
+        fi
+        attempt=$((attempt + 1))
+      done
+      if [ $attempt -ge $max_retries ]; then
+          echo "[prerun] Failed to initialize or upgrade db after $max_retries attempts, exiting..."
+          exit 1
+      fi
+
+
+
+      if [[ -z "$CKAN_SYSADMIN_NAME" || -z "$CKAN_SYSADMIN_PASSWORD" || -z "$CKAN_SYSADMIN_EMAIL" ]]; then
+        echo "[prerun] Missing required environment variables: CKAN_SYSADMIN_NAME, CKAN_SYSADMIN_PASSWORD, or CKAN_SYSADMIN_EMAIL"
+        exit 1
+      fi
+
+      EXISTING_USER=$(ckan -c "$CKAN_INI" user show "$CKAN_SYSADMIN_NAME" 2>/dev/null)
+
+      if [[ "$EXISTING_USER" == *"User: None"* ]]; then
+        echo "[prerun] Creating sysadmin user $CKAN_SYSADMIN_NAME"
+
+        ckan -c "$CKAN_INI" user add "$CKAN_SYSADMIN_NAME" "password=$CKAN_SYSADMIN_PASSWORD" "email=$CKAN_SYSADMIN_EMAIL"
+        echo "[prerun] Created user $CKAN_SYSADMIN_NAME"
+
+        ckan -c "$CKAN_INI" sysadmin add "$CKAN_SYSADMIN_NAME"
+        echo "[prerun] Made user $CKAN_SYSADMIN_NAME a sysadmin"
+        else
+        echo "[prerun] Sysadmin user $CKAN_SYSADMIN_NAME exists, skipping creation"
+      fi
+
+      if [[ -z "$DATAPUSHER_API_TOKEN" ]]; then
+        ckan -c $CKAN_INI user token add ckan_admin datapusherApiKey | tail -n 1 | tr -d '\t' > /api-tokens/datapusherApiKey;
+      fi
+      if [[ -z "$EMAIL_API_KEY" ]]; then
+        ckan -c $CKAN_INI user token add ckan_admin emailApiKey | tail -n 1 | tr -d '\t' > /api-tokens/emailApiKey;
+      fi
+    else
+      echo "ckan already initiated"
+    fi

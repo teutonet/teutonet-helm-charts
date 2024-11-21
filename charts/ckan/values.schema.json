@@ -55,6 +55,24 @@
         }
       },
       "properties": {
+        "locales": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "default":{
+              "type": "string"
+            },
+            "offered": {
+              "type": "string"
+            }
+          }
+        },
+        "extraEnvVars": {
+          "type": ["array", "string"],
+          "description": "Array with extra environment variables to add to CKAN",
+          "default": [],
+          "items": {}
+        },
         "siteId":{
           "type": "string",
           "description": "The search index is linked to the value of the ckan.site_id, so if you have more than one CKAN instance using the same solr_url, they will each have a separate search index as long as their ckan.site_id values are different."
@@ -64,6 +82,15 @@
           "description": "This sets the name of the site, as displayed in the CKAN web interface."
         },
         "plugins":{
+          "type": "array",
+          "items": {
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": "The enabled plugins in the Ckan instance."
+        },
+        "defaultViews":{
           "type": "array",
           "items": {
             "items": {
