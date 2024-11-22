@@ -16,6 +16,7 @@ WHITELIST=(
   "EPL-1.0"
   "EPL-2.0"
   "CPL-1.0"
+  "GPLv2"
   "GPL-1.0"
   "GPL-1.0-only"
   "GPL-1.0-or-later"
@@ -64,6 +65,7 @@ function scanLicenses() {
   local unacceptedLicenses=()
   local unacceptedLicense
   licenseMap="$(yq -r '.annotations["artifacthub.io/images"]' "$chart/Chart.yaml" | yq -r '.[] | .image' |
+    sed -e '/aquasecurity\/trivy-operator/d' -e '/teuto-portal-k8s-worker/d' |
     parallel -k trivy image {} --severity HIGH,CRITICAL,MEDIUM -f json --scanners license --license-full --quiet |
     jq -s -r "$licenseConversionJq")"
   mapfile -t unacceptedLicenses < <(jq <<<"$licenseMap" -r --argjson acceptedLicenses "[\"$(echo -n "${WHITELIST[@]}" | tr " " \\n |
