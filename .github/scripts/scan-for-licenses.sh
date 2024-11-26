@@ -6,6 +6,10 @@
 set -eu
 set -o pipefail
 
+declare -A IMAGE_PULL_TOKENS=(
+  ["registry-gitlab.teuto.net"]="${TEUTO_PORTAL_WORKER_PULL_TOKEN}"
+)
+
 WHITELIST=(
   "AGPL-3.0" # We're not writing software 🤷
   "CC-BY-SA-3.0"
@@ -52,6 +56,12 @@ function scanLicenses() {
     return 1
   fi
 }
+
+trivy image --download-db-only
+
+for registry in "${!IMAGE_PULL_TOKENS[@]}"; do
+  TRIVY_PASSWORD="${IMAGE_PULL_TOKENS["$registry"]}" trivy registry login --username github-cve-scanning "$registry"
+done
 
 if [[ "$#" == 1 && -d "$1" ]]; then
   scanLicenses "$1"
