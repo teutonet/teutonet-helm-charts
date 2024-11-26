@@ -10,7 +10,6 @@ WHITELIST=(
   "AGPL-3.0" # We're not writing software 🤷
   "CC-BY-SA-3.0"
   "CPL-1.0"
-  "GPLv2"
   "GPL-1.0"
   "GPL-2.0"
   "GPL-2.0-with-autoconf-exception"
