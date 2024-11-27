@@ -6,6 +6,8 @@
 set -eu
 set -o pipefail
 
+source "$(dirname "$0")/trivy-login-to-registries.sh"
+
 WHITELIST=(
   "AGPL-3.0" # We're not writing software 🤷
   "CC-BY-SA-3.0"
