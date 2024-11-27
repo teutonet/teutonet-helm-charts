@@ -36,7 +36,7 @@ function scanLicenses() {
   local unacceptedLicenses=()
   local unacceptedLicense
   licenseMap="$(yq -r '.annotations["artifacthub.io/images"]' "$chart/Chart.yaml" | yq -r '.[] | .image' |
-    parallel -k trivy image {} --severity HIGH,CRITICAL,MEDIUM -f json --scanners license --license-full --quiet |
+    parallel -k trivy image {} --severity HIGH,CRITICAL,MEDIUM -f json --scanners license --quiet |
     jq -s -r "$licenseConversionJq")"
   mapfile -t unacceptedLicenses < <(jq <<<"$licenseMap" -r --argjson acceptedLicenses "[\"$(echo -n "${WHITELIST[@]}" | tr " " \\n |
     paste -sd '@' | sed 's#@#","#g')\"]" '(keys-$acceptedLicenses)[]')
