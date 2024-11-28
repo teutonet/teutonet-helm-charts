@@ -10,19 +10,49 @@ source "$(dirname "$0")/trivy-login-to-registries.sh"
 
 WHITELIST=(
   "AGPL-3.0" # We're not writing software 🤷
+  "AGPL-3.0-only"
+  "AGPL-3.0-or-later"
   "CC-BY-SA-3.0"
+  "CDDL-1.0"
+  "CDDL-1.1"
   "CPL-1.0"
+  "EPL-1.0"
+  "EPL-2.0"
   "GPL-1.0"
+  "GPL-1.0-only"
+  "GPL-1.0-or-later"
   "GPL-2.0"
+  "GPL-2.0-only"
+  "GPL-2.0-or-later"
   "GPL-2.0-with-autoconf-exception"
+  "GPL-2.0-with-autoconf-exception+"
   "GPL-2.0-with-bison-exception"
+  "GPL-2.0-with-bison-exception+"
+  "GPL-2.0-with-classpath-exception"
   "GPL-3.0"
+  "GPL-3.0-only"
+  "GPL-3.0-or-later"
   "GPL-3.0-with-autoconf-exception"
+  "GPL-3.0-with-autoconf-exception+"
+  "GPLv2 with exceptions"
+  "GPLv2"
+  "GPLv2+"
+  "GPLv3+"
   "LGPL-2.0"
+  "LGPL-2.0-only"
+  "LGPL-2.0-or-later"
   "LGPL-2.1"
+  "LGPL-2.1-only"
+  "LGPL-2.1-or-later"
   "LGPL-3.0"
+  "LGPL-3.0-only"
+  "LGPL-3.0-or-later"
+  "LGPLv2"
+  "LGPLv2+"
+  "LGPLv3+"
   "MPL-1.1"
   "MPL-2.0"
+  "MPLv2.0"
   "Ruby"
   "Sleepycat"
   "WTFPL"
@@ -38,8 +68,7 @@ function scanLicenses() {
   licenseMap="$(yq -r '.annotations["artifacthub.io/images"]' "$chart/Chart.yaml" | yq -r '.[] | .image' |
     parallel -k trivy image {} --severity HIGH,CRITICAL,MEDIUM -f json --scanners license --quiet |
     jq -s -r "$licenseConversionJq")"
-  mapfile -t unacceptedLicenses < <(jq <<<"$licenseMap" -r --argjson acceptedLicenses "[\"$(echo -n "${WHITELIST[@]}" | tr " " \\n |
-    paste -sd '@' | sed 's#@#","#g')\"]" '(keys-$acceptedLicenses)[]')
+  mapfile -t unacceptedLicenses < <(jq <<<"$licenseMap" -r --argjson acceptedLicenses "[\"$(for i in ${!WHITELIST[@]}; do echo "${WHITELIST[$i]}"; done | paste -sd '@' | sed 's#@#","#g')\"]" '(keys-$acceptedLicenses)[]')
   if [[ "${#unacceptedLicenses[@]}" -gt 0 ]]; then
     echo "found ${#unacceptedLicenses[@]} untrusted images in '$chart', please fix;" >&2
     for unacceptedLicense in "${unacceptedLicenses[@]}"; do
