@@ -27,7 +27,7 @@ jobs:
           TEUTO_PORTAL_WORKER_PULL_TOKEN: ${{ secrets.TEUTO_PORTAL_WORKER_PULL_TOKEN }}
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          ./.github/scripts/scan-for-licenses.sh ${{ needs.getChangedChart.outputs.chart }}
+          ./.github/scripts/scan-for-licenses.sh "charts/${{ needs.getChangedChart.outputs.chart }}"
   check-licenses-list:
     name: check licenses from list
     runs-on: ubuntu-latest
