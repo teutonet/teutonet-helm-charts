@@ -7,6 +7,7 @@ fi
 
 declare -A IMAGE_PULL_TOKENS=(
   ["registry-gitlab.teuto.net"]="${TEUTO_PORTAL_WORKER_PULL_TOKEN?}"
+  ["ghcr.io"]="${GHCR_PULL_TOKEN}"
 )
 
 trivy image --download-db-only

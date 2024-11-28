@@ -25,6 +25,7 @@ jobs:
       - run: /home/linuxbrew/.linuxbrew/bin/brew install trivy
       - env:
           TEUTO_PORTAL_WORKER_PULL_TOKEN: ${{ secrets.TEUTO_PORTAL_WORKER_PULL_TOKEN }}
+          GHCR_PULL_TOKEN: ${{ secrets.GHCR_PULL_TOKEN }}
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           ./.github/scripts/scan-for-licenses.sh "charts/${{ needs.getChangedChart.outputs.chart }}"
