@@ -31,7 +31,7 @@ sources:
   - https://github.com/teutonet/teutonet-helm-charts/tree/ckan-v1.1.7/charts/ckan
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/ckan
 type: application
-version: 1.1.8
+version: 1.2.0
 annotations:
   artifacthub.io/images: |
     - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r14                                                                     #  default/StatefulSet/ckan-postgresql-primary.yaml

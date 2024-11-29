@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.1.8...ckan-v1.2.0) (2024-11-29)
+
+
+### Features
+
+* **ckan:** add api creation and perist secrets ([#1238](https://github.com/teutonet/teutonet-helm-charts/issues/1238)) ([#1249](https://github.com/teutonet/teutonet-helm-charts/issues/1249)) ([a42d2f6](https://github.com/teutonet/teutonet-helm-charts/commit/a42d2f6dbd8a241d390a70263ba67d2d69362396))
+
+
+### Miscellaneous Chores
+
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/solr-ckan docker tag to v1.0.12 ([#1210](https://github.com/teutonet/teutonet-helm-charts/issues/1210)) ([6900c0f](https://github.com/teutonet/teutonet-helm-charts/commit/6900c0ff7333e851450eb0b64bee8efcb8cffb5c))
+
 ## [1.1.8](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.1.7...ckan-v1.1.8) (2024-10-21)
 
 
