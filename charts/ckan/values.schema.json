@@ -73,6 +73,18 @@
           "default": [],
           "items": {}
         },
+        "extraVolumeMounts": {
+          "type": ["array", "string"],
+          "description": "Array with extra volume mounts variables to add to CKAN",
+          "default": [],
+          "items": {}
+        },
+        "extraVolumes": {
+          "type": ["array", "string"],
+          "description": "Array with extra volumes variables to add to CKAN",
+          "default": [],
+          "items": {}
+        },
         "siteId":{
           "type": "string",
           "description": "The search index is linked to the value of the ckan.site_id, so if you have more than one CKAN instance using the same solr_url, they will each have a separate search index as long as their ckan.site_id values are different."

@@ -33,6 +33,9 @@ spec:
             name: my-configmap
         - name: api-tokens-volume
           emptyDir: {}
+        {{- with .Values.ckan.extraVolumes }}
+          {{- tpl (toYaml .) $ | nindent 8 -}}
+        {{- end }}
       securityContext:
       {{- toYaml .Values.ckan.podSecurityContext | default dict | nindent 8 }}
       containers:
@@ -200,6 +203,9 @@ spec:
             - name: "ckan"
               mountPath: /var/lib/ckan
               readOnly: false
+            {{- with .Values.ckan.extraVolumeMounts }}
+              {{- tpl (toYaml .) $ | nindent 12 -}}
+            {{- end }}
           ports:
             - name: http
               containerPort: {{ include "ckan.ckan.service.port" $ }}
