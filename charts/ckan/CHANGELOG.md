@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.0...ckan-v1.2.1) (2024-12-03)
+
+
+### Miscellaneous Chores
+
+* **ckan:** add extra volumes to ckan ([#1263](https://github.com/teutonet/teutonet-helm-charts/issues/1263)) ([bb194dc](https://github.com/teutonet/teutonet-helm-charts/commit/bb194dcdc4535d391f0659a9d6070e578b7d91f5))
+
 ## [1.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.1.8...ckan-v1.2.0) (2024-11-29)
 
 
