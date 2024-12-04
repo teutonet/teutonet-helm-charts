@@ -1,5 +1,24 @@
 # Changelog
 
+## [7.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.0.0...base-cluster-v7.1.0) (2024-12-04)
+
+
+### Features
+
+* **base-cluster/monitoring:** create aggregate ClusterRoles ([#1234](https://github.com/teutonet/teutonet-helm-charts/issues/1234)) ([cd037a0](https://github.com/teutonet/teutonet-helm-charts/commit/cd037a0fa942a75c6c087c86e7e2d2912e003690))
+
+
+### Bug Fixes
+
+* **base-cluster/tetragon:** only roll out tetragon repo when needed ([#1220](https://github.com/teutonet/teutonet-helm-charts/issues/1220)) ([2252399](https://github.com/teutonet/teutonet-helm-charts/commit/2252399ea0a6a31ea111359fdd0873e26375e001))
+* **base-cluster:** additionalItems is the wrong field ([#1231](https://github.com/teutonet/teutonet-helm-charts/issues/1231)) ([0235cd6](https://github.com/teutonet/teutonet-helm-charts/commit/0235cd6f80eb168dfb12b3353af57790a85e6ddd))
+* **base-cluster:** only `toYaml` if field exists ([#1226](https://github.com/teutonet/teutonet-helm-charts/issues/1226)) ([d81cd38](https://github.com/teutonet/teutonet-helm-charts/commit/d81cd3855530c7fafa7257c9507ab4e7caa220ca))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update helm release descheduler to 0.31.x ([#1236](https://github.com/teutonet/teutonet-helm-charts/issues/1236)) ([2504f6c](https://github.com/teutonet/teutonet-helm-charts/commit/2504f6c3bae93961b5af60bfa7cdd179019327b6))
+
 ## [7.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v6.7.0...base-cluster-v7.0.0) (2024-11-11)
 
 
