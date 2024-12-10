@@ -703,6 +703,18 @@
                         }
                       },
                       "additionalProperties": false
+                    },
+                    "betterstack": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "webhookKey": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
                     }
                   },
                   "additionalProperties": false
