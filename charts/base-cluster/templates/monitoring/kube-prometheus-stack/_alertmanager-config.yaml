@@ -85,7 +85,7 @@ config:
     {{- end }}
     {{- $routes := list (dict "match" (dict "alertname" "InfoInhibitor") "receiver" "null") -}}
     {{- $routes = append $routes (dict "match" (dict "alertname" "Watchdog") "receiver" (hasKey $receivers "healthchecks.io" | ternary "healthchecks.io" "null") "group_interval" "1m" "repeat_interval" "1m") }}
-    routes  : {{- toYaml $routes | nindent 6 }}
+    routes: {{- toYaml $routes | nindent 6 }}
 {{- else }}
 enabled: false
 {{- end }}
