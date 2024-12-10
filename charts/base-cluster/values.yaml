@@ -73,7 +73,7 @@ global:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: 1.31.2-debian-12-r3@sha256:45e7c7a9d120f93e9b66b689c63896ff87bb5b4d73b1203a0636d09e1219c879
+      tag: 1.31.4-debian-12-r0@sha256:671516f53dd61f1e7d1dc178ba30d47faecc6caaa1e8c2a0f53d3d939f11c077
   flux:
     image:
       registry: docker.io
