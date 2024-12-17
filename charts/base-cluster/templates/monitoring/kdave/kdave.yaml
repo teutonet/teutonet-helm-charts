@@ -30,12 +30,18 @@ spec:
     apiVersionsInspector:
       enabled: false
 ---
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "kdave-servicemonitor" "resource" (include "base-cluster.kdave.serviceMonitor" (dict "context" .)) "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "kdave")) | nindent 0 }}
+{{- end -}}
+
+
+{{- define "base-cluster.kdave.serviceMonitor" -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: kdave
   namespace: monitoring
-  labels: {{- include "common.labels.standard" $ | nindent 4 }}{{- toYaml .Values.monitoring.labels | nindent 4 }}
+  labels: {{- include "common.helm.labels" (dict) | nindent 4 }}{{- toYaml .Values.monitoring.labels | nindent 4 }}
     app.kubernetes.io/component: kdave
     app.kubernetes.io/part-of: monitoring
 spec:
