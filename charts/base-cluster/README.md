@@ -1,7 +1,6 @@
-[modeline]: # ( vim: set ft=markdown: )
 # base-cluster
 
-![Version: 6.7.0](https://img.shields.io/badge/Version-6.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 7.1.0](https://img.shields.io/badge/Version-7.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -22,7 +21,7 @@ A common base for every kubernetes cluster
 git init
 
 # create empty cluster HelmRelease;
-flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 5.x.x > cluster.yaml
+flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 7.x.x > cluster.yaml
 
 # maybe use the following name for your cluster;
 kubectl get node -o jsonpath='{.items[0].metadata.annotations.cluster\.x-k8s\.io/cluster-name}'
@@ -49,7 +48,7 @@ helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io
 
 # manual initial installation of the chart, afterwards the chart takes over
 # after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
-helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 4.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
+helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 7.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
 
 # you can use this command to get the instructions again
 # e.g. when adding users, gitRepositories, ...
@@ -237,10 +236,12 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v6.7.0/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v7.1.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
+
+Kubernetes: `>=1.27.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
@@ -314,7 +315,7 @@ haven't already.
 ### 5.x.x -> 6.0.0
 
 The kyverno 2.x.x -> 3.x.x upgrade cannot be done without manual intervention, see
-https://artifacthub.io/packages/helm/kyverno/kyverno#option-1---uninstallation-and-reinstallation
+<https://artifacthub.io/packages/helm/kyverno/kyverno#option-1---uninstallation-and-reinstallation>
 
 So you have to backup your resources and delete the kyverno HelmReleases before the
 upgrade, they will be recreated in version 6.
@@ -326,10 +327,10 @@ you cluster.
 
 **Title:** base cluster configuration
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                         | Pattern | Type        | Deprecated | Definition | Title/Description    |
 | -------------------------------- | ------- | ----------- | ---------- | ---------- | -------------------- |
@@ -352,10 +353,10 @@ you cluster.
 
 ## <a name="global"></a>1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Property                                                  | Pattern | Type             | Deprecated | Definition              | Title/Description                                                                                                                                                                             |
 | --------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -434,10 +435,10 @@ nexus.teuto.net
 
 ### <a name="global_imageCredentials"></a>1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > imageCredentials`
 
-|                           |                                                                                                                                                                                      |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Type**                  | `object`                                                                                                                                                                             |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_imageCredentials_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                      |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                             |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_imageCredentials_additionalProperties) |
 
 **Description:** A map of credentials to be created and synced into namespaces, the key is the secret name
 
@@ -447,10 +448,10 @@ nexus.teuto.net
 
 #### <a name="global_imageCredentials_additionalProperties"></a>1.5.1. Property `base cluster configuration > global > imageCredentials > additionalProperties`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                              | Pattern | Type   | Deprecated | Definition                  | Title/Description                                                     |
 | ------------------------------------------------------------------------------------- | ------- | ------ | ---------- | --------------------------- | --------------------------------------------------------------------- |
@@ -485,12 +486,12 @@ docker.io
 
 ##### <a name="global_imageCredentials_additionalProperties_targetNamespaces"></a>1.5.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > imageCredentials > additionalProperties > targetNamespaces`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Default**               | `"ALL"`                                                                                                                           |
-| **Defined in**            | #/$defs/targetNamespaces                                                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Default**               | `"ALL"`                                                                     |
+| **Defined in**            | #/$defs/targetNamespaces                                                    |
 
 **Description:** The namespaces to sync the secret into, or `ALL` for all namespaces
 
@@ -525,7 +526,7 @@ Specific value: `"ALL"`
 | --------------------------------------------------------------------------------------------- | ----------- |
 | [item 1 items](#global_imageCredentials_additionalProperties_targetNamespaces_oneOf_i1_items) | -           |
 
-###### <a name="autogenerated_heading_2"></a>1.5.1.4.2.1. base cluster configuration > global > imageCredentials > additionalProperties > targetNamespaces > oneOf > item 1 > item 1 items
+###### <a name="global_imageCredentials_additionalProperties_targetNamespaces_oneOf_i1_items"></a>1.5.1.4.2.1. base cluster configuration > global > imageCredentials > additionalProperties > targetNamespaces > oneOf > item 1 > item 1 items
 
 |          |          |
 | -------- | -------- |
@@ -533,10 +534,10 @@ Specific value: `"ALL"`
 
 ### <a name="global_kubectl"></a>1.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > kubectl`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 **Description:** Image with `kubectl` binary
 
@@ -546,11 +547,11 @@ Specific value: `"ALL"`
 
 #### <a name="global_kubectl_image"></a>1.6.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > kubectl > image`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-| **Defined in**            | #/$defs/image                                                                                            |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+| **Defined in**            | #/$defs/image                                                  |
 
 | Property                                          | Pattern | Type   | Deprecated | Definition | Title/Description              |
 | ------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------ |
@@ -601,10 +602,10 @@ bitnami/kubectl
 
 ### <a name="global_curl"></a>1.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > curl`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 **Description:** Image with `curl` binary
 
@@ -614,18 +615,18 @@ bitnami/kubectl
 
 #### <a name="global_curl_image"></a>1.7.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > curl > image`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-| **Same definition as**    | [image](#global_kubectl_image)                                                                           |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+| **Same definition as**    | [image](#global_kubectl_image)                                 |
 
 ### <a name="global_flux"></a>1.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > flux`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 **Description:** Image with `flux` binary
 
@@ -635,18 +636,18 @@ bitnami/kubectl
 
 #### <a name="global_flux_image"></a>1.8.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > flux > image`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-| **Same definition as**    | [image](#global_kubectl_image)                                                                           |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+| **Same definition as**    | [image](#global_kubectl_image)                                 |
 
 ### <a name="global_gpg"></a>1.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > gpg`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 **Description:** Image with `gpg` binary
 
@@ -656,18 +657,18 @@ bitnami/kubectl
 
 #### <a name="global_gpg_image"></a>1.9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > gpg > image`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-| **Same definition as**    | [image](#global_kubectl_image)                                                                           |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+| **Same definition as**    | [image](#global_kubectl_image)                                 |
 
 ### <a name="global_networkPolicy"></a>1.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                | Pattern | Type             | Deprecated | Definition | Title/Description                                                                                             |
 | ------------------------------------------------------- | ------- | ---------------- | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------- |
@@ -692,10 +693,10 @@ Must be one of:
 
 #### <a name="global_networkPolicy_metricsLabels"></a>1.10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > metricsLabels`
 
-|                           |                                                                                                                                                                                                 |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                        |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_networkPolicy_metricsLabels_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                                 |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                        |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_networkPolicy_metricsLabels_additionalProperties) |
 
 **Description:** The labels used to allow ingress from the metrics service
 
@@ -711,10 +712,10 @@ Must be one of:
 
 #### <a name="global_networkPolicy_dnsLabels"></a>1.10.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > dnsLabels`
 
-|                           |                                                                                                                                                                                             |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                    |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_networkPolicy_dnsLabels_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                             |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                    |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_networkPolicy_dnsLabels_additionalProperties) |
 
 **Description:** The labels used to allow egress to the DNS service
 
@@ -730,10 +731,10 @@ Must be one of:
 
 #### <a name="global_networkPolicy_ingressLabels"></a>1.10.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > ingressLabels`
 
-|                           |                                                                                                                                                                                                 |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                        |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_networkPolicy_ingressLabels_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                                 |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                        |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_networkPolicy_ingressLabels_additionalProperties) |
 
 **Description:** The labels used to allow egress to the DNS service
 
@@ -749,10 +750,10 @@ Must be one of:
 
 ### <a name="global_helmRepositories"></a>1.11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories`
 
-|                           |                                                                                                                                                                                      |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Type**                  | `object`                                                                                                                                                                             |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                      |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                             |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties) |
 
 **Description:** A map of helmRepositories to create, the key is the name
 
@@ -762,10 +763,10 @@ Must be one of:
 
 #### <a name="global_helmRepositories_additionalProperties"></a>1.11.1. Property `base cluster configuration > global > helmRepositories > additionalProperties`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                              |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `combining`                                                    |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                | Pattern | Type             | Deprecated | Definition           | Title/Description                                                                                            |
 | ----------------------------------------------------------------------- | ------- | ---------------- | ---------- | -------------------- | ------------------------------------------------------------------------------------------------------------ |
@@ -782,10 +783,10 @@ Must be one of:
 
 ##### <a name="global_helmRepositories_additionalProperties_oneOf_i0"></a>1.11.1.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 0`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Property                                                                   | Pattern | Type   | Deprecated | Definition | Title/Description |
 | -------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -799,27 +800,27 @@ Must be one of:
 
 ###### <a name="global_helmRepositories_additionalProperties_oneOf_i0_oneOf_i0"></a>1.11.1.1.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 0 > oneOf > item 0`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_3"></a>1.11.1.1.1.1. Must **not** be
+###### <a name="autogenerated_heading_2"></a>1.11.1.1.1.1. Must **not** be
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_4"></a>1.11.1.1.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_3"></a>1.11.1.1.1.1.1. The following properties are required
 * type
 
 ###### <a name="global_helmRepositories_additionalProperties_oneOf_i0_oneOf_i1"></a>1.11.1.1.2. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 0 > oneOf > item 1`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Property                                                                        | Pattern | Type  | Deprecated | Definition | Title/Description |
 | ------------------------------------------------------------------------------- | ------- | ----- | ---------- | ---------- | ----------------- |
@@ -845,10 +846,10 @@ Specific value: `"helm"`
 
 ###### <a name="global_helmRepositories_additionalProperties_oneOf_i0_charts"></a>1.11.1.1.4. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 0 > charts`
 
-|                           |                                                                                                                                                                                                                           |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                                                  |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties_oneOf_i0_charts_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                                                           |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                                  |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties_oneOf_i0_charts_additionalProperties) |
 
 | Property                                                                                  | Pattern | Type   | Deprecated | Definition | Title/Description |
 | ----------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -862,27 +863,27 @@ Specific value: `"helm"`
 
 ##### <a name="global_helmRepositories_additionalProperties_oneOf_i1"></a>1.11.1.2. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Property                                                               | Pattern | Type   | Deprecated | Definition | Title/Description |
 | ---------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [url](#global_helmRepositories_additionalProperties_oneOf_i1_url )   | No      | string | No         | -          | -                 |
 | + [type](#global_helmRepositories_additionalProperties_oneOf_i1_type ) | No      | const  | No         | -          | -                 |
 
-###### <a name="autogenerated_heading_5"></a>1.11.1.2.1. Must **not** be
+###### <a name="autogenerated_heading_4"></a>1.11.1.2.1. Must **not** be
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_6"></a>1.11.1.2.1.1. The following properties are required
+###### <a name="autogenerated_heading_5"></a>1.11.1.2.1.1. The following properties are required
 * interval
 
-###### <a name="autogenerated_heading_7"></a>1.11.1.2.2. The following properties are required
+###### <a name="autogenerated_heading_6"></a>1.11.1.2.2. The following properties are required
 * charts
 
 ###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_url"></a>1.11.1.2.3. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > url`
@@ -946,10 +947,10 @@ Specific value: `"git"`
 
 ##### <a name="global_helmRepositories_additionalProperties_charts"></a>1.11.1.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > charts`
 
-|                           |                                                                                                                                                                                                                  |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                                         |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties_charts_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                                                  |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Type**                  | `object`                                                                                                                                         |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties_charts_additionalProperties) |
 
 **Description:** Which charts are deployed in which version using this repo, used internally
 
@@ -959,10 +960,10 @@ Specific value: `"git"`
 
 ###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties"></a>1.11.1.6.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | One of(Option)                                                                               |
 | -------------------------------------------------------------------------------------------- |
@@ -977,10 +978,10 @@ Specific value: `"git"`
 
 ###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1"></a>1.11.1.6.1.2. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                              |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `combining`                                                    |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                                                   | Pattern | Type   | Deprecated | Definition | Title/Description                              |
 | ---------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ---------------------------------------------- |
@@ -1001,57 +1002,57 @@ Specific value: `"git"`
 
 ###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i0"></a>1.11.1.6.1.2.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 0`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_8"></a>1.11.1.6.1.2.1.1. The following properties are required
+###### <a name="autogenerated_heading_7"></a>1.11.1.6.1.2.1.1. The following properties are required
 * branch
 
 ###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i1"></a>1.11.1.6.1.2.2. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 1`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_9"></a>1.11.1.6.1.2.2.1. The following properties are required
+###### <a name="autogenerated_heading_8"></a>1.11.1.6.1.2.2.1. The following properties are required
 * commit
 
 ###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i2"></a>1.11.1.6.1.2.3. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 2`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_10"></a>1.11.1.6.1.2.3.1. The following properties are required
+###### <a name="autogenerated_heading_9"></a>1.11.1.6.1.2.3.1. The following properties are required
 * semver
 
 ###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i3"></a>1.11.1.6.1.2.4. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 3`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_11"></a>1.11.1.6.1.2.4.1. The following properties are required
+###### <a name="autogenerated_heading_10"></a>1.11.1.6.1.2.4.1. The following properties are required
 * tag
 
 ###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i4"></a>1.11.1.6.1.2.5. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 4`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_12"></a>1.11.1.6.1.2.5.1. Must **not** be
+###### <a name="autogenerated_heading_11"></a>1.11.1.6.1.2.5.1. Must **not** be
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Any of(Option)                                                                                                     |
 | ------------------------------------------------------------------------------------------------------------------ |
@@ -1062,42 +1063,42 @@ Specific value: `"git"`
 
 ###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i4_not_anyOf_i0"></a>1.11.1.6.1.2.5.1.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 4 > not > anyOf > item 0`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_13"></a>1.11.1.6.1.2.5.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_12"></a>1.11.1.6.1.2.5.1.1.1. The following properties are required
 * branch
 
 ###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i4_not_anyOf_i1"></a>1.11.1.6.1.2.5.1.2. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 4 > not > anyOf > item 1`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_14"></a>1.11.1.6.1.2.5.1.2.1. The following properties are required
+###### <a name="autogenerated_heading_13"></a>1.11.1.6.1.2.5.1.2.1. The following properties are required
 * commit
 
 ###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i4_not_anyOf_i2"></a>1.11.1.6.1.2.5.1.3. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 4 > not > anyOf > item 2`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_15"></a>1.11.1.6.1.2.5.1.3.1. The following properties are required
+###### <a name="autogenerated_heading_14"></a>1.11.1.6.1.2.5.1.3.1. The following properties are required
 * semver
 
 ###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i4_not_anyOf_i3"></a>1.11.1.6.1.2.5.1.4. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 4 > not > anyOf > item 3`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_16"></a>1.11.1.6.1.2.5.1.4.1. The following properties are required
+###### <a name="autogenerated_heading_15"></a>1.11.1.6.1.2.5.1.4.1. The following properties are required
 * tag
 
 ###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_branch"></a>1.11.1.6.1.2.6. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > branch`
@@ -1157,10 +1158,10 @@ Must be one of:
 
 ### <a name="global_certificates"></a>1.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates`
 
-|                           |                                                                                                                                                                                  |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                         |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_certificates_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                  |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                         |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_certificates_additionalProperties) |
 
 **Description:** A map of cert-manager certificates to create and sync its secrets into namespaces, the key is the name, therefore the secret name will be `$key`-certificate
 
@@ -1170,10 +1171,10 @@ Must be one of:
 
 #### <a name="global_certificates_additionalProperties"></a>1.12.1. Property `base cluster configuration > global > certificates > additionalProperties`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                          | Pattern | Type        | Deprecated | Definition                                                                                  | Title/Description                                                                                            |
 | --------------------------------------------------------------------------------- | ------- | ----------- | ---------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
@@ -1183,10 +1184,10 @@ Must be one of:
 
 ##### <a name="global_certificates_additionalProperties_dnsNames"></a>1.12.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > certificates > additionalProperties > dnsNames`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 **Description:** The dnsNames to create
 
@@ -1231,7 +1232,7 @@ test.teuto.net
 | --------------------------------------------------------------------------------- | ----------- |
 | [item 1 items](#global_certificates_additionalProperties_dnsNames_oneOf_i1_items) | -           |
 
-###### <a name="autogenerated_heading_17"></a>1.12.1.1.2.1. base cluster configuration > global > certificates > additionalProperties > dnsNames > oneOf > item 1 > item 1 items
+###### <a name="global_certificates_additionalProperties_dnsNames_oneOf_i1_items"></a>1.12.1.1.2.1. base cluster configuration > global > certificates > additionalProperties > dnsNames > oneOf > item 1 > item 1 items
 
 |          |          |
 | -------- | -------- |
@@ -1239,12 +1240,12 @@ test.teuto.net
 
 ##### <a name="global_certificates_additionalProperties_targetNamespaces"></a>1.12.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates > additionalProperties > targetNamespaces`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Default**               | `"ALL"`                                                                                                                           |
-| **Same definition as**    | [targetNamespaces](#global_imageCredentials_additionalProperties_targetNamespaces)                                                |
+|                           |                                                                                    |
+| ------------------------- | ---------------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                        |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)        |
+| **Default**               | `"ALL"`                                                                            |
+| **Same definition as**    | [targetNamespaces](#global_imageCredentials_additionalProperties_targetNamespaces) |
 
 **Description:** The namespaces to sync the secret into, or `ALL` for all namespaces
 
@@ -1268,10 +1269,10 @@ test.teuto.net
 
 ### <a name="global_namespaces"></a>1.14. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces`
 
-|                           |                                                                                                                                                                                |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Type**                  | `object`                                                                                                                                                                       |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_namespaces_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                       |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_namespaces_additionalProperties) |
 
 **Description:** Namespaces to create. AND *delete* if removed. These will also be the only ones, including the builtin namespaces, for which alerts will be sent if `monitoring.monitorAllNamespaces=false`
 
@@ -1281,10 +1282,10 @@ test.teuto.net
 
 #### <a name="global_namespaces_additionalProperties"></a>1.14.1. Property `base cluster configuration > global > namespaces > additionalProperties`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                        | Pattern | Type   | Deprecated | Definition                                                                    | Title/Description                                                                                            |
 | ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
@@ -1294,10 +1295,10 @@ test.teuto.net
 
 ##### <a name="global_namespaces_additionalProperties_additionalLabels"></a>1.14.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > additionalLabels`
 
-|                           |                                                                                                                                                                                                                      |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                                             |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_namespaces_additionalProperties_additionalLabels_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                                                      |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                             |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_namespaces_additionalProperties_additionalLabels_additionalProperties) |
 
 | Property                                                                             | Pattern | Type   | Deprecated | Definition | Title/Description |
 | ------------------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -1320,10 +1321,10 @@ test.teuto.net
 
 ##### <a name="global_namespaces_additionalProperties_resources"></a>1.14.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > resources`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                  | Pattern | Type   | Deprecated | Definition | Title/Description                                               |
 | ------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | --------------------------------------------------------------- |
@@ -1332,10 +1333,10 @@ test.teuto.net
 
 ###### <a name="global_namespaces_additionalProperties_resources_defaults"></a>1.14.1.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                           | Pattern | Type   | Deprecated | Definition | Title/Description |
 | ---------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -1344,10 +1345,10 @@ test.teuto.net
 
 ###### <a name="global_namespaces_additionalProperties_resources_defaults_requests"></a>1.14.1.3.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults > requests`
 
-|                           |                                                                                                                                                                                                                                 |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                                                        |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                                                                 |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                                        |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
 | Property                                                                                        | Pattern | Type   | Deprecated | Definition          | Title/Description |
 | ----------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------- | ----------------- |
@@ -1355,11 +1356,11 @@ test.teuto.net
 
 ###### <a name="global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties"></a>1.14.1.3.1.1.1. Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults > requests > quantity`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Defined in**            | #/$defs/quantity                                                                                                                  |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Defined in**            | #/$defs/quantity                                                            |
 
 | One of(Option)                                                                                              |
 | ----------------------------------------------------------------------------------------------------------- |
@@ -1380,10 +1381,10 @@ test.teuto.net
 
 ###### <a name="global_namespaces_additionalProperties_resources_defaults_limits"></a>1.14.1.3.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults > limits`
 
-|                           |                                                                                                                                                                                                                               |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                                                      |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_namespaces_additionalProperties_resources_defaults_limits_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                                                               |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                                      |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_namespaces_additionalProperties_resources_defaults_limits_additionalProperties) |
 
 | Property                                                                                      | Pattern | Type   | Deprecated | Definition                                                                                                                                         | Title/Description |
 | --------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
@@ -1394,15 +1395,15 @@ test.teuto.net
 |                           |                                                                                                                                           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                                  |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.")         |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                                                               |
 | **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
 ###### <a name="global_namespaces_additionalProperties_resources_quotas"></a>1.14.1.3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > resources > quotas`
 
-|                           |                                                                                                                                                                                                                      |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                                             |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_namespaces_additionalProperties_resources_quotas_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                                                      |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                             |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_namespaces_additionalProperties_resources_quotas_additionalProperties) |
 
 **Description:** See https://kubernetes.io/docs/concepts/policy/resource-quotas/
 
@@ -1415,15 +1416,15 @@ test.teuto.net
 |                           |                                                                                                                                           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                                  |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.")         |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                                                               |
 | **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
 ### <a name="global_priorityClasses"></a>1.15. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > priorityClasses`
 
-|                           |                                                                                                                                                                                     |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                            |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_priorityClasses_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                     |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                            |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_priorityClasses_additionalProperties) |
 
 | Property                                            | Pattern | Type   | Deprecated | Definition | Title/Description |
 | --------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -1431,10 +1432,10 @@ test.teuto.net
 
 #### <a name="global_priorityClasses_additionalProperties"></a>1.15.1. Property `base cluster configuration > global > priorityClasses > additionalProperties`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                             | Pattern | Type             | Deprecated | Definition | Title/Description |
 | ------------------------------------------------------------------------------------ | ------- | ---------------- | ---------- | ---------- | ----------------- |
@@ -1472,10 +1473,10 @@ Must be one of:
 
 ### <a name="global_authentication"></a>1.16. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > authentication`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                           | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                          |
 | -------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -1485,10 +1486,10 @@ Must be one of:
 
 #### <a name="global_authentication_config"></a>1.16.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > authentication > config`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                      | Pattern | Type   | Deprecated | Definition | Title/Description |
 | ------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -1523,10 +1524,10 @@ Must be one of:
 
 #### <a name="global_authentication_grafana"></a>1.16.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > authentication > grafana`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 **Description:** See https://grafana.com/docs/grafana/latest/setup-grafana/configure-security/configure-authentication/generic-oauth/#configuration-options
 
@@ -1563,10 +1564,10 @@ Must be one of:
 
 #### <a name="global_authentication_oauthProxy"></a>1.16.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > authentication > oauthProxy`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                | Pattern | Type             | Deprecated | Definition                      | Title/Description                                                 |
 | ----------------------------------------------------------------------- | ------- | ---------------- | ---------- | ------------------------------- | ----------------------------------------------------------------- |
@@ -1606,11 +1607,11 @@ Must be one of:
 
 ##### <a name="global_authentication_oauthProxy_resources"></a>1.16.3.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > authentication > oauthProxy > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Defined in**            | #/$defs/resourceRequirements                                                                                                      |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Defined in**            | #/$defs/resourceRequirements                                                |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
@@ -1644,13 +1645,13 @@ This field is immutable. It can only be set for containers.
 | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
 | [io.k8s.api.core.v1.ResourceClaim](#global_authentication_oauthProxy_resources_claims_items) | ResourceClaim references one entry in PodSpec.ResourceClaims. |
 
-###### <a name="autogenerated_heading_18"></a>1.16.3.3.1.1. base cluster configuration > global > authentication > oauthProxy > resources > claims > io.k8s.api.core.v1.ResourceClaim
+###### <a name="global_authentication_oauthProxy_resources_claims_items"></a>1.16.3.3.1.1. base cluster configuration > global > authentication > oauthProxy > resources > claims > io.k8s.api.core.v1.ResourceClaim
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-| **Defined in**            | #/definitions/io.k8s.api.core.v1.ResourceClaim                                                           |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+| **Defined in**            | #/definitions/io.k8s.api.core.v1.ResourceClaim                 |
 
 **Description:** ResourceClaim references one entry in PodSpec.ResourceClaims.
 
@@ -1677,10 +1678,10 @@ This field is immutable. It can only be set for containers.
 
 ###### <a name="global_authentication_oauthProxy_resources_limits"></a>1.16.3.3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > authentication > oauthProxy > resources > limits`
 
-|                           |                                                                                                                                                                                                                |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                                       |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_authentication_oauthProxy_resources_limits_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                                                |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                       |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_authentication_oauthProxy_resources_limits_additionalProperties) |
 
 **Description:** Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 
@@ -1693,15 +1694,15 @@ This field is immutable. It can only be set for containers.
 |                           |                                                                                                                                                                                     |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `combining`                                                                                                                                                                         |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.")                                                   |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                                                                                                         |
 | **Same definition as**    | [global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
 ###### <a name="global_authentication_oauthProxy_resources_requests"></a>1.16.3.3.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > authentication > oauthProxy > resources > requests`
 
-|                           |                                                                                                                                                                                                                  |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                                         |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_authentication_oauthProxy_resources_requests_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                                                  |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Type**                  | `object`                                                                                                                                         |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_authentication_oauthProxy_resources_requests_additionalProperties) |
 
 **Description:** Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 
@@ -1714,15 +1715,15 @@ This field is immutable. It can only be set for containers.
 |                           |                                                                                                                                                                                     |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `combining`                                                                                                                                                                         |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.")                                                   |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                                                                                                         |
 | **Same definition as**    | [global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
 ## <a name="kyverno"></a>2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > kyverno`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                       | Pattern | Type             | Deprecated | Definition | Title/Description                 |
 | -------------------------------------------------------------- | ------- | ---------------- | ---------- | ---------- | --------------------------------- |
@@ -1776,10 +1777,10 @@ Must be one of:
 
 ## <a name="tetragon"></a>3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > tetragon`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                        | Pattern | Type    | Deprecated | Definition | Title/Description |
 | ------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
@@ -1793,10 +1794,10 @@ Must be one of:
 
 ## <a name="monitoring"></a>4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                    | Pattern | Type    | Deprecated | Definition | Title/Description                                                                                                                 |
 | ----------------------------------------------------------- | ------- | ------- | ---------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -1821,10 +1822,10 @@ Must be one of:
 
 ### <a name="monitoring_labels"></a>4.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > labels`
 
-|                           |                                                                                                                                                                                |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Type**                  | `object`                                                                                                                                                                       |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#monitoring_labels_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                       |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#monitoring_labels_additionalProperties) |
 
 **Description:** The labels to set on ServiceMonitors, ... and which the prometheus uses to search for
 
@@ -1840,10 +1841,10 @@ Must be one of:
 
 ### <a name="monitoring_deadMansSwitch"></a>4.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > deadMansSwitch`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 **Description:** This needs `.global.clusterName` to be set up as an integration in healthchecks.io. Also, `.global.baseDomain` has to be set.
 
@@ -1875,10 +1876,10 @@ Must be one of:
 
 ### <a name="monitoring_kdave"></a>4.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > kdave`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                | Pattern | Type    | Deprecated | Definition | Title/Description |
 | --------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
@@ -1892,10 +1893,10 @@ Must be one of:
 
 ### <a name="monitoring_prometheus"></a>4.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                         | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
 | ---------------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -1937,11 +1938,11 @@ Must be one of:
 
 #### <a name="monitoring_prometheus_resources"></a>4.5.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
@@ -1967,10 +1968,10 @@ Must be one of:
 
 #### <a name="monitoring_prometheus_persistence"></a>4.5.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > persistence`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                           | Pattern | Type   | Deprecated | Definition                                                                                                                                         | Title/Description                                                                                                |
 | ------------------------------------------------------------------ | ------- | ------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -1991,15 +1992,15 @@ Must be one of:
 |                           |                                                                                                                                           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                                  |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.")         |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                                                               |
 | **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
 #### <a name="monitoring_prometheus_operator"></a>4.5.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > operator`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                              | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
 | --------------------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -2015,20 +2016,20 @@ Must be one of:
 
 ##### <a name="monitoring_prometheus_operator_resources"></a>4.5.8.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > operator > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
 #### <a name="monitoring_prometheus_kubeStateMetrics"></a>4.5.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > kubeStateMetrics`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                                  | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                         |
 | ----------------------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
@@ -2045,20 +2046,20 @@ Must be one of:
 
 ##### <a name="monitoring_prometheus_kubeStateMetrics_resources"></a>4.5.9.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > kubeStateMetrics > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
 ##### <a name="monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList"></a>4.5.9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > kubeStateMetrics > metricLabelsAllowList`
 
-|                           |                                                                                                                                                                                                                           |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                                                  |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                                                           |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                                  |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList_additionalProperties) |
 
 **Description:** A map of resource/[label] that will be set as labels on the state metrics
 
@@ -2084,7 +2085,7 @@ Must be one of:
 | ---------------------------------------------------------------------------------------------------------------------- | ----------- |
 | [additionalProperties items](#monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList_additionalProperties_items) | -           |
 
-###### <a name="autogenerated_heading_19"></a>4.5.9.3.1.1. base cluster configuration > monitoring > prometheus > kubeStateMetrics > metricLabelsAllowList > additionalProperties > additionalProperties items
+###### <a name="monitoring_prometheus_kubeStateMetrics_metricLabelsAllowList_additionalProperties_items"></a>4.5.9.3.1.1. base cluster configuration > monitoring > prometheus > kubeStateMetrics > metricLabelsAllowList > additionalProperties > additionalProperties items
 
 |          |          |
 | -------- | -------- |
@@ -2092,10 +2093,10 @@ Must be one of:
 
 #### <a name="monitoring_prometheus_nodeExporter"></a>4.5.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > nodeExporter`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                  | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
 | ------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -2111,21 +2112,21 @@ Must be one of:
 
 ##### <a name="monitoring_prometheus_nodeExporter_resources"></a>4.5.10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > nodeExporter > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
 #### <a name="monitoring_prometheus_ingress"></a>4.5.11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > ingress`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-| **Defined in**            | #/$defs/toolIngress                                                                                      |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+| **Defined in**            | #/$defs/toolIngress                                            |
 
 | Property                                                       | Pattern | Type    | Deprecated | Definition | Title/Description                                                         |
 | -------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ------------------------------------------------------------------------- |
@@ -2157,10 +2158,10 @@ Must be one of:
 
 #### <a name="monitoring_prometheus_alertmanager"></a>4.5.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                      | Pattern | Type    | Deprecated | Definition                                         | Title/Description |
 | ----------------------------------------------------------------------------- | ------- | ------- | ---------- | -------------------------------------------------- | ----------------- |
@@ -2172,10 +2173,10 @@ Must be one of:
 
 ##### <a name="monitoring_prometheus_alertmanager_receivers"></a>4.5.12.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                | Pattern | Type   | Deprecated | Definition | Title/Description |
 | ----------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -2183,10 +2184,10 @@ Must be one of:
 
 ###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty"></a>4.5.12.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                                    | Pattern | Type    | Deprecated | Definition | Title/Description |
 | ------------------------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
@@ -2214,11 +2215,11 @@ Must be one of:
 
 ##### <a name="monitoring_prometheus_alertmanager_ingress"></a>4.5.12.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > ingress`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-| **Same definition as**    | [ingress](#monitoring_prometheus_ingress)                                                                |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+| **Same definition as**    | [ingress](#monitoring_prometheus_ingress)                      |
 
 ##### <a name="monitoring_prometheus_alertmanager_replicas"></a>4.5.12.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > replicas`
 
@@ -2242,10 +2243,10 @@ Must be one of:
 
 ##### <a name="monitoring_prometheus_alertmanager_persistence"></a>4.5.12.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > persistence`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                        | Pattern | Type   | Deprecated | Definition                                                                                                                                         | Title/Description                                                                                                |
 | ------------------------------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -2266,15 +2267,15 @@ Must be one of:
 |                           |                                                                                                                                           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                                  |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.")         |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                                                               |
 | **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
 ### <a name="monitoring_grafana"></a>4.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                            | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                       |
 | ------------------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
@@ -2297,18 +2298,18 @@ Must be one of:
 
 #### <a name="monitoring_grafana_ingress"></a>4.6.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > ingress`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-| **Same definition as**    | [ingress](#monitoring_prometheus_ingress)                                                                |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+| **Same definition as**    | [ingress](#monitoring_prometheus_ingress)                      |
 
 #### <a name="monitoring_grafana_additionalDashboards"></a>4.6.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > additionalDashboards`
 
-|                           |                                                                                                                                                                                                      |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                             |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#monitoring_grafana_additionalDashboards_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                                      |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **Type**                  | `object`                                                                                                                             |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#monitoring_grafana_additionalDashboards_additionalProperties) |
 
 | Property                                                             | Pattern | Type   | Deprecated | Definition | Title/Description |
 | -------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -2316,10 +2317,10 @@ Must be one of:
 
 ##### <a name="monitoring_grafana_additionalDashboards_additionalProperties"></a>4.6.3.1. Property `base cluster configuration > monitoring > grafana > additionalDashboards > additionalProperties`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                                  | Pattern | Type    | Deprecated | Definition | Title/Description |
 | ----------------------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
@@ -2347,10 +2348,10 @@ Must be one of:
 
 #### <a name="monitoring_grafana_config"></a>4.6.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > config`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 #### <a name="monitoring_grafana_notifiers"></a>4.6.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > notifiers`
 
@@ -2372,12 +2373,12 @@ Must be one of:
 | ------------------------------------------------------ | ----------- |
 | [notifiers items](#monitoring_grafana_notifiers_items) | -           |
 
-##### <a name="autogenerated_heading_20"></a>4.6.5.1. base cluster configuration > monitoring > grafana > notifiers > notifiers items
+##### <a name="monitoring_grafana_notifiers_items"></a>4.6.5.1. base cluster configuration > monitoring > grafana > notifiers > notifiers items
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                              | Pattern | Type    | Deprecated | Definition | Title/Description |
 | --------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
@@ -2438,10 +2439,10 @@ Must be one of:
 
 ###### <a name="monitoring_grafana_notifiers_items_settings"></a>4.6.5.1.8. Property `base cluster configuration > monitoring > grafana > notifiers > notifiers items > settings`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 #### <a name="monitoring_grafana_additionalPlugins"></a>4.6.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > additionalPlugins`
 
@@ -2461,7 +2462,7 @@ Must be one of:
 | ---------------------------------------------------------------------- | ----------- |
 | [additionalPlugins items](#monitoring_grafana_additionalPlugins_items) | -           |
 
-##### <a name="autogenerated_heading_21"></a>4.6.6.1. base cluster configuration > monitoring > grafana > additionalPlugins > additionalPlugins items
+##### <a name="monitoring_grafana_additionalPlugins_items"></a>4.6.6.1. base cluster configuration > monitoring > grafana > additionalPlugins > additionalPlugins items
 
 |          |          |
 | -------- | -------- |
@@ -2476,20 +2477,20 @@ Must be one of:
 
 #### <a name="monitoring_grafana_resources"></a>4.6.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
 #### <a name="monitoring_grafana_persistence"></a>4.6.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > persistence`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                | Pattern | Type    | Deprecated | Definition                                                                                                                                         | Title/Description |
 | ----------------------------------------------------------------------- | ------- | ------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
@@ -2508,7 +2509,7 @@ Must be one of:
 |                           |                                                                                                                                           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                                  |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.")         |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                                                               |
 | **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
 ##### <a name="monitoring_grafana_persistence_storageClassName"></a>4.6.9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > persistence > storageClassName`
@@ -2519,10 +2520,10 @@ Must be one of:
 
 #### <a name="monitoring_grafana_sidecar"></a>4.6.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > sidecar`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                          | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
 | ----------------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -2538,20 +2539,20 @@ Must be one of:
 
 ##### <a name="monitoring_grafana_sidecar_resources"></a>4.6.10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana > sidecar > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
 ### <a name="monitoring_loki"></a>4.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                               | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
 | ------------------------------------------------------ | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -2570,10 +2571,10 @@ Must be one of:
 
 #### <a name="monitoring_loki_persistence"></a>4.7.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > persistence`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                     | Pattern | Type   | Deprecated | Definition                                                                                                                                         | Title/Description                                                                                                |
 | ------------------------------------------------------------ | ------- | ------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -2585,7 +2586,7 @@ Must be one of:
 |                           |                                                                                                                                           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                                  |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.")         |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                                                               |
 | **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
 ##### <a name="monitoring_loki_persistence_storageClass"></a>4.7.2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > persistence > storageClass`
@@ -2616,20 +2617,20 @@ Must be one of:
 
 #### <a name="monitoring_loki_resources"></a>4.7.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
 #### <a name="monitoring_loki_promtail"></a>4.7.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > promtail`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                        | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
 | --------------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -2645,20 +2646,20 @@ Must be one of:
 
 ##### <a name="monitoring_loki_promtail_resources"></a>4.7.6.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > promtail > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
 ### <a name="monitoring_metricsServer"></a>4.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > metricsServer`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                        | Pattern | Type    | Deprecated | Definition | Title/Description |
 | ----------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
@@ -2672,10 +2673,10 @@ Must be one of:
 
 ### <a name="monitoring_storageCostAnalysis"></a>4.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > storageCostAnalysis`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 **Description:** Configuration of the `storageCostAnalysis dashboard
 
@@ -2723,10 +2724,10 @@ currencyEUR
 
 #### <a name="monitoring_storageCostAnalysis_storageClassMapping"></a>4.9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > storageCostAnalysis > storageClassMapping`
 
-|                           |                                                                                                                                                                                                                 |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                                        |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#monitoring_storageCostAnalysis_storageClassMapping_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                                                 |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                        |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#monitoring_storageCostAnalysis_storageClassMapping_additionalProperties) |
 
 **Description:** A map of storageClasses to their cost per GiB/$period
 
@@ -2742,10 +2743,10 @@ currencyEUR
 
 ### <a name="monitoring_securityScanning"></a>4.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > securityScanning`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                       | Pattern | Type    | Deprecated | Definition | Title/Description |
 | -------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
@@ -2760,10 +2761,10 @@ currencyEUR
 
 #### <a name="monitoring_securityScanning_nodeCollector"></a>4.10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > securityScanning > nodeCollector`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Property                                                                 | Pattern | Type  | Deprecated | Definition | Title/Description |
 | ------------------------------------------------------------------------ | ------- | ----- | ---------- | ---------- | ----------------- |
@@ -2787,13 +2788,13 @@ currencyEUR
 | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | [tolerations](#monitoring_securityScanning_nodeCollector_tolerations_items) | The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>. |
 
-###### <a name="autogenerated_heading_22"></a>4.10.2.1.1. base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations
+###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items"></a>4.10.2.1.1. base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Defined in**            | #/$defs/tolerations                                                                                                               |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Defined in**            | #/$defs/tolerations                                                         |
 
 **Description:** The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>.
 
@@ -2848,10 +2849,10 @@ currencyEUR
 
 ### <a name="monitoring_tracing"></a>4.11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Property                                    | Pattern | Type    | Deprecated | Definition | Title/Description |
 | ------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
@@ -2866,10 +2867,10 @@ currencyEUR
 
 #### <a name="monitoring_tracing_ingester"></a>4.11.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                           | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
 | ------------------------------------------------------------------ | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -2885,27 +2886,27 @@ currencyEUR
 
 ##### <a name="monitoring_tracing_ingester_resources"></a>4.11.2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
 ### <a name="monitoring_additionalProperties"></a>4.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > additionalProperties`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 ## <a name="descheduler"></a>5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                           | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                                                    |
 | -------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
@@ -2922,10 +2923,10 @@ currencyEUR
 
 ### <a name="descheduler_strategies"></a>5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > strategies`
 
-|                           |                                                                                                                                                                                     |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                            |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#descheduler_strategies_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                     |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                            |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#descheduler_strategies_additionalProperties) |
 
 **Description:** See https://github.com/kubernetes-sigs/descheduler#policy-and-strategies. The key is the policy name
 
@@ -2935,10 +2936,10 @@ currencyEUR
 
 #### <a name="descheduler_strategies_additionalProperties"></a>5.2.1. Property `base cluster configuration > descheduler > strategies > additionalProperties`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                           | Pattern | Type    | Deprecated | Definition | Title/Description |
 | ------------------------------------------------------------------ | ------- | ------- | ---------- | ---------- | ----------------- |
@@ -2953,10 +2954,10 @@ currencyEUR
 
 ##### <a name="descheduler_strategies_additionalProperties_params"></a>5.2.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > strategies > additionalProperties > params`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Property                                                                        | Pattern | Type   | Deprecated | Definition | Title/Description |
 | ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -2971,20 +2972,20 @@ currencyEUR
 
 ### <a name="descheduler_resources"></a>5.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
 ## <a name="dns"></a>6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > dns`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                     | Pattern | Type            | Deprecated | Definition | Title/Description                                                                                           |
 | ---------------------------- | ------- | --------------- | ---------- | ---------- | ----------------------------------------------------------------------------------------------------------- |
@@ -2993,10 +2994,10 @@ currencyEUR
 
 ### <a name="dns_provider"></a>6.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > dns > provider`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 **Description:** Setting a provider enabled various DNS based features, such as `external-dns`, wildcard certificates, ...
 
@@ -3007,10 +3008,10 @@ currencyEUR
 
 #### <a name="dns_provider_oneOf_i0"></a>6.1.1. Property `base cluster configuration > dns > provider > oneOf > item 0`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Property                                           | Pattern | Type   | Deprecated | Definition | Title/Description |
 | -------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -3018,10 +3019,10 @@ currencyEUR
 
 ##### <a name="dns_provider_oneOf_i0_cloudflare"></a>6.1.1.1. Property `base cluster configuration > dns > provider > oneOf > item 0 > cloudflare`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Property                                                  | Pattern | Type   | Deprecated | Definition | Title/Description |
 | --------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -3057,7 +3058,7 @@ currencyEUR
 | ----------------------------------- | ----------- |
 | [domains items](#dns_domains_items) | -           |
 
-#### <a name="autogenerated_heading_23"></a>6.2.1. base cluster configuration > dns > domains > domains items
+#### <a name="dns_domains_items"></a>6.2.1. base cluster configuration > dns > domains > domains items
 
 |          |          |
 | -------- | -------- |
@@ -3065,10 +3066,10 @@ currencyEUR
 
 ## <a name="certManager"></a>7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                           | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                                      |
 | ------------------------------------------------------------------ | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
@@ -3088,11 +3089,11 @@ currencyEUR
 
 ### <a name="certManager_resources"></a>7.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
@@ -3111,10 +3112,10 @@ currencyEUR
 
 ### <a name="certManager_webhook"></a>7.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager > webhook`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                   | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
 | ---------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -3130,20 +3131,20 @@ currencyEUR
 
 #### <a name="certManager_webhook_resources"></a>7.4.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager > webhook > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
 ### <a name="certManager_caInjector"></a>7.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager > caInjector`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                      | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
 | ------------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -3159,20 +3160,20 @@ currencyEUR
 
 #### <a name="certManager_caInjector_resources"></a>7.5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager > caInjector > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
 ### <a name="certManager_dnsChallengeNameservers"></a>7.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager > dnsChallengeNameservers`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                                            | Pattern | Type    | Deprecated | Definition | Title/Description |
 | --------------------------------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
@@ -3194,10 +3195,10 @@ must respect the following conditions
 
 ## <a name="externalDNS"></a>8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > externalDNS`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                           | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
 | -------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -3213,20 +3214,20 @@ must respect the following conditions
 
 ### <a name="externalDNS_resources"></a>8.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > externalDNS > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
 ## <a name="flux"></a>9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                    | Pattern | Type   | Deprecated | Definition | Title/Description                  |
 | ------------------------------------------- | ------- | ------ | ---------- | ---------- | ---------------------------------- |
@@ -3234,10 +3235,10 @@ must respect the following conditions
 
 ### <a name="flux_gitRepositories"></a>9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories`
 
-|                           |                                                                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                          |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#flux_gitRepositories_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                   |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                          |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#flux_gitRepositories_additionalProperties) |
 
 **Description:** A map of gitRepositories to create
 
@@ -3247,10 +3248,10 @@ must respect the following conditions
 
 #### <a name="flux_gitRepositories_additionalProperties"></a>9.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                              |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `combining`                                                    |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description                            |
 | ------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | -------------------------------------------- |
@@ -3272,10 +3273,10 @@ must respect the following conditions
 
 ##### <a name="flux_gitRepositories_additionalProperties_allOf_i0"></a>9.1.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | One of(Option)                                                         |
 | ---------------------------------------------------------------------- |
@@ -3284,10 +3285,10 @@ must respect the following conditions
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0"></a>9.1.1.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Property                                                                   | Pattern | Type   | Deprecated | Definition | Title/Description |
 | -------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -3300,28 +3301,28 @@ must respect the following conditions
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_oneOf_i0"></a>9.1.1.1.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > oneOf > item 0`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_24"></a>9.1.1.1.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_16"></a>9.1.1.1.1.1.1. The following properties are required
 * password
 * username
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_oneOf_i1"></a>9.1.1.1.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > oneOf > item 1`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_25"></a>9.1.1.1.1.2.1. Must **not** be
+###### <a name="autogenerated_heading_17"></a>9.1.1.1.1.2.1. Must **not** be
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Any of(Option)                                                                               |
 | -------------------------------------------------------------------------------------------- |
@@ -3330,30 +3331,30 @@ must respect the following conditions
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_oneOf_i1_not_anyOf_i0"></a>9.1.1.1.1.2.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > oneOf > item 1 > not > anyOf > item 0`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_26"></a>9.1.1.1.1.2.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_18"></a>9.1.1.1.1.2.1.1.1. The following properties are required
 * username
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_oneOf_i1_not_anyOf_i1"></a>9.1.1.1.1.2.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > oneOf > item 1 > not > anyOf > item 1`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_27"></a>9.1.1.1.1.2.1.2.1. The following properties are required
+###### <a name="autogenerated_heading_19"></a>9.1.1.1.1.2.1.2.1. The following properties are required
 * password
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_url"></a>9.1.1.1.1.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > url`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Restrictions                      |                                                                         |
 | --------------------------------- | ----------------------------------------------------------------------- |
@@ -3361,21 +3362,21 @@ must respect the following conditions
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1"></a>9.1.1.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Property                                                                   | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                      |
 | -------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------- |
 | - [url](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_url ) | No      | object | No         | -          | This needs to follow flux's way of writing this url, see https://fluxcd.io/flux/components/source/gitrepositories/#url |
 
-###### <a name="autogenerated_heading_28"></a>9.1.1.1.2.1. Must **not** be
+###### <a name="autogenerated_heading_20"></a>9.1.1.1.2.1. Must **not** be
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Any of(Option)                                                                      |
 | ----------------------------------------------------------------------------------- |
@@ -3384,30 +3385,30 @@ must respect the following conditions
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_not_anyOf_i0"></a>9.1.1.1.2.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1 > not > anyOf > item 0`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_29"></a>9.1.1.1.2.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_21"></a>9.1.1.1.2.1.1.1. The following properties are required
 * username
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_not_anyOf_i1"></a>9.1.1.1.2.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1 > not > anyOf > item 1`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_30"></a>9.1.1.1.2.1.2.1. The following properties are required
+###### <a name="autogenerated_heading_22"></a>9.1.1.1.2.1.2.1. The following properties are required
 * password
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_url"></a>9.1.1.1.2.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1 > url`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 **Description:** This needs to follow flux's way of writing this url, see https://fluxcd.io/flux/components/source/gitrepositories/#url
 
@@ -3417,10 +3418,10 @@ must respect the following conditions
 
 ##### <a name="flux_gitRepositories_additionalProperties_allOf_i1"></a>9.1.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | One of(Option)                                                         |
 | ---------------------------------------------------------------------- |
@@ -3432,57 +3433,57 @@ must respect the following conditions
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i0"></a>9.1.1.2.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 0`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_31"></a>9.1.1.2.1.1. The following properties are required
+###### <a name="autogenerated_heading_23"></a>9.1.1.2.1.1. The following properties are required
 * branch
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i1"></a>9.1.1.2.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 1`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_32"></a>9.1.1.2.2.1. The following properties are required
+###### <a name="autogenerated_heading_24"></a>9.1.1.2.2.1. The following properties are required
 * commit
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i2"></a>9.1.1.2.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 2`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_33"></a>9.1.1.2.3.1. The following properties are required
+###### <a name="autogenerated_heading_25"></a>9.1.1.2.3.1. The following properties are required
 * semver
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i3"></a>9.1.1.2.4. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 3`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_34"></a>9.1.1.2.4.1. The following properties are required
+###### <a name="autogenerated_heading_26"></a>9.1.1.2.4.1. The following properties are required
 * tag
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4"></a>9.1.1.2.5. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_35"></a>9.1.1.2.5.1. Must **not** be
+###### <a name="autogenerated_heading_27"></a>9.1.1.2.5.1. Must **not** be
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Any of(Option)                                                                      |
 | ----------------------------------------------------------------------------------- |
@@ -3493,42 +3494,42 @@ must respect the following conditions
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_not_anyOf_i0"></a>9.1.1.2.5.1.1. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > not > anyOf > item 0`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_36"></a>9.1.1.2.5.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_28"></a>9.1.1.2.5.1.1.1. The following properties are required
 * branch
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_not_anyOf_i1"></a>9.1.1.2.5.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > not > anyOf > item 1`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_37"></a>9.1.1.2.5.1.2.1. The following properties are required
+###### <a name="autogenerated_heading_29"></a>9.1.1.2.5.1.2.1. The following properties are required
 * commit
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_not_anyOf_i2"></a>9.1.1.2.5.1.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > not > anyOf > item 2`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_38"></a>9.1.1.2.5.1.3.1. The following properties are required
+###### <a name="autogenerated_heading_30"></a>9.1.1.2.5.1.3.1. The following properties are required
 * semver
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_not_anyOf_i3"></a>9.1.1.2.5.1.4. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > not > anyOf > item 3`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_39"></a>9.1.1.2.5.1.4.1. The following properties are required
+###### <a name="autogenerated_heading_31"></a>9.1.1.2.5.1.4.1. The following properties are required
 * tag
 
 ##### <a name="flux_gitRepositories_additionalProperties_url"></a>9.1.1.3. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > flux > gitRepositories > additionalProperties > url`
@@ -3595,10 +3596,10 @@ must respect the following conditions
 
 ##### <a name="flux_gitRepositories_additionalProperties_decryption"></a>9.1.1.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                      | Pattern | Type             | Deprecated | Definition | Title/Description |
 | ----------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ---------- | ----------------- |
@@ -3615,10 +3616,10 @@ Must be one of:
 
 ## <a name="ingress"></a>10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                       | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                                                                                                                                                                             |
 | ------------------------------------------------------------------------------ | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -3648,11 +3649,11 @@ Must be one of:
 
 ### <a name="ingress_resources"></a>10.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
@@ -3684,10 +3685,10 @@ Must be one of:
 
 ## <a name="storage"></a>11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > storage`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                   | Pattern | Type   | Deprecated | Definition | Title/Description                                                    |
 | ------------------------------------------ | ------- | ------ | ---------- | ---------- | -------------------------------------------------------------------- |
@@ -3695,10 +3696,10 @@ Must be one of:
 
 ### <a name="storage_readWriteMany"></a>11.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > storage > readWriteMany`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 **Description:** NFS based ReadWriteMany storage, requires `mount.nfs` on the hosts
 
@@ -3716,10 +3717,10 @@ Must be one of:
 
 #### <a name="storage_readWriteMany_storageClass"></a>11.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > storage > readWriteMany > storageClass`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                            | Pattern | Type   | Deprecated | Definition | Title/Description |
 | --------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -3733,10 +3734,10 @@ Must be one of:
 
 #### <a name="storage_readWriteMany_persistence"></a>11.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > storage > readWriteMany > persistence`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                           | Pattern | Type   | Deprecated | Definition                                                                                                                                         | Title/Description                                                                                                |
 | ------------------------------------------------------------------ | ------- | ------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -3748,7 +3749,7 @@ Must be one of:
 |                           |                                                                                                                                           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                                  |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.")         |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                                                               |
 | **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
 ##### <a name="storage_readWriteMany_persistence_storageClass"></a>11.1.3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > storage > readWriteMany > persistence > storageClass`
@@ -3762,10 +3763,10 @@ Must be one of:
 
 ## <a name="reflector"></a>12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > reflector`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                         | Pattern | Type        | Deprecated | Definition | Title/Description |
 | -------------------------------- | ------- | ----------- | ---------- | ---------- | ----------------- |
@@ -3773,10 +3774,10 @@ Must be one of:
 
 ### <a name="reflector_enabled"></a>12.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > reflector > enabled`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | One of(Option)                        |
 | ------------------------------------- |
@@ -3799,10 +3800,10 @@ Specific value: `"auto"`
 
 ## <a name="rbac"></a>13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                      | Pattern | Type   | Deprecated | Definition | Title/Description                           |
 | ----------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------- |
@@ -3811,10 +3812,10 @@ Specific value: `"auto"`
 
 ### <a name="rbac_roles"></a>13.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac > roles`
 
-|                           |                                                                                                                                                                         |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#rbac_roles_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                         |
+| ------------------------- | ------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#rbac_roles_additionalProperties) |
 
 **Description:** A map of a ClusterRole name to it's rules
 
@@ -3833,15 +3834,167 @@ Specific value: `"auto"`
 | **Min items**        | 1                  |
 | **Max items**        | N/A                |
 | **Items unicity**    | False              |
-| **Additional items** | True               |
-| **Tuple validation** | N/A                |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                         | Description                                                                                                                                                       |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [io.k8s.api.rbac.v1.PolicyRule](#rbac_roles_additionalProperties_items) | PolicyRule holds information that describes a policy rule, but does not contain information about who the rule applies to or which namespace the rule applies to. |
+
+##### <a name="rbac_roles_additionalProperties_items"></a>13.1.1.1. base cluster configuration > rbac > roles > additionalProperties > io.k8s.api.rbac.v1.PolicyRule
+
+|                           |                                                                                                                                                             |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                                    |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red)                                                                                              |
+| **Defined in**            | https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.api.rbac.v1.PolicyRule |
+
+**Description:** PolicyRule holds information that describes a policy rule, but does not contain information about who the rule applies to or which namespace the rule applies to.
+
+| Property                                                                     | Pattern | Type            | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                                                                                           |
+| ---------------------------------------------------------------------------- | ------- | --------------- | ---------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [apiGroups](#rbac_roles_additionalProperties_items_apiGroups )             | No      | array of string | No         | -          | APIGroups is the name of the APIGroup that contains the resources.  If multiple API groups are specified, any action requested against one of the enumerated resources in any API group will be allowed. "" represents the core API group and "*" represents all API groups.                                                                                                                                |
+| - [nonResourceURLs](#rbac_roles_additionalProperties_items_nonResourceURLs ) | No      | array of string | No         | -          | NonResourceURLs is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path Since non-resource URLs are not namespaced, this field is only applicable for ClusterRoles referenced from a ClusterRoleBinding. Rules can either apply to API resources (such as "pods" or "secrets") or non-resource URL paths (such as "/api"),  but not both. |
+| - [resourceNames](#rbac_roles_additionalProperties_items_resourceNames )     | No      | array of string | No         | -          | ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.                                                                                                                                                                                                                                                                                  |
+| - [resources](#rbac_roles_additionalProperties_items_resources )             | No      | array of string | No         | -          | Resources is a list of resources this rule applies to. '*' represents all resources.                                                                                                                                                                                                                                                                                                                        |
+| + [verbs](#rbac_roles_additionalProperties_items_verbs )                     | No      | array of string | No         | -          | Verbs is a list of Verbs that apply to ALL the ResourceKinds contained in this rule. '*' represents all verbs.                                                                                                                                                                                                                                                                                              |
+
+###### <a name="rbac_roles_additionalProperties_items_apiGroups"></a>13.1.1.1.1. Property `base cluster configuration > rbac > roles > additionalProperties > additionalProperties items > apiGroups`
+
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of string` |
+
+**Description:** APIGroups is the name of the APIGroup that contains the resources.  If multiple API groups are specified, any action requested against one of the enumerated resources in any API group will be allowed. "" represents the core API group and "*" represents all API groups.
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                           | Description |
+| ------------------------------------------------------------------------- | ----------- |
+| [apiGroups items](#rbac_roles_additionalProperties_items_apiGroups_items) | -           |
+
+###### <a name="rbac_roles_additionalProperties_items_apiGroups_items"></a>13.1.1.1.1.1. base cluster configuration > rbac > roles > additionalProperties > additionalProperties items > apiGroups > apiGroups items
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="rbac_roles_additionalProperties_items_nonResourceURLs"></a>13.1.1.1.2. Property `base cluster configuration > rbac > roles > additionalProperties > additionalProperties items > nonResourceURLs`
+
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of string` |
+
+**Description:** NonResourceURLs is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path Since non-resource URLs are not namespaced, this field is only applicable for ClusterRoles referenced from a ClusterRoleBinding. Rules can either apply to API resources (such as "pods" or "secrets") or non-resource URL paths (such as "/api"),  but not both.
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                                       | Description |
+| ------------------------------------------------------------------------------------- | ----------- |
+| [nonResourceURLs items](#rbac_roles_additionalProperties_items_nonResourceURLs_items) | -           |
+
+###### <a name="rbac_roles_additionalProperties_items_nonResourceURLs_items"></a>13.1.1.1.2.1. base cluster configuration > rbac > roles > additionalProperties > additionalProperties items > nonResourceURLs > nonResourceURLs items
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="rbac_roles_additionalProperties_items_resourceNames"></a>13.1.1.1.3. Property `base cluster configuration > rbac > roles > additionalProperties > additionalProperties items > resourceNames`
+
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of string` |
+
+**Description:** ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                                   | Description |
+| --------------------------------------------------------------------------------- | ----------- |
+| [resourceNames items](#rbac_roles_additionalProperties_items_resourceNames_items) | -           |
+
+###### <a name="rbac_roles_additionalProperties_items_resourceNames_items"></a>13.1.1.1.3.1. base cluster configuration > rbac > roles > additionalProperties > additionalProperties items > resourceNames > resourceNames items
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="rbac_roles_additionalProperties_items_resources"></a>13.1.1.1.4. Property `base cluster configuration > rbac > roles > additionalProperties > additionalProperties items > resources`
+
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of string` |
+
+**Description:** Resources is a list of resources this rule applies to. '*' represents all resources.
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                           | Description |
+| ------------------------------------------------------------------------- | ----------- |
+| [resources items](#rbac_roles_additionalProperties_items_resources_items) | -           |
+
+###### <a name="rbac_roles_additionalProperties_items_resources_items"></a>13.1.1.1.4.1. base cluster configuration > rbac > roles > additionalProperties > additionalProperties items > resources > resources items
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="rbac_roles_additionalProperties_items_verbs"></a>13.1.1.1.5. Property `base cluster configuration > rbac > roles > additionalProperties > additionalProperties items > verbs`
+
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of string` |
+
+**Description:** Verbs is a list of Verbs that apply to ALL the ResourceKinds contained in this rule. '*' represents all verbs.
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                   | Description |
+| ----------------------------------------------------------------- | ----------- |
+| [verbs items](#rbac_roles_additionalProperties_items_verbs_items) | -           |
+
+###### <a name="rbac_roles_additionalProperties_items_verbs_items"></a>13.1.1.1.5.1. base cluster configuration > rbac > roles > additionalProperties > additionalProperties items > verbs > verbs items
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
 
 ### <a name="rbac_accounts"></a>13.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac > accounts`
 
-|                           |                                                                                                                                                                            |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                   |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#rbac_accounts_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                            |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                   |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#rbac_accounts_additionalProperties) |
 
 **Description:** A map of an account to it's (Cluster-)Roles
 
@@ -3851,10 +4004,10 @@ Specific value: `"auto"`
 
 #### <a name="rbac_accounts_additionalProperties"></a>13.2.1. Property `base cluster configuration > rbac > accounts > additionalProperties`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                            | Pattern | Type   | Deprecated | Definition | Title/Description                           |
 | ------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------- |
@@ -3863,10 +4016,10 @@ Specific value: `"auto"`
 
 ##### <a name="rbac_accounts_additionalProperties_roles"></a>13.2.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac > accounts > additionalProperties > roles`
 
-|                           |                                                                                                                                                                                                       |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                              |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#rbac_accounts_additionalProperties_roles_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                                       |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                              |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#rbac_accounts_additionalProperties_roles_additionalProperties) |
 
 **Description:** A map of a role to it's intended namespaces
 
@@ -3904,10 +4057,10 @@ Specific value: `"auto"`
 
 ## <a name="backup"></a>14. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                              |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `combining`                                                    |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                    | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
 | ----------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -3924,31 +4077,31 @@ Specific value: `"auto"`
 
 ### <a name="backup_oneOf_i0"></a>14.1. Property `base cluster configuration > backup > oneOf > item 0`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Property                                                             | Pattern | Type   | Deprecated | Definition | Title/Description |
 | -------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [backupStorageLocations](#backup_oneOf_i0_backupStorageLocations ) | No      | object | No         | -          | -                 |
 
-#### <a name="autogenerated_heading_40"></a>14.1.1. The following properties are required
+#### <a name="autogenerated_heading_32"></a>14.1.1. The following properties are required
 * defaultLocation
 
 #### <a name="backup_oneOf_i0_backupStorageLocations"></a>14.1.2. Property `base cluster configuration > backup > oneOf > item 0 > backupStorageLocations`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 ### <a name="backup_oneOf_i1"></a>14.2. Property `base cluster configuration > backup > oneOf > item 1`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Property                                                             | Pattern | Type   | Deprecated | Definition | Title/Description |
 | -------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -3956,10 +4109,10 @@ Specific value: `"auto"`
 
 #### <a name="backup_oneOf_i1_backupStorageLocations"></a>14.2.1. Property `base cluster configuration > backup > oneOf > item 1 > backupStorageLocations`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 ### <a name="backup_resourcesPreset"></a>14.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > resourcesPreset`
 
@@ -3970,20 +4123,20 @@ Specific value: `"auto"`
 
 ### <a name="backup_resources"></a>14.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
 ### <a name="backup_backupStorageLocations"></a>14.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations`
 
-|                           |                                                                                                                                                                                            |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Type**                  | `object`                                                                                                                                                                                   |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#backup_backupStorageLocations_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                            |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                   |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#backup_backupStorageLocations_additionalProperties) |
 
 | Property                                                   | Pattern | Type   | Deprecated | Definition | Title/Description |
 | ---------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -3991,10 +4144,10 @@ Specific value: `"auto"`
 
 #### <a name="backup_backupStorageLocations_additionalProperties"></a>14.5.1. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                    | Pattern | Type   | Deprecated | Definition | Title/Description |
 | --------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -4004,10 +4157,10 @@ Specific value: `"auto"`
 
 ##### <a name="backup_backupStorageLocations_additionalProperties_provider"></a>14.5.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                       | Pattern | Type        | Deprecated | Definition | Title/Description |
 | ------------------------------------------------------------------------------ | ------- | ----------- | ---------- | ---------- | ----------------- |
@@ -4015,10 +4168,10 @@ Specific value: `"auto"`
 
 ###### <a name="backup_backupStorageLocations_additionalProperties_provider_minio"></a>14.5.1.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                              |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `combining`                                                    |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                                                 | Pattern | Type    | Deprecated | Definition | Title/Description |
 | -------------------------------------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
@@ -4037,38 +4190,38 @@ Specific value: `"auto"`
 
 ###### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i0"></a>14.5.1.1.1.1. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 0`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_41"></a>14.5.1.1.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_33"></a>14.5.1.1.1.1.1. The following properties are required
 * accessKeyID
 * secretAccessKey
 
 ###### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i1"></a>14.5.1.1.1.2. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 1`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_42"></a>14.5.1.1.1.2.1. The following properties are required
+###### <a name="autogenerated_heading_34"></a>14.5.1.1.1.2.1. The following properties are required
 * existingSecret
 
 ###### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2"></a>14.5.1.1.1.3. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_43"></a>14.5.1.1.1.3.1. Must **not** be
+###### <a name="autogenerated_heading_35"></a>14.5.1.1.1.3.1. Must **not** be
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                                                                       |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Any of(Option)                                                                                     |
 | -------------------------------------------------------------------------------------------------- |
@@ -4078,32 +4231,32 @@ Specific value: `"auto"`
 
 ###### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i0"></a>14.5.1.1.1.3.1.1. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2 > not > anyOf > item 0`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_44"></a>14.5.1.1.1.3.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_36"></a>14.5.1.1.1.3.1.1.1. The following properties are required
 * accessKeyID
 
 ###### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i1"></a>14.5.1.1.1.3.1.2. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2 > not > anyOf > item 1`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_45"></a>14.5.1.1.1.3.1.2.1. The following properties are required
+###### <a name="autogenerated_heading_37"></a>14.5.1.1.1.3.1.2.1. The following properties are required
 * secretAccessKey
 
 ###### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i2"></a>14.5.1.1.1.3.1.3. Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2 > not > anyOf > item 2`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_46"></a>14.5.1.1.1.3.1.3.1. The following properties are required
+###### <a name="autogenerated_heading_38"></a>14.5.1.1.1.3.1.3.1. The following properties are required
 * existingSecret
 
 ###### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_accessKeyID"></a>14.5.1.1.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > accessKeyID`
@@ -4120,10 +4273,10 @@ Specific value: `"auto"`
 
 ###### <a name="backup_backupStorageLocations_additionalProperties_provider_minio_existingSecret"></a>14.5.1.1.1.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > backupStorageLocations > additionalProperties > provider > minio > existingSecret`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                                          | Pattern | Type   | Deprecated | Definition | Title/Description                                        |
 | ------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | -------------------------------------------------------- |
@@ -4184,10 +4337,10 @@ Specific value: `"auto"`
 
 ### <a name="backup_nodeAgent"></a>14.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > nodeAgent`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
 | ------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -4203,20 +4356,20 @@ Specific value: `"auto"`
 
 #### <a name="backup_nodeAgent_resources"></a>14.7.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > backup > nodeAgent > resources`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
-| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                                                                          |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
 ## <a name="kube-janitor"></a>15. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > kube-janitor`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                            | Pattern | Type    | Deprecated | Definition | Title/Description |
 | ----------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
@@ -4230,10 +4383,10 @@ Specific value: `"auto"`
 
 ## <a name="common"></a>16. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > common`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 **Description:** Values for sub-chart
 
