@@ -24,6 +24,8 @@ docker.io:
     opentelemetry-collector-contrib: ALL_TAGS
   ckan:
     ckan-base-datapusher: ALL_TAGS
+mirror.gcr.io:
+  aquasec: ALL_IMAGES
 ghcr.io:
   aquasecurity: ALL_IMAGES
   kyverno: ALL_IMAGES

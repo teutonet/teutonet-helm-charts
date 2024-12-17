@@ -209,3 +209,6 @@ licenses:
   registry.k8s.io/sig-storage/nfs-provisioner:
     license: Apache-2.0
     licenseLink: https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/blob/master/LICENSE
+  mirror.gcr.io/aquasec/trivy-operator:
+    license: Apache-2.0
+    licenseLink: https://github.com/aquasecurity/trivy-operator/blob/main/LICENSE
