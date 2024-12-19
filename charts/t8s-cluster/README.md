@@ -1,7 +1,7 @@
-[modeline]: # ( vim: set ft=markdown: )
+<!-- vim: set ft=markdown: -->
 # t8s-cluster
 
-![Version: 8.3.2](https://img.shields.io/badge/Version-8.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 9.0.1](https://img.shields.io/badge/Version-9.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -17,7 +17,7 @@ t8s-operator cluster with necessary addons
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v8.3.2/charts/t8s-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.0.1/charts/t8s-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster>
 
 ## Requirements
@@ -53,10 +53,10 @@ Removed the unused `.metadata.gopassName` field.
 
 **Title:** t8s cluster configuration
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                         | Pattern | Type             | Deprecated | Definition                                                                  | Title/Description                                                                              |
 | -------------------------------------------------------------------------------- | ------- | ---------------- | ---------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
@@ -71,15 +71,15 @@ Removed the unused `.metadata.gopassName` field.
 | - [containerRegistryMirror](#containerRegistryMirror )                           | No      | object           | No         | -                                                                           | -                                                                                              |
 | - [sshKeyName](#sshKeyName )                                                     | No      | string or null   | No         | -                                                                           | -                                                                                              |
 | - [cni](#cni )                                                                   | No      | enum (of string) | No         | -                                                                           | The CNI plugin to use. \`auto\` means to keep the current one or use cilium for a new cluster. |
-| + [openstackImageNamePrefix](#openstackImageNamePrefix )                         | No      | string           | No         | -                                                                           | -                                                                                              |
+| - [openstackImageNamePrefix](#openstackImageNamePrefix )                         | No      | string           | No         | -                                                                           | -                                                                                              |
 | - [common](#common )                                                             | No      | object           | No         | -                                                                           | Values for sub-chart                                                                           |
 
 ## <a name="global"></a>1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Property                                                                    | Pattern | Type   | Deprecated | Definition | Title/Description                                        |
 | --------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | -------------------------------------------------------- |
@@ -91,10 +91,10 @@ Removed the unused `.metadata.gopassName` field.
 
 ### <a name="global_helmRepositories"></a>1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > helmRepositories`
 
-|                           |                                                                                                                                                                                      |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Type**                  | `object`                                                                                                                                                                             |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                      |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                             |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties) |
 
 **Description:** A map of helmRepositories to create, the key is the name
 
@@ -104,10 +104,10 @@ Removed the unused `.metadata.gopassName` field.
 
 #### <a name="global_helmRepositories_additionalProperties"></a>1.1.1. Property `t8s cluster configuration > global > helmRepositories > additionalProperties`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                | Pattern | Type   | Deprecated | Definition           | Title/Description                                                                                            |
 | ----------------------------------------------------------------------- | ------- | ------ | ---------- | -------------------- | ------------------------------------------------------------------------------------------------------------ |
@@ -127,10 +127,10 @@ Removed the unused `.metadata.gopassName` field.
 
 ##### <a name="global_helmRepositories_additionalProperties_charts"></a>1.1.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > helmRepositories > additionalProperties > charts`
 
-|                           |                                                                                                                                                                                                                  |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                                                                         |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties_charts_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                                                                  |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Type**                  | `object`                                                                                                                                         |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties_charts_additionalProperties) |
 
 **Description:** Which charts are deployed in which version using this repo, used internally
 
@@ -165,10 +165,10 @@ Removed the unused `.metadata.gopassName` field.
 
 ### <a name="global_kubectl"></a>1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubectl`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 **Description:** Image with `kubectl` binary
 
@@ -178,11 +178,11 @@ Removed the unused `.metadata.gopassName` field.
 
 #### <a name="global_kubectl_image"></a>1.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubectl > image`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-| **Defined in**            | #/$defs/image                                                                                            |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+| **Defined in**            | #/$defs/image                                                  |
 
 | Property                                          | Pattern | Type   | Deprecated | Definition | Title/Description              |
 | ------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------ |
@@ -233,10 +233,10 @@ bitnami/kubectl
 
 ### <a name="global_etcd"></a>1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > etcd`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 **Description:** Image with `etcdctl` binary
 
@@ -246,11 +246,11 @@ bitnami/kubectl
 
 #### <a name="global_etcd_image"></a>1.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > etcd > image`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
-| **Same definition as**    | [image](#global_kubectl_image)                                                                           |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+| **Same definition as**    | [image](#global_kubectl_image)                                 |
 
 ### <a name="global_injectedCertificateAuthorities"></a>1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > injectedCertificateAuthorities`
 
@@ -260,10 +260,10 @@ bitnami/kubectl
 
 ### <a name="global_kubeletExtraConfig"></a>1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubeletExtraConfig`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 **Description:** Additional kubelet configuration
 
@@ -281,10 +281,10 @@ bitnami/kubectl
 
 ## <a name="metadata"></a>2. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > metadata`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                    | Pattern | Type             | Deprecated | Definition | Title/Description |
 | ----------------------------------------------------------- | ------- | ---------------- | ---------- | ---------- | ----------------- |
@@ -345,10 +345,10 @@ Must be one of:
 
 ## <a name="controlPlane"></a>3. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > controlPlane`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                              | Pattern | Type            | Deprecated | Definition                | Title/Description                                             |
 | --------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------- | ------------------------------------------------------------- |
@@ -397,7 +397,7 @@ Must be one of:
 | ------------------------------------------------------------------------------ | ----------- |
 | [additionalSecurityGroups items](#controlPlane_additionalSecurityGroups_items) | -           |
 
-#### <a name="autogenerated_heading_2"></a>3.4.1. t8s cluster configuration > controlPlane > additionalSecurityGroups > additionalSecurityGroups items
+#### <a name="controlPlane_additionalSecurityGroups_items"></a>3.4.1. t8s cluster configuration > controlPlane > additionalSecurityGroups > additionalSecurityGroups items
 
 |          |          |
 | -------- | -------- |
@@ -421,7 +421,7 @@ Must be one of:
 | ------------------------------------------------------ | ----------- |
 | [allowedCIDRs items](#controlPlane_allowedCIDRs_items) | -           |
 
-#### <a name="autogenerated_heading_3"></a>3.5.1. t8s cluster configuration > controlPlane > allowedCIDRs > allowedCIDRs items
+#### <a name="controlPlane_allowedCIDRs_items"></a>3.5.1. t8s cluster configuration > controlPlane > allowedCIDRs > allowedCIDRs items
 
 |          |          |
 | -------- | -------- |
@@ -439,10 +439,10 @@ Must be one of:
 
 ## <a name="version"></a>5. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                   | Pattern | Type    | Deprecated | Definition | Title/Description                     |
 | -------------------------- | ------- | ------- | ---------- | ---------- | ------------------------------------- |
@@ -478,10 +478,10 @@ Specific value: `1`
 
 ## <a name="nodePools"></a>6. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools`
 
-|                           |                                                                                                                                                                        |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                                                               |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#nodePools_additionalProperties "Each additional property must conform to the following schema") |
+|                           |                                                                                                        |
+| ------------------------- | ------------------------------------------------------------------------------------------------------ |
+| **Type**                  | `object`                                                                                               |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#nodePools_additionalProperties) |
 
 | Property                               | Pattern | Type   | Deprecated | Definition | Title/Description |
 | -------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
@@ -489,10 +489,10 @@ Specific value: `1`
 
 ### <a name="nodePools_additionalProperties"></a>6.1. Property `t8s cluster configuration > nodePools > additionalProperties`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                | Pattern | Type    | Deprecated | Definition | Title/Description |
 | ----------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
@@ -531,10 +531,10 @@ Specific value: `1`
 
 ## <a name="bastion"></a>8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                         | Pattern | Type           | Deprecated | Definition | Title/Description |
 | ------------------------------------------------ | ------- | -------------- | ---------- | ---------- | ----------------- |
@@ -562,10 +562,10 @@ Specific value: `1`
 
 ## <a name="containerRegistryMirror"></a>9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryMirror`
 
-|                           |                                                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                 |
-| **Additional properties** | [![Not allowed](https://img.shields.io/badge/Not%20allowed-red)](# "Additional Properties not allowed.") |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 | Property                                                                                     | Pattern | Type            | Deprecated | Definition | Title/Description |
 | -------------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ---------- | ----------------- |
@@ -590,7 +590,7 @@ Specific value: `1`
 | ----------------------------------------------------------------------------------------------------- | ----------- |
 | [additionallyMirroredRegistries items](#containerRegistryMirror_additionallyMirroredRegistries_items) | -           |
 
-#### <a name="autogenerated_heading_4"></a>9.1.1. t8s cluster configuration > containerRegistryMirror > additionallyMirroredRegistries > additionallyMirroredRegistries items
+#### <a name="containerRegistryMirror_additionallyMirroredRegistries_items"></a>9.1.1. t8s cluster configuration > containerRegistryMirror > additionallyMirroredRegistries > additionallyMirroredRegistries items
 
 |          |          |
 | -------- | -------- |
@@ -621,7 +621,7 @@ Must be one of:
 * "auto"
 * "calico"
 
-## <a name="openstackImageNamePrefix"></a>12. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > openstackImageNamePrefix`
+## <a name="openstackImageNamePrefix"></a>12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > openstackImageNamePrefix`
 
 |          |          |
 | -------- | -------- |
@@ -629,10 +629,10 @@ Must be one of:
 
 ## <a name="common"></a>13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > common`
 
-|                           |                                                                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                          |
-| **Additional properties** | [![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)](# "Additional Properties of any type are allowed.") |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 **Description:** Values for sub-chart
 

@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.0.0...t8s-cluster-v9.0.1) (2024-12-19)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** add missing necessary image field ([#1247](https://github.com/teutonet/teutonet-helm-charts/issues/1247)) ([e3910ca](https://github.com/teutonet/teutonet-helm-charts/commit/e3910cafa3bc792f68290ae0e4c03a31b6871f2e))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/docs:** add correct vim modeline ([#1274](https://github.com/teutonet/teutonet-helm-charts/issues/1274)) ([3339f0b](https://github.com/teutonet/teutonet-helm-charts/commit/3339f0b2d560ba5f43cbdeaca44f5831dc7b388c))
+
 ## [9.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v8.3.2...t8s-cluster-v9.0.0) (2024-11-18)
 
 
