@@ -1,3 +1,4 @@
+<!-- vim: set ft=markdown: -->
 {{- $majorVersion := index ((.Files.Get "Chart.yaml" | fromYaml).version | split ".") "_0" -}}
 {{- $fluxMajorVersion := "2" -}}
 
