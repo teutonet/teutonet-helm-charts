@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.1.0...base-cluster-v7.1.1) (2024-12-20)
+
+
+### Bug Fixes
+
+* **base-cluster/kdave:** deploy wrapped ServiceMonitor ([#1267](https://github.com/teutonet/teutonet-helm-charts/issues/1267)) ([9698390](https://github.com/teutonet/teutonet-helm-charts/commit/96983905d7bde7c68bb4b8c07666512c7ffdb81f))
+
 ## [7.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.0.0...base-cluster-v7.1.0) (2024-12-04)
 
 
