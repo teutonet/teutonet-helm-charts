@@ -16,16 +16,16 @@ maintainers:
     name: tasches
 name: base-cluster
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v7.1.0/charts/base-cluster
+  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v7.1.1/charts/base-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster
 type: application
-version: 7.1.0
+version: 7.1.1
 annotations:
   artifacthub.io/images: |
     - image: docker.io/aelbakry/kdave-server:1.0.4                                                                                                          #  monitoring/HelmRelease/kdave/null/Deployment/kdave.yaml
     - image: docker.io/bats/bats:1.8.2                                                                                                                      #  loki/HelmRelease/loki/null/Pod/loki-loki-stack-test.yaml
     - image: docker.io/bats/bats:v1.4.1                                                                                                                     #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Pod/kube-prometheus-stack-grafana-test.yaml
-    - image: docker.io/bitnami/external-dns:0.15.0-debian-12-r6                                                                                             #  ingress/HelmRelease/external-dns/ingress/Deployment/external-dns.yaml
+    - image: docker.io/bitnami/external-dns:0.15.1-debian-12-r0                                                                                             #  ingress/HelmRelease/external-dns/ingress/Deployment/external-dns.yaml
     - image: docker.io/bitnami/grafana-tempo-vulture:2.6.1-debian-12-r4                                                                                     #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-vulture.yaml
     - image: docker.io/bitnami/grafana-tempo:2.6.1-debian-12-r4                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-compactor.yaml
     - image: docker.io/bitnami/grafana-tempo:2.6.1-debian-12-r4                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-distributor.yaml
