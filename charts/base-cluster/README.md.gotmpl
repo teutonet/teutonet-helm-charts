@@ -14,6 +14,8 @@
 
 ## Cluster bootstrap
 
+The `.x.x` part of the versions can be left as is, helm uses that as a range. If you choose to set a fix version, you have to take care of the updates yourself.
+
 ```sh
 # always be git 😁
 git init
@@ -85,7 +87,7 @@ so the kube-scheduler can, hopefully, schedule them on nodes with more space.
 Additionally, the descheduler also tries to reconcile `topologySpreadConstraints`
 and affinities.
 
-If the cluster is _semi_ underspecced or the individual applications have unperfect
+If the cluster is _semi_ underspecced or the individual applications have imperfect
 resource requests, the descheduler might lead to period restarting of random pods.
 
 In that case you should disable the descheduler.
