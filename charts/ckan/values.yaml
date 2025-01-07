@@ -1,4 +1,6 @@
 global:
+  security:
+    allowInsecureImages: true
   imageRegistry: ""
   imagePullSecrets: []
   storageClass: ""
@@ -55,7 +57,7 @@ ckan:
     pullPolicy: IfNotPresent
     pullSecrets: []
     repository: teutonet/oci-images/ckan
-    tag: 1.0.11
+    tag: 1.0.12
     digest: ""
   extraEnvVars: []
   extraVolumeMounts: []
@@ -197,7 +199,7 @@ solr:
     pullPolicy: IfNotPresent
     pullSecrets: []
     repository: teutonet/oci-images/solr-ckan
-    tag: 1.0.12@sha256:1b43d6bc320ee7a45a276f8080098cae3c920aabbf9b8ecf79472eff572aac4c
+    tag: 1.0.14
     digest: ""
   extraEnvVars:
     - name: SOLR_ADMIN_USERNAME
