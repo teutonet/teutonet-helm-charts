@@ -10,7 +10,7 @@ spec:
   url: https://github.com/projectcalico/calico
   ref:
     {{- with .Values.version }}
-    semver: {{ printf "v3.%d.x" (.minor | int) }}
+    semver: {{ printf ">=v3.%d.x <=v3.%d.x" (sub (.minor | int) 2) (.minor | int) | quote }}
     {{- end }}
   ignore: |
     /manifests/**
