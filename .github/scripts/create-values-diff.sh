@@ -6,34 +6,21 @@
 set -eu
 set -o pipefail
 
-parsed="$(getopt --options '' --longoptions "body:,dry-run" --name "$0" -- "$@")"
-
-eval set -- "$parsed"
-unset parsed
-
-dryRun=false
-
-while [[ "$#" -gt 0 ]]; do
-  case "$1" in
+issue=${1?You need to provide the issue ID}
+chart=${2?You need to provide the chart name}
+if [[ -v 3 ]]; then
+  case "$3" in
     --dry-run)
       dryRun=true
       ;;
-    --body)
-      shift
-      body="${1}"
-      if [[ ! -f "$body" ]]; then
-        echo "input file '$body' does not exist" >&2
-        exit 3
-      fi
-      ;;
-    --) # positional arguments
-      shift
-      issue=${1?You need to provide the issue ID}
-      chart=${2?You need to provide the chart name}
+    *)
+      echo "Option '$3' not supported" >&2
+      exit 1
       ;;
   esac
-  shift
-done
+else
+  dryRun=false
+fi
 
 if yq -e '.type == "library"' "$chart/Chart.yaml" >/dev/null; then
   echo "Skipping library chart '$chart'" >&2
@@ -144,9 +131,7 @@ function updateComment() {
       -d @-
 }
 
-if [[ ! -v body ]]; then
-  body=$(generateComment "$chart")
-fi
+body=$(generateComment "$chart")
 
 if [[ "$dryRun" == false ]]; then
   # cannot use `gh pr/issue view --json comments` as the returned id is incorrect
