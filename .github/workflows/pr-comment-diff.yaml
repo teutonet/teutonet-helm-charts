@@ -30,8 +30,8 @@ jobs:
       - run: pip install yq
       - name: Install sponge
         run: sudo apt-get -yq install moreutils
-      - run: ./.github/scripts/prepare-values.sh "pr/charts/${{ needs.getChangedChart.outputs.chart }}"
-      - run: ./.github/scripts/create-values-diff.sh ${{ github.event.number }} "pr/charts/${{ needs.getChangedChart.outputs.chart }}" --dry-run > comment_body.md
+      - run: ./.github/scripts/prepare-values.sh "charts/${{ needs.getChangedChart.outputs.chart }}"
+      - run: ./.github/scripts/create-values-diff.sh ${{ github.event.number }} "charts/${{ needs.getChangedChart.outputs.chart }}" --dry-run > comment_body.md
       - uses: actions/upload-artifact@v4
         with:
           name: comment_body
