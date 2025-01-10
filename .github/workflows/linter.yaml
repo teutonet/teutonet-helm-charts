@@ -42,7 +42,7 @@ jobs:
 
       - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5
         with:
-          python-version: 3.7
+          python-version: 3.9
 
       - run: ./.github/scripts/prepare-values.sh "charts/$CHART"
       - uses: helm/chart-testing-action@e6669bcd63d7cb57cb4380c33043eebe5d111992 # v2.6.1
