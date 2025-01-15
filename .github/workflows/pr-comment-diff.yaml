@@ -52,4 +52,5 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: comment_body
+          path: comment_body.md
       - run: ./.github/scripts/create-values-diff.sh ${{ github.event.number }} "charts/${{ needs.getChangedChart.outputs.chart }}" --body comment_body.md
