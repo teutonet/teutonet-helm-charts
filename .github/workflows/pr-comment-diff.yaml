@@ -41,6 +41,8 @@ jobs:
           retention-days: 1
   postDiffComment:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     needs:
       - getChangedChart
       - generateDiffCommentBody
