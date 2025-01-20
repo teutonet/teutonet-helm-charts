@@ -59,13 +59,13 @@ WHITELIST=(
 )
 
 # shellcheck disable=SC2016
-licenseConversionJq='map({Image: (.Metadata.RepoTags // .Metadata.RepoDigests)[0], License: (.Results[] | .Licenses[]? | .Name)} as $licenseInfo | $licenseInfo+{PackageOrPath: (.Results[] | .Licenses[]? | select(.Name == $licenseInfo.License) | if .PkgName != "" then .PkgName else .FilePath end)}) | group_by(.License) | map({(.[0].License): (map(del(.License)) | group_by(.Image) | map({(.[0].Image): map(.PackageOrPath) | unique}) | add) }) | add'
+licenseConversionJq='map({Image: (.Metadata.RepoTags // .Metadata.RepoDigests)[0], License: (.Results[] | .Licenses[]? | .Name)} as $licenseInfo | $licenseInfo+{PackageOrPath: (.Results[] | .Licenses[]? | select(.Name == $licenseInfo.License) | if .PkgName != "" then .PkgName else .FilePath end)}) | group_by(.License) | map({(.[0].License): (map(del(.License)) | group_by(.Image) | map({(.[0].Image): map(.PackageOrPath) | unique}) | add) }) | add // {}'
 function scanLicenses() {
   local chart="${1?}"
   local licenseMap
   local unacceptedLicenses=()
   local unacceptedLicense
-  licenseMap="$(yq -r '.annotations["artifacthub.io/images"]' "$chart/Chart.yaml" | yq -r '.[] | .image' |
+  licenseMap="$(yq -r '.annotations["artifacthub.io/images"] // []' "$chart/Chart.yaml" | yq -r '.[] | .image' |
     parallel -k trivy image {} --severity HIGH,CRITICAL,MEDIUM -f json --scanners license --quiet |
     jq -s -r "$licenseConversionJq")"
   mapfile -t unacceptedLicenses < <(jq <<<"$licenseMap" -r --argjson acceptedLicenses "[\"$(for i in ${!WHITELIST[@]}; do echo "${WHITELIST[$i]}"; done | paste -sd '@' | sed 's#@#","#g')\"]" '(keys-$acceptedLicenses)[]')
