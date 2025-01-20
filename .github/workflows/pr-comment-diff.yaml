@@ -23,7 +23,7 @@ jobs:
       pull-requests: read
     env:
       CT_TARGET_BRANCH: ${{ github.event.pull_request.base.ref || github.event.repository.default_branch }}
-      GITHUB_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
@@ -53,4 +53,5 @@ jobs:
         with:
           name: comment_body
           path: comment_body.md
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - run: ./.github/scripts/create-values-diff.sh ${{ github.event.number }} "charts/${{ needs.getChangedChart.outputs.chart }}" --body comment_body.md
