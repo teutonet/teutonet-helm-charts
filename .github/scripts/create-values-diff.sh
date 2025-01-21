@@ -72,17 +72,20 @@ function generateComment() {
   for values in "$chart/values.yaml" "$chart/ci/"*-values.yaml; do
     [[ -f "$values" ]] || continue
     (
+      set -e
       originalResourcesDir="$TMP_DIR/original-$(basename -s .yaml "$values")"
       newResourcesDir="$TMP_DIR/new-$(basename -s .yaml "$values")"
 
       mkdir "$originalResourcesDir" "$newResourcesDir"
 
       (
+        set -e
         "$(dirname "$0")/templateGitHelmChart" -1 "$GITHUB_REPO_URL" "$chart" "${GITHUB_DEFAULT_BRANCH}" "$values" | yq -y -S >"$originalResourcesDir.yaml"
         "$(dirname "$0")/splitYamlIntoDir" "$originalResourcesDir.yaml" "$originalResourcesDir"
       ) &
 
       (
+        set -e
         "$(dirname "$0")/templateLocalHelmChart" -1 "$chart" "$values" | yq -y -S >"$newResourcesDir.yaml"
         "$(dirname "$0")/splitYamlIntoDir" "$newResourcesDir.yaml" "$newResourcesDir"
       ) &
