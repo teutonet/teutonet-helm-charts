@@ -36,7 +36,7 @@ spec:
         {{- end }}
       {{- end }}
       config:
-        use-proxy-protocol: true
+        use-proxy-protocol: {{ .Values.ingress.useProxyProtocol }}
         use-gzip: true
         enable-brotli: true
         enable-underscores-in-headers: true

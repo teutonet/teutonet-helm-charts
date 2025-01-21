@@ -420,6 +420,7 @@ flux:
 ingress:
   enabled: true
   allowNginxConfigurationSnippets: false
+  useProxyProtocol: true
   replicas: 2
   resourcesPreset: nano
   resources:
