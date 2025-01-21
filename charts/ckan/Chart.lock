@@ -4,12 +4,12 @@ dependencies:
   version: 1.2.1
 - name: postgresql
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 15.5.21
+  version: 15.5.38
 - name: redis
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 19.6.4
 - name: solr
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 9.4.0
-digest: sha256:d01205944d8877ae56278f5933dd261903290bdf41dbf57145dfec937f348762
-generated: "2024-08-15T09:45:03.020555017Z"
+  version: 9.5.1
+digest: sha256:8a1f88c8e892c544445dbf2d0437039b2c756e424d9dd255f30d6ce2f0d4ce88
+generated: "2025-01-21T14:46:35.204340115+01:00"
