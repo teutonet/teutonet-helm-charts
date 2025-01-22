@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.4](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.3...ckan-v1.2.4) (2025-01-22)
+
+
+### Miscellaneous Chores
+
+* **ckan:** fix postinstall ckan image ([#1308](https://github.com/teutonet/teutonet-helm-charts/issues/1308)) ([a06c51c](https://github.com/teutonet/teutonet-helm-charts/commit/a06c51c8a75f6a5c2fe3aa41be85cc5c58a5a928))
+
 ## [1.2.3](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.2...ckan-v1.2.3) (2025-01-22)
 
 
