@@ -21,6 +21,7 @@ spec:
       annotations:
         checksum/secret: {{ include "common.utils.checksumTemplate" (dict "path" "/ckan/secret.yaml" "context" $) }}-{{ include "common.utils.checksumTemplate" (dict "path" "/postgresql/secret.yaml" "context" $) }}-{{ include "common.utils.checksumTemplate" (dict "path" "/solr/secret.yaml" "context" $) }}
     spec:
+      {{- include "common.images.renderPullSecrets" ( dict "images" (list .Values.ckan.image) "context" $) | indent 6 }}
       automountServiceAccountToken: false
       serviceAccountName: {{ printf "%s-%s-serviceaccount" (include "common.names.fullname" $) $name | quote }}
       volumes:
