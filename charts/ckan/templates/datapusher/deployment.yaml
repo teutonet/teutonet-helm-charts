@@ -18,7 +18,7 @@ spec:
       labels: {{- include "common.labels.matchLabels" . | nindent 8 }}
         app.kubernetes.io/component: {{ $name }}
     spec:
-      {{- include "common.images.renderPullSecrets" ( dict "images" (list .Values.datapusher.image) "context" $) | indent 6 }}
+      {{- include "ckan.datapusher.imagePullSecrets" . | nindent 6 }}
       automountServiceAccountToken: false
       securityContext:
       {{- toYaml .Values.datapusher.podSecurityContext | default dict | nindent 8 }}

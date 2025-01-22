@@ -29,3 +29,11 @@
 {{- define "ckan.defaultRegistry" -}}
 docker.io
 {{- end -}}
+
+{{- define "ckan.ckan.imagePullSecrets" -}}
+{{- include "common.images.renderPullSecrets" (dict "images" (list .Values.ckan.image) "context" $) -}}
+{{- end }}
+
+{{- define "ckan.datapusher.imagePullSecrets" -}}
+{{- include "common.images.renderPullSecrets" (dict "images" (list .Values.datapusher.image) "context" $) -}}
+{{- end }}
