@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.2](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.1...ckan-v1.2.2) (2025-01-22)
+
+
+### Miscellaneous Chores
+
+* **ckan/dependencies:** pin dependencies ([#1266](https://github.com/teutonet/teutonet-helm-charts/issues/1266)) ([44f25a5](https://github.com/teutonet/teutonet-helm-charts/commit/44f25a5d835724fad9763c28cb5bfaa42ad72afb))
+* **ckan:** add imagepullsecrets support ([#1297](https://github.com/teutonet/teutonet-helm-charts/issues/1297)) ([c612cf2](https://github.com/teutonet/teutonet-helm-charts/commit/c612cf221c0e803c6e6a5c5086d25c169b27d6da))
+* **ckan:** update solar and ckan container ([#1277](https://github.com/teutonet/teutonet-helm-charts/issues/1277)) ([fadecb5](https://github.com/teutonet/teutonet-helm-charts/commit/fadecb5693f6f2881c8d7b797cd03e1cab0e79e9))
+
 ## [1.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.0...ckan-v1.2.1) (2024-12-03)
 
 
