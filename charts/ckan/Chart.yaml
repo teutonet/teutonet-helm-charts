@@ -34,12 +34,14 @@ type: application
 version: 1.2.1
 annotations:
   artifacthub.io/images: |
-    - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r14                                                                     #  default/StatefulSet/ckan-postgresql-primary.yaml
-    - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r14                                                                     #  default/StatefulSet/ckan-postgresql-read.yaml
-    - image: docker.io/bitnami/redis:7.2.5-debian-12-r4                                                                            #  default/StatefulSet/ckan-redis-master.yaml
-    - image: docker.io/bitnami/redis:7.2.5-debian-12-r4                                                                            #  default/StatefulSet/ckan-redis-replicas.yaml
-    - image: docker.io/bitnami/zookeeper:3.9.2-debian-12-r15                                                                       #  default/StatefulSet/ckan-zookeeper.yaml
-    - image: docker.io/busybox:1.36                                                                                                #  default/Deployment/ckan-ckan.yaml
-    - image: docker.io/ckan/ckan-base-datapusher:0.0.21@sha256:90e71b5a5fd6f1de99dd2dd1cac68990a813b21a0fff10e0eaef912f4a64f872    #  default/Deployment/ckan-datapusher.yaml
-    - image: ghcr.io/teutonet/oci-images/ckan:1.0.5@sha256:df97fe51f67295fab60bd02153204e0cd12f5cb3eb8033f6cbc43a391b48a29d        #  default/Deployment/ckan-ckan.yaml
-    - image: ghcr.io/teutonet/oci-images/solr-ckan:1.0.12@sha256:1b43d6bc320ee7a45a276f8080098cae3c920aabbf9b8ecf79472eff572aac4c  #  default/StatefulSet/ckan-solr.yaml
+    - image: docker.io/bitnami/kubectl                                                                                           #  default/Job/ckan-ckan-post-install.yaml
+    - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r14                                                                   #  default/StatefulSet/ckan-postgresql-primary.yaml
+    - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r14                                                                   #  default/StatefulSet/ckan-postgresql-read.yaml
+    - image: docker.io/bitnami/redis:7.2.5-debian-12-r4                                                                          #  default/StatefulSet/ckan-redis-master.yaml
+    - image: docker.io/bitnami/redis:7.2.5-debian-12-r4                                                                          #  default/StatefulSet/ckan-redis-replicas.yaml
+    - image: docker.io/bitnami/zookeeper:3.9.3-debian-12-r2                                                                      #  default/StatefulSet/ckan-zookeeper.yaml
+    - image: docker.io/busybox:1.28                                                                                              #  default/Job/ckan-ckan-post-install.yaml
+    - image: docker.io/ckan/ckan-base-datapusher:0.0.21@sha256:90e71b5a5fd6f1de99dd2dd1cac68990a813b21a0fff10e0eaef912f4a64f872  #  default/Deployment/ckan-datapusher.yaml
+    - image: ghcr.io/teutonet/oci-images/ckan:1.0.12                                                                             #  default/Deployment/ckan-ckan.yaml
+    - image: ghcr.io/teutonet/oci-images/ckan:1.0.12                                                                             #  default/Job/ckan-ckan-post-install.yaml
+    - image: ghcr.io/teutonet/oci-images/solr-ckan:1.0.15                                                                        #  default/StatefulSet/ckan-solr.yaml
