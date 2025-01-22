@@ -13,6 +13,7 @@ metadata:
 spec:
   template:
     spec:
+      {{- include "ckan.ckan.imagePullSecrets" . | nindent 6 }}
       serviceAccountName: {{ printf "%s-%s-serviceaccount" (include "common.names.fullname" $) $name | quote }}
       restartPolicy: Never
       initContainers:
