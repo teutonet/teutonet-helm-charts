@@ -1308,6 +1308,9 @@
           "type": "boolean",
           "description": "Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets"
         },
+        "useProxyProtocol": {
+          "type": "boolean"
+        },
         "IP": {
           "type": "string",
           "pattern": "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$",
