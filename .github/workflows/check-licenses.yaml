@@ -1,6 +1,6 @@
 name: Check used licenses
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref_name }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 on:
