@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.2...ckan-v1.2.3) (2025-01-22)
+
+
+### Miscellaneous Chores
+
+* **ckan:** fix imagepullsecrets support ([#1304](https://github.com/teutonet/teutonet-helm-charts/issues/1304)) ([bcef00b](https://github.com/teutonet/teutonet-helm-charts/commit/bcef00b2b0db43091062691156e4595362d8d704))
+
 ## [1.2.2](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.1...ckan-v1.2.2) (2025-01-22)
 
 

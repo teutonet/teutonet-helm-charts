@@ -28,10 +28,10 @@ maintainers:
     name: tasches
 name: ckan
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/ckan-v1.2.2/charts/ckan
+  - https://github.com/teutonet/teutonet-helm-charts/tree/ckan-v1.2.3/charts/ckan
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/ckan
 type: application
-version: 1.2.2
+version: 1.2.3
 annotations:
   artifacthub.io/images: |
     - image: docker.io/bitnami/kubectl                                                                                             #  default/Job/ckan-ckan-post-install.yaml
