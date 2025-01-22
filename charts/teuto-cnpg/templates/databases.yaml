@@ -1,0 +1,19 @@
+{{- $databases := dict -}}
+{{- if kindIs "string" .Values.databases -}}
+  {{- $databases = .Values.databases | fromYaml -}}
+{{- else -}}
+  {{- $databases = .Values.databases -}}
+{{- end -}}
+{{- range $name, $owner := $databases -}}
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: {{ printf "%s-%s" $.Release.Name $name }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  name: {{ $name }}
+  owner: {{ $owner }}
+  cluster:
+    name: {{ printf "%s" $.Release.Name }}
+---
+{{ end }}

@@ -1,0 +1,8 @@
+roles:
+  - name: kruemel
+    ensure: present
+    login: false
+    superuser: false
+databases:
+  kuchen: pizza
+  torte: keks

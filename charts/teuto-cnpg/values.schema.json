@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "cnpg-wrapper configuration",
+  "required": [
+    "roles",
+    "databases"
+  ],
+  "properties": {
+    "podMonitorLabels": {
+      "type": "object",
+      "description": "The labels to set on ServiceMonitor which the prometheus uses to search for",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "instances": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "databases": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "should only be used by flux"
+        },
+        {
+          "type": "object",
+          "description": "key is database name and value is owner",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "roles": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "should only be used by flux"
+        },
+        {
+          "type": "array",
+          "additionalItems": {
+            "type": "object",
+            "description": "see cnpg: https://cloudnative-pg.io/documentation/1.25/declarative_role_management/",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "ensure": {
+                "type": "string",
+                "enum": [
+                  "present",
+                  "absent"
+                ]
+              },
+              "login": {
+                "type": "boolean"
+              },
+              "superuser": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        }
+      ]
+    },
+    "logLevel": {
+      "type": "string",
+      "enum": [
+        "error",
+        "warning",
+        "info",
+        "debug",
+        "trace"
+      ]
+    },
+    "storageSize": {
+      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+    },
+    "databaseImage": {
+      "type": "object",
+      "description": "For postgis see this link: https://github.com/cloudnative-pg/postgis-containers/pkgs/container/postgis",
+      "properties": {
+        "registry": {
+          "type": "string",
+          "description": "The host of the registry",
+          "examples": [
+            "ghcr.io"
+          ]
+        },
+        "repository": {
+          "type": "string",
+          "description": "The image path in the registry",
+          "examples": [
+            "cloudnative-pg/postgresql"
+          ]
+        },
+        "tag": {
+          "type": "string",
+          "description": "For available tags see: https://github.com/cloudnative-pg/postgres-containers/pkgs/container/postgresql",
+          "examples": [
+            "15.6",
+            "16.1",
+            "17.2"
+          ]
+        },
+        "digest": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
