@@ -109,7 +109,6 @@ spec:
       toPorts:
         - ports:
             - port: "53"
-              protocol: UDP
           rules:
             dns:
               - matchName: {{ $.Values.global.authentication.config.issuerHost | quote }}
