@@ -20,11 +20,11 @@ while [[ "$#" -gt 0 ]]; do
       ;;
     --body)
       shift
-      body="${1}"
-      if [[ ! -f "$body" ]]; then
-        echo "input file '$body' does not exist" >&2
+      if [[ ! -f "$1" ]]; then
+        echo "input file '$1' does not exist" >&2
         exit 3
       fi
+      body="$(<"$1")"
       ;;
     --) # positional arguments
       shift
