@@ -23,8 +23,10 @@ function getImages() {
   (
     cd "$tmpDir/helmRelease"
     rm -f -- */HelmRelease/*.yaml
-    grep -Er '\s+image: \S+$' |
-      grep -v 'artifacthub-ignore' |
+    (
+      grep -Er '\s+image: \S+$' |
+        grep -v 'artifacthub-ignore' || { if [[ "$?" == 2 ]]; then exit 2; fi; }
+    ) |
       awk '{print ($2 == "-" ? $4 : $3) " # " $1}' |
       tr -d '"' |
       sed 's#:$##' |
