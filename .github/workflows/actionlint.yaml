@@ -8,10 +8,12 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     name: lint github workflows
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - name: Add problem matchers
+      - name: Add actionlint problem matchers
         run: |
           # https://github.com/rhysd/actionlint/blob/3a2f2c7/docs/usage.md#problem-matchers
           curl -LO https://raw.githubusercontent.com/rhysd/actionlint/main/.github/actionlint-matcher.json

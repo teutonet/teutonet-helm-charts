@@ -8,6 +8,8 @@ on:
 jobs:
   getAllCharts:
     uses: ./.github/workflows/get-all-charts.yaml
+    permissions:
+      contents: read
     with:
       showLibraryCharts: false
 
@@ -15,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: getAllCharts
     permissions:
+      contents: read
       security-events: write
     strategy:
       fail-fast: false

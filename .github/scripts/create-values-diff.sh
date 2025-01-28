@@ -43,10 +43,12 @@ fi
 GITHUB_API_URL="${GITHUB_API_URL:-https://api.github.com}"
 
 if command -v gh &>/dev/null; then
-  if ! [[ -v GITHUB_TOKEN ]]; then
-    GITHUB_TOKEN=$(gh auth token)
-  else
-    GITHUB_TOKEN="${GITHUB_TOKEN?Please export 'GITHUB_TOKEN'}"
+  if [[ "$dryRun" == false ]]; then
+    if ! [[ -v GITHUB_TOKEN ]]; then
+      GITHUB_TOKEN=$(gh auth token)
+    else
+      GITHUB_TOKEN="${GITHUB_TOKEN?Please export 'GITHUB_TOKEN'}"
+    fi
   fi
   if ! [[ -v GITHUB_REPOSITORY ]]; then
     GITHUB_REPOSITORY=$(gh repo view --json nameWithOwner -q .nameWithOwner)

@@ -8,8 +8,10 @@ on:
 
 jobs:
   cogCheck:
-    runs-on: ubuntu-latest
     name: check conventional commit compliance
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
         with:
