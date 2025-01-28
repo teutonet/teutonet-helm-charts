@@ -32,5 +32,5 @@ jobs:
               else
                 echo "Skipping library chart: '$chart'" >&2
               fi
-            done | jq -c -Rn '[inputs]'
+            done | jq -c -Rn '[inputs] | map(split("/") | .[1])'
           ) | tee -a "$GITHUB_OUTPUT"
