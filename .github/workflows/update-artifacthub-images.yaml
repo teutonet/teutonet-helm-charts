@@ -7,25 +7,9 @@ on:
 
 jobs:
   getAllCharts:
-    runs-on: ubuntu-latest
-    outputs:
-      charts: ${{ steps.getCharts.outputs.charts }}
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-
-      - name: Get all charts
-        id: getCharts
-        run: |
-          set -ex
-          set -o pipefail
-          (
-            echo -n charts=
-            for chart in charts/*; do
-              if [[ "$chart" != "charts/*" && -f "$chart/ci/artifacthub-values.yaml" ]]; then
-                echo "$chart"
-              fi
-            done | cut -d / -f 2 | jq -c -Rn '[inputs]'
-          ) | tee -a "$GITHUB_OUTPUT"
+    uses: ./.github/workflows/get-all-charts.yaml
+    with:
+      showLibraryCharts: false
 
   extractImagesForMultipleCharts:
     runs-on: ubuntu-latest
@@ -62,6 +46,7 @@ jobs:
         run: gh pr merge --auto --squash "$PR_NUMBER"
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
+          PR_NUMBER: ${{ steps.create-pr.outputs.pull-request-number }}
           merge-method: squash
       - if: ${{ steps.create-pr.outputs.pull-request-number }}
         run: gh pr review --approve "$PR_NUMBER"
