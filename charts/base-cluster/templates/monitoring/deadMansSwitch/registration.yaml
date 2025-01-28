@@ -1,3 +1,7 @@
+{{- define "base-cluster.deadMansSwitch.checkName" -}}
+  {{- printf "k8s-cluster-%s-%s" (.Values.global.baseDomain | replace "." "-") .Values.global.clusterName }}
+{{- end -}}
+
 {{- if .Values.monitoring.deadMansSwitch.enabled }}
 apiVersion: batch/v1
 kind: Job
@@ -59,7 +63,7 @@ spec:
                 curl --silent --show-error --fail --retry 5 --max-time 30 "https://hc-ping.com/$PING_KEY/$checkName"
               }
 
-              checkName={{- printf "k8s-cluster-%s-%s" (.Values.global.baseDomain | replace "." "-") .Values.global.clusterName | quote }}
+              checkName={{- include "base-cluster.deadMansSwitch.checkName" . | quote }}
               {{- if .Values.monitoring.prometheus.enabled }}
               createCheck "$checkName-monitoring"
               {{- end }}

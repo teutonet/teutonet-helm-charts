@@ -20,7 +20,7 @@
 ===
 You can access your grafana instance via
 
-{{- if and .Values.certManager.email .Values.monitoring.grafana.ingress.enabled .Values.global.baseDomain }}
+{{- if and .Values.certManager.email .Values.monitoring.grafana.ingress.enabled }}
 {{- printf "https://%s" (include "base-cluster.grafana.host" $) | nindent 2 }}
 {{- else }}
 {{- printf "$ kubectl -n monitoring port-forward svc/kube-prometheus-stack-grafana 3000:http-web" | nindent 2 }}
