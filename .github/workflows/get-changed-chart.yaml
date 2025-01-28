@@ -17,6 +17,8 @@ on:
 jobs:
   getChangedCharts:
     uses: ./.github/workflows/get-changed-charts.yaml
+    permissions:
+      pull-requests: read
     with:
       pr_number: ${{ inputs.pr_number }}
   getChangedChart:

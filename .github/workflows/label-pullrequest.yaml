@@ -16,11 +16,15 @@ on:
 jobs:
   getChangedCharts:
     uses: ./.github/workflows/get-changed-charts.yaml
+    permissions:
+      pull-requests: read
     with:
       pr_number: ${{ github.event.pull_request.number }}
   labelPullRequest:
     name: Label PR
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     needs: getChangedCharts
     steps:
       - env:

@@ -11,10 +11,14 @@ on:
 jobs:
   getChangedCharts:
     uses: ./.github/workflows/get-changed-charts.yaml
+    permissions:
+      pull-requests: read
     with:
       pr_number: ${{ github.event.pull_request.number }}
   lint-helm-chart:
-    name: prepare helm chart
+    name: lint helm chart
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     needs: getChangedCharts
     strategy:

@@ -14,12 +14,16 @@ on:
 jobs:
   getChangedChart:
     if: ${{ !startsWith(github.head_ref, 'release-please--') }}
+    permissions:
+      pull-requests: read
     uses: ./.github/workflows/get-changed-chart.yaml
     with:
       pr_number: ${{ github.event.pull_request.number }}
   validateCommits:
     if: ${{ !startsWith(github.head_ref, 'release-please--') }}
     name: Validate commits
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4

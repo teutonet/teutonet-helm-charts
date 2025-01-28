@@ -10,8 +10,11 @@ on:
       charts:
         description: "All Charts"
         value: ${{ jobs.getAllCharts.outputs.charts }}
+
 jobs:
   getAllCharts:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     outputs:
       charts: ${{ steps.getCharts.outputs.charts }}

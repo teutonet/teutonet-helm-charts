@@ -12,11 +12,15 @@ jobs:
   getChangedChart:
     if: startsWith(github.head_ref, 'release-please--branches--main--components--')
     uses: ./.github/workflows/get-changed-chart.yaml
+    permissions:
+      pull-requests: read
     with:
       pr_number: ${{ github.event.pull_request.number }}
   update-metadata-files:
     if: startsWith(github.head_ref, 'release-please--branches--main--components--')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs: getChangedChart
     name: update metadata file for release
     env:
