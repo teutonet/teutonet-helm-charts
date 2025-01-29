@@ -57,8 +57,8 @@ identityRef:
       "remoteManagedGroups" $remoteManagedGroups
     -}}
     {{- if or (hasKey $securityGroupRule "port") (hasKey $securityGroupRule "portMin") -}}
-      {{- $_securityGroupRule = set $_securityGroupRule "PortRangeMin" ($securityGroupRule.portMin | default $securityGroupRule.port) -}}
-      {{- $_securityGroupRule = set $_securityGroupRule "PortRangeMax" ($securityGroupRule.portMax | default $securityGroupRule.port) -}}
+      {{- $_securityGroupRule = set $_securityGroupRule "portRangeMin" ($securityGroupRule.portMin | default $securityGroupRule.port) -}}
+      {{- $_securityGroupRule = set $_securityGroupRule "portRangeMax" ($securityGroupRule.portMax | default $securityGroupRule.port) -}}
     {{- end -}}
     {{- $allNodesSecurityGroupRules = append $allNodesSecurityGroupRules $_securityGroupRule  -}}
   {{- end }}
