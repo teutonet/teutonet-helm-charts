@@ -1,5 +1,13 @@
 # Changelog
 
+## [9.0.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.0.1...t8s-cluster-v9.0.2) (2025-01-29)
+
+
+### Bug Fixes
+
+* **t8s-cluster/cni:** otherwise for &gt;=1.30 there is no version ([#1276](https://github.com/teutonet/teutonet-helm-charts/issues/1276)) ([20d0ad8](https://github.com/teutonet/teutonet-helm-charts/commit/20d0ad85974a5c5f640970a2f7d8ce92b000e237))
+* **t8s-cluster:** use correct case for field ([#1317](https://github.com/teutonet/teutonet-helm-charts/issues/1317)) ([5861cd6](https://github.com/teutonet/teutonet-helm-charts/commit/5861cd62bd18d81dfa146efcbea0bb524828d7d8))
+
 ## [9.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.0.0...t8s-cluster-v9.0.1) (2024-12-19)
 
 
