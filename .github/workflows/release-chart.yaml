@@ -36,6 +36,7 @@ jobs:
       CHART: ${{ matrix.chart }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: oras-project/setup-oras@v1
 
       - run: helm package --dependency-update "${CHART}"
       - run: helm registry login ghcr.io --username ${{ github.repository_owner }} --password ${{ github.token }}
