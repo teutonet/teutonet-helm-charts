@@ -38,6 +38,9 @@
     },
     "charts/ckan": {
       "package-name": "ckan"
+    },
+    "charts/teuto-cnpg": {
+      "package-name": "teuto-cnpg"
     }
   }
 }
