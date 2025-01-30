@@ -1,6 +1,7 @@
 apiVersion: v2
 name: teuto-cnpg
-description: A Helm chart to abstract the managing of cnpg-databases from the original resource.
+description: A Helm chart to abstract the managing of cnpg-databases from the
+  original resource.
 
 maintainers:
   - email: cwr@teuto.net
