@@ -1,0 +1,25 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ printf "%s" .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  affinity:
+    podAntiAffinityType: preferred
+  enablePDB: true
+  enableSuperuserAccess: true
+  failoverDelay: 0
+  imageName: {{- include "common.images.image" (dict "imageRoot" .Values.databaseImage "global" .Values.global) -}}
+  instances: {{ .Values.instances }}
+  logLevel: {{ .Values.logLevel }}
+  managed:
+    {{- if kindIs "string" .Values.roles }}
+    roles: {{- .Values.roles | fromYamlArray | toYaml | nindent 6  }}
+    {{ else }}
+    roles: {{- .Values.roles | toYaml | nindent 6  }}
+    {{- end }}
+  storage:
+    resizeInUseVolumes: true
+    size: {{ .Values.storageSize }}
+  switchoverDelay: 3600

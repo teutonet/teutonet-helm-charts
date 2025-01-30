@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    cnpg.io/cluster: {{ printf "%s" .Release.Name }}
+    {{- with .Values.podMonitorLabels }}{{- toYaml . | nindent 4 }}{{- end }}
+  name: {{ printf "%s" .Release.Name }}-podmonitor
+  namespace: {{ .Release.Namespace}}
+spec:
+  podMetricsEndpoints:
+    - port: metrics
+  selector:
+    matchLabels:
+      cnpg.io/cluster: {{ printf "%s" .Release.Name }}
