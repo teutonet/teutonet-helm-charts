@@ -5,4 +5,5 @@ charts/ckan/ @cwrau @marvinWolff @syeklu @tasches  @teutonet-bot
 charts/common/ @cwrau @marvinWolff @tasches  @teutonet-bot
 charts/stellio-context-broker/ @cwrau @ocaner-biz  @teutonet-bot
 charts/t8s-cluster/ @cwrau @marvinWolff @tasches  @teutonet-bot
+charts/teuto-cnpg/ @cwrau @marvinWolff @tasches  @teutonet-bot
 charts/teuto-portal-k8s-worker/ @cwrau @marvinWolff @tasches  @teutonet-bot
