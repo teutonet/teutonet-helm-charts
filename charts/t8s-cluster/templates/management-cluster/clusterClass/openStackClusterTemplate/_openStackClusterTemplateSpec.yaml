@@ -51,7 +51,7 @@ identityRef:
   {{- range $name, $securityGroupRule := $cniSecurityGroupRules -}}
     {{- $_securityGroupRule := dict
       "name" (printf "%s %s" $cni $name)
-      "direction" "Ingress"
+      "direction" "ingress"
       "etherType" "IPv4"
       "protocol" ($securityGroupRule.protocol | required "security group rule protocol is required")
       "remoteManagedGroups" $remoteManagedGroups
