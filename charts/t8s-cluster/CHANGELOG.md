@@ -1,5 +1,13 @@
 # Changelog
 
+## [9.0.3](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.0.2...t8s-cluster-v9.0.3) (2025-01-31)
+
+
+### Bug Fixes
+
+* **t8s-cluster/workload-cluster:** allow all protocols for DNS ([#1305](https://github.com/teutonet/teutonet-helm-charts/issues/1305)) ([8e4caa2](https://github.com/teutonet/teutonet-helm-charts/commit/8e4caa28c926648cab5a24ccf87bb06be83eec0a))
+* **t8s-cluster:** me be stupid I guess ([#1327](https://github.com/teutonet/teutonet-helm-charts/issues/1327)) ([d908dcc](https://github.com/teutonet/teutonet-helm-charts/commit/d908dccb9eafac4c815fcf9466eb98285b338f64))
+
 ## [9.0.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.0.1...t8s-cluster-v9.0.2) (2025-01-29)
 
 
