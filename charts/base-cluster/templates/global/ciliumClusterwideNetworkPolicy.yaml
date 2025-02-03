@@ -21,7 +21,6 @@ spec:
       toPorts:
         - ports:
             - port: "53"
-              protocol: UDP
           rules:
             dns:
               - matchPattern: "*"
@@ -43,5 +42,4 @@ spec:
       toPorts:
         - ports:
             - port: "53"
-              protocol: UDP
 {{- end }}
