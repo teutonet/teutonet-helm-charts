@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.0.4](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.0.3...t8s-cluster-v9.0.4) (2025-02-05)
+
+
+### Bug Fixes
+
+* **t8s-cluster/workload-cluster:** turn off bpf.masquerade ([#1332](https://github.com/teutonet/teutonet-helm-charts/issues/1332)) ([c8cfa12](https://github.com/teutonet/teutonet-helm-charts/commit/c8cfa1292f7836b9786225f36f62327c7559e471))
+
 ## [9.0.3](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.0.2...t8s-cluster-v9.0.3) (2025-01-31)
 
 
