@@ -2,7 +2,7 @@ apiVersion: v2
 name: teuto-portal-k8s-worker
 description: A Helm chart for deploying the portal worker application to k8s
 type: application
-version: 3.1.2
+version: 3.2.0
 appVersion: 2.0.0
 maintainers:
   - name: cwrau
@@ -15,6 +15,9 @@ dependencies:
   - name: common
     version: 1.2.1
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
+sources:
+  - https://github.com/teutonet/teutonet-helm-charts/tree/teuto-portal-k8s-worker-v3.2.0/charts/teuto-portal-k8s-worker
+  - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/teuto-portal-k8s-worker
 annotations:
   artifacthub.io/images: |
     - image: registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker:4.0.0  #  default/Deployment/teuto-portal-k8s-worker.yaml
