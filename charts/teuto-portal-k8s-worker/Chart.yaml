@@ -18,3 +18,6 @@ dependencies:
 annotations:
   artifacthub.io/images: |
     - image: registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker:4.0.0  #  default/Deployment/teuto-portal-k8s-worker.yaml
+sources:
+  - https://github.com/teutonet/teutonet-helm-charts/tree/teuto-portal-k8s-worker-v3.2.0/charts/teuto-portal-k8s-worker
+  - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/teuto-portal-k8s-worker
