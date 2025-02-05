@@ -119,9 +119,9 @@ spec:
     # default since 1.22.
     config:
       webhooks:
-        - namespaceSelector:
-            matchExpressions:
-              - key: kubernetes.io/metadata.name
-                operator: NotIn
-                values: {{- include "base-cluster.kyverno.ignoredNamespaces" . | nindent 18 }}
+        namespaceSelector:
+          matchExpressions:
+            - key: kubernetes.io/metadata.name
+              operator: NotIn
+              values: {{- include "base-cluster.kyverno.ignoredNamespaces" . | nindent 18 }}
 {{- end }}
