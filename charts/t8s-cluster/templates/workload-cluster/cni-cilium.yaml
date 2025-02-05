@@ -25,11 +25,13 @@ spec:
   targetNamespace: kube-system
   releaseName: cni
   values:
-    # enable eBPF based routing instead of iptables
     nodePort:
       enabled: true
+    # enable eBPF based routing instead of iptables
     bpf:
-      masquerade: true
+      masquerade: false # disable for now as this creates routing problems
+    egressGateway:
+      enabled: false # disable for now as this depends on bpf.masquerade
     # enable eBPF bases host routing
     # currently not really possible with CAPI, as they don't support disabling the built-in kube-proxy
     # kubeProxyReplacement: strict
@@ -38,8 +40,6 @@ spec:
     encryption:
       enabled: false
       nodeEncryption: false
-    egressGateway:
-      enabled: true
     hubble:
       metrics:
         enabled:
