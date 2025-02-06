@@ -10,15 +10,24 @@ spec:
   enablePDB: true
   enableSuperuserAccess: true
   failoverDelay: 0
-  imageName: {{- include "common.images.image" (dict "imageRoot" .Values.databaseImage "global" .Values.global) -}}
+  imageName: {{ include "common.images.image" (dict "imageRoot" .Values.databaseImage "global" .Values.global) }}
   instances: {{ .Values.instances }}
   logLevel: {{ .Values.logLevel }}
   managed:
-    {{- if kindIs "string" .Values.roles }}
-    roles: {{- .Values.roles | fromYamlArray | toYaml | nindent 6  }}
-    {{ else }}
-    roles: {{- .Values.roles | toYaml | nindent 6  }}
+    {{- $roles := dict -}}
+    {{- if kindIs "string" .Values.roles -}}
+      {{- $roles = .Values.roles | fromYamlArray -}}
+    {{- else -}}
+      {{- $roles = .Values.roles -}}
+    {{- end -}}
+    {{- $cleanRoles := list -}}
+    {{- range $role := $roles -}}
+      {{- with $role.passwordSecret -}}
+        {{- $role = set $role "passwordSecret" (omit . "exists") -}}
+      {{- end -}}
+      {{- $cleanRoles = append $cleanRoles $role -}}
     {{- end }}
+    roles: {{- $cleanRoles | toYaml | nindent 6  }}
   storage:
     resizeInUseVolumes: true
     size: {{ .Values.storageSize }}

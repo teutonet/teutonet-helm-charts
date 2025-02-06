@@ -60,6 +60,18 @@
               },
               "superuser": {
                 "type": "boolean"
+              },
+              "passwordSecret": {
+                "description": "If using an existing one, then you have to have the fields username and password set",
+                "properties": {
+                  "exists": {
+                    "description": "pass existing secret with database password to be used instead of generating a new one",
+                    "type": "boolean"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
               }
             },
             "required": [
