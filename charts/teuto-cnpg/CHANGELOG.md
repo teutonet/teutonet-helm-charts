@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v1.1.0...teuto-cnpg-v1.2.0) (2025-02-07)
+
+
+### Features
+
+* **teuto-cnpg:** allow existing secrets to be used and skip generati… ([#1335](https://github.com/teutonet/teutonet-helm-charts/issues/1335)) ([7a6c7e1](https://github.com/teutonet/teutonet-helm-charts/commit/7a6c7e1928ec0b334c4cfd222383e22448404392))
+
 ## [1.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v1.0.0...teuto-cnpg-v1.1.0) (2025-02-05)
 
 
