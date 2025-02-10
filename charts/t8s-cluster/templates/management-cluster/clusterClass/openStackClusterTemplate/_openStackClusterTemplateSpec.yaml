@@ -33,33 +33,56 @@ disablePortSecurity: false
 identityRef:
   name: {{ include "t8s-cluster.clusterClass.getIdentityRefSecretName" (dict "context" .context) }}
   cloudName: {{ include "t8s-cluster.clusterClass.cloudName" (dict) }}
+
+  {{- $securityGroupRules := dict -}}
+
+  {{- $cni := include "t8s-cluster.cni" .context -}}
+  {{- $controlPlaneSecurityGroup := "controlplane" -}}
+  {{- $computePlaneSecurityGroup := "worker" -}}
+  {{- $allRemoteManagedGroups := list $computePlaneSecurityGroup -}}
+  {{- if not .Values.controlPlane.hosted -}}
+    {{ $allRemoteManagedGroups = append $allRemoteManagedGroups $controlPlaneSecurityGroup -}}
+  {{- end -}}
+
   {{- $cniSecurityGroupRules := dict -}}
-    {{- $cni := include "t8s-cluster.cni" .context -}}
-    {{- $remoteManagedGroups := list "worker" -}}
-    {{- if not .Values.controlPlane.hosted -}}
-      {{ $remoteManagedGroups = append $remoteManagedGroups "controlplane" -}}
-    {{- end -}}
-    {{- if eq $cni "calico" }}
-      {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "BGP" (dict "port" 179 "protocol" "tcp") -}}
-      {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "IP-in-IP" (dict "protocol" "4") -}}
-    {{- else if eq $cni "cilium" -}}
-      {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "VXLAN" (dict "port" 8472 "protocol" "udp") -}}
-      {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "health (http)" (dict "port" 4240 "protocol" "tcp") -}}
-      {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "health (ping)" (dict "protocol" "icmp") -}}
-    {{- end }}
-  {{- $allNodesSecurityGroupRules := list -}}
+  {{- if eq $cni "calico" }}
+    {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "BGP" (dict "port" 179) -}}
+    {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "IP-in-IP" (dict "protocol" "4") -}}
+  {{- else if eq $cni "cilium" -}}
+    {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "VXLAN" (dict "port" 8472 "protocol" "udp") -}}
+    {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "health (http)" (dict "port" 4240) -}}
+    {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "health (ping)" (dict "protocol" "icmp") -}}
+  {{- end }}
   {{- range $name, $securityGroupRule := $cniSecurityGroupRules -}}
+    {{- $securityGroupRules = set $securityGroupRules (printf "%s %s" $cni $name) $securityGroupRule -}}
+  {{- end -}}
+
+  {{- $metricsSecurityGroupRules := dict -}}
+  {{- $metricsSecurityGroupRules = set $metricsSecurityGroupRules "prometheus node-exporter" (dict "port" 9100 "remoteManagedGroups" (list $computePlaneSecurityGroup)) -}}
+  {{- if not .Values.controlPlane.hosted -}}
+    {{- $metricsSecurityGroupRules = set $metricsSecurityGroupRules "etcd" (dict "port" 2381 "remoteManagedGroups" (list $computePlaneSecurityGroup)) -}}
+    {{- $metricsSecurityGroupRules = set $metricsSecurityGroupRules "kube-proxy" (dict "port" 10249 "remoteManagedGroups" (list $computePlaneSecurityGroup)) -}}
+    {{- $metricsSecurityGroupRules = set $metricsSecurityGroupRules "kube-controller-manager" (dict "port" 10257 "remoteManagedGroups" (list $computePlaneSecurityGroup)) -}}
+    {{- $metricsSecurityGroupRules = set $metricsSecurityGroupRules "kube-scheduler" (dict "port" 10259 "remoteManagedGroups" (list $computePlaneSecurityGroup)) -}}
+  {{- end }}
+  {{- range $name, $securityGroupRule := $metricsSecurityGroupRules -}}
+    {{- $securityGroupRules = set $securityGroupRules (printf "metrics (%s)" $name) $securityGroupRule -}}
+  {{- end -}}
+
+  {{- $allNodesSecurityGroupRules := list -}}
+  {{- range $name, $securityGroupRule := $securityGroupRules -}}
     {{- $_securityGroupRule := dict
-      "name" (printf "%s %s" $cni $name)
+      "name" $name
+      "description" ($securityGroupRule.description | default $name)
       "direction" "ingress"
       "etherType" "IPv4"
-      "protocol" ($securityGroupRule.protocol | required "security group rule protocol is required")
-      "remoteManagedGroups" $remoteManagedGroups
+      "protocol" ($securityGroupRule.protocol | default "tcp")
     -}}
-    {{- if or (hasKey $securityGroupRule "port") (hasKey $securityGroupRule "portMin") -}}
+    {{- if or (hasKey $securityGroupRule "port") (and (hasKey $securityGroupRule "portMin") (hasKey $securityGroupRule "portMax")) -}}
       {{- $_securityGroupRule = set $_securityGroupRule "portRangeMin" ($securityGroupRule.portMin | default $securityGroupRule.port) -}}
       {{- $_securityGroupRule = set $_securityGroupRule "portRangeMax" ($securityGroupRule.portMax | default $securityGroupRule.port) -}}
     {{- end -}}
+    {{- $_securityGroupRule = set $_securityGroupRule "remoteManagedGroups" ($securityGroupRule.remoteManagedGroups | default $allRemoteManagedGroups) -}}
     {{- $allNodesSecurityGroupRules = append $allNodesSecurityGroupRules $_securityGroupRule  -}}
   {{- end }}
 managedSecurityGroups:
