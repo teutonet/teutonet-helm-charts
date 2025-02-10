@@ -18,7 +18,7 @@ sources:
   - https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.0.4/charts/t8s-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster
 type: application
-version: 9.0.4
+version: 9.0.5
 annotations:
   artifacthub.io/images: |
     - image: k8s.gcr.io/sig-storage/csi-attacher:v3.4.0                                                                                                                       #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml

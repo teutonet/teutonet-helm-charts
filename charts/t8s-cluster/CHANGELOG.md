@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.0.5](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.0.4...t8s-cluster-v9.0.5) (2025-02-10)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** add securityGroupRules for monitoring ([#1338](https://github.com/teutonet/teutonet-helm-charts/issues/1338)) ([1bf3c0f](https://github.com/teutonet/teutonet-helm-charts/commit/1bf3c0fba41e66b085137aaf5dfadd9144390f92))
+
 ## [9.0.4](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.0.3...t8s-cluster-v9.0.4) (2025-02-05)
 
 
