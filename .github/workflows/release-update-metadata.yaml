@@ -78,7 +78,7 @@ jobs:
         with:
           message: "ci: [bot] Update sources in 'Chart.yaml'"
           default_author: github_actions
-          push: true
+          push: false
           add: charts/${{ env.CHART }}/Chart.yaml
 
       - run: ./.github/scripts/prepare-values.sh "charts/$CHART"
