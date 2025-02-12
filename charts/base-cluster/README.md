@@ -1,6 +1,6 @@
-# base-cluster
+<!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 7.1.1](https://img.shields.io/badge/Version-7.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 7.1.2](https://img.shields.io/badge/Version-7.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -15,6 +15,8 @@ A common base for every kubernetes cluster
 | tasches | <st@teuto.net> |  |
 
 ## Cluster bootstrap
+
+The `.x.x` part of the versions can be left as is, helm uses that as a range. If you choose to set a fix version, you have to take care of the updates yourself.
 
 ```sh
 # always be git 😁
@@ -87,7 +89,7 @@ so the kube-scheduler can, hopefully, schedule them on nodes with more space.
 Additionally, the descheduler also tries to reconcile `topologySpreadConstraints`
 and affinities.
 
-If the cluster is _semi_ underspecced or the individual applications have unperfect
+If the cluster is _semi_ underspecced or the individual applications have imperfect
 resource requests, the descheduler might lead to period restarting of random pods.
 
 In that case you should disable the descheduler.
@@ -236,7 +238,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v7.1.1/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v7.1.2/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -3628,6 +3630,7 @@ Must be one of:
 | - [resources](#ingress_resources )                                             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements.                                                                                                                                                             |
 | - [enabled](#ingress_enabled )                                                 | No      | boolean          | No         | -                                                                             | -                                                                                                                                                                                                                             |
 | - [allowNginxConfigurationSnippets](#ingress_allowNginxConfigurationSnippets ) | No      | boolean          | No         | -                                                                             | Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets |
+| - [useProxyProtocol](#ingress_useProxyProtocol )                               | No      | boolean          | No         | -                                                                             | -                                                                                                                                                                                                                             |
 | - [IP](#ingress_IP )                                                           | No      | string           | No         | -                                                                             | Try to use specified IP as loadbalancer IP                                                                                                                                                                                    |
 
 ### <a name="ingress_replicas"></a>10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > replicas`
@@ -3671,7 +3674,13 @@ Must be one of:
 
 **Description:** Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets
 
-### <a name="ingress_IP"></a>10.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > IP`
+### <a name="ingress_useProxyProtocol"></a>10.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > useProxyProtocol`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+### <a name="ingress_IP"></a>10.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > IP`
 
 |          |          |
 | -------- | -------- |
