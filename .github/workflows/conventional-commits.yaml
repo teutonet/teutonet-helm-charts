@@ -18,4 +18,4 @@ jobs:
           fetch-depth: 0
 
       - name: Conventional commits check
-        uses: oknozor/cocogitto-action@5ae166018d8265bb2df85c1eb521e86a17b61085 # v3
+        uses: oknozor/cocogitto-action@ed62593c499c2d7697bb0177213946f1e2634119 # v3
