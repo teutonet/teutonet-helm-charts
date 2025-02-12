@@ -1,5 +1,21 @@
 # Changelog
 
+## [7.1.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.1.1...base-cluster-v7.1.2) (2025-02-12)
+
+
+### Bug Fixes
+
+* **base-cluster/kube-prometheus-stack:** only register healthcheck if enabled on both sides ([#1052](https://github.com/teutonet/teutonet-helm-charts/issues/1052)) ([21e966d](https://github.com/teutonet/teutonet-helm-charts/commit/21e966d7db3ff8ba36150305a321dca38aacc1a0))
+* **base-cluster/kyverno:** apparently the type changed ([#1330](https://github.com/teutonet/teutonet-helm-charts/issues/1330)) ([aceafc3](https://github.com/teutonet/teutonet-helm-charts/commit/aceafc333f38f20e655ebae60c802ed969686a5d))
+* **base-cluster:** allow all protocols for DNS ([#1306](https://github.com/teutonet/teutonet-helm-charts/issues/1306)) ([829ed95](https://github.com/teutonet/teutonet-helm-charts/commit/829ed95c65336be3795bdc08d84c6efa773f58fa))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/docs:** mention validity of `.x.x` part in the versions ([#1271](https://github.com/teutonet/teutonet-helm-charts/issues/1271)) ([7e0894c](https://github.com/teutonet/teutonet-helm-charts/commit/7e0894cc8db3a34ba2fae7a9d4dee890192578c7))
+* **base-cluster/docs:** set vim modeline ([#1290](https://github.com/teutonet/teutonet-helm-charts/issues/1290)) ([1276209](https://github.com/teutonet/teutonet-helm-charts/commit/127620966bb7a6c206e341fdcf6dce7ce05e96f5))
+* **base-cluster:** make proxy-protocol configurable ([#1293](https://github.com/teutonet/teutonet-helm-charts/issues/1293)) ([0af12c6](https://github.com/teutonet/teutonet-helm-charts/commit/0af12c668dab11a38d204f4679432b04bd191d8c))
+
 ## [7.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.1.0...base-cluster-v7.1.1) (2024-12-20)
 
 
