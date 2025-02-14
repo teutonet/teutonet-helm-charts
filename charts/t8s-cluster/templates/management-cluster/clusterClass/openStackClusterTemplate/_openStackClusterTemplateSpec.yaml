@@ -60,16 +60,18 @@ identityRef:
   {{- $metricsSecurityGroupRules := dict -}}
   {{- $metricsSecurityGroupRules = set $metricsSecurityGroupRules "prometheus node-exporter" (dict "port" 9100 "remoteManagedGroups" (list $computePlaneSecurityGroup)) -}}
   {{- if not .Values.controlPlane.hosted -}}
-    {{- $metricsSecurityGroupRules = set $metricsSecurityGroupRules "etcd" (dict "port" 2381 "remoteManagedGroups" (list $computePlaneSecurityGroup)) -}}
-    {{- $metricsSecurityGroupRules = set $metricsSecurityGroupRules "kube-proxy" (dict "port" 10249 "remoteManagedGroups" (list $computePlaneSecurityGroup)) -}}
-    {{- $metricsSecurityGroupRules = set $metricsSecurityGroupRules "kube-controller-manager" (dict "port" 10257 "remoteManagedGroups" (list $computePlaneSecurityGroup)) -}}
-    {{- $metricsSecurityGroupRules = set $metricsSecurityGroupRules "kube-scheduler" (dict "port" 10259 "remoteManagedGroups" (list $computePlaneSecurityGroup)) -}}
+    {{- $metricsSecurityGroupRules = set $metricsSecurityGroupRules "etcd" (dict "port" 2381 "securityGroup" $controlPlaneSecurityGroup "remoteManagedGroups" (list $computePlaneSecurityGroup)) -}}
+    {{- $metricsSecurityGroupRules = set $metricsSecurityGroupRules "kube-proxy" (dict "port" 10249 "securityGroup" $controlPlaneSecurityGroup "remoteManagedGroups" (list $computePlaneSecurityGroup)) -}}
+    {{- $metricsSecurityGroupRules = set $metricsSecurityGroupRules "kube-controller-manager" (dict "port" 10257 "securityGroup" $controlPlaneSecurityGroup "remoteManagedGroups" (list $computePlaneSecurityGroup)) -}}
+    {{- $metricsSecurityGroupRules = set $metricsSecurityGroupRules "kube-scheduler" (dict "port" 10259 "securityGroup" $controlPlaneSecurityGroup "remoteManagedGroups" (list $computePlaneSecurityGroup)) -}}
   {{- end }}
   {{- range $name, $securityGroupRule := $metricsSecurityGroupRules -}}
     {{- $securityGroupRules = set $securityGroupRules (printf "metrics (%s)" $name) $securityGroupRule -}}
   {{- end -}}
 
   {{- $allNodesSecurityGroupRules := list -}}
+  {{- $controlPlaneNodesSecurityGroupRules := list -}}
+  {{- $workerNodesSecurityGroupRules := list -}}
   {{- range $name, $securityGroupRule := $securityGroupRules -}}
     {{- $_securityGroupRule := dict
       "name" $name
@@ -83,10 +85,19 @@ identityRef:
       {{- $_securityGroupRule = set $_securityGroupRule "portRangeMax" ($securityGroupRule.portMax | default $securityGroupRule.port) -}}
     {{- end -}}
     {{- $_securityGroupRule = set $_securityGroupRule "remoteManagedGroups" ($securityGroupRule.remoteManagedGroups | default $allRemoteManagedGroups) -}}
-    {{- $allNodesSecurityGroupRules = append $allNodesSecurityGroupRules $_securityGroupRule  -}}
+
+    {{- if eq ($_securityGroupRule).securityGroup $controlPlaneSecurityGroup -}}
+      {{- $controlPlaneNodesSecurityGroupRules = append $controlPlaneNodesSecurityGroupRules $_securityGroupRule  -}}
+    {{- else if eq ($_securityGroupRule).securityGroup $computePlaneSecurityGroup -}}
+      {{- $workerNodesSecurityGroupRules = append $workerNodesSecurityGroupRules $_securityGroupRule  -}}
+    {{- else -}}
+      {{- $allNodesSecurityGroupRules = append $allNodesSecurityGroupRules $_securityGroupRule  -}}
+    {{- end -}}
   {{- end }}
 managedSecurityGroups:
   allNodesSecurityGroupRules: {{- toYaml $allNodesSecurityGroupRules | nindent 4 }}
+  controlPlaneNodesSecurityGroupRules: {{- toYaml $controlPlaneNodesSecurityGroupRules | nindent 4 }}
+  workerPlaneNodesSecurityGroupRules: {{- toYaml $workerNodesSecurityGroupRules | nindent 4 }}
 managedSubnets:
   - cidr: 10.6.0.0/24
 {{- end -}}
