@@ -1,0 +1,127 @@
+{{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.loki.enabled -}}
+  {{- if eq ((((lookup lookup "helm.toolkit.fluxcd.io/v2" "HelmRelease" "loki" "loki").spec).chart).spec).chart "loki-stack" -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: loki-stack-deletion
+  namespace: loki
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: {{ .name }}
+    app.kubernetes.io/part-of: flux
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: loki-stack-deletion
+  namespace: loki
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: {{ .name }}
+    app.kubernetes.io/part-of: flux
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+rules:
+  - verbs:
+      - delete
+    apiGroups:
+      - helm.toolkit.fluxcd.io
+    resources:
+      - helmreleases
+    resourceNames:
+      - loki
+  - verbs:
+      - delete
+    apiGroups:
+      - ""
+    resources:
+      - persistentvolumeclaims
+    resourceNames:
+      - storage-loki-0
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: loki-stack-deletion
+  namespace: loki
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: {{ .name }}
+    app.kubernetes.io/part-of: flux
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+subjects:
+  - kind: ServiceAccount
+    name: loki-stack-deletion
+    namespace: loki
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: loki-stack-deletion
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: loki-stack-deletion
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: {{ .name }}
+    app.kubernetes.io/part-of: flux
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      serviceAccountName: loki-stack-deletion
+      securityContext:
+        runAsNonRoot: true
+        runAsGroup: 1000
+        runAsUser: 1000
+        fsGroup: 1000
+      enableServiceLinks: false
+      initContainers:
+        - name: create-k8s-secret
+          image: {{ include "base-cluster.kubectl.image" .context }}
+          imagePullPolicy: {{ empty .Values.global.kubectl.image.digest | ternary "Always" "IfNotPresent" }}
+          securityContext:
+            readOnlyRootFilesystem: true
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+          command:
+            - kubectl
+            - --namespace
+            - loki
+            - delete
+            - helmrelease
+            - loki
+      containers:
+        - name: create-k8s-secret
+          image: {{ include "base-cluster.kubectl.image" .context }}
+          imagePullPolicy: {{ empty .Values.global.kubectl.image.digest | ternary "Always" "IfNotPresent" }}
+          securityContext:
+            readOnlyRootFilesystem: true
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+          command:
+            - kubectl
+            - --namespace
+            - loki
+            - delete
+            - persistentvolumeclaims
+            - storage-loki-0
+  {{- end -}}
+{{- end -}}

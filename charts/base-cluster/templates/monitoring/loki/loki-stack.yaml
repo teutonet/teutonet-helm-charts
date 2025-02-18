@@ -1,0 +1,52 @@
+{{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.loki.enabled -}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: loki
+  namespace: loki
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: loki
+    app.kubernetes.io/part-of: monitoring
+spec:
+  chart:
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "grafana" "chart" "loki-stack" "context" $) | nindent 6 }}
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  install:
+    timeout: 10m0s
+  upgrade:
+    timeout: 10m0s
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
+  values:
+{{/* TODO: Implement */}}
+{{/*            - from: 2022-09-15*/}}
+{{/*              store: boltdb-shipper*/}}
+{{/*              object_store: filesystem*/}}
+{{/*              schema: v12*/}}
+{{/*              index:*/}}
+{{/*                prefix: index_*/}}
+{{/*                period: 24h*/}}
+    promtail:
+      {{- if .Values.global.imageRegistry }}
+      image:
+        registry: {{ $.Values.global.imageRegistry }}
+      {{- end }}
+      resources: {{- include "common.resources" .Values.monitoring.loki.promtail | nindent 8 }}
+      containerSecurityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      priorityClassName: monitoring-components
+      serviceMonitor:
+        enabled: true
+        labels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
+    grafana:
+      enabled: false
+      sidecar:
+        datasources:
+          enabled: true
+    prometheus:
+      enabled: false
+  {{- end -}}

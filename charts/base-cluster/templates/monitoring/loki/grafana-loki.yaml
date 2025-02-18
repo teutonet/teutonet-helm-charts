@@ -1,0 +1,22 @@
+{{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.loki.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-loki-datasource
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: loki
+    app.kubernetes.io/part-of: monitoring
+    grafana_datasource: "1"
+data:
+  grafana-loki-datasource.yaml: |-
+    apiVersion: 1
+    datasources:
+      - name: Loki
+        type: loki
+        access: proxy
+        url: "http://loki.loki:3100"
+        version: 1
+        isDefault: false
+        uid: loki
+{{- end -}}
