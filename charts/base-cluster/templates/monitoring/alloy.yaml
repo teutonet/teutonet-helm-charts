@@ -1,0 +1,259 @@
+{{- if and .Values.monitoring.prometheus.enabled (or .Values.monitoring.tracing.enabled .Values.monitoring.loki.enabled) -}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: alloy
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: alloy
+    app.kubernetes.io/part-of: monitoring
+spec:
+  chart:
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "grafana" "chart" "alloy" "context" $) | nindent 6 }}
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  install:
+    timeout: 10m0s
+    crds: Skip
+  upgrade:
+    timeout: 10m0s
+    crds: Skip
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
+  values:
+    {{- if .Values.global.imageRegistry }}
+    global:
+      image:
+        registry: {{ $.Values.global.imageRegistry }}
+    {{- end }}
+    alloy:
+      enableReporting: false
+      resources: {{- include "common.resources" .Values.monitoring.loki.promtail | nindent 8 }}
+      {{- if .Values.monitoring.loki.enabled }}
+      mounts:
+        varlog: true
+      {{- end }}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      configMap:
+        content: |
+          {{- if .Values.monitoring.loki.enabled }}
+          discovery.kubernetes "pods" {
+          	role = "pod"
+          }
+
+          discovery.relabel "pods" {
+          	targets = discovery.kubernetes.pods.targets
+
+          	rule {
+          		source_labels = ["__meta_kubernetes_pod_controller_name"]
+          		regex         = "([0-9a-z-.]+?)(-[0-9a-f]{8,10})?"
+          		target_label  = "__tmp_controller_name"
+          	}
+
+          	rule {
+          		source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name", "__meta_kubernetes_pod_label_app", "__tmp_controller_name", "__meta_kubernetes_pod_name"]
+          		regex         = "^;*([^;]+)(;.*)?$"
+          		target_label  = "app"
+          	}
+
+          	rule {
+          		source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_instance", "__meta_kubernetes_pod_label_instance"]
+          		regex         = "^;*([^;]+)(;.*)?$"
+          		target_label  = "instance"
+          	}
+
+          	rule {
+          		source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_component", "__meta_kubernetes_pod_label_component"]
+          		regex         = "^;*([^;]+)(;.*)?$"
+          		target_label  = "component"
+          	}
+
+          	rule {
+          		source_labels = ["__meta_kubernetes_pod_node_name"]
+          		target_label  = "node_name"
+          	}
+
+          	rule {
+          		source_labels = ["__meta_kubernetes_namespace"]
+          		target_label  = "namespace"
+          	}
+
+          	rule {
+          		source_labels = ["namespace", "app"]
+          		separator     = "/"
+          		target_label  = "job"
+          	}
+
+          	rule {
+          		source_labels = ["__meta_kubernetes_pod_name"]
+          		target_label  = "pod"
+          	}
+
+          	rule {
+          		source_labels = ["__meta_kubernetes_pod_container_name"]
+          		target_label  = "container"
+          	}
+
+          	rule {
+          		source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
+          		separator     = "/"
+          		target_label  = "__path__"
+          		replacement   = "/var/log/pods/*$1/*.log"
+          	}
+
+          	rule {
+          		source_labels = ["__meta_kubernetes_pod_annotationpresent_kubernetes_io_config_hash", "__meta_kubernetes_pod_annotation_kubernetes_io_config_hash", "__meta_kubernetes_pod_container_name"]
+          		separator     = "/"
+          		regex         = "true/(.*)"
+          		target_label  = "__path__"
+          		replacement   = "/var/log/pods/*$1/*.log"
+          	}
+          }
+
+          local.file_match "pods" {
+          	path_targets = discovery.relabel.pods.output
+          }
+
+          loki.source.file "pods" {
+          	targets               = local.file_match.pods.targets
+          	forward_to            = [loki.process.pods.receiver]
+          }
+
+          loki.process "pods" {
+          	forward_to = [loki.write.default.receiver]
+
+          	stage.cri { }
+          }
+
+          loki.write "default" {
+          	endpoint {
+          		url = "http://loki:3100/loki/api/v1/push"
+          	}
+          	external_labels = {}
+          }
+          {{- end }}
+
+          {{- if .Values.monitoring.tracing.enabled }}
+          otelcol.receiver.otlp "default" {
+            grpc { }
+
+            http { }
+
+            output {
+              traces = [otelcol.processor.k8sattributes.default.input]
+            }
+          }
+
+          otelcol.receiver.jaeger "default" {
+            protocols {
+              grpc { }
+
+              thrift_http { }
+
+              thrift_compact {
+                max_packet_size = "63KiB488B"
+              }
+            }
+
+            output {
+              traces = [otelcol.processor.k8sattributes.default.input]
+            }
+          }
+
+          otelcol.receiver.zipkin "default" {
+            output {
+              traces = [otelcol.processor.k8sattributes.default.input]
+            }
+          }
+
+          otelcol.processor.k8sattributes "default" {
+            auth_type = "serviceAccount"
+
+            extract {
+              metadata = ["k8s.namespace.name", "k8s.deployment.name", "k8s.statefulset.name", "k8s.daemonset.name", "k8s.cronjob.name", "k8s.job.name", "k8s.node.name", "k8s.pod.name", "k8s.pod.uid", "k8s.pod.start_time"]
+            }
+
+            pod_association {
+              source {
+                from = "resource_attribute"
+                name = "k8s.pod.ip"
+              }
+            }
+
+            pod_association {
+              source {
+                from = "resource_attribute"
+                name = "k8s.pod.uid"
+              }
+            }
+
+            pod_association {
+              source {
+                from = "connection"
+              }
+            }
+
+            output {
+              traces = [otelcol.processor.batch.default.input]
+            }
+          }
+
+          otelcol.processor.batch "default" {
+            output {
+              traces = [otelcol.exporter.otlp.tempo.input]
+            }
+          }
+
+          otelcol.exporter.otlp "tempo" {
+            client {
+              endpoint = "grafana-tempo-distributor:4317"
+
+              tls {
+                insecure = true
+              }
+            }
+          }
+          {{- end }}
+      extraPorts:
+        - name: jaeger-compact
+          port: 6831
+          protocol: UDP
+          targetPort: 6831
+        - name: jaeger-grpc
+          port: 14250
+          protocol: TCP
+          targetPort: 14250
+        - name: jaeger-thrift
+          port: 14268
+          protocol: TCP
+          targetPort: 14268
+        - name: metrics
+          port: 8888
+          protocol: TCP
+          targetPort: 8888
+        - name: otlp
+          port: 4317
+          appProtocol: grpc
+          protocol: TCP
+          targetPort: 4317
+        - name: otlp-http
+          port: 4318
+          protocol: TCP
+          targetPort: 4318
+        - name: zipkin
+          port: 9411
+          appProtocol: http/protobuf
+          protocol: TCP
+          targetPort: 9411
+    crds:
+      create: false
+    controller:
+      priorityClassName: monitoring-components
+    serviceMonitor:
+      enabled: true
+      additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
+{{- end -}}
