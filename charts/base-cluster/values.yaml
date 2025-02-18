@@ -113,6 +113,8 @@ global:
       url: https://grafana.github.io/helm-charts
       charts:
         loki-stack: 2.x.x
+        loki: 6.x.x
+        alloy: 0.x.x
       condition: "{{ and .Values.monitoring.prometheus.enabled .Values.monitoring.loki.enabled }}"
     bitnami:
       url: oci://docker.io/bitnamicharts
@@ -311,7 +313,6 @@ monitoring:
     persistence:
       storageClass: ""
       size: 10Gi
-    replicas: 1
     resourcesPreset: nano
     resources:
       requests:

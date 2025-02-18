@@ -869,10 +869,6 @@
               },
               "additionalProperties": false
             },
-            "replicas": {
-              "type": "integer",
-              "minimum": 1
-            },
             "resourcesPreset": {
               "$ref": "#/$defs/resourcesPreset"
             },
