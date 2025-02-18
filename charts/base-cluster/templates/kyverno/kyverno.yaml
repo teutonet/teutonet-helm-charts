@@ -62,25 +62,27 @@ spec:
     # this only works in version 3
     admissionController:
       replicas: 3
-      {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
+      {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "jaeger" "serviceProtocol" "grpc") | fromYaml -}}
+      {{- $telemetryEnabled := and $telemetryConf.enabled .Values.monitoring.prometheus.enabled -}}
+      {{- if $telemetryEnabled }}
       tracing: &tracingConfig
         enabled: true
-        address: open-telemetry-collector-opentelemetry-collector.monitoring
-        port: 14250 # jaeger-grpc
+        address: {{ $telemetryConf.host }}
+        port: {{ $telemetryConf.port }}
       {{- end }}
     backgroundController:
       replicas: 2
-      {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
+      {{- if $telemetryEnabled }}
       tracing: *tracingConfig
       {{- end }}
     reportsController:
       replicas: 2
-      {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
+      {{- if $telemetryEnabled }}
       tracing: *tracingConfig
       {{- end }}
     cleanupController:
       replicas: 2
-      {{- if and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}
+      {{- if $telemetryEnabled }}
       tracing: *tracingConfig
       {{- end }}
     podDisruptionBudget:
