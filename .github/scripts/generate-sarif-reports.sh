@@ -18,8 +18,16 @@ function createSarifReports() {
   yq -r '.annotations["artifacthub.io/images"]' "$chart/Chart.yaml" |
     yq -r '.[] | .image' |
     parallel ${GITHUB_JOB+--bar} --retries 10 -P 0 -k generateSarifReport "$chart" "{}" "reports/$chartName-{#}.json"
+
+  # return with 1 (false) if a file has been found
+  if find reports -type f -name "$chartName-*" -exec false {} + -quit; then
+    # this allows for charts like teuto-cnpg which don't contain any images
+    echo "No images found for $chartName" >&2
+    return 0
+  fi
+
   # shellcheck disable=SC1009
-  cat "reports/$chartName-"*.json | jq -r -s '. as $input | {"$schema": .[0]["$schema"], version: .[0].version, runs: [reduce map(.runs[])[] as $run (null; .+$run as $new | .tool.driver.rules |= (.+$run.tool.driver.rules|unique_by(.id)) | $new*. | del(.properties, .originalUriBaseIds, .results))]} | .runs[0].results = ($input | reduce map(.runs[])[] as $run ([]; . += ($run.results | map(.locations |= (([.[] | select(.physicalLocation)][0].physicalLocation.artifactLocation) as $physicalLocation | .[] | select(.logicalLocations)[] | map({physicalLocation:{artifactLocation:{uri:"\(.fullyQualifiedName)/\($run.properties.imageName)/\($run.originalUriBaseIds[$physicalLocation.uriBaseId].uri)\($physicalLocation.uri)"}}}))))))' >"reports/$chartName.json.sarif"
+  cat "reports/$chartName-"*.json | jq -r -s -f .github/scripts/sarif-report-collect-results.jq >"reports/$chartName.json.sarif"
 }
 
 function generateSarifReport() {
