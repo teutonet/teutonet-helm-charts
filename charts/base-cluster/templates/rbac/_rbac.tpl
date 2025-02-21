@@ -17,7 +17,7 @@
   {{- range $accountName, $account := .accounts -}}
     {{- range $roleName, $namespaces := dig "roles" (dict) $account -}}
       {{- if and (not (has $roleName $definedRoles)) (not (has $roleName $preexistingRoles)) -}}
-        {{- fail (printf "Role '%s' doesn't exist, used in account '%s'" $roleName $accountName ) -}}
+        {{- fail (printf "Role '%s' doesn't exist, used in account '%s'" $roleName $accountName) -}}
       {{- end -}}
 
       {{- $existingRole := dig $roleName (dict) $roles -}}
@@ -35,7 +35,7 @@
       {{- $roles = set $roles $roleName $existingRole -}}
     {{- end -}}
     {{- range $roleName := dig "clusterRoles" (list) $account -}}
-        {{- if not (has $roleName $definedRoles) -}}
+        {{- if and (not (has $roleName $definedRoles)) (not (has $roleName $preexistingRoles)) -}}
           {{- fail (printf "Role '%s' doesn't exist, used in account '%s'" $roleName $accountName ) -}}
         {{- end -}}
 
