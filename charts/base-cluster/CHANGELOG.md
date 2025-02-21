@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.1.3](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.1.2...base-cluster-v7.1.3) (2025-02-21)
+
+
+### Bug Fixes
+
+* **base-cluster/monitoring:** use correct condition for grafana ingress ([#1350](https://github.com/teutonet/teutonet-helm-charts/issues/1350)) ([ec858d3](https://github.com/teutonet/teutonet-helm-charts/commit/ec858d3d0a5e75d3981906af3fd7b041a8508d7e))
+* **base-cluster/rbac:** also allow preexistingRoles for clusterRole assignment ([#1351](https://github.com/teutonet/teutonet-helm-charts/issues/1351)) ([988168d](https://github.com/teutonet/teutonet-helm-charts/commit/988168daff826ba9316d1c4c0c433bb1daf918a4))
+
 ## [7.1.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.1.1...base-cluster-v7.1.2) (2025-02-12)
 
 
