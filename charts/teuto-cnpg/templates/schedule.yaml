@@ -1,0 +1,13 @@
+{{- if (.Values.backup).schedule -}}
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: {{ printf "%s" .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.backup.schedule | quote }}
+  backupOwnerReference: none
+  cluster:
+    name: {{ printf "%s" .Release.Name }}
+{{- end -}}
