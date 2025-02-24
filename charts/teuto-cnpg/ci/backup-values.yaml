@@ -1,0 +1,11 @@
+backup:
+  barmanObjectStore:
+    destinationPath: s3://test/
+    endpointURL: https://test.s3storage.com:6780
+    s3Credentials:
+      accessKeyId:
+        name: aws-creds
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: aws-creds
+        key: ACCESS_SECRET_KEY
