@@ -13,7 +13,9 @@ spec:
   imageName: {{ include "common.images.image" (dict "imageRoot" .Values.databaseImage "global" .Values.global) }}
   instances: {{ .Values.instances }}
   logLevel: {{ .Values.logLevel }}
-  backup: {{ .Values.backup }}
+  {{- with .Values.backup }}
+  backup: {{ omit . "schedule" | toYaml | nindent 4 }}
+  {{- end }}
   managed:
     {{- $roles := dict -}}
     {{- if kindIs "string" .Values.roles -}}

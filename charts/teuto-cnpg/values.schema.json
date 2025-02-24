@@ -96,7 +96,17 @@
     },
     "backup": {
       "type": "object",
-      "description": "See: https://cloudnative-pg.io/documentation/1.16/backup_recovery/"
+      "description": "See: https://cloudnative-pg.io/documentation/1.16/backup_recovery/",
+      "properties": {
+        "schedule": {
+          "type": "string",
+          "description": "cron syntax",
+          "examples": [
+            "0 0 0 * * *"
+          ]
+        }
+      }
+
     },
     "databaseImage": {
       "type": "object",
