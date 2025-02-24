@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v1.3.0...teuto-cnpg-v1.4.0) (2025-02-24)
+
+
+### Features
+
+* **teuto-cnpg/backup:** add backup schedule ([#1354](https://github.com/teutonet/teutonet-helm-charts/issues/1354)) ([6967ce3](https://github.com/teutonet/teutonet-helm-charts/commit/6967ce3982ce62b716f6b25435f753d269fc4c1f))
+
 ## [1.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v1.2.0...teuto-cnpg-v1.3.0) (2025-02-24)
 
 
