@@ -94,6 +94,10 @@
     "storageSize": {
       "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
     },
+    "backup": {
+      "type": "object",
+      "description": "See: https://cloudnative-pg.io/documentation/1.16/backup_recovery/"
+    },
     "databaseImage": {
       "type": "object",
       "description": "For postgis see this link: https://github.com/cloudnative-pg/postgis-containers/pkgs/container/postgis",

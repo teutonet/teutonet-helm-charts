@@ -13,6 +13,7 @@ spec:
   imageName: {{ include "common.images.image" (dict "imageRoot" .Values.databaseImage "global" .Values.global) }}
   instances: {{ .Values.instances }}
   logLevel: {{ .Values.logLevel }}
+  backup: {{ .Values.backup }}
   managed:
     {{- $roles := dict -}}
     {{- if kindIs "string" .Values.roles -}}
