@@ -1,5 +1,5 @@
-{{- if .Values.monitoring.prometheus.enabled }}
-{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "certificate-expiration-rule" "namespace" "cert-manager" "resource" (include "base-cluster.cert-manager.expirationRule" . ) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "prometheus" "app.kubernetes.io/part-of" "cert-manager")) }}
+{{- if .Values.monitoring.prometheus.enabled -}}
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "certificate-expiration" "namespace" "cert-manager" "resource" (include "base-cluster.cert-manager.expirationRule" . ) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "prometheus" "app.kubernetes.io/part-of" "cert-manager")) -}}
 {{- end -}}
 
 {{- define "base-cluster.cert-manager.expirationRule" -}}
@@ -18,7 +18,7 @@ spec:
       rules:
         - alert: CertificateExpiringSoon
           annotations:
-            description: Certificate {{ "{{ $labels.exported_namespace }}/{{ $labels.name }}" }} will expire in less than 14 days. The certificate will expire at {{ "{{ humanizeTimestamp $value }}" }}
+            description: {{ "Certificate {{ $labels.exported_namespace }}/{{ $labels.name }} will expire in less than 14 days. The certificate will expire at {{ humanizeTimestamp $value }}" | quote }}
             summary: Certificate is expiring soon.
           expr: |-
             certmanager_certificate_expiration_timestamp_seconds and (certmanager_certificate_expiration_timestamp_seconds - time() <= (60 * 60 * 24 * 14))
@@ -27,11 +27,11 @@ spec:
             severity: warning
         - alert: CertificateExpiringSoon
           annotations:
-            description: Certificate {{ "{{ $labels.exported_namespace }}/{{ $labels.name }}" }} will expire in less than 1 week. The certificate will expire at {{ "{{ humanizeTimestamp $value }}" }}
+            description: {{ "Certificate {{ $labels.exported_namespace }}/{{ $labels.name }} will expire in less than 1 week. The certificate will expire at {{ humanizeTimestamp $value }}" | quote }}
             summary: Certificate is expiring soon.
           expr: |-
             certmanager_certificate_expiration_timestamp_seconds and (certmanager_certificate_expiration_timestamp_seconds - time() <= (60 * 60 * 24 * 7))
           for: 5m
           labels:
             severity: critical
-  {{- end }}
+  {{- end -}}

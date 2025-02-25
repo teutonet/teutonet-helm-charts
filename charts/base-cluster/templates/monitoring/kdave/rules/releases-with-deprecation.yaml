@@ -1,0 +1,37 @@
+{{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.kdave.enabled -}}
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "releases-with-deprecated-apis" "namespace" "monitoring" "resource" (include "base-cluster.kdave.deprecatedReleasesRule" . ) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "prometheus" "app.kubernetes.io/part-of" "kdave")) -}}
+{{- end -}}
+
+{{- define "base-cluster.kdave.deprecatedReleasesRule" -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: releases-with-deprecated-apis
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- with .Values.monitoring.labels }}{{ toYaml . | nindent 4 }}{{- end }}
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/part-of: kdave
+spec:
+  groups:
+    - name: releases-with-deprecated-apis
+      rules:
+        - alert: ReleasesHaveDeprecatedAPIs
+          annotations:
+            description: {{ "{{ $value }} releases have deprecated APIs." | quote }}
+            summary: Releases have deprecated APIs.
+          expr: |-
+            wf_k8s_deployed_releases_with_deprecated_api_version > 0
+          for: 5m
+          labels:
+            severity: warning
+        - alert: ReleasesHaveRemovedAPIs
+          annotations:
+            description: {{ "{{ $value }} releases have removed APIs." | quote }}
+            summary: Releases have removed APIs.
+          expr: |-
+            wf_k8s_deployed_releases_with_removed_api_version > 0
+          for: 5m
+          labels:
+            severity: critical
+  {{- end -}}
