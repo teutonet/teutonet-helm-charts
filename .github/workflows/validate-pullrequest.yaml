@@ -72,6 +72,8 @@ jobs:
           fi
       - name: Verify title reflects major update
         if: ${{ needs.getChangedChart.outputs.found == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           set -e
@@ -100,6 +102,7 @@ jobs:
         if: ${{ needs.getChangedChart.outputs.found == 'true' }}
         env:
           CHANGED_CHART: ${{ needs.getChangedChart.outputs.chart }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           set -e
