@@ -38,6 +38,7 @@ jobs:
       - name: Extract helm repos
         id: helm-repos
         run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           (
             echo -n "repos="
             yq -r '.dependencies[] | .repository' "charts/$CHART/Chart.yaml" | sort -u | grep https:// | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
@@ -53,6 +54,7 @@ jobs:
 
       - name: Lint chart
         run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           if ! [[ -f "charts/$CHART/values.yaml" ]]; then
             echo "No values.yaml found for $CHART, skipping 'ct lint'" >&2
             helm lint "charts/$CHART"

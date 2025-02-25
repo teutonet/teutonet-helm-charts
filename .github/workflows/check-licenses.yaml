@@ -34,6 +34,7 @@ jobs:
           TEUTO_PORTAL_WORKER_PULL_TOKEN: ${{ secrets.TEUTO_PORTAL_WORKER_PULL_TOKEN }}
           GHCR_PULL_TOKEN: ${{ secrets.GHCR_PULL_TOKEN }}
         run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           ./.github/scripts/scan-for-licenses.sh "charts/${{ needs.getChangedChart.outputs.chart }}"
   check-licenses-list:
@@ -50,7 +51,8 @@ jobs:
       - env:
           chart: ${{ needs.getChangedChart.outputs.chart }}
         run: |
-          set -ex
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+          set -e
           set -o pipefail
           # shellcheck disable=SC2016
           if missingImages="$(yq -r -e -c --argjson usedImages "$(yq -r '.annotations["artifacthub.io/images"]' "charts/${chart?}/Chart.yaml" | yq -r -c 'map(.image | split(":")[0]) | unique')" '$usedImages - (.licenses | keys) | if length == 0 then false else . end' .github/image_licenses.yaml)"; then

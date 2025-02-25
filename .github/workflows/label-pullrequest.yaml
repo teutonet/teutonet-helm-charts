@@ -32,6 +32,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.number }}
           CHANGED_CHARTS: ${{ needs.getChangedCharts.outputs.charts }}
         run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           curl --silent --fail-with-body \
             -X POST \
             -H 'Accept: application/vnd.github+json' \

@@ -28,6 +28,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
         run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           PRs=( ${{ join(fromJSON(steps.release-please.outputs.prs).*.number, ' ') }} )
           for pr_number in "${PRs[@]}";do
             gh pr merge --auto --squash "$pr_number"

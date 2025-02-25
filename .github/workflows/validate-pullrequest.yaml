@@ -49,6 +49,7 @@ jobs:
           check: false
       - name: Verify that PR title is a conventional commit message
         run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           set -e
           set -o pipefail
 
@@ -61,6 +62,7 @@ jobs:
         env:
           CHANGED_CHART: ${{ needs.getChangedChart.outputs.chart }}
         run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           set -e
           set -o pipefail
 
@@ -71,6 +73,7 @@ jobs:
       - name: Verify title reflects major update
         if: ${{ needs.getChangedChart.outputs.found == 'true' }}
         run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           set -e
           set -o pipefail
 
@@ -88,6 +91,7 @@ jobs:
         env:
           CHANGED_CHART: ${{ needs.getChangedChart.outputs.chart }}
         run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           set -e
           set -o pipefail
 

@@ -32,6 +32,7 @@ jobs:
         name: Get changed chart in PR
         if: ${{ needs.getChangedCharts.outputs.count == 1 }}
         run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           set -e
           set -o pipefail
           changed='${{ needs.getChangedCharts.outputs.charts }}'
