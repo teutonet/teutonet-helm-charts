@@ -36,6 +36,11 @@ spec:
       enabled: false
     gateway:
       enabled: false
+    ruler:
+      enabled: false
+    sidecar:
+      rules:
+        enabled: false
     loki:
       enableServiceLinks: false
       livenessProbe:
