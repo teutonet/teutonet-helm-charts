@@ -22,6 +22,27 @@ spec:
       imageRegistry: {{ $.Values.global.imageRegistry }}
     {{- end }}
     ingester: {{- include "common.resourcesWithPreset" .Values.monitoring.tracing.ingester | nindent 6 }}
+      networkPolicy:
+        allowExternalEgress: false
+    compactor:
+      networkPolicy:
+        allowExternalEgress: false
+    distributor:
+      networkPolicy:
+        allowExternalEgress: false
+    metricsGenerator:
+      networkPolicy:
+        allowExternalEgress: false
+    querier:
+      networkPolicy:
+        allowExternalEgress: false
+    queryFrontend:
+      networkPolicy:
+        allowExternalEgress: false
+    vulture:
+      enabled: false
+      networkPolicy:
+        allowExternalEgress: false
     tempo:
       traces:
         jaeger:
