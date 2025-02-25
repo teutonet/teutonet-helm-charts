@@ -32,7 +32,7 @@ spec:
           namespaces:
             - kube-system
             - default
-    {{ $lokiPromtail := dict "resources" (dict "namespaces" (list "loki") "kinds" (list "Pod") "names" (list "loki-promtail-*")) -}}
+    {{ $alloy := dict "resources" (dict "namespaces" (list "monitoring") "kinds" (list "Pod") "names" (list "alloy-*")) -}}
     {{- $syncEtcdSecret := dict "resources" (dict "namespaces" (list "monitoring") "kinds" (list "Pod") "names" (list "sync-etcd-secret-*")) -}}
     {{- $nodeExporter := dict "resources" (dict "namespaces" (list "monitoring") "kinds" (list "Pod") "names" (list "kube-prometheus-stack-prometheus-node-exporter-*")) -}}
     {{- $nfsServerProvisioner := dict "resources" (dict "namespaces" (list "nfs-server-provisioner") "kinds" (list "Pod") "names" (list "nfs-server-provisioner-0")) -}}
@@ -46,8 +46,8 @@ spec:
     {{- $disallowHostPorts := list -}}
 
     {{- if .Values.monitoring.loki.enabled -}}
-      {{- $disallowHostPath = append $disallowHostPath $lokiPromtail -}}
-      {{- $runAsNonRoot = append $runAsNonRoot $lokiPromtail -}}
+      {{- $disallowHostPath = append $disallowHostPath $alloy -}}
+      {{- $runAsNonRoot = append $runAsNonRoot $alloy -}}
     {{- end -}}
     {{- if .Values.monitoring.prometheus.enabled -}}
       {{- $disallowHostPath = append $disallowHostPath $syncEtcdSecret -}}
