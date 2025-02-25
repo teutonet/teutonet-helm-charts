@@ -72,7 +72,7 @@ jobs:
       - run: ./.github/scripts/enforce-trusted-registries.sh "charts/$CHART"
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
       - name: Download Pluto
-        uses: FairwindsOps/pluto/github-action@master
+        uses: FairwindsOps/pluto/github-action@282bddb2e5a1e8a9398da41a896367995cee97ff # v5
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
       - run: pluto detect-files -d /tmp/templated -o custom --columns 'FILEPATH,NAME,KIND,VERSION,REPLACEMENT,REMOVED,DEPRECATED,REPL AVAIL'
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
