@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.2.0...base-cluster-v7.2.1) (2025-02-25)
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.31.4-debian-12-r1 ([#1224](https://github.com/teutonet/teutonet-helm-charts/issues/1224)) ([8e37d45](https://github.com/teutonet/teutonet-helm-charts/commit/8e37d45390de363fe9ec5809ab6af7db77b656dd))
+* **base-cluster/dependencies:** update docker.io/curlimages/curl docker tag to v8.12.1 ([#1222](https://github.com/teutonet/teutonet-helm-charts/issues/1222)) ([b3530ed](https://github.com/teutonet/teutonet-helm-charts/commit/b3530ed26fd5613c57345b221a0e349ced4c87f0))
+
 ## [7.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.1.3...base-cluster-v7.2.0) (2025-02-25)
 
 
