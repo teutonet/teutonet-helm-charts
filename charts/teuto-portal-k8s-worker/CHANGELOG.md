@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.2.0...teuto-portal-k8s-worker-v3.2.1) (2025-02-25)
+
+
+### Miscellaneous Chores
+
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v1.3.0 ([#1363](https://github.com/teutonet/teutonet-helm-charts/issues/1363)) ([b6fa5e0](https://github.com/teutonet/teutonet-helm-charts/commit/b6fa5e0b0476b429fff9b29e9cc9fdbec71bc55f))
+
 ## [3.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.1.2...teuto-portal-k8s-worker-v3.2.0) (2025-02-05)
 
 
