@@ -48,7 +48,7 @@
       "password": "{{ secrets.TEUTONET_GITLAB_PULL_PASSWORD }}"
     },
     {
-      "matchHost": "registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker",
+      "matchHost": "https://registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker",
       "hostType": "docker",
       "username": "github-renovate",
       "password": "{{ secrets.TEUTONET_GITLAB_PULL_PASSWORD }}"
