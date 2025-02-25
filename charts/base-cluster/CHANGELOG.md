@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.1.3...base-cluster-v7.2.0) (2025-02-25)
+
+
+### Features
+
+* **base-cluster/monitoring:** improve alerting ([#1357](https://github.com/teutonet/teutonet-helm-charts/issues/1357)) ([3ce68b7](https://github.com/teutonet/teutonet-helm-charts/commit/3ce68b7823ebe1420a8199b4f066ffa730551256))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update common docker tag to v1.3.0 ([#1360](https://github.com/teutonet/teutonet-helm-charts/issues/1360)) ([816c247](https://github.com/teutonet/teutonet-helm-charts/commit/816c24717b1c4b45ea211231c18a9fb7ded161ab))
+
 ## [7.1.3](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.1.2...base-cluster-v7.1.3) (2025-02-21)
 
 
