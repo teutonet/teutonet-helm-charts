@@ -24,7 +24,8 @@ jobs:
       - name: Get all charts
         id: getCharts
         run: |
-          set -ex
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+          set -e
           set -o pipefail
           (
             echo -n charts=

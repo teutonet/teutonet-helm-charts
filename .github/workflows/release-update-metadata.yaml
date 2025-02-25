@@ -69,7 +69,8 @@ jobs:
 
       - name: set sources in Chart.yaml
         run: |
-          set -ex
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+          set -e
           version="$(jq -er --arg chart "${CHART}" '.["charts/\($chart)"]' .github/release-please/manifest.json)"
           #shellcheck disable=SC2016
           yq -e -y -Y -i --arg tagSource "https://github.com/${GITHUB_REPOSITORY}/tree/${CHART}-v${version}/charts/${CHART}" --arg branchSource "https://github.com/${GITHUB_REPOSITORY}/tree/${{ github.event.repository.default_branch }}/charts/${CHART}" '.sources=[$tagSource, $branchSource]' "charts/${CHART}/Chart.yaml"
@@ -95,7 +96,8 @@ jobs:
       - run: pip install json-schema-for-humans
       - name: generate values.md
         run: |
-          set -ex
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+          set -e
           if ! [[ -f "charts/$CHART/values.schema.json" ]]; then
             echo "No values.schema.json found for $CHART" >&2
             exit 0

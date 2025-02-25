@@ -28,6 +28,7 @@ jobs:
           PULL_REQUEST_NUMBER: ${{ inputs.pr_number }}
           GITHUB_TOKEN: ${{ github.token }}
         run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           set -e
           set -o pipefail
           charts="$(gh api --paginate "/repos/${GITHUB_REPOSITORY}/pulls/${PULL_REQUEST_NUMBER}/files" | jq -cr 'map(.filename | select(test("charts/[^/]*")) | split("/") | .[1] | select(.)) | unique')"
