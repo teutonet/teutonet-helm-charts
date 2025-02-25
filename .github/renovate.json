@@ -4,6 +4,7 @@
   ],
   "assigneesFromCodeOwners": true,
   "assigneesSampleSize": 1,
+  "configMigration": true,
   "platformAutomerge": true,
   "semanticCommitScope": "{{parentDir}}/dependencies",
   "additionalBranchPrefix": "{{parentDir}}-",
