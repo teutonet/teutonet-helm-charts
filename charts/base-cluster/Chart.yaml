@@ -56,7 +56,7 @@ annotations:
     - image: docker.io/grafana/loki:2.6.1                                                                                              #  loki/HelmRelease/loki/loki/StatefulSet/loki.yaml
     - image: docker.io/grafana/promtail:2.9.3                                                                                          #  loki/HelmRelease/loki/loki/DaemonSet/loki-promtail.yaml
     - image: docker.io/hjacobs/kube-janitor:23.7.0                                                                                     #  kube-system/HelmRelease/kube-janitor/kube-system/Deployment/kube-janitor.yaml
-    - image: docker.io/otel/opentelemetry-collector-contrib:0.119.0                                                                    #  monitoring/HelmRelease/open-telemetry-collector/monitoring/DaemonSet/open-telemetry-collector-opentelemetry-collector-agent.yaml
+    - image: docker.io/otel/opentelemetry-collector-contrib:0.120.0                                                                    #  monitoring/HelmRelease/open-telemetry-collector/monitoring/DaemonSet/open-telemetry-collector-opentelemetry-collector-agent.yaml
     - image: docker.io/velero/velero-plugin-for-aws:v1.7.0                                                                             #  backup/HelmRelease/velero/backup/Deployment/velero.yaml
     - image: docker.io/velero/velero:v1.14.0                                                                                           #  backup/HelmRelease/velero/backup/DaemonSet/node-agent.yaml
     - image: docker.io/velero/velero:v1.14.0                                                                                           #  backup/HelmRelease/velero/backup/Deployment/velero.yaml
