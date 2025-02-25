@@ -31,6 +31,12 @@
               ],
               "description": "'auto' tries to figure it out automatically"
             },
+            "host": {
+              "type": "string"
+            },
+            "port": {
+              "type": "integer"
+            },
             "insecure": {
               "type": "boolean"
             }
