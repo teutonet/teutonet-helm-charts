@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.2.1...common-v1.3.0) (2025-02-25)
+
+
+### Features
+
+* **common/telemetry:** abstract telemetry config to allow typed usage ([#1346](https://github.com/teutonet/teutonet-helm-charts/issues/1346)) ([5e5742f](https://github.com/teutonet/teutonet-helm-charts/commit/5e5742f1991583e23229dcfdb163786122c4df31))
+
+
+### Miscellaneous Chores
+
+* **common/dependencies:** update helm release common to v2.22.0 ([#1143](https://github.com/teutonet/teutonet-helm-charts/issues/1143)) ([3e83b9d](https://github.com/teutonet/teutonet-helm-charts/commit/3e83b9d2c7e9b38c05fe6fc33ffdf00800839087))
+* **common/dependencies:** update helm release common to v2.26.0 ([#1194](https://github.com/teutonet/teutonet-helm-charts/issues/1194)) ([ca037e5](https://github.com/teutonet/teutonet-helm-charts/commit/ca037e51815aee4f9f728becdb930a410331f76d))
+* **common/docs:** set vim modeline ([#1273](https://github.com/teutonet/teutonet-helm-charts/issues/1273)) ([322db3f](https://github.com/teutonet/teutonet-helm-charts/commit/322db3f7e5a34ec69f5e749888e46905a16b7339))
+* **common:** formatting ([#1199](https://github.com/teutonet/teutonet-helm-charts/issues/1199)) ([99c18a3](https://github.com/teutonet/teutonet-helm-charts/commit/99c18a39c029484340a6240f4fa26db5c3feb18e))
+
 ## [1.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.2.0...common-v1.2.1) (2024-08-07)
 
 
