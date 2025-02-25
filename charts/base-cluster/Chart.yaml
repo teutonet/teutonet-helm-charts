@@ -36,8 +36,8 @@ annotations:
     - image: docker.io/bitnami/kubectl:1.30.2                                                                                          #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-clean-reports.yaml
     - image: docker.io/bitnami/kubectl:1.30.2                                                                                          #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-remove-configmap.yaml
     - image: docker.io/bitnami/kubectl:1.30.2                                                                                          #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-scale-to-zero.yaml
-    - image: docker.io/bitnami/kubectl:1.31.2-debian-12-r3@sha256:45e7c7a9d120f93e9b66b689c63896ff87bb5b4d73b1203a0636d09e1219c879     #  default/Job/flux-generate-gpg-key-secret-main.yaml
-    - image: docker.io/bitnami/kubectl:1.31.2-debian-12-r3@sha256:45e7c7a9d120f93e9b66b689c63896ff87bb5b4d73b1203a0636d09e1219c879     #  default/Job/prevent-uninstallation.yaml
+    - image: docker.io/bitnami/kubectl:1.31.4-debian-12-r1@sha256:64614ef8290f3fb27fed5164b338debeeb79a1e5e26c93eb920770b71abd7c48     #  default/Job/flux-generate-gpg-key-secret-main.yaml
+    - image: docker.io/bitnami/kubectl:1.31.4-debian-12-r1@sha256:64614ef8290f3fb27fed5164b338debeeb79a1e5e26c93eb920770b71abd7c48     #  default/Job/prevent-uninstallation.yaml
     - image: docker.io/bitnami/kubectl:1.32                                                                                            #  backup/HelmRelease/velero/backup/Job/velero-cleanup-crds.yaml
     - image: docker.io/bitnami/memcached:1.6.36-debian-12-r0                                                                           #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-memcached.yaml
     - image: docker.io/bitnami/metrics-server:0.7.2-debian-12-r16                                                                      #  monitoring/HelmRelease/metrics-server/monitoring/Deployment/metrics-server.yaml
@@ -47,8 +47,8 @@ annotations:
     - image: docker.io/busybox:1.35                                                                                                    #  kyverno/HelmRelease/kyverno/kyverno/Pod/kyverno-cleanup-controller-readiness.yaml
     - image: docker.io/busybox:1.35                                                                                                    #  kyverno/HelmRelease/kyverno/kyverno/Pod/kyverno-reports-controller-metrics.yaml
     - image: docker.io/curlimages/curl:7.85.0                                                                                          #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana.yaml
-    - image: docker.io/curlimages/curl:8.10.1@sha256:d9b4541e214bcd85196d6e92e2753ac6d0ea699f0af5741f8c6cccbfcf00ef4b                  #  default/Job/dead-mans-switch-registration.yaml
-    - image: docker.io/curlimages/curl:8.10.1@sha256:d9b4541e214bcd85196d6e92e2753ac6d0ea699f0af5741f8c6cccbfcf00ef4b                  #  monitoring/CronJob/dead-mans-switch.yaml
+    - image: docker.io/curlimages/curl:8.12.1@sha256:94e9e444bcba979c2ea12e27ae39bee4cd10bc7041a472c4727a558e213744e6                  #  default/Job/dead-mans-switch-registration.yaml
+    - image: docker.io/curlimages/curl:8.12.1@sha256:94e9e444bcba979c2ea12e27ae39bee4cd10bc7041a472c4727a558e213744e6                  #  monitoring/CronJob/dead-mans-switch.yaml
     - image: docker.io/emberstack/kubernetes-reflector:7.1.288                                                                         #  kube-system/HelmRelease/reflector/kube-system/Deployment/reflector.yaml
     - image: docker.io/fluxcd/flux-cli:v2.4.0@sha256:a9cb966cddc1a0c56dc0d57dda485d9477dd397f8b45f222717b24663471fd1f                  #  default/Job/flux-generate-ssh-key-secret-main.yaml
     - image: docker.io/grafana/grafana-image-renderer:latest                                                                           #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana-image-renderer.yaml
