@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.0.5...t8s-cluster-v9.1.0) (2025-02-25)
+
+
+### Features
+
+* **t8s-cluster:** implement node-type specific securityGroupRules ([#1344](https://github.com/teutonet/teutonet-helm-charts/issues/1344)) ([c739f76](https://github.com/teutonet/teutonet-helm-charts/commit/c739f76a4e011d5b7c8541caf7013bfea5154cc5))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update common docker tag to v1.3.0 ([#1361](https://github.com/teutonet/teutonet-helm-charts/issues/1361)) ([d400b9c](https://github.com/teutonet/teutonet-helm-charts/commit/d400b9cc3118614dc520d166182c4a9c620bd19b))
+
 ## [9.0.5](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.0.4...t8s-cluster-v9.0.5) (2025-02-10)
 
 
