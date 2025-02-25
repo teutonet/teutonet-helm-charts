@@ -74,14 +74,24 @@ jobs:
           set -e
           set -o pipefail
 
-          if ! cog verify "$PR_TITLE" 2>&1 | grep -qi 'BREAKING CHANGE'; then
-            # shellcheck disable=SC2086 # this needs to be splitted
-            for commit in $(gh api --paginate "/repos/${GITHUB_REPOSITORY}/pulls/${PULL_REQUEST_NUMBER}/commits" | jq -cr 'map(.sha)[]'); do
-              if cog verify "$(git log -n 1 $commit --format=%s)" 2>&1 | grep -qi 'BREAKING CHANGE'; then
-                echo "You need to reflect the breaking change in the pull request title" >&2
-                exit 1
-              fi
-            done
+          hasBreakingChange=false
+
+          # shellcheck disable=SC2086 # this needs to be splitted
+          for commit in $(gh api --paginate "/repos/${GITHUB_REPOSITORY}/pulls/${PULL_REQUEST_NUMBER}/commits" | jq -cr 'map(.sha)[]'); do
+            if cog verify "$(git log -n 1 $commit --format=%s)" 2>&1 | grep -qi 'BREAKING CHANGE'; then
+              hasBreakingChange=true
+            fi
+          done
+          if cog verify "$PR_TITLE" 2>&1 | grep -qi 'BREAKING CHANGE'; then
+            if [[ "$hasBreakingChange" == false ]]; then
+              echo "There is no commit with a breaking change, this should be reflected in the pull request title" >&2
+              exit 1
+            fi
+          else
+            if [[ "$hasBreakingChange" == true ]]; then
+              echo "You need to reflect the breaking change in the pull request title" >&2
+              exit 1
+            fi
           fi
       - name: Verify readme is updated on major update
         if: ${{ needs.getChangedChart.outputs.found == 'true' }}
