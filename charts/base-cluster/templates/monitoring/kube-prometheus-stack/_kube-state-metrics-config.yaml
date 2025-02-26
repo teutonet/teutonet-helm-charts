@@ -11,6 +11,83 @@ resources: {{- include "common.resources" .Values.monitoring.prometheus.kubeStat
 extraArgs:
   - --metric-labels-allowlist={{- $metricLabelsAllowList | join "," }}
 priorityClassName: monitoring-components
+rbac:
+  extraRules:
+    - apiGroups:
+        - helm.toolkit.fluxcd.io
+        - image.toolkit.fluxcd.io
+        - kustomize.toolkit.fluxcd.io
+        - notification.toolkit.fluxcd.io
+        - source.toolkit.fluxcd.io
+      resources:
+        - buckets
+        - gitrepositories
+        - helmcharts
+        - helmreleases
+        - helmrepositories
+        - imagepolicies
+        - imagerepositories
+        - imageupdateautomations
+        - kustomizations
+        - ocirepositories
+        - receivers
+      verbs:
+        - list
+        - watch
+customResourceState:
+  enabled: true
+  config:
+    spec:
+      {{- $types := dict
+        "Bucket" (dict "group" "source" "version" "v1beta2")
+        "GitRepository" (dict "group" "source" "version" "v1")
+        "HelmChart" (dict "group" "source" "version" "v1")
+        "HelmRelease" (dict "group" "helm" "version" "v2")
+        "HelmRepository" (dict "group" "source" "version" "v1")
+        "ImagePolicy" (dict "group" "image" "version" "v1beta2")
+        "ImageRepository" (dict "group" "image" "version" "v1beta2")
+        "ImageUpdateAutomation" (dict "group" "image" "version" "v1beta2")
+        "Kustomization" (dict "group" "kustomize" "version" "v1")
+        "OCIRepository" (dict "group" "source" "version" "v1beta2")
+        "Receiver" (dict "group" "notification" "version" "v1")
+      -}}
+
+      {{- $resources := list -}}
+      {{- range $kind, $spec := $types -}}
+        {{- $group := $spec.group -}}
+        {{- $version := $spec.version -}}
+        {{- $resources = append $resources (dict
+              "groupVersionKind" (dict
+                "group" (printf "%s.toolkit.fluxcd.io" $group)
+                "kind" $kind
+              )
+              "metricNamePrefix" "gotk"
+              "metrics" (list
+                (dict
+                  "name" "reconcile_condition_info"
+                  "help" (printf "The current conditions of a Flux %s resource." $kind)
+                  "each" (dict
+                    "type" "Info"
+                    "info" (dict
+                      "path" (list "status" "conditions")
+                      "labelsFromPath" (dict
+                        "type" (list "type")
+                        "status" (list "status")
+                      )
+                    )
+                  )
+                  "labelsFromPath" (dict
+                    "exported_namespace" (list "metadata" "namespace")
+                    "name" (list "metadata" "name")
+                  )
+                )
+              )
+            )
+        -}}
+      {{- end }}
+      resources: {{- toYaml $resources | nindent 8 }}
+podAnnotations:
+  checksum/config: {{ toYaml $resources | sha256sum | quote }}
 securityContext:
   enabled: true
   seccompProfile:
