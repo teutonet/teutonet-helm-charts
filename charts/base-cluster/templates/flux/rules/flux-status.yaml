@@ -18,10 +18,10 @@ spec:
       rules:
         - alert: ResourcesFailing
           annotations:
-            description: {{ "Resource {{ $labels.kind }}/{{ $labels.exported_namespace }}/{{ $labels.name }} has been in a failed state for longer than 10 minutes." | quote }}
+            description: {{ "Resource {{ $labels.customresource_kind }}/{{ $labels.exported_namespace }}/{{ $labels.name }} has been in a failed state for longer than 10 minutes." | quote }}
             summary: Resource has failed.
           expr: |-
-            gotk_reconcile_condition{type="Ready",status="False"} == 1
+            gotk_reconcile_condition_info{type="Ready",status="False"} == 1
           for: 10m
           labels:
             severity: warning
@@ -30,7 +30,7 @@ spec:
             description: The flux metrics are missing
             summary: The flux metrics are missing
           expr: |-
-            absent(gotk_reconcile_condition) == 1
+            absent(gotk_reconcile_condition_info) == 1
           for: 5m
           labels:
             severity: critical
