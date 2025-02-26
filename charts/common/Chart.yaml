@@ -13,7 +13,7 @@ maintainers:
     name: tasches
 name: common
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/common-v1.3.0/charts/common
+  - https://github.com/teutonet/teutonet-helm-charts/tree/common-v1.4.0/charts/common
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/common
 type: library
 version: 1.4.0
