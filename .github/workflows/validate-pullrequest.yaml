@@ -74,6 +74,7 @@ jobs:
         if: ${{ needs.getChangedChart.outputs.found == 'true' }}
         env:
           GH_TOKEN: ${{ github.token }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           set -e
@@ -103,6 +104,7 @@ jobs:
         env:
           CHANGED_CHART: ${{ needs.getChangedChart.outputs.chart }}
           GH_TOKEN: ${{ github.token }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           set -e
