@@ -50,7 +50,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
+      - uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4
         with:
           name: comment_body
       - run: ./.github/scripts/create-values-diff.sh ${{ github.event.number }} "charts/${{ needs.getChangedChart.outputs.chart }}" --body comment_body.md
