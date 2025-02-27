@@ -53,8 +53,13 @@ spec:
               - op: replace
                 path: /kind
                 value: Deployment
+              {{- if gt (.Values.version.minor | int) 28 }}
+              - op: remove
+                path: /spec/template/spec/nodeSelector
+              {{- end }}
   {{- end }}
   values:
+    priorityClassName: system-cluster-critical
   {{- if le (.Values.version.minor | int) 28 }}
     tolerations:
       - key: node.cloudprovider.kubernetes.io/uninitialized
@@ -65,9 +70,5 @@ spec:
         effect: NoSchedule
     nodeSelector:
       node-role.kubernetes.io/control-plane: ""
-    {{- end }}
-  {{- else }}
-    {{- if .Values.controlPlane.hosted }}
-    nodeSelector: null
     {{- end }}
   {{- end }}
