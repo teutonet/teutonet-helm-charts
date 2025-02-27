@@ -1,5 +1,20 @@
 # Changelog
 
+## [7.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.2.0...base-cluster-v7.2.1) (2025-02-27)
+
+
+### Bug Fixes
+
+* **base-cluster/monitoring:** migrate to new flux metrics ([#1386](https://github.com/teutonet/teutonet-helm-charts/issues/1386)) ([18e48b2](https://github.com/teutonet/teutonet-helm-charts/commit/18e48b2dcb0dbd9fab5d9cbc6b84a10f735e9b58))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update common docker tag to v1.4.0 ([#1392](https://github.com/teutonet/teutonet-helm-charts/issues/1392)) ([bd7cccc](https://github.com/teutonet/teutonet-helm-charts/commit/bd7cccc994dc225e78d06bb10d73c24f1e9ccc51))
+* **base-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.31.4-debian-12-r1 ([#1224](https://github.com/teutonet/teutonet-helm-charts/issues/1224)) ([8e37d45](https://github.com/teutonet/teutonet-helm-charts/commit/8e37d45390de363fe9ec5809ab6af7db77b656dd))
+* **base-cluster/dependencies:** update docker.io/curlimages/curl docker tag to v8.12.1 ([#1222](https://github.com/teutonet/teutonet-helm-charts/issues/1222)) ([b3530ed](https://github.com/teutonet/teutonet-helm-charts/commit/b3530ed26fd5613c57345b221a0e349ced4c87f0))
+* **base-cluster/descheduler:** migrate config ([#1395](https://github.com/teutonet/teutonet-helm-charts/issues/1395)) ([ee58ce4](https://github.com/teutonet/teutonet-helm-charts/commit/ee58ce48ca1400cb74cd6869469eed05d28dd280))
+
 ## [7.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.1.3...base-cluster-v7.2.0) (2025-02-25)
 
 
