@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.3.0...common-v1.4.0) (2025-02-26)
+
+
+### Features
+
+* **common/images:** add template for pullPolicy ([#1381](https://github.com/teutonet/teutonet-helm-charts/issues/1381)) ([fac4246](https://github.com/teutonet/teutonet-helm-charts/commit/fac4246811afcf2afefab03bc9224a0a717ad75e))
+
 ## [1.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.2.1...common-v1.3.0) (2025-02-25)
 
 
