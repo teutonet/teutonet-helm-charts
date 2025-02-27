@@ -84,7 +84,7 @@ jobs:
 
           # shellcheck disable=SC2086 # this needs to be splitted
           for commit in $(gh api --paginate "/repos/${GITHUB_REPOSITORY}/pulls/${PULL_REQUEST_NUMBER}/commits" | jq -cr 'map(.sha)[]'); do
-            if cog verify "$(git log -n 1 $commit --format=%s)" 2>&1 | grep -qi 'BREAKING CHANGE'; then
+            if cog verify "$(gh api --paginate "/repos/${GITHUB_REPOSITORY}/commits/${commit}" | jq -cr .commit.message)" 2>&1 | grep -qi 'BREAKING CHANGE'; then
               hasBreakingChange=true
             fi
           done
