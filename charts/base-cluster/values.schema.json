@@ -984,22 +984,53 @@
         "enabled": {
           "type": "boolean"
         },
-        "strategies": {
+        "profile": {
           "type": "object",
-          "description": "See https://github.com/kubernetes-sigs/descheduler#policy-and-strategies. The key is the policy name",
-          "additionalProperties": {
-            "type": "object",
-            "properties": {
-              "enabled": {
-                "type": "boolean"
-              },
-              "params": {
+          "description": "See https://github.com/kubernetes-sigs/descheduler#policy-default-evictor-and-strategy-plugins. The key is the policy name",
+          "properties": {
+            "pluginConfig": {
+              "type": "array",
+              "items": {
                 "type": "object",
-                "additionalProperties": true
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "args": {
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "additionalProperties": false
               }
             },
-            "additionalProperties": false
-          }
+            "plugins": {
+              "type": "object",
+              "patternProperties": {
+                "^balance|deschedule$": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "enabled"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "minProperties": 2,
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
         },
         "resourcesPreset": {
           "$ref": "#/$defs/resourcesPreset"

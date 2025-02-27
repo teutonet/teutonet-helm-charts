@@ -42,9 +42,18 @@ spec:
       enabled: true
       additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 8 }}
     {{- end }}
-    deschedulerPolicy:
-      evictLocalStoragePods: true
-      strategies: {{- toYaml .Values.descheduler.strategies | nindent 8 }}
+    deschedulerPolicy: {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp") | fromYaml }}
+      {{- if and $telemetryConf.enabled .Values.monitoring.prometheus.enabled }}
+      tracing:
+        collectorEndpoint: {{ printf "%s:%d" $telemetryConf.host $telemetryConf.port }}
+        serviceName: descheduler
+        serviceNamespace: kube-system
+        sampleRate: 1.0
+        fallbackToNoOpProviderOnError: true
+      {{- end }}
+      profiles:
+        - name: default
+          {{- toYaml .Values.descheduler.profile | nindent 10 }}
     {{- if .Values.global.imageRegistry }}
     image:
       repository: {{ printf "%s/descheduler/descheduler" .Values.global.imageRegistry }}

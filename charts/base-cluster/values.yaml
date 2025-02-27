@@ -354,31 +354,27 @@ descheduler:
     limits:
       cpu: 100m
       memory: 128Mi
-  strategies:
-    RemoveDuplicates:
-      enabled: true
-    RemovePodsViolatingNodeTaints:
-      enabled: true
-    RemovePodsViolatingNodeAffinity:
-      enabled: true
-      params:
-        nodeAffinityType:
-          - requiredDuringSchedulingIgnoredDuringExecution
-    RemovePodsViolatingInterPodAntiAffinity:
-      enabled: true
-    RemovePodsViolatingTopologySpreadConstraint:
-      enabled: true
-      params:
-        includeSoftConstraints: true
-    RemovePodsHavingTooManyRestarts:
-      enabled: true
-      params:
-        podsHavingTooManyRestarts:
+  profile:
+    pluginConfig:
+      - name: DefaultEvictor
+        args:
+          evictLocalStoragePods: true
+          nodeFit: true
+      - name: RemoveDuplicates
+      - name: RemovePodsHavingTooManyRestarts
+        args:
           podRestartThreshold: 10
-    LowNodeUtilization:
-      enabled: true
-      params:
-        nodeResourceUtilizationThresholds:
+      - name: RemovePodsViolatingNodeAffinity
+        args:
+          nodeAffinityType:
+            - requiredDuringSchedulingIgnoredDuringExecution
+      - name: RemovePodsViolatingNodeTaints
+      - name: RemovePodsViolatingInterPodAntiAffinity
+      - name: RemovePodsViolatingTopologySpreadConstraint
+        args:
+          topologyBalanceNodeFit: true
+      - name: LowNodeUtilization
+        args:
           thresholds:
             cpu: 50
             memory: 50
@@ -387,6 +383,18 @@ descheduler:
             cpu: 70
             memory: 80
             pods: 95
+    plugins:
+      balance:
+        enabled:
+          - RemoveDuplicates
+          - RemovePodsViolatingTopologySpreadConstraint
+          - LowNodeUtilization
+      deschedule:
+        enabled:
+          - RemovePodsHavingTooManyRestarts
+          - RemovePodsViolatingNodeTaints
+          - RemovePodsViolatingNodeAffinity
+          - RemovePodsViolatingInterPodAntiAffinity
 
 dns:
   domains: []
