@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 7.2.0](https://img.shields.io/badge/Version-7.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 7.2.1](https://img.shields.io/badge/Version-7.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -238,7 +238,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v7.2.0/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v7.2.1/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -247,7 +247,7 @@ Kubernetes: `>=1.27.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.3.0 |
+| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.4.0 |
 
 This helm chart requires [flux v2 to be installed](https://fluxcd.io/docs/installation),
 see [bootstrap](#cluster-bootstrap)
@@ -2910,12 +2910,12 @@ currencyEUR
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                           | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                                                    |
-| -------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| - [enabled](#descheduler_enabled )                 | No      | boolean          | No         | -                                                                             | -                                                                                                    |
-| - [strategies](#descheduler_strategies )           | No      | object           | No         | -                                                                             | See https://github.com/kubernetes-sigs/descheduler#policy-and-strategies. The key is the policy name |
-| - [resourcesPreset](#descheduler_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                                                    |
-| - [resources](#descheduler_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements.                                    |
+| Property                                           | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                                                                          |
+| -------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| - [enabled](#descheduler_enabled )                 | No      | boolean          | No         | -                                                                             | -                                                                                                                          |
+| - [profile](#descheduler_profile )                 | No      | object           | No         | -                                                                             | See https://github.com/kubernetes-sigs/descheduler#policy-default-evictor-and-strategy-plugins. The key is the policy name |
+| - [resourcesPreset](#descheduler_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                                                                          |
+| - [resources](#descheduler_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements.                                                          |
 
 ### <a name="descheduler_enabled"></a>5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > enabled`
 
@@ -2923,47 +2923,111 @@ currencyEUR
 | -------- | --------- |
 | **Type** | `boolean` |
 
-### <a name="descheduler_strategies"></a>5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > strategies`
-
-|                           |                                                                                                                     |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                            |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#descheduler_strategies_additionalProperties) |
-
-**Description:** See https://github.com/kubernetes-sigs/descheduler#policy-and-strategies. The key is the policy name
-
-| Property                                            | Pattern | Type   | Deprecated | Definition | Title/Description |
-| --------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [](#descheduler_strategies_additionalProperties ) | No      | object | No         | -          | -                 |
-
-#### <a name="descheduler_strategies_additionalProperties"></a>5.2.1. Property `base cluster configuration > descheduler > strategies > additionalProperties`
+### <a name="descheduler_profile"></a>5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > profile`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                           | Pattern | Type    | Deprecated | Definition | Title/Description |
-| ------------------------------------------------------------------ | ------- | ------- | ---------- | ---------- | ----------------- |
-| - [enabled](#descheduler_strategies_additionalProperties_enabled ) | No      | boolean | No         | -          | -                 |
-| - [params](#descheduler_strategies_additionalProperties_params )   | No      | object  | No         | -          | -                 |
+**Description:** See https://github.com/kubernetes-sigs/descheduler#policy-default-evictor-and-strategy-plugins. The key is the policy name
 
-##### <a name="descheduler_strategies_additionalProperties_enabled"></a>5.2.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > strategies > additionalProperties > enabled`
+| Property                                             | Pattern | Type            | Deprecated | Definition | Title/Description |
+| ---------------------------------------------------- | ------- | --------------- | ---------- | ---------- | ----------------- |
+| - [pluginConfig](#descheduler_profile_pluginConfig ) | No      | array of object | No         | -          | -                 |
+| - [plugins](#descheduler_profile_plugins )           | No      | object          | No         | -          | -                 |
 
-|          |           |
-| -------- | --------- |
-| **Type** | `boolean` |
+#### <a name="descheduler_profile_pluginConfig"></a>5.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > profile > pluginConfig`
 
-##### <a name="descheduler_strategies_additionalProperties_params"></a>5.2.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > strategies > additionalProperties > params`
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of object` |
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                               | Description |
+| ------------------------------------------------------------- | ----------- |
+| [pluginConfig items](#descheduler_profile_pluginConfig_items) | -           |
+
+##### <a name="descheduler_profile_pluginConfig_items"></a>5.2.1.1. base cluster configuration > descheduler > profile > pluginConfig > pluginConfig items
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| + [name](#descheduler_profile_pluginConfig_items_name ) | No      | string | No         | -          | -                 |
+| - [args](#descheduler_profile_pluginConfig_items_args ) | No      | object | No         | -          | -                 |
+
+###### <a name="descheduler_profile_pluginConfig_items_name"></a>5.2.1.1.1. Property `base cluster configuration > descheduler > profile > pluginConfig > pluginConfig items > name`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="descheduler_profile_pluginConfig_items_args"></a>5.2.1.1.2. Property `base cluster configuration > descheduler > profile > pluginConfig > pluginConfig items > args`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-| Property                                                                        | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [](#descheduler_strategies_additionalProperties_params_additionalProperties ) | No      | object | No         | -          | -                 |
+#### <a name="descheduler_profile_plugins"></a>5.2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > profile > plugins`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                          | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ----------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [^balance\|deschedule$](#descheduler_profile_plugins_pattern1 ) | Yes     | object | No         | -          | -                 |
+
+##### <a name="descheduler_profile_plugins_pattern1"></a>5.2.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Pattern Property `base cluster configuration > descheduler > profile > plugins > ^balance\|deschedule$`
+> All properties whose name matches the regular expression
+```^balance|deschedule$``` ([Test](https://regex101.com/?regex=%5Ebalance%7Cdeschedule%24))
+must respect the following conditions
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                    | Pattern | Type            | Deprecated | Definition | Title/Description |
+| ----------------------------------------------------------- | ------- | --------------- | ---------- | ---------- | ----------------- |
+| + [enabled](#descheduler_profile_plugins_pattern1_enabled ) | No      | array of string | No         | -          | -                 |
+
+###### <a name="descheduler_profile_plugins_pattern1_enabled"></a>5.2.2.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > descheduler > profile > plugins > ^balance\|deschedule$ > enabled`
+
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of string` |
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | 1                  |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                      | Description |
+| -------------------------------------------------------------------- | ----------- |
+| [enabled items](#descheduler_profile_plugins_pattern1_enabled_items) | -           |
+
+###### <a name="descheduler_profile_plugins_pattern1_enabled_items"></a>5.2.2.1.1.1. base cluster configuration > descheduler > profile > plugins > ^balance\|deschedule$ > enabled > enabled items
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
 
 ### <a name="descheduler_resourcesPreset"></a>5.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > resourcesPreset`
 
