@@ -11,13 +11,16 @@ spec:
     matchLabels:
       app.kubernetes.io/name: cert-manager
       app.kubernetes.io/instance: cert-manager
-  ingress:
+  ingress: {{- if .Values.monitoring.prometheus.enabled }}
     - fromEndpoints:
         - matchLabels: {{- include "common.tplvalues.render" (dict "value" (include "common.dict.filterEmptyValues" .Values.global.networkPolicy.metricsLabels) "context" $) | nindent 12 }}
       toPorts:
         - ports:
             - port: "9402"
               protocol: TCP
+    {{- else }}
+    - {}
+    {{- end }}
   egress:
     - toEntities:
         - world # allow access to letsencrypt and the DNS apis
@@ -60,6 +63,14 @@ spec:
         - ports:
             - port: "6080"
               protocol: TCP
+    {{- if .Values.monitoring.prometheus.enabled }}
+    - fromEndpoints:
+        - matchLabels: {{- include "common.tplvalues.render" (dict "value" (include "common.dict.filterEmptyValues" .Values.global.networkPolicy.metricsLabels) "context" $) | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "9402"
+              protocol: TCP
+    {{- end }}
   egress:
     - toEntities:
         - kube-apiserver
@@ -76,8 +87,16 @@ spec:
     matchLabels:
       app.kubernetes.io/name: cainjector
       app.kubernetes.io/instance: cert-manager
-  ingress:
+  ingress: {{- if .Values.monitoring.prometheus.enabled }}
+    - fromEndpoints:
+        - matchLabels: {{- include "common.tplvalues.render" (dict "value" (include "common.dict.filterEmptyValues" .Values.global.networkPolicy.metricsLabels) "context" $) | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "9402"
+              protocol: TCP
+    {{- else }}
     - {}
+    {{- end }}
   egress:
     - toEntities:
         - kube-apiserver
