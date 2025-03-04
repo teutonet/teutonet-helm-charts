@@ -15,10 +15,10 @@ maintainers:
     name: tasches
 name: t8s-cluster
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.1.0/charts/t8s-cluster
+  - https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.1.1/charts/t8s-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster
 type: application
-version: 9.1.0
+version: 9.1.1
 annotations:
   artifacthub.io/images: |
     - image: k8s.gcr.io/sig-storage/csi-attacher:v3.4.0                                                                                                                       #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
