@@ -30,7 +30,6 @@
   {{- range $name, $file := $dynamicFiles -}}
     {{- $files = append $files (dict "content" (get $file "content" | required (printf "missing content for %s" $name)) "path" (get $file "path" | required (printf "missing path for %s" $name))) -}}
   {{- end -}}
-  {{- $files = concat $files (include "t8s-cluster.clusterClass.apiServer.dynamicFiles" (dict "context" .) | fromYaml | values) -}}
   {{- $apiserverPatch := dict "spec" (dict "containers" (list (dict "name" "kube-apiserver" "resources" (dict "requests" (dict "memory" "2Gi") "limits" (dict "memory" "4Gi"))))) -}}
   {{- $files = append $files (include "t8s-cluster.patches.patchFile" (dict "values" $apiserverPatch "target" "kube-apiserver" "component" "memory") | fromYaml) -}}
   {{- toYaml $files -}}
