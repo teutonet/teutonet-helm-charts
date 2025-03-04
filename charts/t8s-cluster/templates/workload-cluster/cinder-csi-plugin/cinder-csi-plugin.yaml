@@ -44,11 +44,6 @@ spec:
       name: cloud-config
     csi:
       plugin:
-        # TODO: keep this until https://github.com/k0sproject/k0s/issues/1842 is addressed
-        {{- if .Values.controlPlane.hosted }}
-        nodePlugin:
-          kubeletDir: /var/lib/k0s/kubelet
-        {{- end }}
         controllerPlugin:
           tolerations:
             - effect: NoSchedule

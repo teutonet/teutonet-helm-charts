@@ -29,12 +29,12 @@ spec:
       enabled: true
     # enable eBPF based routing instead of iptables
     bpf:
-      masquerade: false # disable for now as this creates routing problems
+      masquerade: true
     egressGateway:
-      enabled: false # disable for now as this depends on bpf.masquerade
-    # enable eBPF bases host routing
-    # currently not really possible with CAPI, as they don't support disabling the built-in kube-proxy
-    # kubeProxyReplacement: strict
+      enabled: true
+    kubeProxyReplacement: true
+    k8sServiceHost: tenant.1111-mgmt-dev.k8s.teuto.net
+    k8sServicePort: 443
 
     rollOutCiliumPods: true
     encryption:
