@@ -1,5 +1,25 @@
 # Changelog
 
+## [9.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.0.5...t8s-cluster-v9.1.0) (2025-03-04)
+
+
+### Features
+
+* **t8s-cluster/api-server:** add support for OIDC ([#1272](https://github.com/teutonet/teutonet-helm-charts/issues/1272)) ([164dcec](https://github.com/teutonet/teutonet-helm-charts/commit/164dcecf2754ca52d4d2de654b6fdae056cdd2a0))
+* **t8s-cluster:** implement node-type specific securityGroupRules ([#1344](https://github.com/teutonet/teutonet-helm-charts/issues/1344)) ([c739f76](https://github.com/teutonet/teutonet-helm-charts/commit/c739f76a4e011d5b7c8541caf7013bfea5154cc5))
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** new spelling of field ([#1399](https://github.com/teutonet/teutonet-helm-charts/issues/1399)) ([9acca02](https://github.com/teutonet/teutonet-helm-charts/commit/9acca02ebe9e7acaa8cdf28e38d8406176ec6e17))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update common docker tag to v1.3.0 ([#1361](https://github.com/teutonet/teutonet-helm-charts/issues/1361)) ([d400b9c](https://github.com/teutonet/teutonet-helm-charts/commit/d400b9cc3118614dc520d166182c4a9c620bd19b))
+* **t8s-cluster/dependencies:** update common docker tag to v1.4.0 ([#1393](https://github.com/teutonet/teutonet-helm-charts/issues/1393)) ([a3f5331](https://github.com/teutonet/teutonet-helm-charts/commit/a3f5331198af46c8be9f031d34a34f79fe08eac7))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.31.4-debian-12-r1 ([#1225](https://github.com/teutonet/teutonet-helm-charts/issues/1225)) ([9f62cfa](https://github.com/teutonet/teutonet-helm-charts/commit/9f62cfa658948a446cbac554c50cfc270b6a17f3))
+
 ## [9.0.5](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.0.4...t8s-cluster-v9.0.5) (2025-02-10)
 
 
