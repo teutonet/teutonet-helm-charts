@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.1.0...t8s-cluster-v9.1.1) (2025-03-04)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** duplicated files ([#1401](https://github.com/teutonet/teutonet-helm-charts/issues/1401)) ([652abab](https://github.com/teutonet/teutonet-helm-charts/commit/652abab6b9ec998b1c9b4f1d8bf0949391db3834))
+
 ## [9.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.0.5...t8s-cluster-v9.1.0) (2025-03-04)
 
 
