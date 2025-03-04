@@ -1,0 +1,16 @@
+controlPlane:
+  flavor: standard.2.1905
+  additionalSecurityGroupRules:
+    api access (vpn):
+      port: 6443
+      description: (falls back to the name)
+      remoteGroupID: d0d85f22-0087-4a68-95a2-b96f9849075c
+    test:
+      remoteGroupID: hjkfasdkjhsadf
+      portMin: 1000
+      portMax: 2000
+nodePools:
+  test:
+    replicas: 1
+    availabilityZone: Zone1
+    flavor: standard.2.1905

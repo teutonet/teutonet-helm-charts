@@ -69,6 +69,25 @@ identityRef:
     {{- $securityGroupRules = set $securityGroupRules (printf "metrics (%s)" $name) $securityGroupRule -}}
   {{- end -}}
 
+  {{- range $name, $securityGroupRule := .Values.controlPlane.additionalSecurityGroupRules -}}
+    {{- $_securityGroupRule := dict
+      "securityGroup" $controlPlaneSecurityGroup
+      "remoteManagedGroups" (list)
+      "remoteGroupID" ($securityGroupRule.remoteGroupID | required "You need to provide the `remoteGroupID`")
+    -}}
+    {{- if hasKey $securityGroupRule "port" -}}
+      {{- $_securityGroupRule = set $_securityGroupRule "port" $securityGroupRule.port -}}
+    {{- end -}}
+    {{- if and (hasKey $securityGroupRule "portMin") (hasKey $securityGroupRule "portMax") -}}
+      {{- $_securityGroupRule = set $_securityGroupRule "portMin" $securityGroupRule.portMin -}}
+      {{- $_securityGroupRule = set $_securityGroupRule "portMax" $securityGroupRule.portMax -}}
+    {{- end -}}
+    {{- if hasKey $securityGroupRule "description" -}}
+      {{- $_securityGroupRule = set $_securityGroupRule "description" (printf "%s (custom)" $securityGroupRule.description) -}}
+    {{- end -}}
+    {{- $securityGroupRules = set $securityGroupRules (printf "%s (custom)" $name) $_securityGroupRule -}}
+  {{- end -}}
+
   {{- $allNodesSecurityGroupRules := list -}}
   {{- $controlPlaneNodesSecurityGroupRules := list -}}
   {{- $workerNodesSecurityGroupRules := list -}}
@@ -80,15 +99,22 @@ identityRef:
       "etherType" "IPv4"
       "protocol" ($securityGroupRule.protocol | default "tcp")
     -}}
+    {{- if hasKey $securityGroupRule "remoteGroupID" -}}
+      {{- $_securityGroupRule = set $_securityGroupRule "remoteGroupID" $securityGroupRule.remoteGroupID -}}
+    {{- end -}}
     {{- if or (hasKey $securityGroupRule "port") (and (hasKey $securityGroupRule "portMin") (hasKey $securityGroupRule "portMax")) -}}
       {{- $_securityGroupRule = set $_securityGroupRule "portRangeMin" ($securityGroupRule.portMin | default $securityGroupRule.port) -}}
       {{- $_securityGroupRule = set $_securityGroupRule "portRangeMax" ($securityGroupRule.portMax | default $securityGroupRule.port) -}}
     {{- end -}}
-    {{- $_securityGroupRule = set $_securityGroupRule "remoteManagedGroups" ($securityGroupRule.remoteManagedGroups | default $allRemoteManagedGroups) -}}
+    {{- if hasKey $securityGroupRule "remoteManagedGroups" -}}
+      {{- $_securityGroupRule = set $_securityGroupRule "remoteManagedGroups" $securityGroupRule.remoteManagedGroups -}}
+    {{- else -}}
+      {{- $_securityGroupRule = set $_securityGroupRule "remoteManagedGroups" $allRemoteManagedGroups -}}
+    {{- end -}}
 
-    {{- if eq ($_securityGroupRule).securityGroup $controlPlaneSecurityGroup -}}
+    {{- if eq ($securityGroupRule).securityGroup $controlPlaneSecurityGroup -}}
       {{- $controlPlaneNodesSecurityGroupRules = append $controlPlaneNodesSecurityGroupRules $_securityGroupRule  -}}
-    {{- else if eq ($_securityGroupRule).securityGroup $computePlaneSecurityGroup -}}
+    {{- else if eq ($securityGroupRule).securityGroup $computePlaneSecurityGroup -}}
       {{- $workerNodesSecurityGroupRules = append $workerNodesSecurityGroupRules $_securityGroupRule  -}}
     {{- else -}}
       {{- $allNodesSecurityGroupRules = append $allNodesSecurityGroupRules $_securityGroupRule  -}}
