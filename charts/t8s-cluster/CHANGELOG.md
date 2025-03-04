@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.1.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.1.1...t8s-cluster-v9.1.2) (2025-03-04)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** renamed parameter ([#1402](https://github.com/teutonet/teutonet-helm-charts/issues/1402)) ([8999a5c](https://github.com/teutonet/teutonet-helm-charts/commit/8999a5cde9830603d80f27f19e686fe17930092a))
+
 ## [9.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.1.0...t8s-cluster-v9.1.1) (2025-03-04)
 
 
