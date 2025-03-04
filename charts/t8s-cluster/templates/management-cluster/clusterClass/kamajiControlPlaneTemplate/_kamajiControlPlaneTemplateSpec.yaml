@@ -1,0 +1,60 @@
+{{/*
+KubeadmControlPlaneTemplate is immutable. We need to create new versions during upgrades.
+Here we are generating a hash suffix.
+This function needs the whole `$` context to be able to use `.Files.Get`
+*/}}
+{{- define "t8s-cluster.clusterClass.kamajiControlPlaneTemplate.spec" -}}
+addons:
+  coreDNS: {}
+  konnectivity:
+    agent:
+      tolerations:
+        - operator: Exists
+  kubeProxy: null
+deployment:
+  extraVolumes:
+    - name: apiserver
+      configMap:
+        name: {{ printf "%s-apiserver" $.Release.Name }}
+      {{- $items := list -}}
+      {{- range $name, $file := mustMerge (include "t8s-cluster.clusterClass.apiServer.staticFiles" (dict) | fromYaml) (include "t8s-cluster.clusterClass.apiServer.dynamicFiles" (dict "context" .) | fromYaml) -}}
+        {{- $items = append $items (dict "key" $name "path" (get $file "fileName" | required (printf "missing fileName for %s" $file))) -}}
+      {{- end }}
+        items: {{- toYaml $items | nindent 10 }}
+admissionControllers: {{- include "t8s-cluster.clusterClass.apiServer.admissionPlugins" (dict "excludePatches" .excludePatches) | fromYamlArray | toYaml | nindent 2 }}
+apiServer: {{- with omit (include "t8s-cluster.clusterClass.args.apiServer" (dict "context" . "excludePatches" true) | fromYaml) "enable-admission-plugins" -}}
+  {{- $apiServerExtraArgsObject := . -}}
+  {{- $apiServerExtraArgs := list -}}
+  {{- range $arg, $value := $apiServerExtraArgsObject -}}
+    {{- $apiServerExtraArgs = append $apiServerExtraArgs (printf "--%s=%v" $arg $value) -}}
+  {{- end }}
+  extraArgs: {{- toYaml $apiServerExtraArgs | nindent 4 -}}
+  {{- end }}
+  extraVolumeMounts:
+    - name: apiserver
+      mountPath: {{ include "t8s-cluster.clusterClass.configPath" (dict) }}
+      readOnly: true
+controllerManager: {{- with omit (include "t8s-cluster.clusterClass.args.controllerManager" (dict "context" . "excludePatches" true) | fromYaml) "enable-admission-plugins" -}}
+  {{- $controllerManagerExtraArgsObject := . -}}
+  {{- $controllerManagerExtraArgs := list -}}
+  {{- range $arg, $value := $controllerManagerExtraArgsObject -}}
+    {{- $controllerManagerExtraArgs = append $controllerManagerExtraArgs (printf "--%s=%v" $arg $value) -}}
+  {{- end }}
+  extraArgs: {{- toYaml $controllerManagerExtraArgs | nindent 4 -}}
+  {{- end }}
+scheduler: {{- with omit (include "t8s-cluster.clusterClass.args.scheduler" (dict "context" . "excludePatches" true) | fromYaml) "enable-admission-plugins" -}}
+  {{- $schedulerExtraArgsObject := . -}}
+  {{- $schedulerExtraArgs := list -}}
+  {{- range $arg, $value := $schedulerExtraArgsObject -}}
+    {{- $schedulerExtraArgs = append $schedulerExtraArgs (printf "--%s=%v" $arg $value) -}}
+  {{- end }}
+  extraArgs: {{- toYaml $schedulerExtraArgs | nindent 4 -}}
+  {{- end }}
+network:
+  serviceType: ClusterIP
+  ingress:
+    extraAnnotations:
+      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    hostname: tenant.1111-mgmt-dev.k8s.teuto.net:443
+dataStoreName: default
+{{- end -}}

@@ -1,3 +1,0 @@
-{{- if .Values.controlPlane.hosted -}}
-  {{- include "t8s-cluster.etcd-defrag" (dict "context" $ "hosted" true) | nindent 0 -}}
-{{- end -}}

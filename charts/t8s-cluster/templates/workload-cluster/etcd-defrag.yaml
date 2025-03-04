@@ -1,3 +1,3 @@
 {{- if not .Values.controlPlane.hosted -}}
-  {{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "etcd-defrag" "resource" (include "t8s-cluster.etcd-defrag" (dict "context" $ "hosted" false)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "etcd")) | nindent 0 -}}
+  {{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "etcd-defrag" "resource" (include "t8s-cluster.etcd-defrag" (dict "context" $)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "etcd")) | nindent 0 -}}
 {{- end -}}

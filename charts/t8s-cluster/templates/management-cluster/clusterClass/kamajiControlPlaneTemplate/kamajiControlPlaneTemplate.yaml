@@ -1,0 +1,11 @@
+{{- if .Values.controlPlane.hosted -}}
+apiVersion: controlplane.cluster.x-k8s.io/v1alpha1
+kind: KamajiControlPlaneTemplate
+metadata:
+  name: {{/* the full context is needed for .Files.Get */}}{{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.kamajiControlPlaneTemplate.specHash" .) }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  template:
+    spec: {{/* the full context is needed for .Files.Get */}}{{- include "t8s-cluster.clusterClass.kamajiControlPlaneTemplate.spec" . | nindent 6 }}
+{{- end -}}

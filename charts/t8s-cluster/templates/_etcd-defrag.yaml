@@ -3,8 +3,8 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ .hosted | ternary (printf "%s-kube-etcd-defrag" .Release.Name) "kube-etcd-defrag" }}
-  namespace: {{ .hosted | ternary .Release.Namespace "kube-system" }}
+  name: kube-etcd-defrag
+  namespace: kube-system
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   concurrencyPolicy: Forbid
@@ -30,14 +30,14 @@ spec:
                 - name: ETCDCTL_API
                   value: "3"
                 - name: ETCDCTL_ENDPOINTS
-                  value: {{ .hosted | ternary (printf "kmc-%s-etcd:2379" .Release.Name) "localhost:2379" }}
+                  value: localhost:2379
               image: {{ include "common.images.image" (dict "imageRoot" .Values.global.etcd.image "global" .Values.global) }}
               imagePullPolicy: IfNotPresent
               name: etcd-defrag
               securityContext:
                 runAsGroup: 1000
-                runAsUser: {{ .hosted | ternary 1000 0 }}
-                runAsNonRoot: {{ .hosted }}
+                runAsUser: 0
+                runAsNonRoot: false
                 privileged: false
                 allowPrivilegeEscalation: false
                 seccompProfile:
@@ -52,7 +52,6 @@ spec:
                   readOnly: true
           dnsPolicy: ClusterFirst
           restartPolicy: OnFailure
-          {{- if not .hosted }}
           hostNetwork: true
           nodeSelector:
             node-role.kubernetes.io/control-plane: ""
@@ -63,28 +62,9 @@ spec:
             - effect: NoSchedule
               key: node-role.kubernetes.io/master
               operator: Exists
-          {{- end }}
           volumes:
             - name: etcd-certs
-              {{- if .hosted }}
-              projected:
-                defaultMode: 420
-                sources:
-                  - secret:
-                      items:
-                        - key: tls.crt
-                          path: ca.crt
-                      name: {{ printf "%s-etcd" .Release.Name }}
-                  - secret:
-                      items:
-                        - key: tls.crt
-                          path: peer.crt
-                        - key: tls.key
-                          path: peer.key
-                      name: {{ printf "%s-etcd-peer" .Release.Name }}
-              {{- else }}
               hostPath:
                 path: /etc/kubernetes/pki/etcd
                 type: Directory
-              {{- end }}
 {{- end -}}
