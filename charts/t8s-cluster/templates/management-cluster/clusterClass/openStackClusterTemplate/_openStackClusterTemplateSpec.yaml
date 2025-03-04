@@ -97,7 +97,7 @@ identityRef:
 managedSecurityGroups:
   allNodesSecurityGroupRules: {{- toYaml $allNodesSecurityGroupRules | nindent 4 }}
   controlPlaneNodesSecurityGroupRules: {{- toYaml $controlPlaneNodesSecurityGroupRules | nindent 4 }}
-  workerPlaneNodesSecurityGroupRules: {{- toYaml $workerNodesSecurityGroupRules | nindent 4 }}
+  workerNodesSecurityGroupRules: {{- toYaml $workerNodesSecurityGroupRules | nindent 4 }}
 managedSubnets:
   - cidr: 10.6.0.0/24
 {{- end -}}
