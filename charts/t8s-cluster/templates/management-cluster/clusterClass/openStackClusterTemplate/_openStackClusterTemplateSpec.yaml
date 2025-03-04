@@ -7,7 +7,7 @@ Here we are generating a hash suffix.
 apiServerLoadBalancer:
   enabled: {{ not .Values.controlPlane.hosted }}
   {{- with .Values.controlPlane.allowedCIDRs }}
-  allowedCidrs: {{- toYaml . | nindent 4 }}
+  allowedCIDRs: {{- toYaml . | nindent 4 }}
   {{- end }}
 disableAPIServerFloatingIP: {{ .Values.controlPlane.hosted }}
 bastion:
