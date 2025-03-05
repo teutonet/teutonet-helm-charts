@@ -6,10 +6,7 @@ This function needs the whole `$` context to be able to use `.Files.Get`
 {{- define "t8s-cluster.clusterClass.kamajiControlPlaneTemplate.spec" -}}
 addons:
   coreDNS: {}
-  konnectivity:
-    agent:
-      tolerations:
-        - operator: Exists
+  konnectivity: {}
   kubeProxy: null
 deployment:
   extraVolumes:
@@ -51,7 +48,7 @@ scheduler: {{- with omit (include "t8s-cluster.clusterClass.args.scheduler" (dic
   extraArgs: {{- toYaml $schedulerExtraArgs | nindent 4 -}}
   {{- end }}
 network:
-  serviceType: ClusterIP
+  serviceType: LoadBalancer
   ingress:
     extraAnnotations:
       nginx.ingress.kubernetes.io/ssl-passthrough: "true"
