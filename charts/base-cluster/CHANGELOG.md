@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.2.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.2.1...base-cluster-v7.2.2) (2025-03-05)
+
+
+### Bug Fixes
+
+* **base-cluster/cert-manager:** metrics collection ([#1397](https://github.com/teutonet/teutonet-helm-charts/issues/1397)) ([71e1189](https://github.com/teutonet/teutonet-helm-charts/commit/71e1189eb6e58d78fdbba867502318813c91fd32))
+
 ## [7.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.2.0...base-cluster-v7.2.1) (2025-02-27)
 
 
