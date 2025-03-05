@@ -27,7 +27,8 @@ spec:
         serviceMonitor:
           enabled: {{ .Values.monitoring.prometheus.enabled }}
           additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 12 }}
-      {{- if .Values.monitoring.tracing.enabled }}
+      {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp") | fromYaml }}
+      {{- if and $telemetryConf.enabled .Values.monitoring.prometheus.enabled }}
       opentelemetry:
         enabled: true
         {{- if and .Values.global.imageRegistry false }}
@@ -40,10 +41,10 @@ spec:
         use-gzip: true
         enable-brotli: true
         enable-underscores-in-headers: true
-        {{- if .Values.monitoring.tracing.enabled }}
+        {{- if $telemetryConf.enabled }}
         enable-opentelemetry: true
         opentelemetry-operation-name: ingress
-        otlp-collector-host: open-telemetry-collector-opentelemetry-collector.monitoring
+        otlp-collector-host: {{ $telemetryConf.host }}
         {{- end }}
       service:
         annotations:

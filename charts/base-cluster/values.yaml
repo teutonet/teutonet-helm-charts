@@ -41,11 +41,6 @@ global:
           requests:
             cpu: 20m
             memory: 100Mi
-    loki:
-      condition: "{{ .Values.monitoring.loki.enabled }}"
-      additionalLabels:
-        app.kubernetes.io/component: loki
-        app.kubernetes.io/part-of: monitoring
     trivy:
       condition: "{{ .Values.monitoring.securityScanning.enabled }}"
       additionalLabels:
@@ -112,8 +107,9 @@ global:
     grafana:
       url: https://grafana.github.io/helm-charts
       charts:
-        loki-stack: 2.x.x
-      condition: "{{ and .Values.monitoring.prometheus.enabled .Values.monitoring.loki.enabled }}"
+        loki: 6.x.x
+        alloy: 0.x.x
+      condition: "{{ and .Values.monitoring.prometheus.enabled (or .Values.monitoring.loki.enabled .Values.monitoring.tracing.enabled) }}"
     bitnami:
       url: oci://docker.io/bitnamicharts
       charts:
@@ -311,7 +307,6 @@ monitoring:
     persistence:
       storageClass: ""
       size: 10Gi
-    replicas: 1
     resourcesPreset: nano
     resources:
       requests:
