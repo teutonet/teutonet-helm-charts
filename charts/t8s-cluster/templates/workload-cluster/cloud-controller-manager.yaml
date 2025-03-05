@@ -1,4 +1,3 @@
-{{- if not .Values.controlPlane.hosted -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -44,6 +43,7 @@ spec:
       valuesKey: cloud.conf
     - <<: *valuesFrom
       targetPath: cloudConfig.metadata.hash
+  {{- if .Values.controlPlane.hosted }}
   postRenderers:
     - kustomize:
         patches:
@@ -57,6 +57,7 @@ spec:
               - op: remove
                 path: /spec/template/spec/nodeSelector
               {{- end }}
+  {{- end }}
   values:
     priorityClassName: system-cluster-critical
     tolerations:
@@ -65,10 +66,3 @@ spec:
       - key: node.cloudprovider.kubernetes.io/uninitialized
         value: "true"
         effect: NoSchedule
-  {{- if le (.Values.version.minor | int) 28 }}
-      - key: node-role.kubernetes.io/control-plane
-        effect: NoSchedule
-    nodeSelector:
-      node-role.kubernetes.io/control-plane: ""
-  {{- end -}}
-{{- end -}}
