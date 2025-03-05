@@ -1315,6 +1315,18 @@
             ],
             "additionalProperties": false
           }
+        },
+        "capacitor": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "ingress": {
+              "$ref": "#/$defs/toolIngress"
+            }
+          },
+          "additionalItems": false
         }
       },
       "additionalProperties": false
