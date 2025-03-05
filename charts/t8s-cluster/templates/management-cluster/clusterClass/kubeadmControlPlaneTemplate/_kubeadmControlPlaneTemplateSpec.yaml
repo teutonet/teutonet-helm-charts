@@ -10,15 +10,11 @@ kubeadmConfigSpec:
   clusterConfiguration:
     apiServer:
       extraArgs: {{- include "t8s-cluster.clusterClass.args.apiServer" (dict "context" .) | nindent 8 }}
-      extraVolumes:
-        - hostPath: &admissionControlConfigFilePath {{ include "t8s-cluster.clusterClass.apiServer.admissionControlConfigPath" (dict) }}
-          mountPath: *admissionControlConfigFilePath
-          name: admission-control-config
-          readOnly: true
-        - hostPath: &eventRateLimitConfigFilePath {{ include "t8s-cluster.clusterClass.apiServer.eventRateLimitConfigPath" (dict) }}
-          mountPath: *eventRateLimitConfigFilePath
-          name: event-rate-limit-config
-          readOnly: true
+      {{- $extraVolumes := list -}}
+      {{- range $name, $file := mustMerge (include "t8s-cluster.clusterClass.apiServer.staticFiles" (dict) | fromYaml) (include "t8s-cluster.clusterClass.apiServer.dynamicFiles" (dict "context" .) | fromYaml) -}}
+        {{- $extraVolumes = append $extraVolumes (dict "name" $name "hostPath" (get $file "path" ) "mountPath" (get $file "path") "readOnly" true) -}}
+      {{- end }}
+      extraVolumes: {{- toYaml $extraVolumes | nindent 8 }}
     controllerManager:
       extraArgs: {{- include "t8s-cluster.clusterClass.args.controllerManager" (dict "context" .) | nindent 8 }}
     etcd:
