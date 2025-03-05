@@ -1,7 +1,7 @@
 <!-- vim: set ft=markdown: -->
 # t8s-cluster
 
-![Version: 9.1.2](https://img.shields.io/badge/Version-9.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 9.2.0](https://img.shields.io/badge/Version-9.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -17,7 +17,7 @@ t8s-operator cluster with necessary addons
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.1.2/charts/t8s-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.2.0/charts/t8s-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster>
 
 ## Requirements
@@ -350,13 +350,14 @@ Must be one of:
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                              | Pattern | Type            | Deprecated | Definition                | Title/Description                                             |
-| --------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------- | ------------------------------------------------------------- |
-| - [hosted](#controlPlane_hosted )                                     | No      | boolean         | No         | -                         | Whether the control plane is hosted on the management cluster |
-| + [flavor](#controlPlane_flavor )                                     | No      | string          | No         | -                         | -                                                             |
-| - [singleNode](#controlPlane_singleNode )                             | No      | boolean         | No         | -                         | -                                                             |
-| - [additionalSecurityGroups](#controlPlane_additionalSecurityGroups ) | No      | array of string | No         | In #/$defs/securityGroups | -                                                             |
-| - [allowedCIDRs](#controlPlane_allowedCIDRs )                         | No      | array of string | No         | -                         | -                                                             |
+| Property                                                                      | Pattern | Type            | Deprecated | Definition                | Title/Description                                             |
+| ----------------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------- | ------------------------------------------------------------- |
+| - [hosted](#controlPlane_hosted )                                             | No      | boolean         | No         | -                         | Whether the control plane is hosted on the management cluster |
+| + [flavor](#controlPlane_flavor )                                             | No      | string          | No         | -                         | -                                                             |
+| - [singleNode](#controlPlane_singleNode )                                     | No      | boolean         | No         | -                         | -                                                             |
+| - [additionalSecurityGroups](#controlPlane_additionalSecurityGroups )         | No      | array of string | No         | In #/$defs/securityGroups | -                                                             |
+| - [additionalSecurityGroupRules](#controlPlane_additionalSecurityGroupRules ) | No      | object          | No         | -                         | -                                                             |
+| - [allowedCIDRs](#controlPlane_allowedCIDRs )                                 | No      | array of string | No         | -                         | -                                                             |
 
 ### <a name="controlPlane_hosted"></a>3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > hosted`
 
@@ -403,7 +404,105 @@ Must be one of:
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="controlPlane_allowedCIDRs"></a>3.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > allowedCIDRs`
+### <a name="controlPlane_additionalSecurityGroupRules"></a>3.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules`
+
+|                           |                                                                                                                                        |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                               |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#controlPlane_additionalSecurityGroupRules_additionalProperties) |
+
+| Property                                                               | Pattern | Type        | Deprecated | Definition | Title/Description |
+| ---------------------------------------------------------------------- | ------- | ----------- | ---------- | ---------- | ----------------- |
+| - [](#controlPlane_additionalSecurityGroupRules_additionalProperties ) | No      | Combination | No         | -          | -                 |
+
+#### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties"></a>3.5.1. Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `combining`                                                    |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                                                          | Pattern | Type             | Deprecated | Definition | Title/Description                                  |
+| ------------------------------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ---------- | -------------------------------------------------- |
+| - [protocol](#controlPlane_additionalSecurityGroupRules_additionalProperties_protocol )           | No      | enum (of string) | No         | -          | -                                                  |
+| - [port](#controlPlane_additionalSecurityGroupRules_additionalProperties_port )                   | No      | integer          | No         | -          | -                                                  |
+| - [portMin](#controlPlane_additionalSecurityGroupRules_additionalProperties_portMin )             | No      | integer          | No         | -          | -                                                  |
+| - [portMax](#controlPlane_additionalSecurityGroupRules_additionalProperties_portMax )             | No      | integer          | No         | -          | -                                                  |
+| - [description](#controlPlane_additionalSecurityGroupRules_additionalProperties_description )     | No      | string           | No         | -          | -                                                  |
+| + [remoteGroupID](#controlPlane_additionalSecurityGroupRules_additionalProperties_remoteGroupID ) | No      | string           | No         | -          | The ID of the security group to allow traffic from |
+
+| One of(Option)                                                                     |
+| ---------------------------------------------------------------------------------- |
+| [item 0](#controlPlane_additionalSecurityGroupRules_additionalProperties_oneOf_i0) |
+| [item 1](#controlPlane_additionalSecurityGroupRules_additionalProperties_oneOf_i1) |
+
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_oneOf_i0"></a>3.5.1.1. Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > oneOf > item 0`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+###### <a name="autogenerated_heading_2"></a>3.5.1.1.1. The following properties are required
+* port
+
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_oneOf_i1"></a>3.5.1.2. Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > oneOf > item 1`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+###### <a name="autogenerated_heading_3"></a>3.5.1.2.1. The following properties are required
+* portMin
+* portMax
+
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_protocol"></a>3.5.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > protocol`
+
+|          |                    |
+| -------- | ------------------ |
+| **Type** | `enum (of string)` |
+
+Must be one of:
+* "tcp"
+* "udp"
+* "4"
+* "icmp"
+
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_port"></a>3.5.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > port`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `integer` |
+
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_portMin"></a>3.5.1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > portMin`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `integer` |
+
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_portMax"></a>3.5.1.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > portMax`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `integer` |
+
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_description"></a>3.5.1.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > description`
+
+|             |                              |
+| ----------- | ---------------------------- |
+| **Type**    | `string`                     |
+| **Default** | `"(falls back to the name)"` |
+
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_remoteGroupID"></a>3.5.1.8. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > remoteGroupID`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** The ID of the security group to allow traffic from
+
+### <a name="controlPlane_allowedCIDRs"></a>3.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > allowedCIDRs`
 
 |          |                   |
 | -------- | ----------------- |
@@ -421,7 +520,7 @@ Must be one of:
 | ------------------------------------------------------ | ----------- |
 | [allowedCIDRs items](#controlPlane_allowedCIDRs_items) | -           |
 
-#### <a name="controlPlane_allowedCIDRs_items"></a>3.5.1. t8s cluster configuration > controlPlane > allowedCIDRs > allowedCIDRs items
+#### <a name="controlPlane_allowedCIDRs_items"></a>3.6.1. t8s cluster configuration > controlPlane > allowedCIDRs > allowedCIDRs items
 
 |          |          |
 | -------- | -------- |
