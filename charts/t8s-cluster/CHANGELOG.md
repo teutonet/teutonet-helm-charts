@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.1.2...t8s-cluster-v9.2.0) (2025-03-05)
+
+
+### Features
+
+* **t8s-cluster/management-cluster:** add option to create SecurityGroupRules ([#1404](https://github.com/teutonet/teutonet-helm-charts/issues/1404)) ([895ebcd](https://github.com/teutonet/teutonet-helm-charts/commit/895ebcda0a1b0bc4c0a541d56932ecc2db487478))
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** add missing volumeMounts for apiServer ([#1405](https://github.com/teutonet/teutonet-helm-charts/issues/1405)) ([db91a8e](https://github.com/teutonet/teutonet-helm-charts/commit/db91a8e027487beeb960df964a607616c7ea91db))
+
 ## [9.1.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.1.1...t8s-cluster-v9.1.2) (2025-03-04)
 
 
