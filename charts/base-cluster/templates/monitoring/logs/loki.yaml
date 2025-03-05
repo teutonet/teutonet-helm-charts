@@ -66,7 +66,7 @@ spec:
           directory: /var/loki/chunks
       schemaConfig:
         configs:
-          - from: 2025-02-18
+          - from: "2025-02-18"
             store: tsdb
             object_store: filesystem
             schema: v13
