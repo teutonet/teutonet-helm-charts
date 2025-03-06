@@ -1,0 +1,103 @@
+{{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.loki.enabled -}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: loki
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: loki
+    app.kubernetes.io/part-of: monitoring
+spec:
+  chart:
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "grafana" "chart" "loki" "context" $) | nindent 6 }}
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  install:
+    timeout: 10m0s
+  upgrade:
+    timeout: 10m0s
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
+  values:
+    {{- if .Values.global.imageRegistry }}
+    global:
+      registry: {{ $.Values.global.imageRegistry }}
+    {{- end }}
+    deploymentMode: SingleBinary
+    lokiCanary:
+      enabled: false
+    test:
+      enabled: false
+    chunksCache:
+      enabled: false
+    resultsCache:
+      enabled: false
+    gateway:
+      enabled: false
+    ruler:
+      enabled: false
+    sidecar:
+      rules:
+        enabled: false
+    loki:
+      enableServiceLinks: false
+      livenessProbe:
+        httpGet:
+          path: /ready
+          port: http-metrics
+        initialDelaySeconds: 45
+      containerSecurityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        privileged: false
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+      auth_enabled: false
+      storage:
+        type: filesystem
+      storage_config:
+        tsdb_shipper:
+          active_index_directory: /var/loki/tsdb-index
+        filesystem:
+          directory: /var/loki/chunks
+      schemaConfig:
+        configs:
+          - from: "2025-02-18"
+            store: tsdb
+            object_store: filesystem
+            schema: v13
+            index:
+              prefix: index_
+              period: 24h
+      commonConfig:
+        replication_factor: 1
+      compactor:
+        retention_enabled: true
+        delete_request_store: filesystem
+      ingester:
+        chunk_block_size: 524288
+        chunk_target_size: 5242880
+    tableManager:
+      retention_deletes_enabled: true
+      retention_period: 6w
+    backend:
+      replicas: 0
+    read:
+      replicas: 0
+    write:
+      replicas: 0
+    singleBinary:
+      replicas: 1
+      persistence: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.loki.persistence "global" $.Values.global) | nindent 8 }}
+        enabled: true
+        size: {{ .Values.monitoring.loki.persistence.size }}
+      resources: {{- include "common.resources" .Values.monitoring.loki | nindent 8 }}
+    monitoring:
+      serviceMonitor:
+        enabled: true
+        additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
+{{- end -}}

@@ -30,6 +30,8 @@ ghcr.io:
   aquasecurity: ALL_IMAGES
   kyverno: ALL_IMAGES
   teutonet: ALL_IMAGES
+  jimmidyson:
+    configmap-reload: ALL_TAGS
 quay.io:
   cilium: ALL_IMAGES
   jetstack: ALL_IMAGES
