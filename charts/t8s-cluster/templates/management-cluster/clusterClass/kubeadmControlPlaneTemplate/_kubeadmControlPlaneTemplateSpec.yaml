@@ -12,7 +12,7 @@ kubeadmConfigSpec:
       extraArgs: {{- include "t8s-cluster.clusterClass.args.apiServer" (dict "context" .) | nindent 8 }}
       {{- $extraVolumes := list -}}
       {{- range $name, $file := mustMerge (include "t8s-cluster.clusterClass.apiServer.staticFiles" (dict) | fromYaml) (include "t8s-cluster.clusterClass.apiServer.dynamicFiles" (dict "context" .) | fromYaml) -}}
-        {{- $extraVolumes = append $extraVolumes (dict "name" $name "hostPath" (get $file "path" ) "mountPath" (get $file "path") "readOnly" true) -}}
+        {{- $extraVolumes = append $extraVolumes (dict "name" ($name | trimSuffix ".yaml" | replace "." "-") "hostPath" (get $file "path" ) "mountPath" (get $file "path") "readOnly" true) -}}
       {{- end }}
       extraVolumes: {{- toYaml $extraVolumes | nindent 8 }}
     controllerManager:
