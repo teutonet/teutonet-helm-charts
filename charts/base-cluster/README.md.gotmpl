@@ -315,4 +315,25 @@ upgrade, they will be recreated in version 6.
 This also makes kyverno HA, so be aware that kyverno will need more resources in
 you cluster.
 
+### 6.x.x -> 7.0.0
+
+This release allows the user to use the predefined k8s ClusterRoles
+(`admin`, `edit`, `view`, ...).
+
+This usage might clash with custom roles named `admin`, `edit`, `view`, ... and
+therefore needs to be adjusted
+
+### 7.x.x -> 8.0.0
+
+This release migrates the now unsupported `loki-stack` to the normal `loki` helm
+chart.
+
+This is a breaking change because, apart from a new storage engine, the deployment
+also moves from the `loki` namespace to `monitoring` to keep in line with every
+other monitoring deployment, which in turn also deletes the `loki` namespace
+
+This also replaces `promtail` and the `otel-collector` with `alloy`, using
+<https://github.com/teutonet/teutonet-helm-charts/blob/main/charts/common/templates/_telemetry.tpl>
+makes this a drop-in change.
+
 {{ .Files.Get "values.md"  }}
