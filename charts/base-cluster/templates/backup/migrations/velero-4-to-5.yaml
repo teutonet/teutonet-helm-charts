@@ -23,7 +23,7 @@ spec:
       containers:
         - name: remove-backup-storage-locations
           image: {{ include "common.images.image" (dict "imageRoot" .Values.global.kubectl.image "global" .Values.global) }}
-          imagePullPolicy: {{ empty .Values.global.kubectl.image.digest | ternary "Always" "IfNotPresent" }}
+          imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.kubectl.image }}
           securityContext:
             readOnlyRootFilesystem: true
             privileged: false
