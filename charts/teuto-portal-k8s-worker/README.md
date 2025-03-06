@@ -1,6 +1,6 @@
 # teuto-portal-k8s-worker
 
-![Version: 3.2.0](https://img.shields.io/badge/Version-3.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 3.3.0](https://img.shields.io/badge/Version-3.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 A Helm chart for deploying the portal worker application to k8s
 
@@ -14,14 +14,14 @@ A Helm chart for deploying the portal worker application to k8s
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/teuto-portal-k8s-worker-v3.2.0/charts/teuto-portal-k8s-worker>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/teuto-portal-k8s-worker-v3.3.0/charts/teuto-portal-k8s-worker>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/teuto-portal-k8s-worker>
 
 ## Requirements
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.2.1 |
+| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.4.0 |
 
 ## Values
 
