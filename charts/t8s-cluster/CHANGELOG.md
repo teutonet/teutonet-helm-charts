@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.2.0...t8s-cluster-v9.2.1) (2025-03-06)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** invalid volume names ([#1410](https://github.com/teutonet/teutonet-helm-charts/issues/1410)) ([70e81cc](https://github.com/teutonet/teutonet-helm-charts/commit/70e81cc716deb895901f5e544b7f17a1055b6fa4))
+
 ## [9.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.1.2...t8s-cluster-v9.2.0) (2025-03-05)
 
 
