@@ -1,18 +1,26 @@
-{{- define "common.networkpolicy.identities.kube-apiserver" -}}
+{{- define "common.networkPolicy.identity.kube-apiserver" -}}
   {{- $identities := list -}}
-  {{- $inClusterControlPlaneEntity := (dict "fromEntities" (list "kube-apiserver")) -}}
-  {{- $konnectivityDaemonSetNamespace := "kube-system" -}}
-  {{- $konnectivityDameonSetName := "konnectivity-agent" -}}
-  {{- $konnectivityProxiedControlPlaneMatchLabels := dict
-      "io.kubernetes.pod.namespace" $konnectivityDaemonSetNamespace
-      "k8s-app" $konnectivityDameonSetName
-  -}}
-  {{- $konnectivityProxiedControlPlaneEndpoint := (dict "fromEndpoints" (list (dict "matchLabels" $konnectivityProxiedControlPlaneMatchLabels))) -}}
-  {{- $matchLabels := dict -}}
-  {{- if lookup "apps/v1" "DaemonSet" $konnectivityDaemonSetNamespace $konnectivityDameonSetName -}}
-    {{- $identities = append $identities $konnectivityProxiedControlPlaneEndpoint -}}
+  {{- $kubeSystemNamespace := "kube-system" -}}
+  {{- $konnectivityName := "konnectivity-agent" -}}
+  {{- if lookup "apps/v1" "DaemonSet" $kubeSystemNamespace $konnectivityName -}}
+    {{- $identities = append $identities (dict "endpoint" (dict
+        "namespace" $kubeSystemNamespace
+        "pod" (dict
+          "k8s-app" $konnectivityName
+        )
+        "serviceAccount" $konnectivityName
+      ))
+    -}}
   {{- else -}}
-    {{- $identities = append $identities $inClusterControlPlaneEntity -}}
+    {{- $identities = append $identities (dict "endpoint" (dict
+        "namespace" $kubeSystemNamespace
+        "pod" (dict
+          "tier" "control-plane"
+          "component" "kube-apiserver"
+        )
+      ))
+     -}}
+    {{- $identities = append $identities (dict "entity" "kube-apiserver") -}}
   {{- end -}}
   {{- toYaml $identities -}}
 {{- end -}}
