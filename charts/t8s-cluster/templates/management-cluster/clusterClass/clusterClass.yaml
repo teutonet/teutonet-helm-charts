@@ -10,7 +10,10 @@ metadata:
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
 spec:
   controlPlane:
-    {{- if not .Values.controlPlane.hosted }}
+    {{- if .Values.controlPlane.hosted }}
+    namingStrategy:
+      template: {{ `kcp-{{ .cluster.name }}` }}
+    {{- else }}
     machineHealthCheck:
       maxUnhealthy: 1
       nodeStartupTimeout: 10m
