@@ -30,11 +30,6 @@ openstack
   {{- toYaml $commands }}
 {{- end -}}
 
-{{- define "t8s-cluster.clusterClass.computePlane.kubeletExtraArgs" -}}
-  {{- $args := dict "node-labels" "node-role.kubernetes.io/compute-plane=''" -}}
-  {{- toYaml $args -}}
-{{- end -}}
-
 {{- define "t8s-cluster.clusterClass.kubeletExtraArgs" -}}
   {{- $args := dict "cloud-provider" "external" -}}
   {{- toYaml $args -}}

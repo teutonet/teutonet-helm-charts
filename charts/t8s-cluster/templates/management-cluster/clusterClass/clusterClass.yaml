@@ -165,6 +165,9 @@ spec:
             maxUnavailable: 0
             {{- end }}
         template:
+          metadata:
+            labels:
+              node-role.kubernetes.io/compute-plane: ""
           bootstrap:
             ref:
               apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
