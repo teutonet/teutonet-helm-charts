@@ -92,6 +92,9 @@ licenses:
   ghcr.io/aquasecurity/trivy-operator:
     license: Apache-2.0
     licenseLink: https://github.com/aquasecurity/trivy-operator/blob/main/LICENSE
+  ghcr.io/jimmidyson/configmap-reload:
+    license: Apache-2.0
+    licenseLink: https://github.com/jimmidyson/configmap-reload/pkgs/container/configmap-reload
   ghcr.io/kyverno/background-controller:
     license: Apache-2.0
     licenseLink: https://github.com/kyverno/kyverno/pkgs/container/background-controller
@@ -134,6 +137,9 @@ licenses:
   k8s.gcr.io/sig-storage/livenessprobe:
     license: Apache-2.0
     licenseLink: https://github.com/kubernetes-csi/livenessprobe/blob/master/LICENSE
+  mirror.gcr.io/aquasec/trivy-operator:
+    license: Apache-2.0
+    licenseLink: https://github.com/aquasecurity/trivy-operator/blob/main/LICENSE
   quay.io/cilium/cilium:
     license: Apache-2.0
     licenseLink: https://github.com/cilium/cilium/blob/main/LICENSE
@@ -167,15 +173,15 @@ licenses:
   quay.io/kiwigrid/k8s-sidecar:
     license: MIT
     licenseLink: https://github.com/kiwigrid/k8s-sidecar/blob/master/LICENSE
+  quay.io/prometheus-operator/prometheus-operator:
+    license: Apache-2.0
+    licenseLink: https://github.com/prometheus-operator/prometheus-operator/blob/main/LICENSE
   quay.io/prometheus/alertmanager:
     license: Apache-2.0
     licenseLink: https://github.com/prometheus/alertmanager/blob/main/LICENSE
   quay.io/prometheus/node-exporter:
     license: Apache-2.0
     licenseLink: https://github.com/prometheus/node_exporter/blob/master/LICENSE
-  quay.io/prometheus-operator/prometheus-operator:
-    license: Apache-2.0
-    licenseLink: https://github.com/prometheus-operator/prometheus-operator/blob/main/LICENSE
   quay.io/prometheus/prometheus:
     license: Apache-2.0
     licenseLink: https://github.com/prometheus/prometheus/blob/main/LICENSE
@@ -209,6 +215,3 @@ licenses:
   registry.k8s.io/sig-storage/nfs-provisioner:
     license: Apache-2.0
     licenseLink: https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/blob/master/LICENSE
-  mirror.gcr.io/aquasec/trivy-operator:
-    license: Apache-2.0
-    licenseLink: https://github.com/aquasecurity/trivy-operator/blob/main/LICENSE
