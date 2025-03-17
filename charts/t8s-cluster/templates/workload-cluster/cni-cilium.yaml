@@ -33,7 +33,7 @@ spec:
     egressGateway:
       enabled: true
     kubeProxyReplacement: true
-    k8sServiceHost: tenant.1111-mgmt-dev.k8s.teuto.net
+    k8sServiceHost: {{ printf "%s.1111-mgmt-dev.k8s.teuto.net" .Release.Name }}
     k8sServicePort: 443
 
     rollOutCiliumPods: true

@@ -52,6 +52,6 @@ network:
   ingress:
     extraAnnotations:
       nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-    hostname: tenant.1111-mgmt-dev.k8s.teuto.net:443
+    hostname: {{ printf "%s.1111-mgmt-dev.k8s.teuto.net:443" .Release.Name }}
 dataStoreName: default
 {{- end -}}
