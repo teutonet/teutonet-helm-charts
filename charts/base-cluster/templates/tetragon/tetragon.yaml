@@ -43,6 +43,6 @@ spec:
       prometheus:
         serviceMonitor:
           enabled: true
-          labelsOverride: {{- toYaml .Values.monitoring.labels | nindent 12 }}
+          labelsOverride: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 12 }}
       {{- end }}
   {{- end }}
