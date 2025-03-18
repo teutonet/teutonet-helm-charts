@@ -45,7 +45,7 @@ privileged: false
   {{- $domainIsConfigured := or (not (empty .Values.global.baseDomain)) (not (empty $ingress.customDomain)) -}}
   {{- $certManagerIsConfigured := not (empty .Values.certManager.email) -}}
   {{- $ingressSpecificallyDisabled := eq false $ingress.enabled -}}
-  {{- and $certManagerIsConfigured (not $ingressSpecificallyDisabled) .Values.ingress.enabled $domainIsConfigured | ternary true "" -}}
+  {{- and $certManagerIsConfigured (not $ingressSpecificallyDisabled) (ne .Values.ingress.provider "none") $domainIsConfigured | ternary true "" -}}
 {{- end -}}
 
 {{- define "base-cluster.monitoring.unauthenticated-ingress.enabled" -}}
