@@ -1,4 +1,4 @@
-{{- if and .Values.dns.provider .Values.global.baseDomain .Values.ingress.enabled }}
+{{- if and .Values.dns.provider .Values.global.baseDomain (ne .Values.ingress.provider "none") }}
 {{- if false }}
 apiVersion: networking.k8s.io/v1
 {{- else }}

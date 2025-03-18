@@ -90,11 +90,11 @@ spec:
       uploaderType: restic
     metrics:
       serviceMonitor:
-        additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
+        additionalLabels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 10 }}
         enabled: true
       prometheusRule:
         enabled: true
-        additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
+        additionalLabels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 10 }}
         spec:
           - alert: VeleroBackupFailures
             annotations:

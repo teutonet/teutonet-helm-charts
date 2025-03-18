@@ -54,7 +54,7 @@ spec:
       enabled: true
       serviceMonitor:
         enabled: true
-        labels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
+        labels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 10 }}
 ---
 apiVersion: v1
 kind: ConfigMap

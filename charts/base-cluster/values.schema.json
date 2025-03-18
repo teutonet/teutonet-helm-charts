@@ -121,28 +121,49 @@
               ]
             },
             "metricsLabels": {
-              "type": "object",
               "description": "The labels used to allow ingress from the metrics service",
-              "additionalProperties": {
-                "type": "string"
-              },
-              "minProperties": 1
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "minProperties": 1
+                },
+                {
+                  "type": "string"
+                }
+              ]
             },
             "dnsLabels": {
-              "type": "object",
               "description": "The labels used to allow egress to the DNS service",
-              "additionalProperties": {
-                "type": "string"
-              },
-              "minProperties": 1
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "minProperties": 1
+                },
+                {
+                  "type": "string"
+                }
+              ]
             },
             "ingressLabels": {
-              "type": "object",
-              "description": "The labels used to allow egress to the DNS service",
-              "additionalProperties": {
-                "type": "string"
-              },
-              "minProperties": 1
+              "description": "The labels used to allow ingress from the ingress controller",
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "minProperties": 1
+                },
+                {
+                  "type": "string"
+                }
+              ]
             }
           },
           "additionalProperties": false
@@ -1328,8 +1349,14 @@
         "resources": {
           "$ref": "#/$defs/resourceRequirements"
         },
-        "enabled": {
-          "type": "boolean"
+        "provider": {
+          "type": "string",
+          "enum": [
+            "nginx",
+            "traefik",
+            "none"
+          ],
+          "description": "Which ingress controller to use"
         },
         "allowNginxConfigurationSnippets": {
           "type": "boolean",
