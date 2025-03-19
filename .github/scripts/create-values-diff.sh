@@ -67,6 +67,7 @@ cd "$GITHUB_WORKSPACE"
 
 function generateComment() {
   local chart="${1?}"
+  local issue="${2?}"
   local -A diffs
   local newResourcesDir
   local originalResourcesDir
@@ -102,9 +103,8 @@ function generateComment() {
     newResourcesDir="$TMP_DIR/new-$(basename -s .yaml "$values")"
 
     diffs+=(
-      [$values]="$(diff --unidirectional-new-file -ur "$originalResourcesDir" "$newResourcesDir" | curl -s -F syntax=diff -F "content=<-" https://dpaste.com/api/v2/)"
+      [$values]="$(diff --unidirectional-new-file -ur "$originalResourcesDir" "$newResourcesDir" | gh gist create -p -f yaml.patch)"
     )
-    sleep 2
   done
 
   echo "<!--helm-diff-->"
@@ -150,7 +150,7 @@ function updateComment() {
 }
 
 if [[ ! -v body ]]; then
-  body=$(generateComment "$chart")
+  body=$(generateComment "$chart" "$issue")
 fi
 
 if [[ "$dryRun" == false ]]; then
