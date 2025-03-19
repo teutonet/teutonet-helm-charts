@@ -71,6 +71,7 @@ function generateComment() {
   local -A diffs
   local newResourcesDir
   local originalResourcesDir
+  local gistURL
 
   for values in "$chart/values.yaml" "$chart/ci/"*-values.yaml; do
     [[ -f "$values" ]] || continue
@@ -99,12 +100,26 @@ function generateComment() {
   wait
   for values in "$chart/values.yaml" "$chart/ci/"*-values.yaml; do
     [[ -f "$values" ]] || continue
-    originalResourcesDir="$TMP_DIR/original-$(basename -s .yaml "$values")"
-    newResourcesDir="$TMP_DIR/new-$(basename -s .yaml "$values")"
+    local valuesName
+    valuesName="$(basename -s .yaml "$values")"
+    originalResourcesDir="$TMP_DIR/original-$valuesName"
+    newResourcesDir="$TMP_DIR/new-$valuesName"
 
+<<<<<<< Updated upstream
     diffs+=(
       [$values]="$(diff --unidirectional-new-file -ur "$originalResourcesDir" "$newResourcesDir" | gh gist create -p -f yaml.patch)"
     )
+||||||| Stash base
+    diffs+=(
+      [$values]="$(diff --unidirectional-new-file -ur "$originalResourcesDir" "$newResourcesDir" | curl -s -F syntax=diff -F "content=<-" https://dpaste.com/api/v2/)"
+    )
+    sleep 2
+=======
+    # Create a temporary file for this diff
+    local diffFile="$TMP_DIR/$valuesName.patch"
+    diff --unidirectional-new-file -ur "$originalResourcesDir" "$newResourcesDir" > "$diffFile" || true
+    diffs+=([$values]="$diffFile")
+>>>>>>> Stashed changes
   done
 
   echo "<!--helm-diff-->"
@@ -117,11 +132,17 @@ function generateComment() {
   echo "'null' means it's either cluster-scoped or it's in the default namespace for the HelmRelease"
   echo ---
   echo
+
+  # Create a single gist with all diffs
+  gistURL="$(gh gist create -p "${diffs[@]}")"
+
   for values in "${!diffs[@]}"; do
-    if [[ "${diffs[$values]}" = *'This field is required.'* ]]; then
-      echo "$values has no changes"
+    local valuesName
+    valuesName="$(basename -s .yaml "$values")"
+    if [[ -s "${diffs[$values]}" ]]; then
+      echo "[$values]($gistURL#file-${valuesName/./-}.patch"
     else
-      echo "[$values](${diffs[$values]})"
+      echo "$values has no changes"
     fi
     echo
   done
