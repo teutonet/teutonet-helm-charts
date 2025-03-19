@@ -11,12 +11,16 @@ TMP_DIR="${TMP_DIR:-$(mktemp -d)}"
 
 function getImages() {
   local chart="$1"
+  local existingDir="${2:-}"
+  local valuesFile="${3:-}"
+  local existingValuesDir
+  existingValuesDir="$2/$(basename --suffix=.yaml "$valuesFile")"
   local tmpDir
   tmpDir="$(mktemp -d -p "$TMP_DIR")"
-  if [[ -v 2 && -n "$2" ]]; then
-    cp -r "$2/artifacthub-values" "$tmpDir/helmRelease"
+  if [[ -n "$2" && -d "$existingValuesDir" ]]; then
+    cp -r "$existingValuesDir" "$tmpDir/helmRelease"
   else
-    "$(dirname "$0")/templateLocalHelmChart" -1 "$chart" >"$tmpDir/helmRelease.yaml"
+    "$(dirname "$0")/templateLocalHelmChart" -1 "$chart" "$valuesFile" >"$tmpDir/helmRelease.yaml"
     "$(dirname "$0")/splitYamlIntoDir" "$tmpDir/helmRelease.yaml" "$tmpDir/helmRelease"
   fi
 
@@ -26,16 +30,7 @@ function getImages() {
     (
       grep -Er '\s+image: \S+$' |
         grep -v 'artifacthub-ignore' || { if [[ "$?" == 2 ]]; then exit 2; fi; }
-    ) |
-      awk '{print ($2 == "-" ? $4 : $3) " # " $1}' |
-      tr -d '"' |
-      sed 's#:$##' |
-      sort -k1 -k2 |
-      uniq |
-      column -t |
-      jq -Rn '[[inputs][] | {image: .}]' |
-      yq -y |
-      tr -d "'"
+    )
   )
 }
 
@@ -44,26 +39,28 @@ function updateChartYaml() {
   local existingDir="${2:-}"
   local tmpDir
   tmpDir="$(mktemp -d -p "$TMP_DIR")"
-  (
-    echo "artifacthub.io/images: |"
-    getImages "$chart" "$existingDir" | awk '{print "  " $0}'
-  ) | tee "$tmpDir/images.yaml" >&2
+  local allImages="$tmpDir/all_images.yaml"
 
-  if yq -e .annotations "$chart/Chart.yaml" >/dev/null; then
-    yq -y '.annotations | del(.["artifacthub.io/images"])' "$chart/Chart.yaml" >"$tmpDir/annotations.yaml"
-    yq -y '. | del(.annotations)' "$chart/Chart.yaml" | sponge "$chart/Chart.yaml"
-  else
-    touch "$tmpDir/annotations.yaml"
-  fi
+  for valuesFile in "$chart/ci/artifacthub-values"*.yaml; do
+    if [[ ! -f "$valuesFile" ]]; then
+      echo "No artifacthub-values files found in '$chart/ci/', exiting" >&2
+      exit 1
+    fi
 
-  (
-    cat "$chart/Chart.yaml"
-    echo "annotations:"
-    (
-      grep -v '{}' "$tmpDir/annotations.yaml" || true
-      cat "$tmpDir/images.yaml"
-    ) | awk '{print "  " $0}'
-  ) | sponge "$chart/Chart.yaml"
+    getImages "$chart" "$existingDir" "$valuesFile"
+  done |
+    awk '{print ($2 == "-" ? $4 : $3) " # " $1}' |
+    tr -d '"' |
+    sed 's#:$##' |
+    sort -k1 -k2 |
+    uniq |
+    column -t |
+    jq -Rn '[[inputs][] | {image: .}]' |
+    yq -y |
+    tr -d "'" >"$allImages"
+
+  # shellcheck disable=SC2016
+  yq -Y -i --rawfile allImages "$allImages" '.annotations |= (. + {"artifacthub.io/images": $allImages | sub("\\s*$"; "")})' "$chart/Chart.yaml"
 }
 
 if [[ "$#" -ge 1 ]]; then
