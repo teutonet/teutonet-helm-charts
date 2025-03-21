@@ -40,6 +40,9 @@ spec:
         use-proxy-protocol: {{ .Values.ingress.useProxyProtocol }}
         use-gzip: true
         enable-brotli: true
+        {{- if .Values.ingress.allowNginxConfigurationSnippets }}
+        annotations-risk-level: Critical
+        {{- end }}
         enable-underscores-in-headers: true
         {{- if $telemetryConf.enabled }}
         enable-opentelemetry: true
