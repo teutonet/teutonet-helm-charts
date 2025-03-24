@@ -68,7 +68,7 @@ spec:
       tracing: &tracingConfig
         enabled: true
         address: {{ $telemetryConf.host }}
-        port: {{ $telemetryConf.port }}
+        port: {{ int64 $telemetryConf.port }}
       {{- end }}
     backgroundController:
       replicas: 2
