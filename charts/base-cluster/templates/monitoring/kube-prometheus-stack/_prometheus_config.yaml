@@ -12,6 +12,7 @@ prometheusSpec:
   {{- if include "base-cluster.monitoring.authenticated-ingress.enabled" (dict "name" "prometheus" "context" .) }}
   externalUrl: {{ printf "https://%s" (include "base-cluster.prometheus.host" $) }}
   {{- end }}
+  enableRemoteWriteReceiver: true
   resources: {{- include "common.resources" .Values.monitoring.prometheus | nindent 4 }}
   priorityClassName: monitoring-components
   securityContext:
@@ -71,6 +72,6 @@ prometheusSpec:
     clientType: grpc
     samplingFraction: "0.1"
     insecure: true
-    endpoint: {{ printf "%s:%d" $telemetryConf.host $telemetryConf.port }}
+    endpoint: {{ printf "%s:%d" $telemetryConf.host (int64 $telemetryConf.port) | quote }}
   {{- end }}
 {{- end -}}
