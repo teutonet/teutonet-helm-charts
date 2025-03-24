@@ -138,6 +138,24 @@ spec:
           {{- end }}
 
           {{- if .Values.monitoring.tracing.enabled }}
+          prometheus.remote_write "default" {
+            endpoint {
+              url = "http://kube-prometheus-stack-prometheus:9090/api/v1/write"
+            }
+          }
+
+          otelcol.exporter.prometheus "default" {
+            forward_to = [prometheus.remote_write.default.receiver]
+          }
+
+          otelcol.connector.servicegraph "default" {
+            dimensions = ["http.method"]
+
+            output {
+              metrics = [otelcol.exporter.prometheus.default.input]
+            }
+          }
+
           otelcol.receiver.otlp "default" {
             grpc { }
 
@@ -204,7 +222,7 @@ spec:
 
           otelcol.processor.batch "default" {
             output {
-              traces = [otelcol.exporter.otlp.tempo.input]
+              traces = [otelcol.connector.servicegraph.default.input, otelcol.exporter.otlp.tempo.input]
             }
           }
 
@@ -253,6 +271,8 @@ spec:
       create: false
     controller:
       priorityClassName: monitoring-components
+    service:
+      internalTrafficPolicy: Local
     serviceMonitor:
       enabled: true
       additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
