@@ -18,4 +18,6 @@ sshKeyName: {{ . }}
 serverGroup:
   filter:
     name: {{ .name }}
+tags:
+  - do_not_import_into_netbox
 {{- end -}}
