@@ -1,6 +1,9 @@
 name: lint github workflows
 
 on:
+  merge_group:
+    types:
+      - checks_requested
   pull_request:
     paths:
       - ".github/**/*.ya?ml"
