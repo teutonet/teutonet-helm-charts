@@ -9,7 +9,7 @@ metadata:
   name: storage-size
   namespace: nfs-server-provisioner
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
-    {{- with .Values.monitoring.labels }}{{- include "common.tplvalues.render" (dict "value" . "context" $) | nindent 4 }}{{- end }}
+    monitoring/managed-by: teutonet
     app.kubernetes.io/component: prometheus
     app.kubernetes.io/part-of: nfs-server-provisioner
 spec:

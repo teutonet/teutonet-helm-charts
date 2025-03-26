@@ -218,8 +218,6 @@ kyverno:
 
 monitoring:
   monitorAllNamespaces: true
-  labels:
-    managed.by/monitoring: teutonet
   grafana:
     adminPassword: ""
     ingress:

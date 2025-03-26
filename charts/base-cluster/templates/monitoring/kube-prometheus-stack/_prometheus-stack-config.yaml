@@ -22,7 +22,8 @@ defaultRules:
 kubelet:
   serviceMonitor:
     resource: false
-commonLabels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 2 }}
+commonLabels:
+  monitoring/managed-by: teutonet
 grafana: {{- include "base-cluster.prometheus-stack.grafana.config" . | nindent 2 }}
 kube-state-metrics: {{- include "base-cluster.prometheus-stack.kube-state-metrics.config" . | nindent 2 }}
 prometheus-node-exporter: {{- include "base-cluster.prometheus-stack.node-exporter.config" . | nindent 2 }}
