@@ -99,5 +99,6 @@ spec:
     monitoring:
       serviceMonitor:
         enabled: true
-        additionalLabels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 10 }}
+        additionalLabels:
+          monitoring/managed-by: teutonet
 {{- end -}}
