@@ -43,6 +43,7 @@ spec:
       prometheus:
         serviceMonitor:
           enabled: true
-          labelsOverride: {{- toYaml .Values.monitoring.labels | nindent 12 }}
+          labelsOverride:
+            monitoring/managed-by: teutonet
       {{- end }}
   {{- end }}
