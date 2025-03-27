@@ -57,7 +57,7 @@ spec:
       {{- end }}
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
-      additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 8 }}
+      additionalLabels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 8 }}
     priorityClassName: system-cluster-critical
     # this only works in version 3
     admissionController:

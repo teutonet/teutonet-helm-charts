@@ -53,7 +53,7 @@ kube-janitor:
 descheduler:
   enabled: true
 ingress:
-  enabled: true
+  provider: nginx
 reflector:
   enabled: true
 dns:
