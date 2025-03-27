@@ -1,0 +1,38 @@
+name: Get changed charts in PR
+
+on:
+  workflow_call:
+    inputs:
+      pr_number:
+        type: number
+        required: true
+    outputs:
+      charts:
+        description: The names of the changed charts in the PR
+        value: ${{ jobs.getChangedCharts.outputs.charts }}
+      count:
+        value: ${{ jobs.getChangedCharts.outputs.count }}
+
+jobs:
+  getChangedCharts:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      charts: ${{ steps.getCharts.outputs.charts }}
+      count: ${{ steps.getCharts.outputs.count }}
+    steps:
+      - name: Get all charts
+        id: getCharts
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PULL_REQUEST_NUMBER: ${{ inputs.pr_number }}
+        run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+          set -e
+          set -o pipefail
+          charts="$(gh api --paginate "/repos/${GITHUB_REPOSITORY}/pulls/${PULL_REQUEST_NUMBER}/files" | jq -cr 'map(.filename | select(test("charts/[^/]*")) | split("/") | .[1] | select(.)) | unique')"
+          (
+            echo charts="$charts"
+            echo count="$(<<<"$charts" jq -r length)"
+          ) | tee -a "$GITHUB_OUTPUT"
