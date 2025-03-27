@@ -127,7 +127,7 @@ spec:
           loki.process "pods" {
           	forward_to = [loki.write.default.receiver]
 
-          	stage.cri { }
+          	stage.cri {}
           }
 
           loki.write "default" {
@@ -140,9 +140,9 @@ spec:
 
           {{- if .Values.monitoring.tracing.enabled }}
           otelcol.receiver.otlp "default" {
-            grpc { }
+            grpc {}
 
-            http { }
+            http {}
 
             output {
               traces = [otelcol.processor.k8sattributes.default.input]
@@ -151,9 +151,9 @@ spec:
 
           otelcol.receiver.jaeger "default" {
             protocols {
-              grpc { }
+              grpc {}
 
-              thrift_http { }
+              thrift_http {}
 
               thrift_compact {
                 max_packet_size = "63KiB488B"
