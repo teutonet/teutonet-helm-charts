@@ -40,7 +40,8 @@ spec:
       enabled: true
     serviceMonitor:
       enabled: true
-      additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 8 }}
+      additionalLabels:
+        monitoring/managed-by: teutonet
     {{- end }}
     deschedulerPolicy: {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp") | fromYaml }}
       {{- if and $telemetryConf.enabled .Values.monitoring.prometheus.enabled }}

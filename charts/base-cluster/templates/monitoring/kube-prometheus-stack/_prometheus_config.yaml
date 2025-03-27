@@ -32,14 +32,6 @@ prometheusSpec:
           requests:
             storage: {{ .Values.monitoring.prometheus.persistence.size }}
   replicas: {{ .Values.monitoring.prometheus.replicas }}
-  ruleSelector:
-    matchLabels: {{- toYaml .Values.monitoring.labels | nindent 6 }}
-  serviceMonitorSelector:
-    matchLabels: {{- toYaml .Values.monitoring.labels | nindent 6 }}
-  podMonitorSelector:
-    matchLabels: {{- toYaml .Values.monitoring.labels | nindent 6 }}
-  probeSelector:
-    matchLabels: {{- toYaml .Values.monitoring.labels | nindent 6 }}
   additionalAlertRelabelConfigs:
     {{- if not .Values.monitoring.monitorAllNamespaces }}
       {{- $namespaces := list .Release.Namespace "kube-node-lease" "kube-public" "kube-system" -}}
