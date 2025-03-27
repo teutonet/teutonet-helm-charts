@@ -32,6 +32,12 @@
   {{- end -}}
 {{- end -}}
 
+{{/*
+Returns a dict for configuring otel traces, containing `enabled`, `host`, `port`, `endpoint`, `serviceProtocol`, `insecure`.
+{{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp" "serviceProtocol" "grpc" "global" $) | fromYaml }}
+`serviceProtocol` is optional, will just not be used (probably using `grpc`).
+Be sure to cast the port back to int by using `{{ int64 $telemetryConf.port }}` for usage, it's a float by default
+*/}}
 {{- define "common.telemetry.conf" -}}
   {{- $conf := dict "enabled" false -}}
   {{- $protocol := .protocol -}}
