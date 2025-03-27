@@ -26,6 +26,7 @@ spec:
   driftDetection:
     mode: enabled
   values:
+    fullnameOverride: {{ printf "cluster-%s-oauth-proxy" $host }}
     redis:
       enabled: false
   {{- if $.Values.global.imageRegistry }}
