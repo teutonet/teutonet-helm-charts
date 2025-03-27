@@ -43,7 +43,7 @@
   {{- $serviceProtocol := .serviceProtocol -}}
   {{- $insecure := dig "insecure" true $config -}}
   {{- if eq (dig "endpoint" "auto" $config) "auto" -}}
-    {{- $services := (dict "monitoring" (list "alloy" "open-telemetry-collector-opentelemetry-collector")) -}}
+    {{- $services := (dict "monitoring" (list "telemetry-collector" "alloy" "open-telemetry-collector-opentelemetry-collector")) -}}
     {{- range $namespace, $serviceNames := $services -}}
       {{- range $serviceName := $serviceNames -}}
         {{- $service := lookup "v1" "Service" $namespace $serviceName -}}
