@@ -20,7 +20,18 @@ jobs:
     permissions:
       checks: read
     steps:
-      - uses: poseidon/wait-for-status-checks@899c768d191b56eef585c18f8558da19e1f3e707 # v0.6.0
-        with:
-          token: ${{ github.token }}
-          ignore: generateDiffCommentBody,postDiffComment
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          IGNORED_JOBS: generateDiffCommentBody,postDiffComment
+          CURRENT_JOB: ${{ github.job }}
+        timeout-minutes: 60
+        run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+          set -e
+          set -o pipefail
+
+          until unfinished_jobs="$(gh pr checks "${PR_URL}" --json name,state | jq --arg ignored "$IGNORED_JOBS,$CURRENT_JOB" -e 'map(select(([.state] | inside(["SUCCESS", "SKIPPED"]) | not) and ([.name] | inside($ignored | split(",")) | not))) | (map("\(.name) (\(.state))") | join(", ") | stderr) | length == 0' 2>&1 >/dev/null)"; do
+            echo "The jobs '$unfinished_jobs' are not (successfully) finished yet" >&2
+            sleep 5
+          done
