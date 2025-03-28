@@ -1,5 +1,104 @@
 # Changelog
 
+## [10.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.2.1...t8s-cluster-v10.0.0) (2025-03-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* **t8s-cluster/management-cluster:** update CAPIO and migrate config ([#1197](https://github.com/teutonet/teutonet-helm-charts/issues/1197))
+* **t8s-cluster:** remove unused gopassName field ([#922](https://github.com/teutonet/teutonet-helm-charts/issues/922))
+* **t8s-cluster/management-cluster:** Revert "feat(t8s-cluster/mana… ([#903](https://github.com/teutonet/teutonet-helm-charts/issues/903))
+
+### Features
+
+* **t8s-cluster/api-server:** add support for OIDC ([#1272](https://github.com/teutonet/teutonet-helm-charts/issues/1272)) ([164dcec](https://github.com/teutonet/teutonet-helm-charts/commit/164dcecf2754ca52d4d2de654b6fdae056cdd2a0))
+* **t8s-cluster/cilium:** enable egressGateway ([#1223](https://github.com/teutonet/teutonet-helm-charts/issues/1223)) ([76fb7b0](https://github.com/teutonet/teutonet-helm-charts/commit/76fb7b045cf83866895d3a89319a796d9c8b8c48))
+* **t8s-cluster/management-cluster:** add option to create SecurityGroupRules ([#1404](https://github.com/teutonet/teutonet-helm-charts/issues/1404)) ([895ebcd](https://github.com/teutonet/teutonet-helm-charts/commit/895ebcda0a1b0bc4c0a541d56932ecc2db487478))
+* **t8s-cluster/management-cluster:** set a memory limit for the kube-apiserver, so things like kyverno won't take out the whole node ([#1025](https://github.com/teutonet/teutonet-helm-charts/issues/1025)) ([85dee99](https://github.com/teutonet/teutonet-helm-charts/commit/85dee99e4496f1731d9361ffdb580cd84a8f7b8c))
+* **t8s-cluster/raise_api_version:** raise api version for helm.toolk… ([#984](https://github.com/teutonet/teutonet-helm-charts/issues/984)) ([ac8cf96](https://github.com/teutonet/teutonet-helm-charts/commit/ac8cf9691ab94715fd53f59695fdb27cd4ebe4b2))
+* **t8s-cluster/workload-cluster:** latch onto legacy cni when used ([#1039](https://github.com/teutonet/teutonet-helm-charts/issues/1039)) ([3513061](https://github.com/teutonet/teutonet-helm-charts/commit/35130617c43764f2d4072ee79648f54c119c5e28))
+* **t8s-cluster/workload-cluster:** skip component uninstall ([#1042](https://github.com/teutonet/teutonet-helm-charts/issues/1042)) ([139ac22](https://github.com/teutonet/teutonet-helm-charts/commit/139ac22f38ce2e701e646bf560c4a5cf82eaa74b))
+* **t8s-cluster:** add support for HCP ([#962](https://github.com/teutonet/teutonet-helm-charts/issues/962)) ([4307b0b](https://github.com/teutonet/teutonet-helm-charts/commit/4307b0b5e4deb99698db563b1dca47b427fd8803))
+* **t8s-cluster:** implement node-type specific securityGroupRules ([#1344](https://github.com/teutonet/teutonet-helm-charts/issues/1344)) ([c739f76](https://github.com/teutonet/teutonet-helm-charts/commit/c739f76a4e011d5b7c8541caf7013bfea5154cc5))
+
+
+### Bug Fixes
+
+* **base-cluster:** add missing ciliumNetworkPolicy for cinder-csi-plugin otherwise it can't talk to the openstack api 🤣 ([#1114](https://github.com/teutonet/teutonet-helm-charts/issues/1114)) ([f33e5ad](https://github.com/teutonet/teutonet-helm-charts/commit/f33e5ad2b613eb084c45ece2ef52c453c3c04b5e))
+* **t8s-cluster/cni:** otherwise for &gt;=1.30 there is no version ([#1276](https://github.com/teutonet/teutonet-helm-charts/issues/1276)) ([20d0ad8](https://github.com/teutonet/teutonet-helm-charts/commit/20d0ad85974a5c5f640970a2f7d8ce92b000e237))
+* **t8s-cluster/management-cluster:** add missing necessary image field ([#1247](https://github.com/teutonet/teutonet-helm-charts/issues/1247)) ([e3910ca](https://github.com/teutonet/teutonet-helm-charts/commit/e3910cafa3bc792f68290ae0e4c03a31b6871f2e))
+* **t8s-cluster/management-cluster:** add missing volumeMounts for apiServer ([#1405](https://github.com/teutonet/teutonet-helm-charts/issues/1405)) ([db91a8e](https://github.com/teutonet/teutonet-helm-charts/commit/db91a8e027487beeb960df964a607616c7ea91db))
+* **t8s-cluster/management-cluster:** add securityGroupRules for monitoring ([#1338](https://github.com/teutonet/teutonet-helm-charts/issues/1338)) ([1bf3c0f](https://github.com/teutonet/teutonet-helm-charts/commit/1bf3c0fba41e66b085137aaf5dfadd9144390f92))
+* **t8s-cluster/management-cluster:** clean old config before applying new one if the old one stay, they might be incompatible now 🙄 ([#1087](https://github.com/teutonet/teutonet-helm-charts/issues/1087)) ([9ebc0ec](https://github.com/teutonet/teutonet-helm-charts/commit/9ebc0ecca3d6a6ee83766a293f7953d96b06a5a9))
+* **t8s-cluster/management-cluster:** duplicated files ([#1401](https://github.com/teutonet/teutonet-helm-charts/issues/1401)) ([652abab](https://github.com/teutonet/teutonet-helm-charts/commit/652abab6b9ec998b1c9b4f1d8bf0949391db3834))
+* **t8s-cluster/management-cluster:** invalid volume names ([#1410](https://github.com/teutonet/teutonet-helm-charts/issues/1410)) ([70e81cc](https://github.com/teutonet/teutonet-helm-charts/commit/70e81cc716deb895901f5e544b7f17a1055b6fa4))
+* **t8s-cluster/management-cluster:** new spelling of field ([#1399](https://github.com/teutonet/teutonet-helm-charts/issues/1399)) ([9acca02](https://github.com/teutonet/teutonet-helm-charts/commit/9acca02ebe9e7acaa8cdf28e38d8406176ec6e17))
+* **t8s-cluster/management-cluster:** remove uninstall job this should still work and help with the resource orphanage (HelmCharts, ...) ([#929](https://github.com/teutonet/teutonet-helm-charts/issues/929)) ([afbe7f0](https://github.com/teutonet/teutonet-helm-charts/commit/afbe7f00d05bdd4a8f047612be41fa99f630ebd8))
+* **t8s-cluster/management-cluster:** renamed parameter ([#1402](https://github.com/teutonet/teutonet-helm-charts/issues/1402)) ([8999a5c](https://github.com/teutonet/teutonet-helm-charts/commit/8999a5cde9830603d80f27f19e686fe17930092a))
+* **t8s-cluster/management-cluster:** replace `remove` with `add` `remove` doesn't work when the `path` doesn't exist 🤦 ([#1088](https://github.com/teutonet/teutonet-helm-charts/issues/1088)) ([850e3fd](https://github.com/teutonet/teutonet-helm-charts/commit/850e3fdcb17a1c0e6b8f1765825140f69b11f90d))
+* **t8s-cluster/workload-cluster:** allow all protocols for DNS ([#1305](https://github.com/teutonet/teutonet-helm-charts/issues/1305)) ([8e4caa2](https://github.com/teutonet/teutonet-helm-charts/commit/8e4caa28c926648cab5a24ccf87bb06be83eec0a))
+* **t8s-cluster/workload-cluster:** helmrepository references ([#893](https://github.com/teutonet/teutonet-helm-charts/issues/893)) ([86c314d](https://github.com/teutonet/teutonet-helm-charts/commit/86c314dcc3db35fdc023935122940025b47261aa))
+* **t8s-cluster/workload-cluster:** this field is _actually_ used 🙄 ([#1174](https://github.com/teutonet/teutonet-helm-charts/issues/1174)) ([16a5b12](https://github.com/teutonet/teutonet-helm-charts/commit/16a5b1216c895b7896ed4fb437dff9cb67e1489b))
+* **t8s-cluster/workload-cluster:** turn off bpf.masquerade ([#1332](https://github.com/teutonet/teutonet-helm-charts/issues/1332)) ([c8cfa12](https://github.com/teutonet/teutonet-helm-charts/commit/c8cfa1292f7836b9786225f36f62327c7559e471))
+* **t8s-cluster:** adjust for 1.29 the SeccompDefault featureGate is enabled by default anyways ([#1036](https://github.com/teutonet/teutonet-helm-charts/issues/1036)) ([62078a9](https://github.com/teutonet/teutonet-helm-charts/commit/62078a9c58150fd1fd4586d41b53cdeab9148be7))
+* **t8s-cluster:** create separate etcd defrag jobs per cluster ([#1201](https://github.com/teutonet/teutonet-helm-charts/issues/1201)) ([948868e](https://github.com/teutonet/teutonet-helm-charts/commit/948868e738830e40e3283e90cdc4c590cd833a43))
+* **t8s-cluster:** me be stupid I guess ([#1327](https://github.com/teutonet/teutonet-helm-charts/issues/1327)) ([d908dcc](https://github.com/teutonet/teutonet-helm-charts/commit/d908dccb9eafac4c815fcf9466eb98285b338f64))
+* **t8s-cluster:** only `toYaml` if field exists ([#1227](https://github.com/teutonet/teutonet-helm-charts/issues/1227)) ([a98420d](https://github.com/teutonet/teutonet-helm-charts/commit/a98420d2467cc672df535518c84f70f2313757d6))
+* **t8s-cluster:** remove unnecessary require for openstackImageNamePrefix ([#1229](https://github.com/teutonet/teutonet-helm-charts/issues/1229)) ([b9b2154](https://github.com/teutonet/teutonet-helm-charts/commit/b9b2154eacd0ef0ccff1d3724e1c9dadcdcdde08))
+* **t8s-cluster:** up etcd-defrag timeout ([#1178](https://github.com/teutonet/teutonet-helm-charts/issues/1178)) ([292b156](https://github.com/teutonet/teutonet-helm-charts/commit/292b156d176ba652c126dd2da395874e1bed8eb2))
+* **t8s-cluster:** use correct case for field ([#1317](https://github.com/teutonet/teutonet-helm-charts/issues/1317)) ([5861cd6](https://github.com/teutonet/teutonet-helm-charts/commit/5861cd62bd18d81dfa146efcbea0bb524828d7d8))
+* **t8s-cluster:** use correct condition to include cilium helmrepository ([#1054](https://github.com/teutonet/teutonet-helm-charts/issues/1054)) ([0d1f7f8](https://github.com/teutonet/teutonet-helm-charts/commit/0d1f7f86c0461551f35785d7a16cb163aa8704a4))
+
+
+### Miscellaneous Chores
+
+* **main:** [bot] release t8s-cluster:6.0.1 ([#810](https://github.com/teutonet/teutonet-helm-charts/issues/810)) ([041c913](https://github.com/teutonet/teutonet-helm-charts/commit/041c9133d8a45e7c0c7a51903e1a5cd6f347be64))
+* **main:** [bot] release t8s-cluster:7.0.0 ([#877](https://github.com/teutonet/teutonet-helm-charts/issues/877)) ([5eaa451](https://github.com/teutonet/teutonet-helm-charts/commit/5eaa4515b400c7c7aaa71b5e63fb79c3c62d7023))
+* **main:** [bot] release t8s-cluster:7.0.1 ([#911](https://github.com/teutonet/teutonet-helm-charts/issues/911)) ([160432f](https://github.com/teutonet/teutonet-helm-charts/commit/160432f428d9f6ac53a09cc498b12dac8090ab9a))
+* **main:** [bot] release t8s-cluster:8.0.0 ([#917](https://github.com/teutonet/teutonet-helm-charts/issues/917)) ([8d1b24a](https://github.com/teutonet/teutonet-helm-charts/commit/8d1b24a61d424458fc8fe30d64ff9ea820483d95))
+* **main:** [bot] release t8s-cluster:8.1.0 ([#982](https://github.com/teutonet/teutonet-helm-charts/issues/982)) ([f69ecb6](https://github.com/teutonet/teutonet-helm-charts/commit/f69ecb60fb9a70e44ccae3ec87503645d8082d2f))
+* **main:** [bot] release t8s-cluster:8.2.0 ([#1044](https://github.com/teutonet/teutonet-helm-charts/issues/1044)) ([4043048](https://github.com/teutonet/teutonet-helm-charts/commit/4043048f74b315498b944443e6208cdc64dba4e4))
+* **main:** [bot] release t8s-cluster:8.3.0 ([#1084](https://github.com/teutonet/teutonet-helm-charts/issues/1084)) ([364dc47](https://github.com/teutonet/teutonet-helm-charts/commit/364dc4729871d7d29e6cb93c2397338d4fdfe80e))
+* **main:** [bot] release t8s-cluster:8.3.1 ([#1086](https://github.com/teutonet/teutonet-helm-charts/issues/1086)) ([987eda1](https://github.com/teutonet/teutonet-helm-charts/commit/987eda14dbdd7038c57907d8f5f7c27ecab7eadc))
+* **main:** [bot] release t8s-cluster:8.3.2 ([#1089](https://github.com/teutonet/teutonet-helm-charts/issues/1089)) ([7b5cbe0](https://github.com/teutonet/teutonet-helm-charts/commit/7b5cbe0f11af2a4f1e3492a430037462a7445b39))
+* **main:** [bot] release t8s-cluster:9.0.0 ([#1091](https://github.com/teutonet/teutonet-helm-charts/issues/1091)) ([51f0f2d](https://github.com/teutonet/teutonet-helm-charts/commit/51f0f2daab4c0ac55fe650c4a0377955a5c51d3b))
+* **main:** [bot] release t8s-cluster:9.0.1 ([#1246](https://github.com/teutonet/teutonet-helm-charts/issues/1246)) ([0996939](https://github.com/teutonet/teutonet-helm-charts/commit/099693967ea53aa868e0898eba3f1a7858a83b5a))
+* **main:** [bot] release t8s-cluster:9.0.2 ([#1275](https://github.com/teutonet/teutonet-helm-charts/issues/1275)) ([5100e96](https://github.com/teutonet/teutonet-helm-charts/commit/5100e96ca7cb2910c26badab03308a44ca2044c9))
+* **main:** [bot] release t8s-cluster:9.0.3 ([#1318](https://github.com/teutonet/teutonet-helm-charts/issues/1318)) ([ad819f0](https://github.com/teutonet/teutonet-helm-charts/commit/ad819f060f82d919ea4f6581e298f64696cbbe5a))
+* **main:** [bot] release t8s-cluster:9.0.4 ([#1333](https://github.com/teutonet/teutonet-helm-charts/issues/1333)) ([d58e7a0](https://github.com/teutonet/teutonet-helm-charts/commit/d58e7a0a581ecaf7780fea4afc742b7217091db8))
+* **main:** [bot] release t8s-cluster:9.0.5 ([#1339](https://github.com/teutonet/teutonet-helm-charts/issues/1339)) ([7a4a7e5](https://github.com/teutonet/teutonet-helm-charts/commit/7a4a7e5bf712d2d23293fcf1543ad7050b798153))
+* **main:** [bot] release t8s-cluster:9.1.0 ([#1353](https://github.com/teutonet/teutonet-helm-charts/issues/1353)) ([8852930](https://github.com/teutonet/teutonet-helm-charts/commit/88529301fddc83e6e6cf2188791084e5fbcf79e6))
+* **main:** [bot] release t8s-cluster:9.1.1 ([#1400](https://github.com/teutonet/teutonet-helm-charts/issues/1400)) ([02f435b](https://github.com/teutonet/teutonet-helm-charts/commit/02f435bd57dab040dceaa1e000280ee4fbd81b4d))
+* **main:** [bot] release t8s-cluster:9.1.2 ([#1403](https://github.com/teutonet/teutonet-helm-charts/issues/1403)) ([ee65f53](https://github.com/teutonet/teutonet-helm-charts/commit/ee65f5315e974588b98f6126c3d20cfa9f0cd7cc))
+* **main:** [bot] release t8s-cluster:9.2.0 ([#1406](https://github.com/teutonet/teutonet-helm-charts/issues/1406)) ([29674aa](https://github.com/teutonet/teutonet-helm-charts/commit/29674aa18aa6615d0c260ec063167164b64b37c5))
+* **main:** [bot] release t8s-cluster:9.2.1 ([#1409](https://github.com/teutonet/teutonet-helm-charts/issues/1409)) ([84442a3](https://github.com/teutonet/teutonet-helm-charts/commit/84442a31d05e4c271227dafc56bbd44922751f4a))
+* **t8s-cluster/dependencies:** update common docker tag to v1.2.0 ([#882](https://github.com/teutonet/teutonet-helm-charts/issues/882)) ([14825a8](https://github.com/teutonet/teutonet-helm-charts/commit/14825a80ff76a4d415d7c55afa65622dc599fe11))
+* **t8s-cluster/dependencies:** update common docker tag to v1.2.1 ([#1081](https://github.com/teutonet/teutonet-helm-charts/issues/1081)) ([88de484](https://github.com/teutonet/teutonet-helm-charts/commit/88de4843d045d0bd38fb75580fce8f5ead24ec36))
+* **t8s-cluster/dependencies:** update common docker tag to v1.3.0 ([#1361](https://github.com/teutonet/teutonet-helm-charts/issues/1361)) ([d400b9c](https://github.com/teutonet/teutonet-helm-charts/commit/d400b9cc3118614dc520d166182c4a9c620bd19b))
+* **t8s-cluster/dependencies:** update common docker tag to v1.4.0 ([#1393](https://github.com/teutonet/teutonet-helm-charts/issues/1393)) ([a3f5331](https://github.com/teutonet/teutonet-helm-charts/commit/a3f5331198af46c8be9f031d34a34f79fe08eac7))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.29.4 ([#872](https://github.com/teutonet/teutonet-helm-charts/issues/872)) ([fe9037b](https://github.com/teutonet/teutonet-helm-charts/commit/fe9037b432f3bae6d790d1e23cd9dafa75d1f01d))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.29.6 ([#961](https://github.com/teutonet/teutonet-helm-charts/issues/961)) ([455f3e5](https://github.com/teutonet/teutonet-helm-charts/commit/455f3e5116bce1ce33e3b0f7cc8cb5bca592b8cb))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.29.8 ([#1137](https://github.com/teutonet/teutonet-helm-charts/issues/1137)) ([b343ce2](https://github.com/teutonet/teutonet-helm-charts/commit/b343ce2e97aafc98d280c0fda857db9b008342e8))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.31.0 ([#908](https://github.com/teutonet/teutonet-helm-charts/issues/908)) ([fa57c6e](https://github.com/teutonet/teutonet-helm-charts/commit/fa57c6e77e0054103cf12bbefd1818f1d45acae5))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.31.2 ([#1192](https://github.com/teutonet/teutonet-helm-charts/issues/1192)) ([5edddd7](https://github.com/teutonet/teutonet-helm-charts/commit/5edddd7614e9558d13ae56358efd8dcf23807d61))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl docker tag to v1.31.4-debian-12-r1 ([#1225](https://github.com/teutonet/teutonet-helm-charts/issues/1225)) ([9f62cfa](https://github.com/teutonet/teutonet-helm-charts/commit/9f62cfa658948a446cbac554c50cfc270b6a17f3))
+* **t8s-cluster/dependencies:** update docker.io/bitnami/kubectl:1.29.6 docker digest to 6f94559 ([#1028](https://github.com/teutonet/teutonet-helm-charts/issues/1028)) ([88ea367](https://github.com/teutonet/teutonet-helm-charts/commit/88ea3678b2c6d3e0cec9b6a46a53c4dbee15691a))
+* **t8s-cluster/dependencies:** update helm release gpu-operator to v24 ([#920](https://github.com/teutonet/teutonet-helm-charts/issues/920)) ([70b8d59](https://github.com/teutonet/teutonet-helm-charts/commit/70b8d59e4fa699827d4aded52e1c0af9cd873adc))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.5.13 ([#892](https://github.com/teutonet/teutonet-helm-charts/issues/892)) ([5436cfa](https://github.com/teutonet/teutonet-helm-charts/commit/5436cfa3d7ca8f768699abb58d0d151f857545e4))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.5.14 ([#1013](https://github.com/teutonet/teutonet-helm-charts/issues/1013)) ([a0f31fd](https://github.com/teutonet/teutonet-helm-charts/commit/a0f31fd1e9326eccab4e4138b473cef2824944df))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.5.15 ([#1078](https://github.com/teutonet/teutonet-helm-charts/issues/1078)) ([bc79a2a](https://github.com/teutonet/teutonet-helm-charts/commit/bc79a2a6c14dfc5c42d43cfefd69c14c4bcf356f))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.5.16 ([#1211](https://github.com/teutonet/teutonet-helm-charts/issues/1211)) ([969e291](https://github.com/teutonet/teutonet-helm-charts/commit/969e2919d99ee7075df7c0a3a49f12df6d330de5))
+* **t8s-cluster/docs:** add correct vim modeline ([#1274](https://github.com/teutonet/teutonet-helm-charts/issues/1274)) ([3339f0b](https://github.com/teutonet/teutonet-helm-charts/commit/3339f0b2d560ba5f43cbdeaca44f5831dc7b388c))
+* **t8s-cluster/management-cluster:** remove removed field ([#913](https://github.com/teutonet/teutonet-helm-charts/issues/913)) ([d30cf03](https://github.com/teutonet/teutonet-helm-charts/commit/d30cf038a751cca2b0b781fee1657f31eb132050))
+* **t8s-cluster/management-cluster:** Revert "feat(t8s-cluster/mana… ([#903](https://github.com/teutonet/teutonet-helm-charts/issues/903)) ([d59bc9e](https://github.com/teutonet/teutonet-helm-charts/commit/d59bc9e1dbeae46d10e816b2fcc8d9299f4ac9e4))
+* **t8s-cluster/management-cluster:** update CAPIO and migrate config ([#1197](https://github.com/teutonet/teutonet-helm-charts/issues/1197)) ([ff9248b](https://github.com/teutonet/teutonet-helm-charts/commit/ff9248b7b27aa9e03d8a491a6cf0d2ef122418cd))
+* **t8s-cluster/management-cluster:** update flux resources they are deprecated ([#930](https://github.com/teutonet/teutonet-helm-charts/issues/930)) ([29a7b8f](https://github.com/teutonet/teutonet-helm-charts/commit/29a7b8fed1124c610d8864689787a16c04f9deea))
+* **t8s-cluster:** cleanup random stuff ([#1040](https://github.com/teutonet/teutonet-helm-charts/issues/1040)) ([d75da99](https://github.com/teutonet/teutonet-helm-charts/commit/d75da996cd287f49b64ccc4137f81acdd3aaa434))
+* **t8s-cluster:** improve developer experience by providing tab-completion ([#1005](https://github.com/teutonet/teutonet-helm-charts/issues/1005)) ([e01ea6a](https://github.com/teutonet/teutonet-helm-charts/commit/e01ea6ad79d67bcee179ea4ffceccd630ac7b237))
+* **t8s-cluster:** remove unneeded comment ([#846](https://github.com/teutonet/teutonet-helm-charts/issues/846)) ([a1119f8](https://github.com/teutonet/teutonet-helm-charts/commit/a1119f870c4ab9cba2e905f943e8ed7d027fe2d2))
+* **t8s-cluster:** remove unused gopassName field ([#922](https://github.com/teutonet/teutonet-helm-charts/issues/922)) ([1a222bf](https://github.com/teutonet/teutonet-helm-charts/commit/1a222bf03b19e4f30bef344cc01ac8e95fd1ee2e))
+* **t8s-cluster:** use teutonet common chart ([#856](https://github.com/teutonet/teutonet-helm-charts/issues/856)) ([7189ddf](https://github.com/teutonet/teutonet-helm-charts/commit/7189ddf7bf9b9b71a216d77696dfd72b3a794f23))
+
 ## [9.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.2.0...t8s-cluster-v9.2.1) (2025-03-06)
 
 
