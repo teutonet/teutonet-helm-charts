@@ -8,7 +8,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
-  name: {{ printf "%s-%s" $.Release.Name $name }}
+  name: {{ printf "%s-%s" $.Release.Name ($name | replace "_" "-") }}
   namespace: {{ $.Release.Namespace }}
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
 spec:
