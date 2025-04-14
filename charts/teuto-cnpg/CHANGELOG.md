@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v1.4.0...teuto-cnpg-v1.4.1) (2025-04-14)
+
+
+### Bug Fixes
+
+* **teuto-cnpg:** replace `_` in database name with `-` ([#1437](https://github.com/teutonet/teutonet-helm-charts/issues/1437)) ([8c4b4bb](https://github.com/teutonet/teutonet-helm-charts/commit/8c4b4bba87322c2e5f2aeefd29ab868eabce793a))
+
 ## [1.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v1.3.0...teuto-cnpg-v1.4.0) (2025-02-24)
 
 

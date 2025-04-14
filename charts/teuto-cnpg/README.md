@@ -1,6 +1,6 @@
 # teuto-cnpg
 
-![Version: 1.4.0](https://img.shields.io/badge/Version-1.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.4.1](https://img.shields.io/badge/Version-1.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Helm chart to abstract the managing of cnpg-databases from the original resource.
 
@@ -14,7 +14,7 @@ A Helm chart to abstract the managing of cnpg-databases from the original resour
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/teuto-cnpg-v1.4.0/charts/teuto-cnpg>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/teuto-cnpg-v1.4.1/charts/teuto-cnpg>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/teuto-cnpg>
 
 ## Requirements
