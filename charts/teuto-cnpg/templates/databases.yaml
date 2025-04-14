@@ -1,10 +1,14 @@
 {{- $databases := dict -}}
+{{- $databaseRegex := "^[a-z_]([a-z0-9_]*[a-z0-9])?$" -}}
 {{- if kindIs "string" .Values.databases -}}
   {{- $databases = .Values.databases | fromYaml -}}
 {{- else -}}
   {{- $databases = .Values.databases -}}
 {{- end -}}
 {{- range $name, $owner := $databases -}}
+  {{- if not (mustRegexMatch $databaseRegex $name) -}}
+    {{- fail (printf "database name '%s' must match '%s'" $name $databaseRegex) -}}
+  {{- end -}}
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
