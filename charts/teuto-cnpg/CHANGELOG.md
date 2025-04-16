@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v1.4.1...teuto-cnpg-v2.0.0) (2025-04-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* **teuto-cnpg:** hash names of databases, to avoid collisions and a… ([#1441](https://github.com/teutonet/teutonet-helm-charts/issues/1441))
+
+### Features
+
+* **teuto-cnpg:** hash names of databases, to avoid collisions and a… ([#1441](https://github.com/teutonet/teutonet-helm-charts/issues/1441)) ([887992a](https://github.com/teutonet/teutonet-helm-charts/commit/887992acdcb704a17613d4f01721c37e76adb9c3))
+
+
+### Bug Fixes
+
+* **teuto-cnpg:** add values templating to README ([#1442](https://github.com/teutonet/teutonet-helm-charts/issues/1442)) ([c089439](https://github.com/teutonet/teutonet-helm-charts/commit/c0894392d735c5b101d559ce59e6d1aab42b9d2a))
+
 ## [1.4.1](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v1.4.0...teuto-cnpg-v1.4.1) (2025-04-14)
 
 
