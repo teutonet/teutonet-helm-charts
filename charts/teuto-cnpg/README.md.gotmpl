@@ -1,0 +1,26 @@
+<!-- vim: set ft=markdown: -->
+{{- $majorVersion := index ((.Files.Get "Chart.yaml" | fromYaml).version | split ".") "_0" -}}
+{{- $fluxMajorVersion := "2" -}}
+
+{{ template "chart.header" . }}
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+{{ template "chart.maintainersSection" . }}
+
+## Migration
+
+### 1.x.x -> 2.0.0
+
+Databases need to be migrated manually:
+
+- stop cnpg-operator
+- delete database objects
+  - make sure that the cnpg-database objects really are deleted, as they have a finalizer set
+- update helmchart
+- start cnpg-operator
