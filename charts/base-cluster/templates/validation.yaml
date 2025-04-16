@@ -7,6 +7,10 @@
   {{- if not .Values.global.serviceLevelAgreement }}
     {{- fail "You need to specify a .Values.global.serviceLevelAgreement" -}}
   {{- end -}}
+
+  {{- if ne .Release.Name "base-cluster" -}}
+    {{- fail "This chart must be installed with the release name 'base-cluster'" -}}
+  {{- end -}}
 {{- else -}}
 {{/* This is no problem during dry-run but fails on normal installations / upgrades */}}
 apiVersion: v1
