@@ -31,8 +31,6 @@ alertmanagerSpec:
         resources:
           requests:
             storage: {{ .Values.monitoring.prometheus.alertmanager.persistence.size }}
-  alertmanagerConfigSelector:
-    matchLabels: {{- toYaml .Values.monitoring.labels | nindent 6 }}
 config:
   {{- if .Values.monitoring.prometheus.alertmanager.receivers.pagerduty.enabled }}
   global:

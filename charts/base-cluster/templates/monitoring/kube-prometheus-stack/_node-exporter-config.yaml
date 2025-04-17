@@ -11,5 +11,6 @@ securityContext:
 containerSecurityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 2 }}
 prometheus:
   monitor:
-    additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 6 }}
+    additionalLabels:
+      monitoring/managed-by: teutonet
 {{- end -}}

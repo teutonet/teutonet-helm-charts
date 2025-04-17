@@ -90,11 +90,11 @@ spec:
       uploaderType: restic
     metrics:
       serviceMonitor:
-        additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
+        additionalLabels:
+          monitoring/managed-by: teutonet
         enabled: true
       prometheusRule:
         enabled: true
-        additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
         spec:
           - alert: VeleroBackupFailures
             annotations:
