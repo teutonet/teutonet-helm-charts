@@ -9,23 +9,35 @@ on:
       - checks_requested
 
 jobs:
-  getChangedCharts:
-    uses: ./.github/workflows/get-changed-charts.yaml
+  getChangedChartsPR:
+    uses: ./.github/workflows/get-changed-charts-pr.yaml
+    if: ${{ github.event.pull_request }}
     permissions:
       pull-requests: read
     with:
       pr_number: ${{ github.event.pull_request.number }}
+  getChangedChartsMQ:
+    uses: ./.github/workflows/get-changed-charts-merge-queue.yaml
+    if: ${{ github.event.merge_group }}
+    permissions:
+      contents: read
+    with:
+      base_commit: ${{ github.event.merge_group.base_sha }}
+      head_commit: ${{ github.event.merge_group.head_sha }}
   lint-helm-chart:
     name: lint helm chart
     permissions:
       contents: read
     runs-on: ubuntu-latest
-    needs: getChangedCharts
+    if: ${{ always() && contains(needs.*.result, 'success') && !contains(needs.*.result, 'failure') }}
+    needs:
+      - getChangedChartsPR
+      - getChangedChartsMQ
     strategy:
       matrix:
-        chart: ${{ fromJson(needs.getChangedCharts.outputs.charts) }}
+        chart: ${{ fromJson(needs.getChangedChartsPR.outputs.charts || needs.getChangedChartsMQ.outputs.charts) }}
     env:
-      CT_TARGET_BRANCH: ${{ github.event.pull_request.base.ref || github.event.repository.default_branch }}
+      CT_TARGET_BRANCH: ${{ github.event.pull_request.base.ref || github.event.merge_group.base_ref || github.event.repository.default_branch }}
       CHART: ${{ matrix.chart }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -53,6 +65,9 @@ jobs:
       - uses: helm/chart-testing-action@e6669bcd63d7cb57cb4380c33043eebe5d111992 # v2.6.1
 
       - name: Lint chart
+        env:
+          CT_CHART_REPOS: ${{ steps.helm-repos.outputs.repos }}
+          CT_CHARTS: charts/${{ matrix.chart }}
         run: |
           [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           if ! [[ -f "charts/$CHART/values.yaml" ]]; then
@@ -61,9 +76,6 @@ jobs:
           else
             ct lint --check-version-increment=false
           fi
-        env:
-          CT_CHART_REPOS: ${{ steps.helm-repos.outputs.repos }}
-          CT_CHARTS: charts/${{ matrix.chart }}
 
       - run: ./.github/scripts/templateHelmChartRecursivelyToFolder.sh "charts/$CHART" /tmp/templated
         id: templateChart

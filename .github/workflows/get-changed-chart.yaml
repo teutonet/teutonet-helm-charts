@@ -16,7 +16,7 @@ on:
 
 jobs:
   getChangedCharts:
-    uses: ./.github/workflows/get-changed-charts.yaml
+    uses: ./.github/workflows/get-changed-charts-pr.yaml
     permissions:
       pull-requests: read
     with:
