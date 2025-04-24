@@ -2,10 +2,10 @@ global:
   provider:
     image:
       registry: public.ecr.aws
-      repository: w5n9a2g2/anynines/provider-anynines
-      tag: v1.2.0
+      repository: w5n9a2g2/klutch/provider-anynines
+      tag: v1.3.2
   configuration:
     image:
       registry: public.ecr.aws
       repository: w5n9a2g2/anynines/dataservices
-      tag: v1.2.0
+      tag: v1.4.1
