@@ -9,3 +9,14 @@ global:
       registry: public.ecr.aws
       repository: w5n9a2g2/anynines/dataservices
       tag: v1.4.1
+  function:
+    function-patch-and-transform:
+      image:
+        registry: xpkg.upbound.io
+        repository: crossplane-contrib/function-patch-and-transform
+        tag: v0.8.2
+    function-go-templating:
+      image:
+        registry: xpkg.upbound.io
+        repository: crossplane-contrib/function-go-templating
+        tag: v0.9.2
