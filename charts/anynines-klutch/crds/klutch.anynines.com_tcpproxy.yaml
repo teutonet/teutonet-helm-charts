@@ -1,0 +1,63 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: tcpproxies.klutch.anynines.com
+spec:
+  group: klutch.anynines.com
+  names:
+    kind: TCPProxy
+    listKind: TCPProxyList
+    plural: tcpproxies
+    singular: tcpproxy
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      schema:
+        openAPIV3Schema:
+          description: TCPProxy is the Schema for the tcpproxies API
+          properties:
+            apiVersion:
+              description: |-
+                APIVersion defines the versioned schema of this representation of an object.
+                Servers should convert recognized schemas to the latest internal value, and
+                may reject unrecognized values.
+                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+              type: string
+            kind:
+              description: |-
+                Kind is a string value representing the REST resource this object represents.
+                Servers may infer this from the endpoint the client submits requests to.
+                Cannot be updated.
+                In CamelCase.
+                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: TCPProxySpec defines the desired state of TCPProxy
+              properties:
+                host:
+                  description: Host specifies the host the proxy should use.
+                  type: string
+                port:
+                  description: The port of the proxied service
+                  type: integer
+              required:
+                - host
+                - port
+              type: object
+            status:
+              description: TCPProxyStatus defines the observed state of TCPProxy
+              properties:
+                host:
+                  description: Host of the proxy for the service.
+                  type: string
+                port:
+                  description: Port of the proxy for the service.
+                  type: integer
+              type: object
+          type: object
+      served: true
+      storage: true

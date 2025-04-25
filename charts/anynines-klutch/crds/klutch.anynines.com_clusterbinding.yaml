@@ -160,4 +160,3 @@ spec:
               rule: self.metadata.name == "cluster"
       served: true
       storage: true
-      subresources:

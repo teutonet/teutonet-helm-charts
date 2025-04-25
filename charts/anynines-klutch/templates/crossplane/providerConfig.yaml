@@ -26,12 +26,12 @@ spec:
     source: Secret
     username:
       secretRef:
-        namespace: crossplane-system
+        namespace: {{ $.Release.Namespace }}
         name: {{ $resourceName }}
         key: username
     password:
       secretRef:
-        namespace: crossplane-system
+        namespace: {{ $.Release.Namespace }}
         name: {{ $resourceName }}
         key: password
   {{- if $.Values.backupManager -}}
@@ -64,12 +64,12 @@ spec:
     source: Secret
     username:
       secretRef:
-        namespace: crossplane-system
+        namespace: {{ $.Release.Namespace }}
         name: {{ $backupManagerResourceName }}
         key: username
     password:
       secretRef:
-        namespace: crossplane-system
+        namespace: {{ $.Release.Namespace }}
         name: {{ $backupManagerResourceName }}
         key: password
   {{- end }}

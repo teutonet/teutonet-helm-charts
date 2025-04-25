@@ -683,4 +683,3 @@ spec:
               rule: self.metadata.name == self.spec.names.plural+"."+self.spec.group
       served: true
       storage: true
-      subresources:
