@@ -28,10 +28,11 @@ mirror.gcr.io:
   aquasec: ALL_IMAGES
 ghcr.io:
   aquasecurity: ALL_IMAGES
-  kyverno: ALL_IMAGES
   teutonet: ALL_IMAGES
   jimmidyson:
     configmap-reload: ALL_TAGS
+reg.kyverno.io:
+  kyverno: ALL_IMAGES
 quay.io:
   cilium: ALL_IMAGES
   jetstack: ALL_IMAGES
