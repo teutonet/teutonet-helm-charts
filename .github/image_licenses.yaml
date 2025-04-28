@@ -95,24 +95,9 @@ licenses:
   ghcr.io/jimmidyson/configmap-reload:
     license: Apache-2.0
     licenseLink: https://github.com/jimmidyson/configmap-reload/pkgs/container/configmap-reload
-  ghcr.io/kyverno/background-controller:
-    license: Apache-2.0
-    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/background-controller
-  ghcr.io/kyverno/cleanup-controller:
-    license: Apache-2.0
-    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/cleanup-controller
-  ghcr.io/kyverno/kyverno:
-    license: Apache-2.0
-    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/kyverno
   ghcr.io/kyverno/kyverno-cli:
     license: Apache-2.0
     licenseLink: https://github.com/kyverno/kyverno/pkgs/container/kyverno-cli
-  ghcr.io/kyverno/kyvernopre:
-    license: Apache-2.0
-    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/kyvernopre
-  ghcr.io/kyverno/reports-controller:
-    license: Apache-2.0
-    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/reports-controller
   ghcr.io/teutonet/oci-images/ckan:
     license: MIT
     licenseLink: https://github.com/teutonet/oci-images/blob/main/LICENSE
@@ -185,6 +170,21 @@ licenses:
   quay.io/prometheus/prometheus:
     license: Apache-2.0
     licenseLink: https://github.com/prometheus/prometheus/blob/main/LICENSE
+  reg.kyverno.io/kyverno/background-controller:
+    license: Apache-2.0
+    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/background-controller
+  reg.kyverno.io/kyverno/cleanup-controller:
+    license: Apache-2.0
+    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/cleanup-controller
+  reg.kyverno.io/kyverno/kyverno:
+    license: Apache-2.0
+    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/kyverno
+  reg.kyverno.io/kyverno/kyvernopre:
+    license: Apache-2.0
+    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/kyvernopre
+  reg.kyverno.io/kyverno/reports-controller:
+    license: Apache-2.0
+    licenseLink: https://github.com/kyverno/kyverno/pkgs/container/reports-controller
   registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker:
     license: Apache-2.0
     licenseLink: https://gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/-/blob/main/gradlew?ref_type=heads

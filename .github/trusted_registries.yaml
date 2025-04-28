@@ -29,6 +29,8 @@ mirror.gcr.io:
 ghcr.io:
   aquasecurity: ALL_IMAGES
   teutonet: ALL_IMAGES
+  kyverno:
+    kyverno-cli: ALL_TAGS
   jimmidyson:
     configmap-reload: ALL_TAGS
 reg.kyverno.io:
