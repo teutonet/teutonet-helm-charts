@@ -100,47 +100,50 @@ global:
     prometheus:
       url: https://prometheus-community.github.io/helm-charts
       charts:
-        kube-prometheus-stack: 65.x
+        kube-prometheus-stack: 65.8.1
       type: helm
       condition: "{{ .Values.monitoring.prometheus.enabled }}"
       interval: 5m
     grafana:
       url: https://grafana.github.io/helm-charts
       charts:
-        loki: 6.x.x
-        alloy: 0.x.x
+        loki: 6.29.0
+        alloy: 0.12.6
       condition: "{{ and .Values.monitoring.prometheus.enabled (or .Values.monitoring.loki.enabled .Values.monitoring.tracing.enabled) }}"
     bitnami:
       url: oci://docker.io/bitnamicharts
       charts:
-        oauth2-proxy: 6.x
-        metrics-server: 7.x
-        external-dns: 8.x
-        grafana-tempo: 3.x
+        oauth2-proxy: 6.2.11
+        metrics-server: 7.4.2
+        external-dns: 8.8.0
+        grafana-tempo: 3.8.8
     descheduler:
       url: https://kubernetes-sigs.github.io/descheduler
       charts:
-        descheduler: 0.31.x
+        descheduler_27: 0.29.0
+        descheduler_28: 0.30.2
+        descheduler_29: 0.31.2
+        descheduler: 0.32.2
       condition: "{{ .Values.descheduler.enabled }}"
     jetstack:
       url: https://charts.jetstack.io
       charts:
-        cert-manager: 1.x.x
+        cert-manager: 1.17.2
     nginx:
       url: https://kubernetes.github.io/ingress-nginx
       charts:
-        ingress-nginx: 4.x.x
-      condition: "{{ .Values.ingress.enabled }}"
+        ingress-nginx: 4.12.1
+      condition: '{{ .Values.ingress.enabled }}'
     kyverno:
       url: https://kyverno.github.io/kyverno
       charts:
-        kyverno: 3.x.x
-        kyverno-policies: 3.x.x
+        kyverno: 3.4.0
+        kyverno-policies: 3.4.0
       condition: "{{ .Values.kyverno.enabled }}"
     tetragon:
       url: https://helm.cilium.io
       charts:
-        tetragon: 1.x.x
+        tetragon: 1.4.0
       condition: "{{ .Values.tetragon.enabled }}"
     cetic:
       url: https://cetic.github.io/helm-charts
@@ -156,23 +159,18 @@ global:
     trivy:
       url: https://aquasecurity.github.io/helm-charts
       charts:
-        trivy-operator: 0.x.x
+        trivy-operator: 0.27.0
       condition: "{{ .Values.monitoring.securityScanning.enabled }}"
     emberstack:
       url: https://emberstack.github.io/helm-charts
       charts:
-        reflector: 7.x
+        reflector: 7.1.288
       condition: '{{ include "base-cluster.reflector.enabled" (dict "context" .) }}'
     vmware:
       url: https://vmware-tanzu.github.io/helm-charts
       charts:
         velero: 7.1.5
       condition: "{{ not (empty .Values.backup.backupStorageLocations) }}"
-    open-telemetry:
-      url: https://open-telemetry.github.io/opentelemetry-helm-charts
-      charts:
-        opentelemetry-collector: 0.x.x
-      condition: "{{ and .Values.monitoring.tracing.enabled .Values.monitoring.prometheus.enabled }}"
     kube-janitor:
       url: https://codeberg.org/hjacobs/kube-janitor
       charts:
