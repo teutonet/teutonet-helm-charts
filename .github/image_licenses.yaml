@@ -50,6 +50,9 @@ licenses:
   docker.io/fluxcd/flux-cli:
     license: Apache-2.0
     licenseLink: https://github.com/fluxcd/flux2/blob/main/LICENSE
+  docker.io/grafana/alloy:
+    license: Apache-2.0
+    licenseLink: https://github.com/grafana/alloy/blob/main/LICENSE
   docker.io/grafana/grafana:
     license: AGPL-3.0-only
     licenseLink: https://github.com/grafana/grafana/blob/main/LICENSING.md
@@ -173,6 +176,9 @@ licenses:
   quay.io/kiwigrid/k8s-sidecar:
     license: MIT
     licenseLink: https://github.com/kiwigrid/k8s-sidecar/blob/master/LICENSE
+  quay.io/prometheus-operator/prometheus-config-reloader:
+    license: Apache-2.0
+    licenseLink: https://github.com/prometheus-operator/prometheus-operator/blob/main/LICENSE
   quay.io/prometheus-operator/prometheus-operator:
     license: Apache-2.0
     licenseLink: https://github.com/prometheus-operator/prometheus-operator/blob/main/LICENSE
