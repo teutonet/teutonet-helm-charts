@@ -18,7 +18,7 @@ jobs:
       checks: read
     steps:
       - env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
           CHANGE_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
           IGNORED_JOBS: generateDiffCommentBody,postDiffComment
           CURRENT_JOB: ${{ github.job }}
