@@ -22,6 +22,8 @@ spec:
       imageRegistry: {{ $.Values.global.imageRegistry }}
     {{- end }}
     ingester: {{- include "common.resourcesWithPreset" .Values.monitoring.tracing.ingester | nindent 6 }}
+      persistence:
+        size: {{ .Values.monitoring.tracing.ingester.persistence.size }}
       networkPolicy:
         allowExternalEgress: false
     compactor:
