@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.2.1...t8s-cluster-v9.3.0) (2025-05-05)
+
+
+### Features
+
+* **t8s-cluster:** enable audit logging ([#1440](https://github.com/teutonet/teutonet-helm-charts/issues/1440)) ([dcb28ca](https://github.com/teutonet/teutonet-helm-charts/commit/dcb28ca09156ad20f1f19fdad8a370aab02861db))
+
 ## [9.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.2.0...t8s-cluster-v9.2.1) (2025-03-06)
 
 
