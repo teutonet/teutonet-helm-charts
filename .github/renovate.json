@@ -16,8 +16,8 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/)values\\.yaml$"
+      "managerFilePatterns": [
+        "/(^|/)values\\.yaml$/"
       ],
       "matchStrings": [
         " {4}\\S+:\\n {6}url: (?<registryUrl>https://\\S+)\\n {6}charts:(?:\\s+\\S+: [0-9.x]+\\s)+",
@@ -29,8 +29,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/)values\\.yaml$"
+      "managerFilePatterns": [
+        "/(^|/)values\\.yaml$/"
       ],
       "matchStrings": [
         " {4}\\S+:\\n {6}url: oci://(?<ociUrl>\\S+)\\n {6}charts:(?:\\s+\\S+: [0-9.x]+\\s)+",
