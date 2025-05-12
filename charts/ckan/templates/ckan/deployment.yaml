@@ -84,6 +84,7 @@ spec:
               value: {{ .Values.ckan.locales.default | quote }}
             - name: CKAN__LOCALES_OFFERED
               value: {{ .Values.ckan.locales.offered | quote }}
+            {{- if .Values.postgresql.enabled }}
             - name: POSTGRES_USER
               value: postgres
             - name: POSTGRES_PASSWORD
@@ -131,6 +132,7 @@ spec:
               value: "postgresql://$(CKAN_DB_USER):$(CKAN_DB_PASSWORD)@{{ printf "%s-%s" (include "ckan.postgresql.fullname" . ) "primary" }}/$(DATASTORE_DB)"
             - name: CKAN_DATASTORE_READ_URL
               value: "postgresql://$(DATASTORE_READONLY_USER):$(DATASTORE_READONLY_PASSWORD)@{{ printf "%s-%s" (include "ckan.postgresql.fullname" . ) "read" }}/$(DATASTORE_DB)"
+            {{- end }}
             - name: CKAN_SOLR_URL
               value: "http://{{ printf "%s-%s" (include "ckan.solr.fullname" . ) "headless" }}:{{ include "ckan.solr.service.port" $ }}/solr/ckan"
             {{- if .Values.solr.auth.enabled }}
