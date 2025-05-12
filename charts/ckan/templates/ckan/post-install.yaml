@@ -189,11 +189,11 @@ spec:
             - "-c"
             - "psql $PSQL_CONNECTION_STRING -f /script/10_set_permissions.sh"
           env:
-            - name: PSQL_CONNECTION_STRING
-              value: "postgresql://$(CKAN_DB_USER):$(CKAN_DB_PASSWORD)@${POSTGRES_HOST}/$(CKAN_DB)"
             {{- if .Values.ckan.postInstall.postgresInit.extraEnvVars }}
               {{- include "common.tplvalues.render" (dict "value" .Values.ckan.postInstall.postgresInit.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
+            - name: PSQL_CONNECTION_STRING
+              value: "postgresql://$(CKAN_DB_USER):$(CKAN_DB_PASSWORD)@${POSTGRES_HOST}/$(CKAN_DB)"
           volumeMounts:
             - mountPath: /script
               readOnly: true
