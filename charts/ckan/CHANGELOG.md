@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.7](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.6...ckan-v1.2.7) (2025-05-12)
+
+
+### Miscellaneous Chores
+
+* **ckan:** change env order ([#1455](https://github.com/teutonet/teutonet-helm-charts/issues/1455)) ([135ef05](https://github.com/teutonet/teutonet-helm-charts/commit/135ef05164525f5cb97724dd0943297ecee4a881))
+
 ## [1.2.6](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.5...ckan-v1.2.6) (2025-05-12)
 
 
