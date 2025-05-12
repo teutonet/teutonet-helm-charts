@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # ckan
 
-![Version: 1.2.5](https://img.shields.io/badge/Version-1.2.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.11.0](https://img.shields.io/badge/AppVersion-2.11.0-informational?style=flat-square)
+![Version: 1.2.6](https://img.shields.io/badge/Version-1.2.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.11.0](https://img.shields.io/badge/AppVersion-2.11.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -112,6 +112,7 @@ nexus.teuto.net
 
 | Property                                          | Pattern | Type            | Deprecated | Definition       | Title/Description                                                                                                                                                                                                                |
 | ------------------------------------------------- | ------- | --------------- | ---------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [postInstall](#ckan_postInstall )               | No      | object          | No         | -                | -                                                                                                                                                                                                                                |
 | - [locales](#ckan_locales )                       | No      | object          | No         | -                | -                                                                                                                                                                                                                                |
 | - [extraEnvVars](#ckan_extraEnvVars )             | No      | array or string | No         | -                | Array with extra environment variables to add to CKAN                                                                                                                                                                            |
 | - [extraVolumeMounts](#ckan_extraVolumeMounts )   | No      | array or string | No         | -                | Array with extra volume mounts variables to add to CKAN                                                                                                                                                                          |
@@ -131,7 +132,62 @@ nexus.teuto.net
 | - [resources](#ckan_resources )                   | No      | object          | No         | -                | -                                                                                                                                                                                                                                |
 | - [readiness\|liveness](#ckan_pattern1 )          | Yes     | object          | No         | -                | -                                                                                                                                                                                                                                |
 
-### <a name="ckan_locales"></a>2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > locales`
+### <a name="ckan_postInstall"></a>2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > postInstall`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                          | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [postgresInit](#ckan_postInstall_postgresInit ) | No      | object | No         | -          | -                 |
+
+#### <a name="ckan_postInstall_postgresInit"></a>2.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > postInstall > postgresInit`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                       | Pattern | Type            | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------- | ------- | --------------- | ---------- | ---------- | ----------------- |
+| - [enabled](#ckan_postInstall_postgresInit_enabled )           | No      | boolean         | No         | -          | -                 |
+| - [extraEnvVars](#ckan_postInstall_postgresInit_extraEnvVars ) | No      | array or string | No         | -          | -                 |
+
+##### <a name="ckan_postInstall_postgresInit_enabled"></a>2.1.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > postInstall > postgresInit > enabled`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+##### <a name="ckan_postInstall_postgresInit_extraEnvVars"></a>2.1.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > postInstall > postgresInit > extraEnvVars`
+
+|             |                   |
+| ----------- | ----------------- |
+| **Type**    | `array or string` |
+| **Default** | `[]`              |
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                         | Description |
+| ----------------------------------------------------------------------- | ----------- |
+| [extraEnvVars items](#ckan_postInstall_postgresInit_extraEnvVars_items) | -           |
+
+###### <a name="ckan_postInstall_postgresInit_extraEnvVars_items"></a>2.1.1.2.1. ckan configuration > ckan > postInstall > postgresInit > extraEnvVars > extraEnvVars items
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+### <a name="ckan_locales"></a>2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > locales`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -143,19 +199,19 @@ nexus.teuto.net
 | - [default](#ckan_locales_default ) | No      | string | No         | -          | -                 |
 | - [offered](#ckan_locales_offered ) | No      | string | No         | -          | -                 |
 
-#### <a name="ckan_locales_default"></a>2.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > locales > default`
+#### <a name="ckan_locales_default"></a>2.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > locales > default`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="ckan_locales_offered"></a>2.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > locales > offered`
+#### <a name="ckan_locales_offered"></a>2.2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > locales > offered`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="ckan_extraEnvVars"></a>2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > extraEnvVars`
+### <a name="ckan_extraEnvVars"></a>2.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > extraEnvVars`
 
 |             |                   |
 | ----------- | ----------------- |
@@ -176,14 +232,14 @@ nexus.teuto.net
 | ---------------------------------------------- | ----------- |
 | [extraEnvVars items](#ckan_extraEnvVars_items) | -           |
 
-#### <a name="ckan_extraEnvVars_items"></a>2.2.1. ckan configuration > ckan > extraEnvVars > extraEnvVars items
+#### <a name="ckan_extraEnvVars_items"></a>2.3.1. ckan configuration > ckan > extraEnvVars > extraEnvVars items
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-### <a name="ckan_extraVolumeMounts"></a>2.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > extraVolumeMounts`
+### <a name="ckan_extraVolumeMounts"></a>2.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > extraVolumeMounts`
 
 |             |                   |
 | ----------- | ----------------- |
@@ -204,14 +260,14 @@ nexus.teuto.net
 | -------------------------------------------------------- | ----------- |
 | [extraVolumeMounts items](#ckan_extraVolumeMounts_items) | -           |
 
-#### <a name="ckan_extraVolumeMounts_items"></a>2.3.1. ckan configuration > ckan > extraVolumeMounts > extraVolumeMounts items
+#### <a name="ckan_extraVolumeMounts_items"></a>2.4.1. ckan configuration > ckan > extraVolumeMounts > extraVolumeMounts items
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-### <a name="ckan_extraVolumes"></a>2.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > extraVolumes`
+### <a name="ckan_extraVolumes"></a>2.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > extraVolumes`
 
 |             |                   |
 | ----------- | ----------------- |
@@ -232,14 +288,14 @@ nexus.teuto.net
 | ---------------------------------------------- | ----------- |
 | [extraVolumes items](#ckan_extraVolumes_items) | -           |
 
-#### <a name="ckan_extraVolumes_items"></a>2.4.1. ckan configuration > ckan > extraVolumes > extraVolumes items
+#### <a name="ckan_extraVolumes_items"></a>2.5.1. ckan configuration > ckan > extraVolumes > extraVolumes items
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-### <a name="ckan_siteId"></a>2.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > siteId`
+### <a name="ckan_siteId"></a>2.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > siteId`
 
 |          |          |
 | -------- | -------- |
@@ -247,7 +303,7 @@ nexus.teuto.net
 
 **Description:** The search index is linked to the value of the ckan.site_id, so if you have more than one CKAN instance using the same solr_url, they will each have a separate search index as long as their ckan.site_id values are different.
 
-### <a name="ckan_siteTitle"></a>2.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > siteTitle`
+### <a name="ckan_siteTitle"></a>2.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > siteTitle`
 
 |          |          |
 | -------- | -------- |
@@ -255,7 +311,7 @@ nexus.teuto.net
 
 **Description:** This sets the name of the site, as displayed in the CKAN web interface.
 
-### <a name="ckan_plugins"></a>2.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > plugins`
+### <a name="ckan_plugins"></a>2.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > plugins`
 
 |          |         |
 | -------- | ------- |
@@ -275,14 +331,14 @@ nexus.teuto.net
 | ------------------------------------ | ----------- |
 | [plugins items](#ckan_plugins_items) | -           |
 
-#### <a name="ckan_plugins_items"></a>2.7.1. ckan configuration > ckan > plugins > plugins items
+#### <a name="ckan_plugins_items"></a>2.8.1. ckan configuration > ckan > plugins > plugins items
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-### <a name="ckan_defaultViews"></a>2.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > defaultViews`
+### <a name="ckan_defaultViews"></a>2.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > defaultViews`
 
 |          |         |
 | -------- | ------- |
@@ -302,14 +358,14 @@ nexus.teuto.net
 | ---------------------------------------------- | ----------- |
 | [defaultViews items](#ckan_defaultViews_items) | -           |
 
-#### <a name="ckan_defaultViews_items"></a>2.8.1. ckan configuration > ckan > defaultViews > defaultViews items
+#### <a name="ckan_defaultViews_items"></a>2.9.1. ckan configuration > ckan > defaultViews > defaultViews items
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-### <a name="ckan_datapusher"></a>2.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > datapusher`
+### <a name="ckan_datapusher"></a>2.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > datapusher`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -320,7 +376,7 @@ nexus.teuto.net
 | -------------------------------------- | ------- | ----- | ---------- | ---------- | --------------------------------------- |
 | - [formats](#ckan_datapusher_formats ) | No      | array | No         | -          | The enabled formats for the datapusher. |
 
-#### <a name="ckan_datapusher_formats"></a>2.9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > datapusher > formats`
+#### <a name="ckan_datapusher_formats"></a>2.10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > datapusher > formats`
 
 |          |         |
 | -------- | ------- |
@@ -340,14 +396,14 @@ nexus.teuto.net
 | ----------------------------------------------- | ----------- |
 | [formats items](#ckan_datapusher_formats_items) | -           |
 
-##### <a name="ckan_datapusher_formats_items"></a>2.9.1.1. ckan configuration > ckan > datapusher > formats > formats items
+##### <a name="ckan_datapusher_formats_items"></a>2.10.1.1. ckan configuration > ckan > datapusher > formats > formats items
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-### <a name="ckan_image"></a>2.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > image`
+### <a name="ckan_image"></a>2.11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > image`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -364,7 +420,7 @@ nexus.teuto.net
 | - [digest](#ckan_image_digest )           | No      | string          | No         | -                      | -                              |
 | - [pullSecrets](#ckan_image_pullSecrets ) | No      | array of string | No         | In #/$defs/pullSecrets | -                              |
 
-#### <a name="ckan_image_registry"></a>2.10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > image > registry`
+#### <a name="ckan_image_registry"></a>2.11.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > image > registry`
 
 |          |          |
 | -------- | -------- |
@@ -378,7 +434,7 @@ nexus.teuto.net
 docker.io
 ```
 
-#### <a name="ckan_image_pullPolicy"></a>2.10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > image > pullPolicy`
+#### <a name="ckan_image_pullPolicy"></a>2.11.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > image > pullPolicy`
 
 |          |          |
 | -------- | -------- |
@@ -390,7 +446,7 @@ docker.io
 Always
 ```
 
-#### <a name="ckan_image_repository"></a>2.10.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > image > repository`
+#### <a name="ckan_image_repository"></a>2.11.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > image > repository`
 
 |          |          |
 | -------- | -------- |
@@ -404,19 +460,19 @@ Always
 bitnami/kubectl
 ```
 
-#### <a name="ckan_image_tag"></a>2.10.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > image > tag`
+#### <a name="ckan_image_tag"></a>2.11.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > image > tag`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="ckan_image_digest"></a>2.10.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > image > digest`
+#### <a name="ckan_image_digest"></a>2.11.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > image > digest`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="ckan_image_pullSecrets"></a>2.10.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > image > pullSecrets`
+#### <a name="ckan_image_pullSecrets"></a>2.11.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > image > pullSecrets`
 
 |                |                     |
 | -------------- | ------------------- |
@@ -435,13 +491,13 @@ bitnami/kubectl
 | -------------------------------------------------- | ----------- |
 | [pullSecrets items](#ckan_image_pullSecrets_items) | -           |
 
-##### <a name="ckan_image_pullSecrets_items"></a>2.10.6.1. ckan configuration > ckan > image > pullSecrets > pullSecrets items
+##### <a name="ckan_image_pullSecrets_items"></a>2.11.6.1. ckan configuration > ckan > image > pullSecrets > pullSecrets items
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="ckan_ingress"></a>2.11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress`
+### <a name="ckan_ingress"></a>2.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -457,32 +513,32 @@ bitnami/kubectl
 | - [tls](#ckan_ingress_tls )                           | No      | object  | No         | -          | -                 |
 | - [existingSecret](#ckan_ingress_existingSecret )     | No      | string  | No         | -          | -                 |
 
-#### <a name="ckan_ingress_ingressClassName"></a>2.11.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress > ingressClassName`
+#### <a name="ckan_ingress_ingressClassName"></a>2.12.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress > ingressClassName`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="ckan_ingress_annotations"></a>2.11.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress > annotations`
+#### <a name="ckan_ingress_annotations"></a>2.12.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress > annotations`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-#### <a name="ckan_ingress_hostname"></a>2.11.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress > hostname`
+#### <a name="ckan_ingress_hostname"></a>2.12.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress > hostname`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="ckan_ingress_selfSigned"></a>2.11.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress > selfSigned`
+#### <a name="ckan_ingress_selfSigned"></a>2.12.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress > selfSigned`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-#### <a name="ckan_ingress_tls"></a>2.11.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress > tls`
+#### <a name="ckan_ingress_tls"></a>2.12.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress > tls`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -493,19 +549,19 @@ bitnami/kubectl
 | ----------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [existingSecret](#ckan_ingress_tls_existingSecret ) | No      | string | No         | -          | -                 |
 
-##### <a name="ckan_ingress_tls_existingSecret"></a>2.11.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress > tls > existingSecret`
+##### <a name="ckan_ingress_tls_existingSecret"></a>2.12.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress > tls > existingSecret`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="ckan_ingress_existingSecret"></a>2.11.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress > existingSecret`
+#### <a name="ckan_ingress_existingSecret"></a>2.12.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > ingress > existingSecret`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="ckan_persistence"></a>2.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > persistence`
+### <a name="ckan_persistence"></a>2.13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > persistence`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -518,7 +574,7 @@ bitnami/kubectl
 | - [storageClass](#ckan_persistence_storageClass ) | No      | string           | No         | Same as [storageClass](#global_storageClass ) | The storageClass to use for persistence, otherwise use the cluster default (e.g. teutostack-ssd) |
 | - [size](#ckan_persistence_size )                 | No      | object           | No         | In #/$defs/quantity                           | -                                                                                                |
 
-#### <a name="ckan_persistence_accessMode"></a>2.12.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > persistence > accessMode`
+#### <a name="ckan_persistence_accessMode"></a>2.13.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > persistence > accessMode`
 
 |          |                    |
 | -------- | ------------------ |
@@ -530,7 +586,7 @@ Must be one of:
 * "ReadWriteMany"
 * "ReadWriteOncePod"
 
-#### <a name="ckan_persistence_storageClass"></a>2.12.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > persistence > storageClass`
+#### <a name="ckan_persistence_storageClass"></a>2.13.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > persistence > storageClass`
 
 |                        |                                      |
 | ---------------------- | ------------------------------------ |
@@ -539,7 +595,7 @@ Must be one of:
 
 **Description:** The storageClass to use for persistence, otherwise use the cluster default (e.g. teutostack-ssd)
 
-#### <a name="ckan_persistence_size"></a>2.12.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > persistence > size`
+#### <a name="ckan_persistence_size"></a>2.13.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > persistence > size`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -552,19 +608,19 @@ Must be one of:
 | [item 0](#ckan_persistence_size_oneOf_i0) |
 | [item 1](#ckan_persistence_size_oneOf_i1) |
 
-##### <a name="ckan_persistence_size_oneOf_i0"></a>2.12.3.1. Property `ckan configuration > ckan > persistence > size > oneOf > item 0`
+##### <a name="ckan_persistence_size_oneOf_i0"></a>2.13.3.1. Property `ckan configuration > ckan > persistence > size > oneOf > item 0`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="ckan_persistence_size_oneOf_i1"></a>2.12.3.2. Property `ckan configuration > ckan > persistence > size > oneOf > item 1`
+##### <a name="ckan_persistence_size_oneOf_i1"></a>2.13.3.2. Property `ckan configuration > ckan > persistence > size > oneOf > item 1`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `number` |
 
-### <a name="ckan_sysadmin"></a>2.13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > sysadmin`
+### <a name="ckan_sysadmin"></a>2.14. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > sysadmin`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -577,19 +633,19 @@ Must be one of:
 | - [password](#ckan_sysadmin_password ) | No      | string | No         | -                | -                 |
 | - [email](#ckan_sysadmin_email )       | No      | object | No         | In #/$defs/email | -                 |
 
-#### <a name="ckan_sysadmin_name"></a>2.13.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > sysadmin > name`
+#### <a name="ckan_sysadmin_name"></a>2.14.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > sysadmin > name`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="ckan_sysadmin_password"></a>2.13.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > sysadmin > password`
+#### <a name="ckan_sysadmin_password"></a>2.14.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > sysadmin > password`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="ckan_sysadmin_email"></a>2.13.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > sysadmin > email`
+#### <a name="ckan_sysadmin_email"></a>2.14.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > sysadmin > email`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -601,7 +657,7 @@ Must be one of:
 | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Must match regular expression** | ```(?:[a-z0-9!#$%&'*+/=?^_`{\|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{\|}~-]+)*\|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]\|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\|\[(?:(2(5[0-5]\|[0-4][0-9])\|1[0-9][0-9]\|[1-9]?[0-9])\.){3}(?:(2(5[0-5]\|[0-4][0-9])\|1[0-9][0-9]\|[1-9]?[0-9])\|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]\|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])``` [Test](https://regex101.com/?regex=%28%3F%3A%5Ba-z0-9%21%23%24%25%26%27%2A%2B%2F%3D%3F%5E_%60%7B%7C%7D~-%5D%2B%28%3F%3A%5C.%5Ba-z0-9%21%23%24%25%26%27%2A%2B%2F%3D%3F%5E_%60%7B%7C%7D~-%5D%2B%29%2A%7C%22%28%3F%3A%5B%5Cx01-%5Cx08%5Cx0b%5Cx0c%5Cx0e-%5Cx1f%5Cx21%5Cx23-%5Cx5b%5Cx5d-%5Cx7f%5D%7C%5C%5C%5B%5Cx01-%5Cx09%5Cx0b%5Cx0c%5Cx0e-%5Cx7f%5D%29%2A%22%29%40%28%3F%3A%28%3F%3A%5Ba-z0-9%5D%28%3F%3A%5Ba-z0-9-%5D%2A%5Ba-z0-9%5D%29%3F%5C.%29%2B%5Ba-z0-9%5D%28%3F%3A%5Ba-z0-9-%5D%2A%5Ba-z0-9%5D%29%3F%7C%5C%5B%28%3F%3A%282%285%5B0-5%5D%7C%5B0-4%5D%5B0-9%5D%29%7C1%5B0-9%5D%5B0-9%5D%7C%5B1-9%5D%3F%5B0-9%5D%29%5C.%29%7B3%7D%28%3F%3A%282%285%5B0-5%5D%7C%5B0-4%5D%5B0-9%5D%29%7C1%5B0-9%5D%5B0-9%5D%7C%5B1-9%5D%3F%5B0-9%5D%29%7C%5Ba-z0-9-%5D%2A%5Ba-z0-9%5D%3A%28%3F%3A%5B%5Cx01-%5Cx08%5Cx0b%5Cx0c%5Cx0e-%5Cx1f%5Cx21-%5Cx5a%5Cx53-%5Cx7f%5D%7C%5C%5C%5B%5Cx01-%5Cx09%5Cx0b%5Cx0c%5Cx0e-%5Cx7f%5D%29%2B%29%5C%5D%29) |
 
-### <a name="ckan_smtp"></a>2.14. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > smtp`
+### <a name="ckan_smtp"></a>2.15. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > smtp`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -616,25 +672,25 @@ Must be one of:
 | - [mailFrom](#ckan_smtp_mailFrom ) | No      | object  | No         | Same as [email](#ckan_sysadmin_email ) | -                 |
 | - [starttls](#ckan_smtp_starttls ) | No      | boolean | No         | -                                      | -                 |
 
-#### <a name="ckan_smtp_server"></a>2.14.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > smtp > server`
+#### <a name="ckan_smtp_server"></a>2.15.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > smtp > server`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="ckan_smtp_user"></a>2.14.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > smtp > user`
+#### <a name="ckan_smtp_user"></a>2.15.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > smtp > user`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="ckan_smtp_password"></a>2.14.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > smtp > password`
+#### <a name="ckan_smtp_password"></a>2.15.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > smtp > password`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="ckan_smtp_mailFrom"></a>2.14.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > smtp > mailFrom`
+#### <a name="ckan_smtp_mailFrom"></a>2.15.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > smtp > mailFrom`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -642,34 +698,34 @@ Must be one of:
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 | **Same definition as**    | [email](#ckan_sysadmin_email)                                               |
 
-#### <a name="ckan_smtp_starttls"></a>2.14.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > smtp > starttls`
+#### <a name="ckan_smtp_starttls"></a>2.15.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > smtp > starttls`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-### <a name="ckan_podSecurityContext"></a>2.15. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > podSecurityContext`
+### <a name="ckan_podSecurityContext"></a>2.16. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > podSecurityContext`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-### <a name="ckan_securityContext"></a>2.16. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > securityContext`
+### <a name="ckan_securityContext"></a>2.17. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > securityContext`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-### <a name="ckan_resources"></a>2.17. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > resources`
+### <a name="ckan_resources"></a>2.18. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > resources`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-### <a name="ckan_pattern1"></a>2.18. ![Optional](https://img.shields.io/badge/Optional-yellow) Pattern Property `ckan configuration > ckan > readiness\|liveness`
+### <a name="ckan_pattern1"></a>2.19. ![Optional](https://img.shields.io/badge/Optional-yellow) Pattern Property `ckan configuration > ckan > readiness\|liveness`
 > All properties whose name matches the regular expression
 ```readiness|liveness``` ([Test](https://regex101.com/?regex=readiness%7Cliveness))
 must respect the following conditions
@@ -686,25 +742,25 @@ must respect the following conditions
 | - [failureThreshold](#ckan_pattern1_failureThreshold )       | No      | integer | No         | -          | -                 |
 | - [timeoutSeconds](#ckan_pattern1_timeoutSeconds )           | No      | integer | No         | -          | -                 |
 
-#### <a name="ckan_pattern1_initialDelaySeconds"></a>2.18.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > readiness\|liveness > initialDelaySeconds`
+#### <a name="ckan_pattern1_initialDelaySeconds"></a>2.19.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > readiness\|liveness > initialDelaySeconds`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `integer` |
 
-#### <a name="ckan_pattern1_periodSeconds"></a>2.18.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > readiness\|liveness > periodSeconds`
+#### <a name="ckan_pattern1_periodSeconds"></a>2.19.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > readiness\|liveness > periodSeconds`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `integer` |
 
-#### <a name="ckan_pattern1_failureThreshold"></a>2.18.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > readiness\|liveness > failureThreshold`
+#### <a name="ckan_pattern1_failureThreshold"></a>2.19.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > readiness\|liveness > failureThreshold`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `integer` |
 
-#### <a name="ckan_pattern1_timeoutSeconds"></a>2.18.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > readiness\|liveness > timeoutSeconds`
+#### <a name="ckan_pattern1_timeoutSeconds"></a>2.19.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > ckan > readiness\|liveness > timeoutSeconds`
 
 |          |           |
 | -------- | --------- |
