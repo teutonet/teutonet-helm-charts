@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.6](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.5...ckan-v1.2.6) (2025-05-12)
+
+
+### Miscellaneous Chores
+
+* **ckan:** support external db ([#1453](https://github.com/teutonet/teutonet-helm-charts/issues/1453)) ([caa20e8](https://github.com/teutonet/teutonet-helm-charts/commit/caa20e84fbca462359598eba34c2b710cf5158f8))
+
 ## [1.2.5](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.4...ckan-v1.2.5) (2025-05-12)
 
 
