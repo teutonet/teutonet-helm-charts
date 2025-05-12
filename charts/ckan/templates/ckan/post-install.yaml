@@ -19,8 +19,9 @@ spec:
       initContainers:
         - name: wait-for-postgresql
           image: docker.io/bitnami/postgresql:17
-          command: [ 'sh', '-c', 'until pg_isready -U $CKAN_DB_USER -d $CKAN_DB -h {{ printf "%s-%s" (include "ckan.postgresql.fullname" . ) "primary" }} -p 5432; do echo waiting for database; sleep 2; done;' ]
+          command: [ 'sh', '-c', 'until pg_isready -U $CKAN_DB_USER -d $CKAN_DB -h $POSTGRES_HOST -p 5432; do echo waiting for database; sleep 2; done;' ]
           env:
+            {{- if .Values.postgresql.enabled }}
             - name: CKAN_DB_USER
               valueFrom:
                 secretKeyRef:
@@ -31,6 +32,12 @@ spec:
                 secretKeyRef:
                   name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
                   key: ckanDatabase
+            - name: POSTGRES_HOST
+              value: {{ printf "%s-%s" (include "ckan.postgresql.fullname" . ) "primary" }}
+            {{- end }}
+            {{- if .Values.ckan.extraEnvVars }}
+              {{- include "common.tplvalues.render" (dict "value" .Values.ckan.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
         - name: ckan-initiate
           image: {{ include "common.images.image" (dict "imageRoot" .Values.ckan.image "global" .Values.global) }}
           command: ["sh","-c","/srv/app/ckan-init.sh"]
@@ -50,6 +57,7 @@ spec:
                 secretKeyRef:
                   name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
                   key: sysAdminEmail
+            {{- if .Values.postgresql.enabled }}
             - name: POSTGRES_USER
               value: postgres
             - name: POSTGRES_PASSWORD
@@ -97,6 +105,10 @@ spec:
               value: "postgresql://$(CKAN_DB_USER):$(CKAN_DB_PASSWORD)@{{ printf "%s-%s" (include "ckan.postgresql.fullname" . ) "primary" }}/$(DATASTORE_DB)"
             - name: CKAN_DATASTORE_READ_URL
               value: "postgresql://$(DATASTORE_READONLY_USER):$(DATASTORE_READONLY_PASSWORD)@{{ printf "%s-%s" (include "ckan.postgresql.fullname" . ) "read" }}/$(DATASTORE_DB)"
+            {{- end }}
+            {{- if .Values.ckan.extraEnvVars }}
+              {{- include "common.tplvalues.render" (dict "value" .Values.ckan.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
             - name: CKAN_SOLR_URL
               value: "http://{{ printf "%s-%s" (include "ckan.solr.fullname" . ) "headless" }}:{{ include "ckan.solr.service.port" $ }}/solr/ckan"
             {{- if .Values.solr.auth.enabled }}
@@ -169,6 +181,24 @@ spec:
           volumeMounts:
             - mountPath: /api-tokens
               name: api-tokens-volume
+        {{- if and (not .Values.postgresql.enabled) .Values.ckan.postInstall.postgresInit.enabled }}
+        - name: postgres-init
+          image: docker.io/bitnami/postgresql:17
+          command:
+            - "/bin/sh"
+            - "-c"
+            - "psql $PSQL_CONNECTION_STRING -f /script/10_set_permissions.sh"
+          env:
+            - name: PSQL_CONNECTION_STRING
+              value: "postgresql://$(CKAN_DB_USER):$(CKAN_DB_PASSWORD)@${POSTGRES_HOST}/$(CKAN_DB)"
+            {{- if .Values.ckan.postInstall.postgresInit.extraEnvVars }}
+              {{- include "common.tplvalues.render" (dict "value" .Values.ckan.postInstall.postgresInit.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          volumeMounts:
+            - mountPath: /script
+              readOnly: true
+              name: script-volume
+        {{- end }}
       containers:
         - name: postinstall-config
           image: docker.io/busybox:1.28
@@ -180,3 +210,8 @@ spec:
             name: {{ printf "%s-%s-configmap" (include "common.names.fullname" .) "ckan" }}
         - name: api-tokens-volume
           emptyDir: {}
+        {{- if and (not .Values.postgresql.enabled) .Values.ckan.postInstall.postgresInit.enabled }}
+        - name: script-volume
+          secret:
+            secretName: {{ printf "%s-initconfig" (include "ckan.postgresql.fullname" . )}}
+        {{- end }}

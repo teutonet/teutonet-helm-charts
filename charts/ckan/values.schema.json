@@ -54,6 +54,29 @@
         }
       },
       "properties": {
+        "postInstall": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "postgresInit": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "extraEnvVars": {
+                  "type": [
+                    "array",
+                    "string"
+                  ],
+                  "default": [],
+                  "items": {}
+                }
+              }
+            }
+          }
+        },
         "locales": {
           "type": "object",
           "additionalProperties": false,
