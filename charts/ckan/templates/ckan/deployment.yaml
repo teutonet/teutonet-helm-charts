@@ -42,143 +42,70 @@ spec:
       containers:
         - name: {{ printf "%s-%s" .Chart.Name $name }}
           env:
-            - name: CKAN_SITE_ID
-              value: {{ .Values.ckan.siteId }}
-            - name: CKAN__SITE_TITLE
-              value: {{ .Values.ckan.siteTitle | quote }}
+            {{- $envMap := dict }}
+
+            {{- $_ := set $envMap "CKAN_SITE_ID" (dict "value" .Values.ckan.siteId) }}
+            {{- $_ := set $envMap "CKAN__SITE_TITLE" (dict "value" .Values.ckan.siteTitle) }}
             {{- if .Values.ckan.ingress.hostname }}
-            - name: CKAN_SITE_URL
-              value: "https://{{ .Values.ckan.ingress.hostname }}"
+              {{- $_ := set $envMap "CKAN_SITE_URL" (dict "value" (printf "https://%s" .Values.ckan.ingress.hostname)) }}
             {{- end }}
-            - name: CKAN_SYSADMIN_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
-                  key: sysAdminUsername
-            - name: CKAN_SYSADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
-                  key: sysAdminPassword
-            - name: CKAN_SYSADMIN_EMAIL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
-                  key: sysAdminEmail
+            {{- $_ := set $envMap "CKAN_SYSADMIN_NAME" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-%s-config" (include "common.names.fullname" $) $name) "key" "sysAdminUsername"))) }}
+            {{- $_ := set $envMap "CKAN_SYSADMIN_PASSWORD" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-%s-config" (include "common.names.fullname" $) $name) "key" "sysAdminPassword"))) }}
+            {{- $_ := set $envMap "CKAN_SYSADMIN_EMAIL" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-%s-config" (include "common.names.fullname" $) $name) "key" "sysAdminEmail"))) }}
             {{- if .Values.ckan.smtp }}
-            - name: CKAN_SMTP_SERVER
-              value: {{ .Values.ckan.smtp.server }}
-            - name: CKAN_SMTP_USER
-              value: {{ .Values.ckan.smtp.user }}
-            - name: CKAN_SMTP_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
-                  key: smtpPassword
-            - name: CKAN_SMTP_MAIL_FROM
-              value: {{ .Values.ckan.smtp.mailFrom }}
-            - name: CKAN_SMTP_STARTTLS
-              value: {{ .Values.ckan.smtp.starttls | quote}}
+              {{- $_ := set $envMap "CKAN_SMTP_SERVER" (dict "value" .Values.ckan.smtp.server) }}
+              {{- $_ := set $envMap "CKAN_SMTP_USER" (dict "value" .Values.ckan.smtp.user) }}
+              {{- $_ := set $envMap "CKAN_SMTP_PASSWORD" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-%s-config" (include "common.names.fullname" $) $name) "key" "smtpPassword"))) }}
+              {{- $_ := set $envMap "CKAN_SMTP_MAIL_FROM" (dict "value" .Values.ckan.smtp.mailFrom) }}
+              {{- $_ := set $envMap "CKAN_SMTP_STARTTLS" (dict "value" .Values.ckan.smtp.starttls) }}
             {{- end }}
-            - name: CKAN__LOCALE_DEFAULT
-              value: {{ .Values.ckan.locales.default | quote }}
-            - name: CKAN__LOCALES_OFFERED
-              value: {{ .Values.ckan.locales.offered | quote }}
-            - name: POSTGRES_USER
-              value: postgres
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
-                  key: postgresPassword
-            - name: POSTGRES_DB
-              value: postgres
-            - name: POSTGRES_HOST
-              value: {{ printf "%s-%s" (include "ckan.postgresql.fullname" . ) "primary" }}
-            - name: CKAN_DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
-                  key: ckanDatabaseUsername
-            - name: CKAN_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
-                  key: ckanDatabasePassword
-            - name: CKAN_DB
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
-                  key: ckanDatabase
-            - name: DATASTORE_READONLY_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
-                  key: datastoreUsername
-            - name: DATASTORE_READONLY_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
-                  key: datastorePassword
-            - name: DATASTORE_DB
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-config" (include "ckan.postgresql.fullname" . ) }}
-                  key: datastoreDatabase
-            - name: CKAN_SQLALCHEMY_URL
-              value: "postgresql://$(CKAN_DB_USER):$(CKAN_DB_PASSWORD)@{{ printf "%s-%s" (include "ckan.postgresql.fullname" . ) "primary" }}/$(CKAN_DB)"
-            - name: CKAN_DATASTORE_WRITE_URL
-              value: "postgresql://$(CKAN_DB_USER):$(CKAN_DB_PASSWORD)@{{ printf "%s-%s" (include "ckan.postgresql.fullname" . ) "primary" }}/$(DATASTORE_DB)"
-            - name: CKAN_DATASTORE_READ_URL
-              value: "postgresql://$(DATASTORE_READONLY_USER):$(DATASTORE_READONLY_PASSWORD)@{{ printf "%s-%s" (include "ckan.postgresql.fullname" . ) "read" }}/$(DATASTORE_DB)"
-            - name: CKAN_SOLR_URL
-              value: "http://{{ printf "%s-%s" (include "ckan.solr.fullname" . ) "headless" }}:{{ include "ckan.solr.service.port" $ }}/solr/ckan"
+            {{- $_ := set $envMap "CKAN__LOCALE_DEFAULT" (dict "value"  .Values.ckan.locales.default) }}
+            {{- $_ := set $envMap "CKAN__LOCALES_OFFERED" (dict "value"  .Values.ckan.locales.offered) }}
+            {{- $_ := set $envMap "POSTGRES_USER" (dict "value" "postgres") }}
+            {{- $_ := set $envMap "POSTGRES_PASSWORD" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-config" (include "ckan.postgresql.fullname" .)) "key" "postgresPassword"))) }}
+            {{- $_ := set $envMap "POSTGRES_DB" (dict "value" "postgres") }}
+            {{- $_ := set $envMap "POSTGRES_HOST" (dict "value" (printf "%s-%s" (include "ckan.postgresql.fullname" .) "primary")) }}
+            {{- $_ := set $envMap "CKAN_DB_USER" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-config" (include "ckan.postgresql.fullname" .)) "key" "ckanDatabaseUsername"))) }}
+            {{- $_ := set $envMap "CKAN_DB_PASSWORD" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-config" (include "ckan.postgresql.fullname" .)) "key" "ckanDatabasePassword"))) }}
+            {{- $_ := set $envMap "CKAN_DB" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-config" (include "ckan.postgresql.fullname" .)) "key" "ckanDatabase"))) }}
+            {{- $_ := set $envMap "DATASTORE_READONLY_USER" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-config" (include "ckan.postgresql.fullname" .)) "key" "datastoreUsername"))) }}
+            {{- $_ := set $envMap "DATASTORE_READONLY_PASSWORD" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-config" (include "ckan.postgresql.fullname" .)) "key" "datastorePassword"))) }}
+            {{- $_ := set $envMap "DATASTORE_DB" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-config" (include "ckan.postgresql.fullname" .)) "key" "datastoreDatabase"))) }}
+            {{- $_ := set $envMap "CKAN_SQLALCHEMY_URL" (dict "value" (printf "postgresql://$(CKAN_DB_USER):$(CKAN_DB_PASSWORD)@%s/$(CKAN_DB)" (printf "%s-%s" (include "ckan.postgresql.fullname" .) "primary"))) }}
+            {{- $_ := set $envMap "CKAN_DATASTORE_WRITE_URL" (dict "value" (printf "postgresql://$(CKAN_DB_USER):$(CKAN_DB_PASSWORD)@%s/$(DATASTORE_DB)" (printf "%s-%s" (include "ckan.postgresql.fullname" .) "primary"))) }}
+            {{- $_ := set $envMap "CKAN_DATASTORE_READ_URL" (dict "value" (printf "postgresql://$(DATASTORE_READONLY_USER):$(DATASTORE_READONLY_PASSWORD)@%s/$(DATASTORE_DB)" (printf "%s-%s" (include "ckan.postgresql.fullname" .) "read"))) }}
+            {{- $_ := set $envMap "CKAN_SOLR_URL" (dict "value" (printf "http://%s:%s/solr/ckan" (printf "%s-%s" (include "ckan.solr.fullname" .) "headless") (include "ckan.solr.service.port" $))) }}
             {{- if .Values.solr.auth.enabled }}
-            - name: CKAN_SOLR_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-config" (include "ckan.solr.fullname" . ) }}
-                  key: solrUsername
-            - name: CKAN_SOLR_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-config" (include "ckan.solr.fullname" . ) }}
-                  key: solrPassword
+              {{- $_ := set $envMap "CKAN_SOLR_USER" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-config" (include "ckan.solr.fullname" .)) "key" "solrUsername"))) }}
+              {{- $_ := set $envMap "CKAN_SOLR_PASSWORD" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-config" (include "ckan.solr.fullname" .)) "key" "solrPassword"))) }}
             {{- end }}
-            - name: CKAN_REDIS_URL
-              value: "redis://{{ printf "%s-%s" (include "ckan.redis.fullname" . ) "headless" }}:{{ include "ckan.redis.service.port" $}}/0"
-            - name: CKAN_DATAPUSHER_URL
-              value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "datapusher" }}:{{ include "ckan.datapusher.service.port" $ }}"
-            - name: CKAN_DATAPUSHER_FORMATS
-              value: {{ .Values.ckan.datapusher.formats | join " " | quote }}
-            - name: CKAN__DATAPUSHER__API_TOKEN
+            {{- $_ := set $envMap "CKAN_REDIS_URL" (dict "value" (printf "redis://%s:%s/0" (printf "%s-%s" (include "ckan.redis.fullname" .) "headless") (include "ckan.redis.service.port" $))) }}
+            {{- $_ := set $envMap "CKAN_DATAPUSHER_URL" (dict "value" (printf "http://%s:%s" (printf "%s-%s" (include "common.names.fullname" $) "datapusher") (include "ckan.datapusher.service.port" $))) }}
+            {{- $_ := set $envMap "CKAN_DATAPUSHER_FORMATS" (dict "value" (join " " .Values.ckan.datapusher.formats)) }}
+            {{- $_ := set $envMap "CKAN__DATAPUSHER__API_TOKEN" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-%s-config" (include "common.names.fullname" $) $name) "key" "datapusherApiKey"))) }}
+            {{- $_ := set $envMap "CKAN__DATAPUSHER__CALLBACK_URL_BASE" (dict "value" (printf "http://%s:%s/" (printf "%s-%s" (include "common.names.fullname" $) "ckan") (include "ckan.ckan.service.port" $))) }}
+            {{- $_ := set $envMap "SECRET_KEY" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-%s-config" (include "common.names.fullname" $) $name) "key" "secretKey"))) }}
+            {{- $_ := set $envMap "WTF_CSRF_SECRET_KEY" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-%s-config" (include "common.names.fullname" $) $name) "key" "wtfCsrfSecretKey"))) }}
+            {{- $_ := set $envMap "JWT_SECRET" (dict "valueFrom" (dict "secretKeyRef" (dict "name" (printf "%s-%s-config" (include "common.names.fullname" $) $name) "key" "jwtSecret"))) }}
+            {{- $_ := set $envMap "CKAN__PLUGINS" (dict "value" (join " " .Values.ckan.plugins)) }}
+            {{- $_ := set $envMap "CKAN__VIEWS__DEFAULT_VIEWS" (dict "value"  (join " " .Values.ckan.defaultViews)) }}
+
+            {{- range .Values.ckan.extraEnvVars }}
+              {{- if .value }}
+                {{- $_ := set $envMap .name (dict "value" .value) }}
+              {{- else if .valueFrom }}
+                {{- $_ := set $envMap .name (dict "valueFrom" .valueFrom) }}
+              {{- end }}
+            {{- end }}
+
+            {{- range $key, $entry := $envMap }}
+            - name: {{ $key }}
+              {{- if hasKey $entry "value" }}
+              value: {{ $entry.value | quote }}
+              {{- else if hasKey $entry "valueFrom" }}
               valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
-                  key: datapusherApiKey
-            - name: CKAN__DATAPUSHER__CALLBACK_URL_BASE
-              value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "ckan" }}:{{ include "ckan.ckan.service.port" $ }}/"
-            - name: SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
-                  key: secretKey
-            - name: WTF_CSRF_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
-                  key: wtfCsrfSecretKey
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-config" (include "common.names.fullname" $) $name }}
-                  key: jwtSecret
-            - name: CKAN__PLUGINS
-              value: {{ .Values.ckan.plugins | join " " | quote }}
-            - name: CKAN__VIEWS__DEFAULT_VIEWS
-              value: {{ .Values.ckan.defaultViews | join " " | quote }}
-            {{- if .Values.ckan.extraEnvVars }}
-              {{- include "common.tplvalues.render" (dict "value" .Values.ckan.extraEnvVars "context" $) | nindent 12 }}
+                {{- toYaml $entry.valueFrom | nindent 16 }}
+              {{- end }}
             {{- end }}
           securityContext:
           {{- toYaml .Values.ckan.securityContext | default dict | nindent 12 }}
