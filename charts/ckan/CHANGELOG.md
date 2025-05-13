@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.9](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.8...ckan-v1.2.9) (2025-05-13)
+
+
+### Miscellaneous Chores
+
+* **ckan:** remove ext postgres config ([#1459](https://github.com/teutonet/teutonet-helm-charts/issues/1459)) ([263b574](https://github.com/teutonet/teutonet-helm-charts/commit/263b574de2a2d41c0ec26061b5395e17ff36af1f))
+
 ## [1.2.8](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.7...ckan-v1.2.8) (2025-05-13)
 
 
