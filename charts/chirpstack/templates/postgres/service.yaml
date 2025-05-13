@@ -1,0 +1,12 @@
+{{- if not .Values.postgres.existingPsqlUrl -}}
+apiVersion: v1
+kind: Service
+metadata: {{- include "chirpstack.commonMetadata" (dict "context" . "component" "postgres") | nindent 2 }}
+spec:
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: postgres
+  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
+{{- end -}}
