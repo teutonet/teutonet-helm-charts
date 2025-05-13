@@ -62,24 +62,6 @@ ckan:
   extraEnvVars: []
   extraVolumeMounts: []
   extraVolumes: []
-  postInstall:
-    postgresInit:
-      enabled: false
-      extraEnvVars:
-        - name: CKAN_DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: ""
-              key: username
-        - name: CKAN_DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: ""
-              key: password
-        - name: CKAN_DB
-          value: ckan
-        - name: POSTGRES_HOST
-          value: HOST
   ingress:
     ingressClassName: ""
     annotations: {}
