@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.8](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.7...ckan-v1.2.8) (2025-05-13)
+
+
+### Miscellaneous Chores
+
+* **ckan:** change psql connection ([#1457](https://github.com/teutonet/teutonet-helm-charts/issues/1457)) ([e001dd3](https://github.com/teutonet/teutonet-helm-charts/commit/e001dd376b245bc021e5900bcacdff8e0860933f))
+
 ## [1.2.7](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.6...ckan-v1.2.7) (2025-05-12)
 
 
