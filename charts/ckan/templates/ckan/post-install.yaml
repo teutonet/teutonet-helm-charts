@@ -181,22 +181,6 @@ spec:
           volumeMounts:
             - mountPath: /api-tokens
               name: api-tokens-volume
-        {{- if and (not .Values.postgresql.enabled) .Values.ckan.postInstall.postgresInit.enabled }}
-        - name: postgres-init
-          image: docker.io/bitnami/postgresql:17
-          command:
-            - "/bin/sh"
-            - "-c"
-            - "psql -U $CKAN_DB_USER -d $CKAN_DB -h $POSTGRES_HOST -p 5432 -f /script/10_set_permissions.sh"
-          env:
-            {{- if .Values.ckan.postInstall.postgresInit.extraEnvVars }}
-              {{- include "common.tplvalues.render" (dict "value" .Values.ckan.postInstall.postgresInit.extraEnvVars "context" $) | nindent 12 }}
-            {{- end }}
-          volumeMounts:
-            - mountPath: /script
-              readOnly: true
-              name: script-volume
-        {{- end }}
       containers:
         - name: postinstall-config
           image: docker.io/busybox:1.28
@@ -208,8 +192,3 @@ spec:
             name: {{ printf "%s-%s-configmap" (include "common.names.fullname" .) "ckan" }}
         - name: api-tokens-volume
           emptyDir: {}
-        {{- if and (not .Values.postgresql.enabled) .Values.ckan.postInstall.postgresInit.enabled }}
-        - name: script-volume
-          secret:
-            secretName: {{ printf "%s-initconfig" (include "ckan.postgresql.fullname" . )}}
-        {{- end }}

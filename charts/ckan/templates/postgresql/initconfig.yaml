@@ -1,3 +1,4 @@
+{{- if .Values.postgresql.enabled }}
 {{- $name := "postgresql" -}}
 apiVersion: v1
 kind: Secret
@@ -7,7 +8,6 @@ metadata:
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: {{ $name }}
 stringData:
-  {{- if .Values.postgresql.enabled }}
   00_initdb.sh: |
     #!/bin/bash
     set -e
@@ -20,12 +20,10 @@ stringData:
       CREATE ROLE ${DATAPUSHER_USER} WITH NOSUPERUSER NOCREATEDB NOCREATEROLE LOGIN PASSWORD '${DATAPUSHER_PASSWORD}';
       CREATE DATABASE ${DATAPUSHER_DB} OWNER ${DATAPUSHER_USER} ENCODING 'utf-8';
     EOSQL
-  {{- end }}
   10_set_permissions.sh: |
     #!/bin/bash
     set -e
 
-    {{- if .Values.postgresql.enabled }}
     psql -U postgres -d $DATASTORE_DB <<EOSQL
       -- revoke permissions for the read-only user
       REVOKE CREATE ON SCHEMA public FROM PUBLIC;
@@ -47,10 +45,7 @@ stringData:
       -- grant access to new tables and views by default
       ALTER DEFAULT PRIVILEGES FOR USER ${CKANDB_USER} IN SCHEMA public
       GRANT SELECT ON TABLES TO ${DATASTORE_USER};
-      {{ else }}
-    psql -U $CKANDB_USER -d $DATASTORE_DB <<EOSQL
 
-      {{- end }}
       -- a view for listing valid table (resource id) and view names
       CREATE OR REPLACE VIEW "_table_metadata" AS
           SELECT DISTINCT
@@ -108,3 +103,4 @@ stringData:
           END;
       \$\$;
     EOSQL
+  {{- end }}
