@@ -105,7 +105,7 @@ spec:
               severity: warning
           - alert: VeleroBackupOlderThan30Hours
             annotations:
-              message: Last successful velero backup {{ $labels.schedule }} is older than 30 hours.
+              message: Last successful velero backup {{ `{{ $labels.schedule }}` }} is older than 30 hours.
             expr: (time() - velero_backup_last_successful_timestamp) / 3600 > 30
             for: 15m
             labels:
