@@ -35,7 +35,7 @@ vi cluster.yaml
 # create HelmRelease for flux to manage itself
 kubectl create namespace flux-system --dry-run=client -o yaml > flux.yaml
 flux create source helm --url https://fluxcd-community.github.io/helm-charts flux -n flux-system --export >> flux.yaml
-flux create helmrelease --export flux -n flux-system --source HelmRepository/flux.flux-system --chart flux2 --chart-version {{ $fluxMajorVersion }}.x.x >> flux.yaml
+flux create helmrelease --export --crds CreateReplace flux -n flux-system --source HelmRepository/flux.flux-system --chart flux2 --chart-version {{ $fluxMajorVersion }}.x.x >> flux.yaml
 
 # add, commit and push resources
 git add cluster.yaml flux.yaml
