@@ -202,7 +202,7 @@ solr:
     pullPolicy: IfNotPresent
     pullSecrets: []
     repository: teutonet/oci-images/solr-ckan
-    tag: 1.0.15@sha256:d31a82388ed348d944bf1c31e0415f3fe8c793b9b764404a4c11ca15681a8d60
+    tag: 1.0.25@sha256:cf36ee93a50ffeeb3dc53298ed0e7d92152896c6fcb1e1ac199363eb883dc971
     digest: ""
   extraEnvVars:
     - name: SOLR_ADMIN_USERNAME
