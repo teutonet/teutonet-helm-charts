@@ -40,9 +40,9 @@ annotations:
     - image: docker.io/bitnami/postgresql:17                                                                                       #  default/Job/ckan-ckan-post-install.yaml
     - image: docker.io/bitnami/redis:7.2.5-debian-12-r4                                                                            #  default/StatefulSet/ckan-redis-master.yaml
     - image: docker.io/bitnami/redis:7.2.5-debian-12-r4                                                                            #  default/StatefulSet/ckan-redis-replicas.yaml
-    - image: docker.io/bitnami/zookeeper:3.9.3-debian-12-r2                                                                        #  default/StatefulSet/ckan-zookeeper.yaml
+    - image: docker.io/bitnami/zookeeper:3.9.3-debian-12-r10                                                                       #  default/StatefulSet/ckan-zookeeper.yaml
     - image: docker.io/busybox:1.28                                                                                                #  default/Job/ckan-ckan-post-install.yaml
-    - image: docker.io/ckan/ckan-base-datapusher:0.0.21@sha256:90e71b5a5fd6f1de99dd2dd1cac68990a813b21a0fff10e0eaef912f4a64f872    #  default/Deployment/ckan-datapusher.yaml
-    - image: ghcr.io/teutonet/oci-images/ckan:1.0.12@sha256:3a45e6cb31c6e7c53315f63a85184893fbb82b2d2e6255eb9ff29ff103c9cb45       #  default/Deployment/ckan-ckan.yaml
-    - image: ghcr.io/teutonet/oci-images/ckan:1.0.12@sha256:3a45e6cb31c6e7c53315f63a85184893fbb82b2d2e6255eb9ff29ff103c9cb45       #  default/Job/ckan-ckan-post-install.yaml
-    - image: ghcr.io/teutonet/oci-images/solr-ckan:1.0.15@sha256:d31a82388ed348d944bf1c31e0415f3fe8c793b9b764404a4c11ca15681a8d60  #  default/StatefulSet/ckan-solr.yaml
+    - image: docker.io/ckan/ckan-base-datapusher:0.0.21@sha256:84d11924549f44bcc1419256811d156893d837f90885b24f81f1753733b9d6ef    #  default/Deployment/ckan-datapusher.yaml
+    - image: ghcr.io/teutonet/oci-images/ckan:1.0.14@sha256:a7486198683ea62f8b264775fd4162d0bdb403d9914c1dd95f9c364be097d63b       #  default/Deployment/ckan-ckan.yaml
+    - image: ghcr.io/teutonet/oci-images/ckan:1.0.14@sha256:a7486198683ea62f8b264775fd4162d0bdb403d9914c1dd95f9c364be097d63b       #  default/Job/ckan-ckan-post-install.yaml
+    - image: ghcr.io/teutonet/oci-images/solr-ckan:1.0.25@sha256:cf36ee93a50ffeeb3dc53298ed0e7d92152896c6fcb1e1ac199363eb883dc971  #  default/StatefulSet/ckan-solr.yaml
