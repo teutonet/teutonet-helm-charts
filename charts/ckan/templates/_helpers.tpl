@@ -4,7 +4,7 @@
 {{- define "ckan.datapusher.service.port" -}}
 8800
 {{- end -}}
-{{- define "ckan.redis.service.port" -}}
+{{- define "ckan.valkey.service.port" -}}
 6379
 {{- end -}}
 {{- define "ckan.postgres.service.port" -}}
@@ -22,8 +22,8 @@
 {{- include "common.names.dependency.fullname" (dict "chartName" "solr" "chartValues" .Values.solr "context" $) -}}
 {{- end -}}
 
-{{- define "ckan.redis.fullname" -}}
-{{- include "common.names.dependency.fullname" (dict "chartName" "redis" "chartValues" .Values.redis "context" $) -}}
+{{- define "ckan.valkey.fullname" -}}
+{{- include "common.names.dependency.fullname" (dict "chartName" "valkey" "chartValues" .Values.valkey "context" $) -}}
 {{- end -}}
 
 {{- define "ckan.defaultRegistry" -}}

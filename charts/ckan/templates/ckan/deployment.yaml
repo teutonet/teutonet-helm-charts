@@ -147,8 +147,13 @@ spec:
                   name: {{ printf "%s-config" (include "ckan.solr.fullname" . ) }}
                   key: solrPassword
             {{- end }}
+            - name: VALKEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s" (include "ckan.valkey.fullname" . ) }}
+                  key: valkey-password
             - name: CKAN_REDIS_URL
-              value: "redis://{{ printf "%s-%s" (include "ckan.redis.fullname" . ) "headless" }}:{{ include "ckan.redis.service.port" $}}/0"
+              value: "redis://default:$(VALKEY_PASSWORD)@{{ printf "%s-%s" (include "ckan.valkey.fullname" . ) "headless" }}:{{ include "ckan.valkey.service.port" $}}/0"
             - name: CKAN_DATAPUSHER_URL
               value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "datapusher" }}:{{ include "ckan.datapusher.service.port" $ }}"
             - name: CKAN_DATAPUSHER_FORMATS
