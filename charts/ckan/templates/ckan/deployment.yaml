@@ -153,7 +153,7 @@ spec:
                   name: {{ printf "%s" (include "ckan.valkey.fullname" . ) }}
                   key: valkey-password
             - name: CKAN_REDIS_URL
-              value: "redis://default:$(VALKEY_PASSWORD)@{{ printf "%s-%s" (include "ckan.valkey.fullname" . ) "headless" }}:{{ include "ckan.valkey.service.port" $}}/0"
+              value: "redis://default:$(VALKEY_PASSWORD)@{{ printf "%s-%s" (include "ckan.valkey.fullname" . ) "primary" }}:{{ include "ckan.valkey.service.port" $}}/0"
             - name: CKAN_DATAPUSHER_URL
               value: "http://{{ printf "%s-%s" (include "common.names.fullname" $) "datapusher" }}:{{ include "ckan.datapusher.service.port" $ }}"
             - name: CKAN_DATAPUSHER_FORMATS
