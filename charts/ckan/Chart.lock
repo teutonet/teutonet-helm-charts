@@ -5,11 +5,11 @@ dependencies:
 - name: postgresql
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 15.5.38
-- name: redis
+- name: valkey
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 19.6.4
+  version: 3.0.6
 - name: solr
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 9.5.7
-digest: sha256:05b5447693158352b53166d26aba84b0891c625f7098c5503b3935a8df562227
-generated: "2025-05-13T07:43:22.799696641Z"
+digest: sha256:6f2169a35f94b184781d7834eb1a4b9f4edf32269c39601e6ed87be3b335b3b9
+generated: "2025-05-19T10:05:15.400414024+02:00"

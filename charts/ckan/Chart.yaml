@@ -8,10 +8,10 @@ dependencies:
     name: postgresql
     repository: oci://registry-1.docker.io/bitnamicharts
     version: 15.5.38
-  - condition: redis.enabled
-    name: redis
+  - condition: valkey.enabled
+    name: valkey
     repository: oci://registry-1.docker.io/bitnamicharts
-    version: 19.6.4
+    version: 3.0.6
   - condition: solr.enabled
     name: solr
     repository: oci://registry-1.docker.io/bitnamicharts

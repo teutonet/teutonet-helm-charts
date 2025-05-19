@@ -188,10 +188,8 @@ postgresql:
           secretKeyRef:
             name: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
             key: datapusherDatabase
-redis:
+valkey:
   enabled: true
-  auth:
-    enabled: false
   replica:
     replicaCount: 1
 
