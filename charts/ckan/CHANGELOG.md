@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.1](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.3.0...ckan-v1.3.1) (2025-05-21)
+
+
+### Miscellaneous Chores
+
+* **ckan:** add missing valkey license ([#1472](https://github.com/teutonet/teutonet-helm-charts/issues/1472)) ([2edc78f](https://github.com/teutonet/teutonet-helm-charts/commit/2edc78f31317f7a35d61750cecac1d5aca7ae89a))
+* **ckan:** use primary valkey instance ([#1469](https://github.com/teutonet/teutonet-helm-charts/issues/1469)) ([64acca3](https://github.com/teutonet/teutonet-helm-charts/commit/64acca300e408279ac09963b2041d24f17181e39))
+
 ## [1.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.2.9...ckan-v1.3.0) (2025-05-19)
 
 
