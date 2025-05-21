@@ -1,7 +1,7 @@
 [modeline]: # ( vim: set ft=markdown: )
 # ckan
 
-![Version: 1.2.9](https://img.shields.io/badge/Version-1.2.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.11.0](https://img.shields.io/badge/AppVersion-2.11.0-informational?style=flat-square)
+![Version: 1.3.1](https://img.shields.io/badge/Version-1.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.11.0](https://img.shields.io/badge/AppVersion-2.11.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -29,7 +29,7 @@ A Helm chart for Kubernetes
 | - [ckan](#ckan )               | No      | object | No         | -          | -                 |
 | - [datapuscher](#datapuscher ) | No      | object | No         | -          | -                 |
 | - [postgresql](#postgresql )   | No      | object | No         | -          | -                 |
-| - [redis](#redis )             | No      | object | No         | -          | -                 |
+| - [valkey](#valkey )           | No      | object | No         | -          | -                 |
 | - [solr](#solr )               | No      | object | No         | -          | -                 |
 
 ## <a name="global"></a>1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > global`
@@ -830,18 +830,18 @@ must respect the following conditions
 | -------- | -------- |
 | **Type** | `string` |
 
-## <a name="redis"></a>5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > redis`
+## <a name="valkey"></a>5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > valkey`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-| Property                     | Pattern | Type    | Deprecated | Definition | Title/Description |
-| ---------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
-| - [enabled](#redis_enabled ) | No      | boolean | No         | -          | -                 |
+| Property                      | Pattern | Type    | Deprecated | Definition | Title/Description |
+| ----------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
+| - [enabled](#valkey_enabled ) | No      | boolean | No         | -          | -                 |
 
-### <a name="redis_enabled"></a>5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > redis > enabled`
+### <a name="valkey_enabled"></a>5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `ckan configuration > valkey > enabled`
 
 |          |           |
 | -------- | --------- |
