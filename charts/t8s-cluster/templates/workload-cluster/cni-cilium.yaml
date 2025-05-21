@@ -38,7 +38,7 @@ spec:
 
     rollOutCiliumPods: true
     encryption:
-      enabled: false
+      enabled: true
       nodeEncryption: false
     hubble:
       metrics:
