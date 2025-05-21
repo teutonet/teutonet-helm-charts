@@ -26,9 +26,9 @@ licenses:
   docker.io/bitnami/postgresql:
     license: PostgreSQL
     licenseLink: https://www.postgresql.org/about/licence/
-  docker.io/bitnami/redis:
-    license: SSPL-1.0
-    licenseLink: https://redis.io/legal/licenses/
+  docker.io/bitnami/valkey:
+    license: Apache-2.0
+    licenseLink: https://hub.docker.com/r/bitnami/valkey
   docker.io/bitnami/zookeeper:
     license: Apache-2.0
     licenseLink: https://zookeeper.apache.org/
