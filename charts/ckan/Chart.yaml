@@ -46,4 +46,3 @@ annotations:
     - image: ghcr.io/teutonet/oci-images/ckan:1.0.14@sha256:a7486198683ea62f8b264775fd4162d0bdb403d9914c1dd95f9c364be097d63b       #  default/Deployment/ckan-ckan.yaml
     - image: ghcr.io/teutonet/oci-images/ckan:1.0.14@sha256:a7486198683ea62f8b264775fd4162d0bdb403d9914c1dd95f9c364be097d63b       #  default/Job/ckan-ckan-post-install.yaml
     - image: ghcr.io/teutonet/oci-images/solr-ckan:1.0.25@sha256:cf36ee93a50ffeeb3dc53298ed0e7d92152896c6fcb1e1ac199363eb883dc971  #  default/StatefulSet/ckan-solr.yaml
-  artifacthub.io/image-licenses.docker.io/bitnami/valkey: Apache-2.0
