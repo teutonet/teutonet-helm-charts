@@ -61,10 +61,8 @@ admin:
   existingSecret: {{ include "common.secrets.name" (dict "defaultNameSuffix" "grafana" "context" $) }}
   userKey: username
   passwordKey: password
-plugins:
-  - grafana-piechart-panel
   {{- with .Values.monitoring.grafana.additionalPlugins }}
-  {{- toYaml . | nindent 2 }}
+plugins: {{- toYaml . | nindent 2 }}
   {{- end }}
 defaultDashboardsEnabled: true
   {{- if .Values.monitoring.grafana.notifiers }}
