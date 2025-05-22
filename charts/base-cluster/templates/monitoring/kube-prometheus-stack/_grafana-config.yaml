@@ -62,7 +62,6 @@ admin:
   userKey: username
   passwordKey: password
 plugins:
-  - grafana-piechart-panel
   {{- with .Values.monitoring.grafana.additionalPlugins }}
   {{- toYaml . | nindent 2 }}
   {{- end }}
