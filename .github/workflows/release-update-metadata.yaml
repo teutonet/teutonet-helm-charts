@@ -43,7 +43,7 @@ jobs:
           push: true
           add: ${{ env.CONFIG_FILE }}
   update-metadata-files:
-    if: startsWith(github.head_ref, 'release-please--branches--main--components--')
+    if: ${{ startsWith(github.head_ref, 'release-please--branches--main--components--') }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
