@@ -32,7 +32,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Conventional commit check
-        uses: cocogitto/cocogitto-action@ed62593c499c2d7697bb0177213946f1e2634119 # v3
+        uses: cocogitto/cocogitto-action@c7a74f5406bab86da17da0f0e460a69f8219a68c # v3
   validateTitle:
     if: ${{ !startsWith(github.head_ref, 'release-please--') }}
     name: Validate Title
@@ -45,7 +45,7 @@ jobs:
       PR_TITLE: ${{ github.event.pull_request.title }}
     steps:
       - name: Conventional commit check
-        uses: cocogitto/cocogitto-action@ed62593c499c2d7697bb0177213946f1e2634119 # v3
+        uses: cocogitto/cocogitto-action@c7a74f5406bab86da17da0f0e460a69f8219a68c # v3
         with:
           check: false
       - name: Verify that PR title is a conventional commit message
