@@ -99,5 +99,6 @@ spec:
     monitoring:
       serviceMonitor:
         enabled: true
-        additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
+        additionalLabels:
+          monitoring/managed-by: teutonet
 {{- end -}}
