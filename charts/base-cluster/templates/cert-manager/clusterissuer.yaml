@@ -33,7 +33,6 @@ spec:
       {{- end }}
       - http01:
           ingress:
-            class: nginx
             serviceType: ClusterIP
     privateKeySecretRef:
       name: letsencrypt-{{ .name }}-account
