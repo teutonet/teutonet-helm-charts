@@ -32,7 +32,10 @@
   {{- end -}}
   {{- $apiserverPatch := dict "spec" (dict "containers" (list (dict "name" "kube-apiserver" "resources" (dict "requests" (dict "memory" "2Gi") "limits" (dict "memory" "4Gi"))))) -}}
   {{- $files = append $files (include "t8s-cluster.patches.patchFile" (dict "values" $apiserverPatch "target" "kube-apiserver" "component" "memory") | fromYaml) -}}
-  {{- $etcdPatch := dict "metadata" (dict "annotations" (dict "k8up.io/backupcommand" "ETCDCTL_API=3 etcdctl --endpoints=<https://IP-Adresse>:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/peer.crt --key=/etc/kubernetes/pki/etcd/peer.key snapshot save </Pfad/zum/Backup-Speicherort.db>")) -}}
+  {{- $etcdBackupEndpoint := "https://127.0.0.1:2379" -}}
+  {{- $etcdBackupPath := "/var/lib/etcd/backup/etcd-snapshot.db" -}}
+  {{- $etcdPatch := dict "metadata" (dict "annotations" (dict "k8up.io/backupcommand" (printf "ETCDCTL_API=3 etcdctl --endpoints=%s --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/peer.crt --key=/etc/kubernetes/pki/etcd/peer.key snapshot save %s" $etcdBackupEndpoint $etcdBackupPath))) -}}
   {{- $files = append $files (include "t8s-cluster.patches.patchFile" (dict "values" $etcdPatch "target" "etcd" "component" "annotations")) -}}
   {{- toYaml $files -}}
 {{- end -}}
+
