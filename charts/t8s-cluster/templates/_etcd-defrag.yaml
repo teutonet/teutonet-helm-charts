@@ -32,7 +32,7 @@ spec:
                 - name: ETCDCTL_ENDPOINTS
                   value: {{ .hosted | ternary (printf "kmc-%s-etcd:2379" .Release.Name) "localhost:2379" }}
               image: {{ include "common.images.image" (dict "imageRoot" .Values.global.etcd.image "global" .Values.global) }}
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.etcd.image }}
               name: etcd-defrag
               securityContext:
                 runAsGroup: 1000
