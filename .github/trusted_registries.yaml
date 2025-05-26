@@ -48,8 +48,12 @@ registry.k8s.io:
   kube-state-metrics: ALL_IMAGES
   sig-storage:
     nfs-provisioner: ALL_TAGS
+    csi-attacher: ALL_TAGS
+    csi-node-driver-registrar: ALL_TAGS
+    csi-provisioner: ALL_TAGS
+    csi-resizer: ALL_TAGS
+    csi-snapshotter: ALL_TAGS
+    livenessprobe: ALL_TAGS
   etcd: ALL_TAGS
   provider-os: ALL_IMAGES
-k8s.gcr.io:
-  sig-storage: ALL_IMAGES
 registry-gitlab.teuto.net: ALL_IMAGES
