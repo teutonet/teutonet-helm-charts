@@ -1,12 +1,6 @@
 {{- if .Values.descheduler.enabled -}}
-{{- $kubeMinorVersion := .Capabilities.KubeVersion.Minor -}}
-{{- $versionMatrix := dict -}}
-{{- $latestVersion := "" -}}
-{{- with .Values.global.helmRepositories.descheduler.charts -}}
-  {{- $versionMatrix = dict 27 .descheduler_27 28 .descheduler_28 29 .descheduler_29 -}}
-  {{- $latestVersion = .descheduler -}}
-{{- end -}}
-{{- $selectedVersion := (hasKey $versionMatrix $kubeMinorVersion) | ternary (index $versionMatrix $kubeMinorVersion) $latestVersion -}}
+  {{- $repoCharts := (index .Values.global.helmRepositories "descheduler").charts -}}
+  {{- $selectedVersion := default (index $repoCharts "descheduler") (index $repoCharts (printf "descheduler 0.%d.x" ($.Capabilities.KubeVersion.Minor | int))) -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -14,9 +8,6 @@ metadata:
   namespace: kube-system
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     app.kubernetes.io/component: descheduler
-    {{- if ne $selectedVersion $latestVersion }}
-    helmrelease-metrics/ignore: "true"
-    {{- end }}
 spec:
   chart:
     spec:
@@ -25,7 +16,7 @@ spec:
         kind: HelmRepository
         name: descheduler
         namespace: {{ .Release.Namespace }}
-      version: {{ $selectedVersion }}
+      version: {{ $selectedVersion | quote }}
   interval: 1h
   driftDetection:
     mode: enabled
