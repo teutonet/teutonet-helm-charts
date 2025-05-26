@@ -11,5 +11,5 @@ securityContext:
 containerSecurityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 2 }}
 prometheus:
   monitor:
-    additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 6 }}
+    additionalLabels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 6 }}
 {{- end -}}

@@ -40,6 +40,12 @@ spec:
     extraArgs:
       - --dns01-recursive-nameservers={{- $nameservers | sortAlpha | join "," }}
     {{- end }}
+    {{- if eq .Values.ingress.provider "traefik" }}
+    config:
+      apiVersion: controller.config.cert-manager.io/v1alpha1
+      kind: ControllerConfiguration
+      enableGatewayAPI: true
+    {{- end }}
     resources: {{- include "common.resources" $.Values.certManager | nindent 6 }}
     replicaCount: 1
     securityContext: &securityContext
@@ -65,4 +71,4 @@ spec:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
       servicemonitor:
         enabled: {{ .Values.monitoring.prometheus.enabled }}
-        labels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
+        labels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 10 }}

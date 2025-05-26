@@ -1,0 +1,89 @@
+{{- if eq .Values.ingress.provider "traefik" -}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ingress-controller
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress
+spec:
+  chart:
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "traefik" "chart" "traefik" "context" $) | nindent 6 }}
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  {{- if .Values.monitoring.prometheus.enabled }}
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
+  {{- end }}
+  install:
+    crds: Skip
+  upgrade:
+    crds: Skip
+  values:
+    fullnameOverride: ingress-controller
+    {{- with .Values.global.imageRegistry }}
+    image:
+      registry: {{ . }}
+    {{- end }}
+    deployment:
+      replicas: {{ .Values.ingress.replicas }}
+    ports:
+      web:
+        redirections:
+          entryPoint:
+            to: websecure
+            scheme: https
+            permanent: true
+        proxyProtocol:
+          insecure: {{ .Values.ingress.useProxyProtocol }}
+      websecure:
+        proxyProtocol:
+          insecure: {{ .Values.ingress.useProxyProtocol }}
+    service:
+      annotations:
+        loadbalancer.openstack.org/proxy-protocol: {{ .Values.ingress.useProxyProtocol | quote }}
+        load-balancer.hetzner.cloud/uses-proxyprotocol: {{ .Values.ingress.useProxyProtocol | quote }}
+        load-balancer.hetzner.cloud/disable-private-ingress: "true"
+        {{- if .Values.ingress.IP }}
+        loadbalancer.openstack.org/keep-floatingip: "true"
+        {{- end }}
+      {{- if .Values.ingress.IP }}
+      spec:
+        loadBalancerIP: {{ .Values.ingress.IP | quote }}
+      {{- end }}
+    gatewayClass:
+      name: default
+    gateway:
+      enabled: false # Gateways need to be created for each set of hostnames, therefore having a clusterwide one makes no sense
+    resources: {{- include "common.resources" .Values.ingress | nindent 8 }}
+    metrics:
+      enabled: {{ .Values.monitoring.prometheus.enabled }}
+      serviceMonitor:
+        enabled: {{ .Values.monitoring.prometheus.enabled }}
+        additionalLabels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 12 }}
+    providers:
+      kubernetesCRD:
+        enabled: false
+      kubernetesGateway:
+        enabled: true
+        experimentalChannel: true
+    logs:
+      general:
+        format: json
+    globalArguments: # Otherwise these are on by default
+      - --global.sendanonymoususage=false
+      - --global.checknewversion=false
+    {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp" "global" .Values.global) | fromYaml }}
+    {{- if $telemetryConf.enabled }}
+    tracing:
+      otlp:
+        enabled: true
+        grpc:
+          endpoint: {{ $telemetryConf.endpoint }}
+          {{- if $telemetryConf.insecure }}
+          insecure: true
+          {{- end }}
+    {{- end }}
+{{- end -}}

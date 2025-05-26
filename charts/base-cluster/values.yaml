@@ -7,7 +7,7 @@ global:
   priorityClasses: {}
   namespaces:
     ingress:
-      condition: "{{ not (empty .Values.dns.provider) }}"
+      condition: '{{ or (not (empty .Values.dns.provider)) (eq .Values.ingress.provider "traefik") }}'
       additionalLabels:
         app.kubernetes.io/component: ingress
     cert-manager:
@@ -25,7 +25,7 @@ global:
           limits.cpu: "2"
           limits.memory: 2Gi
     ingress-nginx:
-      condition: "{{ .Values.ingress.enabled }}"
+      condition: '{{ eq .Values.ingress.provider "nginx" }}'
       additionalLabels:
         app.kubernetes.io/component: ingress
     kyverno:
@@ -93,8 +93,8 @@ global:
       io.kubernetes.pod.namespace: monitoring
       app.kubernetes.io/name: prometheus
     ingressLabels:
-      io.kubernetes.pod.namespace: ingress-nginx
-      app.kubernetes.io/name: ingress-nginx
+      io.kubernetes.pod.namespace: '{{ eq .Values.ingress.provider "nginx" | ternary "ingress-nginx" "ingress" }}'
+      app.kubernetes.io/name: '{{ eq .Values.ingress.provider "nginx" | ternary "ingress-nginx" "ingress-controller" }}'
   # it's important that the `url` is the first key and `charts` is right below, otherwise renovate won't detect it
   helmRepositories:
     prometheus:
@@ -133,7 +133,12 @@ global:
       url: https://kubernetes.github.io/ingress-nginx
       charts:
         ingress-nginx: 4.12.1
-      condition: '{{ .Values.ingress.enabled }}'
+      condition: '{{ eq .Values.ingress.provider "nginx" }}'
+    traefik:
+      url: https://helm.traefik.io/traefik
+      charts:
+        traefik: 35.2.0
+      condition: '{{ eq .Values.ingress.provider "traefik" }}'
     kyverno:
       url: https://kyverno.github.io/kyverno
       charts:
@@ -419,7 +424,7 @@ flux:
   gitRepositories: {}
 
 ingress:
-  enabled: true
+  provider: traefik
   allowNginxConfigurationSnippets: false
   useProxyProtocol: true
   replicas: 2

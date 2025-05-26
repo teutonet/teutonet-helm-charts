@@ -31,6 +31,10 @@ spec:
     - name: kube-prometheus-stack
       namespace: monitoring
   {{- end }}
+  install:
+    crds: Skip
+  upgrade:
+    crds: Skip
   values:
     priorityClassName: cluster-components
     {{- if .Values.global.imageRegistry }}
@@ -47,6 +51,11 @@ spec:
     {{- end }}
     sources:
       - ingress
+      - gateway-httproute
+      - gateway-grpcroute
+      - gateway-tlsroute
+      - gateway-tcproute
+      - gateway-udproute
     rbac:
       create: true
     crd:
@@ -71,5 +80,5 @@ spec:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
       serviceMonitor:
         enabled: {{ .Values.monitoring.prometheus.enabled }}
-        labels: {{- toYaml .Values.monitoring.labels | nindent 10 }}
+        labels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 10 }}
 {{- end -}}

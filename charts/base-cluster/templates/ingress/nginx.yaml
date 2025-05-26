@@ -1,4 +1,4 @@
-{{ if .Values.ingress.enabled }}
+{{- if eq .Values.ingress.provider "nginx" -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -26,7 +26,7 @@ spec:
         enabled: {{ .Values.monitoring.prometheus.enabled }}
         serviceMonitor:
           enabled: {{ .Values.monitoring.prometheus.enabled }}
-          additionalLabels: {{- toYaml .Values.monitoring.labels | nindent 12 }}
+          additionalLabels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 12 }}
       {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp") | fromYaml }}
       {{- if and $telemetryConf.enabled .Values.monitoring.prometheus.enabled }}
       opentelemetry:
@@ -94,4 +94,4 @@ spec:
       image:
         registry: {{ .Values.global.imageRegistry }}
       {{- end }}
-  {{ end }}
+{{- end -}}

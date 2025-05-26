@@ -107,8 +107,16 @@ which is also supported by [cert-manager](https://cert-manager.io/docs/configura
 
 ### Component [ingress](#ingress)
 
-The included [`nginx` ingress-controller](https://docs.nginx.com/nginx-ingress-controller)
-only works for the `IngressClassName: nginx`.
+The chart supports two ingress controllers:
+
+1. [`nginx` ingress-controller](https://docs.nginx.com/nginx-ingress-controller) (default)
+   - Works with `IngressClassName: nginx` or if none is defined
+   - Provides built-in metrics and tracing support
+
+2. [`traefik`](https://traefik.io) (recommended)
+   - Works with `IngressClassName: ingress-controller` or if none is defined
+   - Provides built-in metrics and tracing support
+   - Also supports [Gateway API](https://gateway-api.sigs.k8s.io)
 
 #### TLS
 
@@ -122,7 +130,7 @@ only works for the `IngressClassName: nginx`.
 
 If you want to make sure that, in the event of a catastrophic failure, you keep the
 same IP address, you should roll this out, get the assigned IP
-(`kubectl -n ingress-nginx get svc ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress}'`)
+(`kubectl -n ingress-nginx get svc ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress}'` for nginx or `kubectl -n ingress get svc ingress-controller -o jsonpath='{.status.loadBalancer.ingress}'` for traefik)
 and set `.ingress.IP=<ip>` in the values. This makes sure the IP is kept in your
 project (may incur cost!), which means you can reuse it later or after recovery.
 
@@ -335,5 +343,54 @@ other monitoring deployment, which in turn also deletes the `loki` namespace
 This also replaces `promtail` and the `otel-collector` with `alloy`, using
 <https://github.com/teutonet/teutonet-helm-charts/blob/main/charts/common/templates/_telemetry.tpl>
 makes this a drop-in change.
+
+### 8.x.x -> 9.0.0
+
+This release adds another option for ingress, [traefik](https://traefik.io)! 🎉
+
+If you have disabled ingress in your configuration, you need to update your
+values from:
+
+```yaml
+ingress:
+  enabled: false
+```
+
+to:
+
+```yaml
+ingress:
+  provider: none
+```
+
+If you are using ingress (the default), you need to either switch over to traefik
+or adjust your config to use nginx.
+But we do recommend using traefik, especially in light of <https://github.com/kubernetes/ingress-nginx/issues/13002>.
+
+To switch to traefik you don't need to do anything.
+
+This will delete the old service which in turn will get you a new IP.
+The `ingress-nginx` namespace will be deleted, so make sure you don't have any other
+stuff deployed there or adjust its [condition](https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster/#11412--property-base-cluster-configuration--global--namespaces--additionalproperties--condition)
+
+Using a [DNS Provider](#component-dns) will automatically update your DNS records.
+
+If you want to keep the same IP, do
+<https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster/#ip-address>
+beforehand.
+
+The switch will still create downtime, so be aware of that.
+
+In nginx it was possible to enable `allowNginxConfigurationSnippets` to add custom
+configuration to the nginx ingress controller.
+In traefik this is not possible, but you can use [gateway api](https://gateway-api.sigs.k8s.io)
+instead, making this agnostic.
+
+If you want to keep nginx, you need to configure the following;
+
+```yaml
+ingress:
+  provider: nginx
+```
 
 {{ .Files.Get "values.md"  }}

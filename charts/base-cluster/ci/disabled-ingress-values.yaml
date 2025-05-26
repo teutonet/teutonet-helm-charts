@@ -1,2 +1,2 @@
 ingress:
-  enabled: false
+  provider: none

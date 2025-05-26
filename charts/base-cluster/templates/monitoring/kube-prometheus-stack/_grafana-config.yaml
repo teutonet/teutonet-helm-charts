@@ -53,7 +53,7 @@ deploymentStrategy:
 {{- end }}
 serviceMonitor:
   interval: "30s"
-  labels: {{- toYaml .Values.monitoring.labels | nindent 4 }}
+  labels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 4 }}
 podAnnotations:
   # This might change on every `template` call, this can be ignored
   checksum/secret: {{ include "common.utils.checksumTemplate" (dict "path" "/monitoring/kube-prometheus-stack/grafana-secret.yaml" "context" $) }}
@@ -117,12 +117,17 @@ dashboards:
     metrics:
       <<: *dashboard
       gnetId: 8588
-    {{- if .Values.ingress.enabled}}
+    {{- if eq .Values.ingress.provider "nginx" }}
     ingress-nginx:
       <<: *dashboard
       gnetId: 9614
       revision: 1
-    {{- end}}
+    {{- else if eq .Values.ingress.provider "traefik" }}
+    traefik:
+      <<: *dashboard
+      gnetId: 17347
+      revision: 9
+    {{- end }}
     cert-manager:
       <<: *dashboard
       gnetId: 11001
@@ -174,7 +179,7 @@ dashboards:
   {{- end }}
 {{- include "base-cluster.monitoring.ingress" (dict "name" "grafana" "context" $) | nindent 0 }}
 {{- $grafanaIni := .Values.monitoring.grafana.config | default (dict) }}
-{{- if and .Values.ingress.enabled .Values.monitoring.grafana.ingress.enabled .Values.certManager.email (or .Values.global.baseDomain .Values.monitoring.grafana.ingress.customDomain) }}
+{{- if and (ne .Values.ingress.provider "none") .Values.monitoring.grafana.ingress.enabled .Values.certManager.email (or .Values.global.baseDomain .Values.monitoring.grafana.ingress.customDomain) }}
   {{- $grafanaIni = mustMerge $grafanaIni (include "base-cluster.prometheus-stack.grafana.ini.ingress" (dict "context" $) | fromYaml) }}
   {{- if .Values.global.authentication.config }}
     {{- $grafanaIni = mustMerge $grafanaIni (include "base-cluster.prometheus-stack.grafana.ini.oauth" (dict "context" $) | fromYaml) }}
