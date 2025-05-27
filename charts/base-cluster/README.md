@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 7.2.1](https://img.shields.io/badge/Version-7.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 8.0.0](https://img.shields.io/badge/Version-8.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -23,7 +23,7 @@ The `.x.x` part of the versions can be left as is, helm uses that as a range. If
 git init
 
 # create empty cluster HelmRelease;
-flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 7.x.x > cluster.yaml
+flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 8.x.x > cluster.yaml
 
 # maybe use the following name for your cluster;
 kubectl get node -o jsonpath='{.items[0].metadata.annotations.cluster\.x-k8s\.io/cluster-name}'
@@ -50,7 +50,7 @@ helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io
 
 # manual initial installation of the chart, afterwards the chart takes over
 # after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
-helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 7.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
+helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 8.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
 
 # you can use this command to get the instructions again
 # e.g. when adding users, gitRepositories, ...
@@ -108,8 +108,16 @@ which is also supported by [cert-manager](https://cert-manager.io/docs/configura
 
 ### Component [ingress](#ingress)
 
-The included [`nginx` ingress-controller](https://docs.nginx.com/nginx-ingress-controller)
-only works for the `IngressClassName: nginx`.
+The chart supports two ingress controllers:
+
+1. [`nginx` ingress-controller](https://docs.nginx.com/nginx-ingress-controller) (default)
+   - Works with `IngressClassName: nginx` or if none is defined
+   - Provides built-in metrics and tracing support
+
+2. [`traefik`](https://traefik.io) (recommended)
+   - Works with `IngressClassName: ingress-controller` or if none is defined
+   - Provides built-in metrics and tracing support
+   - Also supports [Gateway API](https://gateway-api.sigs.k8s.io)
 
 #### TLS
 
@@ -123,7 +131,7 @@ only works for the `IngressClassName: nginx`.
 
 If you want to make sure that, in the event of a catastrophic failure, you keep the
 same IP address, you should roll this out, get the assigned IP
-(`kubectl -n ingress-nginx get svc ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress}'`)
+(`kubectl -n ingress-nginx get svc ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress}'` for nginx or `kubectl -n ingress get svc ingress-controller -o jsonpath='{.status.loadBalancer.ingress}'` for traefik)
 and set `.ingress.IP=<ip>` in the values. This makes sure the IP is kept in your
 project (may incur cost!), which means you can reuse it later or after recovery.
 
@@ -238,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v7.2.1/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v8.0.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -324,6 +332,76 @@ upgrade, they will be recreated in version 6.
 
 This also makes kyverno HA, so be aware that kyverno will need more resources in
 you cluster.
+
+### 6.x.x -> 7.0.0
+
+This release allows the user to use the predefined k8s ClusterRoles
+(`admin`, `edit`, `view`, ...).
+
+This usage might clash with custom roles named `admin`, `edit`, `view`, ... and
+therefore needs to be adjusted
+
+### 7.x.x -> 8.0.0
+
+This release migrates the now unsupported `loki-stack` to the normal `loki` helm
+chart.
+
+This is a breaking change because, apart from a new storage engine, the deployment
+also moves from the `loki` namespace to `monitoring` to keep in line with every
+other monitoring deployment, which in turn also deletes the `loki` namespace
+
+This also replaces `promtail` and the `otel-collector` with `alloy`, using
+<https://github.com/teutonet/teutonet-helm-charts/blob/main/charts/common/templates/_telemetry.tpl>
+makes this a drop-in change.
+
+### 8.x.x -> 9.0.0
+
+This release adds another option for ingress, [traefik](https://traefik.io)! 🎉
+
+If you have disabled ingress in your configuration, you need to update your
+values from:
+
+```yaml
+ingress:
+  enabled: false
+```
+
+to:
+
+```yaml
+ingress:
+  provider: none
+```
+
+If you are using ingress (the default), you need to either switch over to traefik
+or adjust your config to use nginx.
+But we do recommend using traefik, especially in light of <https://github.com/kubernetes/ingress-nginx/issues/13002>.
+
+To switch to traefik you don't need to do anything.
+
+This will delete the old service which in turn will get you a new IP.
+The `ingress-nginx` namespace will be deleted, so make sure you don't have any other
+stuff deployed there or adjust its [condition](https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster/#11412--property-base-cluster-configuration--global--namespaces--additionalproperties--condition)
+
+Using a [DNS Provider](#component-dns) will automatically update your DNS records.
+
+If you want to keep the same IP, do
+<https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster/#ip-address>
+beforehand.
+
+The switch will still create downtime, so be aware of that.
+
+In nginx it was possible to enable `allowNginxConfigurationSnippets` to add custom
+configuration to the nginx ingress controller.
+In traefik this is not possible, but you can use [gateway api](https://gateway-api.sigs.k8s.io)
+instead, making this agnostic.
+
+If you want to keep nginx, you need to configure the following;
+
+```yaml
+ingress:
+  provider: nginx
+```
 
 # base cluster configuration
 
@@ -675,9 +753,9 @@ bitnami/kubectl
 | Property                                                | Pattern | Type             | Deprecated | Definition | Title/Description                                                                                             |
 | ------------------------------------------------------- | ------- | ---------------- | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------- |
 | - [type](#global_networkPolicy_type )                   | No      | enum (of string) | No         | -          | Which networkPolicy to create, \`auto\` tries to detect the deployed framework, checking first for \`cilium\` |
-| - [metricsLabels](#global_networkPolicy_metricsLabels ) | No      | object           | No         | -          | The labels used to allow ingress from the metrics service                                                     |
-| - [dnsLabels](#global_networkPolicy_dnsLabels )         | No      | object           | No         | -          | The labels used to allow egress to the DNS service                                                            |
-| - [ingressLabels](#global_networkPolicy_ingressLabels ) | No      | object           | No         | -          | The labels used to allow egress to the DNS service                                                            |
+| - [metricsLabels](#global_networkPolicy_metricsLabels ) | No      | Combination      | No         | -          | The labels used to allow ingress from the metrics service                                                     |
+| - [dnsLabels](#global_networkPolicy_dnsLabels )         | No      | Combination      | No         | -          | The labels used to allow egress to the DNS service                                                            |
+| - [ingressLabels](#global_networkPolicy_ingressLabels ) | No      | Combination      | No         | -          | The labels used to allow ingress from the ingress controller                                                  |
 
 #### <a name="global_networkPolicy_type"></a>1.10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > type`
 
@@ -695,18 +773,36 @@ Must be one of:
 
 #### <a name="global_networkPolicy_metricsLabels"></a>1.10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > metricsLabels`
 
-|                           |                                                                                                                                 |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                        |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_networkPolicy_metricsLabels_additionalProperties) |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 **Description:** The labels used to allow ingress from the metrics service
 
-| Property                                                        | Pattern | Type   | Deprecated | Definition | Title/Description |
-| --------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [](#global_networkPolicy_metricsLabels_additionalProperties ) | No      | string | No         | -          | -                 |
+| One of(Option)                                         |
+| ------------------------------------------------------ |
+| [item 0](#global_networkPolicy_metricsLabels_oneOf_i0) |
+| [item 1](#global_networkPolicy_metricsLabels_oneOf_i1) |
 
-##### <a name="global_networkPolicy_metricsLabels_additionalProperties"></a>1.10.2.1. Property `base cluster configuration > global > networkPolicy > metricsLabels > additionalProperties`
+##### <a name="global_networkPolicy_metricsLabels_oneOf_i0"></a>1.10.2.1. Property `base cluster configuration > global > networkPolicy > metricsLabels > oneOf > item 0`
+
+|                           |                                                                                                                                          |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                 |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_networkPolicy_metricsLabels_oneOf_i0_additionalProperties) |
+
+| Property                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#global_networkPolicy_metricsLabels_oneOf_i0_additionalProperties ) | No      | string | No         | -          | -                 |
+
+###### <a name="global_networkPolicy_metricsLabels_oneOf_i0_additionalProperties"></a>1.10.2.1.1. Property `base cluster configuration > global > networkPolicy > metricsLabels > oneOf > item 0 > additionalProperties`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="global_networkPolicy_metricsLabels_oneOf_i1"></a>1.10.2.2. Property `base cluster configuration > global > networkPolicy > metricsLabels > oneOf > item 1`
 
 |          |          |
 | -------- | -------- |
@@ -714,18 +810,36 @@ Must be one of:
 
 #### <a name="global_networkPolicy_dnsLabels"></a>1.10.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > dnsLabels`
 
-|                           |                                                                                                                             |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                    |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_networkPolicy_dnsLabels_additionalProperties) |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 **Description:** The labels used to allow egress to the DNS service
 
-| Property                                                    | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ----------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [](#global_networkPolicy_dnsLabels_additionalProperties ) | No      | string | No         | -          | -                 |
+| One of(Option)                                     |
+| -------------------------------------------------- |
+| [item 0](#global_networkPolicy_dnsLabels_oneOf_i0) |
+| [item 1](#global_networkPolicy_dnsLabels_oneOf_i1) |
 
-##### <a name="global_networkPolicy_dnsLabels_additionalProperties"></a>1.10.3.1. Property `base cluster configuration > global > networkPolicy > dnsLabels > additionalProperties`
+##### <a name="global_networkPolicy_dnsLabels_oneOf_i0"></a>1.10.3.1. Property `base cluster configuration > global > networkPolicy > dnsLabels > oneOf > item 0`
+
+|                           |                                                                                                                                      |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **Type**                  | `object`                                                                                                                             |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_networkPolicy_dnsLabels_oneOf_i0_additionalProperties) |
+
+| Property                                                             | Pattern | Type   | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#global_networkPolicy_dnsLabels_oneOf_i0_additionalProperties ) | No      | string | No         | -          | -                 |
+
+###### <a name="global_networkPolicy_dnsLabels_oneOf_i0_additionalProperties"></a>1.10.3.1.1. Property `base cluster configuration > global > networkPolicy > dnsLabels > oneOf > item 0 > additionalProperties`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="global_networkPolicy_dnsLabels_oneOf_i1"></a>1.10.3.2. Property `base cluster configuration > global > networkPolicy > dnsLabels > oneOf > item 1`
 
 |          |          |
 | -------- | -------- |
@@ -733,18 +847,36 @@ Must be one of:
 
 #### <a name="global_networkPolicy_ingressLabels"></a>1.10.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > networkPolicy > ingressLabels`
 
-|                           |                                                                                                                                 |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                                        |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_networkPolicy_ingressLabels_additionalProperties) |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-**Description:** The labels used to allow egress to the DNS service
+**Description:** The labels used to allow ingress from the ingress controller
 
-| Property                                                        | Pattern | Type   | Deprecated | Definition | Title/Description |
-| --------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [](#global_networkPolicy_ingressLabels_additionalProperties ) | No      | string | No         | -          | -                 |
+| One of(Option)                                         |
+| ------------------------------------------------------ |
+| [item 0](#global_networkPolicy_ingressLabels_oneOf_i0) |
+| [item 1](#global_networkPolicy_ingressLabels_oneOf_i1) |
 
-##### <a name="global_networkPolicy_ingressLabels_additionalProperties"></a>1.10.4.1. Property `base cluster configuration > global > networkPolicy > ingressLabels > additionalProperties`
+##### <a name="global_networkPolicy_ingressLabels_oneOf_i0"></a>1.10.4.1. Property `base cluster configuration > global > networkPolicy > ingressLabels > oneOf > item 0`
+
+|                           |                                                                                                                                          |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                 |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_networkPolicy_ingressLabels_oneOf_i0_additionalProperties) |
+
+| Property                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#global_networkPolicy_ingressLabels_oneOf_i0_additionalProperties ) | No      | string | No         | -          | -                 |
+
+###### <a name="global_networkPolicy_ingressLabels_oneOf_i0_additionalProperties"></a>1.10.4.1.1. Property `base cluster configuration > global > networkPolicy > ingressLabels > oneOf > item 0 > additionalProperties`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="global_networkPolicy_ingressLabels_oneOf_i1"></a>1.10.4.2. Property `base cluster configuration > global > networkPolicy > ingressLabels > oneOf > item 1`
 
 |          |          |
 | -------- | -------- |
@@ -2560,7 +2692,6 @@ Must be one of:
 | ------------------------------------------------------ | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
 | - [enabled](#monitoring_loki_enabled )                 | No      | boolean          | No         | -                                                                             | -                                                                 |
 | - [persistence](#monitoring_loki_persistence )         | No      | object           | No         | -                                                                             | -                                                                 |
-| - [replicas](#monitoring_loki_replicas )               | No      | integer          | No         | -                                                                             | -                                                                 |
 | - [resourcesPreset](#monitoring_loki_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
 | - [resources](#monitoring_loki_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
 | - [promtail](#monitoring_loki_promtail )               | No      | object           | No         | -                                                                             | -                                                                 |
@@ -2600,24 +2731,14 @@ Must be one of:
 
 **Description:** The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd)
 
-#### <a name="monitoring_loki_replicas"></a>4.7.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > replicas`
-
-|          |           |
-| -------- | --------- |
-| **Type** | `integer` |
-
-| Restrictions |        |
-| ------------ | ------ |
-| **Minimum**  | &ge; 1 |
-
-#### <a name="monitoring_loki_resourcesPreset"></a>4.7.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > resourcesPreset`
+#### <a name="monitoring_loki_resourcesPreset"></a>4.7.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > resourcesPreset`
 
 |                        |                                                                      |
 | ---------------------- | -------------------------------------------------------------------- |
 | **Type**               | `enum (of string)`                                                   |
 | **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
 
-#### <a name="monitoring_loki_resources"></a>4.7.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > resources`
+#### <a name="monitoring_loki_resources"></a>4.7.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > resources`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -2627,7 +2748,7 @@ Must be one of:
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-#### <a name="monitoring_loki_promtail"></a>4.7.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > promtail`
+#### <a name="monitoring_loki_promtail"></a>4.7.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > promtail`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -2639,14 +2760,14 @@ Must be one of:
 | - [resourcesPreset](#monitoring_loki_promtail_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
 | - [resources](#monitoring_loki_promtail_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
 
-##### <a name="monitoring_loki_promtail_resourcesPreset"></a>4.7.6.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > promtail > resourcesPreset`
+##### <a name="monitoring_loki_promtail_resourcesPreset"></a>4.7.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > promtail > resourcesPreset`
 
 |                        |                                                                      |
 | ---------------------- | -------------------------------------------------------------------- |
 | **Type**               | `enum (of string)`                                                   |
 | **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
 
-##### <a name="monitoring_loki_promtail_resources"></a>4.7.6.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > promtail > resources`
+##### <a name="monitoring_loki_promtail_resources"></a>4.7.5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > promtail > resources`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -3692,7 +3813,7 @@ Must be one of:
 | - [replicas](#ingress_replicas )                                               | No      | integer          | No         | -                                                                             | -                                                                                                                                                                                                                             |
 | - [resourcesPreset](#ingress_resourcesPreset )                                 | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                                                                                                                                                                             |
 | - [resources](#ingress_resources )                                             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements.                                                                                                                                                             |
-| - [enabled](#ingress_enabled )                                                 | No      | boolean          | No         | -                                                                             | -                                                                                                                                                                                                                             |
+| - [provider](#ingress_provider )                                               | No      | enum (of string) | No         | -                                                                             | Which ingress controller to use                                                                                                                                                                                               |
 | - [allowNginxConfigurationSnippets](#ingress_allowNginxConfigurationSnippets ) | No      | boolean          | No         | -                                                                             | Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets |
 | - [useProxyProtocol](#ingress_useProxyProtocol )                               | No      | boolean          | No         | -                                                                             | -                                                                                                                                                                                                                             |
 | - [IP](#ingress_IP )                                                           | No      | string           | No         | -                                                                             | Try to use specified IP as loadbalancer IP                                                                                                                                                                                    |
@@ -3724,11 +3845,18 @@ Must be one of:
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-### <a name="ingress_enabled"></a>10.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > enabled`
+### <a name="ingress_provider"></a>10.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > provider`
 
-|          |           |
-| -------- | --------- |
-| **Type** | `boolean` |
+|          |                    |
+| -------- | ------------------ |
+| **Type** | `enum (of string)` |
+
+**Description:** Which ingress controller to use
+
+Must be one of:
+* "nginx"
+* "traefik"
+* "none"
 
 ### <a name="ingress_allowNginxConfigurationSnippets"></a>10.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > allowNginxConfigurationSnippets`
 
