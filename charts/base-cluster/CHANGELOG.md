@@ -1,5 +1,34 @@
 # Changelog
 
+## [8.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.2.1...base-cluster-v8.0.0) (2025-05-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* **base-cluster/ingress:** add option traefik for ingress controller and make it default ([#1420](https://github.com/teutonet/teutonet-helm-charts/issues/1420))
+* **base-cluster/monitoring:** migrate promtail to alloy ([#1347](https://github.com/teutonet/teutonet-helm-charts/issues/1347))
+
+### Features
+
+* **base-cluster/ingress-nginx:** use risk-level Critical when annotations are enabled ([#1417](https://github.com/teutonet/teutonet-helm-charts/issues/1417)) ([a9d8ef2](https://github.com/teutonet/teutonet-helm-charts/commit/a9d8ef2a8a6854ac888d30d8188b7d8eaf320ecb))
+* **base-cluster/ingress:** add option traefik for ingress controller and make it default ([#1420](https://github.com/teutonet/teutonet-helm-charts/issues/1420)) ([f62b197](https://github.com/teutonet/teutonet-helm-charts/commit/f62b1971038760bc7b66c35ff78b98703fde28a1))
+* **base-cluster/ingress:** rename oauth-proxies to have a clean name ([#1434](https://github.com/teutonet/teutonet-helm-charts/issues/1434)) ([27a28d5](https://github.com/teutonet/teutonet-helm-charts/commit/27a28d5c5c3ffccb29272e8e12f22e44aeacf323))
+* **base-cluster/monitoring:** migrate promtail to alloy ([#1347](https://github.com/teutonet/teutonet-helm-charts/issues/1347)) ([24db445](https://github.com/teutonet/teutonet-helm-charts/commit/24db44516ae6eaeafa1a45460375f80d7a171fbe))
+* **base-cluster/monitoring:** rename alloy to be a generic name ([#1433](https://github.com/teutonet/teutonet-helm-charts/issues/1433)) ([3f5826a](https://github.com/teutonet/teutonet-helm-charts/commit/3f5826addfb58a96b754f6c3188753117b3e8ebd))
+
+
+### Bug Fixes
+
+* **base-cluster/cert-manager:** metrics collection ([#1397](https://github.com/teutonet/teutonet-helm-charts/issues/1397)) ([71e1189](https://github.com/teutonet/teutonet-helm-charts/commit/71e1189eb6e58d78fdbba867502318813c91fd32))
+* **base-cluster/rbac:** *RoleBindings should always be prefixed to avoid collision ([#1484](https://github.com/teutonet/teutonet-helm-charts/issues/1484)) ([75de246](https://github.com/teutonet/teutonet-helm-charts/commit/75de246c30fca500b7e8bb0bff11ed7053fc3df3))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/monitoring:** remove deprecated plugin ([#1478](https://github.com/teutonet/teutonet-helm-charts/issues/1478)) ([ee22df5](https://github.com/teutonet/teutonet-helm-charts/commit/ee22df5625c2495b3d93fdc01832cf5284e9e163))
+* **base-cluster:** formatting ([#1424](https://github.com/teutonet/teutonet-helm-charts/issues/1424)) ([853f146](https://github.com/teutonet/teutonet-helm-charts/commit/853f146b1dd002a9975e3ec2ebb3ab053273d029))
+* **base-cluster:** pin all versions ([#1447](https://github.com/teutonet/teutonet-helm-charts/issues/1447)) ([ec8a430](https://github.com/teutonet/teutonet-helm-charts/commit/ec8a4301f51c336ca047f7f4acc17c17fa595bc4))
+
 ## [7.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.2.0...base-cluster-v7.2.1) (2025-02-27)
 
 
