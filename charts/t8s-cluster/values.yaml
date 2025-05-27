@@ -42,6 +42,11 @@ controlPlane:
   flavor: standard.2.1905
   singleNode: false
   allowedCIDRs: []
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 4Gi
 
 version:
   major: 1
