@@ -22,7 +22,7 @@ spec:
       containers:
         - name: fail
           image: {{ template "base-cluster.kubectl.image" . }}
-          imagePullPolicy: {{ empty .Values.global.kubectl.image.digest | ternary "Always" "IfNotPresent" }}
+          imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.kubectl.image }}
           securityContext:
             readOnlyRootFilesystem: true
             privileged: false
