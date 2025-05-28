@@ -585,13 +585,6 @@
         "monitorAllNamespaces": {
           "type": "boolean"
         },
-        "labels": {
-          "type": "object",
-          "description": "The labels to set on ServiceMonitors, ... and which the prometheus uses to search for",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
         "deadMansSwitch": {
           "type": "object",
           "description": "This needs `.global.clusterName` to be set up as an integration in healthchecks.io. Also, `.global.baseDomain` has to be set.",

@@ -57,7 +57,8 @@ spec:
       {{- end }}
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
-      additionalLabels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 8 }}
+      additionalLabels:
+        monitoring/managed-by: teutonet
     priorityClassName: system-cluster-critical
     # this only works in version 3
     admissionController:
