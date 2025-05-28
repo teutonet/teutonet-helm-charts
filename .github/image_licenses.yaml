@@ -83,6 +83,9 @@ licenses:
   docker.io/stellio/stellio-timescale-postgis:
     license: Apache-2.0
     licenseLink: https://github.com/stellio-hub/stellio-context-broker/blob/develop/LICENSE.txt
+  docker.io/traefik:
+    license: MIT
+    licenseLink: https://raw.githubusercontent.com/traefik/traefik/refs/heads/master/LICENSE.md
   docker.io/velero/velero:
     license: Apache-2.0
     licenseLink: https://github.com/vmware-tanzu/velero-plugin-for-aws/blob/main/LICENSE

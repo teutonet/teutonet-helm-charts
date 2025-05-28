@@ -17,6 +17,7 @@ docker.io:
     kube-janitor: ALL_TAGS
   postgres: ALL_TAGS
   stellio: ALL_IMAGES
+  traefik: ALL_TAGS
   velero: ALL_IMAGES
   vladgh:
     gpg: ALL_TAGS
