@@ -1,3 +1,5 @@
+{{- $repoCharts := (index .Values.global.helmRepositories "cloud-provider-openstack").charts -}}
+{{- $selectedVersion := default (index $repoCharts "openstack-cloud-controller-manager") (index $repoCharts (printf "openstack-cloud-controller-manager 2.%d.x" ($.Values.version.minor | int))) -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -12,7 +14,7 @@ spec:
         kind: HelmRepository
         name: {{ printf "%s-cloud-provider-openstack" .Release.Name }}
         namespace: {{ .Release.Namespace }}
-      version: {{ printf "2.%d.x" (.Values.version.minor | int) }}
+      version: {{ $selectedVersion | quote }}
   interval: 1h
   driftDetection:
     mode: enabled
