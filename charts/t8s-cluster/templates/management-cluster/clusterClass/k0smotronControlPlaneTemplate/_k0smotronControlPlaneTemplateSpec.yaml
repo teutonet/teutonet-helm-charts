@@ -5,6 +5,7 @@ This function needs the whole `$` context to be able to use `.Files.Get`
 */}}
 {{- define "t8s-cluster.clusterClass.k0smotronControlPlaneTemplate.spec" -}}
 replicas: {{ $.Values.controlPlane.singleNode | ternary 1 3 }}
+resources: {{- include "common.resources" .Values.controlPlane | nindent 2 }}
 service:
   type: LoadBalancer
   apiPort: 6443

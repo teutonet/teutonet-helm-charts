@@ -1,0 +1,7 @@
+controlPlane:
+  hosted: true
+  resources:
+    requests:
+      memory: 4Gi
+    limits:
+      memory: 8Gi
