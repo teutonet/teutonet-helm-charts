@@ -168,12 +168,6 @@ dashboards:
       gnetId: 11055
       revision: 2
     {{- end }}
-    {{- if .Values.monitoring.tracing.enabled }}
-    open-telemetry-collector:
-      <<: *dashboard
-      gnetId: 15983
-      revision: 9
-    {{- end }}
   {{- with .Values.monitoring.grafana.additionalDashboards }}
   {{ toYaml . | nindent 4 }}
   {{- end }}
