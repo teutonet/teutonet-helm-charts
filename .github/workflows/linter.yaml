@@ -11,14 +11,14 @@ on:
 jobs:
   getChangedChartsPR:
     uses: ./.github/workflows/get-changed-charts-pr.yaml
-    if: ${{ github.event.pull_request }}
+    if: ${{ github.event.pull_request != null }}
     permissions:
       pull-requests: read
     with:
       pr_number: ${{ github.event.pull_request.number }}
   getChangedChartsMQ:
     uses: ./.github/workflows/get-changed-charts-merge-queue.yaml
-    if: ${{ github.event.merge_group }}
+    if: ${{ github.event.merge_group != null }}
     permissions:
       contents: read
     with:
