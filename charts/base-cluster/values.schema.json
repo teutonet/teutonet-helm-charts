@@ -985,6 +985,15 @@
                 },
                 "resources": {
                   "$ref": "#/$defs/resourceRequirements"
+                },
+                "persistence": {
+                  "type": "object",
+                  "properties": {
+                    "size": {
+                      "$ref": "#/$defs/quantity"
+                    }
+                  },
+                  "additionalProperties": false
                 }
               },
               "additionalProperties": false
