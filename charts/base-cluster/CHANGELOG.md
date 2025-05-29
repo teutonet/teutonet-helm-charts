@@ -1,5 +1,22 @@
 # Changelog
 
+## [8.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v8.0.0...base-cluster-v8.1.0) (2025-05-29)
+
+
+### Features
+
+* **base-cluster/monitoring:** also read secrets for datasources ([#1479](https://github.com/teutonet/teutonet-helm-charts/issues/1479)) ([83ba8bd](https://github.com/teutonet/teutonet-helm-charts/commit/83ba8bd71d9f21a3a6b3310252326838425d4668))
+
+
+### Bug Fixes
+
+* **base-cluster:** this prevents the user from installing this under another name ([#1418](https://github.com/teutonet/teutonet-helm-charts/issues/1418)) ([f4807e8](https://github.com/teutonet/teutonet-helm-charts/commit/f4807e88bfdd196541d28f8ae20e06f82cedb428))
+
+
+### Miscellaneous Chores
+
+* **base-cluster:** change descheduler syntax ([#1483](https://github.com/teutonet/teutonet-helm-charts/issues/1483)) ([907bdae](https://github.com/teutonet/teutonet-helm-charts/commit/907bdae6787077a75f7145c7ec0aa5f8a97ffd9c))
+
 ## [8.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.2.1...base-cluster-v8.0.0) (2025-05-27)
 
 
