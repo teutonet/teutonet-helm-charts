@@ -19,5 +19,5 @@ sources:
   - https://github.com/teutonet/teutonet-helm-charts/tree/teuto-cnpg-v2.0.0/charts/teuto-cnpg
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/teuto-cnpg
 annotations:
-  artifacthub.io/images: |
+  artifacthub.io/images: |-
     []
