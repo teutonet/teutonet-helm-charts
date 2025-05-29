@@ -21,7 +21,7 @@ sources:
 type: application
 version: 8.0.0
 annotations:
-  artifacthub.io/images: |
+  artifacthub.io/images: |-
     - image: docker.io/aelbakry/kdave-server:1.0.4                                                                                     #  monitoring/HelmRelease/kdave/null/Deployment/kdave.yaml
     - image: docker.io/bats/bats:v1.4.1                                                                                                #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Pod/kube-prometheus-stack-grafana-test.yaml
     - image: docker.io/bitnami/external-dns:0.16.1-debian-12-r5                                                                        #  ingress/HelmRelease/external-dns/ingress/Deployment/external-dns.yaml
@@ -54,6 +54,7 @@ annotations:
     - image: docker.io/grafana/grafana:11.3.0                                                                                          #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana.yaml
     - image: docker.io/grafana/loki:3.4.2                                                                                              #  monitoring/HelmRelease/loki/monitoring/StatefulSet/loki.yaml
     - image: docker.io/hjacobs/kube-janitor:23.7.0                                                                                     #  kube-system/HelmRelease/kube-janitor/kube-system/Deployment/kube-janitor.yaml
+    - image: docker.io/traefik:v3.3.6                                                                                                  #  ingress/HelmRelease/ingress-controller/ingress/Deployment/ingress-controller.yaml
     - image: docker.io/velero/velero-plugin-for-aws:v1.7.0                                                                             #  backup/HelmRelease/velero/backup/Deployment/velero.yaml
     - image: docker.io/velero/velero:v1.14.0                                                                                           #  backup/HelmRelease/velero/backup/DaemonSet/node-agent.yaml
     - image: docker.io/velero/velero:v1.14.0                                                                                           #  backup/HelmRelease/velero/backup/Deployment/velero.yaml
