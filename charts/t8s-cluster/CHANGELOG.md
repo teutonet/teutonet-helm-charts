@@ -1,5 +1,14 @@
 # Changelog
 
+## [9.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.2.1...t8s-cluster-v9.3.0) (2025-05-29)
+
+
+### Features
+
+* **t8s-cluster:** enable audit logging ([#1440](https://github.com/teutonet/teutonet-helm-charts/issues/1440)) ([dcb28ca](https://github.com/teutonet/teutonet-helm-charts/commit/dcb28ca09156ad20f1f19fdad8a370aab02861db))
+* **t8s-cluster:** make apiserver resources configurable ([#1485](https://github.com/teutonet/teutonet-helm-charts/issues/1485)) ([3126661](https://github.com/teutonet/teutonet-helm-charts/commit/3126661a773e899c56b284546eb4a88a2b620e31))
+* **t8s-cluster:** use new pullPolicy template ([#1383](https://github.com/teutonet/teutonet-helm-charts/issues/1383)) ([6b253bd](https://github.com/teutonet/teutonet-helm-charts/commit/6b253bd6ecd6695f85481cff525c676619ae8044))
+
 ## [9.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.2.0...t8s-cluster-v9.2.1) (2025-03-06)
 
 
