@@ -34,7 +34,7 @@ type: application
 version: 1.3.1
 annotations:
   artifacthub.io/image-licenses.docker.io/bitnami/valkey: Apache-2.0
-  artifacthub.io/images: |
+  artifacthub.io/images: |-
     - image: docker.io/bitnami/kubectl                                                                                             #  default/Job/ckan-ckan-post-install.yaml
     - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r14                                                                     #  default/StatefulSet/ckan-postgresql-primary.yaml
     - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r14                                                                     #  default/StatefulSet/ckan-postgresql-read.yaml
