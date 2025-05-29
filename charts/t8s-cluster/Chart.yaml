@@ -20,7 +20,7 @@ sources:
 type: application
 version: 9.2.1
 annotations:
-  artifacthub.io/images: |
+  artifacthub.io/images: |-
     - image: k8s.gcr.io/sig-storage/csi-attacher:v3.4.0                                                                                                                       #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
     - image: k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.5.0                                                                                                          #  default/HelmRelease/t8s-cluster-csi/kube-system/DaemonSet/openstack-cinder-csi-nodeplugin.yaml
     - image: k8s.gcr.io/sig-storage/csi-provisioner:v3.1.0                                                                                                                    #  default/HelmRelease/t8s-cluster-csi/kube-system/Deployment/openstack-cinder-csi-controllerplugin.yaml
