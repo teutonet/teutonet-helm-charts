@@ -14,7 +14,7 @@ dependencies:
     version: 2.6.0
     repository: https://charts.bitnami.com/bitnami
 annotations:
-  artifacthub.io/images: |
+  artifacthub.io/images: |-
     - image: docker.io/confluentinc/cp-kafka:7.3.1                     #  null/Deployment/stellio-context-broker-kafka.yaml
     - image: docker.io/stellio/stellio-api-gateway:2.1.0               #  null/Deployment/stellio-context-broker-api-gateway.yaml
     - image: docker.io/stellio/stellio-search-service:2.1.0            #  null/Deployment/stellio-context-broker-search.yaml
