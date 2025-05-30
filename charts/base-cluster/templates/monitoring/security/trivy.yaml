@@ -69,6 +69,9 @@ spec:
       scanJobCompressLogs: false
       scanJobPodTemplateContainerSecurityContext: *securityContext
       scanJobPodTemplatePodSecurityContext: *podSecurityContext
+      {{- with .Values.monitoring.securityScanning.reportLabels }}
+      additionalReportLabels: {{ toYaml . | nindent 8 }}
+      {{- end }}
     excludeNamespaces: ""
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
