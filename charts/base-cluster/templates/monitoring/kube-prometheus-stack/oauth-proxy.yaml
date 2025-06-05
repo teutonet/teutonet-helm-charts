@@ -65,6 +65,7 @@ spec:
         {{- else }}
         email_domains = "*"
         {{- end }}
+        code_challenge_method = "S256"
         upstreams = [ {{ printf "http://%s:%d" $targetServiceName $port | quote }} ]
     podAnnotations:
       # This might change on every `template` call, this can be ignored
