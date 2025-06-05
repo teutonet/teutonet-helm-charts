@@ -9,6 +9,8 @@ jwt:
     claimMappings:
       username:
         expression: claims.email
+      groups:
+        expression: dyn(claims.groups).map(g, "teuto.net:" + g)
     claimValidationRules:
       - expression: (has(claims.email_verified) && claims.email_verified) || !has(claims.email_verified)
         message: email must be verified

@@ -1,0 +1,15 @@
+{{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "teuto-rbac" "resource" (include "t8s-cluster.rbac.teuto" (dict)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "rbac")) | nindent 0 -}}
+
+{{- define "t8s-cluster.rbac.teuto" -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: teuto-staff
+subjects:
+  - kind: Group
+    name: teuto.net:staff
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+{{- end -}}
