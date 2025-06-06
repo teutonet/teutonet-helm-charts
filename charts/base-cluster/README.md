@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 8.0.0](https://img.shields.io/badge/Version-8.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 8.1.0](https://img.shields.io/badge/Version-8.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -36,7 +36,7 @@ vi cluster.yaml
 # create HelmRelease for flux to manage itself
 kubectl create namespace flux-system --dry-run=client -o yaml > flux.yaml
 flux create source helm --url https://fluxcd-community.github.io/helm-charts flux -n flux-system --export >> flux.yaml
-flux create helmrelease --export flux -n flux-system --source HelmRepository/flux.flux-system --chart flux2 --chart-version 2.x.x >> flux.yaml
+flux create helmrelease --export --crds CreateReplace flux -n flux-system --source HelmRepository/flux.flux-system --chart flux2 --chart-version 2.x.x >> flux.yaml
 
 # add, commit and push resources
 git add cluster.yaml flux.yaml
@@ -246,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v8.0.0/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v8.1.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -2999,6 +2999,7 @@ currencyEUR
 | ------------------------------------------------------------------ | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
 | - [resourcesPreset](#monitoring_tracing_ingester_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
 | - [resources](#monitoring_tracing_ingester_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
+| - [persistence](#monitoring_tracing_ingester_persistence )         | No      | object           | No         | -                                                                             | -                                                                 |
 
 ##### <a name="monitoring_tracing_ingester_resourcesPreset"></a>4.11.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester > resourcesPreset`
 
@@ -3016,6 +3017,25 @@ currencyEUR
 | **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
 
 **Description:** ResourceRequirements describes the compute resource requirements.
+
+##### <a name="monitoring_tracing_ingester_persistence"></a>4.11.2.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester > persistence`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                 | Pattern | Type   | Deprecated | Definition                                                                                                                                         | Title/Description |
+| -------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| - [size](#monitoring_tracing_ingester_persistence_size ) | No      | object | No         | Same as [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties ) | -                 |
+
+###### <a name="monitoring_tracing_ingester_persistence_size"></a>4.11.2.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester > persistence > size`
+
+|                           |                                                                                                                                           |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                  |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                                                               |
+| **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
 ### <a name="monitoring_additionalProperties"></a>4.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > additionalProperties`
 

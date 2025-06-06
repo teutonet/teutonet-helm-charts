@@ -1,5 +1,28 @@
 # Changelog
 
+## [8.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v8.0.0...base-cluster-v8.1.0) (2025-06-06)
+
+
+### Features
+
+* **base-cluster/monitoring:** allow upsizing tempo storage ([#1448](https://github.com/teutonet/teutonet-helm-charts/issues/1448)) ([db1a742](https://github.com/teutonet/teutonet-helm-charts/commit/db1a742100eb98e5fcaf833794bf5e4259f425d4))
+* **base-cluster/monitoring:** also read secrets for datasources ([#1479](https://github.com/teutonet/teutonet-helm-charts/issues/1479)) ([83ba8bd](https://github.com/teutonet/teutonet-helm-charts/commit/83ba8bd71d9f21a3a6b3310252326838425d4668))
+* **base-cluster/monitoring:** configure service graph for grafana ([#1422](https://github.com/teutonet/teutonet-helm-charts/issues/1422)) ([8d4bb4c](https://github.com/teutonet/teutonet-helm-charts/commit/8d4bb4c6d2641fc80b85cb01b354a6386a9aeaf9))
+* **base-cluster/monitoring:** set code challenge for grafana ([#1500](https://github.com/teutonet/teutonet-helm-charts/issues/1500)) ([aa803da](https://github.com/teutonet/teutonet-helm-charts/commit/aa803da92a64110eaf83a56e0f54942412487c00))
+* **base-cluster/monitoring:** set code_challenge_method for oauth2-proxy ([#1496](https://github.com/teutonet/teutonet-helm-charts/issues/1496)) ([b252cd7](https://github.com/teutonet/teutonet-helm-charts/commit/b252cd7e6d5b4e6ff6e459417068eadd13a898da))
+
+
+### Bug Fixes
+
+* **base-cluster:** this prevents the user from installing this under another name ([#1418](https://github.com/teutonet/teutonet-helm-charts/issues/1418)) ([f4807e8](https://github.com/teutonet/teutonet-helm-charts/commit/f4807e88bfdd196541d28f8ae20e06f82cedb428))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/docs:** update flux helmrelease command to update CRDs ([#1421](https://github.com/teutonet/teutonet-helm-charts/issues/1421)) ([a8fd535](https://github.com/teutonet/teutonet-helm-charts/commit/a8fd535e77c69e8813b5c8d631b20ff4d069edbe))
+* **base-cluster/monitoring:** remove unnecessary open-telemetry-collector dashboard ([#1449](https://github.com/teutonet/teutonet-helm-charts/issues/1449)) ([520e9e1](https://github.com/teutonet/teutonet-helm-charts/commit/520e9e1a52e74974087a15ea215d9eb931dc3d3a))
+* **base-cluster:** change descheduler syntax ([#1483](https://github.com/teutonet/teutonet-helm-charts/issues/1483)) ([907bdae](https://github.com/teutonet/teutonet-helm-charts/commit/907bdae6787077a75f7145c7ec0aa5f8a97ffd9c))
+
 ## [8.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v7.2.1...base-cluster-v8.0.0) (2025-05-27)
 
 
