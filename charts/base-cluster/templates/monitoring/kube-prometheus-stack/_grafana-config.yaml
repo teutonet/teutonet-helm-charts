@@ -24,6 +24,7 @@ auth.generic_oauth:
   name: OAuth
   role_attribute_path: {{ .grafana.roleAttributePath | quote }}
   scopes: openid profile email
+  use_pkce: true
   {{- end -}}
 {{- end -}}
 
