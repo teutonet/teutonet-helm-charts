@@ -110,24 +110,6 @@ licenses:
   ghcr.io/teutonet/oci-images/solr-ckan:
     license: MIT
     licenseLink: https://github.com/teutonet/oci-images/blob/main/LICENSE
-  k8s.gcr.io/sig-storage/csi-attacher:
-    license: Apache-2.0
-    licenseLink: https://github.com/kubernetes-csi/external-attacher/blob/master/LICENSE
-  k8s.gcr.io/sig-storage/csi-node-driver-registrar:
-    license: Apache-2.0
-    licenseLink: https://github.com/kubernetes-csi/node-driver-registrar/blob/master/LICENSE
-  k8s.gcr.io/sig-storage/csi-provisioner:
-    license: Apache-2.0
-    licenseLink: https://github.com/kubernetes-csi/external-provisioner/blob/master/LICENSE
-  k8s.gcr.io/sig-storage/csi-resizer:
-    license: Apache-2.0
-    licenseLink: https://github.com/kubernetes-csi/external-resizer/blob/master/LICENSE
-  k8s.gcr.io/sig-storage/csi-snapshotter:
-    license: Apache-2.0
-    licenseLink: https://github.com/kubernetes-csi/external-snapshotter/blob/master/LICENSE
-  k8s.gcr.io/sig-storage/livenessprobe:
-    license: Apache-2.0
-    licenseLink: https://github.com/kubernetes-csi/livenessprobe/blob/master/LICENSE
   mirror.gcr.io/aquasec/trivy-operator:
     license: Apache-2.0
     licenseLink: https://github.com/aquasecurity/trivy-operator/blob/main/LICENSE
@@ -221,6 +203,24 @@ licenses:
   registry.k8s.io/provider-os/openstack-cloud-controller-manager:
     license: Apache-2.0
     licenseLink: https://github.com/kubernetes/cloud-provider-openstack/blob/master/LICENSE
+  registry.k8s.io/sig-storage/csi-attacher:
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes-csi/external-attacher/blob/master/LICENSE
+  registry.k8s.io/sig-storage/csi-node-driver-registrar:
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes-csi/node-driver-registrar/blob/master/LICENSE
+  registry.k8s.io/sig-storage/csi-provisioner:
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes-csi/external-provisioner/blob/master/LICENSE
+  registry.k8s.io/sig-storage/csi-resizer:
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes-csi/external-resizer/blob/master/LICENSE
+  registry.k8s.io/sig-storage/csi-snapshotter:
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes-csi/external-snapshotter/blob/master/LICENSE
+  registry.k8s.io/sig-storage/livenessprobe:
+    license: Apache-2.0
+    licenseLink: https://github.com/kubernetes-csi/livenessprobe/blob/master/LICENSE
   registry.k8s.io/sig-storage/nfs-provisioner:
     license: Apache-2.0
     licenseLink: https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/blob/master/LICENSE
