@@ -1,7 +1,7 @@
 <!-- vim: set ft=markdown: -->
 # t8s-cluster
 
-![Version: 9.2.1](https://img.shields.io/badge/Version-9.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 9.3.0](https://img.shields.io/badge/Version-9.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -17,7 +17,7 @@ t8s-operator cluster with necessary addons
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.2.1/charts/t8s-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.3.0/charts/t8s-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster>
 
 ## Requirements
@@ -350,14 +350,15 @@ Must be one of:
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                                      | Pattern | Type            | Deprecated | Definition                | Title/Description                                             |
-| ----------------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------- | ------------------------------------------------------------- |
-| - [hosted](#controlPlane_hosted )                                             | No      | boolean         | No         | -                         | Whether the control plane is hosted on the management cluster |
-| + [flavor](#controlPlane_flavor )                                             | No      | string          | No         | -                         | -                                                             |
-| - [singleNode](#controlPlane_singleNode )                                     | No      | boolean         | No         | -                         | -                                                             |
-| - [additionalSecurityGroups](#controlPlane_additionalSecurityGroups )         | No      | array of string | No         | In #/$defs/securityGroups | -                                                             |
-| - [additionalSecurityGroupRules](#controlPlane_additionalSecurityGroupRules ) | No      | object          | No         | -                         | -                                                             |
-| - [allowedCIDRs](#controlPlane_allowedCIDRs )                                 | No      | array of string | No         | -                         | -                                                             |
+| Property                                                                      | Pattern | Type            | Deprecated | Definition                      | Title/Description                                                 |
+| ----------------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------------- | ----------------------------------------------------------------- |
+| - [hosted](#controlPlane_hosted )                                             | No      | boolean         | No         | -                               | Whether the control plane is hosted on the management cluster     |
+| + [flavor](#controlPlane_flavor )                                             | No      | string          | No         | -                               | -                                                                 |
+| - [singleNode](#controlPlane_singleNode )                                     | No      | boolean         | No         | -                               | -                                                                 |
+| - [additionalSecurityGroups](#controlPlane_additionalSecurityGroups )         | No      | array of string | No         | In #/$defs/securityGroups       | -                                                                 |
+| - [additionalSecurityGroupRules](#controlPlane_additionalSecurityGroupRules ) | No      | object          | No         | -                               | -                                                                 |
+| - [allowedCIDRs](#controlPlane_allowedCIDRs )                                 | No      | array of string | No         | -                               | -                                                                 |
+| - [resources](#controlPlane_resources )                                       | No      | object          | No         | In #/$defs/resourceRequirements | ResourceRequirements describes the compute resource requirements. |
 
 ### <a name="controlPlane_hosted"></a>3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > hosted`
 
@@ -529,6 +530,136 @@ Must be one of:
 | Restrictions                      |                                                                                                                                                                                                                                                                                                                                                                                   |
 | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Must match regular expression** | ```^((25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)\.){3}(25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)(/([0-9]\|[1-2][0-9]\|3[0-2]))?$``` [Test](https://regex101.com/?regex=%5E%28%2825%5B0-5%5D%7C2%5B0-4%5D%5Cd%7C1%5Cd%5Cd%7C%5B1-9%5D%3F%5Cd%29%5C.%29%7B3%7D%2825%5B0-5%5D%7C2%5B0-4%5D%5Cd%7C1%5Cd%5Cd%7C%5B1-9%5D%3F%5Cd%29%28%2F%28%5B0-9%5D%7C%5B1-2%5D%5B0-9%5D%7C3%5B0-2%5D%29%29%3F%24) |
+
+### <a name="controlPlane_resources"></a>3.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > resources`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Defined in**            | #/$defs/resourceRequirements                                                |
+
+**Description:** ResourceRequirements describes the compute resource requirements.
+
+| Property                                        | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                          |
+| ----------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| - [claims](#controlPlane_resources_claims )     | No      | array  | No         | -          | Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.<br /><br />This is an alpha field and requires enabling the DynamicResourceAllocation feature gate.<br /><br />This field is immutable. It can only be set for containers.                                                           |
+| - [limits](#controlPlane_resources_limits )     | No      | object | No         | -          | Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/                                                                                                                                                                                |
+| - [requests](#controlPlane_resources_requests ) | No      | object | No         | -          | Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+
+#### <a name="controlPlane_resources_claims"></a>3.7.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > resources > claims`
+
+|          |         |
+| -------- | ------- |
+| **Type** | `array` |
+
+**Description:** Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
+
+This is an alpha field and requires enabling the DynamicResourceAllocation feature gate.
+
+This field is immutable. It can only be set for containers.
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                          | Description                                                   |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------- |
+| [io.k8s.api.core.v1.ResourceClaim](#controlPlane_resources_claims_items) | ResourceClaim references one entry in PodSpec.ResourceClaims. |
+
+##### <a name="controlPlane_resources_claims_items"></a>3.7.1.1. t8s cluster configuration > controlPlane > resources > claims > io.k8s.api.core.v1.ResourceClaim
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+| **Defined in**            | #/definitions/io.k8s.api.core.v1.ResourceClaim                 |
+
+**Description:** ResourceClaim references one entry in PodSpec.ResourceClaims.
+
+| Property                                                   | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                   |
+| ---------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [name](#controlPlane_resources_claims_items_name )       | No      | string | No         | -          | Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.          |
+| - [request](#controlPlane_resources_claims_items_request ) | No      | string | No         | -          | Request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request. |
+
+###### <a name="controlPlane_resources_claims_items_name"></a>3.7.1.1.1. Property `t8s cluster configuration > controlPlane > resources > claims > claims items > name`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+
+###### <a name="controlPlane_resources_claims_items_request"></a>3.7.1.1.2. Property `t8s cluster configuration > controlPlane > resources > claims > claims items > request`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** Request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request.
+
+#### <a name="controlPlane_resources_limits"></a>3.7.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > resources > limits`
+
+|                           |                                                                                                                            |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                   |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#controlPlane_resources_limits_additionalProperties) |
+
+**Description:** Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+
+| Property                                                   | Pattern | Type   | Deprecated | Definition                                                     | Title/Description |
+| ---------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------- | ----------------- |
+| - [](#controlPlane_resources_limits_additionalProperties ) | No      | object | No         | In #/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity | -                 |
+
+##### <a name="controlPlane_resources_limits_additionalProperties"></a>3.7.2.1. Property `t8s cluster configuration > controlPlane > resources > limits > io.k8s.apimachinery.pkg.api.resource.Quantity`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Defined in**            | #/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity                 |
+
+| One of(Option)                                                         |
+| ---------------------------------------------------------------------- |
+| [item 0](#controlPlane_resources_limits_additionalProperties_oneOf_i0) |
+| [item 1](#controlPlane_resources_limits_additionalProperties_oneOf_i1) |
+
+###### <a name="controlPlane_resources_limits_additionalProperties_oneOf_i0"></a>3.7.2.1.1. Property `t8s cluster configuration > controlPlane > resources > limits > additionalProperties > oneOf > item 0`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="controlPlane_resources_limits_additionalProperties_oneOf_i1"></a>3.7.2.1.2. Property `t8s cluster configuration > controlPlane > resources > limits > additionalProperties > oneOf > item 1`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `number` |
+
+#### <a name="controlPlane_resources_requests"></a>3.7.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > resources > requests`
+
+|                           |                                                                                                                              |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                     |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#controlPlane_resources_requests_additionalProperties) |
+
+**Description:** Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+
+| Property                                                     | Pattern | Type   | Deprecated | Definition                                                                                                         | Title/Description |
+| ------------------------------------------------------------ | ------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------ | ----------------- |
+| - [](#controlPlane_resources_requests_additionalProperties ) | No      | object | No         | Same as [controlPlane_resources_limits_additionalProperties](#controlPlane_resources_limits_additionalProperties ) | -                 |
+
+##### <a name="controlPlane_resources_requests_additionalProperties"></a>3.7.3.1. Property `t8s cluster configuration > controlPlane > resources > requests > io.k8s.apimachinery.pkg.api.resource.Quantity`
+
+|                           |                                                                                                           |
+| ------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                                               |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                               |
+| **Same definition as**    | [controlPlane_resources_limits_additionalProperties](#controlPlane_resources_limits_additionalProperties) |
 
 ## <a name="cloud"></a>4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > cloud`
 
