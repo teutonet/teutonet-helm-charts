@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.4.0...common-v1.5.0) (2025-06-06)
+
+
+### Features
+
+* **common/telemetry:** add telemetry-collector as a generic service name ([#1432](https://github.com/teutonet/teutonet-helm-charts/issues/1432)) ([fdf3b21](https://github.com/teutonet/teutonet-helm-charts/commit/fdf3b21e793a8e3a37e132f9a1472ccb643a2d14))
+* **common:** add kube-apiserver networkpolicy helper ([#1413](https://github.com/teutonet/teutonet-helm-charts/issues/1413)) ([58ed072](https://github.com/teutonet/teutonet-helm-charts/commit/58ed0726018962632766d467bdb90e4f4e6b55a5))
+
+
+### Miscellaneous Chores
+
+* **common/dependencies:** update helm release common to v2.27.0 ([#1389](https://github.com/teutonet/teutonet-helm-charts/issues/1389)) ([9e7587f](https://github.com/teutonet/teutonet-helm-charts/commit/9e7587f70bf05eced1d2cb0e5ac95ccc40dfd00a))
+* **common:** add documentation about template usage ([#1426](https://github.com/teutonet/teutonet-helm-charts/issues/1426)) ([638add8](https://github.com/teutonet/teutonet-helm-charts/commit/638add81729bd169b3a35edfee1c68c6011c2be8))
+
 ## [1.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.3.0...common-v1.4.0) (2025-02-26)
 
 
