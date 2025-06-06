@@ -1,5 +1,20 @@
 # Changelog
 
+## [9.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.2.1...t8s-cluster-v9.3.0) (2025-06-06)
+
+
+### Features
+
+* **t8s-cluster:** add rbac for teuto staff ([#1498](https://github.com/teutonet/teutonet-helm-charts/issues/1498)) ([9e0a9e2](https://github.com/teutonet/teutonet-helm-charts/commit/9e0a9e2c4be2830fd1835bb949a963f047659a4e))
+* **t8s-cluster:** enable audit logging ([#1440](https://github.com/teutonet/teutonet-helm-charts/issues/1440)) ([dcb28ca](https://github.com/teutonet/teutonet-helm-charts/commit/dcb28ca09156ad20f1f19fdad8a370aab02861db))
+* **t8s-cluster:** make apiserver resources configurable ([#1485](https://github.com/teutonet/teutonet-helm-charts/issues/1485)) ([3126661](https://github.com/teutonet/teutonet-helm-charts/commit/3126661a773e899c56b284546eb4a88a2b620e31))
+* **t8s-cluster:** use new pullPolicy template ([#1383](https://github.com/teutonet/teutonet-helm-charts/issues/1383)) ([6b253bd](https://github.com/teutonet/teutonet-helm-charts/commit/6b253bd6ecd6695f85481cff525c676619ae8044))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster:** pin versions ([#1482](https://github.com/teutonet/teutonet-helm-charts/issues/1482)) ([372c92b](https://github.com/teutonet/teutonet-helm-charts/commit/372c92bffad50b11d0d0e75c97b36101bd655ca8))
+
 ## [9.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.2.0...t8s-cluster-v9.2.1) (2025-03-06)
 
 
