@@ -18,15 +18,15 @@ jobs:
     permissions:
       pull-requests: read
     with:
-      pr_number: ${{ github.event.pull_request.number }}
+      pr_number: ${{ github.event.pull_request.number || 0 }}
   getChangedChartsMQ:
     uses: ./.github/workflows/get-changed-charts-merge-queue.yaml
     if: ${{ github.event.merge_group != null }}
     permissions:
       contents: read
     with:
-      base_commit: ${{ github.event.merge_group.base_sha }}
-      head_commit: ${{ github.event.merge_group.head_sha }}
+      base_commit: ${{ github.event.merge_group.base_sha || '' }}
+      head_commit: ${{ github.event.merge_group.head_sha || '' }}
   validateREADMEChanges:
     if: ${{ always() && contains(needs.*.result, 'success') && !contains(needs.*.result, 'failure') }}
     name: Validate README changes
