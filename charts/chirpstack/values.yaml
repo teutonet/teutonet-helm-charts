@@ -1,0 +1,96 @@
+global:
+  curl:
+    image:
+      registry: docker.io
+      repository: curlimages/curl
+      tag: 7.88.1
+    resources: {}
+
+ingress:
+  enabled: false
+
+chirpstack:
+  image:
+    registry: docker.io
+    repository: chirpstack/chirpstack
+    tag: "4"
+  resources:
+    requests:
+      cpu: 10m
+      memory: 40Mi
+    limits:
+      cpu: 100m
+      memory: 100Mi
+  logLevel: info
+
+chirpstackGatewayBridge:
+  image:
+    registry: docker.io
+    repository: chirpstack/chirpstack-gateway-bridge
+    tag: "4"
+  resources:
+    requests:
+      cpu: 10m
+      memory: 40Mi
+    limits:
+      cpu: 100m
+      memory: 100Mi
+
+chirpstackRestAPI:
+  image:
+    registry: docker.io
+    repository: chirpstack/chirpstack-rest-api
+    tag: "4"
+  resources:
+    requests:
+      cpu: 10m
+      memory: 40Mi
+    limits:
+      cpu: 100m
+      memory: 100Mi
+
+mosquitto:
+  image:
+    registry: docker.io
+    repository: eclipse-mosquitto
+    tag: "2"
+  resources:
+    requests:
+      cpu: 10m
+      memory: 40Mi
+    limits:
+      cpu: 100m
+      memory: 100Mi
+
+postgres:
+  image:
+    registry: docker.io
+    repository: postgres
+    tag: "14-alpine"
+  persistence:
+    size: 100Mi
+  resources:
+    requests:
+      cpu: 10m
+      memory: 90Mi
+    limits:
+      cpu: 100m
+      memory: 150Mi
+  user: chirpstack
+  dbname: chirpstack
+  rootPassword: terceSrepuS
+
+redis:
+  image:
+    registry: docker.io
+    repository: redis
+    tag: "7-alpine"
+  persistence:
+    size: 100Mi
+  resources:
+    requests:
+      cpu: 10m
+      memory: 40Mi
+    limits:
+      cpu: 100m
+      memory: 100Mi
