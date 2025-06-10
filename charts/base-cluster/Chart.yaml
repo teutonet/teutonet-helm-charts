@@ -33,10 +33,10 @@ annotations:
     - image: docker.io/bitnami/grafana-tempo:2.7.1-debian-12-r4                                                                        #  monitoring/HelmRelease/grafana-tempo/monitoring/StatefulSet/grafana-tempo-ingester.yaml
     - image: docker.io/bitnami/kubectl:1.31.4-debian-12-r1@sha256:64614ef8290f3fb27fed5164b338debeeb79a1e5e26c93eb920770b71abd7c48     #  default/Job/flux-generate-gpg-key-secret-main.yaml
     - image: docker.io/bitnami/kubectl:1.31.4-debian-12-r1@sha256:64614ef8290f3fb27fed5164b338debeeb79a1e5e26c93eb920770b71abd7c48     #  default/Job/prevent-uninstallation.yaml
-    - image: docker.io/bitnami/kubectl:1.32                                                                                            #  backup/HelmRelease/velero/backup/Job/velero-cleanup-crds.yaml
     - image: docker.io/bitnami/kubectl:1.32.3                                                                                          #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-clean-reports.yaml
     - image: docker.io/bitnami/kubectl:1.32.3                                                                                          #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-remove-configmap.yaml
     - image: docker.io/bitnami/kubectl:1.32.3                                                                                          #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-scale-to-zero.yaml
+    - image: docker.io/bitnami/kubectl:1.33                                                                                            #  backup/HelmRelease/velero/backup/Job/velero-cleanup-crds.yaml
     - image: docker.io/bitnami/memcached:1.6.37-debian-12-r0                                                                           #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-memcached.yaml
     - image: docker.io/bitnami/metrics-server:0.7.2-debian-12-r20                                                                      #  monitoring/HelmRelease/metrics-server/monitoring/Deployment/metrics-server.yaml
     - image: docker.io/busybox:1.35                                                                                                    #  kyverno/HelmRelease/kyverno/kyverno/Pod/kyverno-admission-controller-metrics.yaml
