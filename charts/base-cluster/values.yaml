@@ -114,7 +114,7 @@ global:
       url: oci://docker.io/bitnamicharts
       charts:
         oauth2-proxy: 6.2.11
-        metrics-server: 7.4.2
+        metrics-server: 7.4.6
         external-dns: 8.8.0
         grafana-tempo: 3.8.8
     descheduler:
