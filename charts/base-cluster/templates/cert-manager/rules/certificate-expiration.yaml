@@ -24,7 +24,8 @@ spec:
             certmanager_certificate_expiration_timestamp_seconds and (certmanager_certificate_expiration_timestamp_seconds - time() <= (60 * 60 * 24 * 14))
           for: 5m
           labels:
-            severity: warning
+            severity: critical
+            period: WorkingHours
         - alert: CertificateExpiringSoon
           annotations:
             description: {{ "Certificate {{ $labels.exported_namespace }}/{{ $labels.name }} will expire in less than 1 week. The certificate will expire at {{ humanizeTimestamp $value }}" | quote }}
@@ -34,4 +35,5 @@ spec:
           for: 5m
           labels:
             severity: critical
+            period: WorkingHours
   {{- end -}}
