@@ -24,7 +24,8 @@ spec:
             gotk_reconcile_condition_info{type="Ready",status="False"} == 1
           for: 10m
           labels:
-            severity: warning
+            severity: critical
+            period: WorkingHours
         - alert: MetricsMissing
           annotations:
             description: The flux metrics are missing
@@ -34,4 +35,5 @@ spec:
           for: 5m
           labels:
             severity: critical
+            period: WorkingHours
   {{- end }}
