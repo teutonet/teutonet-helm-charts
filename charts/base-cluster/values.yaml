@@ -297,6 +297,9 @@ monitoring:
           enabled: false
           integrationKey: ""
           url: https://events.pagerduty.com/v2/enqueue
+        betterstack:
+          enabled: false
+          webhookKey: ""
       ingress:
         host: alertmanager
         customDomain: ""
