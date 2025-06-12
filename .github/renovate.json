@@ -10,6 +10,8 @@
   "additionalBranchPrefix": "{{parentDir}}-",
   "separateMinorPatch": true,
   "automerge": true,
+  "prHourlyLimit": 50,
+  "prConcurrentLimit": 20,
   "labels": [
     "dependencies"
   ],
