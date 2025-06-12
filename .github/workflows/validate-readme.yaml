@@ -28,7 +28,7 @@ jobs:
       base_commit: ${{ github.event.merge_group.base_sha || '' }}
       head_commit: ${{ github.event.merge_group.head_sha || '' }}
   validateREADMEChanges:
-    if: ${{ always() && contains(needs.*.result, 'success') && !contains(needs.*.result, 'failure') }}
+    if: ${{ always() && contains(needs.*.result, 'success') && !contains(needs.*.result, 'failure') && !contains((needs.getChangedChartsPR.outputs.charts || needs.getChangedChartsMQ.outputs.charts), '[]') }}
     name: Validate README changes
     runs-on: ubuntu-latest
     needs:
