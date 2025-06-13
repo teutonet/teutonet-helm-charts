@@ -1,5 +1,21 @@
 # Changelog
 
+## [8.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v8.1.0...base-cluster-v8.1.1) (2025-06-13)
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update common docker tag to v1.5.0 ([#1520](https://github.com/teutonet/teutonet-helm-charts/issues/1520)) ([cb4a522](https://github.com/teutonet/teutonet-helm-charts/commit/cb4a5220023ea8b4edfe0ba13217d0392baab0a1))
+* **base-cluster/dependencies:** update docker.io/curlimages/curl docker tag to v8.13.0 ([#1523](https://github.com/teutonet/teutonet-helm-charts/issues/1523)) ([e451428](https://github.com/teutonet/teutonet-helm-charts/commit/e451428d5d0295210620322f5929416f05256c72))
+* **base-cluster/dependencies:** update docker.io/fluxcd/flux-cli docker tag to v2.6.1 ([#1524](https://github.com/teutonet/teutonet-helm-charts/issues/1524)) ([956ad7e](https://github.com/teutonet/teutonet-helm-charts/commit/956ad7ed1b25b94791ee9cf26b614ac7f96aec38))
+* **base-cluster/dependencies:** update docker.io/vladgh/gpg docker tag to v1.3.6 ([#1509](https://github.com/teutonet/teutonet-helm-charts/issues/1509)) ([e521e61](https://github.com/teutonet/teutonet-helm-charts/commit/e521e616aee15234ad70f0dcc12d89797532317a))
+* **base-cluster/dependencies:** update external-dns docker tag to v8.8.4 ([#1510](https://github.com/teutonet/teutonet-helm-charts/issues/1510)) ([b8b3f80](https://github.com/teutonet/teutonet-helm-charts/commit/b8b3f809064221d02416d3ee77531eda29a87bdc))
+* **base-cluster/dependencies:** update helm release descheduler to v0.33.0 ([#1525](https://github.com/teutonet/teutonet-helm-charts/issues/1525)) ([36d8eca](https://github.com/teutonet/teutonet-helm-charts/commit/36d8ecaf7213fde6def6a284a56bb0fea3aa25ce))
+* **base-cluster/dependencies:** update helm release ingress-nginx to v4.12.3 ([#1511](https://github.com/teutonet/teutonet-helm-charts/issues/1511)) ([3dd2aa7](https://github.com/teutonet/teutonet-helm-charts/commit/3dd2aa7f6618b8c602531ba9bb40a65e083b3e1b))
+* **base-cluster/dependencies:** update helm release loki to v6.30.1 ([#1526](https://github.com/teutonet/teutonet-helm-charts/issues/1526)) ([4bf6daa](https://github.com/teutonet/teutonet-helm-charts/commit/4bf6daafb4438328bc896748cd186a2fb863a4af))
+* **base-cluster/dependencies:** update metrics-server docker tag to v7.4.6 ([#1514](https://github.com/teutonet/teutonet-helm-charts/issues/1514)) ([c897fbd](https://github.com/teutonet/teutonet-helm-charts/commit/c897fbd9369815aba7ea2c7c757196219b5b09aa))
+* **base-cluster/dependencies:** update oauth2-proxy docker tag to v6.2.13 ([#1515](https://github.com/teutonet/teutonet-helm-charts/issues/1515)) ([0c04e1c](https://github.com/teutonet/teutonet-helm-charts/commit/0c04e1c336a07b980a427d608bb0e411ae8765e6))
+
 ## [8.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v8.0.0...base-cluster-v8.1.0) (2025-06-06)
 
 
