@@ -1,7 +1,7 @@
 dependencies:
 - name: common
   repository: oci://ghcr.io/teutonet/teutonet-helm-charts
-  version: 1.2.1
+  version: 1.5.0
 - name: postgresql
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 15.5.38
@@ -11,5 +11,5 @@ dependencies:
 - name: solr
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 9.5.7
-digest: sha256:6f2169a35f94b184781d7834eb1a4b9f4edf32269c39601e6ed87be3b335b3b9
-generated: "2025-05-19T10:05:15.400414024+02:00"
+digest: sha256:d86239f90d150fd9e4d4209bd3a5319d042579d9e2b0fb9a42821bc86089378a
+generated: "2025-06-13T02:00:55.15399915Z"
