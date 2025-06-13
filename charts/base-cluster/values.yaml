@@ -175,7 +175,7 @@ global:
     vmware:
       url: https://vmware-tanzu.github.io/helm-charts
       charts:
-        velero: 7.1.5
+        velero: 7.2.2
       condition: "{{ not (empty .Values.backup.backupStorageLocations) }}"
     kube-janitor:
       url: https://codeberg.org/hjacobs/kube-janitor
