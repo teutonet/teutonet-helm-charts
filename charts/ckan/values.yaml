@@ -57,7 +57,7 @@ ckan:
     pullPolicy: IfNotPresent
     pullSecrets: []
     repository: teutonet/oci-images/ckan
-    tag: 1.0.14@sha256:a7486198683ea62f8b264775fd4162d0bdb403d9914c1dd95f9c364be097d63b
+    tag: 1.0.15@sha256:88cd3bd9ecb13d9b02f9f16def521b808f19063c716095119f7da83623a24ef9
     digest: ""
   extraEnvVars: []
   extraVolumeMounts: []
