@@ -102,5 +102,7 @@ spec:
             expr: velero_backup_last_status{schedule!=""} != 1
             for: 15m
             labels:
-              severity: warning
+              severity: critical
+              period: WorkingHours
+
 {{- end }}

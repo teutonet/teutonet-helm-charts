@@ -25,5 +25,6 @@ spec:
               sum(kube_persistentvolumeclaim_resource_requests_storage_bytes{namespace="nfs-server-provisioner",persistentvolumeclaim="data-nfs-server-provisioner-0"})) > 0
           for: 1m
           labels:
-            severity: warning
+            severity: critical
+            period: WorkingHours
 {{- end }}
