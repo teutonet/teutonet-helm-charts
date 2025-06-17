@@ -43,7 +43,7 @@ Password: $ kubectl -n monitoring get secret {{ $secretName | quote }} -o json |
 {{- if .Values.rbac.accounts }}
 
 ===
-Use the following commands to create a kubeconfig for an account;
+Use the following commands to create a kubeconfig for an account if it's not a user with an email, for that you use OIDC as per your hoster;
 
 function generateKubeconfig() {
   local user="${1?Missing user parameter}"
@@ -71,5 +71,6 @@ users:
 EOF
 }
 
+# example usage:
 $ generateKubeconfig {{ .Values.rbac.accounts | keys | first }}
 {{- end -}}

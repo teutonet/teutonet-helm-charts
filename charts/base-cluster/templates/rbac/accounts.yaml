@@ -1,5 +1,6 @@
 {{- range $name := .Values.rbac.accounts | keys -}}
   {{- $fullName := printf "%s-%s" (include "common.names.fullname" $) $name -}}
+  {{- if not (contains "@" $name) -}}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -19,4 +20,5 @@ metadata:
   annotations:
     kubernetes.io/service-account.name: {{ $fullName }}
 type: kubernetes.io/service-account-token
-{{ end -}}
+  {{ end -}}
+{{- end -}}
