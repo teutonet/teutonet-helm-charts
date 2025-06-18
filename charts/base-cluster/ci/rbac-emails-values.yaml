@@ -31,7 +31,7 @@ rbac:
           - update
           - patch
   accounts:
-    test:
+    test@example.com:
       roles:
         edit:
           - my-fav-ns

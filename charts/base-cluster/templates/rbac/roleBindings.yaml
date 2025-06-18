@@ -1,6 +1,19 @@
 {{- $roles := include "base-cluster.rbac.roles" (dict "accounts" .Values.rbac.accounts "roles" (.Values.rbac.roles | keys) "namespaces" (include "base-cluster.enabled-namespaces" . | fromYaml | keys)) | fromYaml -}}
 {{- $definedRoles := .Values.rbac.roles | keys -}}
 
+{{- define "base-cluster.rbac.subjects" -}}
+  {{- $_ := mustMerge . (pick .context "Release") -}}
+  {{- $subjects := list -}}
+  {{- range $account := .accounts -}}
+    {{- if contains "@" $account -}}
+      {{- $subjects = append $subjects (dict "kind" "User" "name" $account) -}}
+    {{- else -}}
+      {{- $subjects = append $subjects (dict "kind" "ServiceAccount" "namespace" $.Release.Namespace "name" (printf "%s-%s" (include "common.names.fullname" $.context) $account)) -}}
+    {{- end -}}
+  {{- end }}
+  {{- toYaml $subjects -}}
+{{- end -}}
+
 {{- range $roleName, $roleMapping := $roles -}}
   {{- $clusterMapping := dig "clusterMapping" (dict) $roleMapping -}}
   {{- $namespaceMapping := dig "namespaceMapping" (dict) $roleMapping -}}
@@ -15,12 +28,7 @@ metadata:
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     app.kubernetes.io/component: rbac
   namespace: {{ $namespace }}
-subjects:
-    {{- range $account := $accounts }}
-  - kind: ServiceAccount
-    namespace: {{ $.Release.Namespace }}
-    name: {{ printf "%s-%s" (include "common.names.fullname" $) $account }}
-    {{- end }}
+subjects: {{- include "base-cluster.rbac.subjects" (dict "accounts" $accounts "context" $) | nindent 2 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -34,12 +42,7 @@ metadata:
   name: {{ $roleBindingFullName }}
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     app.kubernetes.io/component: rbac
-subjects:
-    {{- range $account := $clusterMapping }}
-  - kind: ServiceAccount
-    namespace: {{ $.Release.Namespace }}
-    name: {{ printf "%s-%s" (include "common.names.fullname" $) $account }}
-    {{- end }}
+subjects: {{- include "base-cluster.rbac.subjects" (dict "accounts" $clusterMapping "context" $) | nindent 2 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
