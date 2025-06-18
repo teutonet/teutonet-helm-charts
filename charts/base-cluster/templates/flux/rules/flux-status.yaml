@@ -21,7 +21,7 @@ spec:
             description: {{ "Resource {{ $labels.customresource_kind }}/{{ $labels.exported_namespace }}/{{ $labels.name }} has been in a failed state for longer than 10 minutes." | quote }}
             summary: Resource has failed.
           expr: |-
-            gotk_reconcile_condition_info{type="Ready",status="False"} == 1
+            min(gotk_reconcile_condition_gauge{type="Ready"}) by (customresource_kind, exported_namespace, name) == 0
           for: 10m
           labels:
             severity: critical
@@ -31,7 +31,7 @@ spec:
             description: {{ "Resource {{ $labels.customresource_kind }}/{{ $labels.exported_namespace }}/{{ $labels.name }} has been suspended for longer than 1 hour." | quote }}
             summary: Resource is suspended.
           expr: |-
-            gotk_reconcile_condition_info{suspended="True"} == 1
+            max(gotk_reconcile_suspended_gauge) by (customresource_kind, exported_namespace, name) == 1
           for: 1h
           labels:
             severity: critical
@@ -41,7 +41,7 @@ spec:
             description: The flux metrics are missing
             summary: The flux metrics are missing
           expr: |-
-            absent(gotk_reconcile_condition_info) == 1
+            (absent(gotk_reconcile_condition_gauge) or absent(gotk_reconcile_suspended_gauge)) == 1
           for: 5m
           labels:
             severity: critical

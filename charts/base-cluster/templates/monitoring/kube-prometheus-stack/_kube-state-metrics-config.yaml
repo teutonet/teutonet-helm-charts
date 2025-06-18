@@ -39,23 +39,21 @@ customResourceState:
   config:
     spec:
       {{- $types := dict
-        "Bucket" (dict "group" "source" "version" "v1beta2")
-        "GitRepository" (dict "group" "source" "version" "v1")
-        "HelmChart" (dict "group" "source" "version" "v1")
-        "HelmRelease" (dict "group" "helm" "version" "v2")
-        "HelmRepository" (dict "group" "source" "version" "v1")
-        "ImagePolicy" (dict "group" "image" "version" "v1beta2")
-        "ImageRepository" (dict "group" "image" "version" "v1beta2")
-        "ImageUpdateAutomation" (dict "group" "image" "version" "v1beta2")
-        "Kustomization" (dict "group" "kustomize" "version" "v1")
-        "OCIRepository" (dict "group" "source" "version" "v1beta2")
-        "Receiver" (dict "group" "notification" "version" "v1")
+        "Bucket" "source"
+        "GitRepository" "source"
+        "HelmChart" "source"
+        "HelmRelease" "helm"
+        "HelmRepository" "source"
+        "ImagePolicy" "image"
+        "ImageRepository" "image"
+        "ImageUpdateAutomation" "image"
+        "Kustomization" "kustomize"
+        "OCIRepository" "source"
+        "Receiver" "notification"
       -}}
 
       {{- $resources := list -}}
-      {{- range $kind, $spec := $types -}}
-        {{- $group := $spec.group -}}
-        {{- $version := $spec.version -}}
+      {{- range $kind, $group := $types -}}
         {{- $resources = append $resources (dict
               "groupVersionKind" (dict
                 "group" (printf "%s.toolkit.fluxcd.io" $group)
@@ -64,22 +62,36 @@ customResourceState:
               "metricNamePrefix" "gotk"
               "metrics" (list
                 (dict
-                  "name" "reconcile_condition_info"
+                  "name" "reconcile_condition_gauge"
                   "help" (printf "The current conditions of a Flux %s resource." $kind)
                   "each" (dict
-                    "type" "Info"
-                    "info" (dict
+                    "type" "Gauge"
+                    "gauge" (dict
                       "path" (list "status" "conditions")
                       "labelsFromPath" (dict
                         "type" (list "type")
-                        "status" (list "status")
                       )
+                      "valueFrom" (list "status")
                     )
                   )
                   "labelsFromPath" (dict
                     "exported_namespace" (list "metadata" "namespace")
                     "name" (list "metadata" "name")
-                    "suspended" (list "spec" "suspend")
+                  )
+                )
+                (dict
+                  "name" "reconcile_suspended_gauge"
+                  "help" (printf "The reconciliation suspended status of a Flux %s resource." $kind)
+                  "each" (dict
+                    "type" "Gauge"
+                    "gauge" (dict
+                      "path" (list "spec")
+                      "valueFrom" (list "suspend")
+                    )
+                  )
+                  "labelsFromPath" (dict
+                    "exported_namespace" (list "metadata" "namespace")
+                    "name" (list "metadata" "name")
                   )
                 )
               )
