@@ -33,14 +33,6 @@ prometheusSpec:
           requests:
             storage: {{ .Values.monitoring.prometheus.persistence.size }}
   replicas: {{ .Values.monitoring.prometheus.replicas }}
-  ruleSelector:
-    matchLabels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 6 }}
-  serviceMonitorSelector:
-    matchLabels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 6 }}
-  podMonitorSelector:
-    matchLabels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 6 }}
-  probeSelector:
-    matchLabels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 6 }}
   additionalAlertRelabelConfigs:
     {{- if not .Values.monitoring.monitorAllNamespaces }}
       {{- $namespaces := list .Release.Namespace "kube-node-lease" "kube-public" "kube-system" -}}
