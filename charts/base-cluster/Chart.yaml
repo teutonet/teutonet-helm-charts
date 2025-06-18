@@ -54,7 +54,7 @@ annotations:
     - image: docker.io/grafana/grafana:11.3.0                                                                                          #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana.yaml
     - image: docker.io/grafana/loki:3.5.0                                                                                              #  monitoring/HelmRelease/loki/monitoring/StatefulSet/loki.yaml
     - image: docker.io/hjacobs/kube-janitor:23.7.0                                                                                     #  kube-system/HelmRelease/kube-janitor/kube-system/Deployment/kube-janitor.yaml
-    - image: docker.io/traefik:v3.3.6                                                                                                  #  ingress/HelmRelease/ingress-controller/ingress/Deployment/ingress-controller.yaml
+    - image: docker.io/traefik:v3.4.0                                                                                                  #  ingress/HelmRelease/ingress-controller/ingress/Deployment/ingress-controller.yaml
     - image: docker.io/velero/velero-plugin-for-aws:v1.7.0                                                                             #  backup/HelmRelease/velero/backup/Deployment/velero.yaml
     - image: docker.io/velero/velero:v1.14.0                                                                                           #  backup/HelmRelease/velero/backup/DaemonSet/node-agent.yaml
     - image: docker.io/velero/velero:v1.14.0                                                                                           #  backup/HelmRelease/velero/backup/Deployment/velero.yaml
