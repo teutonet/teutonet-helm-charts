@@ -79,6 +79,7 @@ customResourceState:
                   "labelsFromPath" (dict
                     "exported_namespace" (list "metadata" "namespace")
                     "name" (list "metadata" "name")
+                    "suspended" (list "spec" "suspend")
                   )
                 )
               )

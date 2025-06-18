@@ -26,6 +26,16 @@ spec:
           labels:
             severity: critical
             period: WorkingHours
+        - alert: ResourcesSuspended
+          annotations:
+            description: {{ "Resource {{ $labels.customresource_kind }}/{{ $labels.exported_namespace }}/{{ $labels.name }} has been suspended for longer than 1 hour." | quote }}
+            summary: Resource is suspended.
+          expr: |-
+            gotk_reconcile_condition_info{suspended="True"} == 1
+          for: 1h
+          labels:
+            severity: critical
+            period: WorkingHours
         - alert: MetricsMissing
           annotations:
             description: The flux metrics are missing
