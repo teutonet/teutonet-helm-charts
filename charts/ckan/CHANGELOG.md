@@ -1,5 +1,78 @@
 # Changelog
 
+## [1.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.3.2...ckan-v1.4.0) (2025-06-20)
+
+
+### Features
+
+* **ckan:** add api creation and perist secrets ([#1238](https://github.com/teutonet/teutonet-helm-charts/issues/1238)) ([#1249](https://github.com/teutonet/teutonet-helm-charts/issues/1249)) ([a42d2f6](https://github.com/teutonet/teutonet-helm-charts/commit/a42d2f6dbd8a241d390a70263ba67d2d69362396))
+* **ckan:** replace redis with valkey ([#1468](https://github.com/teutonet/teutonet-helm-charts/issues/1468)) ([d29d113](https://github.com/teutonet/teutonet-helm-charts/commit/d29d113a9a2bbc945a60487ad048b2fba178b739))
+
+
+### Bug Fixes
+
+* **ckan:** add defaults for datapusher formats defaults ([#1094](https://github.com/teutonet/teutonet-helm-charts/issues/1094)) ([f036735](https://github.com/teutonet/teutonet-helm-charts/commit/f0367357ef1890f32fb6555cb61fce427f46623b))
+* **ckan:** fix solr cloud setup ([#1104](https://github.com/teutonet/teutonet-helm-charts/issues/1104)) ([c7cbb31](https://github.com/teutonet/teutonet-helm-charts/commit/c7cbb315268d7c0f289db786f73208c198652847))
+* **ckan:** init container for volume permissions ([#1098](https://github.com/teutonet/teutonet-helm-charts/issues/1098)) ([c4c45ed](https://github.com/teutonet/teutonet-helm-charts/commit/c4c45ed7aa11d1997f9ccd54cf7f619a6def83c2))
+* **ckan:** Revert "chore(ckan): add missing valkey license" ([#1474](https://github.com/teutonet/teutonet-helm-charts/issues/1474)) ([d046bc4](https://github.com/teutonet/teutonet-helm-charts/commit/d046bc4453fa14991578b1faa19de8608f38cb6a))
+* **ckan:** volume mount position one level up ([#1095](https://github.com/teutonet/teutonet-helm-charts/issues/1095)) ([a183662](https://github.com/teutonet/teutonet-helm-charts/commit/a18366281613bfa3ed72075c1e5df83f7d9e2e56))
+
+
+### Miscellaneous Chores
+
+* **ckan:** [bot] release 1.1.8 ([#1144](https://github.com/teutonet/teutonet-helm-charts/issues/1144)) ([0eec2b2](https://github.com/teutonet/teutonet-helm-charts/commit/0eec2b221316e0add05213e81c9d59039b70f841))
+* **ckan/dependencies:** pin dependencies ([#1266](https://github.com/teutonet/teutonet-helm-charts/issues/1266)) ([44f25a5](https://github.com/teutonet/teutonet-helm-charts/commit/44f25a5d835724fad9763c28cb5bfaa42ad72afb))
+* **ckan/dependencies:** pin ghcr.io/teutonet/oci-images/solr-ckan docker tag to fa9824f ([#1105](https://github.com/teutonet/teutonet-helm-charts/issues/1105)) ([59790a9](https://github.com/teutonet/teutonet-helm-charts/commit/59790a91e7916083e0711673900f187732ba7b56))
+* **ckan/dependencies:** update ckan/ckan-base-datapusher docker tag to v0.0.21 ([#1008](https://github.com/teutonet/teutonet-helm-charts/issues/1008)) ([303f554](https://github.com/teutonet/teutonet-helm-charts/commit/303f554594ecd465ddb771c1761245a691063eb7))
+* **ckan/dependencies:** update ckan/ckan-base-datapusher:0.0.21 docker digest to 84d1192 ([#1443](https://github.com/teutonet/teutonet-helm-charts/issues/1443)) ([bcbeef2](https://github.com/teutonet/teutonet-helm-charts/commit/bcbeef25d2b3a38a76c33617d4070427b8e58b90))
+* **ckan/dependencies:** update common docker tag to v1.2.0 ([#1016](https://github.com/teutonet/teutonet-helm-charts/issues/1016)) ([4eed55b](https://github.com/teutonet/teutonet-helm-charts/commit/4eed55b59495cda6f523b4270e2d484853eb02cd))
+* **ckan/dependencies:** update common docker tag to v1.2.1 ([#1106](https://github.com/teutonet/teutonet-helm-charts/issues/1106)) ([553e211](https://github.com/teutonet/teutonet-helm-charts/commit/553e211ecbf9d2bc8e7c59073868c8f37ead5124))
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/ckan docker tag to v1.0.14 ([#1378](https://github.com/teutonet/teutonet-helm-charts/issues/1378)) ([4fdacdf](https://github.com/teutonet/teutonet-helm-charts/commit/4fdacdfbb78bc24b22b561026b801c898aec355e))
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/ckan docker tag to v1.0.15 ([#1516](https://github.com/teutonet/teutonet-helm-charts/issues/1516)) ([0180fe4](https://github.com/teutonet/teutonet-helm-charts/commit/0180fe40c4f6f41ff299bbea0f52b1809dc066b3))
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/ckan docker tag to v1.0.2 ([#1009](https://github.com/teutonet/teutonet-helm-charts/issues/1009)) ([de6da51](https://github.com/teutonet/teutonet-helm-charts/commit/de6da517b7af07a98b6817e0457c6e64109c5516))
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/ckan docker tag to v1.0.3 ([#1136](https://github.com/teutonet/teutonet-helm-charts/issues/1136)) ([f33c4a6](https://github.com/teutonet/teutonet-helm-charts/commit/f33c4a615b3a0a5d0781c44d270a54bbc670e511))
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/ckan docker tag to v1.0.5 ([#1163](https://github.com/teutonet/teutonet-helm-charts/issues/1163)) ([33b1b3e](https://github.com/teutonet/teutonet-helm-charts/commit/33b1b3ef9a5bc94d0420b8eb363c65f266f562c7))
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/solr-ckan docker tag to v1.0.11 ([#1164](https://github.com/teutonet/teutonet-helm-charts/issues/1164)) ([445b682](https://github.com/teutonet/teutonet-helm-charts/commit/445b68210aa51e0ab51b597b735a6b174c4ed12f))
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/solr-ckan docker tag to v1.0.12 ([#1210](https://github.com/teutonet/teutonet-helm-charts/issues/1210)) ([6900c0f](https://github.com/teutonet/teutonet-helm-charts/commit/6900c0ff7333e851450eb0b64bee8efcb8cffb5c))
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/solr-ckan docker tag to v1.0.25 ([#1379](https://github.com/teutonet/teutonet-helm-charts/issues/1379)) ([2d1713c](https://github.com/teutonet/teutonet-helm-charts/commit/2d1713cf0e2b98eb8f3aa9481584935cae87a91b))
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/solr-ckan docker tag to v1.0.27 ([#1517](https://github.com/teutonet/teutonet-helm-charts/issues/1517)) ([2a606f5](https://github.com/teutonet/teutonet-helm-charts/commit/2a606f5fa9bd40cb1d60ffa874d32a8b8ff31389))
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/solr-ckan docker tag to v1.0.3 ([#1012](https://github.com/teutonet/teutonet-helm-charts/issues/1012)) ([d49cfdb](https://github.com/teutonet/teutonet-helm-charts/commit/d49cfdb6c8c9745b393f8e027e0ac52d219d4e48))
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/solr-ckan docker tag to v1.0.4 ([#1032](https://github.com/teutonet/teutonet-helm-charts/issues/1032)) ([b1250ab](https://github.com/teutonet/teutonet-helm-charts/commit/b1250ab6cae71427da7d533c8786e51f28d8d57c))
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/solr-ckan docker tag to v1.0.8 ([#1148](https://github.com/teutonet/teutonet-helm-charts/issues/1148)) ([9dd9824](https://github.com/teutonet/teutonet-helm-charts/commit/9dd98242ca437bf5f8e34df80f1ebbf245241eeb))
+* **ckan/dependencies:** update solr docker tag to v9.5.7 ([#1380](https://github.com/teutonet/teutonet-helm-charts/issues/1380)) ([83b6b68](https://github.com/teutonet/teutonet-helm-charts/commit/83b6b68b0a0bb22b09aa594c634f0e1c16cc4c87))
+* **ckan/dependencies:** update solr docker tag to v9.6.5 ([#1531](https://github.com/teutonet/teutonet-helm-charts/issues/1531)) ([faa2a3a](https://github.com/teutonet/teutonet-helm-charts/commit/faa2a3a7e050ebde5b5d62c5222423fd89b4bf2e))
+* **ckan/dependencies:** update valkey docker tag to v3.0.15 ([#1518](https://github.com/teutonet/teutonet-helm-charts/issues/1518)) ([904b201](https://github.com/teutonet/teutonet-helm-charts/commit/904b201019da259c3ce41e433bbe525db2e3b92b))
+* **ckan:** add extra volumes to ckan ([#1263](https://github.com/teutonet/teutonet-helm-charts/issues/1263)) ([bb194dc](https://github.com/teutonet/teutonet-helm-charts/commit/bb194dcdc4535d391f0659a9d6070e578b7d91f5))
+* **ckan:** add imagepullsecrets support ([#1297](https://github.com/teutonet/teutonet-helm-charts/issues/1297)) ([c612cf2](https://github.com/teutonet/teutonet-helm-charts/commit/c612cf221c0e803c6e6a5c5086d25c169b27d6da))
+* **ckan:** add missing valkey license ([#1472](https://github.com/teutonet/teutonet-helm-charts/issues/1472)) ([2edc78f](https://github.com/teutonet/teutonet-helm-charts/commit/2edc78f31317f7a35d61750cecac1d5aca7ae89a))
+* **ckan:** change env generation ([#1451](https://github.com/teutonet/teutonet-helm-charts/issues/1451)) ([152e075](https://github.com/teutonet/teutonet-helm-charts/commit/152e0751344c6d3709654e9ba4c9efb4e1f1fd9e))
+* **ckan:** change env order ([#1455](https://github.com/teutonet/teutonet-helm-charts/issues/1455)) ([135ef05](https://github.com/teutonet/teutonet-helm-charts/commit/135ef05164525f5cb97724dd0943297ecee4a881))
+* **ckan:** change psql connection ([#1457](https://github.com/teutonet/teutonet-helm-charts/issues/1457)) ([e001dd3](https://github.com/teutonet/teutonet-helm-charts/commit/e001dd376b245bc021e5900bcacdff8e0860933f))
+* **ckan:** fix imagepullsecrets support ([#1304](https://github.com/teutonet/teutonet-helm-charts/issues/1304)) ([bcef00b](https://github.com/teutonet/teutonet-helm-charts/commit/bcef00b2b0db43091062691156e4595362d8d704))
+* **ckan:** fix postinstall ckan image ([#1308](https://github.com/teutonet/teutonet-helm-charts/issues/1308)) ([a06c51c](https://github.com/teutonet/teutonet-helm-charts/commit/a06c51c8a75f6a5c2fe3aa41be85cc5c58a5a928))
+* **ckan:** remove ext postgres config ([#1459](https://github.com/teutonet/teutonet-helm-charts/issues/1459)) ([263b574](https://github.com/teutonet/teutonet-helm-charts/commit/263b574de2a2d41c0ec26061b5395e17ff36af1f))
+* **ckan:** support external db ([#1453](https://github.com/teutonet/teutonet-helm-charts/issues/1453)) ([caa20e8](https://github.com/teutonet/teutonet-helm-charts/commit/caa20e84fbca462359598eba34c2b710cf5158f8))
+* **ckan:** update solar and ckan container ([#1277](https://github.com/teutonet/teutonet-helm-charts/issues/1277)) ([fadecb5](https://github.com/teutonet/teutonet-helm-charts/commit/fadecb5693f6f2881c8d7b797cd03e1cab0e79e9))
+* **ckan:** use primary valkey instance ([#1469](https://github.com/teutonet/teutonet-helm-charts/issues/1469)) ([64acca3](https://github.com/teutonet/teutonet-helm-charts/commit/64acca300e408279ac09963b2041d24f17181e39))
+* **main:** [bot] release ckan:1.1.3 ([#977](https://github.com/teutonet/teutonet-helm-charts/issues/977)) ([a7f96d0](https://github.com/teutonet/teutonet-helm-charts/commit/a7f96d020525b7395aba5323bc93e8a1c5828009))
+* **main:** [bot] release ckan:1.1.4 ([#1018](https://github.com/teutonet/teutonet-helm-charts/issues/1018)) ([c606781](https://github.com/teutonet/teutonet-helm-charts/commit/c6067816e0f2bb36bb150dca49bed3a7ab4d4eef))
+* **main:** [bot] release ckan:1.1.5 ([#1096](https://github.com/teutonet/teutonet-helm-charts/issues/1096)) ([df41ed4](https://github.com/teutonet/teutonet-helm-charts/commit/df41ed4fce5a99e10e4e32ae48c7cc18ba52a4a7))
+* **main:** [bot] release ckan:1.1.6 ([#1097](https://github.com/teutonet/teutonet-helm-charts/issues/1097)) ([f7d6445](https://github.com/teutonet/teutonet-helm-charts/commit/f7d644597102ae8235b67a12cfa62217726b4b54))
+* **main:** [bot] release ckan:1.1.7 ([#1099](https://github.com/teutonet/teutonet-helm-charts/issues/1099)) ([920c035](https://github.com/teutonet/teutonet-helm-charts/commit/920c0350e7f0c9c47c44261c9ccac509e40ef688))
+* **main:** [bot] release ckan:1.2.0 ([#1215](https://github.com/teutonet/teutonet-helm-charts/issues/1215)) ([0b22ebd](https://github.com/teutonet/teutonet-helm-charts/commit/0b22ebd6a78daaaecc4cff2894447183702aab9e))
+* **main:** [bot] release ckan:1.2.1 ([#1264](https://github.com/teutonet/teutonet-helm-charts/issues/1264)) ([a510364](https://github.com/teutonet/teutonet-helm-charts/commit/a510364a3d1e50063d5ba5a8e789f92c3ed302cf))
+* **main:** [bot] release ckan:1.2.2 ([#1296](https://github.com/teutonet/teutonet-helm-charts/issues/1296)) ([8d070c7](https://github.com/teutonet/teutonet-helm-charts/commit/8d070c7db8ba930792bbb7bd8aa0d8eff623a1ae))
+* **main:** [bot] release ckan:1.2.3 ([#1302](https://github.com/teutonet/teutonet-helm-charts/issues/1302)) ([8cc22dd](https://github.com/teutonet/teutonet-helm-charts/commit/8cc22dd9c052e47c6902ae4fed9ba5bc21aa1044))
+* **main:** [bot] release ckan:1.2.4 ([#1307](https://github.com/teutonet/teutonet-helm-charts/issues/1307)) ([b814766](https://github.com/teutonet/teutonet-helm-charts/commit/b814766c34c7e00b0ecd5e0294290a4ccf770e33))
+* **main:** [bot] release ckan:1.2.5 ([#1309](https://github.com/teutonet/teutonet-helm-charts/issues/1309)) ([71bb791](https://github.com/teutonet/teutonet-helm-charts/commit/71bb7910085dac35c5f04c471725d0a9719f52b9))
+* **main:** [bot] release ckan:1.2.6 ([#1452](https://github.com/teutonet/teutonet-helm-charts/issues/1452)) ([666eadd](https://github.com/teutonet/teutonet-helm-charts/commit/666eaddc6e4315e2f2eb1f7e3c4ed708e1404df7))
+* **main:** [bot] release ckan:1.2.7 ([#1454](https://github.com/teutonet/teutonet-helm-charts/issues/1454)) ([60ebeb8](https://github.com/teutonet/teutonet-helm-charts/commit/60ebeb8e762dbc24d9d33fb3ff084975c13722b3))
+* **main:** [bot] release ckan:1.2.8 ([#1456](https://github.com/teutonet/teutonet-helm-charts/issues/1456)) ([2c508f2](https://github.com/teutonet/teutonet-helm-charts/commit/2c508f2d5d5e3fb3200b110631a9d69034e0cd1f))
+* **main:** [bot] release ckan:1.2.9 ([#1460](https://github.com/teutonet/teutonet-helm-charts/issues/1460)) ([e6a26ed](https://github.com/teutonet/teutonet-helm-charts/commit/e6a26ed4d542b273a5e4933e1b65f769794da904))
+* **main:** [bot] release ckan:1.3.0 ([#1461](https://github.com/teutonet/teutonet-helm-charts/issues/1461)) ([ca20fb0](https://github.com/teutonet/teutonet-helm-charts/commit/ca20fb02d7bea4510f746c092ce3ea90a227328b))
+* **main:** [bot] release ckan:1.3.1 ([#1470](https://github.com/teutonet/teutonet-helm-charts/issues/1470)) ([b4a41da](https://github.com/teutonet/teutonet-helm-charts/commit/b4a41dadddb63a6eccef083e955aa9aa8f018b01))
+* **main:** [bot] release ckan:1.3.2 ([#1501](https://github.com/teutonet/teutonet-helm-charts/issues/1501)) ([d9b6a42](https://github.com/teutonet/teutonet-helm-charts/commit/d9b6a420fa0fc753595ca1998c619dac79131f49))
+
 ## [1.3.2](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.3.1...ckan-v1.3.2) (2025-06-20)
 
 
