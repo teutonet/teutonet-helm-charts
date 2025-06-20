@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.3.2](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.3.1...ckan-v1.3.2) (2025-06-20)
+
+
+### Bug Fixes
+
+* **ckan:** Revert "chore(ckan): add missing valkey license" ([#1474](https://github.com/teutonet/teutonet-helm-charts/issues/1474)) ([d046bc4](https://github.com/teutonet/teutonet-helm-charts/commit/d046bc4453fa14991578b1faa19de8608f38cb6a))
+
+
+### Miscellaneous Chores
+
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/ckan docker tag to v1.0.15 ([#1516](https://github.com/teutonet/teutonet-helm-charts/issues/1516)) ([0180fe4](https://github.com/teutonet/teutonet-helm-charts/commit/0180fe40c4f6f41ff299bbea0f52b1809dc066b3))
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/solr-ckan docker tag to v1.0.27 ([#1517](https://github.com/teutonet/teutonet-helm-charts/issues/1517)) ([2a606f5](https://github.com/teutonet/teutonet-helm-charts/commit/2a606f5fa9bd40cb1d60ffa874d32a8b8ff31389))
+* **ckan/dependencies:** update solr docker tag to v9.6.5 ([#1531](https://github.com/teutonet/teutonet-helm-charts/issues/1531)) ([faa2a3a](https://github.com/teutonet/teutonet-helm-charts/commit/faa2a3a7e050ebde5b5d62c5222423fd89b4bf2e))
+* **ckan/dependencies:** update valkey docker tag to v3.0.15 ([#1518](https://github.com/teutonet/teutonet-helm-charts/issues/1518)) ([904b201](https://github.com/teutonet/teutonet-helm-charts/commit/904b201019da259c3ce41e433bbe525db2e3b92b))
+
 ## [1.3.1](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.3.0...ckan-v1.3.1) (2025-05-21)
 
 

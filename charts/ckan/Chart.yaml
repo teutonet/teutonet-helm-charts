@@ -28,10 +28,10 @@ maintainers:
     name: tasches
 name: ckan
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/ckan-v1.3.1/charts/ckan
+  - https://github.com/teutonet/teutonet-helm-charts/tree/ckan-v1.3.2/charts/ckan
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/ckan
 type: application
-version: 1.3.1
+version: 1.3.2
 annotations:
   artifacthub.io/image-licenses.docker.io/bitnami/valkey: Apache-2.0
   artifacthub.io/images: |-
@@ -39,11 +39,11 @@ annotations:
     - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r14                                                                     #  default/StatefulSet/ckan-postgresql-primary.yaml
     - image: docker.io/bitnami/postgresql:16.4.0-debian-12-r14                                                                     #  default/StatefulSet/ckan-postgresql-read.yaml
     - image: docker.io/bitnami/postgresql:17                                                                                       #  default/Job/ckan-ckan-post-install.yaml
-    - image: docker.io/bitnami/valkey:8.1.1-debian-12-r0                                                                           #  default/StatefulSet/ckan-valkey-primary.yaml
-    - image: docker.io/bitnami/valkey:8.1.1-debian-12-r0                                                                           #  default/StatefulSet/ckan-valkey-replicas.yaml
-    - image: docker.io/bitnami/zookeeper:3.9.3-debian-12-r10                                                                       #  default/StatefulSet/ckan-zookeeper.yaml
+    - image: docker.io/bitnami/valkey:8.1.2-debian-12-r0                                                                           #  default/StatefulSet/ckan-valkey-primary.yaml
+    - image: docker.io/bitnami/valkey:8.1.2-debian-12-r0                                                                           #  default/StatefulSet/ckan-valkey-replicas.yaml
+    - image: docker.io/bitnami/zookeeper:3.9.3-debian-12-r15                                                                       #  default/StatefulSet/ckan-zookeeper.yaml
     - image: docker.io/busybox:1.28                                                                                                #  default/Job/ckan-ckan-post-install.yaml
     - image: docker.io/ckan/ckan-base-datapusher:0.0.21@sha256:84d11924549f44bcc1419256811d156893d837f90885b24f81f1753733b9d6ef    #  default/Deployment/ckan-datapusher.yaml
     - image: ghcr.io/teutonet/oci-images/ckan:1.0.15@sha256:88cd3bd9ecb13d9b02f9f16def521b808f19063c716095119f7da83623a24ef9       #  default/Deployment/ckan-ckan.yaml
     - image: ghcr.io/teutonet/oci-images/ckan:1.0.15@sha256:88cd3bd9ecb13d9b02f9f16def521b808f19063c716095119f7da83623a24ef9       #  default/Job/ckan-ckan-post-install.yaml
-    - image: ghcr.io/teutonet/oci-images/solr-ckan:1.0.25@sha256:cf36ee93a50ffeeb3dc53298ed0e7d92152896c6fcb1e1ac199363eb883dc971  #  default/StatefulSet/ckan-solr.yaml
+    - image: ghcr.io/teutonet/oci-images/solr-ckan:1.0.27@sha256:cb0d2e59e5394dc861848bbf4c830a86a4bfc8b841370e9efd8c6199fb871fd9  #  default/StatefulSet/ckan-solr.yaml
