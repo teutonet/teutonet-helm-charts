@@ -7,9 +7,9 @@ dependencies:
   version: 15.5.38
 - name: valkey
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 3.0.6
+  version: 3.0.15
 - name: solr
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 9.5.7
-digest: sha256:6f2169a35f94b184781d7834eb1a4b9f4edf32269c39601e6ed87be3b335b3b9
-generated: "2025-05-19T10:05:15.400414024+02:00"
+digest: sha256:3c253453a974a9a4b1e2e90ec55828705a457f22817bf79157a1a9b4d9c7d60c
+generated: "2025-06-20T01:23:45.07030528Z"
