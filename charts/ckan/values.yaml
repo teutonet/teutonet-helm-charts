@@ -202,19 +202,13 @@ solr:
     repository: teutonet/oci-images/solr-ckan
     tag: 1.0.27@sha256:cb0d2e59e5394dc861848bbf4c830a86a4bfc8b841370e9efd8c6199fb871fd9
     digest: ""
-  extraEnvVars:
-    - name: SOLR_ADMIN_USERNAME
-      valueFrom:
-        secretKeyRef:
-          name: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
-          key: solrUsername
   coreNames:
     - ckan
   collection: ckan
   auth:
     enabled: true
     adminPassword: ""
-    adminUsername: ""
+    adminUsername: "admin"
     existingSecret: '{{ printf "%s-config" (include "common.names.fullname" .) }}'
     existingSecretPasswordKey: solrPassword
   collectionReplicas: 2
