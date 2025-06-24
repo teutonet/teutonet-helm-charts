@@ -113,10 +113,7 @@ spec:
               value: "http://{{ printf "%s-%s" (include "ckan.solr.fullname" . ) "headless" }}:{{ include "ckan.solr.service.port" $ }}/solr/ckan"
             {{- if .Values.solr.auth.enabled }}
             - name: CKAN_SOLR_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-config" (include "ckan.solr.fullname" . ) }}
-                  key: solrUsername
+              value: {{ .Values.solr.auth.adminUsername | quote }}
             - name: CKAN_SOLR_PASSWORD
               valueFrom:
                 secretKeyRef:
