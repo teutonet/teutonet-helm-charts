@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.3](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.3.2...ckan-v1.3.3) (2025-06-24)
+
+
+### Miscellaneous Chores
+
+* **ckan:** change sorl auth in preperation for service metrics ([#1547](https://github.com/teutonet/teutonet-helm-charts/issues/1547)) ([bd10b9c](https://github.com/teutonet/teutonet-helm-charts/commit/bd10b9c139a534a422e84ba2f7b0cb94a53178f7))
+
 ## [1.3.2](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.3.1...ckan-v1.3.2) (2025-06-20)
 
 
