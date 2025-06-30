@@ -44,9 +44,12 @@ jobs:
 
   createIssue:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     name: Create Issue
-    if: steps.generateSarifReports.conclusion == 'failure'
+    needs: generateSarifReports
+    if: needs.generateSarifReports.result == 'failure'
     steps:
       - uses: JasonEtco/create-an-issue@v2
         env:
-          GITHUB_TOKEN: ${{GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
