@@ -41,3 +41,12 @@ jobs:
         with:
           sarif_file: reports
           # TODO: github dependency tree?
+
+  createIssue:
+    runs-on: ubuntu-latest
+    name: Create Issue
+    if: steps.generateSarifReports.conclusion == 'failure'
+    steps:
+      - uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{GITHUB_TOKEN}}
