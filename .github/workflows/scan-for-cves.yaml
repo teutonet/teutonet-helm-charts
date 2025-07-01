@@ -41,3 +41,18 @@ jobs:
         with:
           sarif_file: reports
           # TODO: github dependency tree?
+
+  createIssue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    name: Create Issue
+    needs: generateSarifReports
+    if: needs.generateSarifReports.result == 'failure'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          filename: .github/issue-template.md
