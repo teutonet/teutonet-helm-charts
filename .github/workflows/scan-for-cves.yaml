@@ -50,8 +50,8 @@ jobs:
     needs: generateSarifReports
     if: needs.generateSarifReports.result == 'failure'
     steps:
-      - uses: actions/checkout@v4
-      - uses: JasonEtco/create-an-issue@v2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: JasonEtco/create-an-issue@1b14a70e4d8dc185e5cc76d3bec9eab20257b2c5 # v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
