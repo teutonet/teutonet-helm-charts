@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.3.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.3.0...t8s-cluster-v9.3.1) (2025-07-02)
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update common docker tag to v1.5.0 ([#1534](https://github.com/teutonet/teutonet-helm-charts/issues/1534)) ([155472e](https://github.com/teutonet/teutonet-helm-charts/commit/155472ed4877261e120502c7654bd632b940fdc8))
+
 ## [9.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.2.1...t8s-cluster-v9.3.0) (2025-06-06)
 
 
