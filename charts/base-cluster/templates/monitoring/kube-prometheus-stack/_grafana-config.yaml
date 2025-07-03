@@ -54,7 +54,8 @@ deploymentStrategy:
 {{- end }}
 serviceMonitor:
   interval: "30s"
-  labels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 4 }}
+  labels:
+    monitoring/managed-by: teutonet
 podAnnotations:
   # This might change on every `template` call, this can be ignored
   checksum/secret: {{ include "common.utils.checksumTemplate" (dict "path" "/monitoring/kube-prometheus-stack/grafana-secret.yaml" "context" $) }}
