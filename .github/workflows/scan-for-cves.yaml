@@ -57,7 +57,6 @@ jobs:
               --jq '.[0].number')
             if [[ -n $previous_issue_number ]]; then
               gh issue close "$previous_issue_number"
-              gh issue unpin "$previous_issue_number"
             fi
           fi
           new_issue_url=$(gh issue create \
@@ -65,9 +64,6 @@ jobs:
             --assignee "$ASSIGNEES" \
             --label "$LABELS" \
             --body "$BODY")
-          if [[ $PINNED == true ]]; then
-            gh issue pin "$new_issue_url"
-          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
@@ -76,6 +72,5 @@ jobs:
           LABELS: bug
           BODY: |
             Last run of CVE scanning failed.
-          PINNED: false
           CLOSE_PREVIOUS: false
 
