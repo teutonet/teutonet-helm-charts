@@ -59,7 +59,7 @@ jobs:
               gh issue close "$previous_issue_number"
             fi
           fi
-          new_issue_url=$(gh issue create \
+          $(gh issue create \
             --title "$TITLE" \
             --assignee "$ASSIGNEES" \
             --label "$LABELS" \
