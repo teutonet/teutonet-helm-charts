@@ -59,11 +59,11 @@ jobs:
               gh issue close "$previous_issue_number"
             fi
           fi
-          $(gh issue create \
+          gh issue create \
             --title "$TITLE" \
             --assignee "$ASSIGNEES" \
             --label "$LABELS" \
-            --body "$BODY")
+            --body "$BODY"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
