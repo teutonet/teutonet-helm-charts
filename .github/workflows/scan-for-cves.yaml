@@ -25,7 +25,6 @@ jobs:
         chart: ${{ fromJson(needs.getAllCharts.outputs.charts) }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-
       - run: /home/linuxbrew/.linuxbrew/bin/brew install trivy
       - run: pip install yq
       - name: Generate sarif reports
@@ -44,15 +43,23 @@ jobs:
 
   createIssue:
     runs-on: ubuntu-latest
+    if: ${{ always() && needs.generateSarifReports.result == 'failure' }}
+    needs: generateSarifReports
     permissions:
       issues: write
     name: Create Issue
-    needs: generateSarifReports
-    if: needs.generateSarifReports.result == 'failure'
     steps:
-      - uses: actions/checkout@v4
-      - uses: JasonEtco/create-an-issue@v2
+      - run: |
+          gh issue create \
+            --title "$TITLE" \
+            --assignee "$ASSIGNEES" \
+            --label "$LABELS" \
+            --body "$BODY"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          filename: .github/issue-template.md
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TITLE: CVE Scan failed
+          ASSIGNEES: cwrau,marvinWolff,tasches
+          LABELS: bug
+          BODY: |
+            Last run of CVE scanning failed.
