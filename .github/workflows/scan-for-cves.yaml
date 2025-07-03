@@ -53,10 +53,12 @@ jobs:
           if [[ $CLOSE_PREVIOUS == true ]]; then
             previous_issue_number=$(gh issue list \
               --label "$LABELS" \
+              --state open \
               --json number \
               --jq '.[0].number')
             if [[ -n $previous_issue_number ]]; then
-              gh issue close "$previous_issue_number"
+              # Ignore “already closed” / race-condition errors
+              gh issue close "$previous_issue_number" || true
             fi
           fi
           gh issue create \
