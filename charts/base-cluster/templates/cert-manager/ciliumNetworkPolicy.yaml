@@ -49,14 +49,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: webhook
       app.kubernetes.io/instance: cert-manager
-  ingress:
-    - fromEntities:
-        - kube-apiserver
-        - remote-node
-      toPorts:
-        - ports:
-            - port: "10250"
-              protocol: TCP
+  ingress: {{- include "common.networkPolicy.rule.from.kube-apiserver" (dict "ports" (dict "10250" "TCP") "cilium" true) | nindent 4 }}
     - fromEntities:
         - health
       toPorts:
