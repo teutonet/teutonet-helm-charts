@@ -144,7 +144,7 @@ global:
       url: https://kyverno.github.io/kyverno
       charts:
         kyverno: 3.4.0
-        kyverno-policies: 3.4.0
+        kyverno-policies: 3.4.4
       condition: "{{ .Values.kyverno.enabled }}"
     tetragon:
       url: https://helm.cilium.io
