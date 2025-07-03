@@ -16,6 +16,7 @@ jobs:
   generateSarifReports:
     runs-on: ubuntu-latest
     needs: getAllCharts
+    continue-on-error: true
     permissions:
       contents: read
       security-events: write
