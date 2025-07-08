@@ -27,7 +27,7 @@ spec:
         serviceMonitor:
           enabled: {{ .Values.monitoring.prometheus.enabled }}
           additionalLabels:
-            monitoring/managed-by: teutonet
+            monitoring/provisioned-by: base-cluster
       {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp") | fromYaml }}
       {{- if and $telemetryConf.enabled .Values.monitoring.prometheus.enabled }}
       opentelemetry:

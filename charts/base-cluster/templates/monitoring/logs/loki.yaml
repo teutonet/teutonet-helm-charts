@@ -100,5 +100,5 @@ spec:
       serviceMonitor:
         enabled: true
         additionalLabels:
-          monitoring/managed-by: teutonet
+          monitoring/provisioned-by: base-cluster
 {{- end -}}

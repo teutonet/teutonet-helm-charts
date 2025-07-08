@@ -12,5 +12,5 @@ containerSecurityContext: {{- include "base-cluster.prometheus-stack.containerSe
 prometheus:
   monitor:
     additionalLabels:
-      monitoring/managed-by: teutonet
+      monitoring/provisioned-by: base-cluster
 {{- end -}}

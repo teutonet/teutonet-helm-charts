@@ -91,7 +91,7 @@ spec:
     metrics:
       serviceMonitor:
         additionalLabels:
-          monitoring/managed-by: teutonet
+          monitoring/provisioned-by: base-cluster
         enabled: true
       prometheusRule:
         enabled: true

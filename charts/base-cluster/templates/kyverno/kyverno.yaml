@@ -58,7 +58,7 @@ spec:
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
       additionalLabels:
-        monitoring/managed-by: teutonet
+        monitoring/provisioned-by: base-cluster
     priorityClassName: system-cluster-critical
     # this only works in version 3
     admissionController:

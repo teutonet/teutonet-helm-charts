@@ -57,7 +57,7 @@ spec:
       serviceMonitor:
         enabled: true
         labels:
-          monitoring/managed-by: teutonet
+          monitoring/provisioned-by: base-cluster
 ---
 apiVersion: v1
 kind: ConfigMap

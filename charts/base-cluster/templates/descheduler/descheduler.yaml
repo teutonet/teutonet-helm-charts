@@ -36,7 +36,7 @@ spec:
     serviceMonitor:
       enabled: true
       additionalLabels:
-        monitoring/managed-by: teutonet
+        monitoring/provisioned-by: base-cluster
     {{- end }}
     deschedulerPolicy: {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp") | fromYaml }}
       {{- if and $telemetryConf.enabled .Values.monitoring.prometheus.enabled }}

@@ -44,6 +44,6 @@ spec:
         serviceMonitor:
           enabled: true
           labelsOverride:
-            monitoring/managed-by: teutonet
+            monitoring/provisioned-by: base-cluster
       {{- end }}
   {{- end }}

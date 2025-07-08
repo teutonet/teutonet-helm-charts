@@ -9,7 +9,7 @@ metadata:
   name: storage-size
   namespace: nfs-server-provisioner
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
-    monitoring/managed-by: teutonet
+    monitoring/provisioned-by: base-cluster
     app.kubernetes.io/component: prometheus
     app.kubernetes.io/part-of: nfs-server-provisioner
 spec:

@@ -81,5 +81,5 @@ spec:
       serviceMonitor:
         enabled: {{ .Values.monitoring.prometheus.enabled }}
         labels:
-          monitoring/managed-by: teutonet
+          monitoring/provisioned-by: base-cluster
 {{- end -}}
