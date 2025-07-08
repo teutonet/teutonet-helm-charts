@@ -63,4 +63,4 @@ jobs:
           ASSIGNEES: cwrau,marvinWolff,tasches
           LABELS: bug
           BODY: |
-            Last run of CVE scanning failed. Please check ${{ GITHUB_WORKFLOW_URL }} for more information
+            Last run of CVE scanning failed. Please check $GITHUB_WORKFLOW_URL for more information
