@@ -354,7 +354,7 @@ This also replaces `promtail` and the `otel-collector` with `alloy`, using
 <https://github.com/teutonet/teutonet-helm-charts/blob/main/charts/common/templates/_telemetry.tpl>
 makes this a drop-in change.
 
-### 8.x.x -> 9.0.0
+---
 
 This release adds another option for ingress, [traefik](https://traefik.io)! 🎉
 
