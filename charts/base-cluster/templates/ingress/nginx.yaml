@@ -51,6 +51,10 @@ spec:
         {{- end }}
       service:
         annotations:
+          loadbalancer.openstack.org/timeout-client-data: "2073600000"
+          loadbalancer.openstack.org/timeout-member-connect: "2073600000"
+          loadbalancer.openstack.org/timeout-member-data: "2073600000"
+          loadbalancer.openstack.org/timeout-tcp-inspect: "2073600000"
           loadbalancer.openstack.org/proxy-protocol: "true"
           load-balancer.hetzner.cloud/uses-proxyprotocol: "true"
           load-balancer.hetzner.cloud/disable-private-ingress: "true"
