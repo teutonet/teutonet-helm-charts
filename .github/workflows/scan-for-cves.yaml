@@ -58,8 +58,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
+          # Direct link to the current workflow run
+          GITHUB_WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           TITLE: CVE Scan failed
           ASSIGNEES: cwrau,marvinWolff,tasches
           LABELS: bug
           BODY: |
-            Last run of CVE scanning failed.
+            Last run of CVE scanning failed. Please check $GITHUB_WORKFLOW_URL for more information
