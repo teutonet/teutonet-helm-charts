@@ -143,7 +143,10 @@ server = {{ printf "https://%s" .registry | quote }}
 {{- end }}
 
 {{- define "t8s-cluster.clusterClass.args.sharedController" -}}
-  {{- $args := dict "cloud-provider" "external" -}}
+  {{- $args := dict -}}
+  {{- if semverCompare "<1.33.0" (include "t8s-cluster.k8s-version" .context) -}}
+    {{- $args = set $args "cloud-provider" "external" -}}
+  {{- end -}}
   {{- toYaml $args -}}
 {{- end }}
 

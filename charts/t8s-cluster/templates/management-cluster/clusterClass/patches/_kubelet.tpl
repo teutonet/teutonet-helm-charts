@@ -1,7 +1,7 @@
 {{- define "t8s-cluster.patches.kubelet.imagePulls" -}}
   {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- $values := dict -}}
-  {{- if and (or (gt (.Values.version.major | int) 1) (ge (.Values.version.minor | int) 27)) (gt (int .Values.global.kubeletExtraConfig.maxParallelImagePulls) 1) -}}
+  {{- if and (semverCompare ">=1.27.0" (include "t8s-cluster.k8s-version" .context)) (gt (int .Values.global.kubeletExtraConfig.maxParallelImagePulls) 1) -}}
     {{- $values = mustMerge $values (dict "serializeImagePulls" false "maxParallelImagePulls" .Values.global.kubeletExtraConfig.maxParallelImagePulls) -}}
   {{- end -}}
   {{- toYaml $values -}}

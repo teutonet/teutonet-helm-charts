@@ -2,7 +2,7 @@
 {{- $existingCluster := lookup $cluster.apiVersion $cluster.kind $cluster.metadata.namespace $cluster.metadata.name }}
 {{/* Should always pass, just doesn't work for local diffs 😥 */}}
 {{- if $existingCluster }}
-  {{- if semverCompare (printf "<%s" ($existingCluster.spec.version | trimPrefix "v")) (printf "%d.%d.%d" (.Values.version.major | int) (.Values.version.minor | int) (.Values.version.patch | int)) -}}
+  {{- if semverCompare (printf "<%s" ($existingCluster.spec.version | trimPrefix "v")) (include "t8s-cluster.k8s-version" .) -}}
     {{- fail "Cannot downgrade cluster version" -}}
   {{- end }}
 {{- end }}
