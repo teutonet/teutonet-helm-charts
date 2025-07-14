@@ -259,7 +259,9 @@ monitoring:
       storageClass: ""
       size: 100Gi
     resourcesPreset: large
-    resources: {}
+    resources:
+      requests:
+        cpu: "500m"
     operator:
       resourcesPreset: nano
       resources: {}
