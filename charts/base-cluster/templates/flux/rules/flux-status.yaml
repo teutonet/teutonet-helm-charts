@@ -18,20 +18,20 @@ spec:
       rules:
         - alert: ResourcesFailing
           annotations:
-            description: {{ "Resource {{ $labels.customresource_kind }}/{{ $labels.exported_namespace }}/{{ $labels.name }} has been in a failed state for longer than 10 minutes." | quote }}
+            description: {{ "Resource {{ $labels.customresource_kind }}/{{ $labels.customresource_namespace }}/{{ $labels.customresource_name }} has been in a failed state for longer than 10 minutes." | quote }}
             summary: Resource has failed.
           expr: |-
-            min(gotk_reconcile_condition_gauge{type="Ready"}) by (customresource_kind, exported_namespace, name) == 0
+            min(gotk_reconcile_condition_gauge{type="Ready"}) by (customresource_kind, customresource_namespace, customresource_name) == 0
           for: 10m
           labels:
             severity: critical
             period: WorkingHours
         - alert: ResourcesSuspended
           annotations:
-            description: {{ "Resource {{ $labels.customresource_kind }}/{{ $labels.exported_namespace }}/{{ $labels.name }} has been suspended for longer than 1 hour." | quote }}
+            description: {{ "Resource {{ $labels.customresource_kind }}/{{ $labels.customresource_namespace }}/{{ $labels.customresource_name }} has been suspended for longer than 1 hour." | quote }}
             summary: Resource is suspended.
           expr: |-
-            max(gotk_reconcile_suspended_gauge) by (customresource_kind, exported_namespace, name) == 1
+            max(gotk_reconcile_suspended_gauge) by (customresource_kind, customresource_namespace, customresource_name) == 1
           for: 1h
           labels:
             severity: critical
