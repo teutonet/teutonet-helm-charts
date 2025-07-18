@@ -170,7 +170,7 @@ global:
     emberstack:
       url: https://emberstack.github.io/helm-charts
       charts:
-        reflector: 7.1.288
+        reflector: 9.1.22
       condition: '{{ include "base-cluster.reflector.enabled" (dict "context" .) }}'
     vmware:
       url: https://vmware-tanzu.github.io/helm-charts
