@@ -72,9 +72,9 @@ spec:
     logs:
       general:
         format: json
-    globalArguments: # Otherwise these are on by default
-      - --global.sendanonymoususage=false
-      - --global.checknewversion=false
+    global:
+      checkNewVersion: false
+      sendAnonymousUsage: false
     {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp" "global" .Values.global) | fromYaml }}
     {{- if $telemetryConf.enabled }}
     tracing:
