@@ -72,5 +72,6 @@ spec:
     excludeNamespaces: ""
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
-      labels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 8 }}
+      labels:
+        monitoring/provisioned-by: base-cluster
 {{- end }}
