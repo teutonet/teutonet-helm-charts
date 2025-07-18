@@ -107,7 +107,7 @@ global:
     grafana:
       url: https://grafana.github.io/helm-charts
       charts:
-        loki: 6.31.0
+        loki: 6.32.0
         alloy: 1.1.2
       condition: "{{ and .Values.monitoring.prometheus.enabled (or .Values.monitoring.loki.enabled .Values.monitoring.tracing.enabled) }}"
     bitnami:
