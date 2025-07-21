@@ -50,6 +50,8 @@ registry-gitlab.teuto.net: ALL_IMAGES
 registry.k8s.io:
   descheduler: ALL_IMAGES
   etcd: ALL_TAGS
+  external-dns:
+    external-dns: ALL_TAGS
   ingress-nginx: ALL_IMAGES
   kube-state-metrics: ALL_IMAGES
   metrics-server:

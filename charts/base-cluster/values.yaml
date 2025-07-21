@@ -111,10 +111,10 @@ global:
         alloy: 1.2.0
         tempo-distributed: 1.46.0
       condition: "{{ and .Values.monitoring.prometheus.enabled (or .Values.monitoring.loki.enabled .Values.monitoring.tracing.enabled) }}"
-    bitnami:
-      url: oci://docker.io/bitnamicharts
+    external-dns:
+      url: https://kubernetes-sigs.github.io/external-dns
       charts:
-        external-dns: 8.9.2
+        external-dns: 1.18.0
     oauth2-proxy:
       url: https://oauth2-proxy.github.io/manifests
       charts:
