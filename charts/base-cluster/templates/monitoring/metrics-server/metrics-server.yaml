@@ -9,23 +9,35 @@ metadata:
     app.kubernetes.io/part-of: monitoring
 spec:
   chart:
-    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "bitnami" "chart" "metrics-server" "context" $) | nindent 6 }}
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "metrics-server" "chart" "metrics-server" "context" $) | nindent 6 }}
   interval: 1h
   driftDetection:
     mode: enabled
   values:
     apiService:
       create: true
-    {{- if .Values.global.imageRegistry }}
-    global:
-      imageRegistry: {{ $.Values.global.imageRegistry }}
-    {{- end }}
+    image:
+      repository: {{ printf "%s/metrics-server/metrics-server" ($.Values.global.imageRegistry | default "registry.k8s.io") }}
     replicas: 2
     priorityClassName: cluster-components
+    podSecurityContext:
+      fsGroup: 1000
+      fsGroupChangePolicy: Always
+      supplementalGroups: []
+      sysctls: []
+    securityContext:
+      privileged: false
+      runAsGroup: 1000
+      seLinuxOptions: {}
     podDisruptionBudget:
       enabled: true
       minAvailable: 1
-    extraArgs:
+    tls:
+      type: cert-manager
+    defaultArgs:
+      - --cert-dir=/tmp
       - --kubelet-preferred-address-types=InternalIP
-      - --kubelet-insecure-tls=true
+      - --kubelet-insecure-tls
+      - --kubelet-use-node-status-port
+      - --metric-resolution=15s
   {{- end -}}

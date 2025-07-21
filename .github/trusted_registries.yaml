@@ -52,6 +52,8 @@ registry.k8s.io:
   etcd: ALL_TAGS
   ingress-nginx: ALL_IMAGES
   kube-state-metrics: ALL_IMAGES
+  metrics-server:
+    metrics-server: ALL_TAGS
   provider-os: ALL_IMAGES
   sig-storage:
     csi-attacher: ALL_TAGS

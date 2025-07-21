@@ -114,14 +114,17 @@ global:
     bitnami:
       url: oci://docker.io/bitnamicharts
       charts:
-        metrics-server: 7.4.10
         external-dns: 8.9.2
-        grafana-tempo: 4.0.13
     oauth2-proxy:
       url: https://oauth2-proxy.github.io/manifests
       charts:
         oauth2-proxy: 7.14.1
       condition: '{{ and .Values.global.authentication.config .Values.monitoring.prometheus.enabled }}'
+    metrics-server:
+      url: https://kubernetes-sigs.github.io/metrics-server
+      charts:
+        metrics-server: 3.12.2
+      condition: "{{ .Values.monitoring.metricsServer.enabled }}"
     descheduler:
       url: https://kubernetes-sigs.github.io/descheduler
       charts:
