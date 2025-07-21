@@ -21,41 +21,58 @@ metadata:
     app.kubernetes.io/part-of: {{ $host }}
 spec:
   chart:
-    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "bitnami" "chart" "oauth2-proxy" "context" $) | nindent 6 }}
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "oauth2-proxy" "chart" "oauth2-proxy" "context" $) | nindent 6 }}
   interval: 1h
   driftDetection:
     mode: enabled
+  {{- if $.Values.monitoring.prometheus.enabled }}
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
+  {{- end }}
   values:
     fullnameOverride: {{ printf "cluster-%s-oauth-proxy" $host }}
+    nameOverride: {{ printf "cluster-%s-oauth-proxy" $host }}
     redis:
       enabled: false
-  {{- if $.Values.global.imageRegistry }}
-    global:
-      imageRegistry: {{ $.Values.global.imageRegistry }}
-  {{- end }}
+    image:
+      repository: {{ printf "%s/oauth2-proxy/oauth2-proxy" ($.Values.global.imageRegistry | default "quay.io") }}
     ingress:
       enabled: true
-      hostname: {{ include (printf "base-cluster.%s.host" $host) $ }}
-      tls: true
-      {{- if $.Values.dns.provider }}
-      selfSigned: true # `certManager: true` leads to overwritten wildcard certificates
-      {{- else }}
-      certManager: true
+      {{- if not $.Values.dns.provider }}
+      annotations:
+        kubernetes.io/tls-acme: "true"
       {{- end }}
-      existingSecretName: {{ include "base-cluster.certificate" (dict "name" $host "customDomain" $ingress.customDomain "context" $) | quote }}
+      hosts:
+        - &host {{ include (printf "base-cluster.%s.host" $host) $ }}
+      tls:
+        - hosts:
+            - *host
+          secretName: {{ include "base-cluster.certificate" (dict "name" $host "customDomain" $ingress.customDomain "context" $) | quote }}
     replicaCount: 2
-    pdb:
-      create: true
+    podDisruptionBudget:
+      enabled: true
       minAvailable: 1
-      maxUnavailable: ""
     podSecurityContext:
-      enabled: true
-    containerSecurityContext:
-      enabled: true
+      fsGroup: 1001
+      fsGroupChangePolicy: Always
+      supplementalGroups: []
+      sysctls: []
+    securityContext:
+      privileged: false
+      seLinuxOptions: {}
     resources: {{- include "common.resources" $.Values.global.authentication.oauthProxy | nindent 6 }}
-    configuration:
+    enableServiceLinks: false
+    serviceAccount:
+      enabled: false
+      automountServiceAccountToken: false
+    metrics:
+      serviceMonitor:
+        enabled: {{ $.Values.monitoring.prometheus.enabled }}
+        additionalLabels: {{- include "common.tplvalues.render" (dict "value" $.Values.monitoring.labels "context" .) | nindent 10 }}
+    config:
       existingSecret: {{ include "common.secrets.name" (dict "defaultNameSuffix" "oauth-proxy" "context" $) }}
-      content: |-
+      configFile: |-
         provider = "oidc"
         reverse_proxy = true
         oidc_issuer_url = {{ printf "https://%s%s" $.Values.global.authentication.config.issuerHost $.Values.global.authentication.config.issuerPath | quote }}
@@ -69,7 +86,7 @@ spec:
         upstreams = [ {{ printf "http://%s:%d" $targetServiceName $port | quote }} ]
     podAnnotations:
       # This might change on every `template` call, this can be ignored
-      checksum/secret: {{ include "common.utils.checksumTemplate" (dict "path" "/monitoring/kube-prometheus-stack/oauth-proxy-secret.yaml" "context" $) }}
+      checksum/oidc-secret: {{ include "common.utils.checksumTemplate" (dict "path" "/monitoring/kube-prometheus-stack/oauth-proxy-secret.yaml" "context" $) }}
 {{- if eq (include "common.networkPolicy.type" $) "cilium" }}
 ---
 apiVersion: cilium.io/v2
