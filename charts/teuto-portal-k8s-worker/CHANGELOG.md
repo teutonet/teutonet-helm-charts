@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.2.0...teuto-portal-k8s-worker-v3.3.0) (2025-07-23)
+
+
+### Features
+
+* **teuto-portal-k8s-worker:** use new pullPolicy template ([#1384](https://github.com/teutonet/teutonet-helm-charts/issues/1384)) ([a4c2144](https://github.com/teutonet/teutonet-helm-charts/commit/a4c21448da5449fde79f08f5a1b84a26ca7f6358))
+
+
+### Miscellaneous Chores
+
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v1.3.0 ([#1363](https://github.com/teutonet/teutonet-helm-charts/issues/1363)) ([b6fa5e0](https://github.com/teutonet/teutonet-helm-charts/commit/b6fa5e0b0476b429fff9b29e9cc9fdbec71bc55f))
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v1.4.0 ([#1394](https://github.com/teutonet/teutonet-helm-charts/issues/1394)) ([260a99d](https://github.com/teutonet/teutonet-helm-charts/commit/260a99d9d78c9f1e7d6ff41843b2024430c46418))
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v1.5.0 ([#1567](https://github.com/teutonet/teutonet-helm-charts/issues/1567)) ([3e0e84f](https://github.com/teutonet/teutonet-helm-charts/commit/3e0e84f3ec8969761827273383f7303a9b360c79))
+* **teuto-portal-k8s-worker/dependencies:** update registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker docker tag to v4.1.1 ([#1568](https://github.com/teutonet/teutonet-helm-charts/issues/1568)) ([3ea6ef8](https://github.com/teutonet/teutonet-helm-charts/commit/3ea6ef82a123234d5d2890b7ce8f7baabffa5f54))
+
 ## [3.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.1.2...teuto-portal-k8s-worker-v3.2.0) (2025-02-05)
 
 
