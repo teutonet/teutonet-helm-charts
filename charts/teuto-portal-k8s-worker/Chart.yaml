@@ -20,4 +20,4 @@ sources:
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/teuto-portal-k8s-worker
 annotations:
   artifacthub.io/images: |-
-    - image: registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker:4.0.0  #  default/Deployment/teuto-portal-k8s-worker.yaml
+    - image: registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker:4.1.1@sha256:e01795a66fea3a63bb4b6eff2caf8448a624131e79b0ab3ee0d8dd6735406059  #  default/Deployment/teuto-portal-k8s-worker.yaml
