@@ -195,7 +195,11 @@
               "type": "string"
             },
             "loggingFormat": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "json",
+                "iso8601"
+              ]
             }
           },
           "additionalProperties": false
