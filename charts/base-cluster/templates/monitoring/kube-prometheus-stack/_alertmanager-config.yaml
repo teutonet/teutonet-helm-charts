@@ -51,6 +51,16 @@ config:
       )
     -}}
   {{- end -}}
+  {{- if .Values.monitoring.prometheus.alertmanager.receivers.betterstack.enabled -}}
+    {{- $receivers = set $receivers "betterstack" (dict
+          "webhook_configs" (list
+            (dict
+              "url" (printf "https://uptime.betterstack.com/api/v1/prometheus/webhook/%s" (.Values.monitoring.prometheus.alertmanager.receivers.betterstack.webhookKey | required "You need to provide the `.Values.monitoring.prometheus.alertmanager.receivers.betterstack.webhookKey`"))
+            )
+          )
+      )
+    -}}
+  {{- end -}}
   {{- if and .Values.monitoring.deadMansSwitch.enabled .Values.global.baseDomain .Values.global.clusterName -}}
     {{- $receivers = set $receivers "healthchecks.io" (dict
           "webhook_configs" (list
@@ -68,7 +78,10 @@ config:
   {{- end }}
   receivers: {{- toYaml $receiversList | nindent 4 }}
   route: {{- if hasKey $receivers "pagerduty" }}
-    receiver: pagerduty
+    - receiver: pagerduty
+    {{- end }}
+    {{- if hasKey $receivers "betterstack" }}
+    - receiver: betterstack
     {{- end }}
     {{- $routes := list (dict "match" (dict "alertname" "InfoInhibitor") "receiver" "null") -}}
     {{- $routes = append $routes (dict "match" (dict "alertname" "Watchdog") "receiver" (hasKey $receivers "healthchecks.io" | ternary "healthchecks.io" "null") "group_interval" "1m" "repeat_interval" "1m") }}
