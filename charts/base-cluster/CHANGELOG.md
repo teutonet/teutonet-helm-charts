@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v8.2.0...base-cluster-v8.2.1) (2025-07-24)
+
+
+### Bug Fixes
+
+* **base-cluster/rbac:** whitespace trimming ([#1608](https://github.com/teutonet/teutonet-helm-charts/issues/1608)) ([4b028b4](https://github.com/teutonet/teutonet-helm-charts/commit/4b028b4ad0c04eadba520452292a15748e8b3d95))
+
 ## [8.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v8.1.0...base-cluster-v8.2.0) (2025-07-21)
 
 
