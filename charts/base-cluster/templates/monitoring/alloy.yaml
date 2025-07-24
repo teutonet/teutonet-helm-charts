@@ -272,6 +272,10 @@ spec:
       create: false
     controller:
       priorityClassName: monitoring-components
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+          operator: Exists
     service:
       internalTrafficPolicy: Local
     serviceMonitor:
