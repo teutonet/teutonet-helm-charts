@@ -19,6 +19,8 @@ global:
     fsGroupChangePolicy: OnRootMismatch
 
 worker:
+  config:
+    loggingFormat: json
   image:
     registry: registry-gitlab.teuto.net
     repository: 4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker
