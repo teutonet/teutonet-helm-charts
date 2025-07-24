@@ -1,14 +1,20 @@
-{{- define "base-cluster.prometheus-stack.alertmanager.enabled" -}}
-  {{- $enabled := false -}}
-  {{- range $_, $receiver := .Values.monitoring.prometheus.alertmanager.receivers -}}
-    {{- $enabled = or $enabled $receiver.enabled -}}
+{{ define "base-cluster.prometheus-stack.alertmanager.enabled" -}}
+  {{- not (empty .Values.monitoring.prometheus.alertmanager.receivers) -}}
+{{- end -}}
+
+{{- define "base-cluster.prometheus-stack.alertmanager.validateReceiverInRoute" -}}
+  {{- if .route.receiver -}}
+    {{- if not (hasKey .receivers .route.receiver) -}}
+      {{- fail (printf "Receiver '%s' is not configured" .route.receiver) -}}
+    {{- end -}}
   {{- end -}}
-  {{- $enabled | ternary true "" }}
+  {{- range $route := dig "routes" (list) .route -}}
+    {{- include "base-cluster.prometheus-stack.alertmanager.validateReceiverInRoute" (dict "route" $route "receivers" $.receivers) -}}
+  {{- end -}}
 {{- end -}}
 
 {{- define "base-cluster.prometheus-stack.alertmanager.config" -}}
-  {{- $enabled := include "base-cluster.prometheus-stack.alertmanager.enabled" . -}}
-{{- if $enabled }}
+{{- if include "base-cluster.prometheus-stack.alertmanager.enabled" . -}}
 enabled: true
 podDisruptionBudget:
   enabled: true
@@ -34,23 +40,7 @@ alertmanagerSpec:
   alertmanagerConfigSelector:
     matchLabels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 6 }}
 config:
-  {{- if .Values.monitoring.prometheus.alertmanager.receivers.pagerduty.enabled }}
-  global:
-    pagerduty_url: {{ .Values.monitoring.prometheus.alertmanager.receivers.pagerduty.url | required "You need to provide the `.Values.monitoring.promteheus.alertmanager.receivers.pagerduty.url`" | quote }}
-  {{- end }}
   {{- $receivers := dict "null" (dict) -}}
-  {{- if .Values.monitoring.prometheus.alertmanager.receivers.pagerduty.enabled -}}
-    {{- $receivers = set $receivers "pagerduty" (dict
-          "pagerduty_configs" (list
-            (dict
-              "routing_key" (.Values.monitoring.prometheus.alertmanager.receivers.pagerduty.integrationKey | required "You need to provide the `.Values.monitoring.prometheus.alertmanager.receivers.pagerduty.integrationKey`")
-              "send_resolved" true
-              "http_config" (dict "follow_redirects" true)
-            )
-          )
-      )
-    -}}
-  {{- end -}}
   {{- if and .Values.monitoring.deadMansSwitch.enabled .Values.global.baseDomain .Values.global.clusterName -}}
     {{- $receivers = set $receivers "healthchecks.io" (dict
           "webhook_configs" (list
@@ -62,17 +52,68 @@ config:
       )
     -}}
   {{- end -}}
+  {{- range $name, $config := .Values.monitoring.prometheus.alertmanager.receivers -}}
+    {{- $type := $name -}}
+    {{- $splitted := splitList " " $name -}}
+    {{- if eq (len $splitted) 2 -}}
+      {{- $type = index $splitted 0 -}}
+      {{- $name = index $splitted 1 -}}
+    {{- end -}}
+    {{- if eq $type "pagerduty" -}}
+      {{- $receivers = set $receivers "pagerduty" (dict
+            "pagerduty_configs" (list
+              (dict
+                "routing_key" $config.integrationKey
+                "url" ($config.url | default "https://events.pagerduty.com/v2/enqueue")
+                "send_resolved" true
+                "http_config" (dict "follow_redirects" true)
+              )
+            )
+        )
+      -}}
+    {{- else if eq $type "email" -}}
+      {{- $receivers = set $receivers $name (dict
+            "email_configs" (list
+              (dict
+                "to" $config.to
+                "from" $config.from
+                "smarthost" (printf "%s:%d" $config.host (int64 $config.port))
+                "send_resolved" (dig "sendResolved" false $config)
+                "auth_username" $config.username
+                "auth_password" $config.password
+              )
+            )
+        )
+      -}}
+    {{- end -}}
+  {{- end -}}
   {{- $receiversList := list -}}
   {{- range $name, $receiver := $receivers -}}
     {{- $receiversList = append $receiversList (mustMerge (dict "name" $name) $receiver) -}}
   {{- end }}
-  receivers: {{- toYaml $receiversList | nindent 4 }}
-  route: {{- if hasKey $receivers "pagerduty" }}
-    receiver: pagerduty
-    {{- end }}
-    {{- $routes := list (dict "match" (dict "alertname" "InfoInhibitor") "receiver" "null") -}}
-    {{- $routes = append $routes (dict "match" (dict "alertname" "Watchdog") "receiver" (hasKey $receivers "healthchecks.io" | ternary "healthchecks.io" "null") "group_interval" "1m" "repeat_interval" "1m") }}
-    routes: {{- toYaml $routes | nindent 6 }}
+  receivers: {{- toYaml $receiversList | nindent 4 -}}
+  {{- $routes := list
+    (dict
+      "match" (dict "alertname" "InfoInhibitor")
+      "receiver" "null"
+    )
+    (dict
+      "match" (dict "alertname" "Watchdog")
+      "receiver" (hasKey $receivers "healthchecks.io" | ternary "healthchecks.io" "null")
+      "group_interval" "1m"
+      "repeat_interval" "1m"
+    )
+  -}}
+  {{- with .Values.monitoring.prometheus.alertmanager.routes -}}
+    {{- $routes = concat $routes . -}}
+  {{- end -}}
+
+  {{- $route := dict
+    "receiver" (include "common.tplvalues.render" (dict "value" .Values.monitoring.prometheus.alertmanager.defaultReceiver "context" .))
+    "routes" $routes
+  -}}
+  {{- include "base-cluster.prometheus-stack.alertmanager.validateReceiverInRoute" (dict "route" $route "receivers" $receivers) }}
+  route: {{- toYaml $route | nindent 4 }}
 {{- else }}
 enabled: false
 {{- end }}

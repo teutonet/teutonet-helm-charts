@@ -1,0 +1,33 @@
+{{- if eq (include "common.networkPolicy.type" .) "cilium" }}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: alertmanager-email
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  endpointSelector:
+    matchLabels:
+      alertmanager: kube-prometheus-stack-alertmanager
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: kube-prometheus-stack
+    {{- $fqdns := dict }}
+    {{- range $type, $receiver := .Values.monitoring.prometheus.alertmanager.receivers }}
+      {{- if eq (index (splitList " " $type) 0) "email" }}
+        {{- $ports := dig $receiver.host (list) $fqdns }}
+        {{- $ports = append $ports $receiver.port }}
+        {{- $fqdns = set $fqdns $receiver.host $ports }}
+      {{- end }}
+    {{- end }}
+    {{- range $host, $ports := $fqdns}}
+    - toFQDNs:
+        - matchName: {{ $host }}
+      toPorts:
+        - ports:
+      {{- range $port := $ports | uniq | sortAlpha }}
+            - port: {{ $port | quote }}
+      {{- end }}
+    {{- end }}
+{{- end }}

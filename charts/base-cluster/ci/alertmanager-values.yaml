@@ -1,0 +1,25 @@
+monitoring:
+  prometheus:
+    alertmanager:
+      defaultReceiver: testmail
+      receivers:
+        email:
+          from: test@mail.net
+          to: test@mail.net
+          host: smtp.mail.net
+          port: 587
+          username: test
+          password: "1234"
+          sendResolved: true
+        email testmail:
+          from: test2@mail.com
+          to: test2@mail.com
+          host: smtp.mail.com
+          port: 587
+          username: root
+          password: abcd
+          sendResolved: false
+      routes:
+        - matchers:
+            - namespace=~"test"
+          receiver: "email"

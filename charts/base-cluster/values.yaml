@@ -295,11 +295,9 @@ monitoring:
       host: prometheus
       customDomain: ""
     alertmanager:
-      receivers:
-        pagerduty:
-          enabled: false
-          integrationKey: ""
-          url: https://events.pagerduty.com/v2/enqueue
+      defaultReceiver: '{{ hasKey .Values.monitoring.prometheus.alertmanager.receivers "pagerduty" | ternary "pagerduty" "null" }}'
+      receivers: {}
+      routes: []
       ingress:
         host: alertmanager
         customDomain: ""

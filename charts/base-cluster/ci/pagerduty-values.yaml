@@ -3,5 +3,4 @@ monitoring:
     alertmanager:
       receivers:
         pagerduty:
-          enabled: true
-          integrationKey: INTEGRATION_KEY
+          integrationKey: INTEGRATION_KEY__INTEGRATION_KEY

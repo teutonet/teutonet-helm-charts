@@ -707,26 +707,73 @@
             "alertmanager": {
               "type": "object",
               "properties": {
+                "defaultReceiver": {
+                  "type": "string"
+                },
                 "receivers": {
                   "type": "object",
                   "properties": {
                     "pagerduty": {
                       "type": "object",
                       "properties": {
-                        "enabled": {
-                          "type": "boolean"
-                        },
                         "url": {
-                          "type": "string"
+                          "type": "string",
+                          "default": "https://events.pagerduty.com/v2/enqueue"
                         },
                         "integrationKey": {
-                          "type": "string"
+                          "type": "string",
+                          "minLength": 32,
+                          "maxLength": 32
                         }
                       },
+                      "required": [
+                        "integrationKey"
+                      ],
                       "additionalProperties": false
                     }
                   },
-                  "additionalProperties": false
+                  "patternProperties": {
+                    "^email($| \\S+$)": {
+                      "description": "Sets up an email receiver, if suffixed with ` $name` `$name` will be used as the name of the receiver, otherwise it's `email`",
+                      "properties": {
+                        "from": {
+                          "$ref": "#/$defs/email"
+                        },
+                        "to": {
+                          "$ref": "#/$defs/email"
+                        },
+                        "host": {
+                          "type": "string"
+                        },
+                        "port": {
+                          "type": "integer",
+                          "maximum": 65535,
+                          "minimum": 1
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string"
+                        },
+                        "sendResolved": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "from",
+                        "to",
+                        "host",
+                        "port",
+                        "username",
+                        "password"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "routes": {
+                  "$ref": "#/$defs/alertmanagerConfigRoutes"
                 },
                 "ingress": {
                   "$ref": "#/$defs/toolIngress"
@@ -752,7 +799,10 @@
                   "additionalProperties": false
                 }
               },
-              "additionalProperties": false
+              "additionalProperties": false,
+              "required": [
+                "defaultReceiver"
+              ]
             }
           },
           "additionalProperties": false
@@ -1663,6 +1713,9 @@
     },
     "tolerations": {
       "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.api.core.v1.Toleration"
+    },
+    "alertmanagerConfigRoutes": {
+      "$ref": "https://raw.githubusercontent.com/prometheus-community/helm-charts/87e588c0569ecfb61276b5270246d25c3874e8bb/charts/alertmanager/values.schema.json#/definitions/config/route/properties/routes"
     },
     "image": {
       "type": "object",
