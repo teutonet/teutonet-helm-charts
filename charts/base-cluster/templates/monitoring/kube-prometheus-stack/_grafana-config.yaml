@@ -31,6 +31,7 @@ auth.generic_oauth:
 {{- define "base-cluster.prometheus-stack.grafana.config" -}}
 imageRenderer:
   enabled: true
+  automountServiceAccountToken: false
   securityContext:
     seccompProfile:
       type: RuntimeDefault

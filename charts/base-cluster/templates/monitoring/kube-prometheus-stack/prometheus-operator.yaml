@@ -19,15 +19,5 @@ spec:
   upgrade:
     timeout: 20m0s
     crds: CreateReplace
-  postRenderers:
-    - kustomize:
-        patches:
-          - target:
-              kind: Deployment
-              name: kube-prometheus-stack-grafana-image-renderer
-            patch: |-
-              - op: add
-                path: /spec/template/spec/automountServiceAccountToken
-                value: false
   values: {{- include "base-cluster.prometheus.config" . | nindent 4 }}
 {{- end }}
