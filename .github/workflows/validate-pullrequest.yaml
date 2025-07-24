@@ -48,6 +48,25 @@ jobs:
         uses: cocogitto/cocogitto-action@c7a74f5406bab86da17da0f0e460a69f8219a68c # v3
         with:
           check: false
+      - name: Verify PR title is the first line of the first commit
+        if: ${{ needs.getChangedChart.outputs.found == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+          set -e
+          set -o pipefail
+
+          if [[ "$PR_TITLE" != "$(gh api --paginate "/repos/${GITHUB_REPOSITORY}/pulls/${PULL_REQUEST_NUMBER}/commits" | jq -cr 'first | .commit.message | split("\n") | first')" ]]; then
+            echo "Don't change the PR title, leave it as the first line of the first commit's message" >&2
+            exit 1
+          fi
+
+          if gh api --paginate "/repos/${GITHUB_REPOSITORY}/pulls/${PULL_REQUEST_NUMBER}" | jq -cr .body | grep -q '…'; then
+            echo "The PR body shouldn't contain ellipses (…), did you remove the trailing stuff from the first line of the commit message?" >&2
+            exit 1
+          fi
       - name: Verify that PR title is a conventional commit message
         run: |
           [[ "$RUNNER_DEBUG" == 1 ]] && set -x
