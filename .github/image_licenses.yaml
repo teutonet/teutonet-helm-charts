@@ -65,9 +65,15 @@ licenses:
   docker.io/grafana/promtail:
     license: AGPL-3.0
     licenseLink: https://github.com/grafana/loki/blob/main/tools/LICENSE_APACHE2
+  docker.io/grafana/tempo:
+    license: AGPL-3.0-only
+    licenseLink: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/LICENSE
   docker.io/hjacobs/kube-janitor:
     license: AGPL-3.0
     licenseLink: https://github.com/hjacobs/kube-janitor/blob/main/LICENSE
+  docker.io/memcached:
+    license: BSD-3
+    licenseLink: https://raw.githubusercontent.com/memcached/memcached/refs/heads/master/LICENSE
   docker.io/otel/opentelemetry-collector-contrib:
     license: Apache-2.0
     licenseLink: https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/LICENSE
