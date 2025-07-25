@@ -75,8 +75,8 @@ customResourceState:
                     )
                   )
                   "labelsFromPath" (dict
-                    "exported_namespace" (list "metadata" "namespace")
-                    "name" (list "metadata" "name")
+                    "customresource_namespace" (list "metadata" "namespace")
+                    "customresource_name" (list "metadata" "name")
                   )
                 )
                 (dict
@@ -90,8 +90,8 @@ customResourceState:
                     )
                   )
                   "labelsFromPath" (dict
-                    "exported_namespace" (list "metadata" "namespace")
-                    "name" (list "metadata" "name")
+                    "customresource_namespace" (list "metadata" "namespace")
+                    "customresource_name" (list "metadata" "name")
                   )
                 )
               )
