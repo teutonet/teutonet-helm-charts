@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.0.0...base-cluster-v9.0.1) (2025-07-25)
+
+
+### Bug Fixes
+
+* **base-cluster/kyverno:** migrate to new `validationFailureAction` syntax ([#1621](https://github.com/teutonet/teutonet-helm-charts/issues/1621)) ([c3f16be](https://github.com/teutonet/teutonet-helm-charts/commit/c3f16bedb07de2fb1d7f2f238e9061c2f18bb656))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/monitoring:** migrate metrics-server away from bitnami ([#1604](https://github.com/teutonet/teutonet-helm-charts/issues/1604)) ([6a755d9](https://github.com/teutonet/teutonet-helm-charts/commit/6a755d9556619b4d2abaccb757250ebdc89345ef))
+
 ## [9.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v8.2.1...base-cluster-v9.0.0) (2025-07-25)
 
 
