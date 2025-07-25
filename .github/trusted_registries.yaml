@@ -40,6 +40,8 @@ quay.io:
   jetstack: ALL_IMAGES
   kiwigrid:
     k8s-sidecar: ALL_TAGS
+  oauth2-proxy:
+    oauth2-proxy: ALL_TAGS
   prometheus: ALL_IMAGES
   prometheus-operator: ALL_IMAGES
 reg.kyverno.io:
