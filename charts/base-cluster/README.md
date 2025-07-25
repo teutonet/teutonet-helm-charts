@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 8.2.1](https://img.shields.io/badge/Version-8.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 9.0.0](https://img.shields.io/badge/Version-9.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -23,7 +23,7 @@ The `.x.x` part of the versions can be left as is, helm uses that as a range. If
 git init
 
 # create empty cluster HelmRelease;
-flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 8.x.x > cluster.yaml
+flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 9.x.x > cluster.yaml
 
 # maybe use the following name for your cluster;
 kubectl get node -o jsonpath='{.items[0].metadata.annotations.cluster\.x-k8s\.io/cluster-name}'
@@ -50,7 +50,7 @@ helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io
 
 # manual initial installation of the chart, afterwards the chart takes over
 # after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
-helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 8.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
+helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 9.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
 
 # you can use this command to get the instructions again
 # e.g. when adding users, gitRepositories, ...
@@ -246,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v8.2.1/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v9.0.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -2297,57 +2297,373 @@ Must be one of:
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                                      | Pattern | Type    | Deprecated | Definition                                         | Title/Description |
-| ----------------------------------------------------------------------------- | ------- | ------- | ---------- | -------------------------------------------------- | ----------------- |
-| - [receivers](#monitoring_prometheus_alertmanager_receivers )                 | No      | object  | No         | -                                                  | -                 |
-| - [ingress](#monitoring_prometheus_alertmanager_ingress )                     | No      | object  | No         | Same as [ingress](#monitoring_prometheus_ingress ) | -                 |
-| - [replicas](#monitoring_prometheus_alertmanager_replicas )                   | No      | integer | No         | -                                                  | -                 |
-| - [retentionDuration](#monitoring_prometheus_alertmanager_retentionDuration ) | No      | string  | No         | -                                                  | -                 |
-| - [persistence](#monitoring_prometheus_alertmanager_persistence )             | No      | object  | No         | -                                                  | -                 |
+| Property                                                                      | Pattern | Type            | Deprecated | Definition                                         | Title/Description          |
+| ----------------------------------------------------------------------------- | ------- | --------------- | ---------- | -------------------------------------------------- | -------------------------- |
+| + [defaultReceiver](#monitoring_prometheus_alertmanager_defaultReceiver )     | No      | string          | No         | -                                                  | -                          |
+| - [receivers](#monitoring_prometheus_alertmanager_receivers )                 | No      | object          | No         | -                                                  | -                          |
+| - [routes](#monitoring_prometheus_alertmanager_routes )                       | No      | array of object | No         | In #/$defs/alertmanagerConfigRoutes                | Zero or more child routes. |
+| - [ingress](#monitoring_prometheus_alertmanager_ingress )                     | No      | object          | No         | Same as [ingress](#monitoring_prometheus_ingress ) | -                          |
+| - [replicas](#monitoring_prometheus_alertmanager_replicas )                   | No      | integer         | No         | -                                                  | -                          |
+| - [retentionDuration](#monitoring_prometheus_alertmanager_retentionDuration ) | No      | string          | No         | -                                                  | -                          |
+| - [persistence](#monitoring_prometheus_alertmanager_persistence )             | No      | object          | No         | -                                                  | -                          |
 
-##### <a name="monitoring_prometheus_alertmanager_receivers"></a>4.5.12.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers`
+##### <a name="monitoring_prometheus_alertmanager_defaultReceiver"></a>4.5.12.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > monitoring > prometheus > alertmanager > defaultReceiver`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="monitoring_prometheus_alertmanager_receivers"></a>4.5.12.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+| Property                                                                      | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                   |
+| ----------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| - [pagerduty](#monitoring_prometheus_alertmanager_receivers_pagerduty )       | No      | object | No         | -          | -                                                                                                                                   |
+| - [^email($\| \S+$)](#monitoring_prometheus_alertmanager_receivers_pattern1 ) | Yes     | object | No         | -          | Sets up an email receiver, if suffixed with \` $name\` \`$name\` will be used as the name of the receiver, otherwise it's \`email\` |
+
+###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty"></a>4.5.12.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                                | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ----------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [pagerduty](#monitoring_prometheus_alertmanager_receivers_pagerduty ) | No      | object | No         | -          | -                 |
+| Property                                                                                    | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [url](#monitoring_prometheus_alertmanager_receivers_pagerduty_url )                       | No      | string | No         | -          | -                 |
+| + [integrationKey](#monitoring_prometheus_alertmanager_receivers_pagerduty_integrationKey ) | No      | string | No         | -          | -                 |
 
-###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty"></a>4.5.12.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty`
+###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty_url"></a>4.5.12.2.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty > url`
+
+|             |                                             |
+| ----------- | ------------------------------------------- |
+| **Type**    | `string`                                    |
+| **Default** | `"https://events.pagerduty.com/v2/enqueue"` |
+
+###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty_integrationKey"></a>4.5.12.2.1.2. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty > integrationKey`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+| Restrictions   |    |
+| -------------- | -- |
+| **Min length** | 32 |
+| **Max length** | 32 |
+
+###### <a name="monitoring_prometheus_alertmanager_receivers_pattern1"></a>4.5.12.2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Pattern Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > ^email($\| \S+$)`
+> All properties whose name matches the regular expression
+```^email($| \S+$)``` ([Test](https://regex101.com/?regex=%5Eemail%28%24%7C%20%5CS%2B%24%29))
+must respect the following conditions
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                                                    | Pattern | Type    | Deprecated | Definition | Title/Description |
-| ------------------------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
-| - [enabled](#monitoring_prometheus_alertmanager_receivers_pagerduty_enabled )               | No      | boolean | No         | -          | -                 |
-| - [url](#monitoring_prometheus_alertmanager_receivers_pagerduty_url )                       | No      | string  | No         | -          | -                 |
-| - [integrationKey](#monitoring_prometheus_alertmanager_receivers_pagerduty_integrationKey ) | No      | string  | No         | -          | -                 |
+**Description:** Sets up an email receiver, if suffixed with ` $name` `$name` will be used as the name of the receiver, otherwise it's `email`
 
-###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty_enabled"></a>4.5.12.1.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty > enabled`
+| Property                                                                               | Pattern | Type    | Deprecated | Definition                                                                   | Title/Description |
+| -------------------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------------------------------------------------------------------------- | ----------------- |
+| + [from](#monitoring_prometheus_alertmanager_receivers_pattern1_from )                 | No      | object  | No         | In #/$defs/email                                                             | -                 |
+| + [to](#monitoring_prometheus_alertmanager_receivers_pattern1_to )                     | No      | object  | No         | Same as [from](#monitoring_prometheus_alertmanager_receivers_pattern1_from ) | -                 |
+| + [host](#monitoring_prometheus_alertmanager_receivers_pattern1_host )                 | No      | string  | No         | -                                                                            | -                 |
+| + [port](#monitoring_prometheus_alertmanager_receivers_pattern1_port )                 | No      | integer | No         | -                                                                            | -                 |
+| + [username](#monitoring_prometheus_alertmanager_receivers_pattern1_username )         | No      | string  | No         | -                                                                            | -                 |
+| + [password](#monitoring_prometheus_alertmanager_receivers_pattern1_password )         | No      | string  | No         | -                                                                            | -                 |
+| - [sendResolved](#monitoring_prometheus_alertmanager_receivers_pattern1_sendResolved ) | No      | boolean | No         | -                                                                            | -                 |
+
+###### <a name="monitoring_prometheus_alertmanager_receivers_pattern1_from"></a>4.5.12.2.2.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > ^email($\| \S+$) > from`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Defined in**            | #/$defs/email                                                               |
+
+| Restrictions                      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Must match regular expression** | ```(?:[a-z0-9!#$%&'*+/=?^_`{\|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{\|}~-]+)*\|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]\|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\|\[(?:(2(5[0-5]\|[0-4][0-9])\|1[0-9][0-9]\|[1-9]?[0-9])\.){3}(?:(2(5[0-5]\|[0-4][0-9])\|1[0-9][0-9]\|[1-9]?[0-9])\|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]\|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])``` [Test](https://regex101.com/?regex=%28%3F%3A%5Ba-z0-9%21%23%24%25%26%27%2A%2B%2F%3D%3F%5E_%60%7B%7C%7D~-%5D%2B%28%3F%3A%5C.%5Ba-z0-9%21%23%24%25%26%27%2A%2B%2F%3D%3F%5E_%60%7B%7C%7D~-%5D%2B%29%2A%7C%22%28%3F%3A%5B%5Cx01-%5Cx08%5Cx0b%5Cx0c%5Cx0e-%5Cx1f%5Cx21%5Cx23-%5Cx5b%5Cx5d-%5Cx7f%5D%7C%5C%5C%5B%5Cx01-%5Cx09%5Cx0b%5Cx0c%5Cx0e-%5Cx7f%5D%29%2A%22%29%40%28%3F%3A%28%3F%3A%5Ba-z0-9%5D%28%3F%3A%5Ba-z0-9-%5D%2A%5Ba-z0-9%5D%29%3F%5C.%29%2B%5Ba-z0-9%5D%28%3F%3A%5Ba-z0-9-%5D%2A%5Ba-z0-9%5D%29%3F%7C%5C%5B%28%3F%3A%282%285%5B0-5%5D%7C%5B0-4%5D%5B0-9%5D%29%7C1%5B0-9%5D%5B0-9%5D%7C%5B1-9%5D%3F%5B0-9%5D%29%5C.%29%7B3%7D%28%3F%3A%282%285%5B0-5%5D%7C%5B0-4%5D%5B0-9%5D%29%7C1%5B0-9%5D%5B0-9%5D%7C%5B1-9%5D%3F%5B0-9%5D%29%7C%5Ba-z0-9-%5D%2A%5Ba-z0-9%5D%3A%28%3F%3A%5B%5Cx01-%5Cx08%5Cx0b%5Cx0c%5Cx0e-%5Cx1f%5Cx21-%5Cx5a%5Cx53-%5Cx7f%5D%7C%5C%5C%5B%5Cx01-%5Cx09%5Cx0b%5Cx0c%5Cx0e-%5Cx7f%5D%29%2B%29%5C%5D%29) |
+
+###### <a name="monitoring_prometheus_alertmanager_receivers_pattern1_to"></a>4.5.12.2.2.2. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > ^email($\| \S+$) > to`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [from](#monitoring_prometheus_alertmanager_receivers_pattern1_from)         |
+
+###### <a name="monitoring_prometheus_alertmanager_receivers_pattern1_host"></a>4.5.12.2.2.3. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > ^email($\| \S+$) > host`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="monitoring_prometheus_alertmanager_receivers_pattern1_port"></a>4.5.12.2.2.4. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > ^email($\| \S+$) > port`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `integer` |
+
+| Restrictions |            |
+| ------------ | ---------- |
+| **Minimum**  | &ge; 1     |
+| **Maximum**  | &le; 65535 |
+
+###### <a name="monitoring_prometheus_alertmanager_receivers_pattern1_username"></a>4.5.12.2.2.5. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > ^email($\| \S+$) > username`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="monitoring_prometheus_alertmanager_receivers_pattern1_password"></a>4.5.12.2.2.6. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > ^email($\| \S+$) > password`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="monitoring_prometheus_alertmanager_receivers_pattern1_sendResolved"></a>4.5.12.2.2.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > ^email($\| \S+$) > sendResolved`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty_url"></a>4.5.12.1.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty > url`
+##### <a name="monitoring_prometheus_alertmanager_routes"></a>4.5.12.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > routes`
+
+|                |                                  |
+| -------------- | -------------------------------- |
+| **Type**       | `array of object`                |
+| **Defined in** | #/$defs/alertmanagerConfigRoutes |
+
+**Description:** Zero or more child routes.
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                           | Description                  |
+| --------------------------------------------------------- | ---------------------------- |
+| [route](#monitoring_prometheus_alertmanager_routes_items) | Alert routing configuration. |
+
+###### <a name="monitoring_prometheus_alertmanager_routes_items"></a>4.5.12.3.1. base cluster configuration > monitoring > prometheus > alertmanager > routes > route
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Defined in**            | #/definitions/config/route                                                  |
+
+**Description:** Alert routing configuration.
+
+| Property                                                                                           | Pattern | Type            | Deprecated | Definition                                                                         | Title/Description                                                                                                                                            |
+| -------------------------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| - [receiver](#monitoring_prometheus_alertmanager_routes_items_receiver )                           | No      | string          | No         | -                                                                                  | The default receiver to send alerts to.                                                                                                                      |
+| - [group_by](#monitoring_prometheus_alertmanager_routes_items_group_by )                           | No      | array of string | No         | -                                                                                  | The labels by which incoming alerts are grouped together.                                                                                                    |
+| - [continue](#monitoring_prometheus_alertmanager_routes_items_continue )                           | No      | boolean         | No         | -                                                                                  | Whether an alert should continue matching subsequent sibling nodes.                                                                                          |
+| - [matchers](#monitoring_prometheus_alertmanager_routes_items_matchers )                           | No      | array of string | No         | -                                                                                  | A list of matchers that an alert has to fulfill to match the node.                                                                                           |
+| - [group_wait](#monitoring_prometheus_alertmanager_routes_items_group_wait )                       | No      | string          | No         | In #/definitions/config/duration                                                   | How long to initially wait to send a notification for a group of alerts.                                                                                     |
+| - [group_interval](#monitoring_prometheus_alertmanager_routes_items_group_interval )               | No      | string          | No         | Same as [group_wait](#monitoring_prometheus_alertmanager_routes_items_group_wait ) | How long to wait before sending a notification about new alerts that are added to a group of alerts for which an initial notification has already been sent. |
+| - [repeat_interval](#monitoring_prometheus_alertmanager_routes_items_repeat_interval )             | No      | string          | No         | Same as [group_wait](#monitoring_prometheus_alertmanager_routes_items_group_wait ) | How long to wait before sending a notification again if it has already been sent successfully for an alert.                                                  |
+| - [mute_time_intervals](#monitoring_prometheus_alertmanager_routes_items_mute_time_intervals )     | No      | array of string | No         | -                                                                                  | Times when the route should be muted.                                                                                                                        |
+| - [active_time_intervals](#monitoring_prometheus_alertmanager_routes_items_active_time_intervals ) | No      | array of string | No         | -                                                                                  | Times when the route should be active.                                                                                                                       |
+| - [routes](#monitoring_prometheus_alertmanager_routes_items_routes )                               | No      | array of object | No         | -                                                                                  | Zero or more child routes.                                                                                                                                   |
+
+###### <a name="monitoring_prometheus_alertmanager_routes_items_receiver"></a>4.5.12.3.1.1. Property `base cluster configuration > monitoring > prometheus > alertmanager > routes > routes items > receiver`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-###### <a name="monitoring_prometheus_alertmanager_receivers_pagerduty_integrationKey"></a>4.5.12.1.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > pagerduty > integrationKey`
+**Description:** The default receiver to send alerts to.
+
+###### <a name="monitoring_prometheus_alertmanager_routes_items_group_by"></a>4.5.12.3.1.2. Property `base cluster configuration > monitoring > prometheus > alertmanager > routes > routes items > group_by`
+
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of string` |
+
+**Description:** The labels by which incoming alerts are grouped together.
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                              | Description |
+| ---------------------------------------------------------------------------- | ----------- |
+| [labelname](#monitoring_prometheus_alertmanager_routes_items_group_by_items) | -           |
+
+###### <a name="monitoring_prometheus_alertmanager_routes_items_group_by_items"></a>4.5.12.3.1.2.1. base cluster configuration > monitoring > prometheus > alertmanager > routes > routes items > group_by > labelname
+
+|                |                                |
+| -------------- | ------------------------------ |
+| **Type**       | `string`                       |
+| **Defined in** | #/definitions/config/labelname |
+
+| Restrictions                      |                                                                                                                              |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **Must match regular expression** | ```^[a-zA-Z_][a-zA-Z0-9_]*$\|^...$``` [Test](https://regex101.com/?regex=%5E%5Ba-zA-Z_%5D%5Ba-zA-Z0-9_%5D%2A%24%7C%5E...%24) |
+
+###### <a name="monitoring_prometheus_alertmanager_routes_items_continue"></a>4.5.12.3.1.3. Property `base cluster configuration > monitoring > prometheus > alertmanager > routes > routes items > continue`
+
+|             |           |
+| ----------- | --------- |
+| **Type**    | `boolean` |
+| **Default** | `false`   |
+
+**Description:** Whether an alert should continue matching subsequent sibling nodes.
+
+###### <a name="monitoring_prometheus_alertmanager_routes_items_matchers"></a>4.5.12.3.1.4. Property `base cluster configuration > monitoring > prometheus > alertmanager > routes > routes items > matchers`
+
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of string` |
+
+**Description:** A list of matchers that an alert has to fulfill to match the node.
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                                   | Description |
+| --------------------------------------------------------------------------------- | ----------- |
+| [matchers items](#monitoring_prometheus_alertmanager_routes_items_matchers_items) | -           |
+
+###### <a name="monitoring_prometheus_alertmanager_routes_items_matchers_items"></a>4.5.12.3.1.4.1. base cluster configuration > monitoring > prometheus > alertmanager > routes > routes items > matchers > matchers items
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="monitoring_prometheus_alertmanager_ingress"></a>4.5.12.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > ingress`
+###### <a name="monitoring_prometheus_alertmanager_routes_items_group_wait"></a>4.5.12.3.1.5. Property `base cluster configuration > monitoring > prometheus > alertmanager > routes > routes items > group_wait`
+
+|                |                               |
+| -------------- | ----------------------------- |
+| **Type**       | `string`                      |
+| **Defined in** | #/definitions/config/duration |
+
+**Description:** How long to initially wait to send a notification for a group of alerts.
+
+| Restrictions                      |                                                                                                                                                                                                                                                                                                                                                              |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Must match regular expression** | ```^((([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?\|0)$``` [Test](https://regex101.com/?regex=%5E%28%28%28%5B0-9%5D%2B%29y%29%3F%28%28%5B0-9%5D%2B%29w%29%3F%28%28%5B0-9%5D%2B%29d%29%3F%28%28%5B0-9%5D%2B%29h%29%3F%28%28%5B0-9%5D%2B%29m%29%3F%28%28%5B0-9%5D%2B%29s%29%3F%28%28%5B0-9%5D%2B%29ms%29%3F%7C0%29%24) |
+
+###### <a name="monitoring_prometheus_alertmanager_routes_items_group_interval"></a>4.5.12.3.1.6. Property `base cluster configuration > monitoring > prometheus > alertmanager > routes > routes items > group_interval`
+
+|                        |                                                                           |
+| ---------------------- | ------------------------------------------------------------------------- |
+| **Type**               | `string`                                                                  |
+| **Same definition as** | [group_wait](#monitoring_prometheus_alertmanager_routes_items_group_wait) |
+
+**Description:** How long to wait before sending a notification about new alerts that are added to a group of alerts for which an initial notification has already been sent.
+
+###### <a name="monitoring_prometheus_alertmanager_routes_items_repeat_interval"></a>4.5.12.3.1.7. Property `base cluster configuration > monitoring > prometheus > alertmanager > routes > routes items > repeat_interval`
+
+|                        |                                                                           |
+| ---------------------- | ------------------------------------------------------------------------- |
+| **Type**               | `string`                                                                  |
+| **Same definition as** | [group_wait](#monitoring_prometheus_alertmanager_routes_items_group_wait) |
+
+**Description:** How long to wait before sending a notification again if it has already been sent successfully for an alert.
+
+###### <a name="monitoring_prometheus_alertmanager_routes_items_mute_time_intervals"></a>4.5.12.3.1.8. Property `base cluster configuration > monitoring > prometheus > alertmanager > routes > routes items > mute_time_intervals`
+
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of string` |
+
+**Description:** Times when the route should be muted.
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                                                         | Description |
+| ------------------------------------------------------------------------------------------------------- | ----------- |
+| [mute_time_intervals items](#monitoring_prometheus_alertmanager_routes_items_mute_time_intervals_items) | -           |
+
+###### <a name="monitoring_prometheus_alertmanager_routes_items_mute_time_intervals_items"></a>4.5.12.3.1.8.1. base cluster configuration > monitoring > prometheus > alertmanager > routes > routes items > mute_time_intervals > mute_time_intervals items
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="monitoring_prometheus_alertmanager_routes_items_active_time_intervals"></a>4.5.12.3.1.9. Property `base cluster configuration > monitoring > prometheus > alertmanager > routes > routes items > active_time_intervals`
+
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of string` |
+
+**Description:** Times when the route should be active.
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                                                             | Description |
+| ----------------------------------------------------------------------------------------------------------- | ----------- |
+| [active_time_intervals items](#monitoring_prometheus_alertmanager_routes_items_active_time_intervals_items) | -           |
+
+###### <a name="monitoring_prometheus_alertmanager_routes_items_active_time_intervals_items"></a>4.5.12.3.1.9.1. base cluster configuration > monitoring > prometheus > alertmanager > routes > routes items > active_time_intervals > active_time_intervals items
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="monitoring_prometheus_alertmanager_routes_items_routes"></a>4.5.12.3.1.10. Property `base cluster configuration > monitoring > prometheus > alertmanager > routes > routes items > routes`
+
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of object` |
+
+**Description:** Zero or more child routes.
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                        | Description                  |
+| ---------------------------------------------------------------------- | ---------------------------- |
+| [route](#monitoring_prometheus_alertmanager_routes_items_routes_items) | Alert routing configuration. |
+
+###### <a name="monitoring_prometheus_alertmanager_routes_items_routes_items"></a>4.5.12.3.1.10.1. base cluster configuration > monitoring > prometheus > alertmanager > routes > routes items > routes > route
+
+|                           |                                                                                                     |
+| ------------------------- | --------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                            |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                         |
+| **Same definition as**    | [monitoring_prometheus_alertmanager_routes_items](#monitoring_prometheus_alertmanager_routes_items) |
+
+**Description:** Alert routing configuration.
+
+##### <a name="monitoring_prometheus_alertmanager_ingress"></a>4.5.12.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > ingress`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -2355,7 +2671,7 @@ Must be one of:
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 | **Same definition as**    | [ingress](#monitoring_prometheus_ingress)                      |
 
-##### <a name="monitoring_prometheus_alertmanager_replicas"></a>4.5.12.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > replicas`
+##### <a name="monitoring_prometheus_alertmanager_replicas"></a>4.5.12.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > replicas`
 
 |          |           |
 | -------- | --------- |
@@ -2365,7 +2681,7 @@ Must be one of:
 | ------------ | ------ |
 | **Minimum**  | &ge; 1 |
 
-##### <a name="monitoring_prometheus_alertmanager_retentionDuration"></a>4.5.12.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > retentionDuration`
+##### <a name="monitoring_prometheus_alertmanager_retentionDuration"></a>4.5.12.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > retentionDuration`
 
 |          |          |
 | -------- | -------- |
@@ -2375,7 +2691,7 @@ Must be one of:
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | **Must match regular expression** | ```[0-9]+(ms\|s\|m\|h\|d\|w\|y)``` [Test](https://regex101.com/?regex=%5B0-9%5D%2B%28ms%7Cs%7Cm%7Ch%7Cd%7Cw%7Cy%29) |
 
-##### <a name="monitoring_prometheus_alertmanager_persistence"></a>4.5.12.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > persistence`
+##### <a name="monitoring_prometheus_alertmanager_persistence"></a>4.5.12.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > persistence`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -2387,7 +2703,7 @@ Must be one of:
 | - [storageClass](#monitoring_prometheus_alertmanager_persistence_storageClass ) | No      | string | No         | Same as [storageClass](#global_storageClass )                                                                                                      | The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd) |
 | - [size](#monitoring_prometheus_alertmanager_persistence_size )                 | No      | object | No         | Same as [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties ) | -                                                                                                                |
 
-###### <a name="monitoring_prometheus_alertmanager_persistence_storageClass"></a>4.5.12.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > persistence > storageClass`
+###### <a name="monitoring_prometheus_alertmanager_persistence_storageClass"></a>4.5.12.7.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > persistence > storageClass`
 
 |                        |                                      |
 | ---------------------- | ------------------------------------ |
@@ -2396,7 +2712,7 @@ Must be one of:
 
 **Description:** The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd)
 
-###### <a name="monitoring_prometheus_alertmanager_persistence_size"></a>4.5.12.5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > persistence > size`
+###### <a name="monitoring_prometheus_alertmanager_persistence_size"></a>4.5.12.7.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > persistence > size`
 
 |                           |                                                                                                                                           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
