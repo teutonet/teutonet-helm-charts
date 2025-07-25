@@ -29,7 +29,7 @@ jobs:
     permissions:
       contents: read
     runs-on: ubuntu-latest
-    if: ${{ always() && contains(needs.*.result, 'success') && !contains(needs.*.result, 'failure') }}
+    if: ${{ always() && contains(needs.*.result, 'success') && !contains(needs.*.result, 'failure') && !contains((needs.getChangedChartsPR.outputs.charts || needs.getChangedChartsMQ.outputs.charts), '[]') }}
     needs:
       - getChangedChartsPR
       - getChangedChartsMQ
