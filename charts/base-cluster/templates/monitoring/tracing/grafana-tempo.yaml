@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/part-of: monitoring
 spec:
   chart:
-    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "bitnami" "chart" "grafana-tempo" "context" $) | nindent 6 }}
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "grafana" "chart" "tempo-distributed" "context" $) | nindent 6 }}
   interval: 1h
   driftDetection:
     mode: enabled
@@ -19,41 +19,33 @@ spec:
   values:
     {{- if .Values.global.imageRegistry }}
     global:
-      imageRegistry: {{ $.Values.global.imageRegistry }}
+      image:
+        registry: {{ $.Values.global.imageRegistry }}
     {{- end }}
     ingester: {{- include "common.resourcesWithPreset" .Values.monitoring.tracing.ingester | nindent 6 }}
+      replicas: &replicas 1
+      config:
+        replication_factor: *replicas
       persistence:
+        enabled: true
         size: {{ .Values.monitoring.tracing.ingester.persistence.size }}
-      networkPolicy:
-        allowExternalEgress: false
-    compactor:
-      networkPolicy:
-        allowExternalEgress: false
-    distributor:
-      networkPolicy:
-        allowExternalEgress: false
-    metricsGenerator:
-      networkPolicy:
-        allowExternalEgress: false
-    querier:
-      networkPolicy:
-        allowExternalEgress: false
-    queryFrontend:
-      networkPolicy:
-        allowExternalEgress: false
-    vulture:
-      enabled: false
-      networkPolicy:
-        allowExternalEgress: false
     tempo:
-      traces:
-        jaeger:
-          grpc: false
-          thriftHttp: false
-        otlp:
-          grpc: true
-    metrics:
+      securityContext:
+        privileged: false
+        seLinuxOptions: {}
+        seccompProfile:
+          type: RuntimeDefault
+      podSecurityContext:
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: []
+        sysctls: []
+    metricsGenerator:
       enabled: true
+    traces:
+      otlp:
+        grpc:
+          enabled: true
+    metaMonitoring:
       serviceMonitor:
         enabled: true
         labels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 10 }}

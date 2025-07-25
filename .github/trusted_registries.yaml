@@ -5,6 +5,8 @@ docker.io:
     bats: ALL_TAGS
   bitnami: ALL_IMAGES
   busybox: ALL_TAGS
+  ckan:
+    ckan-base-datapusher: ALL_TAGS
   confluentinc:
     cp-kafka: ALL_TAGS
   curlimages:
@@ -15,27 +17,24 @@ docker.io:
   grafana: ALL_IMAGES
   hjacobs:
     kube-janitor: ALL_TAGS
+  memcached: ALL_TAGS
+  otel:
+    opentelemetry-collector-contrib: ALL_TAGS
   postgres: ALL_TAGS
   stellio: ALL_IMAGES
   traefik: ALL_TAGS
   velero: ALL_IMAGES
   vladgh:
     gpg: ALL_TAGS
-  otel:
-    opentelemetry-collector-contrib: ALL_TAGS
-  ckan:
-    ckan-base-datapusher: ALL_TAGS
-mirror.gcr.io:
-  aquasec: ALL_IMAGES
 ghcr.io:
   aquasecurity: ALL_IMAGES
-  teutonet: ALL_IMAGES
-  kyverno:
-    kyverno-cli: ALL_TAGS
   jimmidyson:
     configmap-reload: ALL_TAGS
-reg.kyverno.io:
-  kyverno: ALL_IMAGES
+  kyverno:
+    kyverno-cli: ALL_TAGS
+  teutonet: ALL_IMAGES
+mirror.gcr.io:
+  aquasec: ALL_IMAGES
 quay.io:
   cilium: ALL_IMAGES
   jetstack: ALL_IMAGES
@@ -43,18 +42,20 @@ quay.io:
     k8s-sidecar: ALL_TAGS
   prometheus: ALL_IMAGES
   prometheus-operator: ALL_IMAGES
+reg.kyverno.io:
+  kyverno: ALL_IMAGES
+registry-gitlab.teuto.net: ALL_IMAGES
 registry.k8s.io:
   descheduler: ALL_IMAGES
+  etcd: ALL_TAGS
   ingress-nginx: ALL_IMAGES
   kube-state-metrics: ALL_IMAGES
+  provider-os: ALL_IMAGES
   sig-storage:
-    nfs-provisioner: ALL_TAGS
     csi-attacher: ALL_TAGS
     csi-node-driver-registrar: ALL_TAGS
     csi-provisioner: ALL_TAGS
     csi-resizer: ALL_TAGS
     csi-snapshotter: ALL_TAGS
     livenessprobe: ALL_TAGS
-  etcd: ALL_TAGS
-  provider-os: ALL_IMAGES
-registry-gitlab.teuto.net: ALL_IMAGES
+    nfs-provisioner: ALL_TAGS
