@@ -1,5 +1,22 @@
 # Changelog
 
+## [9.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v8.2.1...base-cluster-v9.0.0) (2025-07-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* **base-cluster/monitoring/alertmanager:** add receiver and route configuration capabilities ([#1600](https://github.com/teutonet/teutonet-helm-charts/issues/1600))
+
+### Features
+
+* **base-cluster/monitoring/alertmanager:** add receiver and route configuration capabilities ([#1600](https://github.com/teutonet/teutonet-helm-charts/issues/1600)) ([7f549fb](https://github.com/teutonet/teutonet-helm-charts/commit/7f549fb95019d1e1db288bc0ca278601fe5d370f))
+* **base-cluster/monitoring:** don't automount the ServiceAccountToken ([#1615](https://github.com/teutonet/teutonet-helm-charts/issues/1615)) ([52386b7](https://github.com/teutonet/teutonet-helm-charts/commit/52386b7a0c1e8a062748af985f98ddf85f1408b1))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/monitoring:** deploy log collector to potential control-plane ([#1616](https://github.com/teutonet/teutonet-helm-charts/issues/1616)) ([e021845](https://github.com/teutonet/teutonet-helm-charts/commit/e021845ad3299668918a7d4fc5a7532c45495503))
+
 ## [8.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v8.2.0...base-cluster-v8.2.1) (2025-07-24)
 
 
