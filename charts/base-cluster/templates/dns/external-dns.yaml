@@ -1,5 +1,4 @@
 {{- if .Values.dns.provider -}}
-{{- $apiVersion := (include "common.capabilities.ingress.apiVersion" .) -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -7,22 +6,9 @@ metadata:
   namespace: ingress
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
     app.kubernetes.io/component: external-dns
-    {{- if or (eq $apiVersion "extensions/v1beta1") (eq $apiVersion "networking.k8s.io/v1beta1") }}
-    helmrelease-metrics/ignore: "true"
-    {{- end }}
 spec:
   chart:
-    {{- if or (eq $apiVersion "extensions/v1beta1") (eq $apiVersion "networking.k8s.io/v1beta1") }}
-    spec:
-      chart: external-dns
-      sourceRef:
-        kind: HelmRepository
-        name: bitnami
-        namespace: {{ .Release.Namespace }}
-      version: 5.4.8
-    {{- else }}
-    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "bitnami" "chart" "external-dns" "context" $) | nindent 6 }}
-    {{- end }}
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "external-dns" "chart" "external-dns" "context" $) | nindent 6 }}
   interval: 1h
   driftDetection:
     mode: enabled
@@ -37,17 +23,22 @@ spec:
     crds: Skip
   values:
     priorityClassName: cluster-components
-    {{- if .Values.global.imageRegistry }}
-    global:
-      imageRegistry: {{ $.Values.global.imageRegistry }}
-    {{- end }}
+    image:
+      repository: {{ printf "%s/external-dns/external-dns" ($.Values.global.imageRegistry | default "registry.k8s.io") }}
     podAnnotations:
       checksum/provider-secret: {{ include "common.utils.checksumTemplate" (dict "path" (printf "/dns/%s/external-dns.yaml" (.Values.dns.provider | keys | first)) "context" $) }}
-    provider: {{ .Values.dns.provider | keys | first | quote }}
+    provider:
+      name: {{ .Values.dns.provider | keys | first | quote }}
     {{- if .Values.dns.provider.cloudflare }}
-    cloudflare:
-      secretName: "external-dns"
-      proxied: false
+    env:
+      - name: CF_API_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: external-dns
+            key: cloudflare_api_token
+    {{- end }}
+    {{- with .Values.dns.domains }}
+    domainFilters: {{- toYaml . | nindent 6 }}
     {{- end }}
     sources:
       - ingress
@@ -58,28 +49,18 @@ spec:
       - gateway-udproute
     rbac:
       create: true
-    crd:
-      create: false
     policy: sync
+    registry: txt
     txtOwnerId: {{ required "You must provide a cluster name, unique in your DNS setup" .Values.global.clusterName }}
     podSecurityContext:
-      runAsNonRoot: true
-      runAsGroup: 1001
-      runAsUser: 1001
+      runAsGroup: 65534
+      runAsUser: 65534
     containerSecurityContext:
-      readOnlyRootFilesystem: true
-      privileged: false
-      capabilities:
-        drop:
-          - ALL
-      allowPrivilegeEscalation: false
       seccompProfile:
         type: RuntimeDefault
     resources: {{- include "common.resources" .Values.externalDNS | nindent 6 }}
-    metrics:
+    serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
-      serviceMonitor:
-        enabled: {{ .Values.monitoring.prometheus.enabled }}
-        labels:
+      additionalLabels:
           monitoring/provisioned-by: base-cluster
 {{- end -}}
