@@ -37,8 +37,6 @@ alertmanagerSpec:
         resources:
           requests:
             storage: {{ .Values.monitoring.prometheus.alertmanager.persistence.size }}
-  alertmanagerConfigSelector:
-    matchLabels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 6 }}
 config:
   {{- $receivers := dict "null" (dict) -}}
   {{- if and .Values.monitoring.deadMansSwitch.enabled .Values.global.baseDomain .Values.global.clusterName -}}

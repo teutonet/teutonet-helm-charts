@@ -71,4 +71,5 @@ spec:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
       servicemonitor:
         enabled: {{ .Values.monitoring.prometheus.enabled }}
-        labels: {{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 10 }}
+        labels:
+          monitoring/provisioned-by: base-cluster

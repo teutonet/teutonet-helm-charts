@@ -41,7 +41,8 @@ kind: ServiceMonitor
 metadata:
   name: kdave
   namespace: monitoring
-  labels: {{- include "common.helm.labels" (dict) | nindent 4 }}{{- include "common.tplvalues.render" (dict "value" .Values.monitoring.labels "context" .) | nindent 4 }}
+  labels: {{- include "common.helm.labels" (dict) | nindent 4 }}
+    monitoring/provisioned-by: base-cluster
     app.kubernetes.io/component: kdave
     app.kubernetes.io/part-of: monitoring
 spec:
