@@ -1,0 +1,69 @@
+name: Get changed charts in a PR or merge group
+
+on:
+  workflow_call:
+    inputs:
+      pr_number:
+        type: number
+        default: -1
+      base_commit:
+        description: Should only be set if no pr_number has been provided
+        type: string
+        default: missing
+      head_commit:
+        description: Should only be set if no pr_number has been provided
+        type: string
+        default: missing
+    outputs:
+      charts:
+        description: The names of the changed charts in the PR or merge group.
+        value: ${{ jobs.getChangedCharts.outputs.charts }}
+      count:
+        value: ${{ jobs.getChangedCharts.outputs.count }}
+
+jobs:
+  getChangedCharts:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      charts: ${{ inputs.pr_number != -1 && steps.getChartsPR.outputs.charts || steps.getChartsMG.outputs.charts }}
+      count: ${{ inputs.pr_number != -1 && steps.getChartsPR.outputs.count || steps.getChartsMG.outputs.count }}
+    steps:
+      - name: fail if all inputs are given
+        if: ${{ inputs.pr_number != -1 && (inputs.base_commit != 'missing' && inputs.head_commit != 'missing') }}
+        run: exit 1
+      - name: Get all charts changed in a PR
+        id: getChartsPR
+        if: ${{ inputs.pr_number != -1 }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PULL_REQUEST_NUMBER: ${{ inputs.pr_number }}
+        run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+          set -e
+          set -o pipefail
+          charts="$(gh api --paginate "/repos/${GITHUB_REPOSITORY}/pulls/${PULL_REQUEST_NUMBER}/files" | jq -cr 'map(.filename | select(test("charts/[^/]*")) | split("/") | .[1] | select(.)) | unique')"
+          (
+            echo charts="$charts"
+            echo count="$(<<<"$charts" jq -r length)"
+          ) | tee -a "$GITHUB_OUTPUT"
+      - name: Get all charts changed in a merge group
+        id: getChartsMG
+        if: ${{ inputs.base_commit != 'missing' && inputs.head_commit != 'missing' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          BASE_COMMIT: ${{ inputs.base_commit }}
+          HEAD_COMMIT: ${{ inputs.head_commit }}
+        run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+          set -e
+          set -o pipefail
+          charts="$(gh api --paginate "/repos/${GITHUB_REPOSITORY}/compare/${BASE_COMMIT}...${HEAD_COMMIT}" | jq -cr '.files | map(.filename | select(test("charts/[^/]*")) | split("/") | .[1] | select(.)) | unique')"
+          (
+            echo charts="$charts"
+            echo count="$(<<<"$charts" jq -r length)"
+          ) | tee -a "$GITHUB_OUTPUT"
+      - name: fail if inputs are missing
+        if: ${{ inputs.pr_number == -1 && (inputs.base_commit == 'missing' || inputs.head_commit == 'missing') }}
+        run: exit 1
