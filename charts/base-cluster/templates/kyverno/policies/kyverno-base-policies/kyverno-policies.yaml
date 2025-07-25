@@ -25,7 +25,7 @@ spec:
     podSecuritySeverity: {{ .Values.kyverno.podSecuritySeverity | quote }}
     # Supported values- `audit`, `enforce`
     # For more info- https://kyverno.io/docs/writing-policies/validate/
-    validationFailureAction: {{ .Values.kyverno.validationFailureAction | quote }}
+    validationFailureAction: {{ .Values.kyverno.validationFailureAction | title | quote }}
     validationFailureActionOverride:
       all:
         - action: audit
