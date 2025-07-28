@@ -31,6 +31,12 @@ auth.generic_oauth:
 {{- define "base-cluster.prometheus-stack.grafana.config" -}}
 imageRenderer:
   enabled: true
+  {{- with .Values.global.imageRenderer.image }}
+  image:
+    registry: {{ $.Values.global.imageRegistry | default (printf .registry) }}
+    repository: {{ .repository }}
+    tag: {{ .tag }}
+  {{- end }}
   automountServiceAccountToken: false
   securityContext:
     seccompProfile:

@@ -107,6 +107,15 @@
           },
           "additionalProperties": false
         },
+        "imageRenderer": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "$ref": "#/$defs/image"
+            }
+          },
+          "additionalProperties": false
+        },
         "networkPolicy": {
           "type": "object",
           "properties": {
