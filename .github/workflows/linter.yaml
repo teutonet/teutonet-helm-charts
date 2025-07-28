@@ -9,33 +9,25 @@ on:
       - checks_requested
 
 jobs:
-  getChangedChartsPR:
-    uses: ./.github/workflows/get-changed-charts-pr.yaml
-    if: ${{ github.event.pull_request != null }}
+  getChangedCharts:
+    uses: ./.github/workflows/get-changed-charts.yaml
     permissions:
       pull-requests: read
-    with:
-      pr_number: ${{ github.event.pull_request.number || 0 }}
-  getChangedChartsMQ:
-    uses: ./.github/workflows/get-changed-charts-merge-queue.yaml
-    if: ${{ github.event.merge_group != null }}
-    permissions:
       contents: read
     with:
-      base_commit: ${{ github.event.merge_group.base_sha || '' }}
-      head_commit: ${{ github.event.merge_group.head_sha || '' }}
+      pr_number: ${{ github.event.pull_request.number || -1 }}
+      base_commit: ${{ github.event.merge_group.base_sha || 'missing' }}
+      head_commit: ${{ github.event.merge_group.head_sha || 'missing' }}
   lint-helm-chart:
     name: lint helm chart
     permissions:
       contents: read
     runs-on: ubuntu-latest
-    if: ${{ always() && contains(needs.*.result, 'success') && !contains(needs.*.result, 'failure') }}
     needs:
-      - getChangedChartsPR
-      - getChangedChartsMQ
+      - getChangedCharts
     strategy:
       matrix:
-        chart: ${{ fromJson(needs.getChangedChartsPR.outputs.charts || needs.getChangedChartsMQ.outputs.charts) }}
+        chart: ${{ fromJson(needs.getChangedCharts.outputs.charts) }}
     env:
       CT_TARGET_BRANCH: ${{ github.event.pull_request.base.ref || github.event.merge_group.base_ref || github.event.repository.default_branch }}
       CHART: ${{ matrix.chart }}
