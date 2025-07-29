@@ -56,10 +56,10 @@ jobs:
 
           if [[ "$hasBreakingChange" == true ]]; then
             major="$(gh api --paginate "/repos/${GITHUB_REPOSITORY}/contents/charts/${CHANGED_CHART}/Chart.yaml?ref=${HEAD_COMMIT}" | jq -er .content | base64 -d | yq -er '.version | split(".")[0]')"
-            migrationLine="### $major\.x\.x -> $(( major + 1))\.0\.0"
-            if [[ "$(gh api --paginate "/repos/${GITHUB_REPOSITORY}/contents/charts/${CHANGED_CHART}/README.md.gotmpl?ref=${HEAD_COMMIT}" | jq -er .content | base64 -d | grep -c "$migrationLine")" != 1 ]]; then
+            migrationLine="### $major.x.x -> $(( major + 1)).0.0"
+            if [[ "$(gh api --paginate "/repos/${GITHUB_REPOSITORY}/contents/charts/${CHANGED_CHART}/README.md.gotmpl?ref=${HEAD_COMMIT}" | jq -er .content | base64 -d | grep -Fc "$migrationLine")" != 1 ]]; then
               echo "You need to provide a migration info for this breaking change, and exactly one" >&2
-              echo "Add > $migrationLine < to README.md.gotmpl"
+              echo "Add > $migrationLine < to README.md.gotmpl" >&2
               exit 1
             fi
           fi
