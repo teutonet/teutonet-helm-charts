@@ -87,6 +87,7 @@ customResourceState:
                     "gauge" (dict
                       "path" (list "spec")
                       "valueFrom" (list "suspend")
+                      "nilIsZero" true
                     )
                   )
                   "labelsFromPath" (dict
