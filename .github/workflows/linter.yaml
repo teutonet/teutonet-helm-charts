@@ -75,6 +75,8 @@ jobs:
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
       - run: ./.github/scripts/enforce-trusted-registries.sh "charts/$CHART"
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
+      - run: ./.github/scripts/check-licenses.sh "charts/$CHART"
+        if: ${{ steps.templateChart.outputs.skipped == 'false' }}
       - name: Download Pluto
         uses: FairwindsOps/pluto/github-action@92afdefd3cb579090dc1e5d55e7f7b89e9fc1dfa # v5.22.0
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}

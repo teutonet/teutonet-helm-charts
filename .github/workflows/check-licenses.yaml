@@ -43,20 +43,11 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     needs: getChangedChart
+    env:
+      CHART: ${{ needs.getChangedChart.outputs.chart }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - run: pip install yq
-      - env:
-          chart: ${{ needs.getChangedChart.outputs.chart }}
-        run: |
-          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
-          set -e
-          set -o pipefail
-          # shellcheck disable=SC2016
-          if missingImages="$(yq -r -e -c --argjson usedImages "$(yq -r '.annotations["artifacthub.io/images"]' "charts/${chart?}/Chart.yaml" | yq -r -c 'map(.image | split(":")[0]) | unique')" '$usedImages - (.licenses | keys) | if length == 0 then false else . end' .github/image_licenses.yaml)"; then
-            echo "The following images have no license, please review:"
-            echo "$missingImages" | yq -r 'map("  - " + .)[]'
-            exit 1
-          fi
+      - run: ./.github/scripts/check-licenses.sh "charts/$CHART"
