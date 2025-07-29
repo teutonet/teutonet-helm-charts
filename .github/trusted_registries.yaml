@@ -21,6 +21,8 @@ docker.io:
   otel:
     opentelemetry-collector-contrib: ALL_TAGS
   postgres: ALL_TAGS
+  rancher:
+    kubectl: ALL_TAGS
   stellio: ALL_IMAGES
   traefik: ALL_TAGS
   velero: ALL_IMAGES

@@ -77,6 +77,9 @@ licenses:
   docker.io/otel/opentelemetry-collector-contrib:
     license: Apache-2.0
     licenseLink: https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/LICENSE
+  docker.io/rancher/kubectl:
+    license: Apache-2.0
+    licenseLink: https://raw.githubusercontent.com/kubernetes/kubernetes/refs/heads/master/LICENSE
   docker.io/stellio/stellio-api-gateway:
     license: Apache-2.0
     licenseLink: https://github.com/stellio-hub/stellio-context-broker/blob/develop/LICENSE.txt
