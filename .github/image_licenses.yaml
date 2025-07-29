@@ -188,6 +188,12 @@ licenses:
   registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker:
     license: Apache-2.0
     licenseLink: https://gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/-/blob/main/gradlew?ref_type=heads
+  registry.k8s.io/external-dns/external-dns:
+    license: Apache-2.0
+    licenseLink: https://raw.githubusercontent.com/kubernetes-sigs/external-dns/refs/heads/master/LICENSE.md
+  registry.k8s.io/metrics-server/metrics-server:
+    license: Apache-2.0
+    licenseLink: https://raw.githubusercontent.com/kubernetes-sigs/metrics-server/refs/heads/master/LICENSE
   registry.k8s.io/descheduler/descheduler:
     license: Apache-2.0
     licenseLink: https://github.com/kubernetes-sigs/descheduler/blob/master/LICENSE
