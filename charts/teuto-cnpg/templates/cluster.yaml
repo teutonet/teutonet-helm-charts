@@ -5,8 +5,14 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
+  env:
+  - name: AWS_REQUEST_CHECKSUM_CALCULATION
+    value: when_required
+  - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+    value: when_required
   affinity:
     podAntiAffinityType: preferred
+  primaryUpdateMethod: switchover
   enablePDB: true
   enableSuperuserAccess: true
   failoverDelay: 0
