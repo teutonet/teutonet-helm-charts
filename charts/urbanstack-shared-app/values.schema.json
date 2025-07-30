@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "library to easily deploy shared apps in urbanstack using flux",
+  "additionalProperties": false,
+  "required": ["image", "host", "keycloakIssuer", "keycloakClientId", "postgres", "tenant", "citytool", "contact"],
+  "properties": {
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "registry", "digest"],
+      "properties": {
+        "repository": {
+          "type": "string"
+        },
+        "registry": {
+          "type": "string"
+        },
+        "digest": {
+          "type": "string"
+        }
+      }
+    },
+    "registryAuth": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "username": {
+          "type": ["string", "null"]
+        },
+        "password": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "host": {
+      "type": "string"
+    },
+    "certIssuer": {
+      "type": ["string", "null"]
+    },
+    "postgres": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["host", "secret", "database", "networkPolicy"],
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "secret": {
+          "type": "string"
+        },
+        "database": {
+          "type": "string"
+        },
+        "networkPolicy": {
+          "type": "object",
+          "required": ["matchLabels"],
+          "additionalProperties": false,
+          "properties": {
+            "matchLabels": {
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "keycloakIssuer": {
+      "type": "string"
+    },
+    "keycloakClientId": {
+      "type": "string"
+    },
+    "allowExternalEgress": {
+      "type": "boolean"
+    },
+    "tenant": {
+      "type": "string"
+    },
+    "citytool": {
+      "type": "string"
+    },
+    "contact": {
+      "type": "string"
+    },
+    "storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "size": {
+          "$ref": "#/$defs/quantity"
+        }
+      }
+    },
+    "resources": {
+      "$ref": "#/$defs/resourceRequirements"
+    },
+    "commonLabels": {
+      "type": "object"
+    },
+    "common": {
+      "type": "object",
+      "description": "Values for sub-chart"
+    }
+  },
+  "$defs": {
+    "resourceRequirements": {
+      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+    },
+    "quantity": {
+      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+    }
+  }
+}
