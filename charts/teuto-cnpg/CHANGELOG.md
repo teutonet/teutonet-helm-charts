@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v2.0.0...teuto-cnpg-v2.1.0) (2025-07-29)
+
+
+### Features
+
+* **teuto-cnpg/credentials:** allow adding roles during upgrades ([#1626](https://github.com/teutonet/teutonet-helm-charts/issues/1626)) ([441db93](https://github.com/teutonet/teutonet-helm-charts/commit/441db936e5c11ae3231331888b5894c9ec433d4b))
+
 ## [2.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v1.4.1...teuto-cnpg-v2.0.0) (2025-04-16)
 
 
