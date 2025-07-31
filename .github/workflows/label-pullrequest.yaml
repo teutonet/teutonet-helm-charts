@@ -28,7 +28,7 @@ jobs:
     needs: getChangedCharts
     steps:
       - env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.number }}
           CHANGED_CHARTS: ${{ needs.getChangedCharts.outputs.charts }}
         run: |
