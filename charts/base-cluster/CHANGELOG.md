@@ -1,5 +1,30 @@
 # Changelog
 
+## [9.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.0.0...base-cluster-v9.1.0) (2025-07-31)
+
+
+### Features
+
+* **base-cluster:** use new networkPolicy template ([#1414](https://github.com/teutonet/teutonet-helm-charts/issues/1414)) ([e433c02](https://github.com/teutonet/teutonet-helm-charts/commit/e433c02fb74052800e73a30ad03393a6e2754ac8))
+
+
+### Bug Fixes
+
+* **base-cluster/kyverno:** migrate to new `validationFailureAction` syntax ([#1621](https://github.com/teutonet/teutonet-helm-charts/issues/1621)) ([c3f16be](https://github.com/teutonet/teutonet-helm-charts/commit/c3f16bedb07de2fb1d7f2f238e9061c2f18bb656))
+* **base-cluster/monitoring:** also create metrics for resources without suspend field ([#1634](https://github.com/teutonet/teutonet-helm-charts/issues/1634)) ([964b34c](https://github.com/teutonet/teutonet-helm-charts/commit/964b34c442e206040102f41f1309f45847622a16))
+* **base-cluster/monitoring:** oauth-proxy serviceMonitor labels ([#1625](https://github.com/teutonet/teutonet-helm-charts/issues/1625)) ([86c1981](https://github.com/teutonet/teutonet-helm-charts/commit/86c198160202f47b4d081a07c4885e157bf75927))
+* **base-cluster/monitoring:** pin image-renderer version to ensure it's compatible ([#1631](https://github.com/teutonet/teutonet-helm-charts/issues/1631)) ([685592c](https://github.com/teutonet/teutonet-helm-charts/commit/685592c14d617c1feb061730dab10ffc52850048))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update helm release kube-prometheus-stack to v75.15.1 ([#1610](https://github.com/teutonet/teutonet-helm-charts/issues/1610)) ([256cb8e](https://github.com/teutonet/teutonet-helm-charts/commit/256cb8ea3718ed74427af61617289d5685840e2b))
+* **base-cluster/dependencies:** update helm release loki to v6.33.0 ([#1618](https://github.com/teutonet/teutonet-helm-charts/issues/1618)) ([7e6a8e8](https://github.com/teutonet/teutonet-helm-charts/commit/7e6a8e8df1bb6efe30b8266de2181b1d5b231179))
+* **base-cluster/dns:** migrate external-dns away from bitnami ([#1601](https://github.com/teutonet/teutonet-helm-charts/issues/1601)) ([7af34d2](https://github.com/teutonet/teutonet-helm-charts/commit/7af34d2f5f83995c6ad6cd665ac44055f606f281))
+* **base-cluster/monitoring:** adjust metrics syntax ([#1562](https://github.com/teutonet/teutonet-helm-charts/issues/1562)) ([ebc2d74](https://github.com/teutonet/teutonet-helm-charts/commit/ebc2d74fabbd9b26de5db431158fc8e889310fd5))
+* **base-cluster/monitoring:** migrate metrics-server away from bitnami ([#1604](https://github.com/teutonet/teutonet-helm-charts/issues/1604)) ([6a755d9](https://github.com/teutonet/teutonet-helm-charts/commit/6a755d9556619b4d2abaccb757250ebdc89345ef))
+* **base-cluster:** migrate kubectl image away from bitnami ([#1606](https://github.com/teutonet/teutonet-helm-charts/issues/1606)) ([6fe2410](https://github.com/teutonet/teutonet-helm-charts/commit/6fe241066d03b1ebf77057c4be46c472b4db11e5))
+
 ## [9.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v8.2.1...base-cluster-v9.0.0) (2025-07-25)
 
 
