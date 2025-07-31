@@ -17,6 +17,7 @@ jobs:
     permissions:
       checks: read
     steps:
+      - run: /home/linuxbrew/.linuxbrew/bin/brew install gh
       - env:
           GH_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
           CHANGE_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
