@@ -20,6 +20,24 @@ spec:
   dependsOn:
     - name: kube-prometheus-stack
       namespace: monitoring
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+            patch: |
+              - op: add
+                path: /spec/template/spec/containers/0/securityContext
+                value:
+                  runAsNonRoot: true
+                  runAsUser: 1003
+                  runAsGroup: 1003
+                  allowPrivilegeEscalation: false
+                  capabilities:
+                    drop:
+                      - ALL
+                  seccompProfile:
+                    type: RuntimeDefault
   values:
     helmBinary: helm3
     image:
@@ -29,6 +47,10 @@ spec:
       pspEnabled: false
     apiVersionsInspector:
       enabled: false
+    securityContext:
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
 ---
 {{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "kdave-servicemonitor" "resource" (include "base-cluster.kdave.serviceMonitor" (dict "context" .)) "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "kdave")) | nindent 0 }}
 {{- end -}}
