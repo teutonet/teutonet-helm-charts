@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.1.0...base-cluster-v9.1.1) (2025-08-01)
+
+
+### Bug Fixes
+
+* **base-cluster/monitoring:** lock down kdave container ([#1646](https://github.com/teutonet/teutonet-helm-charts/issues/1646)) ([431548d](https://github.com/teutonet/teutonet-helm-charts/commit/431548d0e3d6423e06818f01ac0fd12ca5a3bf86))
+
 ## [9.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.0.0...base-cluster-v9.1.0) (2025-07-31)
 
 
