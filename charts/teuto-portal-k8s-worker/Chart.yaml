@@ -16,7 +16,7 @@ dependencies:
     version: 1.5.0
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/teuto-portal-k8s-worker-v3.3.0/charts/teuto-portal-k8s-worker
+  - https://github.com/teutonet/teutonet-helm-charts/tree/teuto-portal-k8s-worker-v3.4.0/charts/teuto-portal-k8s-worker
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/teuto-portal-k8s-worker
 annotations:
   artifacthub.io/images: |-
