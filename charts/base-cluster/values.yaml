@@ -57,12 +57,9 @@ global:
   certificates:
     cluster-wildcard:
       dnsNames: |-
-        - {{ include "base-cluster.domain" $ | quote }}
-        {{- if .Values.dns.provider }}
         - {{ printf "*.%s" (include "base-cluster.domain" $) | quote }}
-        {{- end }}
       targetNamespaces: ALL
-      condition: "{{ not (empty .Values.global.baseDomain) }}"
+      condition: "{{ and (not (empty .Values.global.baseDomain)) .Values.dns.provider }}"
   storageClass: ""
   kubectl:
     image:
