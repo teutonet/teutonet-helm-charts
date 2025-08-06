@@ -69,7 +69,6 @@ data:
         access: proxy
         uid: tempo
         url: "http://grafana-tempo-query-frontend.monitoring:3200"
-        version: 1
         isDefault: false
         jsonData:
           tracesToLogsV2:
