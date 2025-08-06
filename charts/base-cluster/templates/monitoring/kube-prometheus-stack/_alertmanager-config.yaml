@@ -39,7 +39,7 @@ alertmanagerSpec:
             storage: {{ .Values.monitoring.prometheus.alertmanager.persistence.size }}
 config:
   {{- $receivers := dict "null" (dict) -}}
-  {{- if and .Values.monitoring.deadMansSwitch.enabled .Values.global.baseDomain .Values.global.clusterName -}}
+  {{- if and .Values.monitoring.deadMansSwitch .Values.global.baseDomain .Values.global.clusterName -}}
     {{- $receivers = set $receivers "healthchecks.io" (dict
           "webhook_configs" (list
             (dict
