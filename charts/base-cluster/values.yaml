@@ -138,9 +138,9 @@ global:
         descheduler 0.27.x: 0.29.0
       condition: "{{ .Values.descheduler.enabled }}"
     jetstack:
-      url: https://charts.jetstack.io
+      url: oci://quay.io/jetstack/charts
       charts:
-        cert-manager: 1.17.2
+        cert-manager: v1.17.2
     nginx:
       url: https://kubernetes.github.io/ingress-nginx
       charts:
