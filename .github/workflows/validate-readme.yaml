@@ -47,7 +47,7 @@ jobs:
 
           hasBreakingChange=false
           #shellcheck disable=SC2086
-          for commit in $(gh api --paginate "/repos/${GITHUB_REPOSITORY}/compare/${BASE_COMMIT}...${HEAD_COMMIT}" | jq -r '.commits | map(.commit.tree.sha)[]'); do
+          for commit in $(gh api --paginate "/repos/${GITHUB_REPOSITORY}/compare/${BASE_COMMIT}...${HEAD_COMMIT}" | jq -r '.commits | map(.sha)[]'); do
             if cog verify "$(gh api --paginate /repos/${GITHUB_REPOSITORY}/commits/$commit | jq -r .commit.message)" 2>&1 | grep -qi 'BREAKING CHANGE'; then
               hasBreakingChange=true
               break
