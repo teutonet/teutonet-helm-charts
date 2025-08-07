@@ -48,6 +48,7 @@ spec:
     {{- end }}
     resources: {{- include "common.resources" $.Values.certManager | nindent 6 }}
     replicaCount: 1
+    enableCertificateOwnerRef: true
     securityContext: &securityContext
       runAsNonRoot: true
       runAsUser: 1001
