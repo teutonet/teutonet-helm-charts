@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v2.1.0...teuto-cnpg-v2.1.1) (2025-08-07)
+
+
+### Bug Fixes
+
+* **teuto-cnpg/updateMethod:** set update method to switchover, set env-vars to make it compatible with newer barman ([#1572](https://github.com/teutonet/teutonet-helm-charts/issues/1572)) ([3082967](https://github.com/teutonet/teutonet-helm-charts/commit/30829679527a6c291fc30af1bcd0f9c91cee2657))
+
 ## [2.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v2.0.0...teuto-cnpg-v2.1.0) (2025-07-29)
 
 
