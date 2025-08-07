@@ -17,7 +17,6 @@ jobs:
     permissions:
       checks: read
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - run: /home/linuxbrew/.linuxbrew/bin/brew install gh
       - env:
           GH_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
