@@ -55,6 +55,9 @@ spec:
       image:
         registry: {{ include "base-cluster.defaultRegistry" (dict) }}
       {{- end }}
+    features:
+      policyExceptions:
+        enabled: true
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
       additionalLabels:
