@@ -1,5 +1,22 @@
 # Changelog
 
+## [9.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.1.1...base-cluster-v9.2.0) (2025-08-14)
+
+
+### Features
+
+* **base-cluster/cert-manager:** enableCertificateOwnerRef ([#1653](https://github.com/teutonet/teutonet-helm-charts/issues/1653)) ([283d86f](https://github.com/teutonet/teutonet-helm-charts/commit/283d86f38d828f91b2bc601d49ec6513cde3f41a))
+* **base-cluster/cert-manager:** use oci repository ([#1650](https://github.com/teutonet/teutonet-helm-charts/issues/1650)) ([ef6382d](https://github.com/teutonet/teutonet-helm-charts/commit/ef6382dbc078466b98e1fb8a5473839d5b9112a2))
+* **base-cluster/kyverno:** enable policyExceptions for kyverno ([#1655](https://github.com/teutonet/teutonet-helm-charts/issues/1655)) ([2029bcb](https://github.com/teutonet/teutonet-helm-charts/commit/2029bcb8fe202a7d11dfb462f43c533b4631b9e5))
+
+
+### Bug Fixes
+
+* **base-cluster/certificates:** certificate for `baseDomain` is not used ([#1644](https://github.com/teutonet/teutonet-helm-charts/issues/1644)) ([6a3ccae](https://github.com/teutonet/teutonet-helm-charts/commit/6a3ccae31cd8592b6f25f6ec16aba5892510a561))
+* **base-cluster/dns:** only deploy external-dns HelmRepository if needed ([#1645](https://github.com/teutonet/teutonet-helm-charts/issues/1645)) ([7d313f2](https://github.com/teutonet/teutonet-helm-charts/commit/7d313f2a7e2c8ac33f60cd6588dfd1c5fceb9d14))
+* **base-cluster/ingress-nginx:** set a couple of timeouts in the loadbalancer to the maximum value ([#1571](https://github.com/teutonet/teutonet-helm-charts/issues/1571)) ([bc6fe78](https://github.com/teutonet/teutonet-helm-charts/commit/bc6fe78413ea26f3b5003d645ef9918d0b346265))
+* **base-cluster/monitoring:** remove versions from datasources so they always take precedence ([#1651](https://github.com/teutonet/teutonet-helm-charts/issues/1651)) ([6821ed8](https://github.com/teutonet/teutonet-helm-charts/commit/6821ed816d7d4263b0e683db366cf8ca7edd3b24))
+
 ## [9.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.1.0...base-cluster-v9.1.1) (2025-08-01)
 
 
