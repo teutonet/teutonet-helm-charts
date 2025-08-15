@@ -58,6 +58,7 @@ spec:
     features:
       policyExceptions:
         enabled: true
+        namespace: '*'
     serviceMonitor:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
       additionalLabels:
