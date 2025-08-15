@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.2.0...base-cluster-v9.3.0) (2025-08-15)
+
+
+### Features
+
+* **base-cluster/kyverno:** add capability for exceptions to be in all namespaces ([#1656](https://github.com/teutonet/teutonet-helm-charts/issues/1656)) ([1441fb0](https://github.com/teutonet/teutonet-helm-charts/commit/1441fb052b95273d854c0d3543660dbbf9fa1082))
+
 ## [9.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.1.1...base-cluster-v9.2.0) (2025-08-14)
 
 
