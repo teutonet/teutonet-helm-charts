@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.3.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.3.0...base-cluster-v9.3.1) (2025-08-15)
+
+
+### Bug Fixes
+
+* **base-cluster/external-dns:** correctly check if provider is set ([#1658](https://github.com/teutonet/teutonet-helm-charts/issues/1658)) ([7933988](https://github.com/teutonet/teutonet-helm-charts/commit/7933988877da6f1284836b6bb390a9d5abac6534))
+
 ## [9.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.2.0...base-cluster-v9.3.0) (2025-08-15)
 
 
