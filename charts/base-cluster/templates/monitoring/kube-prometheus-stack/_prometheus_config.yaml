@@ -58,6 +58,9 @@ prometheusSpec:
         - __address__
       target_label: cluster
       replacement: {{ .Values.global.clusterName }}
+    {{- with .Values.monitoring.prometheus.additionalAlertRelabelConfig }}
+      {{- toYamlPretty . | nindent 4 }}
+    {{- end }}
   {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp") | fromYaml }}
   {{- if $telemetryConf.enabled }}
   tracingConfig:

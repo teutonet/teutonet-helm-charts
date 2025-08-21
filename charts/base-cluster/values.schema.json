@@ -805,6 +805,9 @@
               "required": [
                 "defaultReceiver"
               ]
+            },
+            "additionalAlertRelabelConfig": {
+              "$ref": "#/$defs/additionalAlertRelabelConfig"
             }
           },
           "additionalProperties": false
@@ -1715,6 +1718,9 @@
     },
     "tolerations": {
       "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.api.core.v1.Toleration"
+    },
+    "additionalAlertRelabelConfig": {
+      "$ref": "https://raw.githubusercontent.com/SchemaStore/schemastore/refs/heads/master/src/schemas/json/prometheus.json#/definitions/relabel_configs"
     },
     "alertmanagerConfigRoutes": {
       "$ref": "https://raw.githubusercontent.com/prometheus-community/helm-charts/87e588c0569ecfb61276b5270246d25c3874e8bb/charts/alertmanager/values.schema.json#/definitions/config/route/properties/routes"
