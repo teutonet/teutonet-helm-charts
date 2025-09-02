@@ -10,6 +10,6 @@ dependencies:
   version: 3.0.16
 - name: solr
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 9.6.5
-digest: sha256:b7ffa8bb6bce74a11abd8c5a13bfec2a2413b2cac984d35f4b961c69653ed223
-generated: "2025-07-01T13:50:42.421860811Z"
+  version: 9.6.10
+digest: sha256:a1cc37b503484763e4247c74d450b3ddeb14880721fd2acc013a9046a24ff234
+generated: "2025-09-02T13:20:21.966800421Z"
