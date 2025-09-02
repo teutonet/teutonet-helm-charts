@@ -85,8 +85,7 @@ customResourceState:
                   "each" (dict
                     "type" "Gauge"
                     "gauge" (dict
-                      "path" (list "spec")
-                      "valueFrom" (list "suspend")
+                      "path" (list "spec" "suspend")
                       "nilIsZero" true
                     )
                   )
