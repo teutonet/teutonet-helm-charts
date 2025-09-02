@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 9.3.1](https://img.shields.io/badge/Version-9.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 9.3.2](https://img.shields.io/badge/Version-9.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -246,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v9.3.1/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v9.3.2/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
