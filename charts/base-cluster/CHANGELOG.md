@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.3.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.3.1...base-cluster-v9.3.2) (2025-09-02)
+
+
+### Bug Fixes
+
+* **base-cluster/monitoring:** otherwise the metric will be duplicated if `suspend` is not set ([#1661](https://github.com/teutonet/teutonet-helm-charts/issues/1661)) ([193c6b3](https://github.com/teutonet/teutonet-helm-charts/commit/193c6b37928ae55c565c24f5bdce272951ad87c4))
+
 ## [9.3.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.3.0...base-cluster-v9.3.1) (2025-08-15)
 
 
