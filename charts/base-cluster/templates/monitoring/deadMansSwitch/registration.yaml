@@ -2,7 +2,7 @@
   {{- printf "k8s-cluster-%s-%s" (.Values.global.baseDomain | replace "." "-") .Values.global.clusterName }}
 {{- end -}}
 
-{{- if .Values.monitoring.deadMansSwitch.enabled }}
+{{- if .Values.monitoring.deadMansSwitch }}
 apiVersion: batch/v1
 kind: Job
 metadata:
