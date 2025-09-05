@@ -8,6 +8,9 @@ metadata:
 spec:
   schedule: {{ .Values.backup.schedule | quote }}
   backupOwnerReference: none
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
   cluster:
     name: {{ printf "%s" .Release.Name }}
 {{- end -}}

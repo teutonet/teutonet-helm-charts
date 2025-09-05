@@ -96,6 +96,9 @@
     },
     "backup": {
       "type": "object",
+      "required": [
+        "s3"
+      ],
       "description": "See: https://cloudnative-pg.io/documentation/1.16/backup_recovery/",
       "properties": {
         "schedule": {
@@ -104,9 +107,48 @@
           "examples": [
             "0 0 0 * * *"
           ]
+        },
+        "s3": {
+          "type": "object",
+          "required": [
+            "path",
+            "endpointURL"
+          ],
+          "description": "s3 related options",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "s3 path to write files to"
+            },
+            "endpointURL": {
+              "type": "string",
+              "description": "url of the api endpoint"
+            },
+            "secret": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "accessKeyId": {
+                  "type": "string",
+                  "default": "ACCESS_KEY_ID"
+                },
+                "accessSecretKey": {
+                  "type": "string",
+                  "default": "ACCESS_SECRET_KEY"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "name"
+              ]
+            }
+          },
+          "additionalProperties": false
         }
-      }
-
+      },
+      "additionalProperties": false
     },
     "databaseImage": {
       "type": "object",

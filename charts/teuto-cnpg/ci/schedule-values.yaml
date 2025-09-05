@@ -1,12 +1,9 @@
 backup:
   schedule: "0 0 0 * * *"
-  barmanObjectStore:
-    destinationPath: s3://test/
-    endpointURL: https://test.s3storage.com:6780
-    s3Credentials:
-      accessKeyId:
-        name: aws-creds
-        key: ACCESS_KEY_ID
-      secretAccessKey:
-        name: aws-creds
-        key: ACCESS_SECRET_KEY
+  s3:
+    path: "s3://backup"
+    endpointURL: "https://test.s3storage.com:6780"
+    secret:
+      name: "MeinNameIstNichtGeheim"
+      accessKeyId: "dasjhiodsadas"
+      accessSecretKey: "jiopidasda"
