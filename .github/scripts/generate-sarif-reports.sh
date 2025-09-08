@@ -44,7 +44,7 @@ function generateSarifReport() {
   locationsJson="$(yq --arg image "$image" -r '.annotations["artifacthub.io/images"] | split("\n")[] | select(contains($image))' "$chart/Chart.yaml" |
     awk '{print $NF}' |
     jq -r -c -Rn '[inputs] | map({fullyQualifiedName: .})')"
-  if trivy image "$image" -f sarif --quiet --ignore-unfixed | jq -r --argjson locations "$locationsJson" --arg category "$chart/${GITHUB_JOB:-local}" '.runs |= map(.results |= map(.locations += [{logicalLocations: $locations}])) | .runs |= map(.automationDetails = {id: $category})' >"$tmpFile"; then
+  if trivy image --skip-db-update --skip-java-db-update "$image" -f sarif --quiet --ignore-unfixed | jq -r --argjson locations "$locationsJson" --arg category "$chart/${GITHUB_JOB:-local}" '.runs |= map(.results |= map(.locations += [{logicalLocations: $locations}])) | .runs |= map(.automationDetails = {id: $category})' >"$tmpFile"; then
     mv "${tmpFile}" "${outFile}"
   else
     rm "$tmpFile"

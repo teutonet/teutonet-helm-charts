@@ -11,6 +11,7 @@ declare -A IMAGE_PULL_TOKENS=(
 )
 
 trivy image --download-db-only
+trivy image --download-java-db-only
 
 for registry in "${!IMAGE_PULL_TOKENS[@]}"; do
   TRIVY_PASSWORD="${IMAGE_PULL_TOKENS["$registry"]}" trivy registry login --username github-cve-scanning "$registry"
