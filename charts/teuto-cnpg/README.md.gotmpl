@@ -25,4 +25,27 @@ Databases need to be migrated manually:
 - update helmchart
 - start cnpg-operator
 
+### 2.x.x -> 3.x.x
+
+Cloudnative-PG made the in-operator backup deprecated.
+
+Therefore a migration has to happen where the Backup block is moved
+into the Objectstore.
+
+In the values you need to remove .values.backup.barmanObjectStore block.
+Those values now need to be set under .values.backup.s3 like this:
+
+```
+values:
+  backup:
+    s3:
+      endpointURL: https://api.ffm3.teutostack.de:6780
+      path: s3://backup/
+      secret:
+        name: backup-credentials
+```
+
+accessKeyId and accessSecretKey are set to `ACCESS_KEY_ID` and `accessSecretKeyEY` by default
+but can be overwritten with .values.backup.s3.accessKeyId or .values.backup.s3.accessSecretKey.
+
 {{ .Files.Get "values.md"  }}

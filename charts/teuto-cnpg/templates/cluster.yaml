@@ -19,8 +19,12 @@ spec:
   imageName: {{ include "common.images.image" (dict "imageRoot" .Values.databaseImage "global" .Values.global) }}
   instances: {{ .Values.instances }}
   logLevel: {{ .Values.logLevel }}
-  {{- with .Values.backup }}
-  backup: {{ omit . "schedule" | toYaml | nindent 4 }}
+  {{- if .Values.backup }}
+  plugins:
+  - name: barman-cloud.cloudnative-pg.io
+    isWALArchiver: true
+    parameters:
+      barmanObjectName: {{ .Release.Name }}
   {{- end }}
   managed:
     {{- $roles := dict -}}
