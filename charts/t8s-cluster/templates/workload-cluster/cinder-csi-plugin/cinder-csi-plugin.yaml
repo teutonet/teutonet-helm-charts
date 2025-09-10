@@ -52,6 +52,8 @@ spec:
           kubeletDir: /var/lib/k0s/kubelet
         {{- end }}
         controllerPlugin:
+          extraArgs:
+            - --with-topology=false
           tolerations:
             - effect: NoSchedule
               key: node-role.kubernetes.io/control-plane
