@@ -25,7 +25,7 @@ jobs:
         chart: ${{ fromJson(needs.getAllCharts.outputs.charts) }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - run: /home/linuxbrew/.linuxbrew/bin/brew install trivy
+      - run: /home/linuxbrew/.linuxbrew/bin/brew install grype
       - run: pip install yq
       - name: Generate sarif reports
         env:
