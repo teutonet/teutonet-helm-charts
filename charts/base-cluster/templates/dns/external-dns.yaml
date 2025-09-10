@@ -40,6 +40,12 @@ spec:
     {{- with .Values.dns.domains }}
     domainFilters: {{- toYaml . | nindent 6 }}
     {{- end }}
+    {{- with .Values.dns.zones }}
+    extraArgs:
+      {{- range $zone := . }}
+      - --zone-name-filter={{ $zone }}
+      {{- end }}
+    {{- end }}
     sources:
       - ingress
       - gateway-httproute
