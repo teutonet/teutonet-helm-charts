@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># teuto-cnpg
 
-![Version: 2.1.0](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Helm chart to abstract the managing of cnpg-databases from the original resource.
 
@@ -23,6 +23,29 @@ Databases need to be migrated manually:
   - make sure that the cnpg-database objects really are deleted, as they have a finalizer set
 - update helmchart
 - start cnpg-operator
+
+### 2.x.x -> 3.x.x
+
+Cloudnative-PG made the in-operator backup deprecated.
+
+Therefore a migration has to happen where the Backup block is moved
+into the Objectstore.
+
+In the values you need to remove .values.backup.barmanObjectStore block.
+Those values now need to be set under .values.backup.s3 like this:
+
+```
+values:
+  backup:
+    s3:
+      endpointURL: https://api.ffm3.teutostack.de:6780
+      path: s3://backup/
+      secret:
+        name: backup-credentials
+```
+
+accessKeyId and accessSecretKey are set to `ACCESS_KEY_ID` and `accessSecretKeyEY` by default
+but can be overwritten with .values.backup.s3.accessKeyId or .values.backup.s3.accessSecretKey.
 
 # cnpg-wrapper configuration
 
@@ -186,16 +209,17 @@ Must be one of:
 
 ## <a name="backup"></a>7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > backup`
 
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                    |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
 **Description:** See: https://cloudnative-pg.io/documentation/1.16/backup_recovery/
 
-| Property                        | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [schedule](#backup_schedule ) | No      | string | No         | -          | cron syntax       |
+| Property                        | Pattern | Type   | Deprecated | Definition | Title/Description  |
+| ------------------------------- | ------- | ------ | ---------- | ---------- | ------------------ |
+| - [schedule](#backup_schedule ) | No      | string | No         | -          | cron syntax        |
+| + [s3](#backup_s3 )             | No      | object | No         | -          | s3 related options |
 
 ### <a name="backup_schedule"></a>7.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > backup > schedule`
 
@@ -210,6 +234,70 @@ Must be one of:
 ```yaml
 0 0 0 * * *
 ```
+
+### <a name="backup_s3"></a>7.2. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > backup > s3`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+**Description:** s3 related options
+
+| Property                                 | Pattern | Type   | Deprecated | Definition | Title/Description         |
+| ---------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------- |
+| + [path](#backup_s3_path )               | No      | string | No         | -          | s3 path to write files to |
+| + [endpointURL](#backup_s3_endpointURL ) | No      | string | No         | -          | url of the api endpoint   |
+| - [secret](#backup_s3_secret )           | No      | object | No         | -          | -                         |
+
+#### <a name="backup_s3_path"></a>7.2.1. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > backup > s3 > path`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** s3 path to write files to
+
+#### <a name="backup_s3_endpointURL"></a>7.2.2. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > backup > s3 > endpointURL`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** url of the api endpoint
+
+#### <a name="backup_s3_secret"></a>7.2.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > backup > s3 > secret`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| + [name](#backup_s3_secret_name )                       | No      | string | No         | -          | -                 |
+| - [accessKeyId](#backup_s3_secret_accessKeyId )         | No      | string | No         | -          | -                 |
+| - [accessSecretKey](#backup_s3_secret_accessSecretKey ) | No      | string | No         | -          | -                 |
+
+##### <a name="backup_s3_secret_name"></a>7.2.3.1. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > backup > s3 > secret > name`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+##### <a name="backup_s3_secret_accessKeyId"></a>7.2.3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > backup > s3 > secret > accessKeyId`
+
+|             |                   |
+| ----------- | ----------------- |
+| **Type**    | `string`          |
+| **Default** | `"ACCESS_KEY_ID"` |
+
+##### <a name="backup_s3_secret_accessSecretKey"></a>7.2.3.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > backup > s3 > secret > accessSecretKey`
+
+|             |                       |
+| ----------- | --------------------- |
+| **Type**    | `string`              |
+| **Default** | `"ACCESS_SECRET_KEY"` |
 
 ## <a name="databaseImage"></a>8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > databaseImage`
 
