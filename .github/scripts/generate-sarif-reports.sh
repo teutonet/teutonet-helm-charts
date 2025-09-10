@@ -17,7 +17,7 @@ function createSarifReports() {
   # shellcheck disable=SC2046
   yq -r '.annotations["artifacthub.io/images"]' "$chart/Chart.yaml" |
     yq -r '.[] | .image' |
-    parallel ${GITHUB_JOB+--bar} --retries 10 -P 0 -k generateSarifReport "$chart" "{}" "reports/$chartName-{#}.json"
+    parallel ${GITHUB_JOB+--bar} --retries 10 -P 4 -k generateSarifReport "$chart" "{}" "reports/$chartName-{#}.json"
 
   # return with 1 (false) if a file has been found
   if find reports -type f -name "$chartName-*" -exec false {} + -quit; then
