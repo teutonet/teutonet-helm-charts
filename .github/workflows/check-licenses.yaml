@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - run: pip install yq
-      - run: /home/linuxbrew/.linuxbrew/bin/brew install trivy
+      - run: /home/linuxbrew/.linuxbrew/bin/brew install syft trivy
       - env:
           TEUTO_PORTAL_WORKER_PULL_TOKEN: ${{ secrets.TEUTO_PORTAL_WORKER_PULL_TOKEN }}
           GHCR_PULL_TOKEN: ${{ secrets.GHCR_PULL_TOKEN }}
