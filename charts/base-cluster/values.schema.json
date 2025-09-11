@@ -1150,6 +1150,14 @@
           ]
         },
         "domains": {
+          "description": "This field is also used for zone filtering if `zones` is not provided, be careful",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "zones": {
           "type": "array",
           "uniqueItems": true,
           "items": {
