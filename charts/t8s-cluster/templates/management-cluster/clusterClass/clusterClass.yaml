@@ -29,10 +29,10 @@ spec:
         name: {{ printf "%s-control-plane-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfControlPlane" (dict "context" $)) }}
     {{- end }}
     ref:
-      apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+      apiVersion: controlplane.cluster.x-k8s.io/{{ .Values.controlPlane.hosted | ternary "v1alpha1" "v1beta1" }}
       {{- if .Values.controlPlane.hosted }}
-      kind: K0smotronControlPlaneTemplate
-      name: {{/* the full context is needed for .Files.Get */}}{{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.k0smotronControlPlaneTemplate.specHash" .) }}
+      kind: HostedControlPlaneTemplate
+      name: {{/* the full context is needed for .Files.Get */}}{{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.hostedControlPlaneTemplate.specHash" .) }}
       {{- else }}
       kind: KubeadmControlPlaneTemplate
       name: {{/* the full context is needed for .Files.Get */}}{{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.specHash" .) }}
@@ -147,7 +147,8 @@ spec:
             - status: 'False'
               timeout: 300s
               type: Ready
-        nodeDrainTimeout: "8m"
+        nodeDrainTimeout: 8m
+        nodeDeletionTimeout: 15m
         strategy:
           type: RollingUpdate
           rollingUpdate:
@@ -164,7 +165,7 @@ spec:
           bootstrap:
             ref:
               apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
-              kind: {{ $.Values.controlPlane.hosted | ternary "K0sWorkerConfigTemplate" "KubeadmConfigTemplate" }}
+              kind: KubeadmConfigTemplate
               name: {{ printf "%s-%s-compute-plane" $.Release.Name ($isGpuDeploymentClass | ternary "gpu" "standard") }}
           infrastructure:
             ref:
