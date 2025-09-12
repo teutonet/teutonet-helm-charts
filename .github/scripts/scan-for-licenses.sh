@@ -6,8 +6,9 @@
 set -eu
 set -o pipefail
 
-export DOCKER_CONFIG="$(mktemp -d)"
-trap "rm -rf $DOCKER_CONFIG" EXIT
+DOCKER_CONFIG="$(mktemp -d)"
+export DOCKER_CONFIG
+trap 'rm -rf "$DOCKER_CONFIG"' EXIT
 
 source "$(dirname "$0")/grype-login-to-registries.sh"
 
@@ -68,10 +69,10 @@ function generateTrivyJson() {
   local image="${1?}"
   local tmpFile
   tmpFile="$(mktemp)"
-  trap "rm -f $tmpFile" EXIT
+  trap 'rm -f "$tmpFile"' RETURN
 
-  syft "$image" -o spdx-json >$tmpFile
-  trivy sbom $tmpFile --skip-{java-,}db-update --severity HIGH,CRITICAL,MEDIUM -f json --scanners license --quiet | jq -r --arg image "$image" '.Metadata.image = $image'
+  syft "$image" -o spdx-json >"$tmpFile"
+  trivy sbom "$tmpFile" --skip-{java-,}db-update --severity HIGH,CRITICAL,MEDIUM -f json --scanners license --quiet | jq -r --arg image "$image" '.Metadata.image = $image'
 }
 export -f generateTrivyJson
 
@@ -98,7 +99,7 @@ function scanLicenses() {
   licenseMap="$(yq -r '.annotations["artifacthub.io/images"] // []' "$chart/Chart.yaml" | yq -r '.[] | .image' |
     parallel --retries 10 -k generateTrivyJson {} |
     jq -s -r "$licenseConversionJq")"
-  mapfile -t unacceptedLicenses < <(jq <<<"$licenseMap" -r --argjson acceptedLicenses "[\"$(for i in ${!WHITELIST[@]}; do echo "${WHITELIST[$i]}"; done | paste -sd '@' | sed 's#@#","#g')\"]" '(keys-$acceptedLicenses)[]')
+  mapfile -t unacceptedLicenses < <(jq <<<"$licenseMap" -r --argjson acceptedLicenses "[\"$(for i in "${!WHITELIST[@]}"; do echo "${WHITELIST[$i]}"; done | paste -sd '@' | sed 's#@#","#g')\"]" '(keys-$acceptedLicenses)[]')
   if [[ "${#unacceptedLicenses[@]}" -gt 0 ]]; then
     echo "found ${#unacceptedLicenses[@]} untrusted images in '$chart', please fix;" >&2
     for unacceptedLicense in "${unacceptedLicenses[@]}"; do

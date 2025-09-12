@@ -6,8 +6,9 @@
 set -eu
 set -o pipefail
 
-export DOCKER_CONFIG="$(mktemp -d)"
-trap "rm -rf $DOCKER_CONFIG" EXIT
+DOCKER_CONFIG="$(mktemp -d)"
+export DOCKER_CONFIG
+trap 'rm -rf "$DOCKER_CONFIG"' EXIT
 
 source "$(dirname "$0")/grype-login-to-registries.sh"
 
