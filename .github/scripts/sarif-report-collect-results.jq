@@ -11,17 +11,22 @@
   ]
 } | .runs[0].results = ($input | reduce map(.runs[])[] as $run ([];
   . += ($run.results |
-    map(.locations |=
-      (
-        ([.[] | select(.physicalLocation)][0].physicalLocation.artifactLocation) as $physicalLocation | .[] | select(.logicalLocations)[] |
-          map({
-            physicalLocation: {
-              artifactLocation: {
-                uri: "\(.fullyQualifiedName)/\($run.properties.imageName)/\($run.originalUriBaseIds[$physicalLocation.uriBaseId].uri)\($physicalLocation.uri)"
-              }
-            }
-          })
-      )
-    )
+    map(.locations |= (. as $locations | [
+          $run.properties.subCharts[] as $subChart | $locations[] |
+              . |= (
+                (
+                  .physicalLocation |= (
+                    .artifactLocation |= (
+                      .uri |= "\($run.properties.chart):\($subChart):\(sub("^[^/]+/"; ""))"
+                    )
+                  )
+                ) | (
+                  .logicalLocations |= map(
+                    .fullyQualifiedName |= "\($run.properties.chart):\($subChart):\(.)"
+                  )
+                )
+              )
+        ]
+      ))
   )
 ) | unique)
