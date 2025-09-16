@@ -2,7 +2,7 @@
 {{- range $name, $spec := .Values.nodePools -}}
   {{- $machineDeploymentClasses = set $machineDeploymentClasses $name ($spec.flavor | contains "gpu") -}}
 {{- end -}}
-apiVersion: cluster.x-k8s.io/v1beta1
+apiVersion: cluster.x-k8s.io/v1beta2
 kind: ClusterClass
 metadata:
   name: {{ $.Release.Name }}
@@ -11,25 +11,29 @@ metadata:
 spec:
   controlPlane:
     {{- if not .Values.controlPlane.hosted }}
-    machineHealthCheck:
-      maxUnhealthy: 1
-      nodeStartupTimeout: 10m
-      unhealthyConditions:
-        - status: Unknown
-          timeout: 600s
-          type: Ready
-        - status: 'False'
-          timeout: 600s
-          type: Ready
-    nodeDrainTimeout: "8m"
+    healthCheck:
+      remediation:
+        triggerIf:
+          unhealthyLessThanOrEqualTo: 1
+      checks:
+        nodeStartupTimeoutSeconds: 600
+        unhealthyNodeConditions:
+          - status: Unknown
+            timeoutSeconds: 600
+            type: Ready
+          - status: 'False'
+            timeoutSeconds: 600
+            type: Ready
+    deletion:
+      nodeDrainTimeoutSeconds: 480
     machineInfrastructure:
-      ref:
+      templateRef:
         apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
         kind: OpenStackMachineTemplate
         name: {{ printf "%s-control-plane-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfControlPlane" (dict "context" $)) }}
     {{- end }}
-    ref:
-      apiVersion: controlplane.cluster.x-k8s.io/{{ .Values.controlPlane.hosted | ternary "v1alpha1" "v1beta1" }}
+    templateRef:
+      apiVersion: controlplane.cluster.x-k8s.io/{{ .Values.controlPlane.hosted | ternary "v1alpha1" "v1beta2" }}
       {{- if .Values.controlPlane.hosted }}
       kind: HostedControlPlaneTemplate
       name: {{/* the full context is needed for .Files.Get */}}{{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.hostedControlPlaneTemplate.specHash" .) }}
@@ -38,7 +42,7 @@ spec:
       name: {{/* the full context is needed for .Files.Get */}}{{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.specHash" .) }}
       {{- end }}
   infrastructure:
-    ref:
+    templateRef:
       apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
       kind: OpenStackClusterTemplate
       name: {{ printf "%s-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackClusterTemplate.specHash" (dict "context" $)) }}
@@ -138,38 +142,40 @@ spec:
     machineDeployments:
       {{- range $name, $isGpuDeploymentClass := $machineDeploymentClasses }}
       - class: {{ $name }}
-        machineHealthCheck:
-          nodeStartupTimeout: 8m
-          unhealthyConditions:
-            - status: Unknown
-              timeout: 300s
-              type: Ready
-            - status: 'False'
-              timeout: 300s
-              type: Ready
-        nodeDrainTimeout: 8m
-        nodeDeletionTimeout: 15m
-        strategy:
-          type: RollingUpdate
-          rollingUpdate:
-            deletePolicy: Oldest
-            {{/* TODO: this is only for our beta phase */}}
-            {{- if $isGpuDeploymentClass }}
-            maxSurge: 0
-            maxUnavailable: 1
-            {{- else }}
-            maxSurge: 75%
-            maxUnavailable: 0
-            {{- end }}
-        template:
-          bootstrap:
-            ref:
-              apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
-              kind: KubeadmConfigTemplate
-              name: {{ printf "%s-%s-compute-plane" $.Release.Name ($isGpuDeploymentClass | ternary "gpu" "standard") }}
-          infrastructure:
-            ref:
-              apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
-              kind: OpenStackMachineTemplate
-              name: {{ printf "%s-compute-plane-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfNodePools" (dict "context" $)) }}
+        healthCheck:
+          checks:
+            nodeStartupTimeoutSeconds: 480
+            unhealthyNodeConditions:
+              - status: Unknown
+                timeoutSeconds: 300
+                type: Ready
+              - status: 'False'
+                timeoutSeconds: 300
+                type: Ready
+        deletion:
+          order: Oldest
+          nodeDrainTimeoutSeconds: 480
+          nodeDeletionTimeoutSeconds: 900
+        rollout:
+          strategy:
+            type: RollingUpdate
+            rollingUpdate:
+              {{/* TODO: this is only for our beta phase */}}
+              {{- if $isGpuDeploymentClass }}
+              maxSurge: 0
+              maxUnavailable: 1
+              {{- else }}
+              maxSurge: 75%
+              maxUnavailable: 0
+              {{- end }}
+        bootstrap:
+          templateRef:
+            apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
+            kind: KubeadmConfigTemplate
+            name: {{ printf "%s-%s-compute-plane" $.Release.Name ($isGpuDeploymentClass | ternary "gpu" "standard") }}
+        infrastructure:
+          templateRef:
+            apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
+            kind: OpenStackMachineTemplate
+            name: {{ printf "%s-compute-plane-%s" $.Release.Name (include "t8s-cluster.clusterClass.openStackMachineTemplate.specHashOfNodePools" (dict "context" $)) }}
       {{- end }}
