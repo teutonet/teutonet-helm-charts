@@ -35,6 +35,14 @@ openstack
   {{- toYaml $args -}}
 {{- end -}}
 
+{{- define "t8s-cluster.clusterClass.argsMapToArray" }}
+  {{- $argsArray := list -}}
+  {{- range $key, $value := .args -}}
+    {{- $argsArray = append $argsArray (dict "name" $key "value" $value) -}}
+  {{- end -}}
+  {{- toYaml $argsArray -}}
+{{- end -}}
+
 {{/* this can be split up with containerd >=2.0.0 */}}
 {{- define "t8s-cluster.clusterClass.containerdConfig.plugins" -}}
   {{- $_ := mustMerge . (pick .context "Values") -}}
