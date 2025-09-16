@@ -10,7 +10,9 @@ declare -A IMAGE_PULL_TOKENS=(
   ["ghcr.io"]="${GHCR_PULL_TOKEN}"
 )
 
-grype db update -q
+if command -v grype 2>/dev/null; then
+  grype db update -q
+fi
 
 echo -n '{}' >"$DOCKER_CONFIG/config.json"
 for registry in "${!IMAGE_PULL_TOKENS[@]}"; do
