@@ -33,7 +33,17 @@ spec:
       availabilityZone: {{ $machineDeploymentClass.availabilityZone | quote }}
       {{- end }}
       flavor: {{ $machineDeploymentClass.flavor | quote }}
-      replicas: {{ $machineDeploymentClass.replicas }}
+      {{- with $machineDeploymentClass.replicas }}
+        {{- if typeIs "map" . }}
+          {{- if gt .min .max }}
+            {{- fail (printf "nodePools.%s.replicas.min must not be greater than nodePools.%s.replicas.max" $name $name) -}}
+          {{- end }}
+      minReplicas: {{ .min }}
+      maxReplicas: {{ .max }}
+        {{- else }}
+      replicas: {{ . }}
+        {{- end }}
+      {{- end }}
   {{- end }}
   bastion:
     enabled: false
