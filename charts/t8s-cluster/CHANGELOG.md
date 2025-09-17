@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.3.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.3.1...t8s-cluster-v9.3.2) (2025-09-11)
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster:** migrate config, ignore-volume-az is not enough ([#1679](https://github.com/teutonet/teutonet-helm-charts/issues/1679)) ([55b14c6](https://github.com/teutonet/teutonet-helm-charts/commit/55b14c69d2990c8de2afa640423315e1da29221b))
+
 ## [9.3.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.3.0...t8s-cluster-v9.3.1) (2025-07-11)
 
 
