@@ -1,5 +1,5 @@
 {{- if false }}
-apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
 {{- else }}
 apiVersion: {{ include "t8s-cluster.clusterClass.infrastructureApiVersion" (dict) }}
 {{- end }}
