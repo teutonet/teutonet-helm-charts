@@ -17,7 +17,7 @@
                 (
                   .physicalLocation |= (
                     .artifactLocation |= (
-                      .uri |= "\($run.properties.chart):\($subChart):\(sub("^[^/]+/"; ""))"
+                      .uri |= "file:///\($run.properties.chart):\($subChart):\(sub("^[^/]+/"; ""))"
                     )
                   )
                 ) | (
