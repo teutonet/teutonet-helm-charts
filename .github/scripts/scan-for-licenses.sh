@@ -72,6 +72,8 @@ function generateTrivyJson() {
   trap 'rm -f "$tmpFile"' RETURN
 
   syft "$image" -o spdx-json >"$tmpFile"
+  # ignore packages that are not fully defined, otherwise trivy fails
+  jq -r '.packages |= map(select(.name | endswith("/") | not))' "$tmpFile" | sponge "$tmpFile"
   trivy sbom "$tmpFile" --skip-{java-,}db-update --severity HIGH,CRITICAL,MEDIUM -f json --scanners license --quiet | jq -r --arg image "$image" '.Metadata.image = $image'
 }
 export -f generateTrivyJson
