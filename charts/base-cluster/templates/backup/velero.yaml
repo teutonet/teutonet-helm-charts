@@ -26,7 +26,8 @@ spec:
       repository: {{ printf "%s/velero/velero" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
     kubectl:
       image:
-        repository: {{ printf "%s/bitnami/kubectl" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
+        repository: {{ printf "%s/rancher/kubectl" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
+        tag: {{ .Capabilities.KubeVersion.Version }}
     upgradeCRDs: false
     cleanUpCRDs: true
     initContainers:
