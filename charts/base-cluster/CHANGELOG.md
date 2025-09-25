@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.3.2...base-cluster-v9.4.0) (2025-09-25)
+
+
+### Features
+
+* **base-cluster/traefik:** Changed ipFamilyPolicy to DualStack ([#1694](https://github.com/teutonet/teutonet-helm-charts/issues/1694)) ([166c9af](https://github.com/teutonet/teutonet-helm-charts/commit/166c9af490ed6c2efb521c873c692608ba86b8a5))
+
+
+### Bug Fixes
+
+* **base-cluster/velero:** remove last reference to bitnami images ([#1701](https://github.com/teutonet/teutonet-helm-charts/issues/1701)) ([50a5112](https://github.com/teutonet/teutonet-helm-charts/commit/50a51126c9a17f2b0418217d63075c2ff4db7a25))
+
 ## [9.3.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.3.1...base-cluster-v9.3.2) (2025-09-02)
 
 
