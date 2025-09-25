@@ -27,7 +27,7 @@ annotations:
     - image: docker.io/bitnami/kubectl:1.32.3                                                                                          #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-clean-reports.yaml
     - image: docker.io/bitnami/kubectl:1.32.3                                                                                          #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-remove-configmap.yaml
     - image: docker.io/bitnami/kubectl:1.32.3                                                                                          #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-scale-to-zero.yaml
-    - image: docker.io/bitnami/kubectl:1.33                                                                                            #  backup/HelmRelease/velero/backup/Job/velero-cleanup-crds.yaml
+    - image: docker.io/bitnami/kubectl:1.34                                                                                            #  backup/HelmRelease/velero/backup/Job/velero-cleanup-crds.yaml
     - image: docker.io/busybox:1.35                                                                                                    #  kyverno/HelmRelease/kyverno/kyverno/Pod/kyverno-admission-controller-metrics.yaml
     - image: docker.io/busybox:1.35                                                                                                    #  kyverno/HelmRelease/kyverno/kyverno/Pod/kyverno-cleanup-controller-liveness.yaml
     - image: docker.io/busybox:1.35                                                                                                    #  kyverno/HelmRelease/kyverno/kyverno/Pod/kyverno-cleanup-controller-metrics.yaml
