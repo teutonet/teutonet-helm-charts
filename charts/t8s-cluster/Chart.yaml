@@ -18,7 +18,7 @@ sources:
   - https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.3.1/charts/t8s-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster
 type: application
-version: 9.3.1
+version: 9.4.0
 annotations:
   artifacthub.io/images: |-
     - image: quay.io/cilium/cilium-envoy:v1.32.6-1746661844-0f602c28cb2aa57b29078195049fb257d5b5246c@sha256:a04218c6879007d60d96339a441c448565b6f86650358652da27582e0efbf182  #  default/HelmRelease/t8s-cluster-cni/kube-system/DaemonSet/cilium-envoy.yaml
