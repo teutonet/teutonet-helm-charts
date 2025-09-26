@@ -1,7 +1,7 @@
 <!-- vim: set ft=markdown: -->
 # t8s-cluster
 
-![Version: 9.3.1](https://img.shields.io/badge/Version-9.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 9.4.0](https://img.shields.io/badge/Version-9.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -17,7 +17,7 @@ t8s-operator cluster with necessary addons
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.3.1/charts/t8s-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.4.0/charts/t8s-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster>
 
 ## Requirements
@@ -543,7 +543,7 @@ Must be one of:
 
 | Property                                        | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                          |
 | ----------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| - [claims](#controlPlane_resources_claims )     | No      | array  | No         | -          | Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.<br /><br />This is an alpha field and requires enabling the DynamicResourceAllocation feature gate.<br /><br />This field is immutable. It can only be set for containers.                                                           |
+| - [claims](#controlPlane_resources_claims )     | No      | array  | No         | -          | Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.<br /><br />This field depends on the DynamicResourceAllocation feature gate.<br /><br />This field is immutable. It can only be set for containers.                                                                                  |
 | - [limits](#controlPlane_resources_limits )     | No      | object | No         | -          | Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/                                                                                                                                                                                |
 | - [requests](#controlPlane_resources_requests ) | No      | object | No         | -          | Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
 
@@ -555,7 +555,7 @@ Must be one of:
 
 **Description:** Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
 
-This is an alpha field and requires enabling the DynamicResourceAllocation feature gate.
+This field depends on the DynamicResourceAllocation feature gate.
 
 This field is immutable. It can only be set for containers.
 
@@ -724,13 +724,25 @@ Specific value: `1`
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                                | Pattern | Type    | Deprecated | Definition | Title/Description |
-| ----------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
-| + [replicas](#nodePools_additionalProperties_replicas )                 | No      | integer | No         | -          | -                 |
-| - [availabilityZone](#nodePools_additionalProperties_availabilityZone ) | No      | string  | No         | -          | -                 |
-| + [flavor](#nodePools_additionalProperties_flavor )                     | No      | string  | No         | -          | -                 |
+| Property                                                                | Pattern | Type        | Deprecated | Definition | Title/Description |
+| ----------------------------------------------------------------------- | ------- | ----------- | ---------- | ---------- | ----------------- |
+| + [replicas](#nodePools_additionalProperties_replicas )                 | No      | Combination | No         | -          | -                 |
+| - [availabilityZone](#nodePools_additionalProperties_availabilityZone ) | No      | string      | No         | -          | -                 |
+| + [flavor](#nodePools_additionalProperties_flavor )                     | No      | string      | No         | -          | -                 |
 
 #### <a name="nodePools_additionalProperties_replicas"></a>6.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools > additionalProperties > replicas`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+| One of(Option)                                              |
+| ----------------------------------------------------------- |
+| [item 0](#nodePools_additionalProperties_replicas_oneOf_i0) |
+| [item 1](#nodePools_additionalProperties_replicas_oneOf_i1) |
+
+##### <a name="nodePools_additionalProperties_replicas_oneOf_i0"></a>6.1.1.1. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 0`
 
 |          |           |
 | -------- | --------- |
@@ -739,6 +751,38 @@ Specific value: `1`
 | Restrictions |        |
 | ------------ | ------ |
 | **Minimum**  | &ge; 0 |
+
+##### <a name="nodePools_additionalProperties_replicas_oneOf_i1"></a>6.1.1.2. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 1`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                        | Pattern | Type    | Deprecated | Definition | Title/Description |
+| --------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
+| + [min](#nodePools_additionalProperties_replicas_oneOf_i1_min ) | No      | integer | No         | -          | -                 |
+| + [max](#nodePools_additionalProperties_replicas_oneOf_i1_max ) | No      | integer | No         | -          | -                 |
+
+###### <a name="nodePools_additionalProperties_replicas_oneOf_i1_min"></a>6.1.1.2.1. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 1 > min`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `integer` |
+
+| Restrictions |        |
+| ------------ | ------ |
+| **Minimum**  | &ge; 1 |
+
+###### <a name="nodePools_additionalProperties_replicas_oneOf_i1_max"></a>6.1.1.2.2. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 1 > max`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `integer` |
+
+| Restrictions |        |
+| ------------ | ------ |
+| **Minimum**  | &ge; 1 |
 
 #### <a name="nodePools_additionalProperties_availabilityZone"></a>6.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > nodePools > additionalProperties > availabilityZone`
 
