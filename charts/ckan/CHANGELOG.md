@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.3.3...ckan-v1.3.4) (2025-09-26)
+
+
+### Miscellaneous Chores
+
+* **ckan/dependencies:** update valkey docker tag to v3.0.16 ([#1551](https://github.com/teutonet/teutonet-helm-charts/issues/1551)) ([57002f8](https://github.com/teutonet/teutonet-helm-charts/commit/57002f884cd78f4556e618723ea44eba41cb5b69))
+
 ## [1.3.3](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.3.2...ckan-v1.3.3) (2025-06-24)
 
 
