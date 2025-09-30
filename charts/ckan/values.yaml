@@ -109,6 +109,15 @@ datapusher:
 
 postgresql:
   enabled: true
+  image:
+    repository: bitnamilegacy/postgresql
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+  metrics:
+    image:
+      repository: bitnamilegacy/postgres-exporter
+
   global:
     postgresql:
       auth:
@@ -190,11 +199,20 @@ postgresql:
             key: datapusherDatabase
 valkey:
   enabled: true
+  image:
+    repository: bitnamilegacy/valkey
+    tag: 7.2.5-debian-12-r9
+  metrics:
+    image:
+      repository: bitnamilegacy/redis-exporter
   replica:
     replicaCount: 1
 
 solr:
   enabled: true
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
   image:
     registry: "ghcr.io"
     pullPolicy: IfNotPresent
@@ -215,3 +233,5 @@ solr:
   replicaCount: 2
   zookeeper:
     replicaCount: 3
+    image:
+      repository: bitnamilegacy/zookeeper

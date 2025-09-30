@@ -4,6 +4,7 @@ docker.io:
   bats:
     bats: ALL_TAGS
   bitnami: ALL_IMAGES
+  bitnamilegacy: ALL_IMAGES
   busybox: ALL_TAGS
   ckan:
     ckan-base-datapusher: ALL_TAGS

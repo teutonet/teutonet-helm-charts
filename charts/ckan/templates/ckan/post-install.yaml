@@ -18,7 +18,7 @@ spec:
       restartPolicy: Never
       initContainers:
         - name: wait-for-postgresql
-          image: docker.io/bitnami/postgresql:17
+          image: docker.io/bitnamilegacy/postgresql:17
           command: [ 'sh', '-c', 'until pg_isready -U $CKAN_DB_USER -d $CKAN_DB -h $POSTGRES_HOST -p 5432; do echo waiting for database; sleep 2; done;' ]
           env:
             {{- if .Values.postgresql.enabled }}
@@ -160,7 +160,7 @@ spec:
             - mountPath: /api-tokens
               name: api-tokens-volume
         - name: update-secret
-          image: docker.io/bitnami/kubectl
+          image: docker.io/bitnamilegacy/kubectl:1.31
           command:
             - "/bin/sh"
             - "-c"
