@@ -14,22 +14,22 @@ licenses:
   docker.io/bitnami/grafana-tempo-vulture:
     license: Apache-2.0
     licenseLink: https://hub.docker.com/r/bitnami/grafana-tempo-vulture
-  docker.io/bitnami/kubectl:
+  docker.io/bitnamilegacy/kubectl:
     license: Apache-2.0
-    licenseLink: https://hub.docker.com/r/bitnami/kubectl
+    licenseLink: https://hub.docker.com/r/bitnamilegacy/kubectl
   docker.io/bitnami/memcached:
     license: Apache-2.0
     licenseLink: https://hub.docker.com/r/bitnami/memcached
   docker.io/bitnami/metrics-server:
     license: Apache-2.0
     licenseLink: https://hub.docker.com/r/bitnami/metrics-server
-  docker.io/bitnami/postgresql:
+  docker.io/bitnamilegacy/postgresql:
     license: PostgreSQL
     licenseLink: https://www.postgresql.org/about/licence/
-  docker.io/bitnami/valkey:
+  docker.io/bitnamilegacy/valkey:
     license: BSD-3
-    licenseLink: https://hub.docker.com/r/bitnami/valkey
-  docker.io/bitnami/zookeeper:
+    licenseLink: https://hub.docker.com/r/bitnamilegacy/valkey
+  docker.io/bitnamilegacy/zookeeper:
     license: Apache-2.0
     licenseLink: https://zookeeper.apache.org/
   docker.io/busybox:
