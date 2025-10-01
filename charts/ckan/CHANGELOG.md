@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.3.4](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.3.3...ckan-v1.3.4) (2025-10-01)
+
+
+### Miscellaneous Chores
+
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/solr-ckan docker tag to v1.0.29 ([#1609](https://github.com/teutonet/teutonet-helm-charts/issues/1609)) ([88ec690](https://github.com/teutonet/teutonet-helm-charts/commit/88ec690a3c01436d4f0a3d880651eb4d1fd92685))
+* **ckan/dependencies:** update valkey docker tag to v3.0.16 ([#1551](https://github.com/teutonet/teutonet-helm-charts/issues/1551)) ([57002f8](https://github.com/teutonet/teutonet-helm-charts/commit/57002f884cd78f4556e618723ea44eba41cb5b69))
+* **ckan:** change to bitnami legacy ([#1705](https://github.com/teutonet/teutonet-helm-charts/issues/1705)) ([7d2a9cf](https://github.com/teutonet/teutonet-helm-charts/commit/7d2a9cfee2b2063bc8f3bc73151bab793b72e7dd))
+
 ## [1.3.3](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.3.2...ckan-v1.3.3) (2025-06-24)
 
 
