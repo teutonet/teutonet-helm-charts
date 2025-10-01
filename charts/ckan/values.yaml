@@ -218,7 +218,7 @@ solr:
     pullPolicy: IfNotPresent
     pullSecrets: []
     repository: teutonet/oci-images/solr-ckan
-    tag: 1.0.27@sha256:cb0d2e59e5394dc861848bbf4c830a86a4bfc8b841370e9efd8c6199fb871fd9
+    tag: 1.0.29@sha256:33afbaa6e09106f3036c6b9c06a2e3ff7d4e3d7153294221ccb598117d88ea30
     digest: ""
   coreNames:
     - ckan
