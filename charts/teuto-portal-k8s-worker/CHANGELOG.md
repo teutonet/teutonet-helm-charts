@@ -1,5 +1,25 @@
 # Changelog
 
+## [3.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.3.0...teuto-portal-k8s-worker-v3.4.0) (2025-10-02)
+
+
+### Features
+
+* **teuto-portal-k8s-worker:** update image ([#1324](https://github.com/teutonet/teutonet-helm-charts/issues/1324)) ([7298742](https://github.com/teutonet/teutonet-helm-charts/commit/7298742377b12c82ab39e7bd09fa6e8c50603640))
+* **teuto-portal-k8s-worker:** use new pullPolicy template ([#1384](https://github.com/teutonet/teutonet-helm-charts/issues/1384)) ([a4c2144](https://github.com/teutonet/teutonet-helm-charts/commit/a4c21448da5449fde79f08f5a1b84a26ca7f6358))
+
+
+### Miscellaneous Chores
+
+* **main:** [bot] release teuto-portal-k8s-worker:3.1.2 ([#924](https://github.com/teutonet/teutonet-helm-charts/issues/924)) ([48c8374](https://github.com/teutonet/teutonet-helm-charts/commit/48c83745cdd7d80ccba1466f9841cc285242c54d))
+* **main:** [bot] release teuto-portal-k8s-worker:3.2.0 ([#1325](https://github.com/teutonet/teutonet-helm-charts/issues/1325)) ([2377d41](https://github.com/teutonet/teutonet-helm-charts/commit/2377d41f8fbb65bde48bfd0ced75ebbb753e9ac8))
+* **main:** [bot] release teuto-portal-k8s-worker:3.3.0 ([#1364](https://github.com/teutonet/teutonet-helm-charts/issues/1364)) ([2681f09](https://github.com/teutonet/teutonet-helm-charts/commit/2681f09c27ddc2c98887987961dc08b9de4f81ba))
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v1.3.0 ([#1363](https://github.com/teutonet/teutonet-helm-charts/issues/1363)) ([b6fa5e0](https://github.com/teutonet/teutonet-helm-charts/commit/b6fa5e0b0476b429fff9b29e9cc9fdbec71bc55f))
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v1.4.0 ([#1394](https://github.com/teutonet/teutonet-helm-charts/issues/1394)) ([260a99d](https://github.com/teutonet/teutonet-helm-charts/commit/260a99d9d78c9f1e7d6ff41843b2024430c46418))
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v1.5.0 ([#1567](https://github.com/teutonet/teutonet-helm-charts/issues/1567)) ([3e0e84f](https://github.com/teutonet/teutonet-helm-charts/commit/3e0e84f3ec8969761827273383f7303a9b360c79))
+* **teuto-portal-k8s-worker/dependencies:** update registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker docker tag to v4.1.1 ([#1568](https://github.com/teutonet/teutonet-helm-charts/issues/1568)) ([3ea6ef8](https://github.com/teutonet/teutonet-helm-charts/commit/3ea6ef82a123234d5d2890b7ce8f7baabffa5f54))
+* **teuto-portal-k8s-worker:** change default loggingFormat to `json` ([#1613](https://github.com/teutonet/teutonet-helm-charts/issues/1613)) ([974d049](https://github.com/teutonet/teutonet-helm-charts/commit/974d0490fd58db8bafb5006d333296eeccc6c9b7))
+
 ## [3.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.2.0...teuto-portal-k8s-worker-v3.3.0) (2025-07-23)
 
 
