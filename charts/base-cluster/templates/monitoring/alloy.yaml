@@ -31,7 +31,7 @@ spec:
     {{- end }}
     alloy:
       enableReporting: false
-      resources: {{- include "common.resources" .Values.monitoring.loki.promtail | nindent 8 }}
+      resources: {{- include "common.resources" .Values.monitoring.alloy | nindent 8 }}
       {{- if .Values.monitoring.loki.enabled }}
       mounts:
         varlog: true
