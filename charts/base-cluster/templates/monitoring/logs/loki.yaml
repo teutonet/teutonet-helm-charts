@@ -56,6 +56,8 @@ spec:
         capabilities:
           drop:
             - ALL
+      podSecurityContext:
+        fsGroupChangePolicy: OnRootMismatch
       auth_enabled: false
       storage:
         type: filesystem
@@ -94,6 +96,8 @@ spec:
       replicas: 1
       persistence: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.loki.persistence "global" $.Values.global) | nindent 8 }}
         enabled: true
+        whenScaled: Retain
+        whenDeleted: Delete
         size: {{ .Values.monitoring.loki.persistence.size }}
       resources: {{- include "common.resources" .Values.monitoring.loki | nindent 8 }}
     monitoring:
