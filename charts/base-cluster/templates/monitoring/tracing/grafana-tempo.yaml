@@ -23,6 +23,10 @@ spec:
         registry: {{ $.Values.global.imageRegistry }}
     {{- end }}
     ingester: {{- include "common.resourcesWithPreset" .Values.monitoring.tracing.ingester | nindent 6 }}
+      persistentVolumeClaimRetentionPolicy:
+        enabled: true
+        whenDeleted: Delete
+        whenScaled: Retain
       replicas: &replicas 1
       config:
         replication_factor: *replicas
