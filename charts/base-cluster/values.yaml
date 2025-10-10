@@ -196,14 +196,6 @@ global:
           tag: 23.7.0
       type: git
       condition: '{{ dig "kube-janitor" "enabled" false .Values.AsMap }}'
-    kdave:
-      url: https://github.com/amelbakry/kdave-chart
-      charts:
-        kdave:
-          commit: 47a46848222969d60bae87b4650614a9b7a85d00
-          path: .
-      type: git
-      condition: "{{ and .Values.monitoring.kdave.enabled .Values.monitoring.prometheus.enabled }}"
   authentication:
     grafana:
       authenticationPath: /protocol/openid-connect/auth
@@ -257,8 +249,6 @@ monitoring:
     enabled: false
     apiKey: ""
     pingKey: ""
-  kdave:
-    enabled: true
   prometheus:
     enabled: true
     replicas: 2
