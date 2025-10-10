@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.1](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.4.0...teuto-portal-k8s-worker-v3.4.1) (2025-10-10)
+
+
+### Miscellaneous Chores
+
+* **teuto-portal-k8s-worker/dependencies:** update image tag for worker image ([#1728](https://github.com/teutonet/teutonet-helm-charts/issues/1728)) ([6b579ce](https://github.com/teutonet/teutonet-helm-charts/commit/6b579ce2913b327d9d78076c56484a24d77cf9b3))
+
 ## [3.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.3.0...teuto-portal-k8s-worker-v3.4.0) (2025-10-02)
 
 
