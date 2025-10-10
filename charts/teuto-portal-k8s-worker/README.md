@@ -1,6 +1,6 @@
 # teuto-portal-k8s-worker
 
-![Version: 3.3.0](https://img.shields.io/badge/Version-3.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 3.4.0](https://img.shields.io/badge/Version-3.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 A Helm chart for deploying the portal worker application to k8s
 
@@ -14,7 +14,7 @@ A Helm chart for deploying the portal worker application to k8s
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/teuto-portal-k8s-worker-v3.3.0/charts/teuto-portal-k8s-worker>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/teuto-portal-k8s-worker-v3.4.0/charts/teuto-portal-k8s-worker>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/teuto-portal-k8s-worker>
 
 ## Requirements
@@ -40,6 +40,7 @@ A Helm chart for deploying the portal worker application to k8s
 | global.securityContext.runAsGroup | int | `1000` |  |
 | global.securityContext.runAsNonRoot | bool | `true` |  |
 | global.securityContext.runAsUser | int | `1000` |  |
+| worker.config.loggingFormat | string | `"json"` |  |
 | worker.database.credentials.secret.name | string | `""` |  |
 | worker.database.host | string | `"localhost"` |  |
 | worker.database.port | int | `5432` |  |
