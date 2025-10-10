@@ -1,6 +1,6 @@
 # teuto-portal-k8s-worker
 
-![Version: 3.4.0](https://img.shields.io/badge/Version-3.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
+![Version: 3.4.1](https://img.shields.io/badge/Version-3.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 A Helm chart for deploying the portal worker application to k8s
 
@@ -14,7 +14,7 @@ A Helm chart for deploying the portal worker application to k8s
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/teuto-portal-k8s-worker-v3.4.0/charts/teuto-portal-k8s-worker>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/teuto-portal-k8s-worker-v3.4.1/charts/teuto-portal-k8s-worker>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/teuto-portal-k8s-worker>
 
 ## Requirements
@@ -46,7 +46,7 @@ A Helm chart for deploying the portal worker application to k8s
 | worker.database.port | int | `5432` |  |
 | worker.image.registry | string | `"registry-gitlab.teuto.net"` |  |
 | worker.image.repository | string | `"4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker"` |  |
-| worker.image.tag | string | `"4.1.1@sha256:e01795a66fea3a63bb4b6eff2caf8448a624131e79b0ab3ee0d8dd6735406059"` |  |
+| worker.image.tag | string | `"4.1.2@sha256:f7629b1f84ddd35016818ffa99d6617fd0af3dfb51dfbb44006893aad3f9a07d"` |  |
 | worker.kubeconfig.secret.name | string | `""` |  |
 | worker.resources | object | `{}` |  |
 | worker.resourcesPreset | string | `"micro"` |  |
