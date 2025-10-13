@@ -23,10 +23,7 @@ version: 9.4.0
 annotations:
   artifacthub.io/images: |-
     - image: docker.io/aelbakry/kdave-server:1.0.4                                                                                     #  monitoring/HelmRelease/kdave/null/Deployment/kdave.yaml
-    - image: docker.io/bats/bats:v1.4.1                                                                                                #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Pod/kube-prometheus-stack-grafana-test.yaml
-    - image: docker.io/bitnami/kubectl:1.32.3                                                                                          #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-clean-reports.yaml
-    - image: docker.io/bitnami/kubectl:1.32.3                                                                                          #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-remove-configmap.yaml
-    - image: docker.io/bitnami/kubectl:1.32.3                                                                                          #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-scale-to-zero.yaml
+    - image: docker.io/bats/bats:v1.4.1                                                                                                #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Pod/kube-prometheus-stack-grafana-test.yaml                                                                                     #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-scale-to-zero.yaml
     - image: docker.io/busybox:1.35                                                                                                    #  kyverno/HelmRelease/kyverno/kyverno/Pod/kyverno-admission-controller-metrics.yaml
     - image: docker.io/busybox:1.35                                                                                                    #  kyverno/HelmRelease/kyverno/kyverno/Pod/kyverno-cleanup-controller-liveness.yaml
     - image: docker.io/busybox:1.35                                                                                                    #  kyverno/HelmRelease/kyverno/kyverno/Pod/kyverno-cleanup-controller-metrics.yaml
