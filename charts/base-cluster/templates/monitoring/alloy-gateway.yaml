@@ -1,0 +1,130 @@
+{{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.tracing.enabled -}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: telemetry-gateway
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: alloy
+    app.kubernetes.io/part-of: monitoring
+spec:
+  chart:
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "grafana" "chart" "alloy" "context" $) | nindent 6 }}
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  install:
+    timeout: 10m0s
+    crds: Skip
+  upgrade:
+    timeout: 10m0s
+    crds: Skip
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
+  values:
+    fullnameOverride: telemetry-gateway
+    {{- if .Values.global.imageRegistry }}
+    global:
+      image:
+        registry: {{ $.Values.global.imageRegistry }}
+    {{- end }}
+    alloy:
+      enableReporting: false
+      resources: {{- include "common.resources" .Values.monitoring.loki.promtail | nindent 8 }}
+      {{- if .Values.monitoring.loki.enabled }}
+      mounts:
+        varlog: true
+      {{- end }}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      configMap:
+        content: |
+          logging {
+            format = "json"
+          }
+
+          otelcol.receiver.otlp "default" {
+            grpc {}
+
+            output {
+              traces = [otelcol.processor.tail_sampling.policies.input]
+            }
+          }
+
+          tracing {
+            sampling_fraction = 1.0
+            write_to = [otelcol.processor.tail_sampling.policies.input]
+          }
+
+          otelcol.processor.tail_sampling "policies" {
+            decision_wait = "30s"
+
+            policy {
+              name = "sample-erroring-traces"
+              type = "status_code"
+              status_code {
+                status_codes = [ "ERROR" ]
+              }
+            }
+
+            policy {
+              name = "sample-long-traces"
+              type = "latency"
+              latency {
+                threshold_ms = 200
+              }
+            }
+
+            policy {
+              name = "sample-random"
+              type = "probabilistic"
+              probabilistic {
+                sampling_percentage = 0.1
+              }
+            }
+
+            output {
+              traces = [otelcol.processor.batch.default.input]
+            }
+          }
+
+          otelcol.processor.batch "default" {
+            output {
+              traces = [otelcol.exporter.otlp.tempo.input]
+            }
+          }
+
+          otelcol.exporter.otlp "tempo" {
+            client {
+              endpoint = "grafana-tempo-distributor:4317"
+
+              tls {
+                insecure = true
+              }
+            }
+          }
+      extraPorts:
+        - name: metrics
+          port: 8888
+          protocol: TCP
+          targetPort: 8888
+        - name: otlp
+          port: 4317
+          appProtocol: grpc
+          protocol: TCP
+          targetPort: 4317
+    crds:
+      create: false
+    controller:
+      type: deployment
+      autoscaling:
+        enabled: true
+        minReplicas: 2
+      priorityClassName: monitoring-components
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        monitoring/provisioned-by: base-cluster
+{{- end -}}

@@ -68,7 +68,7 @@ spec:
     admissionController:
       replicas: 3
       {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "jaeger" "serviceProtocol" "grpc") | fromYaml -}}
-      {{- $telemetryEnabled := and $telemetryConf.enabled .Values.monitoring.prometheus.enabled -}}
+      {{- $telemetryEnabled := and $telemetryConf.enabled -}}
       {{- if $telemetryEnabled }}
       tracing: &tracingConfig
         enabled: true
