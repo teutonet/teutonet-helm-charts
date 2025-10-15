@@ -53,7 +53,9 @@ spec:
       enable: true
       {{- if not .Values.global.imageRegistry }}
       image:
-        registry: {{ include "base-cluster.defaultRegistry" (dict) }}
+        registry: {{ .Values.global.imageRegistry | default .Values.global.kubectl.image.registry }}
+        repository: {{ .Values.global.kubectl.image.repository }}
+        tag: {{ .Values.global.kubectl.image.tag }}
       {{- end }}
     features:
       policyExceptions:
