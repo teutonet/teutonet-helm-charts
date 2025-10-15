@@ -27,12 +27,19 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          path: scripts # needed because otherwise tokens could be stolen
+          sparse-checkout: |
+            .github
+          sparse-checkout-cone-mode: false
       - run: pip install yq
       - name: Install sponge
         run: sudo apt-get -yq install moreutils
-      - run: ./.github/scripts/prepare-values.sh "charts/${{ needs.getChangedChart.outputs.chart }}"
-      - run: ./.github/scripts/create-values-diff.sh ${{ github.event.number }} "charts/${{ needs.getChangedChart.outputs.chart }}" --dry-run > comment_body.md
+      - run: ./scripts/.github/scripts/prepare-values.sh "charts/${{ needs.getChangedChart.outputs.chart }}"
+      - run: ./scripts/.github/scripts/create-values-diff.sh ${{ github.event.number }} "charts/${{ needs.getChangedChart.outputs.chart }}" --dry-run > comment_body.md
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: comment_body
