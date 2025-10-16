@@ -33,8 +33,6 @@ monitoring:
     enabled: true
     pingKey: PING_KEY
     apiKey: API_KEY
-  kdave:
-    enabled: true
   prometheus:
     enabled: true
     alertmanager:

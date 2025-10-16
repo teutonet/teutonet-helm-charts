@@ -611,15 +611,6 @@
           },
           "additionalProperties": false
         },
-        "kdave": {
-          "type": "object",
-          "properties": {
-            "enabled": {
-              "type": "boolean"
-            }
-          },
-          "additionalProperties": false
-        },
         "prometheus": {
           "type": "object",
           "properties": {
