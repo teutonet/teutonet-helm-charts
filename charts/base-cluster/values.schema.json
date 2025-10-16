@@ -947,18 +947,18 @@
             },
             "resources": {
               "$ref": "#/$defs/resourceRequirements"
+            }
+          },
+          "additionalProperties": false
+        },
+        "alloy": {
+          "type": "object",
+          "properties": {
+            "resourcesPreset": {
+              "$ref": "#/$defs/resourcesPreset"
             },
-            "promtail": {
-              "type": "object",
-              "properties": {
-                "resourcesPreset": {
-                  "$ref": "#/$defs/resourcesPreset"
-                },
-                "resources": {
-                  "$ref": "#/$defs/resourceRequirements"
-                }
-              },
-              "additionalProperties": false
+            "resources": {
+              "$ref": "#/$defs/resourceRequirements"
             }
           },
           "additionalProperties": false

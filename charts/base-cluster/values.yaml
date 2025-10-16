@@ -328,15 +328,15 @@ monitoring:
       limits:
         cpu: 1
         memory: 1Gi
-    promtail:
-      resourcesPreset: nano
-      resources:
-        requests:
-          cpu: 50m
-          memory: 64Mi
-        limits:
-          cpu: 1
-          memory: 128Mi
+  alloy:
+    resourcesPreset: nano
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 1
+        memory: 128Mi
   metricsServer:
     enabled: true
   securityScanning:
