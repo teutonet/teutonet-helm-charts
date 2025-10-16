@@ -253,10 +253,6 @@ monitoring:
     storageClassMapping:
       teutostack-hdd: 0.002
       teutostack-ssd: 0.0067
-  deadMansSwitch:
-    enabled: false
-    apiKey: ""
-    pingKey: ""
   kdave:
     enabled: true
   prometheus:

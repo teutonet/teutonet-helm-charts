@@ -598,9 +598,6 @@
           "type": "object",
           "description": "This needs `.global.clusterName` to be set up as an integration in healthchecks.io. Also, `.global.baseDomain` has to be set.",
           "properties": {
-            "enabled": {
-              "type": "boolean"
-            },
             "apiKey": {
               "type": "string",
               "description": "Used for registration and unregistration"
@@ -609,6 +606,10 @@
               "type": "string"
             }
           },
+          "required": [
+            "apiKey",
+            "pingKey"
+          ],
           "additionalProperties": false
         },
         "kdave": {

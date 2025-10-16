@@ -1,4 +1,4 @@
-{{- if .Values.monitoring.deadMansSwitch.enabled }}
+{{- if .Values.monitoring.deadMansSwitch }}
 {{- if false }}
 apiVersion: batch/v1
 {{- else }}
