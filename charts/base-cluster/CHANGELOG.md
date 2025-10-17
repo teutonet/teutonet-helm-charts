@@ -1,5 +1,23 @@
 # Changelog
 
+## [9.4.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.4.0...base-cluster-v9.4.1) (2025-10-17)
+
+
+### Bug Fixes
+
+* **base-cluster/kyverno:** change kubectl image ([#1734](https://github.com/teutonet/teutonet-helm-charts/issues/1734)) ([cb42f26](https://github.com/teutonet/teutonet-helm-charts/commit/cb42f26934961f71e9f1b69bc2dfbb96eafa1ff1))
+* **base-cluster:** conditions must the `true`, not just truthy ([#1738](https://github.com/teutonet/teutonet-helm-charts/issues/1738)) ([7f46f4e](https://github.com/teutonet/teutonet-helm-charts/commit/7f46f4ea9b00c0b0c8f3c435a2b4519e125aaf1e))
+* **base-cluster:** migrate promtail leftovers to alloy ([#1720](https://github.com/teutonet/teutonet-helm-charts/issues/1720)) ([8b7d062](https://github.com/teutonet/teutonet-helm-charts/commit/8b7d062cfeee4d54d52b8156dad46e0b9a5f19d9))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/external-dns:** migrate domainFilters syntax ([#1681](https://github.com/teutonet/teutonet-helm-charts/issues/1681)) ([51a42a2](https://github.com/teutonet/teutonet-helm-charts/commit/51a42a24c2e84b70f81c63b7df9ded4b040f2bb4))
+* **base-cluster/kdave:** remove kdave ([#1724](https://github.com/teutonet/teutonet-helm-charts/issues/1724)) ([723c049](https://github.com/teutonet/teutonet-helm-charts/commit/723c04913c4e07294a69391a20338bfc2646e3b2))
+* **base-cluster/logs:** only delete volumes on deletion ([#1721](https://github.com/teutonet/teutonet-helm-charts/issues/1721)) ([36b657a](https://github.com/teutonet/teutonet-helm-charts/commit/36b657a990113a230a4e50027e5de263dbcbc69c))
+* **base-cluster/logs:** optimize volume chown; this speeds up startup ([36b657a](https://github.com/teutonet/teutonet-helm-charts/commit/36b657a990113a230a4e50027e5de263dbcbc69c))
+* **base-cluster/traces:** delete tempo volumes on deletion ([#1722](https://github.com/teutonet/teutonet-helm-charts/issues/1722)) ([0afce96](https://github.com/teutonet/teutonet-helm-charts/commit/0afce965f2c42d179a290bf9d14555d74ba10283))
+
 ## [9.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.3.2...base-cluster-v9.4.0) (2025-09-25)
 
 
