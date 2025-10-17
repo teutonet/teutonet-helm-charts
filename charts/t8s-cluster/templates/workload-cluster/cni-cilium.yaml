@@ -38,7 +38,8 @@ spec:
 
     rollOutCiliumPods: true
     encryption:
-      enabled: false
+      enabled: true
+      type: wireguard
       nodeEncryption: false
     hubble:
       metrics:
