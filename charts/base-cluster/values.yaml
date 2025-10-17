@@ -63,9 +63,9 @@ global:
   storageClass: ""
   kubectl:
     image:
-      registry: docker.io
-      repository: rancher/kubectl
-      tag: 1.33.3@sha256:26d09fcee6eb9a14b81c95e52dd90964a0a24263abb075f58651d2ac62651b59
+      registry: registry.k8s.io
+      repository: kubectl
+      tag: 1.33.4@sha256:261a9ed843eb68e3d50da132245e2221d75ca19504130e47bd32788c0ff339a0
   flux:
     image:
       registry: docker.io
