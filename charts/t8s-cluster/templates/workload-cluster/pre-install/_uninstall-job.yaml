@@ -2,7 +2,7 @@
   {{- $name := .name -}}
   {{- $clusterResourceSet := .clusterResourceSet -}}
   {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
-  {{- if lookup "addons.cluster.x-k8s.io/v1beta1" "ClusterResourceSet" .Release.Namespace $clusterResourceSet -}}
+  {{- if lookup "addons.cluster.x-k8s.io/v1beta2" "ClusterResourceSet" .Release.Namespace $clusterResourceSet -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
