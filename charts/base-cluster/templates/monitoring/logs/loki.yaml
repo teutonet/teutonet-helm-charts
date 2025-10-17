@@ -83,7 +83,7 @@ spec:
         retention_enabled: true
         delete_request_store: filesystem
         compaction_interval: 15m
-        retention_delete_delay: 1m
+        retention_delete_delay: 24h
         retention_delete_worker_count: 150
       ingester:
         chunk_block_size: 524288
