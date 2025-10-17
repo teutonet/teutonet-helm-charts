@@ -1,4 +1,9 @@
 global:
+  kubectl:
+    image:
+      registry: registry.k8s.io
+      repository: kubectl
+      tag: 1.33.4@sha256:261a9ed843eb68e3d50da132245e2221d75ca19504130e47bd32788c0ff339a0
   telemetry:
     otlp:
       endpoint: auto
