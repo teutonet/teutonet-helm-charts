@@ -1,4 +1,4 @@
-{{- define "base-cluster.backup.getProviderName" -}}
+{{- define "base-cluster.backup.velero.getProviderName" -}}
   {{- $providers := list "minio" -}}
   {{- $providerName := . | keys | first -}}
   {{- if has $providerName $providers -}}
@@ -8,14 +8,14 @@
   {{- end -}}
 {{- end -}}
 
-{{- define "base-cluster.backup.mapProviderName" -}}
+{{- define "base-cluster.backup.velero.mapProviderName" -}}
   {{- $providerMap := dict "minio" "aws" -}}
   {{- get $providerMap . | required "Missing provider mapping" -}}
 {{- end -}}
 
-{{- define "base-cluster.backup.credential" -}}
-  {{- $providerName := include "base-cluster.backup.getProviderName" . }}
-  {{- $pluginName := include "base-cluster.backup.mapProviderName" $providerName -}}
+{{- define "base-cluster.backup.velero.credential" -}}
+  {{- $providerName := include "base-cluster.backup.velero.getProviderName" . }}
+  {{- $pluginName := include "base-cluster.backup.velero.mapProviderName" $providerName -}}
   {{- $provider := get . $providerName }}
   {{- if eq $pluginName "aws" -}}
     {{- if hasKey $provider "accessKeyID" -}}
@@ -28,9 +28,9 @@ aws_secret_access_key={{ get $provider "secretAccessKey" }}
   {{- end -}}
 {{- end -}}
 
-{{- define "base-cluster.backup.credentialType" -}}
-  {{- $providerName := include "base-cluster.backup.getProviderName" . }}
-  {{- $pluginName := include "base-cluster.backup.mapProviderName" $providerName -}}
+{{- define "base-cluster.backup.velero.credentialType" -}}
+  {{- $providerName := include "base-cluster.backup.velero.getProviderName" . }}
+  {{- $pluginName := include "base-cluster.backup.velero.mapProviderName" $providerName -}}
   {{- $provider := get . $providerName -}}
   {{- if hasKey $provider "existingSecret" -}}
 existingSecret

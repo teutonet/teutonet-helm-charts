@@ -16,4 +16,4 @@ for prefix in 'prefix="/prod"' ''; do
       yq -y -n "{test$((i++)): ({} | .provider.$provider = ({} | .$url | .$auth | .$existingSecret) | .$prefix | .$bucket)}"
     done
   done
-done | yq -s '{backup: {backupStorageLocations: .[], defaultLocation: "test0"}}'
+done | yq -s '{backup: { provider: { velero: { backupStorageLocations: .[], defaultLocation: "test0"}}}}'

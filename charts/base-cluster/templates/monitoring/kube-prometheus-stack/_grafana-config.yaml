@@ -171,11 +171,17 @@ dashboards:
       gnetId: 17813
       revision: 2
     {{- end }}
-    {{- if .Values.backup.backupStorageLocations }}
+    {{- if (.Values.backup.provider).velero }}
     velero:
       <<: *dashboard
       gnetId: 11055
       revision: 2
+    {{- end }}
+    {{- if ne (.Values.backup.provider).k8up nil }}
+    k8up:
+      <<: *dashboard
+      gnetId: 20166
+      revision: 4
     {{- end }}
   {{- with .Values.monitoring.grafana.additionalDashboards }}
   {{ toYaml . | nindent 4 }}

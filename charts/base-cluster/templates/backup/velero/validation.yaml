@@ -1,0 +1,5 @@
+{{- if ((.Values.backup.provider).velero).defaultLocation -}}
+  {{- if not (index .Values.backup.provider.velero.backupStorageLocations .Values.backup.provider.velero.defaultLocation) -}}
+    {{- fail (printf "The `defaultLocation` '%s' must exist in `backupStorageLocations`" .Values.backup.provider.velero.defaultLocation) -}}
+  {{- end -}}
+{{- end -}}

@@ -1,0 +1,7 @@
+global:
+  clusterName: test
+  baseDomain: example.com
+  serviceLevelAgreement: None
+backup:
+  provider:
+    k8up: {}
