@@ -65,7 +65,7 @@ global:
     image:
       registry: docker.io
       repository: rancher/kubectl
-      tag: 1.33.3@sha256:26d09fcee6eb9a14b81c95e52dd90964a0a24263abb075f58651d2ac62651b59
+      tag: 1.33.5@sha256:6f157ad0ff43d31320ab7bf4015271a97466f13c49f03c5108b57b47a312d2c2
   flux:
     image:
       registry: docker.io
