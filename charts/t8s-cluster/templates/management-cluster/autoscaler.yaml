@@ -1,0 +1,35 @@
+{{- $enabled := false -}}
+{{- range $_, $machineDeploymentClass := .Values.nodePools }}
+  {{- with $machineDeploymentClass.replicas }}
+    {{- $enabled = or $enabled (kindIs "map" .) -}}
+  {{- end }}
+{{- end }}
+{{- if $enabled -}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: {{ printf "%s-autoscaler" .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  chart:
+    spec: {{- include "common.helm.chartSpec" (dict "repo" "autoscaler" "repoNamespace" "flux-system" "chart" "cluster-autoscaler" "context" $) | nindent 6 }}
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    autoDiscovery:
+      clusterName: {{ .Release.Name }}
+    cloudProvider: clusterapi
+    # workload-management
+    clusterAPIMode: kubeconfig-incluster
+    clusterAPIConfigMapsNamespace: {{ .Release.Namespace }}
+    clusterAPIKubeconfigSecret: {{ .Release.Name }}-kubeconfig
+    extraArgs:
+      scale-down-utilization-threshold: 0.8
+      leader-elect-resource-name: {{ .Release.Name }}-cluster-autoscaler
+      status-config-map-name: {{ .Release.Name }}-cluster-autoscaler
+    serviceMonitor:
+      enabled: true
+      namespace: {{ .Release.Namespace }}
+{{- end -}}

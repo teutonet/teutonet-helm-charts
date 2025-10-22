@@ -26,6 +26,10 @@ global:
         openstack-cinder-csi 2.29.x: 2.29.2
         openstack-cinder-csi 2.28.x: 2.28.3
         openstack-cinder-csi 2.27.x: 2.27.3
+    autoscaler:
+      url: https://kubernetes.github.io/autoscaler
+      charts:
+        cluster-autoscaler: 9.52.1
     cetic:
       url: https://cetic.github.io/helm-charts
   etcd:

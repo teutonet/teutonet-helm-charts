@@ -1,3 +1,0 @@
-{{- if eq (include "t8s-cluster.cni" .) "cilium" -}}
-{{ include "t8s-cluster.workload.uninstall-job" (dict "name" "cni" "context" . "clusterResourceSet" "cni") }}
-{{- end -}}
