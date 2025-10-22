@@ -13,8 +13,8 @@ spec:
       chart: openstack-cinder-csi
       sourceRef:
         kind: HelmRepository
-        name: {{ printf "%s-cloud-provider-openstack" .Release.Name }}
-        namespace: {{ .Release.Namespace }}
+        name: cloud-provider-openstack
+        namespace: flux-system
       version: {{ $selectedVersion | quote }}
   interval: 1h
   driftDetection:
