@@ -119,6 +119,9 @@ licenses:
   ghcr.io/teutonet/oci-images/solr-ckan:
     license: MIT
     licenseLink: https://github.com/teutonet/oci-images/blob/main/LICENSE
+  ghcr.io/k8up-io/k8up:
+    license: Apache-2.0
+    licenseLink: https://raw.githubusercontent.com/k8up-io/k8up/refs/heads/master/LICENSE
   mirror.gcr.io/aquasec/trivy-operator:
     license: Apache-2.0
     licenseLink: https://github.com/aquasecurity/trivy-operator/blob/main/LICENSE
