@@ -1,5 +1,5 @@
 {{- define "t8s-cluster.clusterClass.infrastructureApiVersion" -}}
-infrastructure.cluster.x-k8s.io/v1beta1
+infrastructure.cluster.x-k8s.io/v1beta2
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.cloudName" -}}
