@@ -1133,7 +1133,8 @@
               },
               "required": [
                 "cloudflare"
-              ]
+              ],
+              "additionalProperties": false
             },
             {
               "type": "null"
@@ -1542,118 +1543,166 @@
         "resources": {
           "$ref": "#/$defs/resourceRequirements"
         },
-        "backupStorageLocations": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "properties": {
-              "provider": {
-                "type": "object",
-                "oneOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "minio": {
+        "provider": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "velero": {
+                  "type": "object",
+                  "properties": {
+                    "backupStorageLocations": {
+                      "type": "object",
+                      "additionalProperties": {
                         "type": "object",
-                        "oneOf": [
-                          {
-                            "required": [
-                              "accessKeyID",
-                              "secretAccessKey"
-                            ]
-                          },
-                          {
-                            "required": [
-                              "existingSecret"
-                            ]
-                          },
-                          {
-                            "not": {
-                              "anyOf": [
-                                {
-                                  "required": [
-                                    "accessKeyID"
-                                  ]
-                                },
-                                {
-                                  "required": [
-                                    "secretAccessKey"
-                                  ]
-                                },
-                                {
-                                  "required": [
-                                    "existingSecret"
-                                  ]
-                                }
-                              ]
-                            }
-                          }
-                        ],
                         "properties": {
-                          "accessKeyID": {
-                            "type": "string"
-                          },
-                          "secretAccessKey": {
-                            "type": "string"
-                          },
-                          "existingSecret": {
+                          "provider": {
                             "type": "object",
-                            "properties": {
-                              "name": {
-                                "type": "string"
-                              },
-                              "key": {
-                                "type": "string",
-                                "description": "The default is <$providerName-$name> (e.g. 'minio-prod')"
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "minio": {
+                                    "type": "object",
+                                    "oneOf": [
+                                      {
+                                        "required": [
+                                          "accessKeyID",
+                                          "secretAccessKey"
+                                        ]
+                                      },
+                                      {
+                                        "required": [
+                                          "existingSecret"
+                                        ]
+                                      },
+                                      {
+                                        "not": {
+                                          "anyOf": [
+                                            {
+                                              "required": [
+                                                "accessKeyID"
+                                              ]
+                                            },
+                                            {
+                                              "required": [
+                                                "secretAccessKey"
+                                              ]
+                                            },
+                                            {
+                                              "required": [
+                                                "existingSecret"
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ],
+                                    "properties": {
+                                      "accessKeyID": {
+                                        "type": "string"
+                                      },
+                                      "secretAccessKey": {
+                                        "type": "string"
+                                      },
+                                      "existingSecret": {
+                                        "type": "object",
+                                        "properties": {
+                                          "name": {
+                                            "type": "string"
+                                          },
+                                          "key": {
+                                            "type": "string",
+                                            "description": "The default is <$providerName-$name> (e.g. 'minio-prod')"
+                                          }
+                                        },
+                                        "required": [
+                                          "name"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      "url": {
+                                        "type": "string"
+                                      },
+                                      "region": {
+                                        "type": "string",
+                                        "default": "Region1"
+                                      },
+                                      "forcePathStyle": {
+                                        "type": "boolean",
+                                        "default": true
+                                      }
+                                    },
+                                    "required": [
+                                      "url"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                "additionalProperties": false
                               }
-                            },
-                            "required": [
-                              "name"
                             ],
-                            "additionalProperties": false
+                            "minProperties": 1,
+                            "maxProperties": 1
                           },
-                          "url": {
+                          "bucket": {
                             "type": "string"
                           },
-                          "region": {
-                            "type": "string",
-                            "default": "Region1"
-                          },
-                          "forcePathStyle": {
-                            "type": "boolean",
-                            "default": true
+                          "prefix": {
+                            "type": "string"
                           }
                         },
                         "required": [
-                          "url"
+                          "provider",
+                          "bucket"
                         ],
                         "additionalProperties": false
                       }
                     },
-                    "additionalProperties": false
-                  }
-                ],
-                "minProperties": 1,
-                "maxProperties": 1
+                    "defaultLocation": {
+                      "type": "string"
+                    }
+                  },
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "backupStorageLocations": {
+                          "minProperties": 1
+                        }
+                      },
+                      "required": [
+                        "defaultLocation"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "backupStorageLocations": {
+                          "maxProperties": 0
+                        }
+                      }
+                    }
+                  ],
+                  "additionalProperties": false
+                }
               },
-              "bucket": {
-                "type": "string"
-              },
-              "prefix": {
-                "type": "string"
-              }
+              "additionalProperties": false
             },
-            "required": [
-              "provider",
-              "bucket"
-            ],
-            "additionalProperties": false
-          }
+            {
+              "type": "object",
+              "properties": {
+                "k8up": {
+                  "type": "object",
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
-        "defaultLocation": {
-          "type": "string"
-        },
-        "nodeAgent": {
+        "runners": {
           "type": "object",
           "properties": {
             "resourcesPreset": {
@@ -1666,25 +1715,6 @@
           "additionalProperties": false
         }
       },
-      "oneOf": [
-        {
-          "properties": {
-            "backupStorageLocations": {
-              "minProperties": 1
-            }
-          },
-          "required": [
-            "defaultLocation"
-          ]
-        },
-        {
-          "properties": {
-            "backupStorageLocations": {
-              "maxProperties": 0
-            }
-          }
-        }
-      ],
       "additionalProperties": false
     },
     "kube-janitor": {

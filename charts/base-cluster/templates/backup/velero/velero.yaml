@@ -1,4 +1,4 @@
-{{- if .Values.backup.backupStorageLocations }}
+{{- if (.Values.backup.provider).velero }}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -55,20 +55,20 @@ spec:
     priorityClassName: system-cluster-critical
     deployNodeAgent: true # enable FSB
     nodeAgent:
-      resources: {{- include "common.resources" .Values.backup.nodeAgent | nindent 8 }}
+      resources: {{- include "common.resources" .Values.backup.runners | nindent 8 }}
       priorityClassName: system-cluster-critical
     configuration:
-      defaultBackupStorageLocation: {{ .Values.backup.defaultLocation | quote }}
-      backupStorageLocation: {{- range $name, $spec := .Values.backup.backupStorageLocations }}
-        {{- $providerName := include "base-cluster.backup.getProviderName" $spec.provider }}
+      defaultBackupStorageLocation: {{ .Values.backup.provider.velero.defaultLocation | quote }}
+      backupStorageLocation: {{- range $name, $spec := .Values.backup.provider.velero.backupStorageLocations }}
+        {{- $providerName := include "base-cluster.backup.velero.getProviderName" $spec.provider }}
         - name: {{ $name | quote }}
-          provider: {{ include "base-cluster.backup.mapProviderName" $providerName | quote }}
+          provider: {{ include "base-cluster.backup.velero.mapProviderName" $providerName | quote }}
           bucket: {{ $spec.bucket | quote }}
           {{- if $spec.prefix }}
           prefix: {{ $spec.prefix | quote }}
           {{- end }}
-          default: {{ eq $name $.Values.backup.defaultLocation }}
-          {{- $credentialType := include "base-cluster.backup.credentialType" $spec.provider }}
+          default: {{ eq $name $.Values.backup.provider.velero.defaultLocation }}
+          {{- $credentialType := include "base-cluster.backup.velero.credentialType" $spec.provider }}
           {{- if eq $credentialType "direct" }}
           credential:
             name: {{ printf "%s-velero-backuplocation-%s" (include "common.names.fullname" $) $name }}
@@ -105,5 +105,4 @@ spec:
             labels:
               severity: critical
               period: WorkingHours
-
 {{- end }}

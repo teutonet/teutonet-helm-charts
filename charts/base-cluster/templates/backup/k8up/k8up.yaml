@@ -1,0 +1,61 @@
+{{- if ne (.Values.backup.provider).k8up nil -}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: k8up
+  namespace: backup
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: backup
+spec:
+  chart:
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "k8up" "chart" "k8up" "context" $) | nindent 6 }}
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  {{- if .Values.monitoring.prometheus.enabled }}
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
+  {{- end }}
+  install:
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
+  values:
+    {{- with .Values.global.imageRegistry }}
+    image:
+      registry: {{ . }}
+    {{- end }}
+    podSecurityContext:
+      fsGroup: 1000
+      runAsUser: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+    securityContext:
+      readOnlyRootFilesystem: true
+      privileged: false
+      capabilities:
+        drop:
+          - ALL
+      allowPrivilegeEscalation: false
+      seccompProfile:
+        type: RuntimeDefault
+    resources: {{- include "common.resources" .Values.backup | nindent 6 }}
+    k8up:
+      globalResources: {{- include "common.resources" .Values.backup.runners | nindent 8 }}
+      skipWithoutAnnotation: true
+    priorityClassName: system-cluster-critical
+    {{- if .Values.monitoring.prometheus.enabled }}
+    metrics:
+      serviceMonitor:
+        additionalLabels:
+          monitoring/provisioned-by: base-cluster
+        enabled: true
+      prometheusRule:
+        createDefaultRules: true
+      grafanaDashboard:
+        enabled: true
+        additionalLabels:
+          grafana_dashboard: "1"
+    {{- end }}
+{{- end -}}

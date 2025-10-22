@@ -7,16 +7,18 @@ flux:
 kyverno:
   enabled: true
 backup:
-  defaultLocation: location
-  backupStorageLocations:
-    location:
-      provider:
-        minio:
-          url: https://minio.com
-          existingSecret:
-            name: secret
-      prefix: /prefix
-      bucket: bucket
+  provider:
+    velero:
+      defaultLocation: location
+      backupStorageLocations:
+        location:
+          provider:
+            minio:
+              url: https://minio.com
+              existingSecret:
+                name: secret
+          prefix: /prefix
+          bucket: bucket
 storage:
   readWriteMany:
     enabled: true

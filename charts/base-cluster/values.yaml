@@ -51,7 +51,7 @@ global:
         app.kubernetes.io/component: storage
         app.kubernetes.io/part-of: nfs-server-provisioner
     backup:
-      condition: "{{ not (empty .Values.backup.backupStorageLocations) }}"
+      condition: "{{ not (empty .Values.backup.provider) }}"
       additionalLabels:
         app.kubernetes.io/component: backup
   certificates:
@@ -183,6 +183,11 @@ global:
       charts:
         reflector: 9.1.22
       condition: '{{ include "base-cluster.reflector.enabled" (dict "context" .) }}'
+    k8up:
+      url: https://k8up-io.github.io/k8up
+      charts:
+        k8up: 4.8.6
+      condition: '{{ ne (.Values.backup.provider).k8up nil }}'
     vmware:
       url: https://vmware-tanzu.github.io/helm-charts
       charts:
@@ -452,7 +457,7 @@ rbac:
   accounts: {}
 
 backup:
-  backupStorageLocations: {}
+  provider: null
   resources:
     requests:
       cpu: 5m
@@ -460,7 +465,7 @@ backup:
     limits:
       cpu: 500m
       memory: 500Mi
-  nodeAgent:
+  runners:
     resources:
       requests:
         cpu: 5m
