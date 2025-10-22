@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.4.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.4.0...t8s-cluster-v9.4.1) (2025-10-22)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** fix replicas type checking ([#1754](https://github.com/teutonet/teutonet-helm-charts/issues/1754)) ([1b56411](https://github.com/teutonet/teutonet-helm-charts/commit/1b5641102c6671f6955c450bbde423a55b87bc0d))
+
 ## [9.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.3.1...t8s-cluster-v9.4.0) (2025-09-26)
 
 
