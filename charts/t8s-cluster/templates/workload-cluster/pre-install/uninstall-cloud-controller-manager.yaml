@@ -1,1 +1,0 @@
-{{ include "t8s-cluster.workload.uninstall-job" (dict "name" "cloud-controller-manager" "context" . "clusterResourceSet" "cloud-controller-manager") }}
