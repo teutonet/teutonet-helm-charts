@@ -22,8 +22,6 @@ docker.io:
   otel:
     opentelemetry-collector-contrib: ALL_TAGS
   postgres: ALL_TAGS
-  rancher:
-    kubectl: ALL_TAGS
   stellio: ALL_IMAGES
   traefik: ALL_TAGS
   velero: ALL_IMAGES
@@ -59,6 +57,7 @@ registry.k8s.io:
     external-dns: ALL_TAGS
   ingress-nginx: ALL_IMAGES
   kube-state-metrics: ALL_IMAGES
+  kubectl: ALL_TAGS
   metrics-server:
     metrics-server: ALL_TAGS
   provider-os: ALL_IMAGES

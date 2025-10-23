@@ -32,15 +32,11 @@ spec:
     test:
       image:
         registry: {{ include "base-cluster.defaultRegistry" (dict) }}
-    cleanupJobs:
-      admissionReports: &defaultImage
-        image:
-          registry: {{ include "base-cluster.defaultRegistry" (dict) }}
-      updateRequests: *defaultImage
-      ephemeralReports: *defaultImage
-      clusterEphemeralReports: *defaultImage
-      clusterAdmissionReports: *defaultImage
-    policyReportsCleanup: *defaultImage
+    policyReportsCleanup:
+      image:
+        registry: {{ .Values.global.imageRegistry | default .Values.global.kubectl.image.registry }}
+        repository: {{ .Values.global.kubectl.image.repository }}
+        tag: {{ .Values.global.kubectl.image.tag }}
     crds:
       migration:
         image:
@@ -51,12 +47,10 @@ spec:
       enabled: false
     webhooksCleanup:
       enable: true
-      {{- if not .Values.global.imageRegistry }}
       image:
         registry: {{ .Values.global.imageRegistry | default .Values.global.kubectl.image.registry }}
         repository: {{ .Values.global.kubectl.image.repository }}
         tag: {{ .Values.global.kubectl.image.tag }}
-      {{- end }}
     features:
       policyExceptions:
         enabled: true
