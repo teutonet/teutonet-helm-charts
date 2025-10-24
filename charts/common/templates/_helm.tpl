@@ -28,7 +28,7 @@ Returns a HelmRelease.spec.chart.spec for a given chart in a given repository.
         "sourceRef" (dict
           "kind" "HelmRepository"
           "name" (eq .prependReleaseName true | ternary (printf "%s-%s" .Release.Name .repo) .repo)
-          "namespace" .Release.Namespace
+          "namespace" (.repoNamespace | default .Release.Namespace)
         )
         "version" (include "common.helm.chartVersion" (dict "repo" .repo "chart" .chart "context" .context))
       )
@@ -40,7 +40,7 @@ Returns a HelmRelease.spec.chart.spec for a given chart in a given repository.
         "sourceRef" (dict
           "kind" "GitRepository"
           "name" (eq .prependReleaseName true | ternary (printf "%s-%s-%s" .Release.Name .repo .chart) (printf "%s-%s" .repo .chart))
-          "namespace" .Release.Namespace
+          "namespace" (.repoNamespace | default .Release.Namespace)
         )
         "reconcileStrategy" (.reconcileStrategy | default "Revision")
       )
