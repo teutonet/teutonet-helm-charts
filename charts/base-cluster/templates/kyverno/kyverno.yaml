@@ -64,8 +64,7 @@ spec:
     admissionController:
       replicas: 3
       {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "jaeger" "serviceProtocol" "grpc") | fromYaml -}}
-      {{- $telemetryEnabled := and $telemetryConf.enabled .Values.monitoring.prometheus.enabled -}}
-      {{- if $telemetryEnabled }}
+      {{- if $telemetryConf.enabled }}
       tracing: &tracingConfig
         enabled: true
         address: {{ $telemetryConf.host }}
@@ -73,17 +72,17 @@ spec:
       {{- end }}
     backgroundController:
       replicas: 2
-      {{- if $telemetryEnabled }}
+      {{- if $telemetryConf.enabled }}
       tracing: *tracingConfig
       {{- end }}
     reportsController:
       replicas: 2
-      {{- if $telemetryEnabled }}
+      {{- if $telemetryConf.enabled }}
       tracing: *tracingConfig
       {{- end }}
     cleanupController:
       replicas: 2
-      {{- if $telemetryEnabled }}
+      {{- if $telemetryConf.enabled }}
       tracing: *tracingConfig
       {{- end }}
     podDisruptionBudget:
