@@ -201,7 +201,7 @@ valkey:
   enabled: true
   image:
     repository: bitnamilegacy/valkey
-    tag: 7.2.5-debian-12-r9
+    tag: 7.2.5-debian-12-r9@sha256:4aac76c8627f3e8d1d7649b30272a962e4330f27151f25497a327065e682be36
   metrics:
     image:
       repository: bitnamilegacy/redis-exporter
