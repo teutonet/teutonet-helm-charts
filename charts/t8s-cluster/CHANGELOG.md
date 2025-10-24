@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.4.1...t8s-cluster-v9.5.0) (2025-10-24)
+
+
+### Features
+
+* **t8s-cluster/management-cluster:** add cluster-autoscaler deployment ([#1756](https://github.com/teutonet/teutonet-helm-charts/issues/1756)) ([5b6ead9](https://github.com/teutonet/teutonet-helm-charts/commit/5b6ead98ea783cff4b2e7bcdcb03e0a33b96d77a))
+
 ## [9.4.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.4.0...t8s-cluster-v9.4.1) (2025-10-22)
 
 
