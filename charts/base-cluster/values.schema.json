@@ -1692,6 +1692,11 @@
               "properties": {
                 "k8up": {
                   "type": "object",
+                  "properties": {
+                    "skipWithoutAnnotation": {
+                      "type": "boolean"
+                    }
+                  },
                   "additionalProperties": false
                 }
               },
