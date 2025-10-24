@@ -1,9 +1,0 @@
-apiVersion: audit.k8s.io/v1
-kind: Policy
-# Long-running requests like watches will not generate an audit event in RequestReceived.
-omitStages:
-  - "RequestReceived"
-rules:
-  - level: Metadata
-    verbs: [] # All verbs
-    resources: [] # All resources
