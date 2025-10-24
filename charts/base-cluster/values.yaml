@@ -366,9 +366,6 @@ descheduler:
           evictLocalStoragePods: true
           nodeFit: true
       - name: RemoveDuplicates
-      - name: RemovePodsHavingTooManyRestarts
-        args:
-          podRestartThreshold: 10
       - name: RemovePodsViolatingNodeAffinity
         args:
           nodeAffinityType:
