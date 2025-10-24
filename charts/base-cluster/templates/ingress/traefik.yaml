@@ -54,17 +54,19 @@ spec:
         loadBalancerIP: {{ .Values.ingress.IP | quote }}
         ipFamilyPolicy: PreferDualStack
       {{- end }}
+    ingressClass:
+      isDefaultClass: false
     gatewayClass:
       name: default
     gateway:
       enabled: false # Gateways need to be created for each set of hostnames, therefore having a clusterwide one makes no sense
     resources: {{- include "common.resources" .Values.ingress | nindent 8 }}
     metrics:
-      enabled: {{ .Values.monitoring.prometheus.enabled }}
-      serviceMonitor:
-        enabled: {{ .Values.monitoring.prometheus.enabled }}
-        additionalLabels:
-          monitoring/provisioned-by: base-cluster
+      prometheus:
+        serviceMonitor:
+          enabled: {{ .Values.monitoring.prometheus.enabled }}
+          additionalLabels:
+            monitoring/provisioned-by: base-cluster
     providers:
       kubernetesCRD:
         enabled: false
