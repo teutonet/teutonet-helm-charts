@@ -54,6 +54,8 @@ spec:
         loadBalancerIP: {{ .Values.ingress.IP | quote }}
         ipFamilyPolicy: PreferDualStack
       {{- end }}
+    ingressClass:
+      isDefaultClass: false
     gatewayClass:
       name: default
     gateway:
