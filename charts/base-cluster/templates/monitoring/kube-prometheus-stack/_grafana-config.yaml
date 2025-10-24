@@ -113,7 +113,7 @@ dashboards:
     #  revision: 7
     #  datasource: Prometheus
     kubernetes-cluster-monitoring-via-prometheus: &dashboard
-      datasource: Prometheus
+      datasource: prometheus
       gnetId: 315
       revision: 3
     namespace-view:
