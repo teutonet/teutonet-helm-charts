@@ -16,10 +16,10 @@ maintainers:
     name: tasches
 name: base-cluster
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.0.0/charts/base-cluster
+  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.0.1/charts/base-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster
 type: application
-version: 10.0.0
+version: 10.0.1
 annotations:
   artifacthub.io/images: |-
     - image: docker.io/bats/bats:v1.4.1                                                                                                #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Pod/kube-prometheus-stack-grafana-test.yaml
@@ -45,7 +45,6 @@ annotations:
     - image: docker.io/grafana/tempo:2.8.2                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/StatefulSet/grafana-tempo-ingester.yaml
     - image: docker.io/hjacobs/kube-janitor:23.7.0                                                                                     #  kube-system/HelmRelease/kube-janitor/kube-system/Deployment/kube-janitor.yaml
     - image: docker.io/memcached:1.6.33-alpine                                                                                         #  monitoring/HelmRelease/grafana-tempo/monitoring/StatefulSet/grafana-tempo-memcached.yaml
-    - image: docker.io/traefik:v3.4.3                                                                                                  #  ingress/HelmRelease/ingress-controller/ingress/Deployment/ingress-controller.yaml
     - image: docker.io/vladgh/gpg:1.3.6@sha256:703f8bb71adbab5ff131e1201c0fa302da53a232c35c55b9e599fc9552ef6b74                        #  default/Job/flux-generate-gpg-key-secret-main.yaml
     - image: ghcr.io/k8up-io/k8up:v2.13.1                                                                                              #  backup/HelmRelease/k8up/null/Deployment/k8up.yaml
     - image: ghcr.io/k8up-io/k8up:v2.13.1                                                                                              #  backup/HelmRelease/k8up/null/Job/k8up-cleanup.yaml

@@ -1,5 +1,15 @@
 # Changelog
 
+## [10.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.0.0...base-cluster-v10.0.1) (2025-10-27)
+
+
+### Bug Fixes
+
+* **base-cluster/descheduler:** don't remove pods with too many restarts ([#1744](https://github.com/teutonet/teutonet-helm-charts/issues/1744)) ([9c1ed51](https://github.com/teutonet/teutonet-helm-charts/commit/9c1ed51ef65d64dc1c61959901a2597981bdbd68))
+* **base-cluster/ingress:** add missing `prometheus` block 🙄 ([#1767](https://github.com/teutonet/teutonet-helm-charts/issues/1767)) ([a329e1a](https://github.com/teutonet/teutonet-helm-charts/commit/a329e1ad30c30f801c991c52c6e118e62577e887))
+* **base-cluster/loki:** adjust retention settings for loki logs ([#1745](https://github.com/teutonet/teutonet-helm-charts/issues/1745)) ([1985d34](https://github.com/teutonet/teutonet-helm-charts/commit/1985d3417efef4f97441b7ff6b3849a57ad42e3c))
+* **base-cluster/monitoring:** use the correct prometheus datasource id ([#1764](https://github.com/teutonet/teutonet-helm-charts/issues/1764)) ([511cc84](https://github.com/teutonet/teutonet-helm-charts/commit/511cc849824e5c6a90dc1e956e8b0ee4b80738e7))
+
 ## [10.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v9.4.0...base-cluster-v10.0.0) (2025-10-23)
 
 
