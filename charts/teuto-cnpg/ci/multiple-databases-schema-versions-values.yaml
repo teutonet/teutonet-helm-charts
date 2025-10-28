@@ -1,0 +1,23 @@
+roles:
+  - name: kruemel
+    ensure: present
+    login: false
+    superuser: false
+databases:
+  kuchen:
+    owner: pizza
+    extensions:
+      pgaudit: {}
+  torte:
+    owner: keks
+    extensions:
+      pgaudit:
+        version: 1.7.1
+        schema: torte
+    schemas:
+      bienenstich:
+        owner: krümel
+globalExtensions:
+  testTest:
+    version: 1.7.1
+    schema: torte
