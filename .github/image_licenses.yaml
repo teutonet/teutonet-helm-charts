@@ -92,6 +92,9 @@ licenses:
   docker.io/traefik:
     license: MIT
     licenseLink: https://raw.githubusercontent.com/traefik/traefik/refs/heads/master/LICENSE.md
+  docker.io/valkey/valkey:
+    license: BSD-3
+    licenseLink: https://github.com/valkey-io/valkey-release-automation/blob/main/LICENSE
   docker.io/velero/velero:
     license: Apache-2.0
     licenseLink: https://github.com/vmware-tanzu/velero-plugin-for-aws/blob/main/LICENSE

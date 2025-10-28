@@ -124,7 +124,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ printf "%s" (include "ckan.valkey.fullname" . ) }}
-                  key: valkey-password
+                  key: password
             - name: CKAN_REDIS_URL
               value: "redis://default:$(VALKEY_PASSWORD)@{{ printf "%s-%s" (include "ckan.valkey.fullname" . ) "headless" }}:{{ include "ckan.valkey.service.port" $}}/0"
             - name: DATAPUSHER_API_TOKEN
