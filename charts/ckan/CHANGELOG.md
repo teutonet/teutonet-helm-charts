@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.3.4...ckan-v1.4.0) (2025-10-29)
+
+
+### Features
+
+* **ckan:** change valkey chart ([#1769](https://github.com/teutonet/teutonet-helm-charts/issues/1769)) ([cf9590e](https://github.com/teutonet/teutonet-helm-charts/commit/cf9590ebced77d4768c0ff6d8e6a883ffd34ad8f))
+
 ## [1.3.4](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.3.3...ckan-v1.3.4) (2025-10-01)
 
 
