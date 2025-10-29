@@ -10,8 +10,8 @@ dependencies:
     version: 15.5.38
   - condition: valkey.enabled
     name: valkey
-    repository: oci://registry-1.docker.io/bitnamicharts
-    version: 3.0.16
+    repository: oci://registry-1.docker.io/cloudpirates
+    version: 0.8.0
   - condition: solr.enabled
     name: solr
     repository: oci://registry-1.docker.io/bitnamicharts

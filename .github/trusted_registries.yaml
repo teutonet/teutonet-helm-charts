@@ -24,6 +24,8 @@ docker.io:
   postgres: ALL_TAGS
   stellio: ALL_IMAGES
   traefik: ALL_TAGS
+  valkey:
+    valkey: ALL_TAGS
   velero: ALL_IMAGES
   vladgh:
     gpg: ALL_TAGS
