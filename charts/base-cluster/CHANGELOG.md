@@ -1,5 +1,17 @@
 # Changelog
 
+## [10.0.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.0.1...base-cluster-v10.0.2) (2025-10-31)
+
+
+### Bug Fixes
+
+* **base-cluster:** add missing value to template ([#1775](https://github.com/teutonet/teutonet-helm-charts/issues/1775)) ([870e7d1](https://github.com/teutonet/teutonet-helm-charts/commit/870e7d1db15976dd33754486768aeeba88db85d6))
+
+
+### Miscellaneous Chores
+
+* **base-cluster:** add loki retention value ([#1774](https://github.com/teutonet/teutonet-helm-charts/issues/1774)) ([de6b582](https://github.com/teutonet/teutonet-helm-charts/commit/de6b5825b1ffd6e2095fdc162d365aeb8c777864))
+
 ## [10.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.0.0...base-cluster-v10.0.1) (2025-10-27)
 
 
