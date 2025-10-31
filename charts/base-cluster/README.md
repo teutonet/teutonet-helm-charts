@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 10.0.2](https://img.shields.io/badge/Version-10.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 10.0.3](https://img.shields.io/badge/Version-10.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -246,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.0.2/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.0.3/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -2987,13 +2987,13 @@ must respect the following conditions
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                 | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
-| -------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| - [enabled](#monitoring_loki_enabled )                   | No      | boolean          | No         | -                                                                             | -                                                                 |
-| - [retention_period](#monitoring_loki_retention_period ) | No      | string           | No         | -                                                                             | Loki log retention period (e.g., 45d, 7d, 24h)                    |
-| - [persistence](#monitoring_loki_persistence )           | No      | object           | No         | -                                                                             | -                                                                 |
-| - [resourcesPreset](#monitoring_loki_resourcesPreset )   | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
-| - [resources](#monitoring_loki_resources )               | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
+| Property                                               | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
+| ------------------------------------------------------ | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| - [enabled](#monitoring_loki_enabled )                 | No      | boolean          | No         | -                                                                             | -                                                                 |
+| - [retentionPeriod](#monitoring_loki_retentionPeriod ) | No      | string           | No         | -                                                                             | Loki log retention period (e.g., 45d, 7d, 24h)                    |
+| - [persistence](#monitoring_loki_persistence )         | No      | object           | No         | -                                                                             | -                                                                 |
+| - [resourcesPreset](#monitoring_loki_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
+| - [resources](#monitoring_loki_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
 
 #### <a name="monitoring_loki_enabled"></a>4.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > enabled`
 
@@ -3001,7 +3001,7 @@ must respect the following conditions
 | -------- | --------- |
 | **Type** | `boolean` |
 
-#### <a name="monitoring_loki_retention_period"></a>4.5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > retention_period`
+#### <a name="monitoring_loki_retentionPeriod"></a>4.5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > loki > retentionPeriod`
 
 |          |          |
 | -------- | -------- |
