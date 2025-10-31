@@ -312,6 +312,7 @@ monitoring:
         size: 1Gi
   loki:
     enabled: true
+    retention_period: 45d
     persistence:
       storageClass: ""
       size: 10Gi
