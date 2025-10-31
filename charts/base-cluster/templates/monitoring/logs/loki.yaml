@@ -78,7 +78,7 @@ spec:
       commonConfig:
         replication_factor: 1
       limits_config:
-        retention_period: {{ .Values.monitoring.loki.retention_period }}
+        retention_period: {{ .Values.monitoring.loki.retentionPeriod }}
       compactor:
         retention_enabled: true
         delete_request_store: filesystem
