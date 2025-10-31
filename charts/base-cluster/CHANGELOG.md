@@ -1,5 +1,12 @@
 # Changelog
 
+## [10.0.3](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.0.2...base-cluster-v10.0.3) (2025-10-31)
+
+
+### Miscellaneous Chores
+
+* **base-cluster:** change value name to camel ([#1777](https://github.com/teutonet/teutonet-helm-charts/issues/1777)) ([b3bd6be](https://github.com/teutonet/teutonet-helm-charts/commit/b3bd6becaf6721b517bc1d6d192652b72dfc4571))
+
 ## [10.0.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.0.1...base-cluster-v10.0.2) (2025-10-31)
 
 
