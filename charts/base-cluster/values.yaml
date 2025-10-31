@@ -192,7 +192,7 @@ global:
       url: https://vmware-tanzu.github.io/helm-charts
       charts:
         velero: 7.2.2
-      condition: "{{ not (empty .Values.backup.backupStorageLocations) }}"
+      condition: '{{ ne (.Values.backup.provider).velero nil }}'
     kube-janitor:
       url: https://codeberg.org/hjacobs/kube-janitor
       charts:
