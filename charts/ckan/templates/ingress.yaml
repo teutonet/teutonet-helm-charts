@@ -36,7 +36,7 @@ spec:
       {{- if .Values.ckan.ingress.existingSecret }}
       secretName: {{ .Values.ckan.ingress.existingSecret }}
       {{- else }}
-      secretName: {{ printf "%s-tls" (tpl .Values.ckan.ingress.hostname .) | trunc 63 | trimSuffix "-" }}
+      secretName: {{ printf "%s-tls" (tpl .Values.ckan.ingress.hostname .) }}
       {{- end }}
   {{- end }}
 {{- end }}
