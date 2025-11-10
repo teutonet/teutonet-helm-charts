@@ -1,5 +1,5 @@
 {{ define "base-cluster.prometheus-stack.alertmanager.enabled" -}}
-  {{- not (empty .Values.monitoring.prometheus.alertmanager.receivers) -}}
+  {{- not (empty .Values.monitoring.prometheus.alertmanager.receivers) | ternary true "" -}}
 {{- end -}}
 
 {{- define "base-cluster.prometheus-stack.alertmanager.validateReceiverInRoute" -}}
