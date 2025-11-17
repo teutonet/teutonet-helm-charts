@@ -33,7 +33,7 @@ licenses:
     license: Apache-2.0
     licenseLink: https://zookeeper.apache.org/
   docker.io/busybox:
-    license: GPL-2.0
+    license: GPL-2.0-only
     licenseLink: http://www.busybox.net/license.html
   docker.io/ckan/ckan-base-datapusher:
     license: AGPL-3.0-only
@@ -60,16 +60,16 @@ licenses:
     license: Apache-2.0
     licenseLink: https://github.com/grafana/grafana-image-renderer/blob/master/LICENSE
   docker.io/grafana/loki:
-    license: AGPL-3.0
+    license: AGPL-3.0-only
     licenseLink: https://github.com/grafana/loki/blob/main/LICENSE
   docker.io/grafana/promtail:
-    license: AGPL-3.0
-    licenseLink: https://github.com/grafana/loki/blob/main/tools/LICENSE_APACHE2
+    license: AGPL-3.0-only
+    licenseLink: https://github.com/grafana/loki/blob/main/LICENSE
   docker.io/grafana/tempo:
     license: AGPL-3.0-only
     licenseLink: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/LICENSE
   docker.io/hjacobs/kube-janitor:
-    license: AGPL-3.0
+    license: GPL-3.0
     licenseLink: https://github.com/hjacobs/kube-janitor/blob/main/LICENSE
   docker.io/memcached:
     license: BSD-3
