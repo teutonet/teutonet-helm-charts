@@ -1,4 +1,4 @@
-{{- if eq (include "common.networkPolicy.type" .) "cilium" }}
+{{- if and (include "base-cluster.prometheus-stack.alertmanager.enabled" .) (eq (include "common.networkPolicy.type" .) "cilium") -}}
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
@@ -30,4 +30,4 @@ spec:
             - port: {{ $port | quote }}
       {{- end }}
     {{- end }}
-{{- end }}
+{{- end -}}
