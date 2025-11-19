@@ -100,6 +100,7 @@ spec:
         enabled: true
         whenScaled: Retain
         whenDeleted: Delete
+        enableStatefulSetRecreationForSizeChange: true
         size: {{ .Values.monitoring.loki.persistence.size }}
       resources: {{- include "common.resources" .Values.monitoring.loki | nindent 8 }}
     monitoring:
