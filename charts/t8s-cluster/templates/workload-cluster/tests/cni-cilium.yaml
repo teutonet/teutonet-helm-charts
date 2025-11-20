@@ -1,0 +1,73 @@
+{{- if and (eq (include "t8s-cluster.cni" .) "cilium") .Release.IsUpgrade false -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ printf "%s-cni" .Release.Name }}
+  namespace: {{ .Release.Namespace}}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: test
+spec:
+  template:
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsGroup: 1000
+        runAsUser: 1000
+        fsGroup: 1000
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      initContainers:
+        - name: test-kubeconfig
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.global.kubectl.image "global" .Values.global) }}
+          imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.kubectl.image }}
+          securityContext: &securityContext
+            readOnlyRootFilesystem: true
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts: &kubeconfigMount
+            - mountPath: /tmp/workload-kubeconfig
+              name: workload-kubeconfig
+              subPath: value
+          env: &kubeconfigEnv
+            - name: KUBECONFIG
+              value: /tmp/workload-kubeconfig
+          command:
+            - kubectl
+            - get
+            - pods
+            - -A
+        - name: connectivity-test
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.global.cilium.image "global" .Values.global) }}
+          imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.cilium.image }}
+          securityContext: *securityContext
+          volumeMounts: *kubeconfigMount
+          env: *kubeconfigEnv
+          command:
+            - cilium
+            - connectivity
+            - test
+            - --test-namespace=cilium-test
+      containers:
+        - name: delete-namespace
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.global.kubectl.image "global" .Values.global) }}
+          imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.kubectl.image }}
+          securityContext: *securityContext
+          volumeMounts: *kubeconfigMount
+          env: *kubeconfigEnv
+          command:
+            - kubectl
+            - delete
+            - namespace
+            - cilium-test-1
+      restartPolicy: Never
+      volumes:
+        - name: workload-kubeconfig
+          secret:
+            secretName: {{ .Release.Name }}-kubeconfig
+{{- end -}}
