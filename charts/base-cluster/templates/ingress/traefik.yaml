@@ -85,7 +85,8 @@ spec:
       otlp:
         enabled: true
         grpc:
-          endpoint: {{ $telemetryConf.endpoint }}
+          enabled: true
+          endpoint: {{ printf "%s:%d" $telemetryConf.host (int64 $telemetryConf.port) | quote }}
           {{- if $telemetryConf.insecure }}
           insecure: true
           {{- end }}

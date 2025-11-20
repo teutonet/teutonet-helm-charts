@@ -62,7 +62,7 @@ prometheusSpec:
   {{- if $telemetryConf.enabled }}
   tracingConfig:
     clientType: grpc
-    samplingFraction: "0.1"
+    samplingFraction: "1.0"
     insecure: true
     endpoint: {{ printf "%s:%d" $telemetryConf.host (int64 $telemetryConf.port) | quote }}
   {{- end }}

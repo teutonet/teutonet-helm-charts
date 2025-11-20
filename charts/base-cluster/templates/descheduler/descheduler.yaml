@@ -38,15 +38,15 @@ spec:
       additionalLabels:
         monitoring/provisioned-by: base-cluster
     {{- end }}
-    deschedulerPolicy: {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp") | fromYaml }}
-      {{- if and $telemetryConf.enabled .Values.monitoring.prometheus.enabled }}
-      tracing:
-        collectorEndpoint: {{ printf "%s:%d" $telemetryConf.host (int64 $telemetryConf.port) | quote }}
-        serviceName: descheduler
-        serviceNamespace: kube-system
-        sampleRate: 1.0
-        fallbackToNoOpProviderOnError: true
-      {{- end }}
+    {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp") | fromYaml }}
+    {{- if $telemetryConf.enabled }}
+    cmdOptions:
+      otel-collector-endpoint: {{ printf "%s:%d" $telemetryConf.host (int64 $telemetryConf.port) | quote }}
+      otel-service-name: descheduler
+      otel-trace-namespace: kube-system
+      otel-sample-rate: 1.0
+    {{- end }}
+    deschedulerPolicy:
       profiles:
         - name: default
           {{- toYaml .Values.descheduler.profile | nindent 10 }}
