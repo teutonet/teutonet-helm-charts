@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.5.0...common-v1.6.0) (2025-11-21)
+
+
+### Features
+
+* **common/helm:** add option to set namespace of HelmRepository ([#1757](https://github.com/teutonet/teutonet-helm-charts/issues/1757)) ([6efd87b](https://github.com/teutonet/teutonet-helm-charts/commit/6efd87b1cd1c032170e8d02138b007ee6c8c754c))
+
 ## [1.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.4.0...common-v1.5.0) (2025-06-06)
 
 
