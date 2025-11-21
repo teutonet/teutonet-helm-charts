@@ -144,7 +144,7 @@ global:
     nginx:
       url: https://kubernetes.github.io/ingress-nginx
       charts:
-        ingress-nginx: 4.12.3
+        ingress-nginx: 4.12.8
       condition: '{{ eq .Values.ingress.provider "nginx" }}'
     traefik:
       url: https://helm.traefik.io/traefik
