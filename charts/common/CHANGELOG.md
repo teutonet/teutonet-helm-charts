@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.7.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.6.0...common-v1.7.0) (2025-11-21)
+
+
+### Features
+
+* **common/helm:** add option to set namespace of HelmRepository ([#1757](https://github.com/teutonet/teutonet-helm-charts/issues/1757)) ([6efd87b](https://github.com/teutonet/teutonet-helm-charts/commit/6efd87b1cd1c032170e8d02138b007ee6c8c754c))
+* **common/images:** add template for pullPolicy ([#1381](https://github.com/teutonet/teutonet-helm-charts/issues/1381)) ([fac4246](https://github.com/teutonet/teutonet-helm-charts/commit/fac4246811afcf2afefab03bc9224a0a717ad75e))
+* **common/telemetry:** abstract telemetry config to allow typed usage ([#1346](https://github.com/teutonet/teutonet-helm-charts/issues/1346)) ([5e5742f](https://github.com/teutonet/teutonet-helm-charts/commit/5e5742f1991583e23229dcfdb163786122c4df31))
+* **common/telemetry:** add telemetry-collector as a generic service name ([#1432](https://github.com/teutonet/teutonet-helm-charts/issues/1432)) ([fdf3b21](https://github.com/teutonet/teutonet-helm-charts/commit/fdf3b21e793a8e3a37e132f9a1472ccb643a2d14))
+* **common:** add kube-apiserver networkpolicy helper ([#1413](https://github.com/teutonet/teutonet-helm-charts/issues/1413)) ([58ed072](https://github.com/teutonet/teutonet-helm-charts/commit/58ed0726018962632766d467bdb90e4f4e6b55a5))
+
+
+### Miscellaneous Chores
+
+* **common/dependencies:** update helm release common to v2.26.0 ([#1194](https://github.com/teutonet/teutonet-helm-charts/issues/1194)) ([ca037e5](https://github.com/teutonet/teutonet-helm-charts/commit/ca037e51815aee4f9f728becdb930a410331f76d))
+* **common/dependencies:** update helm release common to v2.27.0 ([#1389](https://github.com/teutonet/teutonet-helm-charts/issues/1389)) ([9e7587f](https://github.com/teutonet/teutonet-helm-charts/commit/9e7587f70bf05eced1d2cb0e5ac95ccc40dfd00a))
+* **common/docs:** set vim modeline ([#1273](https://github.com/teutonet/teutonet-helm-charts/issues/1273)) ([322db3f](https://github.com/teutonet/teutonet-helm-charts/commit/322db3f7e5a34ec69f5e749888e46905a16b7339))
+* **common:** add documentation about template usage ([#1426](https://github.com/teutonet/teutonet-helm-charts/issues/1426)) ([638add8](https://github.com/teutonet/teutonet-helm-charts/commit/638add81729bd169b3a35edfee1c68c6011c2be8))
+* **common:** formatting ([#1199](https://github.com/teutonet/teutonet-helm-charts/issues/1199)) ([99c18a3](https://github.com/teutonet/teutonet-helm-charts/commit/99c18a39c029484340a6240f4fa26db5c3feb18e))
+* **main:** [bot] release common:1.3.0 ([#1077](https://github.com/teutonet/teutonet-helm-charts/issues/1077)) ([ff40004](https://github.com/teutonet/teutonet-helm-charts/commit/ff4000493cb170424536b109928b7f93eb628f84))
+* **main:** [bot] release common:1.4.0 ([#1385](https://github.com/teutonet/teutonet-helm-charts/issues/1385)) ([cc9cc7f](https://github.com/teutonet/teutonet-helm-charts/commit/cc9cc7fcb5cf9f816fd4c5dd8faeae091af28bae))
+* **main:** [bot] release common:1.5.0 ([#1391](https://github.com/teutonet/teutonet-helm-charts/issues/1391)) ([036125b](https://github.com/teutonet/teutonet-helm-charts/commit/036125bcc16210cc52bce619b69ab2d23f3ad941))
+* **main:** [bot] release common:1.6.0 ([#1766](https://github.com/teutonet/teutonet-helm-charts/issues/1766)) ([f870cda](https://github.com/teutonet/teutonet-helm-charts/commit/f870cda53ebdddd7c543703d8d71edf093f48d18))
+
 ## [1.6.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.5.0...common-v1.6.0) (2025-11-21)
 
 
