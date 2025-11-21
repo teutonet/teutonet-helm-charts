@@ -1,7 +1,7 @@
 <!-- vim: set ft=markdown: -->
 # t8s-cluster
 
-![Version: 9.4.1](https://img.shields.io/badge/Version-9.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 9.5.0](https://img.shields.io/badge/Version-9.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -17,7 +17,7 @@ t8s-operator cluster with necessary addons
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.4.1/charts/t8s-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.5.0/charts/t8s-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster>
 
 ## Requirements
@@ -353,7 +353,7 @@ Must be one of:
 | Property                                                                      | Pattern | Type            | Deprecated | Definition                      | Title/Description                                                 |
 | ----------------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------------- | ----------------------------------------------------------------- |
 | - [hosted](#controlPlane_hosted )                                             | No      | boolean         | No         | -                               | Whether the control plane is hosted on the management cluster     |
-| + [flavor](#controlPlane_flavor )                                             | No      | string          | No         | -                               | -                                                                 |
+| - [flavor](#controlPlane_flavor )                                             | No      | string          | No         | -                               | -                                                                 |
 | - [singleNode](#controlPlane_singleNode )                                     | No      | boolean         | No         | -                               | -                                                                 |
 | - [additionalSecurityGroups](#controlPlane_additionalSecurityGroups )         | No      | array of string | No         | In #/$defs/securityGroups       | -                                                                 |
 | - [additionalSecurityGroupRules](#controlPlane_additionalSecurityGroupRules ) | No      | object          | No         | -                               | -                                                                 |
@@ -368,7 +368,7 @@ Must be one of:
 
 **Description:** Whether the control plane is hosted on the management cluster
 
-### <a name="controlPlane_flavor"></a>3.2. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > controlPlane > flavor`
+### <a name="controlPlane_flavor"></a>3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > flavor`
 
 |          |          |
 | -------- | -------- |
