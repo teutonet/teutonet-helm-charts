@@ -16,10 +16,10 @@ maintainers:
     name: tasches
 name: base-cluster
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.0.3/charts/base-cluster
+  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.1.0/charts/base-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster
 type: application
-version: 10.0.3
+version: 10.1.0
 annotations:
   artifacthub.io/images: |-
     - image: docker.io/bats/bats:v1.4.1                                                                                                #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Pod/kube-prometheus-stack-grafana-test.yaml
@@ -36,7 +36,7 @@ annotations:
     - image: docker.io/grafana/alloy:v1.10.0                                                                                           #  monitoring/HelmRelease/telemetry-collector/monitoring/DaemonSet/telemetry-collector.yaml
     - image: docker.io/grafana/grafana-image-renderer:3.12.6@sha256:07ee43cbdad94ea836fc13f9e8b628fa3eb282be5b07fe64fc7f06fbbba82854   #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana-image-renderer.yaml
     - image: docker.io/grafana/grafana:12.1.0                                                                                          #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana.yaml
-    - image: docker.io/grafana/loki:3.5.5                                                                                              #  monitoring/HelmRelease/loki/monitoring/StatefulSet/loki.yaml
+    - image: docker.io/grafana/loki:3.5.7                                                                                              #  monitoring/HelmRelease/loki/monitoring/StatefulSet/loki.yaml
     - image: docker.io/grafana/tempo:2.8.2                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-compactor.yaml
     - image: docker.io/grafana/tempo:2.8.2                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-distributor.yaml
     - image: docker.io/grafana/tempo:2.8.2                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-metrics-generator.yaml
