@@ -71,8 +71,7 @@ server = {{ printf "https://%s" .registry | quote }}
 {{- end -}}
 
 {{- define "t8s-cluster.featureGates" -}}
-{{/*  {{- (dict "SeccompDefault" (list "kubelet")) | toYaml -}}*/}}
-  {{- (dict) | toYaml -}}
+  {{- (dict "ImageVolume" (list "apiserver" "kubelet")) | toYaml -}}
 {{- end -}}
 
 {{- define  "t8s-cluster.featureGates.forComponent" -}}
@@ -193,6 +192,13 @@ admission-control-config.yaml
   {{- $args = set $args "enable-admission-plugins" (include "t8s-cluster.clusterClass.apiServer.admissionPlugins" (dict) | fromYamlArray | join ",") -}}
   {{- $args = set $args "event-ttl" "4h" -}}
   {{- $args = set $args "tls-cipher-suites" (include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) | fromYamlArray | join ",") -}}
+  {{- $featureFlags := list -}}
+  {{- range $featureFlag, $enabled := include "t8s-cluster.featureGates.forComponent" (dict "component" "apiserver") | fromYaml -}}
+    {{- $featureFlags = append $featureFlags (printf "%s=%t" $featureFlag $enabled) -}}
+  {{- end -}}
+  {{- if $featureFlags -}}
+    {{- $args = set $args "feature-gates" ($featureFlags | join ",") -}}
+  {{- end -}}
   {{- toYaml $args -}}
 {{- end }}
 
