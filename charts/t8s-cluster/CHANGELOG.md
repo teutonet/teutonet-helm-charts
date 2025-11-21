@@ -1,5 +1,14 @@
 # Changelog
 
+## [9.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.4.1...t8s-cluster-v9.5.0) (2025-11-21)
+
+
+### Features
+
+* **t8s-cluster/management-cluster:** add cluster-autoscaler deployment ([#1756](https://github.com/teutonet/teutonet-helm-charts/issues/1756)) ([5b6ead9](https://github.com/teutonet/teutonet-helm-charts/commit/5b6ead98ea783cff4b2e7bcdcb03e0a33b96d77a))
+* **t8s-cluster/management-cluster:** enable ImageVolume feature flag ([#1786](https://github.com/teutonet/teutonet-helm-charts/issues/1786)) ([9676ee0](https://github.com/teutonet/teutonet-helm-charts/commit/9676ee0b348a991883ebded4cad149df9234f16b))
+* **t8s-cluster/management-cluster:** switch to hcp ([#1759](https://github.com/teutonet/teutonet-helm-charts/issues/1759)) ([303b0b6](https://github.com/teutonet/teutonet-helm-charts/commit/303b0b6011555b24f31adadf3ac403b5f76a53de))
+
 ## [9.4.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.4.0...t8s-cluster-v9.4.1) (2025-10-22)
 
 
