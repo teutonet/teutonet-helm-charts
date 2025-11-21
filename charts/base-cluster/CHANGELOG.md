@@ -1,5 +1,23 @@
 # Changelog
 
+## [10.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.0.3...base-cluster-v10.1.0) (2025-11-21)
+
+
+### Features
+
+* **base-cluster/logging:** enable automatic resizing ([#1785](https://github.com/teutonet/teutonet-helm-charts/issues/1785)) ([167e5e0](https://github.com/teutonet/teutonet-helm-charts/commit/167e5e03ae4b857e398ef3aa100fcd24db506a0f))
+* **base-cluster/tracing:** add gateway to enable tail sampling ([#1736](https://github.com/teutonet/teutonet-helm-charts/issues/1736)) ([7c1bd9a](https://github.com/teutonet/teutonet-helm-charts/commit/7c1bd9a3504ea51cbdf8719298dacea3f9c41591))
+
+
+### Bug Fixes
+
+* **base-cluster/monitoring:** alertmanager condition ([#1781](https://github.com/teutonet/teutonet-helm-charts/issues/1781)) ([b6abed0](https://github.com/teutonet/teutonet-helm-charts/commit/b6abed0021bdfd788588e99a93f4fc7b4d5b07dd))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update helm release loki to v6.46.0 ([#1727](https://github.com/teutonet/teutonet-helm-charts/issues/1727)) ([ec1b906](https://github.com/teutonet/teutonet-helm-charts/commit/ec1b9065b421b69d456e2be86e560d93450f39ae))
+
 ## [10.0.3](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.0.2...base-cluster-v10.0.3) (2025-10-31)
 
 
