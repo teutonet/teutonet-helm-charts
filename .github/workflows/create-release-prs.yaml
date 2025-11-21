@@ -21,7 +21,7 @@ jobs:
           config-file: .github/release-please/config.json
           manifest-file: .github/release-please/manifest.json
         id: release-please
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         if: ${{ steps.release-please.outputs.prs_created == 'true' }}
       - name: Set PRs to auto-merge
         if: ${{ steps.release-please.outputs.prs_created == 'true' }}
