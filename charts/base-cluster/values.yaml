@@ -181,7 +181,7 @@ global:
     emberstack:
       url: https://emberstack.github.io/helm-charts
       charts:
-        reflector: 9.1.22
+        reflector: 9.1.39
       condition: '{{ include "base-cluster.reflector.enabled" (dict "context" .) }}'
     k8up:
       url: https://k8up-io.github.io/k8up
