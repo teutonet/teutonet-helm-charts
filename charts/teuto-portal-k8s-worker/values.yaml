@@ -24,7 +24,7 @@ worker:
   image:
     registry: registry-gitlab.teuto.net
     repository: 4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker
-    tag: 4.1.2@sha256:f7629b1f84ddd35016818ffa99d6617fd0af3dfb51dfbb44006893aad3f9a07d
+    tag: 4.1.3@sha256:1ca38465c01ef364416471e5560bfd45d10d83cb5874781bebcc4588eca1aa58
   database:
     credentials:
       secret:
