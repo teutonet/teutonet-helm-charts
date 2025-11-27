@@ -104,6 +104,16 @@ config:
             )
         )
       -}}
+    {{- else if eq $type "webhook" -}}
+      {{- $receivers = set $receivers $name (dict
+            "webhook_configs" (list
+              (dict
+                "url" $config.url
+                "send_resolved" (dig "sendResolved" false $config)
+              )
+            )
+        )
+      -}}
     {{- end -}}
   {{- end -}}
 
