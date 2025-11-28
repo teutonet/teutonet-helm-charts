@@ -145,9 +145,13 @@ server = {{ printf "https://%s" .registry | quote }}
 {{- end }}
 
 {{- define "t8s-cluster.clusterClass.args.controllerManager" -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- $args := include "t8s-cluster.clusterClass.args.shared" (dict) | fromYaml -}}
   {{- $args = mustMerge (include "t8s-cluster.clusterClass.args.sharedController" (dict "context" .context) | fromYaml) $args -}}
   {{- $args = set $args "terminated-pod-gc-threshold" "100" -}}
+  {{- if .Values.controlPlane.hosted -}}
+    {{- $args = set $args "allocate-node-cidrs" "true" -}}
+  {{- end }}
   {{- toYaml $args -}}
 {{- end }}
 

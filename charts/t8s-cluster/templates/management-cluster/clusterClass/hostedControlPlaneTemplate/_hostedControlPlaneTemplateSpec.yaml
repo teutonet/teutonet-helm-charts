@@ -65,6 +65,8 @@ deployment:
     args: {{- include "t8s-cluster.clusterClass.args.scheduler" (dict) | nindent 6 }}
     resources: {{- include "common.resources" .Values.controlPlane | nindent 6 }}
     replicas: 1
+kubeProxy:
+  disabled: {{ .Values.controlPlane.hosted }}
 gateway:
   namespace: capi-hosted-control-plane-system
   name: controlplane

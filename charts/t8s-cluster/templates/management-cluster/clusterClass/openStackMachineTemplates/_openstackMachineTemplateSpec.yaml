@@ -5,6 +5,11 @@ Here we are generating a hash suffix.
 {{- define "t8s-cluster.clusterClass.openStackMachineTemplate.spec" -}}
   {{- $_ := mustMerge . (pick .context "Values") -}}
 flavor: {{ eq .name "control-plane" | ternary .Values.controlPlane.flavor "compute-plane-placeholder" | required "flavor is required" }}
+  {{- if .Values.controlPlane.hosted }}
+ports:
+  - allowedAddressPairs:
+      - ipAddress: 10.0.0.0/16
+  {{- end }}
 image:
   filter:
     name: placeholder

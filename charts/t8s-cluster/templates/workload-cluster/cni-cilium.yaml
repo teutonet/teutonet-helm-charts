@@ -27,19 +27,45 @@ spec:
   values:
     nodePort:
       enabled: true
-    # enable eBPF based routing instead of iptables
+    {{- if .Values.controlPlane.hosted }}
     bpf:
-      masquerade: false # disable for now as this creates routing problems
+      masquerade: true
+      tproxy: true
+      enableTCX: true
+    endpointRoutes:
+      enabled: true
+    bandwidthManager:
+      enabled: true
     egressGateway:
-      enabled: false # disable for now as this depends on bpf.masquerade
-    # enable eBPF bases host routing
-    # currently not really possible with CAPI, as they don't support disabling the built-in kube-proxy
-    # kubeProxyReplacement: strict
+      enabled: true
+    # currently not really possible with kubeadmcontrolplane, as they don't support disabling the built-in kube-proxy
+    kubeProxyReplacement: true
+    ipam:
+      mode: kubernetes
+    routingMode: native
+    autoDirectNodeRoutes: true
+    directRoutingSkipUnreachable: true
+    localRedirectPolicies:
+      enabled: true
+    k8s:
+      requireIPv4PodCIDR: true
+      {{- $gateway := lookup "gateway.networking.k8s.io/v1" "Gateway" "capi-hosted-control-plane-system" "controlplane" -}}
+      {{- if not $gateway -}}
+        {{- fail "Hosted control plane Gateway 'controlplane' in namespace 'capi-hosted-control-plane-system' not found" -}}
+      {{- else }}
+    k8sServiceHost: {{ printf "%s.%s.%s" .Release.Name .Release.Namespace (replace "*." "" (index $gateway.spec.listeners 0).hostname) }}
+      {{- end }}
+    k8sServicePort: 443
+    ipv4NativeRoutingCIDR: 10.0.0.0/16 # default net, see hosted control plane controller
+    {{- end }}
 
     rollOutCiliumPods: true
     encryption:
       enabled: false
       nodeEncryption: false
+    envoy:
+      prometheus:
+        enabled: true
     hubble:
       metrics:
         enabled:
@@ -57,6 +83,12 @@ spec:
       ui:
         rollOutPods: true
         enabled: true
+      export:
+        static:
+          enabled: true
+          filePath: stdout
+          allowList:
+            - '{"verdict":["DROPPED","ERROR"]}'
     operator:
       rollOutPods: true
       prometheus:
