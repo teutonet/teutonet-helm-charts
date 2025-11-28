@@ -1,14 +1,16 @@
-{{- range $name, $config := .Values.global.helmRepositories }}
-{{- $create := true -}}
-{{- if $config.condition -}}
-  {{- $create = eq (include "common.tplvalues.render" (dict "value" $config.condition "context" (deepCopy $))) "true" -}}
-{{- end -}}
-{{- if $create -}}
+# just for artifacthub image resolving
+{{ if eq .Release.Namespace "default" -}}
+  {{- range $name, $config := .Values.global.helmRepositories -}}
+    {{- $create := true -}}
+    {{- if $config.condition -}}
+      {{- $create = eq (include "common.tplvalues.render" (dict "value" $config.condition "context" (deepCopy $))) "true" -}}
+    {{- end -}}
+    {{- if $create -}}
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: {{ printf "%s-%s" $.Release.Name $name | quote }}
-  namespace: {{ $.Release.Namespace }}
+  name: {{ $name | quote }}
+  namespace: flux-system
   labels: {{- include "common.labels.standard" $ | nindent 4 }}
 spec:
   interval: 5m
@@ -17,5 +19,6 @@ spec:
   type: oci
   {{- end }}
 ---
-{{ end -}}
-{{- end }}
+    {{ end -}}
+  {{- end }}
+{{- end -}}
