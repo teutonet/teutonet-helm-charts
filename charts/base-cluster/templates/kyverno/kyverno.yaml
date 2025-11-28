@@ -24,14 +24,17 @@ spec:
       # this is just to make pluto happy
       podDisruptionBudget: policy/v1
     {{- if .Values.global.imageRegistry }}
-    global: &registryImage
+    global:
       image:
         registry: {{ .Values.global.imageRegistry }}
-    test: *registryImage
+    test:
+      image:
+        registry: {{ printf "%s/curlimages" .Values.global.imageRegistry }}
     {{- else }}
     test:
       image:
-        registry: {{ include "base-cluster.defaultRegistry" (dict) }}
+        {{- $registry := include "base-cluster.defaultRegistry" (dict) }}
+        registry: {{ printf "%s/curlimages" $registry }}
     policyReportsCleanup:
       image:
         registry: {{ .Values.global.imageRegistry | default .Values.global.kubectl.image.registry }}
