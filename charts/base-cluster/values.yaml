@@ -334,6 +334,8 @@ monitoring:
       limits:
         cpu: 1
         memory: 128Mi
+    gateway:
+      resourcesPreset: small
   metricsServer:
     enabled: true
   securityScanning:
