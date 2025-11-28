@@ -16,10 +16,10 @@ maintainers:
     name: tasches
 name: base-cluster
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.0.3/charts/base-cluster
+  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.1.0/charts/base-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster
 type: application
-version: 10.0.3
+version: 10.1.0
 annotations:
   artifacthub.io/images: |-
     - image: docker.io/bats/bats:v1.4.1                                                                                                #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Pod/kube-prometheus-stack-grafana-test.yaml
@@ -28,23 +28,23 @@ annotations:
     - image: docker.io/busybox:1.35                                                                                                    #  kyverno/HelmRelease/kyverno/kyverno/Pod/kyverno-cleanup-controller-metrics.yaml
     - image: docker.io/busybox:1.35                                                                                                    #  kyverno/HelmRelease/kyverno/kyverno/Pod/kyverno-cleanup-controller-readiness.yaml
     - image: docker.io/busybox:1.35                                                                                                    #  kyverno/HelmRelease/kyverno/kyverno/Pod/kyverno-reports-controller-metrics.yaml
-    - image: docker.io/curlimages/curl:8.15.0@sha256:4026b29997dc7c823b51c164b71e2b51e0fd95cce4601f78202c513d97da2922                  #  default/Job/dead-mans-switch-registration.yaml
-    - image: docker.io/curlimages/curl:8.15.0@sha256:4026b29997dc7c823b51c164b71e2b51e0fd95cce4601f78202c513d97da2922                  #  monitoring/CronJob/dead-mans-switch.yaml
+    - image: docker.io/curlimages/curl:8.17.0@sha256:935d9100e9ba842cdb060de42472c7ca90cfe9a7c96e4dacb55e79e560b3ff40                  #  default/Job/dead-mans-switch-registration.yaml
+    - image: docker.io/curlimages/curl:8.17.0@sha256:935d9100e9ba842cdb060de42472c7ca90cfe9a7c96e4dacb55e79e560b3ff40                  #  monitoring/CronJob/dead-mans-switch.yaml
     - image: docker.io/curlimages/curl:8.9.1                                                                                           #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana.yaml
-    - image: docker.io/emberstack/kubernetes-reflector:9.1.22                                                                          #  kube-system/HelmRelease/reflector/kube-system/Deployment/reflector.yaml
-    - image: docker.io/fluxcd/flux-cli:v2.6.4@sha256:d6734ea180b0f5135e6a343482da1a669c526ef85525da53a6415c6a9f359861                  #  default/Job/flux-generate-ssh-key-secret-main.yaml
-    - image: docker.io/grafana/alloy:v1.10.0                                                                                           #  monitoring/HelmRelease/telemetry-collector/monitoring/DaemonSet/telemetry-collector.yaml
-    - image: docker.io/grafana/grafana-image-renderer:3.12.6@sha256:07ee43cbdad94ea836fc13f9e8b628fa3eb282be5b07fe64fc7f06fbbba82854   #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana-image-renderer.yaml
+    - image: docker.io/emberstack/kubernetes-reflector:9.1.40                                                                          #  kube-system/HelmRelease/reflector/kube-system/Deployment/reflector.yaml
+    - image: docker.io/fluxcd/flux-cli:v2.7.5@sha256:3a4f9b0a26c26db8193c476e0abe33c32187eae8ce7a0a604d38a51783544946                  #  default/Job/flux-generate-ssh-key-secret-main.yaml
+    - image: docker.io/grafana/alloy:v1.11.3                                                                                           #  monitoring/HelmRelease/telemetry-collector/monitoring/DaemonSet/telemetry-collector.yaml
+    - image: docker.io/grafana/grafana-image-renderer:3.12.9@sha256:6d8650aad54e3efcbe9992ca1bc06e1046c7c15567019d4d289273f60ef59656   #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana-image-renderer.yaml
     - image: docker.io/grafana/grafana:12.1.0                                                                                          #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana.yaml
-    - image: docker.io/grafana/loki:3.5.5                                                                                              #  monitoring/HelmRelease/loki/monitoring/StatefulSet/loki.yaml
-    - image: docker.io/grafana/tempo:2.8.2                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-compactor.yaml
-    - image: docker.io/grafana/tempo:2.8.2                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-distributor.yaml
-    - image: docker.io/grafana/tempo:2.8.2                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-metrics-generator.yaml
-    - image: docker.io/grafana/tempo:2.8.2                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-querier.yaml
-    - image: docker.io/grafana/tempo:2.8.2                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-query-frontend.yaml
-    - image: docker.io/grafana/tempo:2.8.2                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/StatefulSet/grafana-tempo-ingester.yaml
+    - image: docker.io/grafana/loki:3.5.7                                                                                              #  monitoring/HelmRelease/loki/monitoring/StatefulSet/loki.yaml
+    - image: docker.io/grafana/tempo:2.9.0                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-compactor.yaml
+    - image: docker.io/grafana/tempo:2.9.0                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-distributor.yaml
+    - image: docker.io/grafana/tempo:2.9.0                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-metrics-generator.yaml
+    - image: docker.io/grafana/tempo:2.9.0                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-querier.yaml
+    - image: docker.io/grafana/tempo:2.9.0                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-query-frontend.yaml
+    - image: docker.io/grafana/tempo:2.9.0                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/StatefulSet/grafana-tempo-ingester.yaml
     - image: docker.io/hjacobs/kube-janitor:23.7.0                                                                                     #  kube-system/HelmRelease/kube-janitor/kube-system/Deployment/kube-janitor.yaml
-    - image: docker.io/memcached:1.6.33-alpine                                                                                         #  monitoring/HelmRelease/grafana-tempo/monitoring/StatefulSet/grafana-tempo-memcached.yaml
+    - image: docker.io/memcached:1.6.39-alpine                                                                                         #  monitoring/HelmRelease/grafana-tempo/monitoring/StatefulSet/grafana-tempo-memcached.yaml
     - image: docker.io/velero/velero-plugin-for-aws:v1.7.0                                                                             #  backup/HelmRelease/velero/backup/Deployment/velero.yaml
     - image: docker.io/velero/velero:v1.14.1                                                                                           #  backup/HelmRelease/velero/backup/DaemonSet/node-agent.yaml
     - image: docker.io/velero/velero:v1.14.1                                                                                           #  backup/HelmRelease/velero/backup/Deployment/velero.yaml
@@ -52,7 +52,7 @@ annotations:
     - image: ghcr.io/k8up-io/k8up:v2.13.1                                                                                              #  backup/HelmRelease/k8up/null/Deployment/k8up.yaml
     - image: ghcr.io/k8up-io/k8up:v2.13.1                                                                                              #  backup/HelmRelease/k8up/null/Job/k8up-cleanup.yaml
     - image: ghcr.io/kyverno/kyverno-cli:v1.14.4                                                                                       #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-migrate-resources.yaml
-    - image: mirror.gcr.io/aquasec/trivy-operator:0.27.3                                                                               #  trivy/HelmRelease/trivy/trivy/Deployment/trivy-trivy-operator.yaml
+    - image: mirror.gcr.io/aquasec/trivy-operator:0.29.0                                                                               #  trivy/HelmRelease/trivy/trivy/Deployment/trivy-trivy-operator.yaml
     - image: quay.io/jetstack/cert-manager-cainjector:v1.17.2                                                                          #  cert-manager/HelmRelease/cert-manager/cert-manager/Deployment/cert-manager-cainjector.yaml
     - image: quay.io/jetstack/cert-manager-controller:v1.17.2                                                                          #  cert-manager/HelmRelease/cert-manager/cert-manager/Deployment/cert-manager.yaml
     - image: quay.io/jetstack/cert-manager-startupapicheck:v1.17.2                                                                     #  cert-manager/HelmRelease/cert-manager/cert-manager/Job/cert-manager-startupapicheck.yaml
@@ -68,8 +68,8 @@ annotations:
     - image: reg.kyverno.io/kyverno/kyverno:v1.14.4                                                                                    #  kyverno/HelmRelease/kyverno/kyverno/Deployment/kyverno-admission-controller.yaml
     - image: reg.kyverno.io/kyverno/kyvernopre:v1.14.4                                                                                 #  kyverno/HelmRelease/kyverno/kyverno/Deployment/kyverno-admission-controller.yaml
     - image: reg.kyverno.io/kyverno/reports-controller:v1.14.4                                                                         #  kyverno/HelmRelease/kyverno/kyverno/Deployment/kyverno-reports-controller.yaml
-    - image: registry.k8s.io/descheduler/descheduler:v0.33.0                                                                           #  kube-system/HelmRelease/descheduler/kube-system/Deployment/descheduler.yaml
-    - image: registry.k8s.io/external-dns/external-dns:v0.18.0                                                                         #  ingress/HelmRelease/external-dns/ingress/Deployment/external-dns.yaml
+    - image: registry.k8s.io/descheduler/descheduler:v0.34.0                                                                           #  kube-system/HelmRelease/descheduler/kube-system/Deployment/descheduler.yaml
+    - image: registry.k8s.io/external-dns/external-dns:v0.19.0                                                                         #  ingress/HelmRelease/external-dns/ingress/Deployment/external-dns.yaml
     - image: registry.k8s.io/ingress-nginx/controller:v1.12.3@sha256:ac444cd9515af325ba577b596fe4f27a34be1aa330538e8b317ad9d6c8fb94ee  #  ingress-nginx/HelmRelease/ingress-nginx/ingress-nginx/Deployment/ingress-nginx-controller.yaml
     - image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.6.0                                                                 #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Job/kube-prometheus-stack-admission-create.yaml
     - image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.6.0                                                                 #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Job/kube-prometheus-stack-admission-patch.yaml
@@ -80,5 +80,5 @@ annotations:
     - image: registry.k8s.io/kubectl:1.33.4@sha256:261a9ed843eb68e3d50da132245e2221d75ca19504130e47bd32788c0ff339a0                    #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-remove-configmap.yaml
     - image: registry.k8s.io/kubectl:1.33.4@sha256:261a9ed843eb68e3d50da132245e2221d75ca19504130e47bd32788c0ff339a0                    #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-scale-to-zero.yaml
     - image: registry.k8s.io/kubectl:v1.34.0                                                                                           #  backup/HelmRelease/velero/backup/Job/velero-cleanup-crds.yaml
-    - image: registry.k8s.io/metrics-server/metrics-server:v0.7.2                                                                      #  monitoring/HelmRelease/metrics-server/monitoring/Deployment/metrics-server.yaml
+    - image: registry.k8s.io/metrics-server/metrics-server:v0.8.0                                                                      #  monitoring/HelmRelease/metrics-server/monitoring/Deployment/metrics-server.yaml
     - image: registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8                                                                        #  nfs-server-provisioner/HelmRelease/nfs-server-provisioner/null/StatefulSet/nfs-server-provisioner.yaml
