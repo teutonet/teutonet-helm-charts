@@ -925,7 +925,11 @@
               "type": "string",
               "pattern": "[0-9]+(ms|s|m|h|d|w|y)",
               "description": "Loki log retention period (e.g., 45d, 7d, 24h)",
-              "examples": ["45d", "7d", "24h"]
+              "examples": [
+                "45d",
+                "7d",
+                "24h"
+              ]
             },
             "persistence": {
               "type": "object",
@@ -956,6 +960,18 @@
             },
             "resources": {
               "$ref": "#/$defs/resourceRequirements"
+            },
+            "gateway": {
+              "type": "object",
+              "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
             }
           },
           "additionalProperties": false
