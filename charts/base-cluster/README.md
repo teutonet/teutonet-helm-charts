@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 10.1.0](https://img.shields.io/badge/Version-10.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 10.1.1](https://img.shields.io/badge/Version-10.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -246,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.1.0/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.1.1/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -3084,6 +3084,7 @@ must respect the following conditions
 | ------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
 | - [resourcesPreset](#monitoring_alloy_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
 | - [resources](#monitoring_alloy_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
+| - [gateway](#monitoring_alloy_gateway )                 | No      | object           | No         | -                                                                             | -                                                                 |
 
 #### <a name="monitoring_alloy_resourcesPreset"></a>4.6.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > alloy > resourcesPreset`
 
@@ -3093,6 +3094,35 @@ must respect the following conditions
 | **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
 
 #### <a name="monitoring_alloy_resources"></a>4.6.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > alloy > resources`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
+
+**Description:** ResourceRequirements describes the compute resource requirements.
+
+#### <a name="monitoring_alloy_gateway"></a>4.6.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > alloy > gateway`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                        | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
+| --------------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| - [resourcesPreset](#monitoring_alloy_gateway_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
+| - [resources](#monitoring_alloy_gateway_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
+
+##### <a name="monitoring_alloy_gateway_resourcesPreset"></a>4.6.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > alloy > gateway > resourcesPreset`
+
+|                        |                                                                      |
+| ---------------------- | -------------------------------------------------------------------- |
+| **Type**               | `enum (of string)`                                                   |
+| **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
+
+##### <a name="monitoring_alloy_gateway_resources"></a>4.6.3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > alloy > gateway > resources`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |

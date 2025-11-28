@@ -1,5 +1,19 @@
 # Changelog
 
+## [10.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.1.0...base-cluster-v10.1.1) (2025-11-28)
+
+
+### Bug Fixes
+
+* **base-cluster/tracing:** use correct resources for tracing gateway ([#1832](https://github.com/teutonet/teutonet-helm-charts/issues/1832)) ([48c4fca](https://github.com/teutonet/teutonet-helm-charts/commit/48c4fca97048449a888987e9fb0986c1d5c17e44))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update helm release oauth2-proxy to v9 ([#1825](https://github.com/teutonet/teutonet-helm-charts/issues/1825)) ([b4f08bc](https://github.com/teutonet/teutonet-helm-charts/commit/b4f08bca7c9eba85124a2ac127d9f7db84577a68))
+* **base-cluster/dependencies:** update helm release reflector to v9.1.41 ([#1833](https://github.com/teutonet/teutonet-helm-charts/issues/1833)) ([a7b9805](https://github.com/teutonet/teutonet-helm-charts/commit/a7b98054ce2f469b60faef58e9ec164cd1e30598))
+* **base-cluster/dependencies:** update helm release traefik to v37 ([#1826](https://github.com/teutonet/teutonet-helm-charts/issues/1826)) ([fb514f3](https://github.com/teutonet/teutonet-helm-charts/commit/fb514f3a132f59c5d6911d2ca344ef4b38d01136))
+
 ## [10.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.0.3...base-cluster-v10.1.0) (2025-11-28)
 
 
