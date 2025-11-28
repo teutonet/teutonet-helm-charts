@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 10.1.1](https://img.shields.io/badge/Version-10.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 11.0.0](https://img.shields.io/badge/Version-11.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -23,7 +23,7 @@ The `.x.x` part of the versions can be left as is, helm uses that as a range. If
 git init
 
 # create empty cluster HelmRelease;
-flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 10.x.x > cluster.yaml
+flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 11.x.x > cluster.yaml
 
 # maybe use the following name for your cluster;
 kubectl get node -o jsonpath='{.items[0].metadata.annotations.cluster\.x-k8s\.io/cluster-name}'
@@ -50,7 +50,7 @@ helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io
 
 # manual initial installation of the chart, afterwards the chart takes over
 # after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
-helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 10.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
+helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 11.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
 
 # you can use this command to get the instructions again
 # e.g. when adding users, gitRepositories, ...
@@ -246,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.1.1/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v11.0.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
