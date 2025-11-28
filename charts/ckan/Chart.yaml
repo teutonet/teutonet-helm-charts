@@ -31,7 +31,7 @@ sources:
   - https://github.com/teutonet/teutonet-helm-charts/tree/ckan-v1.4.0/charts/ckan
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/ckan
 type: application
-version: 1.4.0
+version: 1.5.0
 annotations:
   artifacthub.io/image-licenses.docker.io/bitnami/valkey: Apache-2.0
   artifacthub.io/images: |-
