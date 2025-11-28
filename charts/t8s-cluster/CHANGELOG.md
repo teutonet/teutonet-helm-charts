@@ -1,5 +1,24 @@
 # Changelog
 
+## [9.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.4.1...t8s-cluster-v9.5.0) (2025-11-28)
+
+
+### Features
+
+* **t8s-cluster/cilium:** enable kubeProxy replacement ([#1815](https://github.com/teutonet/teutonet-helm-charts/issues/1815)) ([b3c412d](https://github.com/teutonet/teutonet-helm-charts/commit/b3c412dc4c3a0dac8ffd6bec60aa6fcc394dc0e4))
+* **t8s-cluster/management-cluster:** add cluster-autoscaler deployment ([#1756](https://github.com/teutonet/teutonet-helm-charts/issues/1756)) ([5b6ead9](https://github.com/teutonet/teutonet-helm-charts/commit/5b6ead98ea783cff4b2e7bcdcb03e0a33b96d77a))
+* **t8s-cluster/management-cluster:** enable ImageVolume feature flag ([#1786](https://github.com/teutonet/teutonet-helm-charts/issues/1786)) ([9676ee0](https://github.com/teutonet/teutonet-helm-charts/commit/9676ee0b348a991883ebded4cad149df9234f16b))
+* **t8s-cluster/management-cluster:** switch to hcp ([#1759](https://github.com/teutonet/teutonet-helm-charts/issues/1759)) ([303b0b6](https://github.com/teutonet/teutonet-helm-charts/commit/303b0b6011555b24f31adadf3ac403b5f76a53de))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update common docker tag to v1.6.0 ([#1811](https://github.com/teutonet/teutonet-helm-charts/issues/1811)) ([b3b4c94](https://github.com/teutonet/teutonet-helm-charts/commit/b3b4c9405affb11977afb3d4972b792c7fe989c4))
+* **t8s-cluster/dependencies:** update helm release openstack-cloud-controller-manager to v2.34.1 ([#1553](https://github.com/teutonet/teutonet-helm-charts/issues/1553)) ([e984d19](https://github.com/teutonet/teutonet-helm-charts/commit/e984d198e21b001d57c30544134a4072e93b5942))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.5.24 ([#1793](https://github.com/teutonet/teutonet-helm-charts/issues/1793)) ([a5098e3](https://github.com/teutonet/teutonet-helm-charts/commit/a5098e3efd54de0aae0f573b4a730eea110722e9))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.6.6 ([#1813](https://github.com/teutonet/teutonet-helm-charts/issues/1813)) ([e07ffa7](https://github.com/teutonet/teutonet-helm-charts/commit/e07ffa74c037590f57ab2a79f77196a8bbd30deb))
+* **t8s-cluster/flux:** use centralised HelmRepositories instead of per-instance ([#1758](https://github.com/teutonet/teutonet-helm-charts/issues/1758)) ([3deff65](https://github.com/teutonet/teutonet-helm-charts/commit/3deff6573f3415ba40bc54eee001b53a12c31962))
+
 ## [9.4.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.4.0...t8s-cluster-v9.4.1) (2025-10-22)
 
 
