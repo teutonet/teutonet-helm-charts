@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 10.0.3](https://img.shields.io/badge/Version-10.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 10.1.0](https://img.shields.io/badge/Version-10.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -246,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.0.3/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.1.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -255,7 +255,7 @@ Kubernetes: `>=1.27.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.5.0 |
+| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.6.0 |
 
 This helm chart requires [flux v2 to be installed](https://fluxcd.io/docs/installation),
 see [bootstrap](#cluster-bootstrap)
@@ -3246,13 +3246,13 @@ currencyEUR
 
 **Description:** The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>.
 
-| Property                                                                                               | Pattern | Type    | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                           |
-| ------------------------------------------------------------------------------------------------------ | ------- | ------- | ---------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| - [effect](#monitoring_securityScanning_nodeCollector_tolerations_items_effect )                       | No      | string  | No         | -          | Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.                                                                                                                                                             |
-| - [key](#monitoring_securityScanning_nodeCollector_tolerations_items_key )                             | No      | string  | No         | -          | Key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys.                                                                                                                               |
-| - [operator](#monitoring_securityScanning_nodeCollector_tolerations_items_operator )                   | No      | string  | No         | -          | Operator represents a key's relationship to the value. Valid operators are Exists and Equal. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category.                                                                                                 |
-| - [tolerationSeconds](#monitoring_securityScanning_nodeCollector_tolerations_items_tolerationSeconds ) | No      | integer | No         | -          | TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system. |
-| - [value](#monitoring_securityScanning_nodeCollector_tolerations_items_value )                         | No      | string  | No         | -          | Value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string.                                                                                                                                                                                  |
+| Property                                                                                               | Pattern | Type    | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------ | ------- | ------- | ---------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [effect](#monitoring_securityScanning_nodeCollector_tolerations_items_effect )                       | No      | string  | No         | -          | Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.                                                                                                                                                                        |
+| - [key](#monitoring_securityScanning_nodeCollector_tolerations_items_key )                             | No      | string  | No         | -          | Key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys.                                                                                                                                          |
+| - [operator](#monitoring_securityScanning_nodeCollector_tolerations_items_operator )                   | No      | string  | No         | -          | Operator represents a key's relationship to the value. Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category. Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators). |
+| - [tolerationSeconds](#monitoring_securityScanning_nodeCollector_tolerations_items_tolerationSeconds ) | No      | integer | No         | -          | TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.            |
+| - [value](#monitoring_securityScanning_nodeCollector_tolerations_items_value )                         | No      | string  | No         | -          | Value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string.                                                                                                                                                                                             |
 
 ###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_effect"></a>4.9.2.1.1.1. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > effect`
 
@@ -3276,7 +3276,7 @@ currencyEUR
 | -------- | -------- |
 | **Type** | `string` |
 
-**Description:** Operator represents a key's relationship to the value. Valid operators are Exists and Equal. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category.
+**Description:** Operator represents a key's relationship to the value. Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category. Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
 
 ###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_tolerationSeconds"></a>4.9.2.1.1.4. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > tolerationSeconds`
 
