@@ -9,28 +9,33 @@ rolloutBefore:
 kubeadmConfigSpec:
   clusterConfiguration:
     apiServer:
-      extraArgs: {{- include "t8s-cluster.clusterClass.args.apiServer" (dict "context" .) | nindent 8 }}
+      extraArgs: {{- toYaml (include "t8s-cluster.clusterClass.argsMapToArray" (dict "args" (include "t8s-cluster.clusterClass.args.apiServer" (dict "context" .) | fromYaml)) | fromYamlArray) | nindent 8 }}
       {{- $extraVolumes := list -}}
       {{- range $name, $file := mustMerge (include "t8s-cluster.clusterClass.apiServer.staticFiles" (dict) | fromYaml) (include "t8s-cluster.clusterClass.apiServer.dynamicFiles" (dict "context" .) | fromYaml) -}}
         {{- $extraVolumes = append $extraVolumes (dict "name" ($name | trimSuffix ".yaml" | replace "." "-") "hostPath" (get $file "path" ) "mountPath" (get $file "path") "readOnly" true) -}}
       {{- end }}
       extraVolumes: {{- toYaml $extraVolumes | nindent 8 }}
     controllerManager:
-      extraArgs: {{- include "t8s-cluster.clusterClass.args.controllerManager" (dict "context" .) | nindent 8 }}
+      extraArgs: {{- toYaml (include "t8s-cluster.clusterClass.argsMapToArray" (dict "args" (include "t8s-cluster.clusterClass.args.controllerManager" (dict "context" .) | fromYaml)) | fromYamlArray) | nindent 8 }}
     etcd:
       local:
         extraArgs:
-          listen-metrics-urls: http://0.0.0.0:2381
+          - name: listen-metrics-urls
+            value: http://0.0.0.0:2381
     scheduler:
-      extraArgs: {{- include "t8s-cluster.clusterClass.args.scheduler" (dict) | nindent 8 }}
+      extraArgs: {{- toYaml (include "t8s-cluster.clusterClass.argsMapToArray" (dict "args" (include "t8s-cluster.clusterClass.args.scheduler" (dict "context" .) | fromYaml)) | fromYamlArray) | nindent 8 }}
   files: {{- include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.files" . | nindent 4 }}
   initConfiguration: &configuration
     nodeRegistration:
-      kubeletExtraArgs: {{- include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict "context" .) | nindent 8 }}
+      kubeletExtraArgs: {{- toYaml (include "t8s-cluster.clusterClass.argsMapToArray" (dict "args" (include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict "context" .) | fromYaml)) | fromYamlArray) | nindent 8 }}
       imagePullSerial: false
     patches:
       directory: {{ include "t8s-cluster.patches.directory" (dict) }}
   joinConfiguration: *configuration
-  preKubeadmCommands: {{- include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.preKubeadmCommands" (dict "context" .) | nindent 4 }}
-  postKubeadmCommands: {{- include "t8s-cluster.clusterClass.postKubeadmCommands" (dict) | nindent 4 }}
+  {{- with include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.preKubeadmCommands" (dict "context" .) | fromYamlArray }}
+  preKubeadmCommands: {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with include "t8s-cluster.clusterClass.postKubeadmCommands" (dict) | fromYamlArray }}
+  postKubeadmCommands: {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end -}}
