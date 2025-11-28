@@ -155,7 +155,7 @@ global:
     kyverno:
       url: https://kyverno.github.io/kyverno
       charts:
-        kyverno: 3.4.4
+        kyverno: 3.4.6
         kyverno-policies: 3.4.4
       condition: "{{ .Values.kyverno.enabled }}"
     tetragon:
