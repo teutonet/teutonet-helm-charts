@@ -32,7 +32,9 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Conventional commit check
-        uses: cocogitto/cocogitto-action@c7a74f5406bab86da17da0f0e460a69f8219a68c # v3
+        uses: cocogitto/cocogitto-action@390bda87a19bf627e03ad075c67a11e9ddbb7547 # v4
+        with:
+          command: check
   validateTitle:
     if: ${{ !startsWith(github.head_ref, 'release-please--') }}
     name: Validate Title
@@ -45,9 +47,9 @@ jobs:
       PR_TITLE: ${{ github.event.pull_request.title }}
     steps:
       - name: Conventional commit check
-        uses: cocogitto/cocogitto-action@c7a74f5406bab86da17da0f0e460a69f8219a68c # v3
+        uses: cocogitto/cocogitto-action@390bda87a19bf627e03ad075c67a11e9ddbb7547 # v4
         with:
-          check: false
+          command: help # I just want to install cog...
       - name: Verify PR title is the first line of the first commit
         if: ${{ needs.getChangedChart.outputs.found == 'true' }}
         env:
