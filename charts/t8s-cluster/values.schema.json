@@ -6,28 +6,7 @@
     "global": {
       "properties": {
         "helmRepositories": {
-          "type": "object",
-          "description": "A map of helmRepositories to create, the key is the name",
-          "additionalProperties": {
-            "type": "object",
-            "properties": {
-              "url": {
-                "type": "string",
-                "pattern": "https://.+"
-              },
-              "charts": {
-                "type": "object",
-                "description": "Which charts are deployed in which version using this repo, used internally",
-                "additionalProperties": {
-                  "type": "string"
-                }
-              },
-              "condition": {
-                "$ref": "#/$defs/condition"
-              }
-            },
-            "additionalProperties": false
-          }
+          "$ref": "https://raw.githubusercontent.com/teutonet/teutonet-helm-charts/main/charts/common/values.schema.json#/$defs/helmRepositories"
         },
         "kubectl": {
           "type": "object",
