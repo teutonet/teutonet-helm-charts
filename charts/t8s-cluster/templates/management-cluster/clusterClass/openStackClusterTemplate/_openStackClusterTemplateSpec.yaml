@@ -107,8 +107,12 @@ identityRef:
       "description" ($securityGroupRule.description | default $name)
       "direction" "ingress"
       "etherType" "IPv4"
-      "protocol" (hasKey $securityGroupRule "protocol" | ternary $securityGroupRule.protocol "tcp")
     -}}
+    {{- if $securityGroupRule.protocol -}}
+      {{- $_securityGroupRule = set $_securityGroupRule "protocol" $securityGroupRule.protocol -}}
+    {{- else if not (hasKey $securityGroupRule "protocol") -}}
+      {{- $_securityGroupRule = set $_securityGroupRule "protocol" "tcp" -}}
+    {{- end -}}
     {{- if or (hasKey $securityGroupRule "port") (and (hasKey $securityGroupRule "portMin") (hasKey $securityGroupRule "portMax")) -}}
       {{- $_securityGroupRule = set $_securityGroupRule "portRangeMin" ($securityGroupRule.portMin | default $securityGroupRule.port) -}}
       {{- $_securityGroupRule = set $_securityGroupRule "portRangeMax" ($securityGroupRule.portMax | default $securityGroupRule.port) -}}
