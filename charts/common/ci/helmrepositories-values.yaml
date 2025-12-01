@@ -1,0 +1,68 @@
+global:
+  helmRepositories:
+    prometheus:
+      url: https://prometheus-community.github.io/helm-charts
+      charts:
+        kube-prometheus-stack: 79.9.0
+      type: helm
+      condition: "true"
+      interval: 5m
+    grafana:
+      url: https://grafana.github.io/helm-charts
+      charts:
+        loki: 6.46.0
+        alloy: 1.4.0
+        tempo-distributed: 1.56.2
+      condition: "{{ .Values.global.helmRepositories.prometheus.condition }}"
+    metrics-server:
+      url: https://kubernetes-sigs.github.io/metrics-server
+      charts:
+        metrics-server: 3.13.0
+      condition: "test"
+    descheduler:
+      url: https://kubernetes-sigs.github.io/descheduler
+      charts:
+        descheduler: 0.34.0
+        descheduler 0.31.x: 0.33.0
+        descheduler 0.30.x: 0.32.2
+        descheduler 0.29.x: 0.31.2
+        descheduler 0.28.x: 0.30.2
+        descheduler 0.27.x: 0.29.0
+      condition: descheduler
+    jetstack:
+      url: oci://quay.io/jetstack/charts
+      charts:
+        cert-manager: v1.17.2
+    nginx:
+      url: https://kubernetes.github.io/ingress-nginx
+      charts:
+        ingress-nginx: 4.12.3
+      condition: "false"
+    traefik:
+      url: https://helm.traefik.io/traefik
+      charts:
+        traefik: 37.4.0
+      condition: "true"
+    vmware:
+      url: https://vmware-tanzu.github.io/helm-charts
+      charts:
+        velero: 7.2.2
+      condition: "false"
+    kube-janitor:
+      url: https://codeberg.org/hjacobs/kube-janitor
+      charts:
+        kube-janitor:
+          path: unsupported/helm
+          tag: 23.7.0
+      type: git
+      condition: '{{ dig "kube-janitor" "enabled" false .Values.AsMap }}'
+    k-janitor:
+      url: https://codeberg.org/hjacobs/kube-janitor
+      charts:
+        kube-janitor:
+          path: unsupported/helm
+          tag: 23.7.0
+        test-extra:
+          path: /
+          tag: prod
+      type: git
