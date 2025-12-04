@@ -29,21 +29,6 @@ auth.generic_oauth:
 {{- end -}}
 
 {{- define "base-cluster.prometheus-stack.grafana.config" -}}
-imageRenderer:
-  enabled: true
-  {{- with .Values.global.imageRenderer.image }}
-  image:
-    registry: {{ $.Values.global.imageRegistry | default (printf .registry) }}
-    repository: {{ .repository }}
-    tag: {{ .tag }}
-  {{- end }}
-  automountServiceAccountToken: false
-  securityContext:
-    seccompProfile:
-      type: RuntimeDefault
-    runAsNonRoot: true
-    runAsUser: 472
-    runAsGroup: 472
 enabled: true
 securityContext:
   seccompProfile:
@@ -75,6 +60,21 @@ plugins:
   {{- toYaml . | nindent 2 }}
   {{- end }}
 defaultDashboardsEnabled: true
+imageRenderer:
+  enabled: true
+  {{- with .Values.global.imageRenderer.image }}
+  image:
+    registry: {{ $.Values.global.imageRegistry | default .registry }}
+    repository: {{ .repository }}
+    tag: {{ .tag }}
+  {{- end }}
+  automountServiceAccountToken: false
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
+    runAsNonRoot: true
+    runAsUser: 472
+    runAsGroup: 472
   {{- if .Values.monitoring.grafana.notifiers }}
 extraEmptyDirMounts:
   - name: provisioning-notifiers
