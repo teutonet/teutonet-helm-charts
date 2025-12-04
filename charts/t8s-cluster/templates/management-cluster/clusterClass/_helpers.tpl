@@ -71,13 +71,17 @@ server = {{ printf "https://%s" .registry | quote }}
 {{- end -}}
 
 {{- define "t8s-cluster.featureGates" -}}
-  {{- (dict "ImageVolume" (list "apiserver" "kubelet")) | toYaml -}}
+  {{- $featureGates := (dict "ImageVolume" (list "apiserver" "kubelet")) -}}
+  {{- if semverCompare ">=1.33.0" (include "t8s-cluster.k8s-version" .context) -}}
+    {{- $featureGates = set $featureGates "KubeletEnsureSecretPulledImages" (list "kubelet") -}}
+  {{- end -}}
+  {{- toYaml $featureGates -}}
 {{- end -}}
 
 {{- define  "t8s-cluster.featureGates.forComponent" -}}
   {{- $featureGates := dict -}}
   {{- $component := .component -}}
-  {{- range $featureGate, $components := include "t8s-cluster.featureGates" (dict) | fromYaml -}}
+  {{- range $featureGate, $components := include "t8s-cluster.featureGates" (dict "context" .context) | fromYaml -}}
     {{- if $components | has $component -}}
       {{- $featureGates = set $featureGates $featureGate true -}}
     {{- end -}}
@@ -156,8 +160,11 @@ server = {{ printf "https://%s" .registry | quote }}
 {{- end }}
 
 {{- define "t8s-cluster.clusterClass.apiServer.admissionPlugins" -}}
-  {{- $admissionPlugins := list "AlwaysPullImages" "NodeRestriction" "EventRateLimit" -}}
-  {{- toYaml $admissionPlugins -}}
+  {{- $admissionPlugins := list "NodeRestriction" "EventRateLimit" -}}
+  {{- if semverCompare "<1.33.0" (include "t8s-cluster.k8s-version" .context) -}}
+    {{- $admissionPlugins = append $admissionPlugins "AlwaysPullImages" -}}
+  {{- end -}}
+  {{- toYaml ($admissionPlugins | sortAlpha) -}}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.configPath" -}}
@@ -193,11 +200,11 @@ admission-control-config.yaml
   {{- $args = mustMerge (include "t8s-cluster.clusterClass.args.sharedController" (dict "context" .context) | fromYaml) $args -}}
   {{- $args = set $args "authentication-config" (include "t8s-cluster.clusterClass.apiServer.authenticationConfigPath" (dict)) -}}
   {{- $args = set $args "admission-control-config-file" (include "t8s-cluster.clusterClass.apiServer.admissionControlConfigPath" (dict)) -}}
-  {{- $args = set $args "enable-admission-plugins" (include "t8s-cluster.clusterClass.apiServer.admissionPlugins" (dict) | fromYamlArray | join ",") -}}
+  {{- $args = set $args "enable-admission-plugins" (include "t8s-cluster.clusterClass.apiServer.admissionPlugins" (dict "context" .context) | fromYamlArray | join ",") -}}
   {{- $args = set $args "event-ttl" "4h" -}}
   {{- $args = set $args "tls-cipher-suites" (include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) | fromYamlArray | join ",") -}}
   {{- $featureFlags := list -}}
-  {{- range $featureFlag, $enabled := include "t8s-cluster.featureGates.forComponent" (dict "component" "apiserver") | fromYaml -}}
+  {{- range $featureFlag, $enabled := include "t8s-cluster.featureGates.forComponent" (dict "component" "apiserver" "context" .context) | fromYaml -}}
     {{- $featureFlags = append $featureFlags (printf "%s=%t" $featureFlag $enabled) -}}
   {{- end -}}
   {{- if $featureFlags -}}
