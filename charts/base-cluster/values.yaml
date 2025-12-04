@@ -111,7 +111,7 @@ global:
       charts:
         loki: 6.46.0
         alloy: 1.4.0
-        tempo-distributed: 1.56.2
+        tempo-distributed: 1.57.0
       condition: "{{ and .Values.monitoring.prometheus.enabled (or .Values.monitoring.loki.enabled .Values.monitoring.tracing.enabled) }}"
     external-dns:
       url: https://kubernetes-sigs.github.io/external-dns
