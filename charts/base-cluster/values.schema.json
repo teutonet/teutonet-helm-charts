@@ -1266,6 +1266,7 @@
           "enum": [
             "nginx",
             "traefik",
+            "external",
             "none"
           ],
           "description": "Which ingress controller to use"
