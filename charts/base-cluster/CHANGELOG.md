@@ -1,5 +1,24 @@
 # Changelog
 
+## [10.1.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.1.1...base-cluster-v10.1.2) (2025-12-05)
+
+
+### Bug Fixes
+
+* **base-cluster/monitoring:** move imageRenderer config to correct place ([#1860](https://github.com/teutonet/teutonet-helm-charts/issues/1860)) ([5e2e9f5](https://github.com/teutonet/teutonet-helm-charts/commit/5e2e9f5a79b9360d97e9fbc8c1ea5ba96e6e2683))
+* **base-cluster:** set default value for kube-janitor to own repo ([#1857](https://github.com/teutonet/teutonet-helm-charts/issues/1857)) ([82b78e5](https://github.com/teutonet/teutonet-helm-charts/commit/82b78e50ca0c65915a5ec8c92270d531d0503552))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update docker.io/grafana/grafana-image-renderer docker tag to v5 ([#1822](https://github.com/teutonet/teutonet-helm-charts/issues/1822)) ([b9b16d7](https://github.com/teutonet/teutonet-helm-charts/commit/b9b16d7766cb191d2a952cf8484255d0da651ac7))
+* **base-cluster/dependencies:** update helm release alloy to v1.5.0 ([#1855](https://github.com/teutonet/teutonet-helm-charts/issues/1855)) ([a157f21](https://github.com/teutonet/teutonet-helm-charts/commit/a157f21312b003118a6cb9aa2baf95df710faf30))
+* **base-cluster/dependencies:** update helm release kube-prometheus-stack to v79.11.0 ([#1850](https://github.com/teutonet/teutonet-helm-charts/issues/1850)) ([94e7e00](https://github.com/teutonet/teutonet-helm-charts/commit/94e7e004fa133c6ecc52d509f4b584aaf6ba36d4))
+* **base-cluster/dependencies:** update helm release kube-prometheus-stack to v79.9.0 ([#1842](https://github.com/teutonet/teutonet-helm-charts/issues/1842)) ([a834e6d](https://github.com/teutonet/teutonet-helm-charts/commit/a834e6d2bc6e058708484a3d7ed9f2b337bb8586))
+* **base-cluster/dependencies:** update helm release reflector to v9.1.42 ([#1854](https://github.com/teutonet/teutonet-helm-charts/issues/1854)) ([b9a042a](https://github.com/teutonet/teutonet-helm-charts/commit/b9a042a452ec7ced9a99648dc59109f157ea668f))
+* **base-cluster/dependencies:** update helm release tempo-distributed to v1.57.0 ([#1849](https://github.com/teutonet/teutonet-helm-charts/issues/1849)) ([c78f7d2](https://github.com/teutonet/teutonet-helm-charts/commit/c78f7d20375a4ac5aca33696c023e8bf0ad0ab8e))
+* **base-cluster/ingress:** update gateway api ([#1843](https://github.com/teutonet/teutonet-helm-charts/issues/1843)) ([96a4b76](https://github.com/teutonet/teutonet-helm-charts/commit/96a4b765f7e4c595b302be182beef333a68dceb1))
+
 ## [10.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.1.0...base-cluster-v10.1.1) (2025-11-28)
 
 
