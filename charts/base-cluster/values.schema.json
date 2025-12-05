@@ -724,6 +724,7 @@
                       ],
                       "additionalProperties": false
                     }
+
                   },
                   "patternProperties": {
                     "^email($| \\S+$)": {
@@ -760,6 +761,26 @@
                         "port",
                         "username",
                         "password"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "telegram($| \\S+$)": {
+                      "type": "object",
+                      "description": "Sets up an telegram receiver, if suffixed with ` $name` `$name` will be used as the name of the receiver, otherwise it's `telegram`",
+                      "properties": {
+                        "bottoken": {
+                          "type": "string"
+                        },
+                        "chatid": {
+                          "type": "string"
+                        },
+                        "sendResolved": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "bottoken",
+                        "chatid"
                       ],
                       "additionalProperties": false
                     }
