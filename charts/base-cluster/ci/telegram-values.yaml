@@ -1,0 +1,10 @@
+monitoring:
+  prometheus:
+    alertmanager:
+      receivers:
+        telegram:
+          bottoken: TEST_TOKEN
+          chatid: TEST_ID
+        telegram 2:
+          bottoken: TEST_TOKEN_2
+          chatid: TEST_ID_2
