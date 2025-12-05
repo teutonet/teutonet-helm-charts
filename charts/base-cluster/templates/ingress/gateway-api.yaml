@@ -10,7 +10,7 @@ spec:
   interval: 1h
   url: https://github.com/kubernetes-sigs/gateway-api
   ref:
-    semver: "1.2.1"
+    semver: "1.4.0"
   ignore: |
     *
     !config/crd/experimental
