@@ -28,9 +28,29 @@ jobs:
           set -e
           set -o pipefail
 
+          fetch_check_runs() {
+            local all_runs='{"check_runs":[]}'
+            local page=1
+            while :; do
+              response=$(curl -fsSL \
+                -H "Accept: application/vnd.github+json" \
+                -H "Authorization: Bearer $GH_TOKEN" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${CHANGE_SHA}/check-runs?per_page=100&page=${page}")
+              runs=$(echo "$response" | jq '.check_runs')
+              if [[ "$(echo "$runs" | jq 'length')" -eq 0 ]]; then
+                break
+              fi
+              all_runs=$(echo "$all_runs" | jq --argjson new "$runs" '.check_runs += $new')
+              ((page++))
+            done
+            echo "$all_runs"
+          }
+
           # must work three times, (sometimes) the github API drops jobs that are currently restarting
+          # the runner image has jq 1.6 (from 2018!), therefore the weird `if` syntax
           tries=3; while (( --tries >= 0 )); do
-            while unfinished_jobs="$(gh api --paginate "/repos/${GITHUB_REPOSITORY}/commits/${CHANGE_SHA}/check-runs" | jq --arg ignored "$IGNORED_JOBS,$CURRENT_JOB" -e '.check_runs | map(select(([.conclusion] | inside(["success","skipped","cancelled"]) | not) and ([.name] | inside($ignored | split(",")) | not))) | map("\(.name) (\(.conclusion // .status))") | if length == 0 then halt_error(1) end')"; do
+            while unfinished_jobs="$(fetch_check_runs | jq --arg ignored "$IGNORED_JOBS,$CURRENT_JOB" -e '.check_runs | map(select(([.conclusion] | inside(["success","skipped","cancelled"]) | not) and ([.name] | inside($ignored | split(",")) | not))) | map("\(.name) (\(.conclusion // .status))") | if length == 0 then halt_error(1) else halt end')"; do
               echo "The following jobs are not (successfully) finished yet:" >&2
               echo "$unfinished_jobs" >&2
               sleep 5
