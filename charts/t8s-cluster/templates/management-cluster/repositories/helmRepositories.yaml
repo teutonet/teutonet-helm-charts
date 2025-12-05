@@ -1,24 +1,4 @@
 # just for artifacthub image resolving
 {{ if eq .Release.Namespace "default" -}}
-  {{- range $name, $config := .Values.global.helmRepositories -}}
-    {{- $create := true -}}
-    {{- if $config.condition -}}
-      {{- $create = eq (include "common.tplvalues.render" (dict "value" $config.condition "context" (deepCopy $))) "true" -}}
-    {{- end -}}
-    {{- if $create -}}
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: {{ $name | quote }}
-  namespace: flux-system
-  labels: {{- include "common.labels.standard" $ | nindent 4 }}
-spec:
-  interval: 5m
-  url: {{ $config.url }}
-  {{- if $config.url | hasPrefix "oci://" }}
-  type: oci
-  {{- end }}
----
-    {{ end -}}
-  {{- end }}
+  {{- include "common.helm.repositories" (dict "context" .) -}}
 {{- end -}}
