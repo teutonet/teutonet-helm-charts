@@ -1,5 +1,17 @@
 # Changelog
 
+## [10.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.1.2...base-cluster-v10.2.0) (2025-12-05)
+
+
+### Features
+
+* **base-cluster/flux:** use centralised helmRepositories template ([#1845](https://github.com/teutonet/teutonet-helm-charts/issues/1845)) ([60658ed](https://github.com/teutonet/teutonet-helm-charts/commit/60658eda1067f2cb01894ade1bdbf948c333e94d))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update helm release reflector to v9.1.44 ([#1861](https://github.com/teutonet/teutonet-helm-charts/issues/1861)) ([2cfe4e5](https://github.com/teutonet/teutonet-helm-charts/commit/2cfe4e50c116d39a6388323efd8b17b2900f5650))
+
 ## [10.1.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.1.1...base-cluster-v10.1.2) (2025-12-05)
 
 
