@@ -31,12 +31,14 @@ spec:
       namespace: monitoring
   {{- end }}
   values:
+    {{- with $.Values.global.imageRegistry }}
+    global:
+      imageRegistry: {{ . }}
+    {{- end }}
     fullnameOverride: {{ printf "cluster-%s-oauth-proxy" $host }}
     nameOverride: {{ printf "cluster-%s-oauth-proxy" $host }}
     redis:
       enabled: false
-    image:
-      repository: {{ printf "%s/oauth2-proxy/oauth2-proxy" ($.Values.global.imageRegistry | default "quay.io") }}
     ingress:
       enabled: true
       {{- if not $.Values.dns.provider }}
