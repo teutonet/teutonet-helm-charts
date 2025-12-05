@@ -16,6 +16,187 @@
         "2xlarge"
       ]
     },
+    "helmRepositories": {
+      "type": "object",
+      "description": "A map of helmRepositories to create, the key is the name",
+      "$defs": {
+        "interval": {
+          "type": "string",
+          "description": "The interval in which to update the repository",
+          "pattern": "[0-9]+[mhd]"
+        }
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "condition": {
+            "$ref": "#/$defs/condition"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "git",
+              "helm"
+            ],
+            "default": "helm"
+          }
+        },
+        "oneOf": [
+          {
+            "properties": {
+              "url": {
+                "type": "string",
+                "pattern": "(https|oci)://.+"
+              },
+              "condition": {
+                "$ref": "#/$defs/condition"
+              },
+              "interval": {
+                "$ref": "#/$defs/helmRepositories/$defs/interval"
+              },
+              "charts": {
+                "type": "object",
+                "description": "Which charts are deployed in which version using this repo, used internally",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "helm"
+                ]
+              }
+            },
+            "oneOf": [
+              {
+                "not": {
+                  "required": [
+                    "type"
+                  ]
+                }
+              },
+              {
+                "properties": {
+                  "type": {
+                    "const": "helm"
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              }
+            ],
+            "additionalProperties": false
+          },
+          {
+            "properties": {
+              "url": {
+                "type": "string",
+                "pattern": "https://.+"
+              },
+              "condition": {
+                "$ref": "#/$defs/condition"
+              },
+              "type": {
+                "const": "git"
+              },
+              "charts": {
+                "type": "object",
+                "description": "Which charts are deployed in which version using this repo, used internally",
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "branch": {
+                      "type": "string"
+                    },
+                    "commit": {
+                      "type": "string"
+                    },
+                    "semver": {
+                      "type": "string"
+                    },
+                    "tag": {
+                      "type": "string"
+                    },
+                    "path": {
+                      "type": "string",
+                      "description": "Path of the chart in the repository"
+                    },
+                    "interval": {
+                      "$ref": "#/$defs/helmRepositories/$defs/interval"
+                    }
+                  },
+                  "oneOf": [
+                    {
+                      "required": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "commit"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "semver"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "tag"
+                      ]
+                    },
+                    {
+                      "not": {
+                        "anyOf": [
+                          {
+                            "required": [
+                              "branch"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "commit"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "semver"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "tag"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        ],
+        "required": [
+          "url"
+        ]
+      }
+    },
+    "condition": {
+      "type": "string",
+      "description": "A condition with which to decide to include the resource. This will be templated. Must return the literal `true`, truthy values don't work.",
+      "examples": [
+        "{{ true }}",
+        "{{ eq .Values.global.baseDomain \"teuto.net\" }}"
+      ]
+    },
     "telemetry": {
       "type": "object",
       "properties": {
@@ -52,6 +233,24 @@
       "properties": {
         "telemetry": {
           "$ref": "#/$defs/telemetry"
+        },
+        "helmRepositories": {
+          "$ref": "#/$defs/helmRepositories"
+        },
+        "networkPolicy": {
+          "type": "object",
+          "description": "Default network policy settings for all charts",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "cilium",
+                "native",
+                "none"
+              ]
+            }
+          }
         }
       }
     },
