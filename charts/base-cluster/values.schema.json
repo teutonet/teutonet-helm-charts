@@ -612,8 +612,8 @@
                 },
                 "receivers": {
                   "type": "object",
-                  "properties": {
-                    "pagerduty": {
+                  "patternProperties": {
+                    "^pagerduty( \\S+)?$": {
                       "type": "object",
                       "properties": {
                         "url": {
@@ -630,10 +630,9 @@
                         "integrationKey"
                       ],
                       "additionalProperties": false
-                    }
-                  },
-                  "patternProperties": {
-                    "^email($| \\S+$)": {
+                    },
+                    "^email( \\S+)?$": {
+                      "type": "object",
                       "description": "Sets up an email receiver, if suffixed with ` $name` `$name` will be used as the name of the receiver, otherwise it's `email`",
                       "properties": {
                         "from": {
@@ -669,7 +668,28 @@
                         "password"
                       ],
                       "additionalProperties": false
-                    }
+                    },
+                    "^telegram( \\S+)?$": {
+                      "type": "object",
+                      "description": "Sets up a telegram receiver, if suffixed with ` $name` `$name` will be used as the name of the receiver, otherwise it's `telegram`",
+                      "properties": {
+                        "botToken": {
+                          "type": "string"
+                        },
+                        "chatid": {
+                          "type": "integer"
+                        },
+                        "sendResolved": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "chatid",
+                        "botToken"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "additionalProperties": false
                   }
                 },
                 "routes": {
