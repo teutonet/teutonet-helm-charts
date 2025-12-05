@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.7.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.6.0...common-v1.7.0) (2025-12-05)
+
+
+### Features
+
+* **common:** add statefulset recreate job ([#1723](https://github.com/teutonet/teutonet-helm-charts/issues/1723)) ([6f40d20](https://github.com/teutonet/teutonet-helm-charts/commit/6f40d204c3abb0ebea526ed2181786e10ad34b3a))
+
+
+### Miscellaneous Chores
+
+* **common/dependencies:** update helm release common to v2.31.4 ([#1532](https://github.com/teutonet/teutonet-helm-charts/issues/1532)) ([7df033f](https://github.com/teutonet/teutonet-helm-charts/commit/7df033f5fe807f53505f8fdf78ae1549632aac5e))
+
 ## [1.6.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.5.0...common-v1.6.0) (2025-11-21)
 
 
