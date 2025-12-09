@@ -1,0 +1,50 @@
+{{- define "common.helm.repositories" -}}
+  {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
+  {{- range $name, $config := .Values.global.helmRepositories }}
+    {{- $create := true -}}
+    {{- if $config.condition -}}
+      {{- $create = eq (include "common.tplvalues.render" (dict "value" $config.condition "context" (deepCopy $))) "true" -}}
+    {{- end -}}
+    {{- if $create -}}
+      {{- if eq ($config.type | default "helm") "helm" }}
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  interval: {{ $config.interval | default "5m" }}
+  url: {{ $config.url }}
+  {{- if $config.url | hasPrefix "oci://" }}
+  type: oci
+  {{- end }}
+---
+      {{- else -}}
+        {{- range $chartName, $chartConfig := $config.charts }}
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: {{ printf "%s-%s" $name $chartName | quote }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  interval: {{ $chartConfig.interval | default "5m" }}
+  url: {{ $config.url }}
+  {{- $refOptions := (list "branch" "commit" "semver" "tag") -}}
+  {{- $ref := (list nil) | first -}}
+  {{- range $refName := $refOptions -}}
+    {{- $value := dig $refName nil $chartConfig -}}
+    {{- if $value -}}
+      {{- $ref = dict $refName $value -}}
+    {{- end -}}
+  {{- end }}
+  {{- if $ref }}
+  ref: {{- toYaml $ref | nindent 4 }}
+  {{- end }}
+---
+        {{ end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
