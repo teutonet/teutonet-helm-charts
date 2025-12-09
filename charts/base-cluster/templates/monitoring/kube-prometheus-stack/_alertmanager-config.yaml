@@ -83,6 +83,17 @@ config:
             )
         )
       -}}
+    {{- else if eq $type "telegram" -}}
+      {{- $receivers = set $receivers $name (dict
+            "telegram_configs" (list
+              (dict
+                "bot_token" $config.bottoken
+                "chat_id" $config.chatid
+                "send_resolved" (dig "sendResolved" false $config)
+              )
+            )
+        )
+      -}}
     {{- end -}}
   {{- end -}}
   {{- $receiversList := list -}}
