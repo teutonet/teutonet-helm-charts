@@ -1,6 +1,6 @@
 {{- define "t8s-cluster.clusterClass.bootstrapConfigTemplate" -}}
   {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
-apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta2
 kind: KubeadmConfigTemplate
 metadata:
   name: {{ printf "%s-%s-compute-plane" .Release.Name (.gpu | ternary "gpu" "standard") }}
