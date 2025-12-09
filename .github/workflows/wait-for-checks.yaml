@@ -48,9 +48,8 @@ jobs:
           }
 
           # must work three times, (sometimes) the github API drops jobs that are currently restarting
-          # the runner image has jq 1.6 (from 2018!), therefore the weird `if` syntax
           tries=3; while (( --tries >= 0 )); do
-            while unfinished_jobs="$(fetch_check_runs | jq --arg ignored "$IGNORED_JOBS,$CURRENT_JOB" -e '.check_runs | map(select(([.conclusion] | inside(["success","skipped","cancelled"]) | not) and ([.name] | inside($ignored | split(",")) | not))) | map("\(.name) (\(.conclusion // .status))") | if length == 0 then halt_error(1) else halt end')"; do
+            while unfinished_jobs="$(fetch_check_runs | jq --arg ignored "$IGNORED_JOBS,$CURRENT_JOB" -e '.check_runs | map(select(([.conclusion] | inside(["success","skipped","cancelled"]) | not) and ([.name] | inside($ignored | split(",")) | not))) | map("\(.name) (\(.conclusion // .status))") | if length == 0 then halt_error(1) end')"; do
               echo "The following jobs are not (successfully) finished yet:" >&2
               echo "$unfinished_jobs" >&2
               sleep 5
