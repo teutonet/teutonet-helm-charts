@@ -871,30 +871,24 @@
             "enabled": {
               "type": "boolean"
             },
-            "ingester": {
+            "resourcesPreset": {
+              "$ref": "#/$defs/resourcesPreset"
+            },
+            "resources": {
+              "$ref": "#/$defs/resourceRequirements"
+            },
+            "persistence": {
               "type": "object",
               "properties": {
-                "resourcesPreset": {
-                  "$ref": "#/$defs/resourcesPreset"
-                },
-                "resources": {
-                  "$ref": "#/$defs/resourceRequirements"
-                },
-                "persistence": {
-                  "type": "object",
-                  "properties": {
-                    "size": {
-                      "$ref": "#/$defs/quantity"
-                    }
-                  },
-                  "additionalProperties": false
+                "size": {
+                  "$ref": "#/$defs/quantity"
                 }
               },
               "additionalProperties": false
             }
-          }
-        },
-        "additionalProperties": false
+          },
+          "additionalProperties": false
+        }
       },
       "additionalProperties": false
     },

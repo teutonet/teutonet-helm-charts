@@ -393,4 +393,26 @@ ingress:
   provider: nginx
 ```
 
+### 8.x.x -> 9.0.0
+
+This release adds the capability to configure alertmanager to push it's alerts
+to multiple receivers, including email.
+
+To migrate to this new version you have to remove `.monitoring.prometheus.alertmanager.receivers.pagerduty.enabled`
+
+### 9.x.x -> 10.0.0
+
+This release adds support for [k8up](https://k8up.io) as a backup provider.
+
+If you are using velero, you need to migrate to using `.backup.provider.velero`.
+
+### 10.x.x -> 11.0.0
+
+This release fixes the grafana tempo deployment compaction / retention.
+
+For this we switched from the distributed deployment to the single binary deployment.
+
+Because of this you need to migrate to the `.monitoring.tracing.<field>` instead
+of `.monitoring.tracing.ingester.<field>`
+
 {{ .Files.Get "values.md"  }}

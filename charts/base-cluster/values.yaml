@@ -111,7 +111,7 @@ global:
       charts:
         loki: 6.46.0
         alloy: 1.5.0
-        tempo-distributed: 1.57.0
+        tempo: 1.24.1
       condition: "{{ and .Values.monitoring.prometheus.enabled (or .Values.monitoring.loki.enabled .Values.monitoring.tracing.enabled) }}"
     external-dns:
       url: https://kubernetes-sigs.github.io/external-dns
@@ -347,11 +347,10 @@ monitoring:
           effect: NoSchedule
   tracing:
     enabled: false
-    ingester:
-      resourcesPreset: small
-      resources: {}
-      persistence:
-        size: 10Gi
+    resourcesPreset: small
+    resources: {}
+    persistence:
+      size: 10Gi
 
 descheduler:
   enabled: true

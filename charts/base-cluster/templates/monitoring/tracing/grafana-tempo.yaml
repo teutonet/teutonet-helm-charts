@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/part-of: monitoring
 spec:
   chart:
-    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "grafana" "chart" "tempo-distributed" "context" $) | nindent 6 }}
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "grafana" "chart" "tempo" "context" $) | nindent 6 }}
   interval: 1h
   driftDetection:
     mode: enabled
@@ -17,43 +17,43 @@ spec:
     - name: kube-prometheus-stack
       namespace: monitoring
   values:
-    {{- if .Values.global.imageRegistry }}
-    global:
-      image:
-        registry: {{ $.Values.global.imageRegistry }}
-    {{- end }}
-    ingester: {{- include "common.resourcesWithPreset" .Values.monitoring.tracing.ingester | nindent 6 }}
-      persistentVolumeClaimRetentionPolicy:
-        enabled: true
-        whenDeleted: Delete
-        whenScaled: Retain
-      replicas: &replicas 1
-      config:
-        replication_factor: *replicas
-      persistence:
-        enabled: true
-        size: {{ .Values.monitoring.tracing.ingester.persistence.size }}
     tempo:
+      {{- with .Values.global.imageRegistry }}
+      registry: {{ . }}
+      {{- end }}
+      resources: {{- include "common.resources" .Values.monitoring.tracing.resources | nindent 8 }}
       securityContext:
         privileged: false
         seLinuxOptions: {}
         seccompProfile:
           type: RuntimeDefault
-      podSecurityContext:
-        fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups: []
-        sysctls: []
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: "0.0.0.0:4317"
+      reportingEnabled: false
+
+    persistentVolumeClaimRetentionPolicy:
+      enabled: true
+      whenDeleted: Delete
+      whenScaled: Retain
+    replicas: 1
+    retention: 48h
+    persistence:
+      enabled: true
+      size: {{ .Values.monitoring.tracing.persistence.size }}
+    securityContext:
+      fsGroupChangePolicy: OnRootMismatch
+      supplementalGroups: []
+      sysctls: []
     metricsGenerator:
       enabled: true
-    traces:
-      otlp:
-        grpc:
-          enabled: true
-    metaMonitoring:
-      serviceMonitor:
-        enabled: true
-        labels:
-          monitoring/provisioned-by: base-cluster
+      remoteWriteUrl: "http://kube-prometheus-stack-prometheus:9090/api/v1/write"
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        monitoring/provisioned-by: base-cluster
 ---
 apiVersion: v1
 kind: ConfigMap
