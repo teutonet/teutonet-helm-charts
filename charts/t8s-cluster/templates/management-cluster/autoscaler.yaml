@@ -23,12 +23,9 @@ spec:
     cloudProvider: clusterapi
     # workload-management
     clusterAPIMode: kubeconfig-incluster
-    clusterAPIConfigMapsNamespace: {{ .Release.Namespace }}
     clusterAPIKubeconfigSecret: {{ .Release.Name }}-kubeconfig
     extraArgs:
       scale-down-utilization-threshold: 0.8
-      leader-elect-resource-name: {{ .Release.Name }}-cluster-autoscaler
-      status-config-map-name: {{ .Release.Name }}-cluster-autoscaler
     serviceMonitor:
       enabled: true
       namespace: {{ .Release.Namespace }}
