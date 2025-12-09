@@ -244,7 +244,9 @@ monitoring:
     config: {}
     sidecar:
       resourcesPreset: nano
-      resources: {}
+      resources:
+        limits:
+          memory: 256Mi
   storageCostAnalysis:
     currency: currencyEUR
     period: Day
