@@ -34,6 +34,10 @@ jobs:
         chart: ${{ fromJson(needs.getChangedCharts.outputs.charts) }}
     steps:
       - run: pip install yq
+      - name: Conventional commit check
+        uses: cocogitto/cocogitto-action@390bda87a19bf627e03ad075c67a11e9ddbb7547 # v4
+        with:
+          command: help # I just want to install cog...
       - name: Verify readme is updated on major update
         env:
           GH_TOKEN: ${{ github.token }}
