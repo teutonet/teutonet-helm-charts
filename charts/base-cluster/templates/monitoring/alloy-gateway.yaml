@@ -98,7 +98,7 @@ spec:
 
           otelcol.exporter.otlp "tempo" {
             client {
-              endpoint = "grafana-tempo-distributor:4317"
+              endpoint = "grafana-tempo:4317"
 
               tls {
                 insecure = true
