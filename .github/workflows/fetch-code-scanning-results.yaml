@@ -16,7 +16,7 @@ jobs:
         id: fetch-alerts
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
-          GH_REPO: ${{ github.repository }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           set -e
@@ -24,7 +24,7 @@ jobs:
 
           # Fetch all code scanning alerts
           echo "Fetching code scanning alerts..."
-          gh api --paginate "/repos/${GH_REPO}/code-scanning/alerts" > all_alerts.json
+          gh api --paginate "/repos/${GITHUB_REPOSITORY}/code-scanning/alerts" > all_alerts.json
 
           # Separate open and closed alerts
           jq '[.[] | select(.state == "open")]' all_alerts.json > open_alerts.json
