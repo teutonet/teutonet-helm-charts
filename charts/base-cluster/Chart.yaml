@@ -19,7 +19,7 @@ sources:
   - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.1.2/charts/base-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster
 type: application
-version: 10.1.2
+version: 11.0.0
 annotations:
   artifacthub.io/images: |-
     - image: docker.io/bats/bats:v1.4.1                                                                                                #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Pod/kube-prometheus-stack-grafana-test.yaml
