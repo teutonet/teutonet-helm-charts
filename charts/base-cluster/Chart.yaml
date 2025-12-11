@@ -16,10 +16,10 @@ maintainers:
     name: tasches
 name: base-cluster
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.1.2/charts/base-cluster
+  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v11.0.0/charts/base-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster
 type: application
-version: 10.1.2
+version: 11.0.0
 annotations:
   artifacthub.io/images: |-
     - image: docker.io/bats/bats:v1.4.1                                                                                                #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Pod/kube-prometheus-stack-grafana-test.yaml
@@ -31,20 +31,15 @@ annotations:
     - image: docker.io/curlimages/curl:8.17.0@sha256:935d9100e9ba842cdb060de42472c7ca90cfe9a7c96e4dacb55e79e560b3ff40                  #  default/Job/dead-mans-switch-registration.yaml
     - image: docker.io/curlimages/curl:8.17.0@sha256:935d9100e9ba842cdb060de42472c7ca90cfe9a7c96e4dacb55e79e560b3ff40                  #  monitoring/CronJob/dead-mans-switch.yaml
     - image: docker.io/curlimages/curl:8.9.1                                                                                           #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana.yaml
-    - image: docker.io/emberstack/kubernetes-reflector:9.1.42                                                                          #  kube-system/HelmRelease/reflector/kube-system/Deployment/reflector.yaml
+    - image: docker.io/emberstack/kubernetes-reflector:9.1.44                                                                          #  kube-system/HelmRelease/reflector/kube-system/Deployment/reflector.yaml
     - image: docker.io/fluxcd/flux-cli:v2.7.5@sha256:3a4f9b0a26c26db8193c476e0abe33c32187eae8ce7a0a604d38a51783544946                  #  default/Job/flux-generate-ssh-key-secret-main.yaml
     - image: docker.io/grafana/alloy:v1.12.0                                                                                           #  monitoring/HelmRelease/telemetry-collector/monitoring/DaemonSet/telemetry-collector.yaml
     - image: docker.io/grafana/alloy:v1.12.0                                                                                           #  monitoring/HelmRelease/telemetry-gateway/monitoring/Deployment/telemetry-gateway.yaml
     - image: docker.io/grafana/grafana-image-renderer:v5.0.11@sha256:863feccac48648f13a948140ca9e954a687bb6c87b58b3246236d25065d2146f  #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana-image-renderer.yaml
     - image: docker.io/grafana/grafana:12.3.0                                                                                          #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana.yaml
     - image: docker.io/grafana/loki:3.5.7                                                                                              #  monitoring/HelmRelease/loki/monitoring/StatefulSet/loki.yaml
-    - image: docker.io/grafana/tempo:2.9.0                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-compactor.yaml
-    - image: docker.io/grafana/tempo:2.9.0                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-distributor.yaml
-    - image: docker.io/grafana/tempo:2.9.0                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-metrics-generator.yaml
-    - image: docker.io/grafana/tempo:2.9.0                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-querier.yaml
-    - image: docker.io/grafana/tempo:2.9.0                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/Deployment/grafana-tempo-query-frontend.yaml
-    - image: docker.io/grafana/tempo:2.9.0                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/StatefulSet/grafana-tempo-ingester.yaml
-    - image: docker.io/memcached:1.6.39-alpine                                                                                         #  monitoring/HelmRelease/grafana-tempo/monitoring/StatefulSet/grafana-tempo-memcached.yaml
+    - image: docker.io/grafana/tempo:2.9.0                                                                                             #  monitoring/HelmRelease/grafana-tempo/monitoring/StatefulSet/grafana-tempo.yaml
+    - image: docker.io/hjacobs/kube-janitor:23.7.0                                                                                     #  kube-system/HelmRelease/kube-janitor/kube-system/Deployment/kube-janitor.yaml
     - image: docker.io/velero/velero-plugin-for-aws:v1.7.0                                                                             #  backup/HelmRelease/velero/backup/Deployment/velero.yaml
     - image: docker.io/velero/velero:v1.14.1                                                                                           #  backup/HelmRelease/velero/backup/DaemonSet/node-agent.yaml
     - image: docker.io/velero/velero:v1.14.1                                                                                           #  backup/HelmRelease/velero/backup/Deployment/velero.yaml

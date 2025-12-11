@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 10.1.2](https://img.shields.io/badge/Version-10.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 11.0.0](https://img.shields.io/badge/Version-11.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -23,7 +23,7 @@ The `.x.x` part of the versions can be left as is, helm uses that as a range. If
 git init
 
 # create empty cluster HelmRelease;
-flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 10.x.x > cluster.yaml
+flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 11.x.x > cluster.yaml
 
 # maybe use the following name for your cluster;
 kubectl get node -o jsonpath='{.items[0].metadata.annotations.cluster\.x-k8s\.io/cluster-name}'
@@ -50,7 +50,7 @@ helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io
 
 # manual initial installation of the chart, afterwards the chart takes over
 # after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
-helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 10.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
+helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 11.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
 
 # you can use this command to get the instructions again
 # e.g. when adding users, gitRepositories, ...
@@ -246,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v10.1.2/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v11.0.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -255,7 +255,7 @@ Kubernetes: `>=1.27.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.6.0 |
+| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.7.0 |
 
 This helm chart requires [flux v2 to be installed](https://fluxcd.io/docs/installation),
 see [bootstrap](#cluster-bootstrap)
@@ -403,6 +403,28 @@ ingress:
   provider: nginx
 ```
 
+### 8.x.x -> 9.0.0
+
+This release adds the capability to configure alertmanager to push it's alerts
+to multiple receivers, including email.
+
+To migrate to this new version you have to remove `.monitoring.prometheus.alertmanager.receivers.pagerduty.enabled`
+
+### 9.x.x -> 10.0.0
+
+This release adds support for [k8up](https://k8up.io) as a backup provider.
+
+If you are using velero, you need to migrate to using `.backup.provider.velero`.
+
+### 10.x.x -> 11.0.0
+
+This release fixes the grafana tempo deployment compaction / retention.
+
+For this we switched from the distributed deployment to the single binary deployment.
+
+Because of this you need to migrate to the `.monitoring.tracing.<field>` instead
+of `.monitoring.tracing.ingester.<field>`
+
 # base cluster configuration
 
 **Title:** base cluster configuration
@@ -438,25 +460,25 @@ ingress:
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-| Property                                                  | Pattern | Type             | Deprecated | Definition              | Title/Description                                                                                                                                                                             |
-| --------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| - [serviceLevelAgreement](#global_serviceLevelAgreement ) | No      | enum (of string) | No         | -                       | The ServiceLevelAgreement with teutonet, will be applied to all alerts as label \`teutosla\`                                                                                                  |
-| - [clusterName](#global_clusterName )                     | No      | string           | No         | -                       | The name of the cluster, used as subdomain under \`baseDomain\` and as label \`cluster\` on all alerts                                                                                        |
-| - [baseDomain](#global_baseDomain )                       | No      | string           | No         | -                       | The base domain to be used for cluster ingress                                                                                                                                                |
-| - [imageRegistry](#global_imageRegistry )                 | No      | string           | No         | -                       | The global container image proxy, e.g. [Nexus](https://artifacthub.io/packages/helm/sonatype/nexus-repository-manager), this needs to support various registries                              |
-| - [imageCredentials](#global_imageCredentials )           | No      | object           | No         | -                       | A map of credentials to be created and synced into namespaces, the key is the secret name                                                                                                     |
-| - [kubectl](#global_kubectl )                             | No      | object           | No         | -                       | Image with \`kubectl\` binary                                                                                                                                                                 |
-| - [curl](#global_curl )                                   | No      | object           | No         | -                       | Image with \`curl\` binary                                                                                                                                                                    |
-| - [flux](#global_flux )                                   | No      | object           | No         | -                       | Image with \`flux\` binary                                                                                                                                                                    |
-| - [gpg](#global_gpg )                                     | No      | object           | No         | -                       | Image with \`gpg\` binary                                                                                                                                                                     |
-| - [imageRenderer](#global_imageRenderer )                 | No      | object           | No         | -                       | -                                                                                                                                                                                             |
-| - [networkPolicy](#global_networkPolicy )                 | No      | object           | No         | -                       | -                                                                                                                                                                                             |
-| - [helmRepositories](#global_helmRepositories )           | No      | object           | No         | -                       | A map of helmRepositories to create, the key is the name                                                                                                                                      |
-| - [certificates](#global_certificates )                   | No      | object           | No         | -                       | A map of cert-manager certificates to create and sync its secrets into namespaces, the key is the name, therefore the secret name will be \`$key\`-certificate                                |
-| - [storageClass](#global_storageClass )                   | No      | string           | No         | In #/$defs/storageClass | The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd)                                                                              |
-| - [namespaces](#global_namespaces )                       | No      | object           | No         | -                       | Namespaces to create. AND *delete* if removed. These will also be the only ones, including the builtin namespaces, for which alerts will be sent if \`monitoring.monitorAllNamespaces=false\` |
-| - [priorityClasses](#global_priorityClasses )             | No      | object           | No         | -                       | -                                                                                                                                                                                             |
-| - [authentication](#global_authentication )               | No      | object           | No         | -                       | -                                                                                                                                                                                             |
+| Property                                                  | Pattern | Type             | Deprecated | Definition                                                                                                                       | Title/Description                                                                                                                                                                             |
+| --------------------------------------------------------- | ------- | ---------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [serviceLevelAgreement](#global_serviceLevelAgreement ) | No      | enum (of string) | No         | -                                                                                                                                | The ServiceLevelAgreement with teutonet, will be applied to all alerts as label \`teutosla\`                                                                                                  |
+| - [clusterName](#global_clusterName )                     | No      | string           | No         | -                                                                                                                                | The name of the cluster, used as subdomain under \`baseDomain\` and as label \`cluster\` on all alerts                                                                                        |
+| - [baseDomain](#global_baseDomain )                       | No      | string           | No         | -                                                                                                                                | The base domain to be used for cluster ingress                                                                                                                                                |
+| - [imageRegistry](#global_imageRegistry )                 | No      | string           | No         | -                                                                                                                                | The global container image proxy, e.g. [Nexus](https://artifacthub.io/packages/helm/sonatype/nexus-repository-manager), this needs to support various registries                              |
+| - [imageCredentials](#global_imageCredentials )           | No      | object           | No         | -                                                                                                                                | A map of credentials to be created and synced into namespaces, the key is the secret name                                                                                                     |
+| - [kubectl](#global_kubectl )                             | No      | object           | No         | -                                                                                                                                | Image with \`kubectl\` binary                                                                                                                                                                 |
+| - [curl](#global_curl )                                   | No      | object           | No         | -                                                                                                                                | Image with \`curl\` binary                                                                                                                                                                    |
+| - [flux](#global_flux )                                   | No      | object           | No         | -                                                                                                                                | Image with \`flux\` binary                                                                                                                                                                    |
+| - [gpg](#global_gpg )                                     | No      | object           | No         | -                                                                                                                                | Image with \`gpg\` binary                                                                                                                                                                     |
+| - [imageRenderer](#global_imageRenderer )                 | No      | object           | No         | -                                                                                                                                | -                                                                                                                                                                                             |
+| - [networkPolicy](#global_networkPolicy )                 | No      | object           | No         | -                                                                                                                                | -                                                                                                                                                                                             |
+| - [helmRepositories](#global_helmRepositories )           | No      | object           | No         | In https://raw.githubusercontent.com/teutonet/teutonet-helm-charts/main/charts/common/values.schema.json#/$defs/helmRepositories | A map of helmRepositories to create, the key is the name                                                                                                                                      |
+| - [certificates](#global_certificates )                   | No      | object           | No         | -                                                                                                                                | A map of cert-manager certificates to create and sync its secrets into namespaces, the key is the name, therefore the secret name will be \`$key\`-certificate                                |
+| - [storageClass](#global_storageClass )                   | No      | string           | No         | In #/$defs/storageClass                                                                                                          | The storageClass to use for persistence, e.g. for prometheus, otherwise use the cluster default (teutostack-ssd)                                                                              |
+| - [namespaces](#global_namespaces )                       | No      | object           | No         | -                                                                                                                                | Namespaces to create. AND *delete* if removed. These will also be the only ones, including the builtin namespaces, for which alerts will be sent if \`monitoring.monitorAllNamespaces=false\` |
+| - [priorityClasses](#global_priorityClasses )             | No      | object           | No         | -                                                                                                                                | -                                                                                                                                                                                             |
+| - [authentication](#global_authentication )               | No      | object           | No         | -                                                                                                                                | -                                                                                                                                                                                             |
 
 ### <a name="global_serviceLevelAgreement"></a>1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > serviceLevelAgreement`
 
@@ -904,10 +926,11 @@ Must be one of:
 
 ### <a name="global_helmRepositories"></a>1.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories`
 
-|                           |                                                                                                                      |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                                                             |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties) |
+|                           |                                                                                                                               |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                      |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties)          |
+| **Defined in**            | https://raw.githubusercontent.com/teutonet/teutonet-helm-charts/main/charts/common/values.schema.json#/$defs/helmRepositories |
 
 **Description:** A map of helmRepositories to create, the key is the name
 
@@ -917,17 +940,14 @@ Must be one of:
 
 #### <a name="global_helmRepositories_additionalProperties"></a>1.12.1. Property `base cluster configuration > global > helmRepositories > additionalProperties`
 
-|                           |                                                                |
-| ------------------------- | -------------------------------------------------------------- |
-| **Type**                  | `combining`                                                    |
-| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 | Property                                                                | Pattern | Type             | Deprecated | Definition           | Title/Description                                                                                                                             |
 | ----------------------------------------------------------------------- | ------- | ---------------- | ---------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| + [url](#global_helmRepositories_additionalProperties_url )             | No      | string           | No         | -                    | -                                                                                                                                             |
-| - [interval](#global_helmRepositories_additionalProperties_interval )   | No      | string           | No         | -                    | The interval in which to update the repository                                                                                                |
 | - [condition](#global_helmRepositories_additionalProperties_condition ) | No      | string           | No         | In #/$defs/condition | A condition with which to decide to include the resource. This will be templated. Must return the literal \`true\`, truthy values don't work. |
-| - [charts](#global_helmRepositories_additionalProperties_charts )       | No      | object           | No         | -                    | Which charts are deployed in which version using this repo, used internally                                                                   |
 | - [type](#global_helmRepositories_additionalProperties_type )           | No      | enum (of string) | No         | -                    | -                                                                                                                                             |
 
 | One of(Option)                                                   |
@@ -937,15 +957,18 @@ Must be one of:
 
 ##### <a name="global_helmRepositories_additionalProperties_oneOf_i0"></a>1.12.1.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 0`
 
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                 |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `combining`                                                    |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                                   | Pattern | Type   | Deprecated | Definition | Title/Description |
-| -------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [url](#global_helmRepositories_additionalProperties_oneOf_i0_url )       | No      | string | No         | -          | -                 |
-| - [charts](#global_helmRepositories_additionalProperties_oneOf_i0_charts ) | No      | object | No         | -          | -                 |
+| Property                                                                         | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                                                                                             |
+| -------------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [url](#global_helmRepositories_additionalProperties_oneOf_i0_url )             | No      | string           | No         | -                                                                             | -                                                                                                                                             |
+| - [condition](#global_helmRepositories_additionalProperties_oneOf_i0_condition ) | No      | string           | No         | Same as [condition](#global_helmRepositories_additionalProperties_condition ) | A condition with which to decide to include the resource. This will be templated. Must return the literal \`true\`, truthy values don't work. |
+| - [interval](#global_helmRepositories_additionalProperties_oneOf_i0_interval )   | No      | string           | No         | In #/$defs/helmRepositories/$defs/interval                                    | The interval in which to update the repository                                                                                                |
+| - [charts](#global_helmRepositories_additionalProperties_oneOf_i0_charts )       | No      | object           | No         | -                                                                             | Which charts are deployed in which version using this repo, used internally                                                                   |
+| - [type](#global_helmRepositories_additionalProperties_oneOf_i0_type )           | No      | enum (of string) | No         | -                                                                             | -                                                                                                                                             |
 
 | One of(Option)                                                            |
 | ------------------------------------------------------------------------- |
@@ -998,49 +1021,71 @@ Specific value: `"helm"`
 | --------------------------------- | ------------------------------------------------------------------------------------------ |
 | **Must match regular expression** | ```(https\|oci)://.+``` [Test](https://regex101.com/?regex=%28https%7Coci%29%3A%2F%2F.%2B) |
 
-###### <a name="global_helmRepositories_additionalProperties_oneOf_i0_charts"></a>1.12.1.1.4. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 0 > charts`
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i0_condition"></a>1.12.1.1.4. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 0 > condition`
+
+|                        |                                                                      |
+| ---------------------- | -------------------------------------------------------------------- |
+| **Type**               | `string`                                                             |
+| **Same definition as** | [condition](#global_helmRepositories_additionalProperties_condition) |
+
+**Description:** A condition with which to decide to include the resource. This will be templated. Must return the literal `true`, truthy values don't work.
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i0_interval"></a>1.12.1.1.5. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 0 > interval`
+
+|                |                                         |
+| -------------- | --------------------------------------- |
+| **Type**       | `string`                                |
+| **Defined in** | #/$defs/helmRepositories/$defs/interval |
+
+**Description:** The interval in which to update the repository
+
+| Restrictions                      |                                                                             |
+| --------------------------------- | --------------------------------------------------------------------------- |
+| **Must match regular expression** | ```[0-9]+[mhd]``` [Test](https://regex101.com/?regex=%5B0-9%5D%2B%5Bmhd%5D) |
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i0_charts"></a>1.12.1.1.6. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 0 > charts`
 
 |                           |                                                                                                                                                           |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                                                  |
 | **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties_oneOf_i0_charts_additionalProperties) |
 
+**Description:** Which charts are deployed in which version using this repo, used internally
+
 | Property                                                                                  | Pattern | Type   | Deprecated | Definition | Title/Description |
 | ----------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [](#global_helmRepositories_additionalProperties_oneOf_i0_charts_additionalProperties ) | No      | string | No         | -          | -                 |
 
-###### <a name="global_helmRepositories_additionalProperties_oneOf_i0_charts_additionalProperties"></a>1.12.1.1.4.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 0 > charts > additionalProperties`
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i0_charts_additionalProperties"></a>1.12.1.1.6.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 0 > charts > additionalProperties`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i0_type"></a>1.12.1.1.7. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 0 > type`
+
+|          |                    |
+| -------- | ------------------ |
+| **Type** | `enum (of string)` |
+
+Must be one of:
+* "helm"
+
 ##### <a name="global_helmRepositories_additionalProperties_oneOf_i1"></a>1.12.1.2. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1`
-
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                 |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
-
-| Property                                                               | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ---------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [url](#global_helmRepositories_additionalProperties_oneOf_i1_url )   | No      | string | No         | -          | -                 |
-| + [type](#global_helmRepositories_additionalProperties_oneOf_i1_type ) | No      | const  | No         | -          | -                 |
-
-###### <a name="autogenerated_heading_4"></a>1.12.1.2.1. Must **not** be
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_5"></a>1.12.1.2.1.1. The following properties are required
-* interval
+| Property                                                                         | Pattern | Type   | Deprecated | Definition                                                                    | Title/Description                                                                                                                             |
+| -------------------------------------------------------------------------------- | ------- | ------ | ---------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [url](#global_helmRepositories_additionalProperties_oneOf_i1_url )             | No      | string | No         | -                                                                             | -                                                                                                                                             |
+| - [condition](#global_helmRepositories_additionalProperties_oneOf_i1_condition ) | No      | string | No         | Same as [condition](#global_helmRepositories_additionalProperties_condition ) | A condition with which to decide to include the resource. This will be templated. Must return the literal \`true\`, truthy values don't work. |
+| + [type](#global_helmRepositories_additionalProperties_oneOf_i1_type )           | No      | const  | No         | -                                                                             | -                                                                                                                                             |
+| - [charts](#global_helmRepositories_additionalProperties_oneOf_i1_charts )       | No      | object | No         | -                                                                             | Which charts are deployed in which version using this repo, used internally                                                                   |
 
-###### <a name="autogenerated_heading_6"></a>1.12.1.2.2. The following properties are required
-* charts
-
-###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_url"></a>1.12.1.2.3. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > url`
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_url"></a>1.12.1.2.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > url`
 
 |          |          |
 | -------- | -------- |
@@ -1050,7 +1095,16 @@ Specific value: `"helm"`
 | --------------------------------- | ----------------------------------------------------------------------- |
 | **Must match regular expression** | ```https://.+``` [Test](https://regex101.com/?regex=https%3A%2F%2F.%2B) |
 
-###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_type"></a>1.12.1.2.4. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > type`
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_condition"></a>1.12.1.2.2. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > condition`
+
+|                        |                                                                      |
+| ---------------------- | -------------------------------------------------------------------- |
+| **Type**               | `string`                                                             |
+| **Same definition as** | [condition](#global_helmRepositories_additionalProperties_condition) |
+
+**Description:** A condition with which to decide to include the resource. This will be templated. Must return the literal `true`, truthy values don't work.
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_type"></a>1.12.1.2.3. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > type`
 
 |          |         |
 | -------- | ------- |
@@ -1058,29 +1112,189 @@ Specific value: `"helm"`
 
 Specific value: `"git"`
 
-##### <a name="global_helmRepositories_additionalProperties_url"></a>1.12.1.3. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > helmRepositories > additionalProperties > url`
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts"></a>1.12.1.2.4. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts`
+
+|                           |                                                                                                                                                           |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                                  |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties) |
+
+**Description:** Which charts are deployed in which version using this repo, used internally
+
+| Property                                                                                  | Pattern | Type        | Deprecated | Definition | Title/Description |
+| ----------------------------------------------------------------------------------------- | ------- | ----------- | ---------- | ---------- | ----------------- |
+| - [](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties ) | No      | Combination | No         | -          | -                 |
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties"></a>1.12.1.2.4.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `combining`                                                    |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                                                                   | Pattern | Type   | Deprecated | Definition                                                                           | Title/Description                              |
+| ---------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------------------ | ---------------------------------------------- |
+| - [branch](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_branch )     | No      | string | No         | -                                                                                    | -                                              |
+| - [commit](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_commit )     | No      | string | No         | -                                                                                    | -                                              |
+| - [semver](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_semver )     | No      | string | No         | -                                                                                    | -                                              |
+| - [tag](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_tag )           | No      | string | No         | -                                                                                    | -                                              |
+| - [path](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_path )         | No      | string | No         | -                                                                                    | Path of the chart in the repository            |
+| - [interval](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_interval ) | No      | string | No         | Same as [interval](#global_helmRepositories_additionalProperties_oneOf_i0_interval ) | The interval in which to update the repository |
+
+| One of(Option)                                                                                        |
+| ----------------------------------------------------------------------------------------------------- |
+| [item 0](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i0) |
+| [item 1](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i1) |
+| [item 2](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i2) |
+| [item 3](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i3) |
+| [item 4](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i4) |
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i0"></a>1.12.1.2.4.1.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties > oneOf > item 0`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+###### <a name="autogenerated_heading_4"></a>1.12.1.2.4.1.1.1. The following properties are required
+* branch
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i1"></a>1.12.1.2.4.1.2. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties > oneOf > item 1`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+###### <a name="autogenerated_heading_5"></a>1.12.1.2.4.1.2.1. The following properties are required
+* commit
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i2"></a>1.12.1.2.4.1.3. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties > oneOf > item 2`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+###### <a name="autogenerated_heading_6"></a>1.12.1.2.4.1.3.1. The following properties are required
+* semver
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i3"></a>1.12.1.2.4.1.4. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties > oneOf > item 3`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+###### <a name="autogenerated_heading_7"></a>1.12.1.2.4.1.4.1. The following properties are required
+* tag
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i4"></a>1.12.1.2.4.1.5. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties > oneOf > item 4`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+###### <a name="autogenerated_heading_8"></a>1.12.1.2.4.1.5.1. Must **not** be
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+| Any of(Option)                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------------ |
+| [item 0](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i4_not_anyOf_i0) |
+| [item 1](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i4_not_anyOf_i1) |
+| [item 2](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i4_not_anyOf_i2) |
+| [item 3](#global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i4_not_anyOf_i3) |
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i4_not_anyOf_i0"></a>1.12.1.2.4.1.5.1.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties > oneOf > item 4 > not > anyOf > item 0`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+###### <a name="autogenerated_heading_9"></a>1.12.1.2.4.1.5.1.1.1. The following properties are required
+* branch
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i4_not_anyOf_i1"></a>1.12.1.2.4.1.5.1.2. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties > oneOf > item 4 > not > anyOf > item 1`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+###### <a name="autogenerated_heading_10"></a>1.12.1.2.4.1.5.1.2.1. The following properties are required
+* commit
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i4_not_anyOf_i2"></a>1.12.1.2.4.1.5.1.3. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties > oneOf > item 4 > not > anyOf > item 2`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+###### <a name="autogenerated_heading_11"></a>1.12.1.2.4.1.5.1.3.1. The following properties are required
+* semver
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_oneOf_i4_not_anyOf_i3"></a>1.12.1.2.4.1.5.1.4. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties > oneOf > item 4 > not > anyOf > item 3`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+###### <a name="autogenerated_heading_12"></a>1.12.1.2.4.1.5.1.4.1. The following properties are required
+* tag
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_branch"></a>1.12.1.2.4.1.6. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties > branch`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-| Restrictions                      |                                                                                            |
-| --------------------------------- | ------------------------------------------------------------------------------------------ |
-| **Must match regular expression** | ```(https\|oci)://.+``` [Test](https://regex101.com/?regex=%28https%7Coci%29%3A%2F%2F.%2B) |
-
-##### <a name="global_helmRepositories_additionalProperties_interval"></a>1.12.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > interval`
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_commit"></a>1.12.1.2.4.1.7. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties > commit`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_semver"></a>1.12.1.2.4.1.8. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties > semver`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_tag"></a>1.12.1.2.4.1.9. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties > tag`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_path"></a>1.12.1.2.4.1.10. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties > path`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** Path of the chart in the repository
+
+###### <a name="global_helmRepositories_additionalProperties_oneOf_i1_charts_additionalProperties_interval"></a>1.12.1.2.4.1.11. Property `base cluster configuration > global > helmRepositories > additionalProperties > oneOf > item 1 > charts > additionalProperties > interval`
+
+|                        |                                                                             |
+| ---------------------- | --------------------------------------------------------------------------- |
+| **Type**               | `string`                                                                    |
+| **Same definition as** | [interval](#global_helmRepositories_additionalProperties_oneOf_i0_interval) |
 
 **Description:** The interval in which to update the repository
 
-| Restrictions                      |                                                                             |
-| --------------------------------- | --------------------------------------------------------------------------- |
-| **Must match regular expression** | ```[0-9]+[mhd]``` [Test](https://regex101.com/?regex=%5B0-9%5D%2B%5Bmhd%5D) |
+##### <a name="autogenerated_heading_13"></a>1.12.1.3. The following properties are required
+* url
 
-##### <a name="global_helmRepositories_additionalProperties_condition"></a>1.12.1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > condition`
+##### <a name="global_helmRepositories_additionalProperties_condition"></a>1.12.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > condition`
 
 |                |                   |
 | -------------- | ----------------- |
@@ -1099,207 +1313,7 @@ Specific value: `"git"`
 {{ eq .Values.global.baseDomain "teuto.net" }}
 ```
 
-##### <a name="global_helmRepositories_additionalProperties_charts"></a>1.12.1.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > charts`
-
-|                           |                                                                                                                                                  |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Type**                  | `object`                                                                                                                                         |
-| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_helmRepositories_additionalProperties_charts_additionalProperties) |
-
-**Description:** Which charts are deployed in which version using this repo, used internally
-
-| Property                                                                         | Pattern | Type        | Deprecated | Definition | Title/Description |
-| -------------------------------------------------------------------------------- | ------- | ----------- | ---------- | ---------- | ----------------- |
-| - [](#global_helmRepositories_additionalProperties_charts_additionalProperties ) | No      | Combination | No         | -          | -                 |
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties"></a>1.12.1.6.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties`
-
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                 |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
-
-| One of(Option)                                                                               |
-| -------------------------------------------------------------------------------------------- |
-| [item 0](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i0) |
-| [item 1](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1) |
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i0"></a>1.12.1.6.1.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 0`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1"></a>1.12.1.6.1.2. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1`
-
-|                           |                                                                |
-| ------------------------- | -------------------------------------------------------------- |
-| **Type**                  | `combining`                                                    |
-| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
-
-| Property                                                                                                   | Pattern | Type   | Deprecated | Definition | Title/Description                              |
-| ---------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ---------------------------------------------- |
-| - [branch](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_branch )     | No      | string | No         | -          | -                                              |
-| - [commit](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_commit )     | No      | string | No         | -          | -                                              |
-| - [semver](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_semver )     | No      | string | No         | -          | -                                              |
-| - [tag](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_tag )           | No      | string | No         | -          | -                                              |
-| - [path](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_path )         | No      | string | No         | -          | Path of the chart in the repository            |
-| - [interval](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_interval ) | No      | string | No         | -          | The interval in which to update the repository |
-
-| One of(Option)                                                                                        |
-| ----------------------------------------------------------------------------------------------------- |
-| [item 0](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i0) |
-| [item 1](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i1) |
-| [item 2](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i2) |
-| [item 3](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i3) |
-| [item 4](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i4) |
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i0"></a>1.12.1.6.1.2.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 0`
-
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                    |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
-
-###### <a name="autogenerated_heading_7"></a>1.12.1.6.1.2.1.1. The following properties are required
-* branch
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i1"></a>1.12.1.6.1.2.2. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 1`
-
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                    |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
-
-###### <a name="autogenerated_heading_8"></a>1.12.1.6.1.2.2.1. The following properties are required
-* commit
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i2"></a>1.12.1.6.1.2.3. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 2`
-
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                    |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
-
-###### <a name="autogenerated_heading_9"></a>1.12.1.6.1.2.3.1. The following properties are required
-* semver
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i3"></a>1.12.1.6.1.2.4. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 3`
-
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                    |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
-
-###### <a name="autogenerated_heading_10"></a>1.12.1.6.1.2.4.1. The following properties are required
-* tag
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i4"></a>1.12.1.6.1.2.5. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 4`
-
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                 |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
-
-###### <a name="autogenerated_heading_11"></a>1.12.1.6.1.2.5.1. Must **not** be
-
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                 |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
-
-| Any of(Option)                                                                                                     |
-| ------------------------------------------------------------------------------------------------------------------ |
-| [item 0](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i4_not_anyOf_i0) |
-| [item 1](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i4_not_anyOf_i1) |
-| [item 2](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i4_not_anyOf_i2) |
-| [item 3](#global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i4_not_anyOf_i3) |
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i4_not_anyOf_i0"></a>1.12.1.6.1.2.5.1.1. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 4 > not > anyOf > item 0`
-
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                    |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
-
-###### <a name="autogenerated_heading_12"></a>1.12.1.6.1.2.5.1.1.1. The following properties are required
-* branch
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i4_not_anyOf_i1"></a>1.12.1.6.1.2.5.1.2. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 4 > not > anyOf > item 1`
-
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                    |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
-
-###### <a name="autogenerated_heading_13"></a>1.12.1.6.1.2.5.1.2.1. The following properties are required
-* commit
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i4_not_anyOf_i2"></a>1.12.1.6.1.2.5.1.3. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 4 > not > anyOf > item 2`
-
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                    |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
-
-###### <a name="autogenerated_heading_14"></a>1.12.1.6.1.2.5.1.3.1. The following properties are required
-* semver
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_oneOf_i4_not_anyOf_i3"></a>1.12.1.6.1.2.5.1.4. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > oneOf > item 4 > not > anyOf > item 3`
-
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                    |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
-
-###### <a name="autogenerated_heading_15"></a>1.12.1.6.1.2.5.1.4.1. The following properties are required
-* tag
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_branch"></a>1.12.1.6.1.2.6. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > branch`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_commit"></a>1.12.1.6.1.2.7. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > commit`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_semver"></a>1.12.1.6.1.2.8. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > semver`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_tag"></a>1.12.1.6.1.2.9. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > tag`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_path"></a>1.12.1.6.1.2.10. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > path`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
-
-**Description:** Path of the chart in the repository
-
-###### <a name="global_helmRepositories_additionalProperties_charts_additionalProperties_oneOf_i1_interval"></a>1.12.1.6.1.2.11. Property `base cluster configuration > global > helmRepositories > additionalProperties > charts > additionalProperties > oneOf > item 1 > interval`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
-
-**Description:** The interval in which to update the repository
-
-| Restrictions                      |                                                                             |
-| --------------------------------- | --------------------------------------------------------------------------- |
-| **Must match regular expression** | ```[0-9]+[mhd]``` [Test](https://regex101.com/?regex=%5B0-9%5D%2B%5Bmhd%5D) |
-
-##### <a name="global_helmRepositories_additionalProperties_type"></a>1.12.1.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > type`
+##### <a name="global_helmRepositories_additionalProperties_type"></a>1.12.1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > helmRepositories > additionalProperties > type`
 
 |             |                    |
 | ----------- | ------------------ |
@@ -1334,7 +1348,7 @@ Must be one of:
 | --------------------------------------------------------------------------------- | ------- | ----------- | ---------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | + [dnsNames](#global_certificates_additionalProperties_dnsNames )                 | No      | Combination | No         | -                                                                                           | The dnsNames to create                                                                                                                        |
 | - [targetNamespaces](#global_certificates_additionalProperties_targetNamespaces ) | No      | object      | No         | Same as [targetNamespaces](#global_imageCredentials_additionalProperties_targetNamespaces ) | The namespaces to sync the secret into, or \`ALL\` for all namespaces                                                                         |
-| - [condition](#global_certificates_additionalProperties_condition )               | No      | string      | No         | Same as [condition](#global_helmRepositories_additionalProperties_condition )               | A condition with which to decide to include the resource. This will be templated. Must return the literal \`true\`, truthy values don't work. |
+| - [condition](#global_certificates_additionalProperties_condition )               | No      | string      | No         | In #/$defs/condition                                                                        | A condition with which to decide to include the resource. This will be templated. Must return the literal \`true\`, truthy values don't work. |
 
 ##### <a name="global_certificates_additionalProperties_dnsNames"></a>1.13.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > certificates > additionalProperties > dnsNames`
 
@@ -1405,10 +1419,10 @@ test.teuto.net
 
 ##### <a name="global_certificates_additionalProperties_condition"></a>1.13.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > certificates > additionalProperties > condition`
 
-|                        |                                                                      |
-| ---------------------- | -------------------------------------------------------------------- |
-| **Type**               | `string`                                                             |
-| **Same definition as** | [condition](#global_helmRepositories_additionalProperties_condition) |
+|                |                   |
+| -------------- | ----------------- |
+| **Type**       | `string`          |
+| **Defined in** | #/$defs/condition |
 
 **Description:** A condition with which to decide to include the resource. This will be templated. Must return the literal `true`, truthy values don't work.
 
@@ -1441,11 +1455,11 @@ test.teuto.net
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                                        | Pattern | Type   | Deprecated | Definition                                                                    | Title/Description                                                                                                                             |
-| ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| - [additionalLabels](#global_namespaces_additionalProperties_additionalLabels ) | No      | object | No         | -                                                                             | -                                                                                                                                             |
-| - [condition](#global_namespaces_additionalProperties_condition )               | No      | string | No         | Same as [condition](#global_helmRepositories_additionalProperties_condition ) | A condition with which to decide to include the resource. This will be templated. Must return the literal \`true\`, truthy values don't work. |
-| - [resources](#global_namespaces_additionalProperties_resources )               | No      | object | No         | -                                                                             | -                                                                                                                                             |
+| Property                                                                        | Pattern | Type   | Deprecated | Definition                                                                | Title/Description                                                                                                                             |
+| ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [additionalLabels](#global_namespaces_additionalProperties_additionalLabels ) | No      | object | No         | -                                                                         | -                                                                                                                                             |
+| - [condition](#global_namespaces_additionalProperties_condition )               | No      | string | No         | Same as [condition](#global_certificates_additionalProperties_condition ) | A condition with which to decide to include the resource. This will be templated. Must return the literal \`true\`, truthy values don't work. |
+| - [resources](#global_namespaces_additionalProperties_resources )               | No      | object | No         | -                                                                         | -                                                                                                                                             |
 
 ##### <a name="global_namespaces_additionalProperties_additionalLabels"></a>1.15.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > additionalLabels`
 
@@ -1466,10 +1480,10 @@ test.teuto.net
 
 ##### <a name="global_namespaces_additionalProperties_condition"></a>1.15.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > condition`
 
-|                        |                                                                      |
-| ---------------------- | -------------------------------------------------------------------- |
-| **Type**               | `string`                                                             |
-| **Same definition as** | [condition](#global_helmRepositories_additionalProperties_condition) |
+|                        |                                                                  |
+| ---------------------- | ---------------------------------------------------------------- |
+| **Type**               | `string`                                                         |
+| **Same definition as** | [condition](#global_certificates_additionalProperties_condition) |
 
 **Description:** A condition with which to decide to include the resource. This will be templated. Must return the literal `true`, truthy values don't work.
 
@@ -1965,7 +1979,6 @@ Must be one of:
 | - [storageCostAnalysis](#monitoring_storageCostAnalysis )   | No      | object  | No         | -          | Configuration of the \`storageCostAnalysis dashboard                                                                              |
 | - [securityScanning](#monitoring_securityScanning )         | No      | object  | No         | -          | -                                                                                                                                 |
 | - [tracing](#monitoring_tracing )                           | No      | object  | No         | -          | -                                                                                                                                 |
-| - [additionalProperties](#monitoring_additionalProperties ) | No      | object  | No         | -          | -                                                                                                                                 |
 
 ### <a name="monitoring_monitorAllNamespaces"></a>4.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > monitorAllNamespaces`
 
@@ -3327,15 +3340,17 @@ currencyEUR
 
 ### <a name="monitoring_tracing"></a>4.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing`
 
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                    |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                    | Pattern | Type    | Deprecated | Definition | Title/Description |
-| ------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
-| - [enabled](#monitoring_tracing_enabled )   | No      | boolean | No         | -          | -                 |
-| - [ingester](#monitoring_tracing_ingester ) | No      | object  | No         | -          | -                 |
+| Property                                                  | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
+| --------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| - [enabled](#monitoring_tracing_enabled )                 | No      | boolean          | No         | -                                                                             | -                                                                 |
+| - [resourcesPreset](#monitoring_tracing_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
+| - [resources](#monitoring_tracing_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
+| - [persistence](#monitoring_tracing_persistence )         | No      | object           | No         | -                                                                             | -                                                                 |
 
 #### <a name="monitoring_tracing_enabled"></a>4.10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > enabled`
 
@@ -3343,27 +3358,14 @@ currencyEUR
 | -------- | --------- |
 | **Type** | `boolean` |
 
-#### <a name="monitoring_tracing_ingester"></a>4.10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester`
-
-|                           |                                                                |
-| ------------------------- | -------------------------------------------------------------- |
-| **Type**                  | `object`                                                       |
-| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
-
-| Property                                                           | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
-| ------------------------------------------------------------------ | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| - [resourcesPreset](#monitoring_tracing_ingester_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
-| - [resources](#monitoring_tracing_ingester_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
-| - [persistence](#monitoring_tracing_ingester_persistence )         | No      | object           | No         | -                                                                             | -                                                                 |
-
-##### <a name="monitoring_tracing_ingester_resourcesPreset"></a>4.10.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester > resourcesPreset`
+#### <a name="monitoring_tracing_resourcesPreset"></a>4.10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > resourcesPreset`
 
 |                        |                                                                      |
 | ---------------------- | -------------------------------------------------------------------- |
 | **Type**               | `enum (of string)`                                                   |
 | **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
 
-##### <a name="monitoring_tracing_ingester_resources"></a>4.10.2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester > resources`
+#### <a name="monitoring_tracing_resources"></a>4.10.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > resources`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -3373,31 +3375,24 @@ currencyEUR
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-##### <a name="monitoring_tracing_ingester_persistence"></a>4.10.2.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester > persistence`
+#### <a name="monitoring_tracing_persistence"></a>4.10.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > persistence`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                 | Pattern | Type   | Deprecated | Definition                                                                                                                                         | Title/Description |
-| -------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
-| - [size](#monitoring_tracing_ingester_persistence_size ) | No      | object | No         | Same as [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties ) | -                 |
+| Property                                        | Pattern | Type   | Deprecated | Definition                                                                                                                                         | Title/Description |
+| ----------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| - [size](#monitoring_tracing_persistence_size ) | No      | object | No         | Same as [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties ) | -                 |
 
-###### <a name="monitoring_tracing_ingester_persistence_size"></a>4.10.2.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > ingester > persistence > size`
+##### <a name="monitoring_tracing_persistence_size"></a>4.10.4.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing > persistence > size`
 
 |                           |                                                                                                                                           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                                                  |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                                                               |
 | **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
-
-### <a name="monitoring_additionalProperties"></a>4.11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > additionalProperties`
-
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                    |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 ## <a name="descheduler"></a>5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler`
 
@@ -3895,7 +3890,7 @@ must respect the following conditions
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_16"></a>9.1.1.1.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_14"></a>9.1.1.1.1.1.1. The following properties are required
 * password
 * username
 
@@ -3906,7 +3901,7 @@ must respect the following conditions
 | **Type**                  | `combining`                                                                 |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_17"></a>9.1.1.1.1.2.1. Must **not** be
+###### <a name="autogenerated_heading_15"></a>9.1.1.1.1.2.1. Must **not** be
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -3925,7 +3920,7 @@ must respect the following conditions
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_18"></a>9.1.1.1.1.2.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_16"></a>9.1.1.1.1.2.1.1.1. The following properties are required
 * username
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_oneOf_i1_not_anyOf_i1"></a>9.1.1.1.1.2.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > oneOf > item 1 > not > anyOf > item 1`
@@ -3935,7 +3930,7 @@ must respect the following conditions
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_19"></a>9.1.1.1.1.2.1.2.1. The following properties are required
+###### <a name="autogenerated_heading_17"></a>9.1.1.1.1.2.1.2.1. The following properties are required
 * password
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i0_url"></a>9.1.1.1.1.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 0 > url`
@@ -3960,7 +3955,7 @@ must respect the following conditions
 | -------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------- |
 | - [url](#flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_url ) | No      | object | No         | -          | This needs to follow flux's way of writing this url, see https://fluxcd.io/flux/components/source/gitrepositories/#url |
 
-###### <a name="autogenerated_heading_20"></a>9.1.1.1.2.1. Must **not** be
+###### <a name="autogenerated_heading_18"></a>9.1.1.1.2.1. Must **not** be
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -3979,7 +3974,7 @@ must respect the following conditions
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_21"></a>9.1.1.1.2.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_19"></a>9.1.1.1.2.1.1.1. The following properties are required
 * username
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_not_anyOf_i1"></a>9.1.1.1.2.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1 > not > anyOf > item 1`
@@ -3989,7 +3984,7 @@ must respect the following conditions
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_22"></a>9.1.1.1.2.1.2.1. The following properties are required
+###### <a name="autogenerated_heading_20"></a>9.1.1.1.2.1.2.1. The following properties are required
 * password
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i0_oneOf_i1_url"></a>9.1.1.1.2.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 0 > oneOf > item 1 > url`
@@ -4027,7 +4022,7 @@ must respect the following conditions
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_23"></a>9.1.1.2.1.1. The following properties are required
+###### <a name="autogenerated_heading_21"></a>9.1.1.2.1.1. The following properties are required
 * branch
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i1"></a>9.1.1.2.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 1`
@@ -4037,7 +4032,7 @@ must respect the following conditions
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_24"></a>9.1.1.2.2.1. The following properties are required
+###### <a name="autogenerated_heading_22"></a>9.1.1.2.2.1. The following properties are required
 * commit
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i2"></a>9.1.1.2.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 2`
@@ -4047,7 +4042,7 @@ must respect the following conditions
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_25"></a>9.1.1.2.3.1. The following properties are required
+###### <a name="autogenerated_heading_23"></a>9.1.1.2.3.1. The following properties are required
 * semver
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i3"></a>9.1.1.2.4. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 3`
@@ -4057,7 +4052,7 @@ must respect the following conditions
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_26"></a>9.1.1.2.4.1. The following properties are required
+###### <a name="autogenerated_heading_24"></a>9.1.1.2.4.1. The following properties are required
 * tag
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4"></a>9.1.1.2.5. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4`
@@ -4067,7 +4062,7 @@ must respect the following conditions
 | **Type**                  | `combining`                                                                 |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_27"></a>9.1.1.2.5.1. Must **not** be
+###### <a name="autogenerated_heading_25"></a>9.1.1.2.5.1. Must **not** be
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -4088,7 +4083,7 @@ must respect the following conditions
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_28"></a>9.1.1.2.5.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_26"></a>9.1.1.2.5.1.1.1. The following properties are required
 * branch
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_not_anyOf_i1"></a>9.1.1.2.5.1.2. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > not > anyOf > item 1`
@@ -4098,7 +4093,7 @@ must respect the following conditions
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_29"></a>9.1.1.2.5.1.2.1. The following properties are required
+###### <a name="autogenerated_heading_27"></a>9.1.1.2.5.1.2.1. The following properties are required
 * commit
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_not_anyOf_i2"></a>9.1.1.2.5.1.3. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > not > anyOf > item 2`
@@ -4108,7 +4103,7 @@ must respect the following conditions
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_30"></a>9.1.1.2.5.1.3.1. The following properties are required
+###### <a name="autogenerated_heading_28"></a>9.1.1.2.5.1.3.1. The following properties are required
 * semver
 
 ###### <a name="flux_gitRepositories_additionalProperties_allOf_i1_oneOf_i4_not_anyOf_i3"></a>9.1.1.2.5.1.4. Property `base cluster configuration > flux > gitRepositories > additionalProperties > allOf > item 1 > oneOf > item 4 > not > anyOf > item 3`
@@ -4118,7 +4113,7 @@ must respect the following conditions
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_31"></a>9.1.1.2.5.1.4.1. The following properties are required
+###### <a name="autogenerated_heading_29"></a>9.1.1.2.5.1.4.1. The following properties are required
 * tag
 
 ##### <a name="flux_gitRepositories_additionalProperties_url"></a>9.1.1.3. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > flux > gitRepositories > additionalProperties > url`
@@ -4741,7 +4736,7 @@ Specific value: `"auto"`
 | --------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [backupStorageLocations](#backup_provider_oneOf_i0_velero_oneOf_i0_backupStorageLocations ) | No      | object | No         | -          | -                 |
 
-###### <a name="autogenerated_heading_32"></a>14.3.1.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_30"></a>14.3.1.1.1.1. The following properties are required
 * defaultLocation
 
 ###### <a name="backup_provider_oneOf_i0_velero_oneOf_i0_backupStorageLocations"></a>14.3.1.1.1.2. Property `base cluster configuration > backup > provider > oneOf > item 0 > velero > oneOf > item 0 > backupStorageLocations`
@@ -4833,7 +4828,7 @@ Specific value: `"auto"`
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_33"></a>14.3.1.1.3.1.1.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_31"></a>14.3.1.1.3.1.1.1.1.1. The following properties are required
 * accessKeyID
 * secretAccessKey
 
@@ -4844,7 +4839,7 @@ Specific value: `"auto"`
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_34"></a>14.3.1.1.3.1.1.1.2.1. The following properties are required
+###### <a name="autogenerated_heading_32"></a>14.3.1.1.3.1.1.1.2.1. The following properties are required
 * existingSecret
 
 ###### <a name="backup_provider_oneOf_i0_velero_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2"></a>14.3.1.1.3.1.1.1.3. Property `base cluster configuration > backup > provider > oneOf > item 0 > velero > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2`
@@ -4854,7 +4849,7 @@ Specific value: `"auto"`
 | **Type**                  | `combining`                                                                 |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_35"></a>14.3.1.1.3.1.1.1.3.1. Must **not** be
+###### <a name="autogenerated_heading_33"></a>14.3.1.1.3.1.1.1.3.1. Must **not** be
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -4874,7 +4869,7 @@ Specific value: `"auto"`
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_36"></a>14.3.1.1.3.1.1.1.3.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_34"></a>14.3.1.1.3.1.1.1.3.1.1.1. The following properties are required
 * accessKeyID
 
 ###### <a name="backup_provider_oneOf_i0_velero_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i1"></a>14.3.1.1.3.1.1.1.3.1.2. Property `base cluster configuration > backup > provider > oneOf > item 0 > velero > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2 > not > anyOf > item 1`
@@ -4884,7 +4879,7 @@ Specific value: `"auto"`
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_37"></a>14.3.1.1.3.1.1.1.3.1.2.1. The following properties are required
+###### <a name="autogenerated_heading_35"></a>14.3.1.1.3.1.1.1.3.1.2.1. The following properties are required
 * secretAccessKey
 
 ###### <a name="backup_provider_oneOf_i0_velero_backupStorageLocations_additionalProperties_provider_minio_oneOf_i2_not_anyOf_i2"></a>14.3.1.1.3.1.1.1.3.1.3. Property `base cluster configuration > backup > provider > oneOf > item 0 > velero > backupStorageLocations > additionalProperties > provider > minio > oneOf > item 2 > not > anyOf > item 2`
@@ -4894,7 +4889,7 @@ Specific value: `"auto"`
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_38"></a>14.3.1.1.3.1.1.1.3.1.3.1. The following properties are required
+###### <a name="autogenerated_heading_36"></a>14.3.1.1.3.1.1.1.3.1.3.1. The following properties are required
 * existingSecret
 
 ###### <a name="backup_provider_oneOf_i0_velero_backupStorageLocations_additionalProperties_provider_minio_accessKeyID"></a>14.3.1.1.3.1.1.1.4. Property `base cluster configuration > backup > provider > oneOf > item 0 > velero > backupStorageLocations > additionalProperties > provider > minio > accessKeyID`

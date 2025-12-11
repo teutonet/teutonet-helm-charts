@@ -1,5 +1,29 @@
 # Changelog
 
+## [11.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.1.2...base-cluster-v11.0.0) (2025-12-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* **base-cluster/monitoring:** grafana-tempo-distributed would need s3 ([#1875](https://github.com/teutonet/teutonet-helm-charts/issues/1875))
+
+### Features
+
+* **base-cluster/flux:** use centralised helmRepositories template ([#1845](https://github.com/teutonet/teutonet-helm-charts/issues/1845)) ([60658ed](https://github.com/teutonet/teutonet-helm-charts/commit/60658eda1067f2cb01894ade1bdbf948c333e94d))
+
+
+### Bug Fixes
+
+* **base-cluster/monitoring:** grafana-tempo-distributed would need s3 ([#1875](https://github.com/teutonet/teutonet-helm-charts/issues/1875)) ([df5c372](https://github.com/teutonet/teutonet-helm-charts/commit/df5c372b7349b248457cff8d37df7bc6887d31e4))
+* **base-cluster/monitoring:** increase limit of grafana sidecar ([#1878](https://github.com/teutonet/teutonet-helm-charts/issues/1878)) ([fb1ebc6](https://github.com/teutonet/teutonet-helm-charts/commit/fb1ebc624ed56e4f8507df37f938766123636822))
+* **base-cluster:** correctly set image repository ([#1848](https://github.com/teutonet/teutonet-helm-charts/issues/1848)) ([0e108dc](https://github.com/teutonet/teutonet-helm-charts/commit/0e108dc31016bb452813222273a0131f5f7a5469))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update common docker tag to v1.7.0 ([#1872](https://github.com/teutonet/teutonet-helm-charts/issues/1872)) ([b50ea98](https://github.com/teutonet/teutonet-helm-charts/commit/b50ea9817dd0b7ce86600199de98a2fdc46ca3a2))
+* **base-cluster/dependencies:** update helm release reflector to v9.1.44 ([#1861](https://github.com/teutonet/teutonet-helm-charts/issues/1861)) ([2cfe4e5](https://github.com/teutonet/teutonet-helm-charts/commit/2cfe4e50c116d39a6388323efd8b17b2900f5650))
+
 ## [10.1.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.1.1...base-cluster-v10.1.2) (2025-12-05)
 
 
