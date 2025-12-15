@@ -19,8 +19,7 @@ jobs:
           fetch-depth: 0
 
       - name: Switch to code-scanning branch
-        run: |
-          git switch code-scanning || git switch -c code-scanning
+        run: git switch code-scanning || git switch -c code-scanning
 
       - name: Fetch code scanning alerts
         id: fetch-alerts
@@ -120,4 +119,4 @@ jobs:
           add: 'open-alerts.md'
           message: 'docs: Update code scanning results - ${{ github.run_id }}'
           default_author: github_actions
-          push: true
+          push: 'origin code-scanning --set-upstream'
