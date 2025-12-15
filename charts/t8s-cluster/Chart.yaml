@@ -2,7 +2,7 @@ apiVersion: v2
 dependencies:
   - name: common
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
-    version: 1.6.0
+    version: 1.7.0
 description: t8s-operator cluster with necessary addons
 home: https://teuto.net
 icon: https://teuto.net/favicon.ico
