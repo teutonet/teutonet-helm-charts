@@ -6,5 +6,9 @@ roles:
 databases:
   kuchen:
     owner: pizza
+    extensions:
+      - name: pgaudit
   torte:
     owner: keks
+    extensions:
+      - name: pgvector

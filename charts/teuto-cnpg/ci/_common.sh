@@ -10,6 +10,6 @@ jq -n '{
     name: "kruemel"
   }],
   databases: {
-    kuchen: "pizza"
+    kuchen: { owner: "pizza" }
   }
 }'
