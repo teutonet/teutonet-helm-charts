@@ -37,7 +37,7 @@ jobs:
           [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           ./.github/scripts/generate-sarif-reports.sh "charts/${{ matrix.chart }}"
-      - uses: github/codeql-action/upload-sarif@fe4161a26a8629af62121b670040955b330f9af2 # v4
+      - uses: github/codeql-action/upload-sarif@5d4e8d1aca955e8d8589aabd499c5cae939e33c7 # v4
         if: ${{ hashFiles('reports/*.sarif') != '' }}
         with:
           sarif_file: reports
