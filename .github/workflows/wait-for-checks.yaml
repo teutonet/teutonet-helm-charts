@@ -44,7 +44,7 @@ jobs:
                 -H "Authorization: Bearer $GH_TOKEN" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
                 "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${CHANGE_SHA}/check-runs?per_page=100&page=$((page++))" > "$response_file"
-              jq -n '{check_runs: reduce inputs as $map ([]; . + $map.check_runs)}' "$all_runs_file" "$response_file" > "$tmp_all_runs_file"
+              jq -n '{check_runs: (reduce inputs as $map ([]; . + $map.check_runs))}' "$all_runs_file" "$response_file" > "$tmp_all_runs_file"
               mv "$tmp_all_runs_file" "$all_runs_file"
               if [[ "$(jq -n length "$all_runs_file")" -eq "$(jq -n .total_count "$response_file")" ]]; then
                 break
