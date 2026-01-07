@@ -38,6 +38,8 @@ ghcr.io:
   teutonet: ALL_IMAGES
   k8up-io:
     k8up: ALL_TAGS
+  jkroepke:
+    kube-webhook-certgen: ALL_TAGS
 mirror.gcr.io:
   aquasec: ALL_IMAGES
 quay.io:

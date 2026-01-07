@@ -122,6 +122,9 @@ licenses:
   ghcr.io/k8up-io/k8up:
     license: Apache-2.0
     licenseLink: https://raw.githubusercontent.com/k8up-io/k8up/refs/heads/master/LICENSE
+  ghcr.io/jkroepke/kube-webhook-certgen:
+    license: Apache-2.0
+    licenseLink: https://raw.githubusercontent.com/jkroepke/kube-webhook-certgen/refs/heads/main/LICENSE
   mirror.gcr.io/aquasec/trivy-operator:
     license: Apache-2.0
     licenseLink: https://github.com/aquasecurity/trivy-operator/blob/main/LICENSE
