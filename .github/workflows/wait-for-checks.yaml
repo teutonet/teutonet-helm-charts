@@ -25,31 +25,46 @@ jobs:
         timeout-minutes: 60
         run: |
           [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+
+          function teerr() {
+            if [[ "$RUNNER_DEBUG" == 1 ]]; then
+              tee /dev/stderr
+            else
+              cat
+            fi
+          }
+
           set -e
           set -o pipefail
 
+          TMP_DIR="$(mktemp -d)"
+
           fetch_check_runs() {
-            local all_runs='{"check_runs":[]}'
-            local page=1
-            while :; do
-              response=$(curl -fsSL \
+            local response_file
+            response_file="$(mktemp -p "$TMP_DIR")"
+            local all_runs_file
+            all_runs_file="$(mktemp -p "$TMP_DIR")"
+            local tmp_all_runs_file
+            tmp_all_runs_file="$(mktemp -p "$TMP_DIR")"
+            jq -n '{check_runs: []}' > "$all_runs_file"
+            local page=1; while :; do
+              curl -fsSL \
                 -H "Accept: application/vnd.github+json" \
                 -H "Authorization: Bearer $GH_TOKEN" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
-                "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${CHANGE_SHA}/check-runs?per_page=100&page=${page}")
-              runs=$(echo "$response" | jq '.check_runs')
-              if [[ "$(echo "$runs" | jq 'length')" -eq 0 ]]; then
+                "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${CHANGE_SHA}/check-runs?per_page=100&page=$((page++))" | teerr > "$response_file"
+              jq '{check_runs: (reduce inputs as $map ([]; . + $map.check_runs))}' "$all_runs_file" "$response_file" | teerr > "$tmp_all_runs_file"
+              mv "$tmp_all_runs_file" "$all_runs_file"
+              if [[ "$(jq '.check_runs | length' "$all_runs_file")" -eq "$(jq .total_count "$response_file")" ]]; then
                 break
               fi
-              all_runs=$(echo "$all_runs" | jq --argjson new "$runs" '.check_runs += $new')
-              ((page++))
             done
-            echo "$all_runs"
+            cat "$all_runs_file"
           }
 
           # must work three times, (sometimes) the github API drops jobs that are currently restarting
           tries=3; while (( --tries >= 0 )); do
-            while unfinished_jobs="$(fetch_check_runs | jq --arg ignored "$IGNORED_JOBS,$CURRENT_JOB" -e '.check_runs | map(select(([.conclusion] | inside(["success","skipped","cancelled"]) | not) and ([.name] | inside($ignored | split(",")) | not))) | map("\(.name) (\(.conclusion // .status))") | if length == 0 then halt_error(1) else . end')"; do
+            while unfinished_jobs="$(fetch_check_runs | jq --arg ignored "$IGNORED_JOBS,$CURRENT_JOB" -e '.check_runs | map(select(([.conclusion] | inside(["success","skipped","cancelled"]) | not) and ([.name] | inside($ignored | split(",")) | not))) | map("\(.name) (\(.conclusion // .status)) (\(.html_url))") | if length == 0 then halt_error(1) else . end')"; do
               echo "The following jobs are not (successfully) finished yet:" >&2
               echo "$unfinished_jobs" >&2
               sleep 5
