@@ -1,5 +1,19 @@
 # Changelog
 
+## [11.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v11.0.0...base-cluster-v11.0.1) (2026-01-08)
+
+
+### Bug Fixes
+
+* **base-cluster/monitoring:** downgrade sidecar version to fix race condition ([#1883](https://github.com/teutonet/teutonet-helm-charts/issues/1883)) ([3044ba9](https://github.com/teutonet/teutonet-helm-charts/commit/3044ba9b6a74038bea2d7fb2643d6805d2484013))
+* **base-cluster/monitoring:** use correct grafana-tempo url ([#1881](https://github.com/teutonet/teutonet-helm-charts/issues/1881)) ([e644bd2](https://github.com/teutonet/teutonet-helm-charts/commit/e644bd23c94834d3fef03cea5ed2250eb4b56945))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update helm release kube-prometheus-stack to v80 ([#1868](https://github.com/teutonet/teutonet-helm-charts/issues/1868)) ([1801d12](https://github.com/teutonet/teutonet-helm-charts/commit/1801d12e1d956250e80716d3bff21e82bc5bd063))
+* **base-cluster/dependencies:** update helm release oauth2-proxy to v9.0.1 ([#1869](https://github.com/teutonet/teutonet-helm-charts/issues/1869)) ([e6f2b7e](https://github.com/teutonet/teutonet-helm-charts/commit/e6f2b7e99cc470939313bd2847c507468b8c3196))
+
 ## [11.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v10.1.2...base-cluster-v11.0.0) (2025-12-10)
 
 
