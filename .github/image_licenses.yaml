@@ -14,15 +14,15 @@ licenses:
   docker.io/bitnami/grafana-tempo-vulture:
     license: Apache-2.0
     licenseLink: https://hub.docker.com/r/bitnami/grafana-tempo-vulture
-  docker.io/bitnamilegacy/kubectl:
-    license: Apache-2.0
-    licenseLink: https://hub.docker.com/r/bitnamilegacy/kubectl
   docker.io/bitnami/memcached:
     license: Apache-2.0
     licenseLink: https://hub.docker.com/r/bitnami/memcached
   docker.io/bitnami/metrics-server:
     license: Apache-2.0
     licenseLink: https://hub.docker.com/r/bitnami/metrics-server
+  docker.io/bitnamilegacy/kubectl:
+    license: Apache-2.0
+    licenseLink: https://hub.docker.com/r/bitnamilegacy/kubectl
   docker.io/bitnamilegacy/postgresql:
     license: PostgreSQL
     licenseLink: https://www.postgresql.org/about/licence/
@@ -110,6 +110,12 @@ licenses:
   ghcr.io/jimmidyson/configmap-reload:
     license: Apache-2.0
     licenseLink: https://github.com/jimmidyson/configmap-reload/pkgs/container/configmap-reload
+  ghcr.io/jkroepke/kube-webhook-certgen:
+    license: Apache-2.0
+    licenseLink: https://raw.githubusercontent.com/jkroepke/kube-webhook-certgen/refs/heads/main/LICENSE
+  ghcr.io/k8up-io/k8up:
+    license: Apache-2.0
+    licenseLink: https://raw.githubusercontent.com/k8up-io/k8up/refs/heads/master/LICENSE
   ghcr.io/kyverno/kyverno-cli:
     license: Apache-2.0
     licenseLink: https://github.com/kyverno/kyverno/pkgs/container/kyverno-cli
@@ -119,9 +125,6 @@ licenses:
   ghcr.io/teutonet/oci-images/solr-ckan:
     license: MIT
     licenseLink: https://github.com/teutonet/oci-images/blob/main/LICENSE
-  ghcr.io/k8up-io/k8up:
-    license: Apache-2.0
-    licenseLink: https://raw.githubusercontent.com/k8up-io/k8up/refs/heads/master/LICENSE
   mirror.gcr.io/aquasec/trivy-operator:
     license: Apache-2.0
     licenseLink: https://github.com/aquasecurity/trivy-operator/blob/main/LICENSE
@@ -191,21 +194,15 @@ licenses:
   registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker:
     license: Apache-2.0
     licenseLink: https://gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/-/blob/main/gradlew?ref_type=heads
-  registry.k8s.io/external-dns/external-dns:
-    license: Apache-2.0
-    licenseLink: https://raw.githubusercontent.com/kubernetes-sigs/external-dns/refs/heads/master/LICENSE.md
-  registry.k8s.io/metrics-server/metrics-server:
-    license: Apache-2.0
-    licenseLink: https://raw.githubusercontent.com/kubernetes-sigs/metrics-server/refs/heads/master/LICENSE
   registry.k8s.io/descheduler/descheduler:
     license: Apache-2.0
     licenseLink: https://github.com/kubernetes-sigs/descheduler/blob/master/LICENSE
-  registry.k8s.io/kubectl:
-    license: Apache-2.0
-    licenseLink: https://raw.githubusercontent.com/kubernetes/kubernetes/refs/heads/master/LICENSE
   registry.k8s.io/etcd:
     license: Apache-2.0
     licenseLink: https://github.com/kubernetes/kubernetes/blob/master/LICENSE
+  registry.k8s.io/external-dns/external-dns:
+    license: Apache-2.0
+    licenseLink: https://raw.githubusercontent.com/kubernetes-sigs/external-dns/refs/heads/master/LICENSE.md
   registry.k8s.io/ingress-nginx/controller:
     license: Apache-2.0
     licenseLink: https://github.com/kubernetes/ingress-nginx/blob/main/LICENSE
@@ -218,6 +215,12 @@ licenses:
   registry.k8s.io/kube-state-metrics/kube-state-metrics:
     license: Apache-2.0
     licenseLink: https://github.com/kubernetes/kube-state-metrics/blob/main/LICENSE
+  registry.k8s.io/kubectl:
+    license: Apache-2.0
+    licenseLink: https://raw.githubusercontent.com/kubernetes/kubernetes/refs/heads/master/LICENSE
+  registry.k8s.io/metrics-server/metrics-server:
+    license: Apache-2.0
+    licenseLink: https://raw.githubusercontent.com/kubernetes-sigs/metrics-server/refs/heads/master/LICENSE
   registry.k8s.io/provider-os/cinder-csi-plugin:
     license: Apache-2.0
     licenseLink: https://github.com/kubernetes/cloud-provider-openstack/blob/master/LICENSE

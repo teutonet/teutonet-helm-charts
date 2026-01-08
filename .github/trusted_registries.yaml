@@ -33,11 +33,13 @@ ghcr.io:
   aquasecurity: ALL_IMAGES
   jimmidyson:
     configmap-reload: ALL_TAGS
+  jkroepke:
+    kube-webhook-certgen: ALL_TAGS
+  k8up-io:
+    k8up: ALL_TAGS
   kyverno:
     kyverno-cli: ALL_TAGS
   teutonet: ALL_IMAGES
-  k8up-io:
-    k8up: ALL_TAGS
 mirror.gcr.io:
   aquasec: ALL_IMAGES
 quay.io:
