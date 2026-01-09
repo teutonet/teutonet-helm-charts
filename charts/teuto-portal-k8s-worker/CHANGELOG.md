@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.4.2](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.4.1...teuto-portal-k8s-worker-v3.4.2) (2026-01-09)
+
+
+### Miscellaneous Chores
+
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v1.6.0 ([#1814](https://github.com/teutonet/teutonet-helm-charts/issues/1814)) ([748cdae](https://github.com/teutonet/teutonet-helm-charts/commit/748cdae5e70b375c36c05049378c015249a55ecb))
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v1.7.0 ([#1874](https://github.com/teutonet/teutonet-helm-charts/issues/1874)) ([3f01e84](https://github.com/teutonet/teutonet-helm-charts/commit/3f01e84f00349dafa48abf79c72feeb80d203ace))
+* **teuto-portal-k8s-worker/dependencies:** update registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker docker tag to v4.1.3 ([#1794](https://github.com/teutonet/teutonet-helm-charts/issues/1794)) ([16562af](https://github.com/teutonet/teutonet-helm-charts/commit/16562af19447c2347a8919a531421f331841d120))
+
 ## [3.4.1](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.4.0...teuto-portal-k8s-worker-v3.4.1) (2025-10-10)
 
 
