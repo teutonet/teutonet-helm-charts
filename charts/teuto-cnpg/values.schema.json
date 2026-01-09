@@ -30,6 +30,62 @@
           "additionalProperties": {
             "type": "string"
           }
+        },
+        {
+          "type": "object",
+          "description": "key is database name and value is a dictionary with part of https://cloudnative-pg.io/docs/1.28/cloudnative-pg.v1#databasespec",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["owner"],
+            "properties": {
+              "owner": {
+                "type": "string"
+              },
+              "schemas": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "owner"],
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "ensure": {
+                      "type": "string",
+                      "default": "present",
+                      "enum": ["present", "absent"]
+                    },
+                    "owner": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "extensions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name"],
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "ensure": {
+                      "type": "string",
+                      "default": "present",
+                      "enum": ["present", "absent"]
+                    },
+                    "version": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       ]
     },
