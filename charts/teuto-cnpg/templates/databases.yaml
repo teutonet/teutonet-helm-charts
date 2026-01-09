@@ -4,7 +4,16 @@
 {{- else -}}
   {{- $databases = .Values.databases -}}
 {{- end -}}
-{{- range $name, $owner := $databases -}}
+{{- range $name, $ownerOrObject := $databases -}}
+{{- $owner := "" -}}
+{{- $dbObject := dict -}}
+{{- if kindIs "string" $ownerOrObject -}}
+  {{- $owner = $ownerOrObject -}}
+  {{- $dbObject = dict -}}
+{{- else -}}
+  {{- $owner = $ownerOrObject.owner -}}
+  {{- $dbObject = omit $ownerOrObject "owner" -}}
+{{- end -}}
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
@@ -14,6 +23,9 @@ metadata:
 spec:
   name: {{ $name | quote }}
   owner: {{ $owner | quote }}
+  {{- with $dbObject }}
+  {{- $dbObject | toYaml | nindent 2 }}
+  {{- end }}
   cluster:
     name: {{ printf "%s" $.Release.Name }}
 ---
