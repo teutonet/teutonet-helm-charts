@@ -78,7 +78,7 @@ jobs:
       - run: ./.github/scripts/check-licenses.sh "charts/$CHART"
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
       - name: Download Pluto
-        uses: FairwindsOps/pluto/github-action@27a470e10b07302fba2d5a2e6817a08a2b87c0c3 # v5.22.6
+        uses: FairwindsOps/pluto/github-action@d3b74eba1b1a24e614b6daef9c613d5203c2b234 # v5.22.7
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
       - run: pluto detect-files -d /tmp/templated -o custom --columns 'FILEPATH,NAME,KIND,VERSION,REPLACEMENT,REMOVED,DEPRECATED,REPL AVAIL'
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
