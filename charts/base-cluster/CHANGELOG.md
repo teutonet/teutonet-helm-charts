@@ -1,5 +1,18 @@
 # Changelog
 
+## [11.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v11.0.1...base-cluster-v11.1.0) (2026-01-09)
+
+
+### Features
+
+* **base-cluster/ingress:** allow external ingress controller ([#1859](https://github.com/teutonet/teutonet-helm-charts/issues/1859)) ([1442431](https://github.com/teutonet/teutonet-helm-charts/commit/14424311358efe19c80a67d509d51fb74bef2041))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update docker.io/grafana/grafana-image-renderer docker tag to v5.0.13 ([#1885](https://github.com/teutonet/teutonet-helm-charts/issues/1885)) ([474e903](https://github.com/teutonet/teutonet-helm-charts/commit/474e9038893d4fb64906ee09e8ccd943141b7511))
+* **base-cluster/dependencies:** update docker.io/vladgh/gpg docker tag to v1.3.7 ([#1886](https://github.com/teutonet/teutonet-helm-charts/issues/1886)) ([4b2c33b](https://github.com/teutonet/teutonet-helm-charts/commit/4b2c33b1d83911db0a4fdeab4df003590b22a4d8))
+
 ## [11.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v11.0.0...base-cluster-v11.0.1) (2026-01-08)
 
 
