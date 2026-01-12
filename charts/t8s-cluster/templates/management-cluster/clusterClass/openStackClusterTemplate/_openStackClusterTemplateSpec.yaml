@@ -4,10 +4,14 @@ Here we are generating a hash suffix.
 */}}
 {{- define "t8s-cluster.clusterClass.openStackClusterTemplate.spec" -}}
   {{- $_ := mustMerge . (pick .context "Values") -}}
+  {{- $cloud := lookup "t8s-engine.teuto.net/v1alpha1" "TeutonetesCloud" "" .Values.cloud -}}
 apiServerLoadBalancer:
   enabled: {{ not .Values.controlPlane.hosted }}
   {{- with .Values.controlPlane.allowedCIDRs }}
   allowedCIDRs: {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with (($cloud).spec).loadBalancerProvider }}
+  provider: {{ . }}
   {{- end }}
 disableAPIServerFloatingIP: {{ .Values.controlPlane.hosted }}
 bastion:
