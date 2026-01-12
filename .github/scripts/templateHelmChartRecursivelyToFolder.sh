@@ -9,7 +9,7 @@ set -o pipefail
 chart=${1?You need to provide the chart name}
 targetDir=${2?You need to provide the target directory}
 
-if yq -e '.type == "library"' "$chart/Chart.yaml" >/dev/null; then
+if yq -e '.type == "library"' "$chart/Chart.yaml" &>/dev/null; then
   echo "Skipping library chart '$chart'" >&2
   [[ -v GITHUB_OUTPUT && -f "$GITHUB_OUTPUT" ]] && echo "skipped=true" | tee -a "$GITHUB_OUTPUT"
   exit 0
@@ -19,16 +19,20 @@ fi
 
 [[ ! -d "$targetDir" ]] && mkdir -p "$targetDir"
 
-for values in "$chart/values.yaml" "$chart/ci/"*-values.yaml; do
-  [[ -f "$values" ]] || continue
-  (
-    newResourcesDir="$targetDir/$(basename -s .yaml "$values")"
+function templateAndSplit() {
+  [[ -v RUNNER_DEBUG ]] && [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+  local values="${1?}"
+  [[ -f "$values" ]] || return 0
+  local chart="${2?}"
+  local targetDir="${3?}"
+  newResourcesDir="$targetDir/$(basename -s .yaml "$values")"
 
-    mkdir "$newResourcesDir"
+  mkdir "$newResourcesDir"
 
-    "$(dirname "$0")/templateLocalHelmChart" -1 "$chart" "$values" | yq -y -S >"$newResourcesDir.yaml"
-    "$(dirname "$0")/splitYamlIntoDir" "$newResourcesDir.yaml" "$newResourcesDir"
-  ) &
-done
-trap 'EC=$?; kill $(jobs -p -r); exit $EC' INT
-wait
+  parallel --semaphore-name templateLocalHelmChart --fg -P 100% "$BIN/templateLocalHelmChart" -1 "$chart" "$values" | yq -y -S >"$newResourcesDir.yaml"
+  "$BIN/splitYamlIntoDir" "$newResourcesDir.yaml" "$newResourcesDir"
+}
+export -f templateAndSplit
+
+export BIN="$(dirname "$0")"
+parallel $([[ -v GITHUB_JOB ]] || printf --bar) -P 100% templateAndSplit {} "$chart" "$targetDir" ::: "$chart/values.yaml" "$chart/ci/"*-values.yaml

@@ -5,7 +5,7 @@
     reduce map(.runs[])[] as $run (null;
       .+$run as $new |
         .tool.driver.rules |= (
-          .+$run.tool.driver.rules | unique_by(.id)
+          .+($run.tool.driver.rules // []) | unique_by(.id)
         ) | $new*. | del(.properties, .originalUriBaseIds, .results)
     )
   ]
