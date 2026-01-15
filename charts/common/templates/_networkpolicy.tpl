@@ -2,7 +2,7 @@
   {{- $identities := list -}}
   {{- $kubeSystemNamespace := "kube-system" -}}
   {{- $konnectivityName := "konnectivity-agent" -}}
-  {{- if lookup "apps/v1" "DaemonSet" $kubeSystemNamespace $konnectivityName -}}
+  {{- if or (lookup "apps/v1" "DaemonSet" $kubeSystemNamespace $konnectivityName) (lookup "apps/v1" "Deployment" $kubeSystemNamespace $konnectivityName) -}}
     {{- $identities = append $identities (dict "endpoint" (dict
         "namespace" $kubeSystemNamespace
         "pod" (dict
