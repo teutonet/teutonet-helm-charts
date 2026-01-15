@@ -63,6 +63,7 @@ spec:
     resources: {{- include "common.resources" .Values.ingress | nindent 8 }}
     metrics:
       prometheus:
+        disableAPICheck: true
         serviceMonitor:
           enabled: {{ .Values.monitoring.prometheus.enabled }}
           additionalLabels:
