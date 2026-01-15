@@ -110,7 +110,7 @@ global:
       url: https://grafana.github.io/helm-charts
       charts:
         loki: 6.46.0
-        alloy: 1.5.0
+        alloy: 1.5.2
         tempo: 1.24.1
       condition: "{{ and .Values.monitoring.prometheus.enabled (or .Values.monitoring.loki.enabled .Values.monitoring.tracing.enabled) }}"
     external-dns:
