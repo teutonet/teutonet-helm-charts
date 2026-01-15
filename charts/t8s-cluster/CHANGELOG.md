@@ -1,5 +1,39 @@
 # Changelog
 
+## [9.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.4.1...t8s-cluster-v9.5.0) (2026-01-15)
+
+
+### Features
+
+* **t8s-cluster/artifacthub:** use centralised helmRepositories template ([#1846](https://github.com/teutonet/teutonet-helm-charts/issues/1846)) ([73a41f9](https://github.com/teutonet/teutonet-helm-charts/commit/73a41f9d6534cfc4c41c84b4396c3666c9d60e51))
+* **t8s-cluster/cilium:** enable kubeProxy replacement ([#1815](https://github.com/teutonet/teutonet-helm-charts/issues/1815)) ([b3c412d](https://github.com/teutonet/teutonet-helm-charts/commit/b3c412dc4c3a0dac8ffd6bec60aa6fcc394dc0e4))
+* **t8s-cluster/management-cluster:** add cluster-autoscaler deployment ([#1756](https://github.com/teutonet/teutonet-helm-charts/issues/1756)) ([5b6ead9](https://github.com/teutonet/teutonet-helm-charts/commit/5b6ead98ea783cff4b2e7bcdcb03e0a33b96d77a))
+* **t8s-cluster/management-cluster:** enable ImageVolume feature flag ([#1786](https://github.com/teutonet/teutonet-helm-charts/issues/1786)) ([9676ee0](https://github.com/teutonet/teutonet-helm-charts/commit/9676ee0b348a991883ebded4cad149df9234f16b))
+* **t8s-cluster/management-cluster:** set apiServerLoadBalancer.provider via TeutonetesCloud ([#1898](https://github.com/teutonet/teutonet-helm-charts/issues/1898)) ([6bf8889](https://github.com/teutonet/teutonet-helm-charts/commit/6bf8889079d865d9ee7466d6cee4f384a4f2b63b))
+* **t8s-cluster/management-cluster:** switch to hcp ([#1759](https://github.com/teutonet/teutonet-helm-charts/issues/1759)) ([303b0b6](https://github.com/teutonet/teutonet-helm-charts/commit/303b0b6011555b24f31adadf3ac403b5f76a53de))
+* **t8s-cluster/management-cluster:** use new KubeletEnsureSecretPulledImages feature gate ([#1858](https://github.com/teutonet/teutonet-helm-charts/issues/1858)) ([40d7bef](https://github.com/teutonet/teutonet-helm-charts/commit/40d7beff12e9eb7b8b3c096395ffad6a99cacee9))
+* **t8s-cluster:** migrate to CAPI v1beta2 ([#1685](https://github.com/teutonet/teutonet-helm-charts/issues/1685)) ([dc5f071](https://github.com/teutonet/teutonet-helm-charts/commit/dc5f0713cca6bc2dcb8beb3e8b0b6e710981f263))
+
+
+### Bug Fixes
+
+* **t8s-cluster/autoscaler:** these names are inside the workload cluster ([#1877](https://github.com/teutonet/teutonet-helm-charts/issues/1877)) ([f345cea](https://github.com/teutonet/teutonet-helm-charts/commit/f345cea4b29e27f32509f9ce288f96cb8b783035))
+* **t8s-cluster/management-cluster:** leave out protocol if `nil` ([#1837](https://github.com/teutonet/teutonet-helm-charts/issues/1837)) ([f370dac](https://github.com/teutonet/teutonet-helm-charts/commit/f370dacbadc84035a1a6bd3a522e86240144499b))
+* **t8s-cluster:** only allow nodePools with valid k8s names ([#1851](https://github.com/teutonet/teutonet-helm-charts/issues/1851)) ([b9431c5](https://github.com/teutonet/teutonet-helm-charts/commit/b9431c54db70c80ec2c71164459435c03a0dc8c1))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update common docker tag to v1.6.0 ([#1811](https://github.com/teutonet/teutonet-helm-charts/issues/1811)) ([b3b4c94](https://github.com/teutonet/teutonet-helm-charts/commit/b3b4c9405affb11977afb3d4972b792c7fe989c4))
+* **t8s-cluster/dependencies:** update common docker tag to v1.7.0 ([#1873](https://github.com/teutonet/teutonet-helm-charts/issues/1873)) ([71e062f](https://github.com/teutonet/teutonet-helm-charts/commit/71e062fc2fb9bb6936ef01227b742a33146ec690))
+* **t8s-cluster/dependencies:** update helm release cilium to v1.18.6 ([#1894](https://github.com/teutonet/teutonet-helm-charts/issues/1894)) ([e1adc88](https://github.com/teutonet/teutonet-helm-charts/commit/e1adc8881e84f222704fbc7ab1811ce8c1462e20))
+* **t8s-cluster/dependencies:** update helm release cluster-autoscaler to v9.53.0 ([#1856](https://github.com/teutonet/teutonet-helm-charts/issues/1856)) ([dc67fcd](https://github.com/teutonet/teutonet-helm-charts/commit/dc67fcdf4bc9dc3c0a37eeb108ae623d529279ca))
+* **t8s-cluster/dependencies:** update helm release openstack-cloud-controller-manager to v2.34.1 ([#1553](https://github.com/teutonet/teutonet-helm-charts/issues/1553)) ([e984d19](https://github.com/teutonet/teutonet-helm-charts/commit/e984d198e21b001d57c30544134a4072e93b5942))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.5.24 ([#1793](https://github.com/teutonet/teutonet-helm-charts/issues/1793)) ([a5098e3](https://github.com/teutonet/teutonet-helm-charts/commit/a5098e3efd54de0aae0f573b4a730eea110722e9))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.6.6 ([#1813](https://github.com/teutonet/teutonet-helm-charts/issues/1813)) ([e07ffa7](https://github.com/teutonet/teutonet-helm-charts/commit/e07ffa74c037590f57ab2a79f77196a8bbd30deb))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.6.7 ([#1895](https://github.com/teutonet/teutonet-helm-charts/issues/1895)) ([cf1d3b4](https://github.com/teutonet/teutonet-helm-charts/commit/cf1d3b4c2fe5570b30953329c34d0e60b9149bf5))
+* **t8s-cluster/flux:** use centralised HelmRepositories instead of per-instance ([#1758](https://github.com/teutonet/teutonet-helm-charts/issues/1758)) ([3deff65](https://github.com/teutonet/teutonet-helm-charts/commit/3deff6573f3415ba40bc54eee001b53a12c31962))
+
 ## [9.4.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.4.0...t8s-cluster-v9.4.1) (2025-10-22)
 
 

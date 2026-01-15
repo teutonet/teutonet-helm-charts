@@ -1,1 +1,1 @@
-{"charts/base-cluster":"11.0.1","charts/teuto-portal-k8s-worker":"3.4.1","charts/t8s-cluster":"9.4.1","charts/stellio-context-broker":"0.1.0","charts/chirpstack":"0.1.0","charts/common":"1.7.0","charts/ckan":"1.4.0","charts/teuto-cnpg":"3.0.0"}
+{"charts/base-cluster":"11.0.1","charts/teuto-portal-k8s-worker":"3.4.1","charts/t8s-cluster":"9.5.0","charts/stellio-context-broker":"0.1.0","charts/chirpstack":"0.1.0","charts/common":"1.7.0","charts/ckan":"1.4.0","charts/teuto-cnpg":"3.0.0"}
