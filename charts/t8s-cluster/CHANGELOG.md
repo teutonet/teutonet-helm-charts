@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.5.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.5.0...t8s-cluster-v9.5.1) (2026-01-16)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** migrate missed field after upgrade ([#1910](https://github.com/teutonet/teutonet-helm-charts/issues/1910)) ([dcf8d1d](https://github.com/teutonet/teutonet-helm-charts/commit/dcf8d1dc235c2bbeae8d2df8184fd15ad09eb1ac))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update helm release openstack-cloud-controller-manager to v2.34.2 ([#1911](https://github.com/teutonet/teutonet-helm-charts/issues/1911)) ([7bab0b4](https://github.com/teutonet/teutonet-helm-charts/commit/7bab0b48b87995ef8902c10354dec550af875601))
+
 ## [9.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.4.1...t8s-cluster-v9.5.0) (2026-01-15)
 
 
