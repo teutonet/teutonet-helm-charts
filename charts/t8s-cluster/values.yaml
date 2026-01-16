@@ -14,7 +14,7 @@ global:
     cloud-provider-openstack:
       url: https://kubernetes.github.io/cloud-provider-openstack
       charts:
-        openstack-cloud-controller-manager: 2.34.1
+        openstack-cloud-controller-manager: 2.34.2
         openstack-cloud-controller-manager 2.33.x: 2.33.1
         openstack-cloud-controller-manager 2.32.x: 2.32.1
         openstack-cloud-controller-manager 2.31.x: 2.31.5
