@@ -16,7 +16,7 @@ maintainers:
     name: tasches
 name: base-cluster
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v11.0.1/charts/base-cluster
+  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v11.1.0/charts/base-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster
 type: application
 version: 11.1.0
