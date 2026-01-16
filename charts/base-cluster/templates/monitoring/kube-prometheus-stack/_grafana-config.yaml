@@ -96,10 +96,6 @@ dashboardProviders:
         options:
           path: /var/lib/grafana/dashboards/custom
 sidecar:
-  image:
-# https://github.com/grafana/helm-charts/issues/4031
-# TODO: Check if fixed, then pinned version can be removed
-    tag: 2.0.3
   dashboards:
     enabled: true
     resource: configmap
