@@ -4,8 +4,9 @@ Here we are generating a hash suffix.
 This function needs the whole `$` context to be able to use `.Files.Get`
 */}}
 {{- define "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.spec" -}}
-rolloutBefore:
-  certificatesExpiryDays: 60
+rollout:
+  before:
+    certificatesExpiryDays: 60
 kubeadmConfigSpec:
   clusterConfiguration:
     apiServer:
