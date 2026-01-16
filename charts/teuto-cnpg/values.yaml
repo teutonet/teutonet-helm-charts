@@ -1,7 +1,7 @@
 databaseImage:
   registry: ghcr.io
   repository: cloudnative-pg/postgresql
-  tag: "16.1"
+  tag: "16.11@sha256:f0b8e5538b1766134bfe32499a9ac7bbbf893d5d0ba21d65e81046b13c7830aa"
 instances: 3
 logLevel: info
 storageSize: 1Gi
