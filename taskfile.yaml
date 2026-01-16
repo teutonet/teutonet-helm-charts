@@ -1,0 +1,405 @@
+version: '3'
+
+vars:
+  SCRIPTS_DIR: .github/scripts
+  CHARTS_DIR: charts
+  REPORTS_DIR: reports
+  TMP_DIR: /tmp/helm-validation
+  TARGET_BRANCH: '{{.TARGET_BRANCH | default "main"}}'
+  CHART: '{{.CHART | default ""}}'
+  CHANGED_CHARTS:
+    sh: |
+      if git rev-parse --verify origin/{{.TARGET_BRANCH}} >/dev/null 2>&1; then
+        git diff --name-only origin/{{.TARGET_BRANCH}}...HEAD 2>/dev/null | \
+          grep -E '^{{.CHARTS_DIR}}/[^/]+' | \
+          cut -d/ -f2 | \
+          sort -u | \
+          tr '\n' ' ' | \
+          sed 's/ $//'
+      else
+        echo ""
+      fi
+
+env:
+  RUNNER_DEBUG: '{{.RUNNER_DEBUG | default "0"}}'
+
+tasks:
+  setup:check-tools:
+    desc: Verify all required tools are installed
+    silent: false
+    cmds:
+      - |
+        MISSING=""
+
+        check_tool() {
+          if command -v "$1" >/dev/null 2>&1; then
+            echo "✓ $1"
+          else
+            echo "✗ $1 (missing)"
+            MISSING="$MISSING $1"
+          fi
+        }
+
+        check_tool bash
+        check_tool git
+        check_tool yq
+        check_tool jq
+        check_tool sponge
+        check_tool helm
+        check_tool ct
+        check_tool helm-docs
+        check_tool cog
+        check_tool actionlint
+        check_tool pluto
+        check_tool grype
+        check_tool syft
+        check_tool trivy
+
+        if [ -n "$MISSING" ]; then
+          echo "Missing tools:$MISSING"
+          echo "To install all tools, run: nix develop"
+          exit 1
+        fi
+
+  git:changed-charts:
+    desc: List charts changed compared to target branch
+    silent: true
+    cmds:
+      - |
+        CHARTS="{{.CHANGED_CHARTS}}"
+        if [ -z "$CHARTS" ]; then
+          echo "No changed charts detected" >&2
+          exit 0
+        fi
+        echo "$CHARTS" | tr ' ' '\n'
+
+  git:all-charts:
+    desc: List all charts in repository
+    silent: true
+    cmds:
+      - |
+        for chart in {{.CHARTS_DIR}}/*/; do
+          [ -d "$chart" ] || continue
+          basename "$chart"
+        done
+
+  git:status:
+    desc: Show changed charts
+    silent: false
+    cmds:
+      - |
+        CHANGED="{{.CHANGED_CHARTS}}"
+        if [ -z "$CHANGED" ]; then
+          echo "(none)"
+        else
+          echo "$CHANGED" | tr ' ' '\n'
+        fi
+
+  chart:prepare-values:
+    desc: Prepare chart values with CI overrides (requires CHART variable)
+    requires:
+      vars:
+        - CHART
+    sources:
+      - '{{.CHARTS_DIR}}/{{.CHART}}/values.yaml'
+      - '{{.CHARTS_DIR}}/{{.CHART}}/ci/**/*.sh'
+      - '{{.CHARTS_DIR}}/{{.CHART}}/ci/_common.sh'
+      - '{{.CHARTS_DIR}}/{{.CHART}}/ci/**/*.yaml'
+    cmds:
+      - '{{.SCRIPTS_DIR}}/prepare-values.sh "{{.CHARTS_DIR}}/{{.CHART}}"'
+
+  chart:template:
+    desc: Template chart with all values files (requires CHART variable)
+    requires:
+      vars:
+        - CHART
+    cmds:
+      - task: chart:prepare-values
+        vars:
+          CHART: '{{.CHART}}'
+      - task: internal:template
+        vars:
+          CHART: '{{.CHART}}'
+
+  internal:template:
+    internal: true
+    requires:
+      vars:
+        - CHART
+    sources:
+      - '{{.CHARTS_DIR}}/{{.CHART}}/templates/**/*'
+      - '{{.CHARTS_DIR}}/{{.CHART}}/charts/**/*'
+      - '{{.CHARTS_DIR}}/{{.CHART}}/values.yaml'
+      - '{{.CHARTS_DIR}}/{{.CHART}}/ci/**/*.yaml'
+    generates:
+      - '{{.TMP_DIR}}/templated-{{.CHART}}/**/*.yaml'
+    vars:
+      OUTPUT_DIR: '{{.TMP_DIR}}/templated-{{.CHART}}'
+    cmds:
+      - rm -rf {{.OUTPUT_DIR}}
+      - mkdir -p {{.OUTPUT_DIR}}
+      - '{{.SCRIPTS_DIR}}/templateHelmChartRecursivelyToFolder.sh "{{.CHARTS_DIR}}/{{.CHART}}" {{.OUTPUT_DIR}}'
+
+  chart:lint:
+    desc: Run helm lint and chart-testing on chart (requires CHART variable)
+    requires:
+      vars:
+        - CHART
+    cmds:
+      - task: chart:prepare-values
+        vars:
+          CHART: '{{.CHART}}'
+      - task: internal:lint
+        vars:
+          CHART: '{{.CHART}}'
+
+  internal:lint:
+    internal: true
+    requires:
+      vars:
+        - CHART
+    sources:
+      - '{{.CHARTS_DIR}}/{{.CHART}}/templates/**/*'
+      - '{{.CHARTS_DIR}}/{{.CHART}}/charts/**/*'
+      - '{{.CHARTS_DIR}}/{{.CHART}}/values.yaml'
+      - '{{.CHARTS_DIR}}/{{.CHART}}/ci/**/*.yaml'
+    cmds:
+      - |
+        CHART_PATH="{{.CHARTS_DIR}}/{{.CHART}}"
+        if [ -f "$CHART_PATH/values.yaml" ]; then
+          ct lint --charts "$CHART_PATH" --check-version-increment=false
+        else
+          helm lint "$CHART_PATH"
+        fi
+
+  chart:extract-images:
+    desc: Extract container images to Chart.yaml annotations (requires CHART variable)
+    requires:
+      vars:
+        - CHART
+    deps:
+      - chart:template
+    sources:
+      - '{{.TMP_DIR}}/templated-{{.CHART}}/**/*.yaml'
+    status:
+      - 'grep -q "artifacthub.io/images" {{.CHARTS_DIR}}/{{.CHART}}/Chart.yaml'
+    vars:
+      TEMPLATED_DIR: '{{.TMP_DIR}}/templated-{{.CHART}}'
+    cmds:
+      - '{{.SCRIPTS_DIR}}/extract-artifacthub-images.sh "{{.CHARTS_DIR}}/{{.CHART}}" {{.TEMPLATED_DIR}}'
+
+  chart:docs:
+    desc: Generate README documentation for chart (requires CHART variable)
+    requires:
+      vars:
+        - CHART
+    sources:
+      - '{{.CHARTS_DIR}}/{{.CHART}}/values.yaml'
+      - '{{.CHARTS_DIR}}/{{.CHART}}/Chart.yaml'
+    generates:
+      - '{{.CHARTS_DIR}}/{{.CHART}}/README.md'
+    cmds:
+      - 'helm-docs -g "{{.CHARTS_DIR}}/{{.CHART}}"'
+
+  validate:commits:
+    desc: Check all commits follow conventional commit specification
+    cmds:
+      - cog check
+
+  validate:workflows:
+    desc: Lint GitHub Actions workflow files
+    cmds:
+      - actionlint
+
+  validate:registries:
+    desc: Ensure all images come from trusted registries (requires CHART variable)
+    requires:
+      vars:
+        - CHART
+    deps:
+      - chart:extract-images
+    sources:
+      - '{{.CHARTS_DIR}}/{{.CHART}}/Chart.yaml'
+      - '.github/trusted_registries.yaml'
+      - '.github/scripts/trusted_images_regex.jq'
+    cmds:
+      - '{{.SCRIPTS_DIR}}/enforce-trusted-registries.sh "{{.CHARTS_DIR}}/{{.CHART}}"'
+
+  validate:licenses-metadata:
+    desc: Check image licenses from metadata file (requires CHART variable)
+    requires:
+      vars:
+        - CHART
+    deps:
+      - chart:extract-images
+    sources:
+      - '{{.CHARTS_DIR}}/{{.CHART}}/Chart.yaml'
+      - '.github/image_licenses.yaml'
+    cmds:
+      - '{{.SCRIPTS_DIR}}/check-licenses.sh "{{.CHARTS_DIR}}/{{.CHART}}"'
+
+  validate:deprecated-apis:
+    desc: Detect deprecated Kubernetes APIs using pluto (requires CHART variable)
+    requires:
+      vars:
+        - CHART
+    deps:
+      - chart:template
+    sources:
+      - '{{.TMP_DIR}}/templated-{{.CHART}}/**/*.yaml'
+    vars:
+      TEMPLATED_DIR: '{{.TMP_DIR}}/templated-{{.CHART}}'
+    cmds:
+      - |
+        if [ -d "{{.TEMPLATED_DIR}}" ] && [ "$(ls -A {{.TEMPLATED_DIR}} 2>/dev/null)" ]; then
+          pluto detect-files -d {{.TEMPLATED_DIR}} -o custom \
+            --columns 'FILEPATH,NAME,KIND,VERSION,REPLACEMENT,REMOVED,DEPRECATED,REPL AVAIL'
+        fi
+
+  security:licenses-deep:
+    desc: Deep license scanning with syft and trivy (requires CHART variable)
+    requires:
+      vars:
+        - CHART
+    deps:
+      - chart:extract-images
+    sources:
+      - '{{.CHARTS_DIR}}/{{.CHART}}/Chart.yaml'
+    cmds:
+      - '{{.SCRIPTS_DIR}}/scan-for-licenses.sh "{{.CHARTS_DIR}}/{{.CHART}}"'
+
+  security:cves:
+    desc: Scan for CVEs with grype (requires CHART variable)
+    requires:
+      vars:
+        - CHART
+    deps:
+      - chart:extract-images
+    sources:
+      - '{{.CHARTS_DIR}}/{{.CHART}}/Chart.yaml'
+    cmds:
+      - rm -rf {{.REPORTS_DIR}}
+      - mkdir -p {{.REPORTS_DIR}}
+      - '{{.SCRIPTS_DIR}}/generate-sarif-reports.sh "{{.CHARTS_DIR}}/{{.CHART}}"'
+
+  validate:chart-quick:
+    desc: Quick validation of a single chart (no security scanning)
+    internal: true
+    requires:
+      vars:
+        - CHART
+    cmds:
+      - task: chart:lint
+        vars:
+          CHART: '{{.CHART}}'
+      - task: chart:template
+        vars:
+          CHART: '{{.CHART}}'
+      - task: validate:registries
+        vars:
+          CHART: '{{.CHART}}'
+      - task: validate:licenses-metadata
+        vars:
+          CHART: '{{.CHART}}'
+
+  validate:chart-full:
+    desc: Full validation of a single chart (includes security scanning)
+    internal: true
+    requires:
+      vars:
+        - CHART
+    cmds:
+      - task: validate:chart-quick
+        vars:
+          CHART: '{{.CHART}}'
+      - task: validate:deprecated-apis
+        vars:
+          CHART: '{{.CHART}}'
+      - task: security:licenses-deep
+        vars:
+          CHART: '{{.CHART}}'
+      - task: security:cves
+        vars:
+          CHART: '{{.CHART}}'
+
+  validate:chart:
+    desc: Full validation of a specific chart (requires CHART variable)
+    requires:
+      vars:
+        - CHART
+    cmds:
+      - task: validate:chart-full
+        vars:
+          CHART: '{{.CHART}}'
+
+  quick:
+    desc: Quick validation of changed charts (no security scanning)
+    deps:
+      - setup:check-tools
+    cmds:
+      - task: validate:commits
+      - task: validate:workflows
+      - |
+        CHARTS="{{.CHANGED_CHARTS}}"
+        [ -z "$CHARTS" ] && exit 0
+
+        for chart in $CHARTS; do
+          task validate:chart-quick CHART="$chart" || exit 1
+        done
+
+  full:
+    desc: Full validation of changed charts (includes security scanning)
+    deps:
+      - setup:check-tools
+    cmds:
+      - task: validate:commits
+      - task: validate:workflows
+      - |
+        CHARTS="{{.CHANGED_CHARTS}}"
+        [ -z "$CHARTS" ] && exit 0
+
+        for chart in $CHARTS; do
+          task validate:chart-full CHART="$chart" || exit 1
+        done
+
+  ci:
+    desc: Full validation of ALL charts (CI mode)
+    deps:
+      - setup:check-tools
+    cmds:
+      - task: validate:commits
+      - task: validate:workflows
+      - |
+        CHARTS=$(task git:all-charts)
+
+        if [ -z "$CHARTS" ]; then
+          echo "No charts found" >&2
+          exit 1
+        fi
+
+        for chart in $CHARTS; do
+          task validate:chart CHART="$chart" || exit 1
+        done
+
+  clean:
+    desc: Clean up temporary files and reports
+    cmds:
+      - |
+        rm -rf {{.TMP_DIR}}
+        rm -rf {{.REPORTS_DIR}}
+
+  default:
+    desc: Run full validation on changed charts
+    silent: true
+    cmds:
+      - |
+        CHARTS=$(task git:changed-charts)
+
+        if [ -z "$CHARTS" ]; then
+          echo "No changed charts found" >&2
+          exit 0
+        fi
+
+        for chart in $CHARTS; do
+          task validate:chart CHART="$chart" || exit 1
+        done
