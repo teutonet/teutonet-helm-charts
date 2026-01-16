@@ -6,5 +6,7 @@ roles:
 databases:
   kuchen:
     owner: pizza
-  torte:
-    owner: keks
+    extensions:
+      - name: pgaudit
+        version: 1.7.1
+  torte: keks
