@@ -13,7 +13,7 @@ jobs:
       security-events: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
           fetch-depth: 0
@@ -114,7 +114,7 @@ jobs:
           } > open-alerts.md
 
       - name: Commit and push results
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9
         with:
           add: 'open-alerts.md'
           message: 'docs: Update code scanning results - ${{ github.run_id }}'
