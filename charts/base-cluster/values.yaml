@@ -116,7 +116,7 @@ global:
     external-dns:
       url: https://kubernetes-sigs.github.io/external-dns
       charts:
-        external-dns: 1.19.0
+        external-dns: 1.20.0
       condition: '{{ not (empty .Values.dns.provider) }}'
     oauth2-proxy:
       url: https://oauth2-proxy.github.io/manifests
