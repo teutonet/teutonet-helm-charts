@@ -16,22 +16,22 @@ spec:
   groups:
     - name: certificate-expiration
       rules:
-        - alert: CertificateExpiringSoon
+        - alert: CertificatePastRenewalTime
           annotations:
-            description: {{ "Certificate {{ $labels.exported_namespace }}/{{ $labels.name }} will expire in less than 14 days. The certificate will expire at {{ humanizeTimestamp $value }}" | quote }}
-            summary: Certificate is expiring soon.
+            description: {{ "Certificate {{ $labels.exported_namespace }}/{{ $labels.name }} hasn't been renewed in 30 Minutes. The certificate should've been renewed {{ humanizeDuration $value }} ago." | quote }}
+            summary: Certificate is past renewal time.
           expr: |-
-            certmanager_certificate_expiration_timestamp_seconds and (certmanager_certificate_expiration_timestamp_seconds - time() <= (60 * 60 * 24 * 14))
+            time() - certmanager_certificate_renewal_timestamp_seconds > (30*60)
           for: 5m
           labels:
             severity: critical
             period: WorkingHours
-        - alert: CertificateExpiringSoon
+        - alert: CertificatePastRenewalTimeHalfwayToExpiration
           annotations:
-            description: {{ "Certificate {{ $labels.exported_namespace }}/{{ $labels.name }} will expire in less than 1 week. The certificate will expire at {{ humanizeTimestamp $value }}" | quote }}
+            description: {{ "Certificate {{ $labels.exported_namespace }}/{{ $labels.name }} hasn't been renewed and is halfway to expiration. The certificate will expire at {{ humanizeTimestamp $value }}." | quote }}
             summary: Certificate is expiring soon.
           expr: |-
-            certmanager_certificate_expiration_timestamp_seconds and (certmanager_certificate_expiration_timestamp_seconds - time() <= (60 * 60 * 24 * 7))
+            certmanager_certificate_expiration_timestamp_seconds and (time() - (certmanager_certificate_renewal_timestamp_seconds + ((certmanager_certificate_expiration_timestamp_seconds - certmanager_certificate_renewal_timestamp_seconds) * 1/2)) > 0)
           for: 5m
           labels:
             severity: critical
