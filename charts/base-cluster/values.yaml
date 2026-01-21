@@ -85,7 +85,7 @@ global:
     image:
       registry: docker.io
       repository: grafana/grafana-image-renderer
-      tag: v5.2.3@sha256:201dc2e8086bf1a7b75e01552421634524c7aadfa441020c36ed3aad3bcf759c
+      tag: v5.3.0@sha256:43ea0bd369a8a06fdbe5a0e3ace684892f231f22e5d69acaec3913304d8528e2
   networkPolicy:
     type: none
     dnsLabels:
