@@ -40,7 +40,7 @@ jobs:
         run: sudo apt-get -yq install moreutils
       - run: ./scripts/.github/scripts/prepare-values.sh "charts/${{ needs.getChangedChart.outputs.chart }}"
       - run: ./scripts/.github/scripts/create-values-diff.sh ${{ github.event.number }} "charts/${{ needs.getChangedChart.outputs.chart }}" --dry-run > comment_body.md
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: comment_body
           path: comment_body.md
@@ -57,7 +57,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.ACTIONS_BOT_TOKEN }}
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
         with:
           name: comment_body
       - run: ./.github/scripts/create-values-diff.sh ${{ github.event.number }} "charts/${{ needs.getChangedChart.outputs.chart }}" --body comment_body.md
