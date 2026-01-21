@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata: {{- include "chirpstack.commonMetadata" (dict "context" . "component" "gateway-bridge") | nindent 2 }}
+spec:
+  type: LoadBalancer
+  ports:
+  - name: chirpstack-udp
+    port: 1700
+    protocol: UDP
+    targetPort: chirpstack-udp
+  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
+    app.kubernetes.io/component: gateway-bridge

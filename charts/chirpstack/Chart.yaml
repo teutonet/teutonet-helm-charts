@@ -1,0 +1,20 @@
+apiVersion: v2
+name: chirpstack
+type: application
+version: 0.1.0
+appVersion: "4"
+maintainers:
+  - name: cwrau
+    email: cwr@teuto.net
+  - name: marvinWolff
+    email: mw@teuto.net
+  - name: steutol
+    email: sl@teuto.net
+sources:
+  - https://github.com/teutonet/teutonet-helm-charts
+home: https://teuto.net
+description: An opinionated way to deploy chirpstack LoRaWAN network server.
+dependencies:
+  - name: common
+    version: 2.2.3
+    repository: https://charts.bitnami.com/bitnami
