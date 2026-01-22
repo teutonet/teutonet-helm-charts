@@ -93,6 +93,11 @@ spec:
       rollOutPods: true
       prometheus:
         enabled: true
+    {{- if .Values.controlPlane.hosted }}
+      tolerations:
+        - key: node.cluster.x-k8s.io/uninitialized
+          effect: NoSchedule
+    {{- end }}
     prometheus:
       enabled: true
 {{- end }}
