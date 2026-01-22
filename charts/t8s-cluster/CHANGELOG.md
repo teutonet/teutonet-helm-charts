@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.5.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.5.1...t8s-cluster-v9.5.2) (2026-01-22)
+
+
+### Bug Fixes
+
+* **t8s-cluster/workload-cluster:** add toleration for cilium-operator ([#1930](https://github.com/teutonet/teutonet-helm-charts/issues/1930)) ([07c3bad](https://github.com/teutonet/teutonet-helm-charts/commit/07c3bad756c123656aa0c8748cb2a56b8d90f5ab))
+
 ## [9.5.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.5.0...t8s-cluster-v9.5.1) (2026-01-16)
 
 
