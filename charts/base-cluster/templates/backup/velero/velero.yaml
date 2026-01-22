@@ -88,7 +88,7 @@ spec:
           {{- end }}
       {{- end }}
       volumeSnapshotLocation: []
-      uploaderType: restic
+      uploaderType: kopia
     metrics:
       serviceMonitor:
         additionalLabels:
