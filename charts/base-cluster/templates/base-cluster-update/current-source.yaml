@@ -1,0 +1,22 @@
+{{- if .Values.monitoring.prometheus.enabled }}
+  {{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "base-cluster-current" "resource" (include "base-cluster.currentVersionRule" .) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "monitoring/provisioned-by" "base-cluster")) }}
+{{- end -}}
+
+{{- define "base-cluster.currentVersionRule" -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: base-cluster-current
+  namespace: flux-system
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    monitoring/provisioned-by: base-cluster
+spec:
+  groups:
+    - name: base-cluster-current
+      rules:
+        - record: base_cluster_current_version:info
+          expr: vector(1)
+          labels: {{- with semver .Chart.Version }}
+            tag: {{ printf "%d.%d.%d" .Major .Minor .Patch | quote }}
+            {{- end }}
+{{- end }}

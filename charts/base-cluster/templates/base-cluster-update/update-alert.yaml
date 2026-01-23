@@ -1,0 +1,35 @@
+{{- if .Values.monitoring.prometheus.enabled }}
+  {{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "base-cluster-update" "resource" (include "base-cluster.updateAlert" .) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "monitoring/provisioned-by" "base-cluster")) }}
+{{- end -}}
+
+{{- define "base-cluster.updateAlert" -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: base-cluster-update
+  namespace: flux-system
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    monitoring/provisioned-by: base-cluster
+spec:
+  groups:
+    - name: base-cluster-update
+      rules:
+        - alert: BaseClusterUpdateAvailable
+          annotations:
+            description: {{ "New base-cluster version is available. New version: {{ $labels.tag }}." | quote }}
+            summary: New base-cluster version is available.
+          expr: |-
+            (
+              (
+                (max(image_policy_latest_version{customresource_namespace="flux-system",customresource_name="base-cluster-chart"}) by (tag))
+                -
+                base_cluster_current_version:info
+              )
+              or
+              (max(image_policy_latest_version{customresource_namespace="flux-system",customresource_name="base-cluster-chart"}) by (tag))
+            ) == 1
+          for: 1w
+          labels:
+            severity: critical
+            period: WorkingHours
+{{- end }}
