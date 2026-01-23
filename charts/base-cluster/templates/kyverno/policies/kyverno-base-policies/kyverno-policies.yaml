@@ -37,7 +37,7 @@ spec:
     {{- $nodeExporter := dict "resources" (dict "namespaces" (list "monitoring") "kinds" (list "Pod") "names" (list "kube-prometheus-stack-prometheus-node-exporter-*")) -}}
     {{- $nfsServerProvisioner := dict "resources" (dict "namespaces" (list "nfs-server-provisioner") "kinds" (list "Pod") "names" (list "nfs-server-provisioner-0")) -}}
     {{- $velero := dict "resources" (dict "namespaces" (list "backup") "kinds" (list "Pod")) -}}
-    {{- $nodeAgent := dict "resources" (dict "namespaces" (list "backup") "kinds" (list "Pod" "Deployment") "names" (list "node-agent-*" "velero-*")) -}}
+    {{- $nodeAgent := dict "resources" (dict "namespaces" (list "backup") "kinds" (list "Pod" "Deployment") "names" (list "node-agent-*" "velero-*" "backup-*")) -}}
 
     {{- $disallowHostPath := list -}}
     {{- $runAsNonRoot := list -}}
