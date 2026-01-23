@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.7.0...common-v1.8.0) (2026-01-23)
+
+
+### Features
+
+* **common/networkpolicy:** add support for konnectivity-agent deployment ([#1901](https://github.com/teutonet/teutonet-helm-charts/issues/1901)) ([85ae79f](https://github.com/teutonet/teutonet-helm-charts/commit/85ae79f4665984a6900fd49e3118169e2c246818))
+
 ## [1.7.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.6.0...common-v1.7.0) (2025-12-09)
 
 
