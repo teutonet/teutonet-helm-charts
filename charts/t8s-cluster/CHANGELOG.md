@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.5.3](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.5.2...t8s-cluster-v9.5.3) (2026-01-26)
+
+
+### Bug Fixes
+
+* **t8s-cluster/workload-cluster:** add missing tolerations ([#1933](https://github.com/teutonet/teutonet-helm-charts/issues/1933)) ([8718c0d](https://github.com/teutonet/teutonet-helm-charts/commit/8718c0da3e375589f0bbc930b3e232ea0d9318dc))
+
 ## [9.5.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.5.1...t8s-cluster-v9.5.2) (2026-01-22)
 
 
