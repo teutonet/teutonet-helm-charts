@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v3.0.0...teuto-cnpg-v3.0.1) (2026-01-26)
+
+
+### Miscellaneous Chores
+
+* **teuto-cnpg/dependencies:** pin ghcr.io/cloudnative-pg/postgresql docker tag to 6e0bdf6 ([#1368](https://github.com/teutonet/teutonet-helm-charts/issues/1368)) ([67362ac](https://github.com/teutonet/teutonet-helm-charts/commit/67362ac8b22c0064435efd46c3f8c82d34eca473))
+
 ## [3.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v2.1.0...teuto-cnpg-v3.0.0) (2025-09-10)
 
 
