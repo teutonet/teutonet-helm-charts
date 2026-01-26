@@ -97,6 +97,11 @@ spec:
       tolerations:
         - key: node.cluster.x-k8s.io/uninitialized
           effect: NoSchedule
+        - key: node.cloudprovider.kubernetes.io/uninitialized
+          effect: NoSchedule
+          value: "true"
+        - key: node.kubernetes.io/not-ready
+          effect: NoSchedule
     {{- end }}
     prometheus:
       enabled: true
