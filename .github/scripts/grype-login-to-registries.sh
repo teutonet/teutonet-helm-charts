@@ -10,7 +10,7 @@ declare -A IMAGE_PULL_TOKENS=(
   ["ghcr.io"]="${GHCR_PULL_TOKEN}"
 )
 
-if command -v grype 2>/dev/null; then
+if command -v grype &>/dev/null; then
   grype db update -q
 fi
 
