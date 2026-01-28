@@ -1,0 +1,26 @@
+{{- if and .Values.monitoring.prometheus.enabled }}
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: base-cluster-chart
+  namespace: flux-system
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    monitoring/provisioned-by: base-cluster
+spec:
+  image: ghcr.io/teutonet/teutonet-helm-charts/base-cluster # artifacthub-ignore
+  interval: 24h
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: base-cluster-chart
+  namespace: flux-system
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    monitoring/provisioned-by: base-cluster
+spec:
+  imageRepositoryRef:
+    name: base-cluster-chart
+  policy:
+    semver:
+      range: x.x.x
+{{- end }}
