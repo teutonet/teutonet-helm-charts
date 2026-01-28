@@ -72,13 +72,24 @@ jobs:
       - run: ./.github/scripts/templateHelmChartRecursivelyToFolder.sh "charts/$CHART" /tmp/templated
         id: templateChart
       - run: ./.github/scripts/extract-artifacthub-images.sh "charts/$CHART" /tmp/templated
-        if: ${{ steps.templateChart.outputs.skipped == 'false' }}
+        # licenses doesn't need to run after a merge, not like normal linting, as the licenses don't change
+        if: &skipLicense ${{ steps.templateChart.outputs.skipped == 'false' && ! github.event.merge_group }}
       - run: ./.github/scripts/enforce-trusted-registries.sh "charts/$CHART"
-        if: ${{ steps.templateChart.outputs.skipped == 'false' }}
+        if: *skipLicense
       - run: ./.github/scripts/check-licenses.sh "charts/$CHART"
-        if: ${{ steps.templateChart.outputs.skipped == 'false' }}
+        if: *skipLicense
+      - run: /home/linuxbrew/.linuxbrew/bin/brew install syft trivy
+        if: *skipLicense
+      - env:
+          TEUTO_PORTAL_WORKER_PULL_TOKEN: ${{ secrets.TEUTO_PORTAL_WORKER_PULL_TOKEN }}
+          GHCR_PULL_TOKEN: ${{ secrets.GHCR_PULL_TOKEN }}
+        run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          ./scripts/.github/scripts/scan-for-licenses.sh "charts/${{ needs.getChangedChart.outputs.chart }}"
+        if: *skipLicense
       - name: Download Pluto
         uses: FairwindsOps/pluto/github-action@d3b74eba1b1a24e614b6daef9c613d5203c2b234 # v5.22.7
-        if: ${{ steps.templateChart.outputs.skipped == 'false' }}
+        if: &skip ${{ steps.templateChart.outputs.skipped == 'false' }}
       - run: pluto detect-files -d /tmp/templated -o custom --columns 'FILEPATH,NAME,KIND,VERSION,REPLACEMENT,REMOVED,DEPRECATED,REPL AVAIL'
-        if: ${{ steps.templateChart.outputs.skipped == 'false' }}
+        if: *skip
