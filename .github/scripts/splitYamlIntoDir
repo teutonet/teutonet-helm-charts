@@ -1,48 +1,80 @@
 #!/usr/bin/env bash
 
-[[ "$RUNNER_DEBUG" == 1 ]] && set -x
+[[ -v RUNNER_DEBUG && "$RUNNER_DEBUG" == 1 ]] && set -x
 [[ -o xtrace ]] && export RUNNER_DEBUG=1
 
 set -eu
 set -o pipefail
 
-function splitBySelector() {
-  [[ -v RUNNER_DEBUG ]] && [[ "$RUNNER_DEBUG" == 1 ]] && set -x
-  local yaml="${1?}"
-  local dir="${2?}"
-  local selector="${3?}"
-  local IFS=$'\n'
-  local resourceName
-  local kind
-  local namespace
-  local name
-  kind="$(jq --argjson selector "$selector" -n -r '$selector.kind')"
-  namespace="$(jq --argjson selector "$selector" -n -r '$selector.namespace')"
-  name="$(jq --argjson selector "$selector" -n -r '$selector.name')"
+function renameFile() {
+  [[ -v RUNNER_DEBUG && "$RUNNER_DEBUG" == 1 ]] && set -x
+  [[ -o xtrace ]] && export RUNNER_DEBUG=1
 
+  local splitFile="${1?}"
+  local dir="${2?}"
+  local kind
+  kind="$(yq -r '.kind' "$splitFile")"
+  if [[ "$kind" == "" ]]; then
+    # skip empty documents
+    rm -f "$splitFile"
+    return 0
+  fi
+  local namespace
+  namespace="$(yq -r '.metadata.namespace' "$splitFile")"
+  local name
+  name="$(yq -r '.metadata.name' "$splitFile")"
+
+  local resourceName
   resourceName="$dir/$namespace/$kind/$name.yaml"
   if [[ -f "$resourceName" ]]; then
     echo "'$resourceName' shouldn't already exist" >&2
     return 1
   fi
   mkdir -p "$(dirname "$resourceName")"
-  # shellcheck disable=SC2016
-  yq -y -s --argjson selector "$selector" '.[] | select((.kind == $selector.kind) and (.metadata.namespace == $selector.namespace) and (.metadata.name == $selector.name)) | del(.metadata.labels.chart) | del(.metadata.labels["helm.sh/chart"])' <"$yaml" >"$resourceName"
-  if [[ "$kind" == "HelmRelease" ]]; then
-    parallel --semaphore-name splitYamlIntoDir_templateHelmRelease --fg -P 50% "$BIN/templateHelmRelease" -1 <<<"$(sed -s '$a---' <(yq -s -y '.[] | select(.apiVersion | contains("source.toolkit.fluxcd.io"))' <"$yaml") "$resourceName")" >"${resourceName}_templated"
-    splitYamlIntoDir "${resourceName}_templated" "$(dirname "$resourceName")/$(basename -s .yaml "$resourceName")"
-    rm "${resourceName}_templated"
+  mv "$splitFile" "$resourceName"
+}
+export -f renameFile
+
+function splitHelmReleaseIntoDir() {
+  [[ -v RUNNER_DEBUG && "$RUNNER_DEBUG" == 1 ]] && set -x
+  [[ -o xtrace ]] && export RUNNER_DEBUG=1
+
+  local helmrelease="${1?}"
+  local helmreleaseDir
+  helmreleaseDir="$(dirname "$helmrelease")/$(basename -s .yaml "$helmrelease")"
+  if ! [[ -d "$helmreleaseDir" ]]; then
+    local yaml="${2?}"
+    "$BIN_DIR/templateHelmRelease" -1 <<<"$(sed -s '$a---' <(yq -s -y '.[] | select(.apiVersion | contains("source.toolkit.fluxcd.io"))' <"$yaml") "$helmrelease")" >"${helmrelease}_templated"
+    splitYamlIntoDir "${helmrelease}_templated" "$helmreleaseDir"
+    rm "${helmrelease}_templated"
   fi
 }
-export -f splitBySelector
+export -f splitHelmReleaseIntoDir
 
 function splitYamlIntoDir() {
-  [[ -v RUNNER_DEBUG ]] && [[ "$RUNNER_DEBUG" == 1 ]] && set -x
-  local yaml="${1?}"
-  local dir="${2?}"
+  [[ -v RUNNER_DEBUG && "$RUNNER_DEBUG" == 1 ]] && set -x
+  [[ -o xtrace ]] && export RUNNER_DEBUG=1
 
-  yq -c -s '.[] | select(.kind and .metadata.name) | {kind: .kind, namespace: .metadata.namespace, name: .metadata.name}' <"$yaml" | parallel -P 100% splitBySelector "$yaml" "$dir" {}
+  local yaml="${1?}"
+  local yamlDir
+  yamlDir="$(dirname "$yaml")"
+  local dir="${2?}"
+  local IFS=$'\n'
+  local rc=0
+  local splitFile
+  local splitPrefix
+  splitPrefix="$(basename "$yaml")-"
+  local helmrelease
+
+  env -C "$yamlDir" csplit --prefix="$splitPrefix" --suppress-matched "$yaml" '/^---$/' '{*}' >/dev/null || rc="$?"
+  if [[ "$rc" != "0" && "$rc" != "1" ]]; then
+    return "$rc"
+  fi
+
+  find "$yamlDir" -type f -name "${splitPrefix}*" -print0 | parallel -0 renameFile {} "$dir"
+
+  find "$dir" -type d -name HelmRelease -exec find {} -maxdepth 1 -type f -name '*.yaml' -print0 \; | parallel -0 splitHelmReleaseIntoDir {} "$yaml"
 }
 export -f splitYamlIntoDir
 
-BIN="$(dirname "$0")" splitYamlIntoDir "$@"
+BIN_DIR="$(dirname "$0")" splitYamlIntoDir "$@"
