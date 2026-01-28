@@ -1,43 +1,76 @@
 #!/usr/bin/env bash
 
-[[ "$RUNNER_DEBUG" == 1 ]] && set -x
+[[ -v RUNNER_DEBUG && "$RUNNER_DEBUG" == 1 ]] && set -x
 [[ -o xtrace ]] && export RUNNER_DEBUG=1
 
 set -eu
 set -o pipefail
 
+function renameFile() {
+  [[ -v RUNNER_DEBUG && "$RUNNER_DEBUG" == 1 ]] && set -x
+  [[ -o xtrace ]] && export RUNNER_DEBUG=1
+
+  local splitFile="${1?}"
+  local dir="${2?}"
+  local kind
+  kind="$(yq -r '.kind' "$splitFile")"
+  if [[ "$kind" == "" ]]; then
+    # skip empty documents
+    rm -f "$splitFile"
+    return 0
+  fi
+  local namespace
+  namespace="$(yq -r '.metadata.namespace' "$splitFile")"
+  local name
+  name="$(yq -r '.metadata.name' "$splitFile")"
+
+  local resourceName
+  resourceName="$dir/$namespace/$kind/$name.yaml"
+  if [[ -f "$resourceName" ]]; then
+    echo "'$resourceName' shouldn't already exist" >&2
+    return 1
+  fi
+  mkdir -p "$(dirname "$resourceName")"
+  mv "$splitFile" "$resourceName"
+}
+export -f renameFile
+
+function splitHelmReleaseIntoDir() {
+  [[ -v RUNNER_DEBUG && "$RUNNER_DEBUG" == 1 ]] && set -x
+  [[ -o xtrace ]] && export RUNNER_DEBUG=1
+
+  local helmrelease="${1?}"
+  local helmreleaseDir
+  helmreleaseDir="$(dirname "$helmrelease")/$(basename -s .yaml "$helmrelease")"
+  if ! [[ -d "$helmreleaseDir" ]]; then
+    local yaml="${2?}"
+    "$BIN_DIR/templateHelmRelease" -1 <<<"$(sed -s '$a---' <(yq -s -y '.[] | select(.apiVersion | contains("source.toolkit.fluxcd.io"))' <"$yaml") "$helmrelease")" >"${helmrelease}_templated"
+    splitYamlIntoDir "${helmrelease}_templated" "$(dirname "$helmrelease")/$helmreleaseDir"
+    rm "${helmrelease}_templated"
+  fi
+}
+export -f splitHelmReleaseIntoDir
+
 function splitYamlIntoDir() {
+  [[ -v RUNNER_DEBUG && "$RUNNER_DEBUG" == 1 ]] && set -x
+  [[ -o xtrace ]] && export RUNNER_DEBUG=1
+
   local yaml="${1?}"
+  local yamlDir
+  yamlDir="$(dirname "$yaml")"
   local dir="${2?}"
   local IFS=$'\n'
-  local selector
+  local splitFile
+  local splitPrefix
+  splitPrefix="$(basename "$yaml")-"
+  local helmrelease
 
-  for selector in $(yq -c -s '.[] | select(.kind and .metadata.name) | {kind: .kind, namespace: .metadata.namespace, name: .metadata.name}' <"$yaml"); do
-    local resourceName
-    local kind
-    local namespace
-    local name
-    kind="$(jq --argjson selector "$selector" -n -r '$selector.kind')"
-    namespace="$(jq --argjson selector "$selector" -n -r '$selector.namespace')"
-    name="$(jq --argjson selector "$selector" -n -r '$selector.name')"
+  env -C "$yamlDir" csplit --prefix="$splitPrefix" --suppress-matched "$yaml" '/^---$/' '{*}' >/dev/null
 
-    resourceName="$dir/$namespace/$kind/$name.yaml"
-    if [[ -f "$resourceName" ]]; then
-      echo "'$resourceName' shouldn't already exist" >&2
-      return 1
-    fi
-    mkdir -p "$(dirname "$resourceName")"
-    # shellcheck disable=SC2016
-    yq -y -s --argjson selector "$selector" '.[] | select((.kind == $selector.kind) and (.metadata.namespace == $selector.namespace) and (.metadata.name == $selector.name)) | del(.metadata.labels.chart) | del(.metadata.labels["helm.sh/chart"])' <"$yaml" >"$resourceName"
-    if [[ "$kind" == "HelmRelease" ]]; then
-      (
-        "$(dirname "$0")/templateHelmRelease" -1 <<<"$(sed -s '$a---' <(yq -s -y '.[] | select(.apiVersion | contains("source.toolkit.fluxcd.io"))' <"$yaml") "$resourceName")" >"${resourceName}_templated"
-        splitYamlIntoDir "${resourceName}_templated" "$(dirname "$resourceName")/$(basename -s .yaml "$resourceName")"
-        rm "${resourceName}_templated"
-      ) &
-    fi
-  done
-  wait
+  find "$yamlDir" -type f -name "${splitPrefix}*" -print0 | parallel -0 renameFile {} "$dir"
+
+  find "$dir" -type d -name HelmRelease -exec find {} -maxdepth 1 -type f -name '*.yaml' -print0 \; | parallel -0 splitHelmReleaseIntoDir {} "$yaml"
 }
+export -f splitYamlIntoDir
 
-splitYamlIntoDir "$@"
+BIN_DIR="$(dirname "$0")" splitYamlIntoDir "$@"
