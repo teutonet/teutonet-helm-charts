@@ -14,7 +14,7 @@ function getImages() {
   local existingDir="${2:-}"
   local valuesFile="${3:-}"
   local existingValuesDir
-  existingValuesDir="$2/$(basename --suffix=.yaml "$valuesFile")"
+  existingValuesDir="$existingDir/$(basename --suffix=.yaml "$valuesFile")"
   local tmpDir
   tmpDir="$(mktemp -d -p "$TMP_DIR")"
   if [[ -n "$2" && -d "$existingValuesDir" ]]; then
