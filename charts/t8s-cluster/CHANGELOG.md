@@ -1,5 +1,18 @@
 # Changelog
 
+## [9.5.3](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.5.2...t8s-cluster-v9.5.3) (2026-01-30)
+
+
+### Bug Fixes
+
+* **t8s-cluster/workload-cluster:** add missing tolerations ([#1933](https://github.com/teutonet/teutonet-helm-charts/issues/1933)) ([8718c0d](https://github.com/teutonet/teutonet-helm-charts/commit/8718c0da3e375589f0bbc930b3e232ea0d9318dc))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update common docker tag to v1.8.0 ([#1940](https://github.com/teutonet/teutonet-helm-charts/issues/1940)) ([cdf387f](https://github.com/teutonet/teutonet-helm-charts/commit/cdf387f8cb43b4333c1499b1ca4884a927d2ec95))
+* **t8s-cluster/dependencies:** update helm release openstack-cloud-controller-manager to v2.35.0 ([#1941](https://github.com/teutonet/teutonet-helm-charts/issues/1941)) ([a580142](https://github.com/teutonet/teutonet-helm-charts/commit/a580142d61c9b2051ed0d50952ff8ed5948c3ebb))
+
 ## [9.5.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.5.1...t8s-cluster-v9.5.2) (2026-01-22)
 
 
