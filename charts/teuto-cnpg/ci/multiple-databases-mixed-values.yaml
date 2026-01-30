@@ -1,0 +1,20 @@
+roles:
+  - name: kruemel
+    ensure: present
+    login: false
+    superuser: false
+databases:
+  kuchen:
+    owner: pizza
+    extensions:
+      - name: pgaudit
+        version: 1.7.1
+  torte: keks
+  lasagne:
+    owner: burger
+    extensions:
+      - name: pgaudit
+        version: 1.7.1
+    schemas:
+      - name: troete
+        owner: trompete

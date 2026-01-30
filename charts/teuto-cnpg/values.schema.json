@@ -18,17 +18,111 @@
       "type": "integer",
       "minimum": 1
     },
+    "globalExtensions": {
+      "extensions": {
+        "type": "array",
+        "description": "list of PostgreSQL extensions for this database",
+        "items": {
+          "oneOf": [
+            {
+              "type": "string",
+              "description": "extension name"
+            },
+            {
+              "type": "object",
+              "required": ["name"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "extension name"
+                },
+                "version": {
+                  "type": "string",
+                  "description": "optional extension version"
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        }
+      }
+    },
     "databases": {
       "oneOf": [
         {
           "type": "string",
-          "description": "should only be used by flux"
+          "description": "YAML string representation (used by Flux)"
         },
         {
           "type": "object",
-          "description": "key is database name and value is owner",
+          "description": "key is database name; value can be an owner string or an object with owner and extensions",
           "additionalProperties": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "database owner (simple form)"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "owner": {
+                    "type": "string",
+                    "description": "database owner name"
+                  },
+                  "extensions": {
+                    "type": "array",
+                    "description": "list of PostgreSQL extensions for this database",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "description": "extension name"
+                        },
+                        {
+                          "type": "object",
+                          "required": ["name"],
+                          "properties": {
+                            "name": {
+                              "type": "string",
+                              "description": "extension name"
+                            },
+                            "version": {
+                              "type": "string",
+                              "description": "optional extension version"
+                            },
+                            "schema": {
+                              "type": "string",
+                              "description": "name of the schema for the extension"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  },
+                  "schemas": {
+                    "type": "array",
+                    "description": "schemas to be created for the database",
+                    "items": {
+                      "type": "object",
+                      "required": ["name", "owner"],
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "name of the schema"
+                        },
+                        "owner": {
+                          "type": "string",
+                          "description": "owner of the extension"
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": ["owner"],
+                "additionalProperties": false
+              }
+            ]
           }
         }
       ]

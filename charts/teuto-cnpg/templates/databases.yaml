@@ -1,10 +1,27 @@
-{{- $databases := dict -}}
+{{- $config := dict -}}
 {{- if kindIs "string" .Values.databases -}}
-  {{- $databases = .Values.databases | fromYaml -}}
+  {{- $config = .Values.databases | fromYaml -}}
 {{- else -}}
-  {{- $databases = .Values.databases -}}
+  {{- $config = .Values.databases -}}
 {{- end -}}
-{{- range $name, $owner := $databases -}}
+
+{{- $globalExtensions := .Values.globalExtensions | default list -}}
+
+{{- range $name, $db := $config -}}
+  {{- $owner := "" -}}
+  {{- $dbExtensions := list -}}
+  {{- $dbSchemas := list -}}
+
+  {{- if kindIs "string" $db -}}
+    {{- $owner = $db -}}
+  {{- else -}}
+    {{- $owner = $db.owner -}}
+    {{- $dbExtensions = $db.extensions | default list -}}
+    {{- $dbSchemas = $db.schemas | default list -}}
+  {{- end -}}
+
+  {{- $mergedExtensions := concat $dbExtensions $globalExtensions -}}
+
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
@@ -15,6 +32,29 @@ spec:
   name: {{ $name | quote }}
   owner: {{ $owner | quote }}
   cluster:
-    name: {{ printf "%s" $.Release.Name }}
+    name: {{ $.Release.Name | quote }}
+  {{- if $dbSchemas }}
+  schemas:
+    {{- range $schem := $dbSchemas }}
+    - name: {{ $schem.name | quote }}
+      owner: {{ $schem.owner | quote }}
+    {{- end }}
+    {{- end }}
+  {{- if $mergedExtensions }}
+  extensions:
+    {{- range $ext := $mergedExtensions }}
+    {{- if kindIs "string" $ext }}
+    - name: {{ $ext | quote }}
+    {{- else }}
+    - name: {{ $ext.name | quote }}
+      {{- if $ext.version }}
+      version: {{ $ext.version | quote }}
+      {{- end }}
+      {{- if $ext.schema }}
+      schema: {{ $ext.schema | quote }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
 ---
 {{ end }}
