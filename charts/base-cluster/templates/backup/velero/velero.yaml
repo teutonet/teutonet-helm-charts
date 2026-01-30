@@ -51,6 +51,16 @@ spec:
       allowPrivilegeEscalation: false
       seccompProfile:
         type: RuntimeDefault
+    extraVolumeMounts:
+      - mountPath: /udmrepo
+        name: udmrepo
+      - mountPath: /.cache
+        name: cache
+    extraVolumes:
+      - emptyDir: {}
+        name: udmrepo
+      - emptyDir: {}
+        name: cache
     resources: {{- include "common.resources" .Values.backup | nindent 6 }}
     priorityClassName: system-cluster-critical
     deployNodeAgent: true # enable FSB
@@ -88,7 +98,7 @@ spec:
           {{- end }}
       {{- end }}
       volumeSnapshotLocation: []
-      uploaderType: restic
+      uploaderType: kopia
     metrics:
       serviceMonitor:
         additionalLabels:
