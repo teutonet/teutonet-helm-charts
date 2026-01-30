@@ -1,7 +1,9 @@
 *.tgz
 .idea
 .vscode
-.DS_Store
 /charts/*/charts
 /charts/*/values.md
 /charts/*/ci/*-gen-values.yaml
+.direnv/
+.task/
+reports/
