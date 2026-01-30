@@ -13,7 +13,7 @@ maintainers:
     email: st@teuto.net
 dependencies:
   - name: common
-    version: 1.7.0
+    version: 1.8.0
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
 sources:
   - https://github.com/teutonet/teutonet-helm-charts/tree/teuto-portal-k8s-worker-v3.4.2/charts/teuto-portal-k8s-worker
