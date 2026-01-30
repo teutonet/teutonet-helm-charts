@@ -218,6 +218,14 @@ global:
         requests:
           cpu: 10m
           memory: 16Mi
+  autoConfiguration:
+    cloudProvider: auto
+    openstack:
+      cloudConfiguration:
+        type: Secret
+        namespace: kube-system
+        name: cloud-config
+        field: cloud.conf
 
 kyverno:
   enabled: false
@@ -435,7 +443,7 @@ flux:
 ingress:
   provider: traefik
   allowNginxConfigurationSnippets: false
-  useProxyProtocol: true
+  useProxyProtocol: auto
   replicas: 2
   resourcesPreset: nano
   resources:

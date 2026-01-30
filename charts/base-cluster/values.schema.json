@@ -370,6 +370,60 @@
             }
           },
           "additionalProperties": false
+        },
+        "autoConfiguration": {
+          "type": "object",
+          "properties": {
+            "cloudProvider": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "openstack"
+              ]
+            },
+            "openstack": {
+              "type": "object",
+              "properties": {
+                "cloudConfiguration": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "Secret",
+                        "ConfigMap"
+                      ]
+                    },
+                    "namespace": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "type",
+                    "name",
+                    "namespace",
+                    "field"
+                  ]
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "cloudConfiguration"
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "cloudProvider",
+            "openstack"
+          ]
         }
       }
     },
@@ -1270,7 +1324,16 @@
           "description": "Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets"
         },
         "useProxyProtocol": {
-          "type": "boolean"
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string",
+              "const": "auto",
+              "description": "Auto will turn it on unless in specific cloud environments where it's known to not be necessary.\n\nThe code figures out the cloud by the node provider ID, which is assumed to be the same across all nodes."
+            }
+          ]
         },
         "IP": {
           "type": "string",
