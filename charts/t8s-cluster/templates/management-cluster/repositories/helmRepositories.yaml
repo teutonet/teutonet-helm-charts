@@ -1,4 +1,6 @@
 # just for artifacthub image resolving
 {{ if eq .Release.Namespace "default" -}}
-  {{- include "common.helm.repositories" (dict "context" .) -}}
+  {{- $release := mustDeepCopy .Release -}}
+  {{- $release = set $release "Namespace" "flux-system" -}}
+  {{- include "common.helm.repositories" (dict "context" (dict "Values" .Values "Chart" .Chart "Release" $release)) -}}
 {{- end -}}
