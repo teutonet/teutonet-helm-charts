@@ -19,7 +19,7 @@ global:
         openstack-cloud-controller-manager 2.33.x: 2.33.1
         openstack-cloud-controller-manager 2.32.x: 2.32.1
         openstack-cloud-controller-manager 2.31.x: 2.31.5
-        openstack-cinder-csi: 2.32.0
+        openstack-cinder-csi: 2.35.0
         openstack-cinder-csi 2.31.x: 2.31.7
         openstack-cinder-csi 2.30.x: 2.30.3
         openstack-cinder-csi 2.29.x: 2.29.2
