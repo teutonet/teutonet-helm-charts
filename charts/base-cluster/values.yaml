@@ -121,7 +121,7 @@ global:
     oauth2-proxy:
       url: https://oauth2-proxy.github.io/manifests
       charts:
-        oauth2-proxy: 10.1.1
+        oauth2-proxy: 10.1.2
       condition: '{{ and (not (empty .Values.global.authentication.config)) .Values.monitoring.prometheus.enabled }}'
     metrics-server:
       url: https://kubernetes-sigs.github.io/metrics-server
