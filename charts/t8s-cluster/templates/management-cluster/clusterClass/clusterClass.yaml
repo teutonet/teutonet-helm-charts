@@ -142,6 +142,9 @@ spec:
     machineDeployments:
       {{- range $name, $isGpuDeploymentClass := $machineDeploymentClasses }}
       - class: {{ $name }}
+        metadata:
+          labels:
+            node-role.kubernetes.io/compute-plane: ""
         healthCheck:
           checks:
             nodeStartupTimeoutSeconds: 480
