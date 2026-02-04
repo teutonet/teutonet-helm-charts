@@ -6,38 +6,43 @@
 set -eu
 set -o pipefail
 
-function splitYamlIntoDir() {
+function splitBySelector() {
+  [[ -v RUNNER_DEBUG ]] && [[ "$RUNNER_DEBUG" == 1 ]] && set -x
   local yaml="${1?}"
   local dir="${2?}"
+  local selector="${3?}"
   local IFS=$'\n'
-  local selector
+  local resourceName
+  local kind
+  local namespace
+  local name
+  kind="$(jq --argjson selector "$selector" -n -r '$selector.kind')"
+  namespace="$(jq --argjson selector "$selector" -n -r '$selector.namespace')"
+  name="$(jq --argjson selector "$selector" -n -r '$selector.name')"
 
-  for selector in $(yq -c -s '.[] | select(.kind and .metadata.name) | {kind: .kind, namespace: .metadata.namespace, name: .metadata.name}' <"$yaml"); do
-    local resourceName
-    local kind
-    local namespace
-    local name
-    kind="$(jq --argjson selector "$selector" -n -r '$selector.kind')"
-    namespace="$(jq --argjson selector "$selector" -n -r '$selector.namespace')"
-    name="$(jq --argjson selector "$selector" -n -r '$selector.name')"
-
-    resourceName="$dir/$namespace/$kind/$name.yaml"
-    if [[ -f "$resourceName" ]]; then
-      echo "'$resourceName' shouldn't already exist" >&2
-      return 1
-    fi
-    mkdir -p "$(dirname "$resourceName")"
-    # shellcheck disable=SC2016
-    yq -y -s --argjson selector "$selector" '.[] | select((.kind == $selector.kind) and (.metadata.namespace == $selector.namespace) and (.metadata.name == $selector.name)) | del(.metadata.labels.chart) | del(.metadata.labels["helm.sh/chart"])' <"$yaml" >"$resourceName"
-    if [[ "$kind" == "HelmRelease" ]]; then
-      (
-        "$(dirname "$0")/templateHelmRelease" -1 <<<"$(sed -s '$a---' <(yq -s -y '.[] | select(.apiVersion | contains("source.toolkit.fluxcd.io"))' <"$yaml") "$resourceName")" >"${resourceName}_templated"
-        splitYamlIntoDir "${resourceName}_templated" "$(dirname "$resourceName")/$(basename -s .yaml "$resourceName")"
-        rm "${resourceName}_templated"
-      ) &
-    fi
-  done
-  wait
+  resourceName="$dir/$namespace/$kind/$name.yaml"
+  if [[ -f "$resourceName" ]]; then
+    echo "'$resourceName' shouldn't already exist" >&2
+    return 1
+  fi
+  mkdir -p "$(dirname "$resourceName")"
+  # shellcheck disable=SC2016
+  yq -y -s --argjson selector "$selector" '.[] | select((.kind == $selector.kind) and (.metadata.namespace == $selector.namespace) and (.metadata.name == $selector.name)) | del(.metadata.labels.chart) | del(.metadata.labels["helm.sh/chart"])' <"$yaml" >"$resourceName"
+  if [[ "$kind" == "HelmRelease" ]]; then
+    parallel --semaphore-name splitYamlIntoDir_templateHelmRelease --fg -P 50% "$BIN/templateHelmRelease" -1 <<<"$(sed -s '$a---' <(yq -s -y '.[] | select(.apiVersion | contains("source.toolkit.fluxcd.io"))' <"$yaml") "$resourceName")" >"${resourceName}_templated"
+    splitYamlIntoDir "${resourceName}_templated" "$(dirname "$resourceName")/$(basename -s .yaml "$resourceName")"
+    rm "${resourceName}_templated"
+  fi
 }
+export -f splitBySelector
 
-splitYamlIntoDir "$@"
+function splitYamlIntoDir() {
+  [[ -v RUNNER_DEBUG ]] && [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+  local yaml="${1?}"
+  local dir="${2?}"
+
+  yq -c -s '.[] | select(.kind and .metadata.name) | {kind: .kind, namespace: .metadata.namespace, name: .metadata.name}' <"$yaml" | parallel -P 100% splitBySelector "$yaml" "$dir" {}
+}
+export -f splitYamlIntoDir
+
+BIN="$(dirname "$0")" splitYamlIntoDir "$@"
