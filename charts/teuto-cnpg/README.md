@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># teuto-cnpg
 
-![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 3.1.0](https://img.shields.io/badge/Version-3.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Helm chart to abstract the managing of cnpg-databases from the original resource.
 
@@ -60,6 +60,7 @@ but can be overwritten with .values.backup.s3.accessKeyId or .values.backup.s3.a
 | ---------------------------------------- | ------- | ---------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
 | - [podMonitorLabels](#podMonitorLabels ) | No      | object           | No         | -                                                                                                                                                                              | The labels to set on ServiceMonitor which the prometheus uses to search for                            |
 | - [instances](#instances )               | No      | integer          | No         | -                                                                                                                                                                              | -                                                                                                      |
+| - [globalExtensions](#globalExtensions ) | No      | object           | No         | -                                                                                                                                                                              | map of PostgreSQL extensions for this database                                                         |
 | + [databases](#databases )               | No      | Combination      | No         | -                                                                                                                                                                              | -                                                                                                      |
 | + [roles](#roles )                       | No      | Combination      | No         | -                                                                                                                                                                              | -                                                                                                      |
 | - [logLevel](#logLevel )                 | No      | enum (of string) | No         | -                                                                                                                                                                              | -                                                                                                      |
@@ -96,7 +97,48 @@ but can be overwritten with .values.backup.s3.accessKeyId or .values.backup.s3.a
 | ------------ | ------ |
 | **Minimum**  | &ge; 1 |
 
-## <a name="databases"></a>3. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > databases`
+## <a name="globalExtensions"></a>3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > globalExtensions`
+
+|                           |                                                                                                               |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                      |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#globalExtensions_additionalProperties) |
+
+**Description:** map of PostgreSQL extensions for this database
+
+| Property                                      | Pattern | Type   | Deprecated | Definition | Title/Description |
+| --------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#globalExtensions_additionalProperties ) | No      | object | No         | -          | -                 |
+
+### <a name="globalExtensions_additionalProperties"></a>3.1. Property `cnpg-wrapper configuration > globalExtensions > additionalProperties`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                     | Pattern | Type   | Deprecated | Definition | Title/Description                    |
+| ------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ------------------------------------ |
+| - [version](#globalExtensions_additionalProperties_version ) | No      | string | No         | -          | optional extension version           |
+| - [schema](#globalExtensions_additionalProperties_schema )   | No      | string | No         | -          | name of the schema for the extension |
+
+#### <a name="globalExtensions_additionalProperties_version"></a>3.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > globalExtensions > additionalProperties > version`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** optional extension version
+
+#### <a name="globalExtensions_additionalProperties_schema"></a>3.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > globalExtensions > additionalProperties > schema`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** name of the schema for the extension
+
+## <a name="databases"></a>4. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > databases`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -108,34 +150,142 @@ but can be overwritten with .values.backup.s3.accessKeyId or .values.backup.s3.a
 | [item 0](#databases_oneOf_i0) |
 | [item 1](#databases_oneOf_i1) |
 
-### <a name="databases_oneOf_i0"></a>3.1. Property `cnpg-wrapper configuration > databases > oneOf > item 0`
+### <a name="databases_oneOf_i0"></a>4.1. Property `cnpg-wrapper configuration > databases > oneOf > item 0`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-**Description:** should only be used by flux
+**Description:** YAML string representation (used by Flux)
 
-### <a name="databases_oneOf_i1"></a>3.2. Property `cnpg-wrapper configuration > databases > oneOf > item 1`
+### <a name="databases_oneOf_i1"></a>4.2. Property `cnpg-wrapper configuration > databases > oneOf > item 1`
 
 |                           |                                                                                                                 |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                                                        |
 | **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#databases_oneOf_i1_additionalProperties) |
 
-**Description:** key is database name and value is owner
+**Description:** key is database name; value can be an owner string or an object with owner and extensions
 
-| Property                                        | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ----------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [](#databases_oneOf_i1_additionalProperties ) | No      | string | No         | -          | -                 |
+| Property                                        | Pattern | Type        | Deprecated | Definition | Title/Description |
+| ----------------------------------------------- | ------- | ----------- | ---------- | ---------- | ----------------- |
+| - [](#databases_oneOf_i1_additionalProperties ) | No      | Combination | No         | -          | -                 |
 
-#### <a name="databases_oneOf_i1_additionalProperties"></a>3.2.1. Property `cnpg-wrapper configuration > databases > oneOf > item 1 > additionalProperties`
+#### <a name="databases_oneOf_i1_additionalProperties"></a>4.2.1. Property `cnpg-wrapper configuration > databases > oneOf > item 1 > additionalProperties`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+| One of(Option)                                              |
+| ----------------------------------------------------------- |
+| [item 0](#databases_oneOf_i1_additionalProperties_oneOf_i0) |
+| [item 1](#databases_oneOf_i1_additionalProperties_oneOf_i1) |
+
+##### <a name="databases_oneOf_i1_additionalProperties_oneOf_i0"></a>4.2.1.1. Property `cnpg-wrapper configuration > databases > oneOf > item 1 > additionalProperties > oneOf > item 0`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-## <a name="roles"></a>4. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > roles`
+**Description:** database owner (simple form)
+
+##### <a name="databases_oneOf_i1_additionalProperties_oneOf_i1"></a>4.2.1.2. Property `cnpg-wrapper configuration > databases > oneOf > item 1 > additionalProperties > oneOf > item 1`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                                      | Pattern | Type   | Deprecated | Definition | Title/Description                              |
+| ----------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ---------------------------------------------- |
+| + [owner](#databases_oneOf_i1_additionalProperties_oneOf_i1_owner )           | No      | string | No         | -          | database owner name                            |
+| - [extensions](#databases_oneOf_i1_additionalProperties_oneOf_i1_extensions ) | No      | object | No         | -          | map of PostgreSQL extensions for this database |
+| - [schemas](#databases_oneOf_i1_additionalProperties_oneOf_i1_schemas )       | No      | object | No         | -          | schemas to be created for the database         |
+
+###### <a name="databases_oneOf_i1_additionalProperties_oneOf_i1_owner"></a>4.2.1.2.1. Property `cnpg-wrapper configuration > databases > oneOf > item 1 > additionalProperties > oneOf > item 1 > owner`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** database owner name
+
+###### <a name="databases_oneOf_i1_additionalProperties_oneOf_i1_extensions"></a>4.2.1.2.2. Property `cnpg-wrapper configuration > databases > oneOf > item 1 > additionalProperties > oneOf > item 1 > extensions`
+
+|                           |                                                                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                                 |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#databases_oneOf_i1_additionalProperties_oneOf_i1_extensions_additionalProperties) |
+
+**Description:** map of PostgreSQL extensions for this database
+
+| Property                                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ---------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#databases_oneOf_i1_additionalProperties_oneOf_i1_extensions_additionalProperties ) | No      | object | No         | -          | -                 |
+
+###### <a name="databases_oneOf_i1_additionalProperties_oneOf_i1_extensions_additionalProperties"></a>4.2.1.2.2.1. Property `cnpg-wrapper configuration > databases > oneOf > item 1 > additionalProperties > oneOf > item 1 > extensions > additionalProperties`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                                                                | Pattern | Type   | Deprecated | Definition | Title/Description                    |
+| ------------------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------ |
+| - [version](#databases_oneOf_i1_additionalProperties_oneOf_i1_extensions_additionalProperties_version ) | No      | string | No         | -          | optional extension version           |
+| - [schema](#databases_oneOf_i1_additionalProperties_oneOf_i1_extensions_additionalProperties_schema )   | No      | string | No         | -          | name of the schema for the extension |
+
+###### <a name="databases_oneOf_i1_additionalProperties_oneOf_i1_extensions_additionalProperties_version"></a>4.2.1.2.2.1.1. Property `cnpg-wrapper configuration > databases > oneOf > item 1 > additionalProperties > oneOf > item 1 > extensions > additionalProperties > version`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** optional extension version
+
+###### <a name="databases_oneOf_i1_additionalProperties_oneOf_i1_extensions_additionalProperties_schema"></a>4.2.1.2.2.1.2. Property `cnpg-wrapper configuration > databases > oneOf > item 1 > additionalProperties > oneOf > item 1 > extensions > additionalProperties > schema`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** name of the schema for the extension
+
+###### <a name="databases_oneOf_i1_additionalProperties_oneOf_i1_schemas"></a>4.2.1.2.3. Property `cnpg-wrapper configuration > databases > oneOf > item 1 > additionalProperties > oneOf > item 1 > schemas`
+
+|                           |                                                                                                                                                       |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                                              |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#databases_oneOf_i1_additionalProperties_oneOf_i1_schemas_additionalProperties) |
+
+**Description:** schemas to be created for the database
+
+| Property                                                                              | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#databases_oneOf_i1_additionalProperties_oneOf_i1_schemas_additionalProperties ) | No      | object | No         | -          | -                 |
+
+###### <a name="databases_oneOf_i1_additionalProperties_oneOf_i1_schemas_additionalProperties"></a>4.2.1.2.3.1. Property `cnpg-wrapper configuration > databases > oneOf > item 1 > additionalProperties > oneOf > item 1 > schemas > additionalProperties`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                                                         | Pattern | Type   | Deprecated | Definition | Title/Description   |
+| ------------------------------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ------------------- |
+| - [owner](#databases_oneOf_i1_additionalProperties_oneOf_i1_schemas_additionalProperties_owner ) | No      | string | No         | -          | owner of the schema |
+
+###### <a name="databases_oneOf_i1_additionalProperties_oneOf_i1_schemas_additionalProperties_owner"></a>4.2.1.2.3.1.1. Property `cnpg-wrapper configuration > databases > oneOf > item 1 > additionalProperties > oneOf > item 1 > schemas > additionalProperties > owner`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** owner of the schema
+
+## <a name="roles"></a>5. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > roles`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -147,7 +297,7 @@ but can be overwritten with .values.backup.s3.accessKeyId or .values.backup.s3.a
 | [item 0](#roles_oneOf_i0) |
 | [item 1](#roles_oneOf_i1) |
 
-### <a name="roles_oneOf_i0"></a>4.1. Property `cnpg-wrapper configuration > roles > oneOf > item 0`
+### <a name="roles_oneOf_i0"></a>5.1. Property `cnpg-wrapper configuration > roles > oneOf > item 0`
 
 |          |          |
 | -------- | -------- |
@@ -155,7 +305,7 @@ but can be overwritten with .values.backup.s3.accessKeyId or .values.backup.s3.a
 
 **Description:** should only be used by flux
 
-### <a name="roles_oneOf_i1"></a>4.2. Property `cnpg-wrapper configuration > roles > oneOf > item 1`
+### <a name="roles_oneOf_i1"></a>5.2. Property `cnpg-wrapper configuration > roles > oneOf > item 1`
 
 |          |         |
 | -------- | ------- |
@@ -169,7 +319,7 @@ but can be overwritten with .values.backup.s3.accessKeyId or .values.backup.s3.a
 | **Additional items** | True               |
 | **Tuple validation** | N/A                |
 
-## <a name="logLevel"></a>5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > logLevel`
+## <a name="logLevel"></a>6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > logLevel`
 
 |          |                    |
 | -------- | ------------------ |
@@ -182,7 +332,7 @@ Must be one of:
 * "debug"
 * "trace"
 
-## <a name="storageSize"></a>6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > storageSize`
+## <a name="storageSize"></a>7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > storageSize`
 
 |                           |                                                                                                                                                                             |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -195,19 +345,19 @@ Must be one of:
 | [item 0](#storageSize_oneOf_i0) |
 | [item 1](#storageSize_oneOf_i1) |
 
-### <a name="storageSize_oneOf_i0"></a>6.1. Property `cnpg-wrapper configuration > storageSize > oneOf > item 0`
+### <a name="storageSize_oneOf_i0"></a>7.1. Property `cnpg-wrapper configuration > storageSize > oneOf > item 0`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="storageSize_oneOf_i1"></a>6.2. Property `cnpg-wrapper configuration > storageSize > oneOf > item 1`
+### <a name="storageSize_oneOf_i1"></a>7.2. Property `cnpg-wrapper configuration > storageSize > oneOf > item 1`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `number` |
 
-## <a name="backup"></a>7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > backup`
+## <a name="backup"></a>8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > backup`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -221,7 +371,7 @@ Must be one of:
 | - [schedule](#backup_schedule ) | No      | string | No         | -          | cron syntax        |
 | + [s3](#backup_s3 )             | No      | object | No         | -          | s3 related options |
 
-### <a name="backup_schedule"></a>7.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > backup > schedule`
+### <a name="backup_schedule"></a>8.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > backup > schedule`
 
 |          |          |
 | -------- | -------- |
@@ -235,7 +385,7 @@ Must be one of:
 0 0 0 * * *
 ```
 
-### <a name="backup_s3"></a>7.2. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > backup > s3`
+### <a name="backup_s3"></a>8.2. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > backup > s3`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -250,7 +400,7 @@ Must be one of:
 | + [endpointURL](#backup_s3_endpointURL ) | No      | string | No         | -          | url of the api endpoint   |
 | - [secret](#backup_s3_secret )           | No      | object | No         | -          | -                         |
 
-#### <a name="backup_s3_path"></a>7.2.1. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > backup > s3 > path`
+#### <a name="backup_s3_path"></a>8.2.1. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > backup > s3 > path`
 
 |          |          |
 | -------- | -------- |
@@ -258,7 +408,7 @@ Must be one of:
 
 **Description:** s3 path to write files to
 
-#### <a name="backup_s3_endpointURL"></a>7.2.2. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > backup > s3 > endpointURL`
+#### <a name="backup_s3_endpointURL"></a>8.2.2. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > backup > s3 > endpointURL`
 
 |          |          |
 | -------- | -------- |
@@ -266,7 +416,7 @@ Must be one of:
 
 **Description:** url of the api endpoint
 
-#### <a name="backup_s3_secret"></a>7.2.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > backup > s3 > secret`
+#### <a name="backup_s3_secret"></a>8.2.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > backup > s3 > secret`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -279,27 +429,27 @@ Must be one of:
 | - [accessKeyId](#backup_s3_secret_accessKeyId )         | No      | string | No         | -          | -                 |
 | - [accessSecretKey](#backup_s3_secret_accessSecretKey ) | No      | string | No         | -          | -                 |
 
-##### <a name="backup_s3_secret_name"></a>7.2.3.1. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > backup > s3 > secret > name`
+##### <a name="backup_s3_secret_name"></a>8.2.3.1. ![Required](https://img.shields.io/badge/Required-blue) Property `cnpg-wrapper configuration > backup > s3 > secret > name`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="backup_s3_secret_accessKeyId"></a>7.2.3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > backup > s3 > secret > accessKeyId`
+##### <a name="backup_s3_secret_accessKeyId"></a>8.2.3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > backup > s3 > secret > accessKeyId`
 
 |             |                   |
 | ----------- | ----------------- |
 | **Type**    | `string`          |
 | **Default** | `"ACCESS_KEY_ID"` |
 
-##### <a name="backup_s3_secret_accessSecretKey"></a>7.2.3.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > backup > s3 > secret > accessSecretKey`
+##### <a name="backup_s3_secret_accessSecretKey"></a>8.2.3.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > backup > s3 > secret > accessSecretKey`
 
 |             |                       |
 | ----------- | --------------------- |
 | **Type**    | `string`              |
 | **Default** | `"ACCESS_SECRET_KEY"` |
 
-## <a name="databaseImage"></a>8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > databaseImage`
+## <a name="databaseImage"></a>9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > databaseImage`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -315,7 +465,7 @@ Must be one of:
 | - [tag](#databaseImage_tag )               | No      | string | No         | -          | For available tags see: https://github.com/cloudnative-pg/postgres-containers/pkgs/container/postgresql |
 | - [digest](#databaseImage_digest )         | No      | string | No         | -          | -                                                                                                       |
 
-### <a name="databaseImage_registry"></a>8.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > databaseImage > registry`
+### <a name="databaseImage_registry"></a>9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > databaseImage > registry`
 
 |          |          |
 | -------- | -------- |
@@ -329,7 +479,7 @@ Must be one of:
 ghcr.io
 ```
 
-### <a name="databaseImage_repository"></a>8.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > databaseImage > repository`
+### <a name="databaseImage_repository"></a>9.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > databaseImage > repository`
 
 |          |          |
 | -------- | -------- |
@@ -343,7 +493,7 @@ ghcr.io
 cloudnative-pg/postgresql
 ```
 
-### <a name="databaseImage_tag"></a>8.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > databaseImage > tag`
+### <a name="databaseImage_tag"></a>9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > databaseImage > tag`
 
 |          |          |
 | -------- | -------- |
@@ -365,7 +515,7 @@ cloudnative-pg/postgresql
 17.2
 ```
 
-### <a name="databaseImage_digest"></a>8.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > databaseImage > digest`
+### <a name="databaseImage_digest"></a>9.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `cnpg-wrapper configuration > databaseImage > digest`
 
 |          |          |
 | -------- | -------- |
