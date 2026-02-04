@@ -37,14 +37,18 @@ spec:
             scheme: https
             permanent: true
         proxyProtocol:
-          insecure: {{ .Values.ingress.useProxyProtocol }}
+          insecure: {{ include "base-cluster.ingress.useProxyProtocol" (dict "context" $) }}
       websecure:
         proxyProtocol:
-          insecure: {{ .Values.ingress.useProxyProtocol }}
+          insecure: {{ include "base-cluster.ingress.useProxyProtocol" (dict "context" $) }}
     service:
       annotations:
-        loadbalancer.openstack.org/proxy-protocol: {{ .Values.ingress.useProxyProtocol | quote }}
-        load-balancer.hetzner.cloud/uses-proxyprotocol: {{ .Values.ingress.useProxyProtocol | quote }}
+        loadbalancer.openstack.org/timeout-client-data: "2073600000"
+        loadbalancer.openstack.org/timeout-member-connect: "2073600000"
+        loadbalancer.openstack.org/timeout-member-data: "2073600000"
+        loadbalancer.openstack.org/timeout-tcp-inspect: "2073600000"
+        loadbalancer.openstack.org/proxy-protocol: {{ include "base-cluster.ingress.useProxyProtocol" (dict "context" $) | quote }}
+        load-balancer.hetzner.cloud/uses-proxyprotocol: {{ include "base-cluster.ingress.useProxyProtocol" (dict "context" $) | quote }}
         load-balancer.hetzner.cloud/disable-private-ingress: "true"
         {{- if .Values.ingress.IP }}
         loadbalancer.openstack.org/keep-floatingip: "true"
