@@ -31,11 +31,12 @@ spec:
       replicas: {{ .Values.ingress.replicas }}
     ports:
       web:
-        redirections:
-          entryPoint:
-            to: websecure
-            scheme: https
-            permanent: true
+        http:
+          redirections:
+            entryPoint:
+              to: websecure
+              scheme: https
+              permanent: true
         proxyProtocol:
           insecure: {{ include "base-cluster.ingress.useProxyProtocol" (dict "context" $) }}
       websecure:
