@@ -10,13 +10,13 @@ maintainers:
   - email: st@teuto.net
     name: tasches
 type: application
-version: 3.0.0
+version: 3.1.0
 dependencies:
   - name: common
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
     version: 1.2.1
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/teuto-cnpg-v3.0.0/charts/teuto-cnpg
+  - https://github.com/teutonet/teutonet-helm-charts/tree/teuto-cnpg-v3.1.0/charts/teuto-cnpg
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/teuto-cnpg
 annotations:
   artifacthub.io/images: |-
