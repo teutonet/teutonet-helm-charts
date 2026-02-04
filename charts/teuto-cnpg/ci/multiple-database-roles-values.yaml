@@ -4,5 +4,9 @@ roles:
     login: false
     superuser: false
 databases:
-  kuchen: pizza
-  torte: keks
+  kuchen:
+    owner: pizza
+  torte:
+    owner: keks
+  lasagne: lasagne
+  burger: burger

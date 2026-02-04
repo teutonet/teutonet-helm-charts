@@ -18,17 +18,86 @@
       "type": "integer",
       "minimum": 1
     },
+    "globalExtensions": {
+      "type": "object",
+      "description": "map of PostgreSQL extensions for this database",
+      "additionalProperties": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "version": {
+            "type": "string",
+            "description": "optional extension version"
+          },
+          "schema": {
+            "type": "string",
+            "description": "name of the schema for the extension"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
     "databases": {
       "oneOf": [
         {
           "type": "string",
-          "description": "should only be used by flux"
+          "description": "YAML string representation (used by Flux)"
         },
         {
           "type": "object",
-          "description": "key is database name and value is owner",
+          "description": "key is database name; value can be an owner string or an object with owner and extensions",
           "additionalProperties": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "database owner (simple form)"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "owner": {
+                    "type": "string",
+                    "description": "database owner name"
+                  },
+                  "extensions": {
+                    "type": "object",
+                    "description": "map of PostgreSQL extensions for this database",
+                    "additionalProperties": {
+                      "type": "object",
+                      "required": [],
+                      "properties": {
+                        "version": {
+                          "type": "string",
+                          "description": "optional extension version"
+                        },
+                        "schema": {
+                          "type": "string",
+                          "description": "name of the schema for the extension"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "schemas": {
+                    "type": "object",
+                    "description": "schemas to be created for the database",
+                    "additionalProperties": {
+                      "type": "object",
+                      "required": [],
+                      "properties": {
+                        "owner": {
+                          "type": "string",
+                          "description": "owner of the schema"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": ["owner"],
+                "additionalProperties": false
+              }
+            ]
           }
         }
       ]

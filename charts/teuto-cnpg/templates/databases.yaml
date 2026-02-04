@@ -1,10 +1,28 @@
-{{- $databases := dict -}}
+{{- $config := dict -}}
 {{- if kindIs "string" .Values.databases -}}
-  {{- $databases = .Values.databases | fromYaml -}}
+  {{- $config = .Values.databases | fromYaml -}}
 {{- else -}}
-  {{- $databases = .Values.databases -}}
+  {{- $config = .Values.databases -}}
 {{- end -}}
-{{- range $name, $owner := $databases -}}
+
+{{- $globalExtensions := .Values.globalExtensions | default dict -}}
+
+{{- range $name, $db := $config -}}
+  {{- $owner := "" -}}
+  {{- $dbExtensions := dict -}}
+  {{- $dbSchemas := dict -}}
+
+  {{- if kindIs "string" $db -}}
+    {{- $owner = $db -}}
+  {{- else -}}
+    {{- $owner = $db.owner -}}
+    {{- $dbExtensions = $db.extensions | default dict -}}
+    {{- $dbSchemas = $db.schemas | default dict -}}
+  {{- end -}}
+
+  {{- $mergedExtensions := merge (deepCopy $dbExtensions) $globalExtensions -}}
+
+
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
@@ -15,6 +33,38 @@ spec:
   name: {{ $name | quote }}
   owner: {{ $owner | quote }}
   cluster:
-    name: {{ printf "%s" $.Release.Name }}
+    name: {{ $.Release.Name | quote }}
+
+  {{- if $dbSchemas }}
+  schemas:
+    {{- range $schemaName, $schemaCfg := $dbSchemas }}
+    - name: {{ $schemaName | quote }}
+      owner: {{ $schemaCfg.owner | default $owner | quote }}
+    {{- end }}
+  {{- end }}
+
+  {{- if $mergedExtensions }}
+  extensions:
+    {{- range $extName, $extCfg := $mergedExtensions }}
+    {{- if $extCfg.schema }}
+      {{- if not (hasKey $dbSchemas $extCfg.schema) }}
+        {{- fail (printf
+          "Database '%s': extension '%s' refers to schema '%s', but this schema is not defined in databases.%s.schemas"
+          $name
+          $extName
+          $extCfg.schema
+          $name
+        ) }}
+      {{- end }}
+    {{- end }}
+    - name: {{ $extName | quote }}
+      {{- if $extCfg.version }}
+      version: {{ $extCfg.version | quote }}
+      {{- end }}
+      {{- if $extCfg.schema }}
+      schema: {{ $extCfg.schema | quote }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
 ---
 {{ end }}
