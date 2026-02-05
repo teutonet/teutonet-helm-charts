@@ -59,6 +59,8 @@ spec:
     ipv4NativeRoutingCIDR: 10.0.0.0/16 # default net, see hosted control plane controller
     {{- end }}
 
+    policyDenyResponse: icmp
+
     rollOutCiliumPods: true
     encryption:
       enabled: false
