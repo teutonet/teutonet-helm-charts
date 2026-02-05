@@ -57,13 +57,10 @@ identityRef:
       {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "IP-in-IP" (dict "protocol" "4") -}}
     {{- else if eq $cni "cilium" -}}
       {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "VXLAN" (dict "port" 8472 "protocol" "udp") -}}
+      {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "hubble relay (http)" (dict "port" 4244) -}}
       {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "health (http)" (dict "port" 4240) -}}
       {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "health (ping)" (dict "protocol" "icmp") -}}
-    {{- if .Values.controlPlane.hosted -}}
-      {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "allow pod-pod native routing (ingress)" (dict "remoteIPPrefix" "10.0.0.0/16" "protocol" nil) -}}
-      {{- $cniSecurityGroupRules = set $cniSecurityGroupRules "allow node-pod native routing (ingress)" (dict "remoteIPPrefix" "10.6.0.0/16" "protocol" nil) -}}
-    {{- end -}}
-  {{- end }}
+    {{- end }}
     {{- range $name, $securityGroupRule := $cniSecurityGroupRules -}}
       {{- $securityGroupRules = set $securityGroupRules (printf "%s %s" $cni $name) $securityGroupRule -}}
     {{- end -}}
