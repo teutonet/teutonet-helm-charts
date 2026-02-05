@@ -26,6 +26,7 @@ spec:
     clusterAPIKubeconfigSecret: {{ .Release.Name }}-kubeconfig
     extraArgs:
       scale-down-utilization-threshold: 0.8
+      skip-nodes-with-local-storage: false
     serviceMonitor:
       enabled: true
       namespace: {{ .Release.Namespace }}
