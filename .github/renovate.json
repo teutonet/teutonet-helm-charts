@@ -15,6 +15,9 @@
   "labels": [
     "dependencies"
   ],
+  "nix": {
+    "enabled": true
+  },
   "customManagers": [
     {
       "customType": "regex",
