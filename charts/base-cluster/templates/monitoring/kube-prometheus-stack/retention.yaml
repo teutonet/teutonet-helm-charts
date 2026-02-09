@@ -1,0 +1,28 @@
+{{- if .Values.monitoring.prometheus.enabled -}}
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "flux-status" "resource" (include "base-cluster.prometheus.retentionRule" .) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "prometheus" "app.kubernetes.io/part-of" "flux")) }}
+{{- end -}}
+
+{{- define "base-cluster.prometheus.retentionRule" -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: prometheus-retention-happened
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    monitoring/provisioned-by: base-cluster
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/part-of: monitoring
+spec:
+  groups:
+    - name: prometheus-retention
+      rules:
+        - alert: prometheusRetentionHappened
+          annotations:
+            description: Data retention happened on {{ `{{ $labels.pod }}` }} in namespace {{ `{{ $labels.namespace }}` }}!
+            summary: Data retention happened, you should increase storage!
+          expr: increase(prometheus_tsdb_size_retentions_total[5m]) > 0
+          for: 1m
+          labels:
+            severity: critical
+            period: WorkingHours
+{{- end }}

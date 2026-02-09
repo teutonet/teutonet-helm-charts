@@ -24,7 +24,8 @@ prometheusSpec:
   probeSelectorNilUsesHelmValues: false
   scrapeConfigSelectorNilUsesHelmValues: false
   retention: {{ .Values.monitoring.prometheus.retentionDuration }}
-  retentionSize: {{ .Values.monitoring.prometheus.retentionSize }}
+  {{ $size := .Values.monitoring.prometheus.persistence.size }}
+  retentionSize: {{ include "common.convert" (dict "value" (div (mul (include "common.convert" (dict "value" $size "to" "")) 9) 10) "to" "Gi") | replace "i" "B" }}
   storageSpec:
     volumeClaimTemplate:
       spec: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.prometheus.persistence "global" $.Values.global) | nindent 8 }}
