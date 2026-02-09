@@ -23,7 +23,13 @@ prometheusSpec:
   podMonitorSelectorNilUsesHelmValues: false
   probeSelectorNilUsesHelmValues: false
   retention: {{ .Values.monitoring.prometheus.retentionDuration }}
-  retentionSize: {{ .Values.monitoring.prometheus.retentionSize }}
+  {{ $size := .Values.monitoring.prometheus.persistence.size }}
+  {{- $number := regexFind "[0-9]+" $size | int -}}
+  {{- $unit := regexFind "[a-zA-Z]+" $size -}}
+  {{- $prometheusUnit := dict "Ki" "KB" "Mi" "MB" "Gi" "GB" "Ti" "TB" "Pi" "PB" "Ei" "EB" "k" "KB" "M" "MB" "G" "GB" "T" "TB" -}}
+  {{- $retention := div (mul $number 9) 10 -}}
+  {{- if le $retention 0 }}{{ fail (printf "Computed retentionSize is 0 for persistence.size=%s; increase the size" $size) }}{{ end -}}
+  retentionSize: {{ printf "%d%s" $retention (get $prometheusUnit $unit | default $unit) }}
   storageSpec:
     volumeClaimTemplate:
       spec: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.prometheus.persistence "global" $.Values.global) | nindent 8 }}
