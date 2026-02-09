@@ -538,10 +538,6 @@
               "type": "string",
               "pattern": "[0-9]+(ms|s|m|h|d|w|y)"
             },
-            "retentionSize": {
-              "type": "string",
-              "pattern": "[0-9]+(B|KB|MB|GB|TB|PB|EB)"
-            },
             "persistence": {
               "type": "object",
               "properties": {
