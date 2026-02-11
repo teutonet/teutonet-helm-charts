@@ -45,8 +45,6 @@ spec:
         {{- end }}
       {{- end }}
   {{- end }}
-  bastion:
-    enabled: false
   {{- with .Values.openstackImageNamePrefix }}
   openStackImageNamePrefix: {{ . | quote }}
   {{- end }}
