@@ -47,7 +47,7 @@ spec:
     csi:
       plugin:
         controllerPlugin:
-          extraArgs:
+          extraArgs: |
             - --with-topology=false
           tolerations:
             - effect: NoSchedule
