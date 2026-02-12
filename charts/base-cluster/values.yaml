@@ -115,7 +115,7 @@ global:
     grafana-community:
       url: https://grafana-community.github.io/helm-charts
       charts:
-        tempo: 1.24.4
+        tempo: 1.26.1
       condition: "{{ and .Values.monitoring.prometheus.enabled .Values.monitoring.tracing.enabled }}"
     external-dns:
       url: https://kubernetes-sigs.github.io/external-dns
