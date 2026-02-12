@@ -236,6 +236,11 @@ kyverno:
   podSecurityStandard: baseline
   podSecuritySeverity: medium
   validationFailureAction: audit
+  resourcesPreset: nano
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 100m
 
 monitoring:
   monitorAllNamespaces: true

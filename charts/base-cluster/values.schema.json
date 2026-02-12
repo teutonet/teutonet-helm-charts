@@ -458,6 +458,12 @@
             "audit",
             "enforce"
           ]
+        },
+        "resources": {
+          "$ref": "#/$defs/resourceRequirements"
+        },
+        "resourcesPreset": {
+          "$ref": "#/$defs/resourcesPreset"
         }
       },
       "additionalProperties": false
