@@ -59,10 +59,13 @@ spec:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
       additionalLabels:
         monitoring/provisioned-by: base-cluster
-    priorityClassName: system-cluster-critical
     # this only works in version 3
     admissionController:
       replicas: 3
+      priorityClassName: system-cluster-critical
+      podDisruptionBudget:
+        enabled: true
+        minAvailable: 1
       {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "jaeger" "serviceProtocol" "grpc") | fromYaml -}}
       {{- if $telemetryConf.enabled }}
       tracing: &tracingConfig
@@ -70,42 +73,28 @@ spec:
         address: {{ $telemetryConf.host }}
         port: {{ int64 $telemetryConf.port }}
       {{- end }}
+      resources: &resources {{- include "common.resources" .Values.kyverno.resources | nindent 8 }}
     backgroundController:
       replicas: 2
+      priorityClassName: system-cluster-critical
+      resources: *resources
       {{- if $telemetryConf.enabled }}
       tracing: *tracingConfig
       {{- end }}
     reportsController:
       replicas: 2
+      priorityClassName: system-cluster-critical
+      resources: *resources
       {{- if $telemetryConf.enabled }}
       tracing: *tracingConfig
       {{- end }}
     cleanupController:
       replicas: 2
+      priorityClassName: system-cluster-critical
+      resources: *resources
       {{- if $telemetryConf.enabled }}
       tracing: *tracingConfig
       {{- end }}
-    podDisruptionBudget:
-      enabled: true
-      minAvailable: 1
-      # Make sure that only 1 pod at a time is unavailable,
-      # otherwise the cluster might have problems because the kyverno webhooks
-      # are unavailable
-      # this is set in the postRenderer section, as in the default values minAvailable is set
-    replicaCount: 3
-    resources:
-      limits:
-        memory: 512Mi
-      requests:
-        cpu: 100m
-        memory: 256Mi
-    initResources:
-      limits:
-        cpu: 100m
-        memory: 512Mi
-      requests:
-        cpu: 10m
-        memory: 256Mi
     # node/pod affinities. Enabled by default but can be disabled in single-node clusters.
     # This uses preferredDuringSchedulingIgnoredDuringExecution, so it's not a hard antiaffinity
     # https://artifacthub.io/packages/helm/kyverno/kyverno#configuration
