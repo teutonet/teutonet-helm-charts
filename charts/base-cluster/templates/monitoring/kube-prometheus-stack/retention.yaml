@@ -1,0 +1,24 @@
+{{- if .Values.monitoring.prometheus.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: prometheus-retention-happened
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    monitoring/provisioned-by: base-cluster
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/part-of: monitoring
+spec:
+  groups:
+    - name: prometheus-retention
+      rules:
+        - alert: prometheus-retention-happened
+          annotations:
+            description: Data retention happened on {{ `{{ $labels.pod }}` }} in namespace {{ `{{ $labels.namespace }}` }}!
+            summary: Data retention happened, maybe increase storage of the instance.
+          expr: increase(prometheus_tsdb_size_retentions_total[5m]) >= 1
+          for: 1m
+          labels:
+            severity: critical
+            period: WorkingHours
+{{- end }}
