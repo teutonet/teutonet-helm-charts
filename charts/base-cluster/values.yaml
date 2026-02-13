@@ -196,7 +196,7 @@ global:
     vmware:
       url: https://vmware-tanzu.github.io/helm-charts
       charts:
-        velero: 7.2.2
+        velero: 11.3.2
       condition: '{{ ne (.Values.backup.provider).velero nil }}'
     kube-janitor:
       url: https://github.com/teutonet/kube-janitor
