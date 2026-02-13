@@ -1,0 +1,114 @@
+{{- if and .Values.global.authentication.config .Values.flux.capacitor.enabled }}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: capacitor-oauth-proxy
+  namespace: flux-system
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: oauth-proxy
+    app.kubernetes.io/part-of: capacitor
+spec:
+  chart:
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "bitnami" "chart" "oauth2-proxy" "context" $) | nindent 6 }}
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    redis:
+      enabled: false
+  {{- if $.Values.global.imageRegistry }}
+    global:
+      imageRegistry: {{ $.Values.global.imageRegistry }}
+  {{- end }}
+    ingress:
+      enabled: true
+      hostname: {{ .Values.flux.capacitor.ingress.host }}
+      tls: true
+      {{- if $.Values.dns.provider }}
+      selfSigned: true # `certManager: true` leads to overwritten wildcard certificates
+      {{- else }}
+      certManager: true
+      {{- end }}
+      existingSecretName: {{ include "base-cluster.certificate" (dict "name" "capacitor" "customDomain" .Values.flux.capacitor.ingress.customDomain "context" $) | quote }}
+    replicaCount: 2
+    pdb:
+      create: true
+      minAvailable: 1
+      maxUnavailable: ""
+    podSecurityContext:
+      enabled: true
+    containerSecurityContext:
+      enabled: true
+    resources: {{- include "common.resources" $.Values.global.authentication.oauthProxy | nindent 6 }}
+    configuration:
+      existingSecret: {{ include "common.secrets.name" (dict "defaultNameSuffix" "oauth-proxy" "context" $) }}
+      content: |-
+        provider = "oidc"
+        reverse_proxy = true
+        oidc_issuer_url = {{ printf "https://%s%s" $.Values.global.authentication.config.issuerHost $.Values.global.authentication.config.issuerPath | quote }}
+        skip_provider_button = true
+        {{- if $.Values.global.authentication.oauthProxy.emailDomains }}
+        email_domains = [ "{{ $.Values.global.authentication.oauthProxy.emailDomains | join "\", \"" }}" ]
+        {{- else }}
+        email_domains = "*"
+        {{- end }}
+        upstreams = [ {{ printf "http://%s:%d" "capacitor" 9000 | quote }} ]
+    podAnnotations:
+      # This might change on every `template` call, this can be ignored
+      checksum/secret: {{ include "common.utils.checksumTemplate" (dict "path" "/flux/oauth-proxy-secret.yaml" "context" $) }}
+{{- if .Capabilities.APIVersions.Has "cilium.io/v2/CiliumNetworkPolicy" }}
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: capacitor-oauth-proxy-policy
+  namespace: flux-system
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: oauth
+    app.kubernetes.io/part-of: capacitor
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: "capacitor-oauth-proxy"
+  ingress:
+    - fromEndpoints:
+        - matchLabels: {{- include "common.tplvalues.render" (dict "value" $.Values.global.networkPolicy.ingressLabels "context" $) | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "9000"
+              protocol: TCP
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: '*'
+    - toEntities:
+        - kube-apiserver
+      toPorts:
+        - ports:
+            - port: "6443"
+    - toFQDNs:
+        - matchName: {{ $.Values.global.authentication.config.issuerHost | quote }}
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels: {{- include "common.tplvalues.render" (dict "value" $.Values.global.networkPolicy.dnsLabels "context" $) | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchName: {{ $.Values.global.authentication.config.issuerHost | quote }}
+{{- end }}
+---
+{{- end }}
