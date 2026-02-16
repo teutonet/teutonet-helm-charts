@@ -26,6 +26,9 @@ spec:
   {{- with .Values.version }}
   version: {{ printf "v%d.%d.%d" (.major | int) (.minor | int) (.patch | int) }}
   {{- end }}
+  {{- with .Values.quotas }}
+  quotas: {{- toYaml . | nindent 4 }}
+  {{- end }}
   clusterClass: {{ $.Release.Name }}
   nodePools: {{- range $name, $machineDeploymentClass := .Values.nodePools }}
     {{ $name -}}:

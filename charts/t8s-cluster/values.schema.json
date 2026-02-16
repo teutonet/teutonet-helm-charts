@@ -163,6 +163,16 @@
     "cloud": {
       "type": "string"
     },
+    "quotas": {
+      "type": "object",
+      "properties": {
+        "floatingIPs": {
+          "type": "integer",
+          "minimum": -1
+        }
+      },
+      "additionalProperties": false
+    },
     "version": {
       "type": "object",
       "properties": {
