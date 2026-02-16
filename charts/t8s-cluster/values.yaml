@@ -63,6 +63,8 @@ controlPlane:
     limits:
       memory: 4Gi
 
+quotas: {}
+
 version:
   major: 1
   minor: 25
