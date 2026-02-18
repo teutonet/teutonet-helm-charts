@@ -36,6 +36,7 @@ spec:
     {{- $syncEtcdSecret := dict "resources" (dict "namespaces" (list "monitoring") "kinds" (list "Pod") "names" (list "sync-etcd-secret-*")) -}}
     {{- $nodeExporter := dict "resources" (dict "namespaces" (list "monitoring") "kinds" (list "Pod") "names" (list "kube-prometheus-stack-prometheus-node-exporter-*")) -}}
     {{- $nfsServerProvisioner := dict "resources" (dict "namespaces" (list "nfs-server-provisioner") "kinds" (list "Pod") "names" (list "nfs-server-provisioner-0")) -}}
+    {{- $velero := dict "resources" (dict "namespaces" (list "backup") "kinds" (list "Pod" "Deployment") "names" (list "node-agent-*" "velero-*" "backup-*")) -}}
 
     {{- $disallowHostPath := list -}}
     {{- $runAsNonRoot := list -}}
@@ -48,6 +49,13 @@ spec:
     {{- if .Values.monitoring.loki.enabled -}}
       {{- $disallowHostPath = append $disallowHostPath $alloy -}}
       {{- $runAsNonRoot = append $runAsNonRoot $alloy -}}
+    {{- end -}}
+    {{- if (.Values.backup.provider).velero -}}
+      {{- $disallowHostPath = append $disallowHostPath $velero -}}
+      {{- $disallowCapabilities = append $disallowCapabilities $velero -}}
+      {{- $restrictSeccomp = append $restrictSeccomp $velero -}}
+      {{- $disallowPrivilegeEscalation = append $disallowPrivilegeEscalation $velero -}}
+      {{- $runAsNonRoot = append $runAsNonRoot $velero -}}
     {{- end -}}
     {{- if .Values.monitoring.prometheus.enabled -}}
       {{- $disallowHostPath = append $disallowHostPath $syncEtcdSecret -}}

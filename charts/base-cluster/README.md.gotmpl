@@ -415,4 +415,10 @@ For this we switched from the distributed deployment to the single binary deploy
 Because of this you need to migrate to the `.monitoring.tracing.<field>` instead
 of `.monitoring.tracing.ingester.<field>`
 
+### 11.x.x -> 12.0.0
+
+This release upgrades velero to the latest version. In that the uploader type changed from restic to kopia and restic
+repositories are no longer supported. For the upgrade you have to create a new bucket and configure it as new
+`backup.velero.defaultLocation`. Please also delete all old restic repositories.
+
 {{ .Files.Get "values.md"  }}
