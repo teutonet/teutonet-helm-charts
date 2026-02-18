@@ -97,7 +97,34 @@ customResourceState:
               )
             )
         -}}
-      {{- end }}
+      {{- end -}}
+
+      {{- $resources = append $resources (dict
+            "groupVersionKind" (dict
+              "group" "image.toolkit.fluxcd.io"
+              "kind" "ImagePolicy"
+            )
+            "metricNamePrefix" "image_policy"
+            "metrics" (list
+              (dict
+                "name" "latest_version"
+                "help" "The latest version of the image as determined by the ImagePolicy."
+                "each" (dict
+                  "type" "Info"
+                  "info" (dict
+                    "labelsFromPath" (dict
+                      "tag" (list "status" "latestRef" "tag")
+                    )
+                  )
+                )
+                "labelsFromPath" (dict
+                  "customresource_namespace" (list "metadata" "namespace")
+                  "customresource_name" (list "metadata" "name")
+                )
+              )
+            )
+          )
+      }}
       resources: {{- toYaml $resources | nindent 8 }}
 podAnnotations:
   checksum/config: {{ toYaml $resources | sha256sum | quote }}
