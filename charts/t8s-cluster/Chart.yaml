@@ -18,7 +18,7 @@ sources:
   - https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.5.2/charts/t8s-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster
 type: application
-version: 9.5.2
+version: 9.6.0
 annotations:
   artifacthub.io/images: |-
     []
