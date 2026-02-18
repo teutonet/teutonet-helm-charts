@@ -1,0 +1,4 @@
+{{/* normal limit is 53, but we need 52 as the limit, because postgres usernames are limited to 64 chars */}}
+{{- if gt (.Release.Name | len) 52 -}}
+{{ fail "Release.Name max length is 52!" }}
+{{- end -}}

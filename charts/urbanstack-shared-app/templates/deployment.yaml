@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name | quote }}
+  annotations:
+    contact: {{ .Values.contact | quote }}
+  labels: {{- include "urbanstack-shared-app.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels: {{- include "urbanstack-shared-app.labels" . | nindent 8 }}
+    spec:
+      {{- if and .Values.registryAuth.username .Values.registryAuth.password }}
+      imagePullSecrets:
+        - name: {{ printf "pullsecret-%s" .Release.Name | quote }}
+      {{- end }}
+      automountServiceAccountToken: false
+      securityContext:
+        runAsGroup: 1000
+        runAsUser: 1000
+        fsGroup: 1000
+        runAsNonRoot: true
+      hostIPC: false
+      hostPID: false
+      hostNetwork: false
+      containers:
+        - name: main
+          securityContext:
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+            runAsGroup: 1000
+            runAsUser: 1000
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.image) | quote }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          env:
+            - name: DB_HOST
+              value: {{ .Values.postgres.host | quote }}
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.secret | quote }}
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.secret | quote }}
+                  key: password
+            - name: DB_DATABASE
+              value: {{ .Values.postgres.database | quote }}
+            - name: AUTH_KEYCLOAK_ISSUER
+              value: {{ .Values.keycloakIssuer | quote }}
+            - name: AUTH_KEYCLOAK_ID
+              value: {{ .Values.keycloakClientId | quote }}
+            - name: HOSTNAME
+              value: {{ .Values.host | quote }}
+            - name: RESOURCE_API_GRAPHQL
+              value: {{ printf "%s/data-hub/graphql" .Values.keycloakIssuer | quote }}
+          startupProbe:
+            httpGet:
+              path: /livez
+              port: http
+            periodSeconds: 5
+            failureThreshold: 20
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+          volumeMounts:
+            - mountPath: /data
+              name: data
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name | quote }}
+      
