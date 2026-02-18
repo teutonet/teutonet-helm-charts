@@ -1,7 +1,7 @@
 <!-- vim: set ft=markdown: -->
 # t8s-cluster
 
-![Version: 9.5.2](https://img.shields.io/badge/Version-9.5.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 9.6.0](https://img.shields.io/badge/Version-9.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -17,14 +17,14 @@ t8s-operator cluster with necessary addons
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.5.2/charts/t8s-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.6.0/charts/t8s-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster>
 
 ## Requirements
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.7.0 |
+| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.8.0 |
 
 ## Initial installation
 
@@ -64,6 +64,7 @@ Removed the unused `.metadata.gopassName` field.
 | + [metadata](#metadata )                                                         | No      | object           | No         | -                                                                           | -                                                                                              |
 | + [controlPlane](#controlPlane )                                                 | No      | object           | No         | -                                                                           | -                                                                                              |
 | - [cloud](#cloud )                                                               | No      | string           | No         | -                                                                           | -                                                                                              |
+| - [quotas](#quotas )                                                             | No      | object           | No         | -                                                                           | -                                                                                              |
 | + [version](#version )                                                           | No      | object           | No         | -                                                                           | -                                                                                              |
 | + [nodePools](#nodePools )                                                       | No      | object           | No         | -                                                                           | -                                                                                              |
 | - [additionalComputePlaneSecurityGroups](#additionalComputePlaneSecurityGroups ) | No      | array of string  | No         | Same as [additionalSecurityGroups](#controlPlane_additionalSecurityGroups ) | -                                                                                              |
@@ -993,7 +994,28 @@ This field is immutable. It can only be set for containers.
 | -------- | -------- |
 | **Type** | `string` |
 
-## <a name="version"></a>5. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version`
+## <a name="quotas"></a>5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > quotas`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                              | Pattern | Type    | Deprecated | Definition | Title/Description |
+| ------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
+| - [floatingIPs](#quotas_floatingIPs ) | No      | integer | No         | -          | -                 |
+
+### <a name="quotas_floatingIPs"></a>5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > quotas > floatingIPs`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `integer` |
+
+| Restrictions |         |
+| ------------ | ------- |
+| **Minimum**  | &ge; -1 |
+
+## <a name="version"></a>6. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -1006,7 +1028,7 @@ This field is immutable. It can only be set for containers.
 | + [minor](#version_minor ) | No      | integer | No         | -          | The minor version of the k8s cluster. |
 | + [patch](#version_patch ) | No      | integer | No         | -          | -                                     |
 
-### <a name="version_major"></a>5.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > major`
+### <a name="version_major"></a>6.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > major`
 
 |          |         |
 | -------- | ------- |
@@ -1014,7 +1036,7 @@ This field is immutable. It can only be set for containers.
 
 Specific value: `1`
 
-### <a name="version_minor"></a>5.2. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > minor`
+### <a name="version_minor"></a>6.2. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > minor`
 
 |          |           |
 | -------- | --------- |
@@ -1026,13 +1048,13 @@ Specific value: `1`
 | ------------ | ------- |
 | **Minimum**  | &ge; 25 |
 
-### <a name="version_patch"></a>5.3. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > patch`
+### <a name="version_patch"></a>6.3. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > patch`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `integer` |
 
-## <a name="nodePools"></a>6. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools`
+## <a name="nodePools"></a>7. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools`
 
 |                           |                                                                                                        |
 | ------------------------- | ------------------------------------------------------------------------------------------------------ |
@@ -1043,7 +1065,7 @@ Specific value: `1`
 | -------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [](#nodePools_additionalProperties ) | No      | object | No         | -          | -                 |
 
-### <a name="nodePools_additionalProperties"></a>6.1. Property `t8s cluster configuration > nodePools > additionalProperties`
+### <a name="nodePools_additionalProperties"></a>7.1. Property `t8s cluster configuration > nodePools > additionalProperties`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -1056,7 +1078,7 @@ Specific value: `1`
 | - [availabilityZone](#nodePools_additionalProperties_availabilityZone ) | No      | string      | No         | -          | -                 |
 | + [flavor](#nodePools_additionalProperties_flavor )                     | No      | string      | No         | -          | -                 |
 
-#### <a name="nodePools_additionalProperties_replicas"></a>6.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools > additionalProperties > replicas`
+#### <a name="nodePools_additionalProperties_replicas"></a>7.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools > additionalProperties > replicas`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -1068,7 +1090,7 @@ Specific value: `1`
 | [item 0](#nodePools_additionalProperties_replicas_oneOf_i0) |
 | [item 1](#nodePools_additionalProperties_replicas_oneOf_i1) |
 
-##### <a name="nodePools_additionalProperties_replicas_oneOf_i0"></a>6.1.1.1. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 0`
+##### <a name="nodePools_additionalProperties_replicas_oneOf_i0"></a>7.1.1.1. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 0`
 
 |          |           |
 | -------- | --------- |
@@ -1078,7 +1100,7 @@ Specific value: `1`
 | ------------ | ------ |
 | **Minimum**  | &ge; 0 |
 
-##### <a name="nodePools_additionalProperties_replicas_oneOf_i1"></a>6.1.1.2. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 1`
+##### <a name="nodePools_additionalProperties_replicas_oneOf_i1"></a>7.1.1.2. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 1`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -1090,7 +1112,7 @@ Specific value: `1`
 | + [min](#nodePools_additionalProperties_replicas_oneOf_i1_min ) | No      | integer | No         | -          | -                 |
 | + [max](#nodePools_additionalProperties_replicas_oneOf_i1_max ) | No      | integer | No         | -          | -                 |
 
-###### <a name="nodePools_additionalProperties_replicas_oneOf_i1_min"></a>6.1.1.2.1. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 1 > min`
+###### <a name="nodePools_additionalProperties_replicas_oneOf_i1_min"></a>7.1.1.2.1. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 1 > min`
 
 |          |           |
 | -------- | --------- |
@@ -1100,7 +1122,7 @@ Specific value: `1`
 | ------------ | ------ |
 | **Minimum**  | &ge; 1 |
 
-###### <a name="nodePools_additionalProperties_replicas_oneOf_i1_max"></a>6.1.1.2.2. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 1 > max`
+###### <a name="nodePools_additionalProperties_replicas_oneOf_i1_max"></a>7.1.1.2.2. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 1 > max`
 
 |          |           |
 | -------- | --------- |
@@ -1110,26 +1132,26 @@ Specific value: `1`
 | ------------ | ------ |
 | **Minimum**  | &ge; 1 |
 
-#### <a name="nodePools_additionalProperties_availabilityZone"></a>6.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > nodePools > additionalProperties > availabilityZone`
+#### <a name="nodePools_additionalProperties_availabilityZone"></a>7.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > nodePools > additionalProperties > availabilityZone`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="nodePools_additionalProperties_flavor"></a>6.1.3. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools > additionalProperties > flavor`
+#### <a name="nodePools_additionalProperties_flavor"></a>7.1.3. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools > additionalProperties > flavor`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-## <a name="additionalComputePlaneSecurityGroups"></a>7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > additionalComputePlaneSecurityGroups`
+## <a name="additionalComputePlaneSecurityGroups"></a>8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > additionalComputePlaneSecurityGroups`
 
 |                        |                                                                    |
 | ---------------------- | ------------------------------------------------------------------ |
 | **Type**               | `array of string`                                                  |
 | **Same definition as** | [additionalSecurityGroups](#controlPlane_additionalSecurityGroups) |
 
-## <a name="bastion"></a>8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion`
+## <a name="bastion"></a>9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -1142,25 +1164,25 @@ Specific value: `1`
 | - [availabilityZone](#bastion_availabilityZone ) | No      | null or string | No         | -          | -                 |
 | - [sshKeyName](#bastion_sshKeyName )             | No      | null or string | No         | -          | -                 |
 
-### <a name="bastion_enabled"></a>8.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion > enabled`
+### <a name="bastion_enabled"></a>9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion > enabled`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-### <a name="bastion_availabilityZone"></a>8.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion > availabilityZone`
+### <a name="bastion_availabilityZone"></a>9.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion > availabilityZone`
 
 |          |                  |
 | -------- | ---------------- |
 | **Type** | `null or string` |
 
-### <a name="bastion_sshKeyName"></a>8.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion > sshKeyName`
+### <a name="bastion_sshKeyName"></a>9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion > sshKeyName`
 
 |          |                  |
 | -------- | ---------------- |
 | **Type** | `null or string` |
 
-## <a name="containerRegistryMirror"></a>9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryMirror`
+## <a name="containerRegistryMirror"></a>10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryMirror`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -1172,7 +1194,7 @@ Specific value: `1`
 | - [additionallyMirroredRegistries](#containerRegistryMirror_additionallyMirroredRegistries ) | No      | array of string | No         | -          | -                 |
 | - [mirrorEndpoint](#containerRegistryMirror_mirrorEndpoint )                                 | No      | string          | No         | -          | -                 |
 
-### <a name="containerRegistryMirror_additionallyMirroredRegistries"></a>9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryMirror > additionallyMirroredRegistries`
+### <a name="containerRegistryMirror_additionallyMirroredRegistries"></a>10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryMirror > additionallyMirroredRegistries`
 
 |          |                   |
 | -------- | ----------------- |
@@ -1190,25 +1212,25 @@ Specific value: `1`
 | ----------------------------------------------------------------------------------------------------- | ----------- |
 | [additionallyMirroredRegistries items](#containerRegistryMirror_additionallyMirroredRegistries_items) | -           |
 
-#### <a name="containerRegistryMirror_additionallyMirroredRegistries_items"></a>9.1.1. t8s cluster configuration > containerRegistryMirror > additionallyMirroredRegistries > additionallyMirroredRegistries items
+#### <a name="containerRegistryMirror_additionallyMirroredRegistries_items"></a>10.1.1. t8s cluster configuration > containerRegistryMirror > additionallyMirroredRegistries > additionallyMirroredRegistries items
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="containerRegistryMirror_mirrorEndpoint"></a>9.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryMirror > mirrorEndpoint`
+### <a name="containerRegistryMirror_mirrorEndpoint"></a>10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryMirror > mirrorEndpoint`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-## <a name="sshKeyName"></a>10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > sshKeyName`
+## <a name="sshKeyName"></a>11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > sshKeyName`
 
 |          |                  |
 | -------- | ---------------- |
 | **Type** | `string or null` |
 
-## <a name="cni"></a>11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > cni`
+## <a name="cni"></a>12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > cni`
 
 |          |                    |
 | -------- | ------------------ |
@@ -1221,13 +1243,13 @@ Must be one of:
 * "auto"
 * "calico"
 
-## <a name="openstackImageNamePrefix"></a>12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > openstackImageNamePrefix`
+## <a name="openstackImageNamePrefix"></a>13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > openstackImageNamePrefix`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-## <a name="common"></a>13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > common`
+## <a name="common"></a>14. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > common`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |

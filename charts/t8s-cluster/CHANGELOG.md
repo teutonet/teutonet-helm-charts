@@ -1,5 +1,32 @@
 # Changelog
 
+## [9.6.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.5.2...t8s-cluster-v9.6.0) (2026-02-18)
+
+
+### Features
+
+* **t8s-cluster/management-cluster:** add `compute-plane` role label to nodes ([#1953](https://github.com/teutonet/teutonet-helm-charts/issues/1953)) ([f5897e3](https://github.com/teutonet/teutonet-helm-charts/commit/f5897e3a6353f9515ec9914cf9f4d0269c1c654f))
+* **t8s-cluster/management-cluster:** add quotas fied to cluster ([#1998](https://github.com/teutonet/teutonet-helm-charts/issues/1998)) ([3123514](https://github.com/teutonet/teutonet-helm-charts/commit/3123514c929290abc0dc8e36a8e1dacf62bf58e0))
+* **t8s-cluster/management-cluster:** ignore local storage for autoscaler ([#1973](https://github.com/teutonet/teutonet-helm-charts/issues/1973)) ([d4abff8](https://github.com/teutonet/teutonet-helm-charts/commit/d4abff80ab66cfc07f5e7b49a5c31b1940672c49))
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** add missing securityGroupRule for cilium hubble ([#1971](https://github.com/teutonet/teutonet-helm-charts/issues/1971)) ([f36f231](https://github.com/teutonet/teutonet-helm-charts/commit/f36f231b94863151e3f34486fb7b53bca8edb554))
+* **t8s-cluster/management-cluster:** adjust test helmRepositories ([#1964](https://github.com/teutonet/teutonet-helm-charts/issues/1964)) ([66be444](https://github.com/teutonet/teutonet-helm-charts/commit/66be4441c2ca1a81f7ea1af2d65cd31522f0832b))
+* **t8s-cluster/management-cluster:** remove hardcoded field ([#1984](https://github.com/teutonet/teutonet-helm-charts/issues/1984)) ([227af97](https://github.com/teutonet/teutonet-helm-charts/commit/227af97b194b9e4cf74035b8e800b124373b8b22))
+* **t8s-cluster/workload-cluster:** add missing tolerations ([#1933](https://github.com/teutonet/teutonet-helm-charts/issues/1933)) ([8718c0d](https://github.com/teutonet/teutonet-helm-charts/commit/8718c0da3e375589f0bbc930b3e232ea0d9318dc))
+* **t8s-cluster/workload-cluster:** migrate extraArgs type to string ([#1985](https://github.com/teutonet/teutonet-helm-charts/issues/1985)) ([79d6df5](https://github.com/teutonet/teutonet-helm-charts/commit/79d6df5ede6c25efbc29ef077ded0427de309353))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update common docker tag to v1.8.0 ([#1940](https://github.com/teutonet/teutonet-helm-charts/issues/1940)) ([cdf387f](https://github.com/teutonet/teutonet-helm-charts/commit/cdf387f8cb43b4333c1499b1ca4884a927d2ec95))
+* **t8s-cluster/dependencies:** update helm release cilium to v1.19.0 ([#1969](https://github.com/teutonet/teutonet-helm-charts/issues/1969)) ([e95a9a5](https://github.com/teutonet/teutonet-helm-charts/commit/e95a9a5d592d447fbe84b1c6f4f65e0024b05f99))
+* **t8s-cluster/dependencies:** update helm release cluster-autoscaler to v9.55.0 ([#1963](https://github.com/teutonet/teutonet-helm-charts/issues/1963)) ([659a529](https://github.com/teutonet/teutonet-helm-charts/commit/659a529599de10140a5277cfa34a5751e1d5b268))
+* **t8s-cluster/dependencies:** update helm release openstack-cinder-csi to v2.35.0 ([#1970](https://github.com/teutonet/teutonet-helm-charts/issues/1970)) ([741d5b2](https://github.com/teutonet/teutonet-helm-charts/commit/741d5b22ae7b6f26feaec5b1fa97515fc5f2dc86))
+* **t8s-cluster/dependencies:** update helm release openstack-cloud-controller-manager to v2.35.0 ([#1941](https://github.com/teutonet/teutonet-helm-charts/issues/1941)) ([a580142](https://github.com/teutonet/teutonet-helm-charts/commit/a580142d61c9b2051ed0d50952ff8ed5948c3ebb))
+
 ## [9.5.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.5.1...t8s-cluster-v9.5.2) (2026-01-22)
 
 
