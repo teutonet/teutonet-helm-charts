@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.8.0...common-v2.0.0) (2026-02-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* **common/resources:** drop cpu limits by default ([#1987](https://github.com/teutonet/teutonet-helm-charts/issues/1987))
+
+### Features
+
+* **common/resources:** drop cpu limits by default ([#1987](https://github.com/teutonet/teutonet-helm-charts/issues/1987)) ([d4564a5](https://github.com/teutonet/teutonet-helm-charts/commit/d4564a5a4e2d26853172cc79ae7fe47f291b03f0))
+
+
+### Miscellaneous Chores
+
+* **common/dependencies:** update helm release common to v2.34.0 ([#1965](https://github.com/teutonet/teutonet-helm-charts/issues/1965)) ([af9e6b3](https://github.com/teutonet/teutonet-helm-charts/commit/af9e6b3a10287448ce0540b3520c3a32229c2605))
+* **common/dependencies:** update helm release common to v2.36.0 ([#1983](https://github.com/teutonet/teutonet-helm-charts/issues/1983)) ([0b5e540](https://github.com/teutonet/teutonet-helm-charts/commit/0b5e540ffdd0d610fc44c92361eca7e4cf395cd9))
+
 ## [1.8.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.7.0...common-v1.8.0) (2026-01-23)
 
 
