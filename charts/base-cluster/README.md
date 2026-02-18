@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 11.0.1](https://img.shields.io/badge/Version-11.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 11.1.0](https://img.shields.io/badge/Version-11.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -246,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v11.0.1/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v11.1.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -255,7 +255,7 @@ Kubernetes: `>=1.27.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.7.0 |
+| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.8.0 |
 
 This helm chart requires [flux v2 to be installed](https://fluxcd.io/docs/installation),
 see [bootstrap](#cluster-bootstrap)
@@ -479,6 +479,7 @@ of `.monitoring.tracing.ingester.<field>`
 | - [namespaces](#global_namespaces )                       | No      | object           | No         | -                                                                                                                                | Namespaces to create. AND *delete* if removed. These will also be the only ones, including the builtin namespaces, for which alerts will be sent if \`monitoring.monitorAllNamespaces=false\` |
 | - [priorityClasses](#global_priorityClasses )             | No      | object           | No         | -                                                                                                                                | -                                                                                                                                                                                             |
 | - [authentication](#global_authentication )               | No      | object           | No         | -                                                                                                                                | -                                                                                                                                                                                             |
+| - [autoConfiguration](#global_autoConfiguration )         | No      | object           | No         | -                                                                                                                                | -                                                                                                                                                                                             |
 
 ### <a name="global_serviceLevelAgreement"></a>1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > serviceLevelAgreement`
 
@@ -1885,6 +1886,81 @@ This field is immutable. It can only be set for containers.
 | **Type**                  | `combining`                                                                                                                                                                         |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                                                                                                         |
 | **Same definition as**    | [global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
+
+### <a name="global_autoConfiguration"></a>1.18. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > autoConfiguration`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                    | Pattern | Type             | Deprecated | Definition | Title/Description |
+| ----------------------------------------------------------- | ------- | ---------------- | ---------- | ---------- | ----------------- |
+| + [cloudProvider](#global_autoConfiguration_cloudProvider ) | No      | enum (of string) | No         | -          | -                 |
+| + [openstack](#global_autoConfiguration_openstack )         | No      | object           | No         | -          | -                 |
+
+#### <a name="global_autoConfiguration_cloudProvider"></a>1.18.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > autoConfiguration > cloudProvider`
+
+|          |                    |
+| -------- | ------------------ |
+| **Type** | `enum (of string)` |
+
+Must be one of:
+* "auto"
+* "openstack"
+
+#### <a name="global_autoConfiguration_openstack"></a>1.18.2. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > autoConfiguration > openstack`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                                        | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| + [cloudConfiguration](#global_autoConfiguration_openstack_cloudConfiguration ) | No      | object | No         | -          | -                 |
+
+##### <a name="global_autoConfiguration_openstack_cloudConfiguration"></a>1.18.2.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > autoConfiguration > openstack > cloudConfiguration`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                                         | Pattern | Type             | Deprecated | Definition | Title/Description |
+| -------------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ---------- | ----------------- |
+| + [type](#global_autoConfiguration_openstack_cloudConfiguration_type )           | No      | enum (of string) | No         | -          | -                 |
+| + [namespace](#global_autoConfiguration_openstack_cloudConfiguration_namespace ) | No      | string           | No         | -          | -                 |
+| + [name](#global_autoConfiguration_openstack_cloudConfiguration_name )           | No      | string           | No         | -          | -                 |
+| + [field](#global_autoConfiguration_openstack_cloudConfiguration_field )         | No      | string           | No         | -          | -                 |
+
+###### <a name="global_autoConfiguration_openstack_cloudConfiguration_type"></a>1.18.2.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > autoConfiguration > openstack > cloudConfiguration > type`
+
+|          |                    |
+| -------- | ------------------ |
+| **Type** | `enum (of string)` |
+
+Must be one of:
+* "Secret"
+* "ConfigMap"
+
+###### <a name="global_autoConfiguration_openstack_cloudConfiguration_namespace"></a>1.18.2.1.2. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > autoConfiguration > openstack > cloudConfiguration > namespace`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="global_autoConfiguration_openstack_cloudConfiguration_name"></a>1.18.2.1.3. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > autoConfiguration > openstack > cloudConfiguration > name`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="global_autoConfiguration_openstack_cloudConfiguration_field"></a>1.18.2.1.4. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > global > autoConfiguration > openstack > cloudConfiguration > field`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
 
 ## <a name="kyverno"></a>2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > kyverno`
 
@@ -4212,7 +4288,7 @@ Must be one of:
 | - [resources](#ingress_resources )                                             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements.                                                                                                                                                             |
 | - [provider](#ingress_provider )                                               | No      | enum (of string) | No         | -                                                                             | Which ingress controller to use                                                                                                                                                                                               |
 | - [allowNginxConfigurationSnippets](#ingress_allowNginxConfigurationSnippets ) | No      | boolean          | No         | -                                                                             | Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets |
-| - [useProxyProtocol](#ingress_useProxyProtocol )                               | No      | boolean          | No         | -                                                                             | -                                                                                                                                                                                                                             |
+| - [useProxyProtocol](#ingress_useProxyProtocol )                               | No      | Combination      | No         | -                                                                             | -                                                                                                                                                                                                                             |
 | - [IP](#ingress_IP )                                                           | No      | string           | No         | -                                                                             | Try to use specified IP as loadbalancer IP                                                                                                                                                                                    |
 
 ### <a name="ingress_replicas"></a>10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > replicas`
@@ -4253,6 +4329,7 @@ Must be one of:
 Must be one of:
 * "nginx"
 * "traefik"
+* "external"
 * "none"
 
 ### <a name="ingress_allowNginxConfigurationSnippets"></a>10.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > allowNginxConfigurationSnippets`
@@ -4265,9 +4342,33 @@ Must be one of:
 
 ### <a name="ingress_useProxyProtocol"></a>10.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > useProxyProtocol`
 
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+| One of(Option)                               |
+| -------------------------------------------- |
+| [item 0](#ingress_useProxyProtocol_oneOf_i0) |
+| [item 1](#ingress_useProxyProtocol_oneOf_i1) |
+
+#### <a name="ingress_useProxyProtocol_oneOf_i0"></a>10.6.1. Property `base cluster configuration > ingress > useProxyProtocol > oneOf > item 0`
+
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
+
+#### <a name="ingress_useProxyProtocol_oneOf_i1"></a>10.6.2. Property `base cluster configuration > ingress > useProxyProtocol > oneOf > item 1`
+
+|          |         |
+| -------- | ------- |
+| **Type** | `const` |
+
+**Description:** Auto will turn it on unless in specific cloud environments where it's known to not be necessary.
+
+The code figures out the cloud by the node provider ID, which is assumed to be the same across all nodes.
+
+Specific value: `"auto"`
 
 ### <a name="ingress_IP"></a>10.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > IP`
 
