@@ -9,3 +9,18 @@
 {{ template "chart.homepageLine" . }}
 
 {{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+## Migration
+
+### 1.x.x -> 2.0.0
+
+The template function `common.resources` changed its signature and it's default behaviour;
+
+It now accepts an additional parameter `setCPULimits` which defaults to `false`.
+
+So now by default CPU limits are omitted from the `resourcesPreset`, but are still always
+set via `resources`.
