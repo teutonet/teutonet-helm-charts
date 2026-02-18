@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.4.0...ckan-v1.5.0) (2026-02-18)
+
+
+### Features
+
+* **ckan/ingress:** remove truncation for ingress tls secret name ([#1779](https://github.com/teutonet/teutonet-helm-charts/issues/1779)) ([27e5396](https://github.com/teutonet/teutonet-helm-charts/commit/27e5396732b8ee3f37fa6a091222dcc961886790))
+
+
+### Miscellaneous Chores
+
+* **ckan/dependencies:** update ghcr.io/teutonet/oci-images/ckan docker tag to v1.0.16 ([#1792](https://github.com/teutonet/teutonet-helm-charts/issues/1792)) ([1639fb0](https://github.com/teutonet/teutonet-helm-charts/commit/1639fb0235317cdc1cedcf3cab61819926a7b163))
+
 ## [1.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/ckan-v1.3.4...ckan-v1.4.0) (2025-10-29)
 
 
