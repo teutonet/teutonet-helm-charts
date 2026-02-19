@@ -255,10 +255,8 @@ monitoring:
       size: 10Gi
     config: {}
     sidecar:
-      resourcesPreset: nano
-      resources:
-        limits:
-          memory: 256Mi
+      resourcesPreset: none
+      resources: {}
   storageCostAnalysis:
     currency: currencyEUR
     period: Day
