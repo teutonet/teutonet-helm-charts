@@ -64,4 +64,4 @@ jobs:
           ASSIGNEES: cwrau,marvinWolff,tasches
           LABELS: bug
           BODY: |
-            Last run of CVE scanning failed.
+            Last run of CVE scanning failed. Please check ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} for more information
