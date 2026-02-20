@@ -102,7 +102,7 @@ global:
     prometheus:
       url: https://prometheus-community.github.io/helm-charts
       charts:
-        kube-prometheus-stack: 81.6.6
+        kube-prometheus-stack: 82.2.0
       type: helm
       condition: "{{ .Values.monitoring.prometheus.enabled }}"
       interval: 5m
