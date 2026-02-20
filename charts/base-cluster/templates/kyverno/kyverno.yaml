@@ -31,12 +31,7 @@ spec:
     {{- else }}
     test:
       image:
-        registry: {{ include "base-cluster.defaultRegistry" (dict) }}
-    policyReportsCleanup:
-      image:
-        registry: {{ .Values.global.imageRegistry | default .Values.global.kubectl.image.registry }}
-        repository: {{ .Values.global.kubectl.image.repository }}
-        tag: {{ .Values.global.kubectl.image.tag }}
+        registry: {{ printf "%s/curlimages" (include "base-cluster.defaultRegistry" (dict)) }}
     crds:
       migration:
         image:
@@ -47,10 +42,6 @@ spec:
       enabled: false
     webhooksCleanup:
       enable: true
-      image:
-        registry: {{ .Values.global.imageRegistry | default .Values.global.kubectl.image.registry }}
-        repository: {{ .Values.global.kubectl.image.repository }}
-        tag: {{ .Values.global.kubectl.image.tag }}
     features:
       policyExceptions:
         enabled: true
