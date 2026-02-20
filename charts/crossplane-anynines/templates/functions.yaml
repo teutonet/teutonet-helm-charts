@@ -1,0 +1,10 @@
+{{- range $name, $function := .Values.global.function -}}
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: {{ $name }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  package: {{ include "common.images.image" (dict "imageRoot" (index $function "image") "global" $.Values.global) }}
+---
+{{ end -}}
