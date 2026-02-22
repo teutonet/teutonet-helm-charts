@@ -21,4 +21,4 @@ jobs:
           # https://github.com/rhysd/actionlint/blob/3a2f2c7/docs/usage.md#problem-matchers
           curl -LO https://raw.githubusercontent.com/rhysd/actionlint/main/.github/actionlint-matcher.json
           echo "::add-matcher::actionlint-matcher.json"
-      - uses: docker://rhysd/actionlint:latest@sha256:ef8299f97635c4c30e2298f48f30763ab782a4ad2c95b744649439a039421e36
+      - uses: docker://rhysd/actionlint:latest@sha256:6f03470d0152251d7f07f7c4dc019dbe7024c72cd952f839544c7798843efa8f
