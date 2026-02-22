@@ -43,7 +43,7 @@ spec:
     resources: {{- include "common.resources" .Values.backup | nindent 6 }}
     k8up:
       globalResources: {{- include "common.resources" .Values.backup.runners | nindent 8 }}
-      skipWithoutAnnotation: true
+      skipWithoutAnnotation: {{ .Values.backup.provider.k8up.skipWithoutAnnotation | default false }}
     priorityClassName: system-cluster-critical
     {{- if .Values.monitoring.prometheus.enabled }}
     metrics:
