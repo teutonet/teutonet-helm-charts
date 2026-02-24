@@ -1,7 +1,9 @@
 {{- $enabled := false -}}
 {{- range $_, $machineDeploymentClass := .Values.nodePools }}
-  {{- with $machineDeploymentClass.replicas }}
-    {{- $enabled = or $enabled (kindIs "map" .) -}}
+  {{- $replicas := $machineDeploymentClass.replicas -}}
+  {{- $maxReplicas := $machineDeploymentClass.maxReplicas | default $replicas -}}
+  {{- if ne $replicas $maxReplicas }}
+    {{- $enabled = true -}}
   {{- end }}
 {{- end }}
 {{- if $enabled -}}
