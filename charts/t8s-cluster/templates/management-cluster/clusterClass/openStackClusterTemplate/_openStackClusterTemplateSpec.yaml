@@ -4,7 +4,7 @@ Here we are generating a hash suffix.
 */}}
 {{- define "t8s-cluster.clusterClass.openStackClusterTemplate.spec" -}}
   {{- $_ := mustMerge . (pick .context "Values") -}}
-  {{- $cloud := lookup "t8s-engine.teuto.net/v1alpha1" "TeutonetesCloud" "" .Values.cloud -}}
+  {{- $cloud := lookup "t8s-engine.teuto.net/v1beta1" "TeutonetesCloud" "" .Values.cloud -}}
 apiServerLoadBalancer:
   enabled: {{ not .Values.controlPlane.hosted }}
   {{- with .Values.controlPlane.allowedCIDRs }}
