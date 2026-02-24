@@ -46,9 +46,11 @@ spec:
       name: cloud-config
     csi:
       plugin:
+        {{- if ge (int .Values.version.minor) 32 }}
+        extraArgs: |
+          - --with-topology=false
+        {{- end }}
         controllerPlugin:
-          extraArgs: |
-            - --with-topology=false
           tolerations:
             - effect: NoSchedule
               key: node-role.kubernetes.io/control-plane
