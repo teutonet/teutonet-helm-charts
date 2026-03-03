@@ -1,0 +1,17 @@
+backup:
+  encrypted: true
+  retention:
+    full: 7
+    diff: 14
+    archive: 2
+    history: 30
+
+  s3:
+    path: "/test/path"
+    endpointURL: "endpointURL"
+    bucketName: "test"
+    secret:
+      name: "MeinNameIstNichtGeheim"
+      accessKeyId: "dasjhiodsadas"
+      accessSecretKey: "jiopidasda"
+      encryptionPass: "ENCRYPTIONPASS"
