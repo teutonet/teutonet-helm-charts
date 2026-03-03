@@ -170,12 +170,43 @@
       ],
       "description": "See: https://cloudnative-pg.io/documentation/1.16/backup_recovery/",
       "properties": {
+        "retention": {
+          "type": "object",
+          "required": [
+            "full",
+            "diff",
+            "archive",
+            "history"
+          ],
+          "properties": {
+            "full": {
+              "type": "number",
+              "description": "Number of full backups in days"
+            },
+            "diff": {
+              "type": "number",
+              "description": "Number of differential backups"
+            },
+            "archive": {
+              "type": "number",
+              "description": "Number of backups worth of continuous WAL to retain."
+            },
+            "history": {
+              "type": "number",
+              "description": "Days of backup history manifests to retain."
+            }
+          }
+        },
         "schedule": {
           "type": "string",
           "description": "cron syntax",
           "examples": [
             "0 0 0 * * *"
           ]
+        },
+        "encrypted": {
+          "type": "boolean",
+          "default": false
         },
         "s3": {
           "type": "object",
@@ -193,6 +224,10 @@
               "type": "string",
               "description": "url of the api endpoint"
             },
+            "bucketName": {
+              "type": "string",
+              "description": "name of the bucket"
+            },
             "secret": {
               "type": "object",
               "properties": {
@@ -206,6 +241,10 @@
                 "accessSecretKey": {
                   "type": "string",
                   "default": "ACCESS_SECRET_KEY"
+                },
+                "encryptionPass": {
+                  "type": "string",
+                  "default": "ENCRYPTION_PASS"
                 }
               },
               "additionalProperties": false,

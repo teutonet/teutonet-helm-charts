@@ -19,12 +19,20 @@ spec:
   imageName: {{ include "common.images.image" (dict "imageRoot" .Values.databaseImage "global" .Values.global) }}
   instances: {{ .Values.instances }}
   logLevel: {{ .Values.logLevel }}
-  {{- if .Values.backup }}
+  {{- if and (not (.Values.backup).encrypted) .Values.backup }}
   plugins:
   - name: barman-cloud.cloudnative-pg.io
     isWALArchiver: true
     parameters:
       barmanObjectName: {{ .Release.Name }}
+  {{- end }}
+  {{- if (.Values.backup).encrypted }}
+  plugins:
+    - name: pgbackrest.dalibo.com
+      enabled: true
+      isWALArchiver: true
+      parameters:
+        stanzaRef: {{ .Release.Name }}
   {{- end }}
   managed:
     {{- $roles := dict -}}
