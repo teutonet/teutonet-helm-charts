@@ -1,0 +1,38 @@
+{{- if (.Values.backup).encrypted }}
+apiVersion: pgbackrest.dalibo.com/v1
+kind: Stanza
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  stanzaConfiguration:
+    name: main
+    s3Repositories:
+      - bucket: {{ .Values.backup.s3.bucketName | quote }}
+        endpoint: {{ .Values.backup.s3.endpointURL | quote }}
+        repoPath: {{ .Values.backup.s3.path | quote }}
+        region: Region1
+        uriStyle: path
+        verifyTLS: true
+        {{- if .Values.backup.retention }}
+        retentionPolicy:
+          full: {{ .Values.backup.retention.full }}
+          fullType: count
+          diff: {{ .Values.backup.retention.diff }}
+          archive: {{ .Values.backup.retention.archive }}
+          archiveType: full
+          history: {{ .Values.backup.retention.history }}
+        {{- end }}
+        secretRef:
+          cipherConfig:
+            encryptionPass:
+              name: {{ .Values.backup.s3.secret.name }}
+              key: {{ .Values.backup.s3.secret.encryptionPass | default "ENCRYPTION_PASS" }}
+          accessKeyId:
+            name: {{ .Values.backup.s3.secret.name }}
+            key: {{ .Values.backup.s3.secret.accessKeyId | default "ACCESS_KEY_ID" }}
+          secretAccessKey:
+            name: {{ .Values.backup.s3.secret.name }}
+            key: {{ .Values.backup.s3.secret.accessSecretKey | default "ACCESS_SECRET_KEY" }}
+{{- end }}
