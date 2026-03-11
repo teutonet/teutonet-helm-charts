@@ -36,16 +36,19 @@ spec:
       availabilityZone: {{ $machineDeploymentClass.availabilityZone | quote }}
       {{- end }}
       flavor: {{ $machineDeploymentClass.flavor | quote }}
-      {{- with $machineDeploymentClass.replicas }}
-        {{- if kindIs "map" . }}
-          {{- if gt .min .max }}
-            {{- fail (printf "nodePools.%s.replicas.min must not be greater than nodePools.%s.replicas.max" $name $name) -}}
-          {{- end }}
-      minReplicas: {{ .min }}
-      maxReplicas: {{ .max }}
-        {{- else }}
-      replicas: {{ . }}
-        {{- end }}
+      {{- $replicas := $machineDeploymentClass.replicas -}}
+      {{- $maxReplicas := $machineDeploymentClass.maxReplicas | default $replicas -}}
+      {{- if gt $replicas $maxReplicas -}}
+        {{- fail (printf "nodePools.%s.replicas must not be greater than nodePools.%s.maxReplicas" $name $name) -}}
+      {{- end -}}
+      {{- if and (eq (int $replicas) 0) (eq (int $maxReplicas) 0) -}}
+        {{- fail (printf "if nodePools.%s.replicas is 0, nodePools.%s.maxReplicas must be set" $name $name) -}}
+      {{- end -}}
+      {{- if ne $replicas $maxReplicas }}
+      minReplicas: {{ $replicas }}
+      maxReplicas: {{ $maxReplicas }}
+      {{- else }}
+      replicas: {{ $replicas }}
       {{- end }}
   {{- end }}
   {{- with .Values.openstackImageNamePrefix }}
