@@ -57,9 +57,7 @@ spec:
                 fi
               }
 
-              checkName={{- printf "k8s-cluster-%s-%s" (.Values.global.baseDomain | replace "." "-") .Values.global.clusterName | quote }}
-              {{- if .Values.monitoring.prometheus.enabled }}
+              checkName={{- include "base-cluster.deadMansSwitch.checkName" . | quote }}
               deleteCheck "$checkName-monitoring"
-              {{- end }}
               deleteCheck "$checkName-scheduling"
 {{- end }}
