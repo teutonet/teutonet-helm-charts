@@ -56,7 +56,7 @@ spec:
                 - '5'
                 - --max-time
                 - '30'
-                - {{ printf "https://hc-ping.com/$(PING_KEY)/k8s-cluster-%s-%s-scheduling" (.Values.global.baseDomain | replace "." "-") .Values.global.clusterName }}
+                - {{ printf "https://hc-ping.com/$(PING_KEY)/%s-scheduling" (include "base-cluster.deadMansSwitch.checkName" .) }}
               resources:
                 requests:
                   cpu: 100m

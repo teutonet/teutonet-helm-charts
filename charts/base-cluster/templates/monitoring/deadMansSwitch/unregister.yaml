@@ -50,16 +50,14 @@ spec:
                 local checkName="$1"
                 local existingChecks
                 local existingCheckUUID
-                existingCheckUUID="$(curl --silent --fail --retry 5 --max-time 30 --header "X-Api-Key: $apiKey" "https://healthchecks.io/api/v3/checks/?slug=$checkName" | sed -r 's#^.*ping_url":\s*"[^"]+/([^"]+)".*$#\1#')"
+                existingCheckUUID="$(curl --silent --fail --retry 5 --max-time 30 --header "X-Api-Key: $API_KEY" "https://healthchecks.io/api/v3/checks/?slug=$checkName" | sed -r 's#^.*ping_url":\s*"[^"]+/([^"]+)".*$#\1#')"
 
                 if curl --silent --show-error --fail --retry 5 --max-time 30 --header "X-Api-Key: $API_KEY" "https://healthchecks.io/api/v3/checks/$existingCheckUUID" > /dev/null; then
                   curl --silent --show-error --fail --retry 5 --max-time 30 --header "X-Api-Key: $API_KEY" "https://healthchecks.io/api/v3/checks/$existingCheckUUID" --request DELETE
                 fi
               }
 
-              checkName={{- printf "k8s-cluster-%s-%s" (.Values.global.baseDomain | replace "." "-") .Values.global.clusterName | quote }}
-              {{- if .Values.monitoring.prometheus.enabled }}
+              checkName={{- include "base-cluster.deadMansSwitch.checkName" . | quote }}
               deleteCheck "$checkName-monitoring"
-              {{- end }}
               deleteCheck "$checkName-scheduling"
 {{- end }}

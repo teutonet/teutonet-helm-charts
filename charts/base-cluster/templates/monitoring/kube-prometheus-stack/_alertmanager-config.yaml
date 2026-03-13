@@ -43,7 +43,7 @@ config:
     {{- $receivers = set $receivers "healthchecks.io" (dict
           "webhook_configs" (list
             (dict
-              "url" (printf "https://hc-ping.com/%s/%s" .Values.monitoring.deadMansSwitch.pingKey (include "base-cluster.deadMansSwitch.checkName" .))
+              "url" (printf "https://hc-ping.com/%s/%s-monitoring" .Values.monitoring.deadMansSwitch.pingKey (include "base-cluster.deadMansSwitch.checkName" .))
               "send_resolved" false
             )
           )
