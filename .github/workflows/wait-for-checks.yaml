@@ -59,7 +59,7 @@ jobs:
                 break
               fi
             done
-            cat "$all_runs_file"
+            cat "$all_runs_file" | jq '.check_runs |= (group_by(.name) | map(max_by(.id)))' # only use the latest instance of each job
           }
 
           # must work three times, (sometimes) the github API drops jobs that are currently restarting
