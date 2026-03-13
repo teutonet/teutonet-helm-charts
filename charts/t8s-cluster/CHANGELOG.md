@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.7.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.6.0...t8s-cluster-v9.7.0) (2026-03-13)
+
+
+### Features
+
+* **t8s-cluster/workload-cluster:** extract storageClasses from TeutonetesCloud ([#2004](https://github.com/teutonet/teutonet-helm-charts/issues/2004)) ([86570be](https://github.com/teutonet/teutonet-helm-charts/commit/86570bed0187df1d7eab382f77e410da90afdf7b))
+
+
+### Bug Fixes
+
+* **t8s-cluster:** use plain values for autoScaling ([#2002](https://github.com/teutonet/teutonet-helm-charts/issues/2002)) ([5a28b1a](https://github.com/teutonet/teutonet-helm-charts/commit/5a28b1a103a86e96e818e7ac3cc4ac2111659515))
+
 ## [9.6.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.5.2...t8s-cluster-v9.6.0) (2026-02-25)
 
 
