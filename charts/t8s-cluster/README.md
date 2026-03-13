@@ -1,7 +1,7 @@
 <!-- vim: set ft=markdown: -->
 # t8s-cluster
 
-![Version: 9.6.0](https://img.shields.io/badge/Version-9.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 9.7.0](https://img.shields.io/badge/Version-9.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -17,7 +17,7 @@ t8s-operator cluster with necessary addons
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.6.0/charts/t8s-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.7.0/charts/t8s-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster>
 
 ## Requirements
@@ -1072,25 +1072,14 @@ Specific value: `1`
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                                | Pattern | Type        | Deprecated | Definition | Title/Description |
-| ----------------------------------------------------------------------- | ------- | ----------- | ---------- | ---------- | ----------------- |
-| + [replicas](#nodePools_additionalProperties_replicas )                 | No      | Combination | No         | -          | -                 |
-| - [availabilityZone](#nodePools_additionalProperties_availabilityZone ) | No      | string      | No         | -          | -                 |
-| + [flavor](#nodePools_additionalProperties_flavor )                     | No      | string      | No         | -          | -                 |
+| Property                                                                | Pattern | Type    | Deprecated | Definition | Title/Description |
+| ----------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
+| + [replicas](#nodePools_additionalProperties_replicas )                 | No      | integer | No         | -          | -                 |
+| - [maxReplicas](#nodePools_additionalProperties_maxReplicas )           | No      | integer | No         | -          | -                 |
+| - [availabilityZone](#nodePools_additionalProperties_availabilityZone ) | No      | string  | No         | -          | -                 |
+| + [flavor](#nodePools_additionalProperties_flavor )                     | No      | string  | No         | -          | -                 |
 
 #### <a name="nodePools_additionalProperties_replicas"></a>7.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools > additionalProperties > replicas`
-
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `combining`                                                                 |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
-
-| One of(Option)                                              |
-| ----------------------------------------------------------- |
-| [item 0](#nodePools_additionalProperties_replicas_oneOf_i0) |
-| [item 1](#nodePools_additionalProperties_replicas_oneOf_i1) |
-
-##### <a name="nodePools_additionalProperties_replicas_oneOf_i0"></a>7.1.1.1. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 0`
 
 |          |           |
 | -------- | --------- |
@@ -1100,19 +1089,7 @@ Specific value: `1`
 | ------------ | ------ |
 | **Minimum**  | &ge; 0 |
 
-##### <a name="nodePools_additionalProperties_replicas_oneOf_i1"></a>7.1.1.2. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 1`
-
-|                           |                                                                |
-| ------------------------- | -------------------------------------------------------------- |
-| **Type**                  | `object`                                                       |
-| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
-
-| Property                                                        | Pattern | Type    | Deprecated | Definition | Title/Description |
-| --------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
-| + [min](#nodePools_additionalProperties_replicas_oneOf_i1_min ) | No      | integer | No         | -          | -                 |
-| + [max](#nodePools_additionalProperties_replicas_oneOf_i1_max ) | No      | integer | No         | -          | -                 |
-
-###### <a name="nodePools_additionalProperties_replicas_oneOf_i1_min"></a>7.1.1.2.1. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 1 > min`
+#### <a name="nodePools_additionalProperties_maxReplicas"></a>7.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > nodePools > additionalProperties > maxReplicas`
 
 |          |           |
 | -------- | --------- |
@@ -1122,23 +1099,13 @@ Specific value: `1`
 | ------------ | ------ |
 | **Minimum**  | &ge; 1 |
 
-###### <a name="nodePools_additionalProperties_replicas_oneOf_i1_max"></a>7.1.1.2.2. Property `t8s cluster configuration > nodePools > additionalProperties > replicas > oneOf > item 1 > max`
-
-|          |           |
-| -------- | --------- |
-| **Type** | `integer` |
-
-| Restrictions |        |
-| ------------ | ------ |
-| **Minimum**  | &ge; 1 |
-
-#### <a name="nodePools_additionalProperties_availabilityZone"></a>7.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > nodePools > additionalProperties > availabilityZone`
+#### <a name="nodePools_additionalProperties_availabilityZone"></a>7.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > nodePools > additionalProperties > availabilityZone`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="nodePools_additionalProperties_flavor"></a>7.1.3. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools > additionalProperties > flavor`
+#### <a name="nodePools_additionalProperties_flavor"></a>7.1.4. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools > additionalProperties > flavor`
 
 |          |          |
 | -------- | -------- |
