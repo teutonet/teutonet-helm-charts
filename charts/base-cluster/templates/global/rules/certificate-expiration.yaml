@@ -1,0 +1,28 @@
+{{- if .Values.monitoring.prometheus.enabled -}}
+  {{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "deprecated-apis" "namespace" "monitoring" "resource" (include "base-cluster.monitoring.deprecatedAPIsAlert" . ) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "prometheus")) -}}
+{{- end -}}
+
+{{- define "base-cluster.monitoring.deprecatedAPIsAlert" -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: deprecated-apis
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    monitoring/provisioned-by: base-cluster
+    app.kubernetes.io/component: prometheus
+spec:
+  groups:
+    - name: deprecated-apis
+      rules:
+        - alert: DeprecatedAPIUsed
+          annotations:
+            description: {{ "The API group {{ $labels.group }}/{{ $labels.version }} resource {{ $labels.resource }}/{{ $labels.subresource }} is still being used. (Will be removed in Kubernetes release {{ $labels.removed_release }})" | quote }}
+            summary: Deprecated APIs are being used.
+          expr: |-
+            sum(apiserver_requested_deprecated_apis * on(group, version, resource, subresource, removed_release) group_right() apiserver_request_total) by (group, version, resource, subresource, removed_release) > 0
+          for: 1d
+          labels:
+            severity: critical
+            period: WorkingHours
+  {{- end -}}
