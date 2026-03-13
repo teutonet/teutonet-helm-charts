@@ -1,5 +1,5 @@
-{{- if .Values.storage.readWriteMany.enabled }}
-  {{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "storage-readwritemany-size" "resource" (include "base-cluster.storage.readWriteMany.size" .) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "prometheus" "app.kubernetes.io/part-of" "nfs-server-provisioner")) }}
+{{- if .Values.storage.readWriteMany.enabled -}}
+  {{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "storage-readwritemany-size" "resource" (include "base-cluster.storage.readWriteMany.size" .) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "prometheus" "app.kubernetes.io/part-of" "nfs-server-provisioner")) -}}
 {{- end -}}
 
 {{- define "base-cluster.storage.readWriteMany.size" -}}
