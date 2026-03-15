@@ -70,7 +70,7 @@ global:
     image:
       registry: docker.io
       repository: fluxcd/flux-cli
-      tag: v2.7.5@sha256:3a4f9b0a26c26db8193c476e0abe33c32187eae8ce7a0a604d38a51783544946
+      tag: v2.8.2@sha256:3c8ea67ef8e5e12bcd9a5fb84195061318a367d4e92065bb2c2807f43382f38d
   gpg:
     image:
       registry: docker.io
