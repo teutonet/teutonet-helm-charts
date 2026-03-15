@@ -4,7 +4,7 @@ global:
     cilium:
       url: oci://quay.io/cilium/charts
       charts:
-        cilium: 1.19.0
+        cilium: 1.19.1
       condition: '{{ eq (include "t8s-cluster.cni" .) "cilium" }}'
     nvidia:
       url: https://helm.ngc.nvidia.com/nvidia
