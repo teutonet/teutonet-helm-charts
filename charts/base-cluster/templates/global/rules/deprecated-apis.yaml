@@ -20,7 +20,7 @@ spec:
             description: {{ "The API group {{ $labels.group }}/{{ $labels.version }} resource {{ $labels.resource }}/{{ $labels.subresource }} is still being used. (Will be removed in Kubernetes release {{ $labels.removed_release }})" | quote }}
             summary: Deprecated APIs are being used.
           expr: |-
-            sum(apiserver_requested_deprecated_apis * on(group, version, resource, subresource, removed_release) group_right() apiserver_request_total) by (group, version, resource, subresource, removed_release) > 0
+            sum(apiserver_requested_deprecated_apis * on(group, version, resource, subresource, instance) group_right() increase(apiserver_request_total[12h])) by (group, version, resource, subresource, removed_release) > 0
           for: 1d
           labels:
             severity: critical
