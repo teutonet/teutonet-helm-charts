@@ -28,6 +28,10 @@ Please refer to Helm's [documentation](https://helm.sh/docs/) to get started.
 
 You can use the OCI registry; `oci://ghcr.io/teutonet/teutonet-helm-charts`
 
+## Security
+
+[Code Scanning Results](https://github.com/teutonet/teutonet-helm-charts/blob/code-scanning/open-alerts.md)
+
 ## License
 
 [MIT](https://github.com/teutonet/teutonet-helm-charts/blob/main/LICENSE).
