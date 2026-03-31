@@ -16,10 +16,10 @@ maintainers:
     name: tasches
 name: base-cluster
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v11.1.0/charts/base-cluster
+  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v11.1.1/charts/base-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster
 type: application
-version: 11.1.0
+version: 11.1.1
 annotations:
   artifacthub.io/images: |-
     - image: docker.io/curlimages/curl:8.10.1                                                                                          #  kyverno/HelmRelease/kyverno/kyverno/Pod/kyverno-admission-controller-metrics.yaml
