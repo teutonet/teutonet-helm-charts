@@ -15,10 +15,10 @@ maintainers:
     name: tasches
 name: t8s-cluster
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.7.0/charts/t8s-cluster
+  - https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.7.1/charts/t8s-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster
 type: application
-version: 9.7.0
+version: 9.7.1
 annotations:
   artifacthub.io/images: |-
     - image: quay.io/cilium/cilium-envoy:v1.35.9-1768828720-c6e4827ebca9c47af2a3a6540c563c30947bae29@sha256:696582a3391ce05a62edb4140e6a99f774351f363f5b5d7f1581f3a244430249  #  default/HelmRelease/t8s-cluster-cni/kube-system/DaemonSet/cilium-envoy.yaml
