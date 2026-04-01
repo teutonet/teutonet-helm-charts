@@ -1,5 +1,22 @@
 # Changelog
 
+## [11.1.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v11.1.1...base-cluster-v11.1.2) (2026-04-01)
+
+
+### Bug Fixes
+
+* **base-cluster/monitoring:** only watch and create metrics for latest apiVersion ([#2037](https://github.com/teutonet/teutonet-helm-charts/issues/2037)) ([b233d68](https://github.com/teutonet/teutonet-helm-charts/commit/b233d6892de9838dba3de70156c3702f16675e4a))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update docker.io/fluxcd/flux-cli docker tag to v2.8.3 ([#2017](https://github.com/teutonet/teutonet-helm-charts/issues/2017)) ([a4ecf9b](https://github.com/teutonet/teutonet-helm-charts/commit/a4ecf9b81253394507a96d3bec5ae570aa8c14c0))
+* **base-cluster/dependencies:** update docker.io/vladgh/gpg docker tag to v1.3.9 ([#2022](https://github.com/teutonet/teutonet-helm-charts/issues/2022)) ([59f892e](https://github.com/teutonet/teutonet-helm-charts/commit/59f892e0a0fbe8e648a331dfd404ca8a42d42df4))
+* **base-cluster/dependencies:** update helm release alloy to v1.6.2 ([#2011](https://github.com/teutonet/teutonet-helm-charts/issues/2011)) ([1f593af](https://github.com/teutonet/teutonet-helm-charts/commit/1f593af1162b9d83447e36fbde1a69a0a039d9e5))
+* **base-cluster/dependencies:** update helm release kube-prometheus-stack to v82.10.5 ([#2026](https://github.com/teutonet/teutonet-helm-charts/issues/2026)) ([ccfe7b1](https://github.com/teutonet/teutonet-helm-charts/commit/ccfe7b18f2e14697523342e72b1c07c85d66ff09))
+* **base-cluster/dependencies:** update helm release traefik to v39.0.7 ([#2013](https://github.com/teutonet/teutonet-helm-charts/issues/2013)) ([bdca6cc](https://github.com/teutonet/teutonet-helm-charts/commit/bdca6cc734460f74c0a74384ec39645702126d0e))
+* **base-cluster/dependencies:** update helm release trivy-operator to v0.32.1 ([#1990](https://github.com/teutonet/teutonet-helm-charts/issues/1990)) ([cab5a0d](https://github.com/teutonet/teutonet-helm-charts/commit/cab5a0d1d8f7ab2288a556b843eb6c6ab3ce9b2a))
+
 ## [11.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v11.1.0...base-cluster-v11.1.1) (2026-03-20)
 
 
