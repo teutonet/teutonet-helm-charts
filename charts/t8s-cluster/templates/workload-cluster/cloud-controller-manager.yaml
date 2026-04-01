@@ -57,6 +57,9 @@ spec:
                 value: Deployment
               - op: remove
                 path: /spec/template/spec/nodeSelector
+              - op: move
+                from: /spec/updateStrategy
+                path: /spec/strategy
   {{- end }}
   values:
     priorityClassName: system-cluster-critical
