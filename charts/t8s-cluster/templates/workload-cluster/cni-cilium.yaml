@@ -14,6 +14,16 @@ spec:
   kubeConfig:
     secretRef:
       name: {{ .Release.Name }}-kubeconfig
+  healthCheckExprs:
+    - apiVersion: apps/v1
+      kind: DaemonSet
+      current: status.numberAvailable == status.desiredNumberScheduled
+      inProgress: status.numberAvailable < status.desiredNumberScheduled
+    - apiVersion: apps/v1
+      kind: Deployment
+      # ignore deployments other than cilium-operator, as they are not critical
+      current: metadata.name != "cilium-operator" || (has(status.conditions) && status.conditions.exists(c, c.type == "Available" && c.status == "True"))
+      inProgress: metadata.name == "cilium-operator" && (!has(status.conditions) || !status.conditions.exists(c, c.type == "Available" && c.status == "True"))
   install:
     remediation:
       retries: -1
