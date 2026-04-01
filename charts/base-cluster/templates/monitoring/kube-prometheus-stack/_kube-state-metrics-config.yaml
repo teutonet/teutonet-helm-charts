@@ -38,6 +38,7 @@ customResourceState:
   enabled: true
   config:
     spec:
+      {{- $imagePolicyVersion := "" -}}
       {{- $types := dict
         "Bucket" "source"
         "GitRepository" "source"
@@ -62,6 +63,9 @@ customResourceState:
           {{- range $version := $crd.spec.versions -}}
             {{- if $version.storage -}}
               {{- $version = $version.name -}}
+              {{- if eq $fluxKind "ImagePolicy" -}}
+                {{- $imagePolicyVersion = $version -}}
+              {{- end -}}
             {{- end -}}
           {{- end -}}
           {{- $resources = append $resources (dict
@@ -115,6 +119,7 @@ customResourceState:
             "groupVersionKind" (dict
               "group" "image.toolkit.fluxcd.io"
               "kind" "ImagePolicy"
+              "version" $imagePolicyVersion
             )
             "metricNamePrefix" "image_policy"
             "metrics" (list
