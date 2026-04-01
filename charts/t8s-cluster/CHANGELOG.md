@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.7.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.7.0...t8s-cluster-v9.7.1) (2026-04-01)
+
+
+### Bug Fixes
+
+* **t8s-cluster/workload-cluster:** adjust cilium healthChecks ([#2038](https://github.com/teutonet/teutonet-helm-charts/issues/2038)) ([c23830e](https://github.com/teutonet/teutonet-helm-charts/commit/c23830e3c269928ed1b5510d66de6f9e2df635bc))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/workload-cluster:** move the updateStrategy -&gt; strategy ([c23830e](https://github.com/teutonet/teutonet-helm-charts/commit/c23830e3c269928ed1b5510d66de6f9e2df635bc))
+
 ## [9.7.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.6.0...t8s-cluster-v9.7.0) (2026-03-18)
 
 
