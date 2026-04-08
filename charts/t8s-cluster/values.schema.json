@@ -86,6 +86,10 @@
           "type": "boolean",
           "description": "Whether the control plane is hosted on the management cluster"
         },
+        "audit": {
+          "type": "boolean",
+          "description": "Whether to configure audit logging for kubeadm control planes (opt-in). Do not set this for hosted control planes, as they always have audit logging enabled via their own mechanism."
+        },
         "flavor": {
           "type": "string"
         },
