@@ -40,6 +40,11 @@ global:
       registry: docker.io
       repository: bitnami/kubectl
       tag: 1.31.4-debian-12-r1@sha256:64614ef8290f3fb27fed5164b338debeeb79a1e5e26c93eb920770b71abd7c48
+  s3:
+    image:
+      registry: docker.io
+      repository: minio/mc
+      tag: RELEASE.2024-11-21T17-21-54Z@sha256:771f5ad7925a6b5e069786d8e847a292de320f1e3e3203647e29f47ec9b3d93b
   injectedCertificateAuthorities: ""
   kubeletExtraConfig:
     # This is only used when using 1.27 or later
@@ -63,6 +68,7 @@ controlPlane:
       memory: 2Gi
     limits:
       memory: 4Gi
+  etcdBackup: false
 
 quotas: {}
 
