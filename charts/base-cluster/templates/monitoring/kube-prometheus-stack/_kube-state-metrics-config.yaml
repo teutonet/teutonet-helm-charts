@@ -60,9 +60,9 @@ customResourceState:
         {{- $crd := lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" (printf "%s.%s" $crdPlural $group) -}}
         {{- if $crd -}}
           {{- $version := "" -}}
-          {{- range $version := $crd.spec.versions -}}
-            {{- if $version.storage -}}
-              {{- $version = $version.name -}}
+          {{- range $crdVersion := $crd.spec.versions -}}
+            {{- if $crdVersion.storage -}}
+              {{- $version = $crdVersion.name -}}
               {{- if eq $fluxKind "ImagePolicy" -}}
                 {{- $imagePolicyVersion = $version -}}
               {{- end -}}
@@ -72,7 +72,7 @@ customResourceState:
                 "groupVersionKind" (dict
                   "group" $group
                   "kind" $fluxKind
-                  "version" $version
+                  "version" ($version | required (printf "unable to determine version for %s.%s" $crdPlural $group))
                 )
                 "metricNamePrefix" "gotk"
                 "metrics" (list
