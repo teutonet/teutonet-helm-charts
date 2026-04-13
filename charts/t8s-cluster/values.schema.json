@@ -169,6 +169,10 @@
         "floatingIPs": {
           "type": "integer",
           "minimum": -1
+        },
+        "storage": {
+          "type": "integer",
+          "minimum": -1
         }
       },
       "additionalProperties": false
