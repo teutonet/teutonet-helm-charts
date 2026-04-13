@@ -1,7 +1,7 @@
 <!-- vim: set ft=markdown: -->
 # t8s-cluster
 
-![Version: 9.7.1](https://img.shields.io/badge/Version-9.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 9.8.0](https://img.shields.io/badge/Version-9.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -17,7 +17,7 @@ t8s-operator cluster with necessary addons
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.7.1/charts/t8s-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.8.0/charts/t8s-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster>
 
 ## Requirements
@@ -1004,8 +1004,19 @@ This field is immutable. It can only be set for containers.
 | Property                              | Pattern | Type    | Deprecated | Definition | Title/Description |
 | ------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
 | - [floatingIPs](#quotas_floatingIPs ) | No      | integer | No         | -          | -                 |
+| - [storage](#quotas_storage )         | No      | integer | No         | -          | -                 |
 
 ### <a name="quotas_floatingIPs"></a>5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > quotas > floatingIPs`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `integer` |
+
+| Restrictions |         |
+| ------------ | ------- |
+| **Minimum**  | &ge; -1 |
+
+### <a name="quotas_storage"></a>5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > quotas > storage`
 
 |          |           |
 | -------- | --------- |

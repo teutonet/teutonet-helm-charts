@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.8.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.7.1...t8s-cluster-v9.8.0) (2026-04-13)
+
+
+### Features
+
+* **t8s-cluster:** add storage quota field ([#2043](https://github.com/teutonet/teutonet-helm-charts/issues/2043)) ([c5ffba5](https://github.com/teutonet/teutonet-helm-charts/commit/c5ffba576985ec10b1e762535aea998e7ac40961))
+
 ## [9.7.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.7.0...t8s-cluster-v9.7.1) (2026-04-01)
 
 
