@@ -1,5 +1,12 @@
 # Changelog
 
+## [11.1.3](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v11.1.2...base-cluster-v11.1.3) (2026-04-13)
+
+
+### Bug Fixes
+
+* **base-cluster/monitoring:** watching only the current version ([#2040](https://github.com/teutonet/teutonet-helm-charts/issues/2040)) ([04f3110](https://github.com/teutonet/teutonet-helm-charts/commit/04f31105fbad56c7aafc62439f7e064444f4446b))
+
 ## [11.1.2](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v11.1.1...base-cluster-v11.1.2) (2026-04-01)
 
 
