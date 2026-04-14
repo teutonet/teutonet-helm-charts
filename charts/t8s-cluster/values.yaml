@@ -54,6 +54,7 @@ metadata:
 
 controlPlane:
   hosted: false
+  audit: false
   flavor: standard.2.1905
   singleNode: false
   allowedCIDRs: []

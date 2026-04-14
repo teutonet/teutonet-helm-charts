@@ -218,6 +218,10 @@ admission-control-config.yaml
   {{- if $featureFlags -}}
     {{- $args = set $args "feature-gates" ($featureFlags | join ",") -}}
   {{- end -}}
+  {{- if .context.Values.controlPlane.audit -}}
+    {{- $args = set $args "audit-policy-file" (include "t8s-cluster.clusterClass.apiServer.auditPolicyPath" (dict)) -}}
+    {{- $args = set $args "audit-webhook-config-file" (include "t8s-cluster.clusterClass.apiServer.auditWebhookConfigPath" (dict)) -}}
+  {{- end -}}
   {{- toYaml $args -}}
 {{- end }}
 
@@ -235,13 +239,119 @@ admission-control-config.yaml
   -}}
 {{- end -}}
 
+{{- define "t8s-cluster.clusterClass.apiServer.auditPolicyFileName" -}}
+audit-policy.yaml
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.auditWebhookConfigFileName" -}}
+audit-webhook.kubeconfig
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.auditPolicyPath" -}}
+{{- include "t8s-cluster.clusterClass.configPath" (dict) -}}/{{- include "t8s-cluster.clusterClass.apiServer.auditPolicyFileName" (dict) -}}
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.auditWebhookConfigPath" -}}
+{{- include "t8s-cluster.clusterClass.configPath" (dict) -}}/{{- include "t8s-cluster.clusterClass.apiServer.auditWebhookConfigFileName" (dict) -}}
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.auditWebhookTokenFileName" -}}
+audit-webhook-token
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.auditWebhookTokenPath" -}}
+{{- include "t8s-cluster.clusterClass.configPath" (dict) -}}/{{- include "t8s-cluster.clusterClass.apiServer.auditWebhookTokenFileName" (dict) -}}
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.auditPolicyRules" -}}
+# Long-running requests like watches will not generate an audit event in RequestReceived.
+omitStages:
+  - RequestReceived
+rules:
+  - level: None
+    users:
+      - system:kube-controller-manager
+      - system:kube-scheduler
+      - system:apiserver
+  - level: None
+    resources:
+      - group: coordination.k8s.io
+        resources:
+          - leases
+      - group: ""
+        resources:
+          - events
+  - level: Metadata
+    verbs: [] # All verbs
+    resources:
+      - group: ""
+        resources:
+          - secrets
+  - level: Metadata
+    verbs:
+      - create
+      - update
+      - patch
+      - delete
+      - deletecollection
+    resources: [] # All resources
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.auditPolicy" -}}
+apiVersion: audit.k8s.io/v1
+kind: Policy
+{{ include "t8s-cluster.clusterClass.apiServer.auditPolicyRules" (dict) -}}
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.auditWebhookConfig" -}}
+  {{- $_ := mustMerge . (pick .context "Release") -}}
+  {{- $server := printf "https://k8s.master.wazuh.teuto.net/%s/%s" .Release.Namespace .Release.Name -}}
+apiVersion: v1
+kind: Config
+clusters:
+- cluster:
+    server: {{ $server }}
+  name: webhook
+users:
+- name: kube-apiserver
+  user:
+    tokenFile: {{ include "t8s-cluster.clusterClass.apiServer.auditWebhookTokenPath" (dict) }}
+contexts:
+- context:
+    cluster: webhook
+    user: kube-apiserver
+  name: webhook
+current-context: webhook
+{{- end -}}
+
 {{- define "t8s-cluster.clusterClass.apiServer.dynamicFiles" -}}
-  {{- toYaml (dict
+  {{- $_ := mustMerge . (pick .context "Values") -}}
+  {{- $files := dict
       (include "t8s-cluster.clusterClass.apiServer.authenticationConfigFileName" (dict)) (dict
         "path" (include "t8s-cluster.clusterClass.apiServer.authenticationConfigPath" (dict))
         "fileName" (include "t8s-cluster.clusterClass.apiServer.authenticationConfigFileName" (dict))
         "content" (include "t8s-cluster.clusterClass.apiServer.authenticationConfig" (dict "context" .context))
       )
-    )
   -}}
+  {{- if .Values.controlPlane.audit -}}
+    {{- $_ := set $files (include "t8s-cluster.clusterClass.apiServer.auditPolicyFileName" (dict)) (dict
+        "path" (include "t8s-cluster.clusterClass.apiServer.auditPolicyPath" (dict))
+        "fileName" (include "t8s-cluster.clusterClass.apiServer.auditPolicyFileName" (dict))
+        "content" (include "t8s-cluster.clusterClass.apiServer.auditPolicy" (dict))
+      )
+    -}}
+    {{- $_ = set $files (include "t8s-cluster.clusterClass.apiServer.auditWebhookConfigFileName" (dict)) (dict
+        "path" (include "t8s-cluster.clusterClass.apiServer.auditWebhookConfigPath" (dict))
+        "fileName" (include "t8s-cluster.clusterClass.apiServer.auditWebhookConfigFileName" (dict))
+        "content" (include "t8s-cluster.clusterClass.apiServer.auditWebhookConfig" (dict "context" .context))
+      )
+    -}}
+    {{- $_ = set $files (include "t8s-cluster.clusterClass.apiServer.auditWebhookTokenFileName" (dict)) (dict
+        "path" (include "t8s-cluster.clusterClass.apiServer.auditWebhookTokenPath" (dict))
+        "fileName" (include "t8s-cluster.clusterClass.apiServer.auditWebhookTokenFileName" (dict))
+        "contentFrom" (dict "secret" (dict "name" "wazuh-audit-webhook" "key" "token"))
+      )
+    -}}
+  {{- end -}}
+  {{- toYaml $files -}}
 {{- end -}}
