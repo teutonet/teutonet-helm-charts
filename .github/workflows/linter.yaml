@@ -72,7 +72,7 @@ jobs:
       - run: ./.github/scripts/templateHelmChartRecursivelyToFolder.sh "charts/$CHART" /tmp/templated
         id: templateChart
       - name: Download Pluto
-        uses: FairwindsOps/pluto/github-action@d3b74eba1b1a24e614b6daef9c613d5203c2b234 # v5.22.7
+        uses: FairwindsOps/pluto/github-action@6b3a11386420584390c3d97fe8939b30a37b5483 # v5.22.8
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
       - run: pluto detect-files -d /tmp/templated -o custom --columns 'FILEPATH,NAME,KIND,VERSION,REPLACEMENT,REMOVED,DEPRECATED,REPL AVAIL'
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
