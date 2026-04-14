@@ -191,7 +191,7 @@ global:
     k8up:
       url: https://k8up-io.github.io/k8up
       charts:
-        k8up: 4.8.6
+        k8up: 4.8.7
       condition: '{{ ne (.Values.backup.provider).k8up nil }}'
     vmware:
       url: https://vmware-tanzu.github.io/helm-charts
