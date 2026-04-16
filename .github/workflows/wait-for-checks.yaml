@@ -67,7 +67,7 @@ jobs:
             while unfinished_jobs="$(fetch_check_runs | jq --arg ignored "$IGNORED_JOBS,$CURRENT_JOB" -e '.check_runs | map(select(([.conclusion] | inside(["success","skipped","cancelled"]) | not) and ([.name] | inside($ignored | split(",")) | not))) | map("\(.name) (\(.conclusion // .status)) (\(.html_url))") | if length == 0 then halt_error(1) else . end')"; do
               echo "The following jobs are not (successfully) finished yet:" >&2
               echo "$unfinished_jobs" >&2
-              sleep 5
+              sleep 30
             done
             sleep 5
           done
