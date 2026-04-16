@@ -135,7 +135,7 @@ global:
     descheduler:
       url: https://kubernetes-sigs.github.io/descheduler
       charts:
-        descheduler: 0.34.0
+        descheduler: 0.35.1
         descheduler 0.31.x: 0.33.0
         descheduler 0.30.x: 0.32.2
         descheduler 0.29.x: 0.31.2
