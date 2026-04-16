@@ -135,12 +135,12 @@ global:
     descheduler:
       url: https://kubernetes-sigs.github.io/descheduler
       charts:
-        descheduler: 0.34.0
+        descheduler: 0.35.1
+        descheduler 0.32.x: 0.34.0
         descheduler 0.31.x: 0.33.0
         descheduler 0.30.x: 0.32.2
-        descheduler 0.29.x: 0.31.2
-        descheduler 0.28.x: 0.30.2
-        descheduler 0.27.x: 0.29.0
+        descheduler 0.29.x: 0.31.0
+        descheduler 0.28.x: 0.30.0
       condition: "{{ .Values.descheduler.enabled }}"
     jetstack:
       url: oci://quay.io/jetstack/charts
