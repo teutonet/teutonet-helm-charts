@@ -1,0 +1,158 @@
+{{- define "t8s-cluster.etcd-backup" -}}
+  {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: kube-etcd-backup
+  namespace: kube-system
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  successfulJobsHistoryLimit: 1
+  schedule: "@daily"
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          automountServiceAccountToken: false
+          initContainers:
+            - name: etcd-snapshot
+              image: {{ include "common.images.image" (dict "imageRoot" .Values.global.etcd.image "global" .Values.global) }}
+              imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.etcd.image }}
+              command:
+                - etcdctl
+                - snapshot
+                - save
+                - /snapshot/snapshot.db
+              env:
+                - name: ETCDCTL_API
+                  value: "3"
+                - name: ETCDCTL_ENDPOINTS
+                  value: localhost:2379
+                - name: ETCDCTL_CACERT
+                  value: /etc/kubernetes/pki/etcd/ca.crt
+                - name: ETCDCTL_CERT
+                  value: /etc/kubernetes/pki/etcd/peer.crt
+                - name: ETCDCTL_KEY
+                  value: /etc/kubernetes/pki/etcd/peer.key
+              securityContext:
+                runAsGroup: 1000
+                runAsUser: 0 # needed for peer.key
+                runAsNonRoot: false
+                privileged: false
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+              volumeMounts:
+                - mountPath: /etc/kubernetes/pki/etcd
+                  name: etcd-certs
+                  readOnly: true
+                - mountPath: /snapshot
+                  name: snapshot
+            - name: fix-snapshot-permissions
+              image: {{ include "common.images.image" (dict "imageRoot" .Values.global.s3.image "global" .Values.global) }}
+              imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.s3.image }}
+              command:
+                - chmod
+                - u=rw,g=r,o=
+                - /snapshot/snapshot.db
+              securityContext:
+                runAsUser: 0
+                runAsGroup: 1000
+                runAsNonRoot: false
+                privileged: false
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+              volumeMounts:
+                - mountPath: /snapshot
+                  name: snapshot
+          containers:
+            - name: upload
+              image: {{ include "common.images.image" (dict "imageRoot" .Values.global.s3.image "global" .Values.global) }}
+              imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.s3.image }}
+              command:
+                - bash
+                - -exc
+                - mc cp /snapshot/snapshot.db "backup/{{ printf "${S3_BUCKET}/%s/%s" .Release.Namespace .Release.Name }}/$(date --iso-8601=seconds).etcd"
+              env:
+                - name: MC_CONFIG_DIR
+                  value: /tmp
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: etcd-backup
+                      key: accessKeyID
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: etcd-backup
+                      key: secretAccessKey
+                - name: AWS_DEFAULT_REGION
+                  valueFrom:
+                    secretKeyRef:
+                      name: etcd-backup
+                      key: region
+                      optional: true
+                - name: S3_ENDPOINT
+                  valueFrom:
+                    secretKeyRef:
+                      name: etcd-backup
+                      key: host
+                - name: S3_BUCKET
+                  valueFrom:
+                    secretKeyRef:
+                      name: etcd-backup
+                      key: bucket
+                - name: MC_HOST_backup
+                  value: https://$(AWS_ACCESS_KEY_ID):$(AWS_SECRET_ACCESS_KEY)@$(S3_ENDPOINT)
+              securityContext:
+                runAsUser: 1000
+                runAsGroup: 1000
+                runAsNonRoot: true
+                privileged: false
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+              volumeMounts:
+                - mountPath: /snapshot
+                  name: snapshot
+                  readOnly: true
+                - mountPath: /tmp
+                  name: tmp
+          dnsPolicy: ClusterFirstWithHostNet
+          hostNetwork: true
+          nodeSelector:
+            node-role.kubernetes.io/control-plane: ""
+          tolerations:
+            - effect: NoSchedule
+              key: node-role.kubernetes.io/control-plane
+              operator: Exists
+            - effect: NoSchedule
+              key: node-role.kubernetes.io/master
+              operator: Exists
+          restartPolicy: OnFailure
+          volumes:
+            - name: etcd-certs
+              hostPath:
+                path: /etc/kubernetes/pki/etcd
+                type: Directory
+            - name: snapshot
+              emptyDir: {}
+            - name: tmp
+              emptyDir: {}
+{{- end -}}

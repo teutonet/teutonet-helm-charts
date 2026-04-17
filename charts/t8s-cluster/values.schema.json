@@ -28,6 +28,16 @@
           },
           "additionalProperties": false
         },
+        "s3": {
+          "type": "object",
+          "description": "Image with an S3 client (mc) for etcd backup uploads",
+          "properties": {
+            "image": {
+              "$ref": "#/$defs/image"
+            }
+          },
+          "additionalProperties": false
+        },
         "injectedCertificateAuthorities": {
           "type": "string"
         },
@@ -160,6 +170,10 @@
         },
         "resources": {
           "$ref": "#/$defs/resourceRequirements"
+        },
+        "etcdBackup": {
+          "type": "boolean",
+          "description": "Enable daily etcd backups for KCP (non-hosted) clusters. Credentials are read from secret 'etcd-backup' in kube-system of the workload cluster. The secret must contain: accessKeyID (required), secretAccessKey (required), host (required), region (optional). Backups are stored at $cloud/$namespace/$name. For hosted clusters, backup is always enabled via the HCP controller using secret 'etcd-backup' in capi-hosted-control-plane-system."
         }
       },
       "additionalProperties": false

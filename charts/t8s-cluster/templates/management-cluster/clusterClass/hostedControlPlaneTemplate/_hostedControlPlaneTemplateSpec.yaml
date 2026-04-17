@@ -34,6 +34,15 @@ deployment:
     args: {{- include "t8s-cluster.clusterClass.args.scheduler" (dict) | nindent 6 }}
     resources: {{- include "common.resources" .Values.controlPlane | nindent 6 }}
     replicas: 1
+  {{- $backupSecret := lookup "v1" "Secret" "capi-hosted-control-plane-system" "etcd-backup" -}}
+  {{- if $backupSecret }}
+etcd:
+  backup:
+    schedule: "@daily"
+    secret:
+      name: etcd-backup
+      namespace: capi-hosted-control-plane-system
+  {{- end }}
 kubeProxy:
   disabled: {{ .Values.controlPlane.hosted }}
 gateway:
