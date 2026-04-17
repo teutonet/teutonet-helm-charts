@@ -1,0 +1,8 @@
+global:
+  namespaces:
+    main0:
+      podSecurityStandards:
+        enforce: restricted
+    main1:
+      podSecurityStandards:
+        audit: none

@@ -8,9 +8,13 @@ global:
   namespaces:
     ingress:
       condition: '{{ or (not (empty .Values.dns.provider)) (eq .Values.ingress.provider "traefik") }}'
+      podSecurityStandards:
+        enforce: restricted
       additionalLabels:
         app.kubernetes.io/component: ingress
     cert-manager:
+      podSecurityStandards:
+        enforce: restricted
       additionalLabels:
         app.kubernetes.io/component: cert-manager
       resources:
@@ -26,6 +30,8 @@ global:
           limits.memory: 2Gi
     ingress-nginx:
       condition: '{{ eq .Values.ingress.provider "nginx" }}'
+      podSecurityStandards:
+        enforce: restricted
       additionalLabels:
         app.kubernetes.io/component: ingress
     kyverno:
@@ -34,6 +40,8 @@ global:
         app.kubernetes.io/component: kyverno
     monitoring:
       condition: "{{ or .Values.monitoring.prometheus.enabled .Values.monitoring.metricsServer.enabled }}"
+      podSecurityStandards:
+        enforce: privileged
       additionalLabels:
         app.kubernetes.io/component: monitoring
       resources:
@@ -43,15 +51,21 @@ global:
             memory: 100Mi
     trivy:
       condition: "{{ .Values.monitoring.securityScanning.enabled }}"
+      podSecurityStandards:
+        enforce: privileged
       additionalLabels:
         app.kubernetes.io/component: security
     nfs-server-provisioner:
       condition: "{{ .Values.storage.readWriteMany.enabled }}"
+      podSecurityStandards:
+        enforce: privileged
       additionalLabels:
         app.kubernetes.io/component: storage
         app.kubernetes.io/part-of: nfs-server-provisioner
     backup:
       condition: "{{ not (empty .Values.backup.provider) }}"
+      podSecurityStandards:
+        enforce: privileged
       additionalLabels:
         app.kubernetes.io/component: backup
   certificates:

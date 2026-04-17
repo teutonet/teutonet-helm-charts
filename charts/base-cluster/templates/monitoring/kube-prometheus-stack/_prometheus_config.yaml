@@ -37,7 +37,7 @@ prometheusSpec:
   additionalAlertRelabelConfigs:
     {{- if not .Values.monitoring.monitorAllNamespaces }}
       {{- $namespaces := list .Release.Namespace "kube-node-lease" "kube-public" "kube-system" -}}
-      {{- range $name := include "base-cluster.enabled-namespaces" . | fromYaml | keys -}}
+      {{- range $name := include "base-cluster.enabled-namespaces" (dict "context" .) | fromYaml | keys -}}
         {{- $namespaces = append $namespaces $name -}}
       {{- end }}
     - # TODO: Needs alternative

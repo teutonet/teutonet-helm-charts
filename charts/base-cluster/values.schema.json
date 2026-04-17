@@ -234,6 +234,23 @@
                   "type": "string"
                 }
               },
+              "podSecurityStandards": {
+                "type": "object",
+                "properties": {
+                  "enforce": {
+                    "$ref": "#/$defs/podSecurityStandardPolicy"
+                  },
+                  "warn": {
+                    "$ref": "#/$defs/podSecurityStandardPolicy",
+                    "default": "restricted"
+                  },
+                  "audit": {
+                    "$ref": "#/$defs/podSecurityStandardPolicy",
+                    "default": "restricted"
+                  }
+                },
+                "additionalProperties": false
+              },
               "condition": {
                 "$ref": "#/$defs/condition"
               },
@@ -1760,6 +1777,15 @@
       },
       "required": [
         "url"
+      ]
+    },
+    "podSecurityStandardPolicy": {
+      "type": "string",
+      "enum": [
+        "none",
+        "privileged",
+        "baseline",
+        "restricted"
       ]
     }
   }
