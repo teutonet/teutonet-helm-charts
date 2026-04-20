@@ -29,9 +29,6 @@ spec:
         registry: {{ .Values.global.imageRegistry }}
     test: *registryImage
     {{- else }}
-    test:
-      image:
-        registry: {{ printf "%s/curlimages" (include "base-cluster.defaultRegistry" (dict)) }}
     crds:
       migration:
         image:
@@ -42,6 +39,10 @@ spec:
       enabled: false
     webhooksCleanup:
       enable: true
+      {{- with .Values.global.imageRegistry }}
+      image:
+        registry: {{ . }}
+      {{- end }}
     features:
       policyExceptions:
         enabled: true
