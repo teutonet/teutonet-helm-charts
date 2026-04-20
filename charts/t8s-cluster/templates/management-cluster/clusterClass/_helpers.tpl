@@ -80,8 +80,11 @@ server = {{ printf "https://%s" .registry | quote }}
 
 {{- define "t8s-cluster.featureGates" -}}
   {{- $featureGates := (dict "ImageVolume" (list "apiserver" "kubelet")) -}}
-  {{- if semverCompare ">=1.33.0" (include "t8s-cluster.k8s-version" .context) -}}
+  {{- if semverCompare ">=1.33.0 <1.35.0" (include "t8s-cluster.k8s-version" .context) -}}
     {{- $featureGates = set $featureGates "KubeletEnsureSecretPulledImages" (list "kubelet") -}}
+  {{- end -}}
+  {{- if semverCompare ">=1.32.0" (include "t8s-cluster.k8s-version" .context) -}}
+    {{- $featureGates = set $featureGates "MutatingAdmissionPolicy" (list "apiserver") -}}
   {{- end -}}
   {{- toYaml $featureGates -}}
 {{- end -}}
@@ -211,6 +214,9 @@ admission-control-config.yaml
   {{- $args = set $args "enable-admission-plugins" (include "t8s-cluster.clusterClass.apiServer.admissionPlugins" (dict "context" .context) | fromYamlArray | join ",") -}}
   {{- $args = set $args "event-ttl" "4h" -}}
   {{- $args = set $args "tls-cipher-suites" (include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) | fromYamlArray | join ",") -}}
+  {{- if semverCompare ">=1.32.0" (include "t8s-cluster.k8s-version" .context) -}}
+    {{- $args = set $args "runtime-config" "admissionregistration.k8s.io/v1beta1=true" -}}
+  {{- end -}}
   {{- $featureFlags := list -}}
   {{- range $featureFlag, $enabled := include "t8s-cluster.featureGates.forComponent" (dict "component" "apiserver" "context" .context) | fromYaml -}}
     {{- $featureFlags = append $featureFlags (printf "%s=%t" $featureFlag $enabled) -}}
