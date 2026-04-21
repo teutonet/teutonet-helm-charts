@@ -16,8 +16,6 @@ docker.io:
     kubernetes-reflector: ALL_TAGS
   fluxcd: ALL_IMAGES
   grafana: ALL_IMAGES
-  hjacobs:
-    kube-janitor: ALL_TAGS
   memcached: ALL_TAGS
   otel:
     opentelemetry-collector-contrib: ALL_TAGS
@@ -41,6 +39,8 @@ ghcr.io:
     kyverno-cli: ALL_TAGS
     readiness-checker: ALL_TAGS
   teutonet: ALL_IMAGES
+  twin:
+    k8s-ttl-controller: ALL_TAGS
 mirror.gcr.io:
   aquasec: ALL_IMAGES
 quay.io:

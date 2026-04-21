@@ -1632,7 +1632,7 @@
       },
       "additionalProperties": false
     },
-    "kube-janitor": {
+    "ttl-controller": {
       "type": "object",
       "properties": {
         "enabled": {

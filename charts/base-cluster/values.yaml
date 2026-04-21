@@ -198,14 +198,11 @@ global:
       charts:
         velero: 7.2.2
       condition: '{{ ne (.Values.backup.provider).velero nil }}'
-    kube-janitor:
-      url: https://github.com/teutonet/kube-janitor
+    twin:
+      url: https://twin.github.io/helm-charts
       charts:
-        kube-janitor:
-          path: unsupported/helm
-          tag: 23.7.0
-      type: git
-      condition: '{{ dig "kube-janitor" "enabled" false .Values.AsMap }}'
+        k8s-ttl-controller: 0.4.0
+      condition: '{{ dig "ttl-controller" "enabled" false .Values.AsMap }}'
   authentication:
     grafana:
       authenticationPath: /protocol/openid-connect/auth
@@ -493,7 +490,7 @@ backup:
         cpu: 500m
         memory: 500Mi
 
-kube-janitor:
+ttl-controller:
   enabled: false
 
 tetragon:

@@ -68,9 +68,6 @@ licenses:
   docker.io/grafana/tempo:
     license: AGPL-3.0-only
     licenseLink: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/LICENSE
-  docker.io/hjacobs/kube-janitor:
-    license: GPL-3.0
-    licenseLink: https://github.com/hjacobs/kube-janitor/blob/main/LICENSE
   docker.io/memcached:
     license: BSD-3
     licenseLink: https://raw.githubusercontent.com/memcached/memcached/refs/heads/master/LICENSE
@@ -128,6 +125,9 @@ licenses:
   ghcr.io/teutonet/oci-images/solr-ckan:
     license: MIT
     licenseLink: https://github.com/teutonet/oci-images/blob/main/LICENSE
+  ghcr.io/twin/k8s-ttl-controller:
+    license: MIT
+    licenseLink: https://github.com/TwiN/k8s-ttl-controller/blob/master/LICENSE
   mirror.gcr.io/aquasec/trivy-operator:
     license: Apache-2.0
     licenseLink: https://github.com/aquasecurity/trivy-operator/blob/main/LICENSE
