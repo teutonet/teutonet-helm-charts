@@ -394,6 +394,10 @@ descheduler:
             - requiredDuringSchedulingIgnoredDuringExecution
       - name: RemovePodsViolatingNodeTaints
       - name: RemovePodsViolatingInterPodAntiAffinity
+      - name: RemovePodsHavingTooManyRestarts
+        args:
+          podRestartThreshold: 100
+          includingInitContainers: true
       - name: RemovePodsViolatingTopologySpreadConstraint
         args:
           topologyBalanceNodeFit: true
