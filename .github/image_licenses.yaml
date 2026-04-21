@@ -119,6 +119,9 @@ licenses:
   ghcr.io/kyverno/kyverno-cli:
     license: Apache-2.0
     licenseLink: https://github.com/kyverno/kyverno/pkgs/container/kyverno-cli
+  ghcr.io/kyverno/readiness-checker:
+    license: Apache-2.0
+    licenseLink: https://github.com/kyverno/kyverno/blob/main/LICENSE
   ghcr.io/teutonet/oci-images/ckan:
     license: MIT
     licenseLink: https://github.com/teutonet/oci-images/blob/main/LICENSE

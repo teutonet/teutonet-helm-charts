@@ -39,6 +39,7 @@ ghcr.io:
     k8up: ALL_TAGS
   kyverno:
     kyverno-cli: ALL_TAGS
+    readiness-checker: ALL_TAGS
   teutonet: ALL_IMAGES
 mirror.gcr.io:
   aquasec: ALL_IMAGES
