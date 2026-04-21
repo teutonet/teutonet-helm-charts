@@ -1,10 +1,12 @@
-{{- range $name, $namespace := include "base-cluster.enabled-namespaces" . | fromYaml -}}
+{{- range $name, $namespace := include "base-cluster.enabled-namespaces" (dict "context" .) | fromYaml -}}
 apiVersion: v1
 kind: Namespace
 metadata:
   name: {{ $name }}
-  labels: {{- include "common.labels.standard" $ | nindent 4 -}}
-    {{- with $namespace.additionalLabels -}}{{- toYaml . | nindent 4 -}}{{- end }}
+  {{- $labels := include "common.labels.standard" $ | fromYaml -}}
+  {{- $labels = mustMergeOverwrite $labels (include "base-cluster.namespace.podSecurityStandardsLabels" (dict "namespace" $namespace) | fromYaml) -}}
+  {{- $labels = mustMergeOverwrite $labels ($namespace.additionalLabels | default (dict)) }}
+  labels: {{- toYaml $labels | nindent 4 }}
 ---
 apiVersion: v1
 kind: LimitRange
