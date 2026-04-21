@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 11.1.3](https://img.shields.io/badge/Version-11.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 11.2.0](https://img.shields.io/badge/Version-11.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -246,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v11.1.3/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v11.2.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -255,7 +255,7 @@ Kubernetes: `>=1.27.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.8.0 |
+| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 2.0.0 |
 
 This helm chart requires [flux v2 to be installed](https://fluxcd.io/docs/installation),
 see [bootstrap](#cluster-bootstrap)
@@ -1456,11 +1456,12 @@ test.teuto.net
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                                        | Pattern | Type   | Deprecated | Definition                                                                | Title/Description                                                                                                                             |
-| ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| - [additionalLabels](#global_namespaces_additionalProperties_additionalLabels ) | No      | object | No         | -                                                                         | -                                                                                                                                             |
-| - [condition](#global_namespaces_additionalProperties_condition )               | No      | string | No         | Same as [condition](#global_certificates_additionalProperties_condition ) | A condition with which to decide to include the resource. This will be templated. Must return the literal \`true\`, truthy values don't work. |
-| - [resources](#global_namespaces_additionalProperties_resources )               | No      | object | No         | -                                                                         | -                                                                                                                                             |
+| Property                                                                                | Pattern | Type   | Deprecated | Definition                                                                | Title/Description                                                                                                                             |
+| --------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [additionalLabels](#global_namespaces_additionalProperties_additionalLabels )         | No      | object | No         | -                                                                         | -                                                                                                                                             |
+| - [podSecurityStandards](#global_namespaces_additionalProperties_podSecurityStandards ) | No      | object | No         | -                                                                         | -                                                                                                                                             |
+| - [condition](#global_namespaces_additionalProperties_condition )                       | No      | string | No         | Same as [condition](#global_certificates_additionalProperties_condition ) | A condition with which to decide to include the resource. This will be templated. Must return the literal \`true\`, truthy values don't work. |
+| - [resources](#global_namespaces_additionalProperties_resources )                       | No      | object | No         | -                                                                         | -                                                                                                                                             |
 
 ##### <a name="global_namespaces_additionalProperties_additionalLabels"></a>1.15.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > additionalLabels`
 
@@ -1479,7 +1480,61 @@ test.teuto.net
 | -------- | -------- |
 | **Type** | `string` |
 
-##### <a name="global_namespaces_additionalProperties_condition"></a>1.15.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > condition`
+##### <a name="global_namespaces_additionalProperties_podSecurityStandards"></a>1.15.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > podSecurityStandards`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                                           | Pattern | Type             | Deprecated | Definition                           | Title/Description |
+| ---------------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ------------------------------------ | ----------------- |
+| - [enforce](#global_namespaces_additionalProperties_podSecurityStandards_enforce ) | No      | enum (of string) | No         | In #/$defs/podSecurityStandardPolicy | -                 |
+| - [warn](#global_namespaces_additionalProperties_podSecurityStandards_warn )       | No      | enum (of string) | No         | In #/$defs/podSecurityStandardPolicy | -                 |
+| - [audit](#global_namespaces_additionalProperties_podSecurityStandards_audit )     | No      | enum (of string) | No         | In #/$defs/podSecurityStandardPolicy | -                 |
+
+###### <a name="global_namespaces_additionalProperties_podSecurityStandards_enforce"></a>1.15.1.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > podSecurityStandards > enforce`
+
+|                |                                   |
+| -------------- | --------------------------------- |
+| **Type**       | `enum (of string)`                |
+| **Defined in** | #/$defs/podSecurityStandardPolicy |
+
+Must be one of:
+* "none"
+* "privileged"
+* "baseline"
+* "restricted"
+
+###### <a name="global_namespaces_additionalProperties_podSecurityStandards_warn"></a>1.15.1.2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > podSecurityStandards > warn`
+
+|                |                                   |
+| -------------- | --------------------------------- |
+| **Type**       | `enum (of string)`                |
+| **Default**    | `"restricted"`                    |
+| **Defined in** | #/$defs/podSecurityStandardPolicy |
+
+Must be one of:
+* "none"
+* "privileged"
+* "baseline"
+* "restricted"
+
+###### <a name="global_namespaces_additionalProperties_podSecurityStandards_audit"></a>1.15.1.2.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > podSecurityStandards > audit`
+
+|                |                                   |
+| -------------- | --------------------------------- |
+| **Type**       | `enum (of string)`                |
+| **Default**    | `"restricted"`                    |
+| **Defined in** | #/$defs/podSecurityStandardPolicy |
+
+Must be one of:
+* "none"
+* "privileged"
+* "baseline"
+* "restricted"
+
+##### <a name="global_namespaces_additionalProperties_condition"></a>1.15.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > condition`
 
 |                        |                                                                  |
 | ---------------------- | ---------------------------------------------------------------- |
@@ -1488,7 +1543,7 @@ test.teuto.net
 
 **Description:** A condition with which to decide to include the resource. This will be templated. Must return the literal `true`, truthy values don't work.
 
-##### <a name="global_namespaces_additionalProperties_resources"></a>1.15.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > resources`
+##### <a name="global_namespaces_additionalProperties_resources"></a>1.15.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > resources`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -1500,7 +1555,7 @@ test.teuto.net
 | - [defaults](#global_namespaces_additionalProperties_resources_defaults ) | No      | object | No         | -          | -                                                               |
 | - [quotas](#global_namespaces_additionalProperties_resources_quotas )     | No      | object | No         | -          | See https://kubernetes.io/docs/concepts/policy/resource-quotas/ |
 
-###### <a name="global_namespaces_additionalProperties_resources_defaults"></a>1.15.1.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults`
+###### <a name="global_namespaces_additionalProperties_resources_defaults"></a>1.15.1.4.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -1512,7 +1567,7 @@ test.teuto.net
 | - [requests](#global_namespaces_additionalProperties_resources_defaults_requests ) | No      | object | No         | -          | -                 |
 | - [limits](#global_namespaces_additionalProperties_resources_defaults_limits )     | No      | object | No         | -          | -                 |
 
-###### <a name="global_namespaces_additionalProperties_resources_defaults_requests"></a>1.15.1.3.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults > requests`
+###### <a name="global_namespaces_additionalProperties_resources_defaults_requests"></a>1.15.1.4.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults > requests`
 
 |                           |                                                                                                                                                                 |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1523,7 +1578,7 @@ test.teuto.net
 | ----------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | ------------------- | ----------------- |
 | - [](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties ) | No      | object | No         | In #/$defs/quantity | -                 |
 
-###### <a name="global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties"></a>1.15.1.3.1.1.1. Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults > requests > quantity`
+###### <a name="global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties"></a>1.15.1.4.1.1.1. Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults > requests > quantity`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -1536,19 +1591,19 @@ test.teuto.net
 | [item 0](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties_oneOf_i0) |
 | [item 1](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties_oneOf_i1) |
 
-###### <a name="global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties_oneOf_i0"></a>1.15.1.3.1.1.1.1. Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults > requests > additionalProperties > oneOf > item 0`
+###### <a name="global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties_oneOf_i0"></a>1.15.1.4.1.1.1.1. Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults > requests > additionalProperties > oneOf > item 0`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-###### <a name="global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties_oneOf_i1"></a>1.15.1.3.1.1.1.2. Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults > requests > additionalProperties > oneOf > item 1`
+###### <a name="global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties_oneOf_i1"></a>1.15.1.4.1.1.1.2. Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults > requests > additionalProperties > oneOf > item 1`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `number` |
 
-###### <a name="global_namespaces_additionalProperties_resources_defaults_limits"></a>1.15.1.3.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults > limits`
+###### <a name="global_namespaces_additionalProperties_resources_defaults_limits"></a>1.15.1.4.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults > limits`
 
 |                           |                                                                                                                                                               |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1559,7 +1614,7 @@ test.teuto.net
 | --------------------------------------------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
 | - [](#global_namespaces_additionalProperties_resources_defaults_limits_additionalProperties ) | No      | object | No         | Same as [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties ) | -                 |
 
-###### <a name="global_namespaces_additionalProperties_resources_defaults_limits_additionalProperties"></a>1.15.1.3.1.2.1. Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults > limits > quantity`
+###### <a name="global_namespaces_additionalProperties_resources_defaults_limits_additionalProperties"></a>1.15.1.4.1.2.1. Property `base cluster configuration > global > namespaces > additionalProperties > resources > defaults > limits > quantity`
 
 |                           |                                                                                                                                           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1567,7 +1622,7 @@ test.teuto.net
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                                                               |
 | **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
 
-###### <a name="global_namespaces_additionalProperties_resources_quotas"></a>1.15.1.3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > resources > quotas`
+###### <a name="global_namespaces_additionalProperties_resources_quotas"></a>1.15.1.4.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > namespaces > additionalProperties > resources > quotas`
 
 |                           |                                                                                                                                                      |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1580,7 +1635,7 @@ test.teuto.net
 | ------------------------------------------------------------------------------------ | ------- | ------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
 | - [](#global_namespaces_additionalProperties_resources_quotas_additionalProperties ) | No      | object | No         | Same as [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties ) | -                 |
 
-###### <a name="global_namespaces_additionalProperties_resources_quotas_additionalProperties"></a>1.15.1.3.2.1. Property `base cluster configuration > global > namespaces > additionalProperties > resources > quotas > quantity`
+###### <a name="global_namespaces_additionalProperties_resources_quotas_additionalProperties"></a>1.15.1.4.2.1. Property `base cluster configuration > global > namespaces > additionalProperties > resources > quotas > quantity`
 
 |                           |                                                                                                                                           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
