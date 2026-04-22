@@ -1,0 +1,106 @@
+[
+  {
+    "name": "no-cpu-limits",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": ".*"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0009",
+        "controlName": "Ensure CPU limits are set"
+      },
+      {
+        "controlID": "C-0270",
+        "controlName": "Ensure CPU limits are set"
+      }
+    ]
+  },
+  {
+    "name": "batch-jobs-no-probes",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Job",
+          "name": ".*"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "CronJob",
+          "name": ".*"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0018",
+        "controlName": "Configured liveness probe"
+      },
+      {
+        "controlID": "C-0056",
+        "controlName": "Configured readiness probe"
+      }
+    ]
+  },
+  {
+    "name": "label-usage-best-practice",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": ".*"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0076",
+        "controlName": "Label usage for resources"
+      },
+      {
+        "controlID": "C-0077",
+        "controlName": "K8s common labels usage"
+      }
+    ]
+  },
+  {
+    "name": "secrets-as-env-vars",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": ".*"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0207",
+        "controlName": "Secrets as environment variables"
+      }
+    ]
+  }
+]
