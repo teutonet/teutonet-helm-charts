@@ -1,0 +1,30 @@
+{{- if dig "ttl-controller" "enabled" false .Values.AsMap -}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ttl-controller
+  namespace: kube-system
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ttl-controller
+spec:
+  chart:
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "twin" "chart" "k8s-ttl-controller" "context" $) | nindent 6 }}
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    priorityClassName: cluster-components
+    image:
+      repository: {{ printf "%s/twin/k8s-ttl-controller" ($.Values.global.imageRegistry | default "ghcr.io") }}
+    resources:
+      limits:
+        memory: 1Gi
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+            patch: |
+              - op: remove
+                path: /spec/template/spec/dnsPolicy
+{{- end -}}

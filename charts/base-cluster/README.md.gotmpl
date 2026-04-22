@@ -415,4 +415,19 @@ For this we switched from the distributed deployment to the single binary deploy
 Because of this you need to migrate to the `.monitoring.tracing.<field>` instead
 of `.monitoring.tracing.ingester.<field>`
 
+### 11.x.x -> 12.0.0
+
+`kube-janitor` is replaced by `ttl-controller` ([k8s-ttl-controller](https://github.com/TwiN/k8s-ttl-controller)).
+
+If you had `kube-janitor.enabled: true`, change it to:
+
+```yaml
+ttl-controller:
+  enabled: true
+```
+
+Resources annotated with `janitor/ttl` must be re-annotated to `k8s-ttl-controller.twin.sh/ttl`.
+Duration values (e.g. `1h`, `7d`) transfer as-is. However, `janitor/expires` absolute timestamps and
+the `forever` value are not supported by `k8s-ttl-controller` and must be removed or replaced.
+
 {{ .Files.Get "values.md"  }}

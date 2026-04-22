@@ -47,7 +47,7 @@ monitoring:
     enabled: true
   securityScanning:
     enabled: true
-kube-janitor:
+ttl-controller:
   enabled: true
 descheduler:
   enabled: true
