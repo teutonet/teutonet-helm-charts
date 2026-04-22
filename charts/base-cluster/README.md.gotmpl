@@ -432,4 +432,6 @@ of `.monitoring.tracing.ingester.<field>`
 
 - This release also removes the `monitoring.deadMansSwitch.enabled` field, it is just active when the `monitoring.deadMansSwitch` block is set.
 
+- This release disables the trivy-operator by default.
+  To continue using the operator set `.monitoring.securityScanning.enabled` to `true`.
 {{ .Files.Get "values.md"  }}

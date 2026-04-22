@@ -365,7 +365,7 @@ monitoring:
   metricsServer:
     enabled: true
   securityScanning:
-    enabled: true
+    enabled: false
     nodeCollector:
       tolerations:
         - key: node-role.kubernetes.io/control-plane
