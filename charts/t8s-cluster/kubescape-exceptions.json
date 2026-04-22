@@ -1,0 +1,520 @@
+[
+  {
+    "name": "kube-etcd-backup-host-network",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "CronJob",
+          "name": "kube-etcd-backup",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "HostNetwork access"},
+      {"controlID": "C-0196"},
+      {"controlID": "C-0216"}
+    ]
+  },
+  {
+    "name": "kube-etcd-backup-host-path",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "CronJob",
+          "name": "kube-etcd-backup",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "HostPath mount"},
+      {"controlName": "Writable hostPath mount"},
+      {"controlID": "C-0203"}
+    ]
+  },
+  {
+    "name": "kube-etcd-backup-non-root",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "CronJob",
+          "name": "kube-etcd-backup",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Non-root containers"},
+      {"controlID": "C-0198"},
+      {"controlID": "C-0218"}
+    ]
+  },
+  {
+    "name": "kube-etcd-defrag-host-network",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "CronJob",
+          "name": "kube-etcd-defrag",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "HostNetwork access"},
+      {"controlID": "C-0196"},
+      {"controlID": "C-0216"}
+    ]
+  },
+  {
+    "name": "kube-etcd-defrag-host-path",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "CronJob",
+          "name": "kube-etcd-defrag",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "HostPath mount"},
+      {"controlName": "Writable hostPath mount"},
+      {"controlID": "C-0203"}
+    ]
+  },
+  {
+    "name": "kube-etcd-defrag-non-root",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "CronJob",
+          "name": "kube-etcd-defrag",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Non-root containers"},
+      {"controlID": "C-0198"},
+      {"controlID": "C-0218"}
+    ]
+  },
+  {
+    "name": "cilium-host-namespaces",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "DaemonSet",
+          "name": "cilium",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Host PID/IPC privileges"},
+      {"controlName": "HostNetwork access"},
+      {"controlID": "C-0194"},
+      {"controlID": "C-0195"},
+      {"controlID": "C-0196"},
+      {"controlID": "C-0214"},
+      {"controlID": "C-0215"},
+      {"controlID": "C-0216"},
+      {"controlID": "C-0275"},
+      {"controlID": "C-0276"}
+    ]
+  },
+  {
+    "name": "cilium-host-path",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "DaemonSet",
+          "name": "cilium",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "HostPath mount"},
+      {"controlName": "Writable hostPath mount"},
+      {"controlID": "C-0203"}
+    ]
+  },
+  {
+    "name": "cilium-capabilities",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "DaemonSet",
+          "name": "cilium",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Insecure capabilities"},
+      {"controlName": "Privileged container"},
+      {"controlID": "C-0193"},
+      {"controlID": "C-0199"},
+      {"controlID": "C-0200"},
+      {"controlID": "C-0201"},
+      {"controlID": "C-0213"},
+      {"controlID": "C-0219"},
+      {"controlID": "C-0220"}
+    ]
+  },
+  {
+    "name": "cilium-envoy-host-namespaces",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "DaemonSet",
+          "name": "cilium-envoy",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Host PID/IPC privileges"},
+      {"controlName": "HostNetwork access"},
+      {"controlID": "C-0194"},
+      {"controlID": "C-0195"},
+      {"controlID": "C-0196"},
+      {"controlID": "C-0214"},
+      {"controlID": "C-0215"},
+      {"controlID": "C-0216"},
+      {"controlID": "C-0275"},
+      {"controlID": "C-0276"}
+    ]
+  },
+  {
+    "name": "cilium-envoy-capabilities",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "DaemonSet",
+          "name": "cilium-envoy",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Insecure capabilities"},
+      {"controlName": "Privileged container"},
+      {"controlID": "C-0193"},
+      {"controlID": "C-0199"},
+      {"controlID": "C-0200"},
+      {"controlID": "C-0201"},
+      {"controlID": "C-0213"},
+      {"controlID": "C-0219"},
+      {"controlID": "C-0220"}
+    ]
+  },
+  {
+    "name": "cilium-operator-host-network",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment",
+          "name": "cilium-operator",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "HostNetwork access"},
+      {"controlID": "C-0196"},
+      {"controlID": "C-0216"}
+    ]
+  },
+  {
+    "name": "cilium-operator-non-root",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment",
+          "name": "cilium-operator",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Non-root containers"},
+      {"controlID": "C-0198"},
+      {"controlID": "C-0218"}
+    ]
+  },
+  {
+    "name": "ccm-host-network",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "DaemonSet|Deployment",
+          "name": "openstack-cloud-controller-manager",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "HostNetwork access"},
+      {"controlName": "HostPath mount"},
+      {"controlName": "Writable hostPath mount"},
+      {"controlID": "C-0196"},
+      {"controlID": "C-0203"},
+      {"controlID": "C-0216"}
+    ]
+  },
+  {
+    "name": "csi-nodeplugin-privileged",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "DaemonSet",
+          "name": "openstack-cinder-csi-nodeplugin",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Insecure capabilities"},
+      {"controlName": "Privileged container"},
+      {"controlID": "C-0193"},
+      {"controlID": "C-0199"},
+      {"controlID": "C-0200"},
+      {"controlID": "C-0201"},
+      {"controlID": "C-0213"},
+      {"controlID": "C-0219"},
+      {"controlID": "C-0220"}
+    ]
+  },
+  {
+    "name": "csi-nodeplugin-host-path",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "DaemonSet",
+          "name": "openstack-cinder-csi-nodeplugin",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "HostPath mount"},
+      {"controlName": "Writable hostPath mount"},
+      {"controlID": "C-0203"}
+    ]
+  },
+  {
+    "name": "csi-nodeplugin-non-root",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "DaemonSet",
+          "name": "openstack-cinder-csi-nodeplugin",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Non-root containers"},
+      {"controlID": "C-0198"},
+      {"controlID": "C-0218"}
+    ]
+  },
+  {
+    "name": "csi-controllerplugin-host-path",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment",
+          "name": "openstack-cinder-csi-controllerplugin",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "HostPath mount"},
+      {"controlName": "Writable hostPath mount"},
+      {"controlID": "C-0203"}
+    ]
+  },
+  {
+    "name": "gpu-operator-host-path",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment",
+          "name": "gpu-operator"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "HostPath mount"},
+      {"controlName": "Writable hostPath mount"},
+      {"controlID": "C-0203"}
+    ]
+  },
+  {
+    "name": "gpu-operator-nfd-worker-host-path",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "DaemonSet",
+          "name": "gpu-operator-node-feature-discovery-worker",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "HostPath mount"},
+      {"controlName": "Writable hostPath mount"},
+      {"controlID": "C-0203"}
+    ]
+  },
+  {
+    "name": "hubble-relay-no-resource-limits",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment",
+          "name": "hubble-relay",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Ensure CPU limits are set"},
+      {"controlName": "Ensure memory limits are set"},
+      {"controlID": "C-0270"},
+      {"controlID": "C-0271"}
+    ]
+  },
+  {
+    "name": "gpu-operator-nfd-non-root",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment|Job",
+          "name": "gpu-operator-node-feature-discovery-(gc|master|prune)",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Non-root containers"},
+      {"controlID": "C-0013"},
+      {"controlID": "C-0198"},
+      {"controlID": "C-0218"}
+    ]
+  },
+  {
+    "name": "gpu-operator-upgrade-crd-non-root",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Job",
+          "name": "gpu-operator-upgrade-crd",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Non-root containers"},
+      {"controlID": "C-0013"},
+      {"controlID": "C-0198"},
+      {"controlID": "C-0218"}
+    ]
+  },
+  {
+    "name": "cluster-autoscaler-non-root",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment",
+          "name": ".*-autoscaler-clusterapi-cluster-autoscaler",
+          "namespace": "default"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Non-root containers"},
+      {"controlID": "C-0013"},
+      {"controlID": "C-0198"},
+      {"controlID": "C-0218"}
+    ]
+  }
+]

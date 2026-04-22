@@ -63,6 +63,17 @@ spec:
   {{- end }}
   values:
     priorityClassName: system-cluster-critical
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1001
+      seccompProfile:
+        type: RuntimeDefault
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
   {{- if .Values.controlPlane.hosted }}
     tolerations:
       - key: node.cluster.x-k8s.io/uninitialized

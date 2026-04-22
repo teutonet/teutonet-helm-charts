@@ -19,7 +19,28 @@ spec:
   interval: 1h
   driftDetection:
     mode: enabled
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: {{ printf "%s-autoscaler-clusterapi-cluster-autoscaler" .Release.Name }}
+            patch: |
+              - op: add
+                path: /spec/template/spec/securityContext
+                value:
+                  runAsNonRoot: true
+                  runAsUser: 65534
+                  fsGroup: 65534
+                  seccompProfile:
+                    type: RuntimeDefault
   values:
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
     autoDiscovery:
       clusterName: {{ .Release.Name }}
     cloudProvider: clusterapi
