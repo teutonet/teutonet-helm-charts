@@ -1,12 +1,4 @@
-{{- $enabled := false -}}
-{{- range $_, $machineDeploymentClass := .Values.nodePools }}
-  {{- $replicas := $machineDeploymentClass.replicas -}}
-  {{- $maxReplicas := $machineDeploymentClass.maxReplicas | default $replicas -}}
-  {{- if ne $replicas $maxReplicas }}
-    {{- $enabled = true -}}
-  {{- end }}
-{{- end }}
-{{- if $enabled -}}
+{{- if include "t8s-cluster.autoscaler.enabled" . -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -19,7 +11,39 @@ spec:
   interval: 1h
   driftDetection:
     mode: enabled
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+            patch: |
+              - op: add
+                path: /spec/template/spec/securityContext
+                value:
+                  runAsNonRoot: true
+                  runAsUser: 65534
+                  fsGroup: 65534
+                  seccompProfile:
+                    type: RuntimeDefault
+              - op: add
+                path: /spec/template/spec/containers/0/securityContext
+                value:
+                  allowPrivilegeEscalation: false
+                  capabilities:
+                    drop:
+                      - ALL
+                  readOnlyRootFilesystem: true
+                  runAsNonRoot: true
+                  runAsGroup: 65534
   values:
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsGroup: 65534
     autoDiscovery:
       clusterName: {{ .Release.Name }}
     cloudProvider: clusterapi

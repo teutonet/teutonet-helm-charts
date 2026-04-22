@@ -1,0 +1,1033 @@
+[
+  {
+    "name": "gpu-operator-hostpath",
+    "description": "GPU operator and NFD worker require HostPath mounts to access host GPU devices and hardware features",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator",
+          "namespace": ".*",
+          "kind": "Deployment"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator-node-feature-discovery-worker",
+          "namespace": "kube-system",
+          "kind": "DaemonSet"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0048",
+        "controlName": "HostPath mount"
+      }
+    ]
+  },
+  {
+    "name": "gpu-operator-rbac",
+    "description": "GPU operator and NFD require broad RBAC permissions (secret access, delete) defined by upstream Helm charts that cannot be modified",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator",
+          "namespace": "kube-system",
+          "kind": "ServiceAccount"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "node-feature-discovery",
+          "namespace": "kube-system",
+          "kind": "ServiceAccount"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0015",
+        "controlName": "List Kubernetes secrets"
+      },
+      {
+        "controlID": "C-0007",
+        "controlName": "Roles with delete capabilities"
+      }
+    ]
+  },
+  {
+    "name": "gpu-operator-cilium-network-policy",
+    "description": "GPU operator resources are covered by CiliumNetworkPolicies which kubescape does not recognize as standard NetworkPolicy",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator.*"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0030",
+        "controlName": "Ingress and Egress blocked"
+      },
+      {
+        "controlID": "C-0260",
+        "controlName": "Missing network policy"
+      }
+    ]
+  },
+  {
+    "name": "cilium-system-components",
+    "description": "Cilium CNI (cilium, cilium-envoy, cilium-operator) requires privileged access, host network, host ports, writable hostPath mounts, and elevated capabilities as a kernel-level networking component; these cannot be changed upstream",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium",
+          "kind": "DaemonSet"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-envoy",
+          "kind": "DaemonSet"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-operator",
+          "kind": "Deployment"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0013",
+        "controlName": "Non-root containers"
+      },
+      {
+        "controlID": "C-0016",
+        "controlName": "Allow privilege escalation"
+      },
+      {
+        "controlID": "C-0017",
+        "controlName": "Immutable container filesystem"
+      },
+      {
+        "controlID": "C-0041",
+        "controlName": "HostNetwork access"
+      },
+      {
+        "controlID": "C-0044",
+        "controlName": "Container hostPort"
+      },
+      {
+        "controlID": "C-0045",
+        "controlName": "Writable hostPath mount"
+      },
+      {
+        "controlID": "C-0046",
+        "controlName": "Insecure capabilities"
+      },
+      {
+        "controlID": "C-0048",
+        "controlName": "HostPath mount"
+      },
+      {
+        "controlID": "C-0057",
+        "controlName": "Privileged container"
+      },
+      {
+        "controlID": "C-0271",
+        "controlName": "Ensure memory limits are set"
+      }
+    ]
+  },
+  {
+    "name": "cilium-rbac",
+    "description": "Cilium and cloud-controller-manager require broad RBAC permissions (secret listing, delete capabilities) as defined by their upstream Helm charts",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium",
+          "kind": "ClusterRole"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium",
+          "kind": "ClusterRoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-operator",
+          "kind": "ClusterRole"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-operator",
+          "kind": "ClusterRoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-operator-tlsinterception-secrets",
+          "kind": "Role"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-operator-tlsinterception-secrets",
+          "kind": "RoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-operator-ztunnel",
+          "kind": "Role"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-operator-ztunnel",
+          "kind": "RoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-tlsinterception-secrets",
+          "kind": "Role"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-tlsinterception-secrets",
+          "kind": "RoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "system:cloud-controller-manager",
+          "kind": "ClusterRole"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "system:cloud-controller-manager",
+          "kind": "ClusterRoleBinding"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0007",
+        "controlName": "Roles with delete capabilities"
+      },
+      {
+        "controlID": "C-0015",
+        "controlName": "List Kubernetes secrets"
+      }
+    ]
+  },
+  {
+    "name": "openstack-csi-nodeplugin-privileged",
+    "description": "OpenStack Cinder CSI node plugin requires privileged access, elevated capabilities, and writable hostPath mounts to attach block volumes to nodes; these are defined upstream and cannot be changed",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "openstack-cinder-csi-nodeplugin",
+          "kind": "DaemonSet"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0013",
+        "controlName": "Non-root containers"
+      },
+      {
+        "controlID": "C-0016",
+        "controlName": "Allow privilege escalation"
+      },
+      {
+        "controlID": "C-0017",
+        "controlName": "Immutable container filesystem"
+      },
+      {
+        "controlID": "C-0041",
+        "controlName": "HostNetwork access"
+      },
+      {
+        "controlID": "C-0045",
+        "controlName": "Writable hostPath mount"
+      },
+      {
+        "controlID": "C-0046",
+        "controlName": "Insecure capabilities"
+      },
+      {
+        "controlID": "C-0048",
+        "controlName": "HostPath mount"
+      },
+      {
+        "controlID": "C-0055",
+        "controlName": "Linux hardening"
+      },
+      {
+        "controlID": "C-0057",
+        "controlName": "Privileged container"
+      },
+      {
+        "controlID": "C-0271",
+        "controlName": "Ensure memory limits are set"
+      }
+    ]
+  },
+  {
+    "name": "openstack-components-probes",
+    "description": "OpenStack CSI and cloud-controller-manager upstream charts do not define readiness/liveness probes; these cannot be added without forking upstream",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "openstack-cinder-csi-nodeplugin",
+          "kind": "DaemonSet"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "openstack-cloud-controller-manager",
+          "kind": "DaemonSet"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "openstack-cinder-csi-controllerplugin",
+          "kind": "Deployment"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0018",
+        "controlName": "Configured readiness probe"
+      },
+      {
+        "controlID": "C-0056",
+        "controlName": "Configured liveness probe"
+      }
+    ]
+  },
+  {
+    "name": "openstack-components-network",
+    "description": "OpenStack cloud-controller-manager and Cinder CSI require host network access and HostPath mounts to communicate with cloud infrastructure; these are defined upstream",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "openstack-cloud-controller-manager",
+          "kind": "DaemonSet"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "openstack-cinder-csi-controllerplugin",
+          "kind": "Deployment"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0013",
+        "controlName": "Non-root containers"
+      },
+      {
+        "controlID": "C-0041",
+        "controlName": "HostNetwork access"
+      },
+      {
+        "controlID": "C-0048",
+        "controlName": "HostPath mount"
+      },
+      {
+        "controlID": "C-0271",
+        "controlName": "Ensure memory limits are set"
+      }
+    ]
+  },
+  {
+    "name": "cilium-network-policy",
+    "description": "Cilium, OpenStack, Hubble, and kube-etcd-defrag resources are covered by CiliumNetworkPolicies which kubescape does not recognize as standard NetworkPolicy",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium",
+          "kind": "DaemonSet"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-envoy",
+          "kind": "DaemonSet"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-operator",
+          "kind": "Deployment"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "openstack-cinder-csi-nodeplugin",
+          "kind": "DaemonSet"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "openstack-cloud-controller-manager",
+          "kind": "DaemonSet"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "openstack-cinder-csi-controllerplugin",
+          "kind": "Deployment"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "hubble-relay",
+          "kind": "Deployment"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "hubble-ui",
+          "kind": "Deployment"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kube-etcd-defrag",
+          "kind": "CronJob"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0030",
+        "controlName": "Ingress and Egress blocked"
+      },
+      {
+        "controlID": "C-0260",
+        "controlName": "Missing network policy"
+      }
+    ]
+  },
+  {
+    "name": "cilium-credentials-configmap",
+    "description": "cilium-config ConfigMap contains network configuration values that kubescape flags as credentials; these are upstream Cilium configuration and cannot be restructured",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-config",
+          "kind": "ConfigMap"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0012",
+        "controlName": "Applications credentials in configuration files"
+      }
+    ]
+  },
+  {
+    "name": "service-account-token-automount",
+    "description": "Service accounts for Cilium, OpenStack CSI, GPU operator, Hubble, and NFD require automounted tokens as defined by their upstream charts",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium",
+          "kind": "ServiceAccount"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-envoy",
+          "kind": "ServiceAccount"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-operator",
+          "kind": "ServiceAccount"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cloud-controller-manager",
+          "kind": "ServiceAccount"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "csi-cinder-controller-sa",
+          "kind": "ServiceAccount"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "csi-cinder-node-sa",
+          "kind": "ServiceAccount"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator",
+          "kind": "ServiceAccount"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator-node-feature-discovery-prune",
+          "kind": "ServiceAccount"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator-upgrade-crd-hook-sa",
+          "kind": "ServiceAccount"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "hubble-ui",
+          "kind": "ServiceAccount"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "node-feature-discovery",
+          "kind": "ServiceAccount"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0034",
+        "controlName": "Automatic mapping of service account"
+      },
+      {
+        "controlID": "C-0053",
+        "controlName": "Access container service account"
+      }
+    ]
+  },
+  {
+    "name": "cilium-secrets-namespace",
+    "description": "cilium-secrets Namespace is used by Cilium for TLS certificate storage; kubescape flags it for network mapping/internal networking as it has no pods",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-secrets",
+          "kind": "Namespace"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0049",
+        "controlName": "Network mapping"
+      },
+      {
+        "controlID": "C-0054",
+        "controlName": "Cluster internal networking"
+      }
+    ]
+  },
+  {
+    "name": "gpu-operator-immutable-filesystem",
+    "description": "gpu-operator Deployment and upgrade-crd Job require mutable filesystems for runtime operations; these are upstream requirements",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator",
+          "kind": "Deployment"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator-upgrade-crd",
+          "kind": "Job"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0017",
+        "controlName": "Immutable container filesystem"
+      }
+    ]
+  },
+  {
+    "name": "gpu-operator-nfd-gc-probes",
+    "description": "gpu-operator-node-feature-discovery-gc does not define readiness/liveness probes in the upstream NFD chart",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator-node-feature-discovery-gc",
+          "kind": "Deployment"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0018",
+        "controlName": "Configured readiness probe"
+      },
+      {
+        "controlID": "C-0056",
+        "controlName": "Configured liveness probe"
+      }
+    ]
+  },
+  {
+    "name": "gpu-operator-delete-events",
+    "description": "GPU operator ClusterRole grants delete permissions on events as required by upstream chart; cannot be modified",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator",
+          "kind": "ClusterRole"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0031",
+        "controlName": "Delete Kubernetes events"
+      }
+    ]
+  },
+  {
+    "name": "kube-etcd-defrag-host-access",
+    "description": "kube-etcd-defrag CronJob must run as root to read etcd TLS certs (0600 root:root on kubeadm nodes), requires host network to reach etcd at localhost:2379, and HostPath mount to access /etc/kubernetes/pki/etcd",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kube-etcd-defrag",
+          "kind": "CronJob"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0013",
+        "controlName": "Non-root containers"
+      },
+      {
+        "controlID": "C-0041",
+        "controlName": "HostNetwork access"
+      },
+      {
+        "controlID": "C-0048",
+        "controlName": "HostPath mount"
+      }
+    ]
+  },
+  {
+    "name": "rbac-service-account-access",
+    "description": "Cilium, OpenStack CSI, GPU operator, Hubble, and NFD RBAC resources grant service account access as required by their upstream charts",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium",
+          "kind": "ClusterRole"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium",
+          "kind": "ClusterRoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-operator",
+          "kind": "ClusterRole"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-operator",
+          "kind": "ClusterRoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-operator-tlsinterception-secrets",
+          "kind": "Role"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-operator-tlsinterception-secrets",
+          "kind": "RoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-operator-ztunnel",
+          "kind": "Role"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-operator-ztunnel",
+          "kind": "RoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-tlsinterception-secrets",
+          "kind": "Role"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-tlsinterception-secrets",
+          "kind": "RoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-config-agent",
+          "kind": "Role"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cilium-config-agent",
+          "kind": "RoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "csi-attacher-role",
+          "kind": "ClusterRole"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "csi-attacher-binding",
+          "kind": "ClusterRoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "csi-nodeplugin-role",
+          "kind": "ClusterRole"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "csi-nodeplugin-binding",
+          "kind": "ClusterRoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "csi-provisioner-role",
+          "kind": "ClusterRole"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "csi-provisioner-binding",
+          "kind": "ClusterRoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "csi-resizer-role",
+          "kind": "ClusterRole"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "csi-resizer-binding",
+          "kind": "ClusterRoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "csi-snapshotter-role",
+          "kind": "ClusterRole"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "csi-snapshotter-binding",
+          "kind": "ClusterRoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator",
+          "kind": "ClusterRole"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator-node-feature-discovery",
+          "kind": "ClusterRole"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator-node-feature-discovery-prune",
+          "kind": "ClusterRole"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator-node-feature-discovery-gc",
+          "kind": "ClusterRoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator-upgrade-crd-hook-binding",
+          "kind": "ClusterRoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator",
+          "kind": "RoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator-node-feature-discovery-worker",
+          "kind": "RoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "hubble-ui",
+          "kind": "ClusterRole"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "hubble-ui",
+          "kind": "ClusterRoleBinding"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "system:cloud-controller-manager",
+          "kind": "ClusterRole"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "system:cloud-controller-manager",
+          "kind": "ClusterRoleBinding"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0053",
+        "controlName": "Access container service account"
+      }
+    ]
+  },
+  {
+    "name": "gpu-operator-memory-limits",
+    "description": "GPU operator Jobs (prune, upgrade-crd) do not define memory limits in upstream charts",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator-node-feature-discovery-prune",
+          "kind": "Job"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator-upgrade-crd",
+          "kind": "Job"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0271",
+        "controlName": "Ensure memory limits are set"
+      }
+    ]
+  }
+]

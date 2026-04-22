@@ -34,6 +34,7 @@ spec:
               image: {{ include "common.images.image" (dict "imageRoot" .Values.global.etcd.image "global" .Values.global) }}
               imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.etcd.image }}
               name: etcd-defrag
+              resources: {{- include "common.resources" .Values.controlPlane.etcdDefrag | nindent 16 }}
               securityContext:
                 runAsGroup: 1000
                 runAsUser: {{ .hosted | ternary 1000 0 }}

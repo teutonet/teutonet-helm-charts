@@ -51,6 +51,74 @@
             }
           },
           "additionalProperties": false
+        },
+        "networkPolicy": {
+          "type": "object",
+          "properties": {
+            "dnsLabels": {
+              "type": "object",
+              "description": "Labels to select the DNS pods for CNP egress rules",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "metricsLabels": {
+              "type": "object",
+              "description": "Labels to select the metrics/Prometheus pods for CNP ingress rules",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "hubble": {
+          "type": "object",
+          "properties": {
+            "relay": {
+              "type": "object",
+              "properties": {
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
+            },
+            "ui": {
+              "type": "object",
+              "properties": {
+                "backend": {
+                  "type": "object",
+                  "properties": {
+                    "resourcesPreset": {
+                      "$ref": "#/$defs/resourcesPreset"
+                    },
+                    "resources": {
+                      "$ref": "#/$defs/resourceRequirements"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "frontend": {
+                  "type": "object",
+                  "properties": {
+                    "resourcesPreset": {
+                      "$ref": "#/$defs/resourcesPreset"
+                    },
+                    "resources": {
+                      "$ref": "#/$defs/resourceRequirements"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
         }
       }
     },
@@ -174,6 +242,18 @@
         "etcdBackup": {
           "type": "boolean",
           "description": "Enable daily etcd backups for KCP (non-hosted) clusters. Credentials are read from secret 'etcd-backup' in kube-system of the workload cluster. The secret must contain: accessKeyID (required), secretAccessKey (required), host (required), region (optional). Backups are stored at $cloud/$namespace/$name. For hosted clusters, backup is always enabled via the HCP controller using secret 'etcd-backup' in capi-hosted-control-plane-system."
+        },
+        "etcdDefrag": {
+          "type": "object",
+          "properties": {
+            "resourcesPreset": {
+              "$ref": "#/$defs/resourcesPreset"
+            },
+            "resources": {
+              "$ref": "#/$defs/resourceRequirements"
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false
@@ -362,6 +442,9 @@
         "{{ true }}",
         "{{ eq .Values.global.baseDomain \"teuto.net\" }}"
       ]
+    },
+    "resourcesPreset": {
+      "$ref": "https://raw.githubusercontent.com/teutonet/teutonet-helm-charts/main/charts/common/values.schema.json#/$defs/resourcesPreset"
     }
   }
 }
