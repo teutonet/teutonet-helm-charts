@@ -1,0 +1,252 @@
+[
+  {
+    "name": "alloy-host-path",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Pod",
+          "name": "alloy-.*",
+          "namespace": "monitoring"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "HostPath mount"},
+      {"controlName": "Writable hostPath mount"},
+      {"controlID": "C-0203"}
+    ]
+  },
+  {
+    "name": "alloy-non-root",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Pod",
+          "name": "alloy-.*",
+          "namespace": "monitoring"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Non-root containers"},
+      {"controlID": "C-0198"},
+      {"controlID": "C-0218"}
+    ]
+  },
+  {
+    "name": "node-exporter-host-path",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "DaemonSet",
+          "name": "kube-prometheus-stack-prometheus-node-exporter",
+          "namespace": "monitoring"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "HostPath mount"},
+      {"controlName": "Writable hostPath mount"},
+      {"controlID": "C-0203"}
+    ]
+  },
+  {
+    "name": "node-exporter-host-ports",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "DaemonSet",
+          "name": "kube-prometheus-stack-prometheus-node-exporter",
+          "namespace": "monitoring"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Container hostPort"},
+      {"controlID": "C-0204"}
+    ]
+  },
+  {
+    "name": "node-exporter-host-namespaces",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "DaemonSet",
+          "name": "kube-prometheus-stack-prometheus-node-exporter",
+          "namespace": "monitoring"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Host PID/IPC privileges"},
+      {"controlName": "HostNetwork access"},
+      {"controlID": "C-0194"},
+      {"controlID": "C-0195"},
+      {"controlID": "C-0196"},
+      {"controlID": "C-0214"},
+      {"controlID": "C-0215"},
+      {"controlID": "C-0216"},
+      {"controlID": "C-0275"},
+      {"controlID": "C-0276"}
+    ]
+  },
+  {
+    "name": "nfs-server-provisioner-seccomp",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "StatefulSet",
+          "name": "nfs-server-provisioner"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlID": "C-0210"}
+    ]
+  },
+  {
+    "name": "nfs-server-provisioner-non-root",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "StatefulSet",
+          "name": "nfs-server-provisioner"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Non-root containers"},
+      {"controlID": "C-0198"},
+      {"controlID": "C-0218"}
+    ]
+  },
+  {
+    "name": "nfs-server-provisioner-privilege-escalation",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "StatefulSet",
+          "name": "nfs-server-provisioner"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Allow privilege escalation"},
+      {"controlID": "C-0197"},
+      {"controlID": "C-0217"}
+    ]
+  },
+  {
+    "name": "nfs-server-provisioner-capabilities",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "StatefulSet",
+          "name": "nfs-server-provisioner"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Insecure capabilities"},
+      {"controlID": "C-0199"},
+      {"controlID": "C-0200"},
+      {"controlID": "C-0201"},
+      {"controlID": "C-0219"},
+      {"controlID": "C-0220"}
+    ]
+  },
+  {
+    "name": "node-agent-host-path-non-root",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "DaemonSet",
+          "name": "node-agent",
+          "namespace": "backup"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "HostPath mount"},
+      {"controlName": "Writable hostPath mount"},
+      {"controlName": "Non-root containers"},
+      {"controlID": "C-0198"},
+      {"controlID": "C-0203"},
+      {"controlID": "C-0218"}
+    ]
+  },
+  {
+    "name": "telemetry-collector-host-path-non-root",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "DaemonSet",
+          "name": "telemetry-collector",
+          "namespace": "monitoring"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "HostPath mount"},
+      {"controlName": "Writable hostPath mount"},
+      {"controlName": "Non-root containers"},
+      {"controlID": "C-0198"},
+      {"controlID": "C-0203"},
+      {"controlID": "C-0218"}
+    ]
+  },
+  {
+    "name": "kube-janitor-non-root",
+    "policyType": "postureExceptionPolicy",
+    "actions": ["alertOnly"],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment",
+          "name": "kube-janitor",
+          "namespace": "kube-system"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {"controlName": "Non-root containers"},
+      {"controlID": "C-0013"},
+      {"controlID": "C-0198"},
+      {"controlID": "C-0218"}
+    ]
+  }
+]

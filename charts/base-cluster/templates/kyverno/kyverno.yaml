@@ -65,10 +65,17 @@ spec:
         address: {{ $telemetryConf.host }}
         port: {{ int64 $telemetryConf.port }}
       {{- end }}
+      podSecurityContext: &podSecurityContext
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
       resources: &resources {{- include "common.resources" .Values.kyverno.resources | nindent 8 }}
     backgroundController:
       replicas: 2
       priorityClassName: system-cluster-critical
+      podSecurityContext: *podSecurityContext
       resources: *resources
       {{- if $telemetryConf.enabled }}
       tracing: *tracingConfig
@@ -76,6 +83,7 @@ spec:
     reportsController:
       replicas: 2
       priorityClassName: system-cluster-critical
+      podSecurityContext: *podSecurityContext
       resources: *resources
       {{- if $telemetryConf.enabled }}
       tracing: *tracingConfig
@@ -83,6 +91,7 @@ spec:
     cleanupController:
       replicas: 2
       priorityClassName: system-cluster-critical
+      podSecurityContext: *podSecurityContext
       resources: *resources
       {{- if $telemetryConf.enabled }}
       tracing: *tracingConfig
