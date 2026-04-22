@@ -32,6 +32,23 @@ function templateGitHelmRelease() {
   helm template ${namespace:+--namespace "$namespace"} "$releaseName" "$tmpDir/$gitPath" --values <(if [[ -f "$values" ]]; then cat "$values"; else echo "$values"; fi)
 }
 
+function applyKustomizePostRenderers() {
+  local helmReleaseYaml="$1"
+  local tmpDir
+  tmpDir=$(mktemp -d -p "$TMP_DIR")
+
+  cat > "$tmpDir/resources.yaml"
+
+  yq <<<"$helmReleaseYaml" -y '{
+    "apiVersion": "kustomize.config.k8s.io/v1beta1",
+    "kind": "Kustomization",
+    "resources": ["resources.yaml"],
+    "patches": ([.spec.postRenderers // [] | .[].kustomize | select(. != null) | .patches[]])
+  }' > "$tmpDir/kustomization.yaml"
+
+  kubectl kustomize "$tmpDir"
+}
+
 function templateHelmRelease() {
   local yaml
   local helmReleaseYaml
@@ -44,6 +61,7 @@ function templateHelmRelease() {
   local sourceYaml
   local sourceResource
   local chartName
+  local hasKustomizePostRenderers
   yaml=$(cat -)
   helmReleaseYaml=$(yq <<<"$yaml" -erys '.[] | select(.kind == "HelmRelease")')
 
@@ -62,13 +80,19 @@ function templateHelmRelease() {
     return 0
   fi
   chartName="$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.chart)"
+  hasKustomizePostRenderers=$(yq <<<"$helmReleaseYaml" -er '(.spec.postRenderers // []) | map(select(.kustomize != null)) | length > 0')
   case "$sourceKind" in
     GitRepository)
       local gitUrl
       local gitRef
       gitUrl="$(yq <<<"$sourceResource" -er .spec.url)"
       gitRef="$(yq <<<"$sourceResource" -er '.spec.ref | if .branch then .branch elif .tag then .tag elif .semver then .semver elif .commit then .commit else "master" end')"
-      templateGitHelmRelease "$gitUrl" "$gitRef" "$chartName" "$namespace" "$releaseName" "$values"
+      if [[ "$hasKustomizePostRenderers" == "true" ]]; then
+        templateGitHelmRelease "$gitUrl" "$gitRef" "$chartName" "$namespace" "$releaseName" "$values" \
+          | applyKustomizePostRenderers "$helmReleaseYaml"
+      else
+        templateGitHelmRelease "$gitUrl" "$gitRef" "$chartName" "$namespace" "$releaseName" "$values"
+      fi
       ;;
     HelmRepository)
       local helmRepositoryUrl
@@ -88,7 +112,12 @@ function templateHelmRelease() {
           ;;
       esac
       chartVersion="$(yq <<<"$helmReleaseYaml" -er .spec.chart.spec.version)"
-      helm <<<"$values" template --namespace "$namespace" "${args[@]}" --version "$chartVersion" --values -
+      if [[ "$hasKustomizePostRenderers" == "true" ]]; then
+        helm <<<"$values" template --namespace "$namespace" "${args[@]}" --version "$chartVersion" --values - \
+          | applyKustomizePostRenderers "$helmReleaseYaml"
+      else
+        helm <<<"$values" template --namespace "$namespace" "${args[@]}" --version "$chartVersion" --values -
+      fi
       ;;
     *)
       echo "'$sourceKind' is not implemented" >&2

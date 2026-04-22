@@ -4,6 +4,7 @@
 /charts/*/charts
 /charts/*/values.md
 /charts/*/ci/*-gen-values.yaml
+/charts/*/ci/*-multi-values.yaml
 .direnv/
 .task/
 reports/
