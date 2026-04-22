@@ -1,3 +1,12 @@
+{{- define "t8s-cluster.hostedControlPlane.apiServerHost" -}}
+  {{- $gateway := lookup "gateway.networking.k8s.io/v1" "Gateway" "capi-hosted-control-plane-system" "controlplane" -}}
+  {{- if not $gateway -}}
+    {{- fail "Hosted control plane Gateway 'controlplane' in namespace 'capi-hosted-control-plane-system' not found" -}}
+  {{- else -}}
+    {{- printf "%s.%s.%s" .Release.Name .Release.Namespace (replace "*." "" (index $gateway.spec.listeners 0).hostname) -}}
+  {{- end -}}
+{{- end -}}
+
 {{- define "t8s-cluster.clusterClass.infrastructureApiVersion" -}}
 infrastructure.cluster.x-k8s.io/v1beta1
 {{- end -}}
