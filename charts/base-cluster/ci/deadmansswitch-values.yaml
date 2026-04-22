@@ -1,6 +1,6 @@
+global:
+  baseDomain: example.com
 monitoring:
   deadMansSwitch:
     pingKey: PING_KEY
     apiKey: API_KEY
-global:
-  baseDomain: example.com

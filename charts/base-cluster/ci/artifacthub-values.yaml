@@ -23,12 +23,8 @@ storage:
   readWriteMany:
     enabled: true
 global:
-  clusterName: test
   baseDomain: example.com
-  serviceLevelAgreement: None
 monitoring:
-  grafana:
-    adminPassword: test
   tracing:
     enabled: true
   deadMansSwitch:
