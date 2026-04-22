@@ -27,4 +27,23 @@ spec:
             patch: |
               - op: remove
                 path: /spec/template/spec/dnsPolicy
+              - op: add
+                path: /spec/template/spec/securityContext
+                value:
+                  runAsNonRoot: true
+                  runAsUser: 65534
+                  runAsGroup: 65534
+                  fsGroup: 65534
+                  seccompProfile:
+                    type: RuntimeDefault
+              - op: add
+                path: /spec/template/spec/containers/0/securityContext
+                value:
+                  allowPrivilegeEscalation: false
+                  capabilities:
+                    drop:
+                      - ALL
+                  readOnlyRootFilesystem: true
+                  runAsNonRoot: true
+                  runAsGroup: 65534
 {{- end -}}

@@ -1,6 +1,4 @@
 global:
-  clusterName: test
   baseDomain: example.com
-  serviceLevelAgreement: None
 ingress:
   provider: traefik

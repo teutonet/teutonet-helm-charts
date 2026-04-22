@@ -16,9 +16,21 @@ spec:
     priorityClassName: cluster-components
     image:
       repository: {{ printf "%s/emberstack/kubernetes-reflector" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 2000
     securityContext:
       privileged: false
       allowPrivilegeEscalation: false
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+          - ALL
       seccompProfile:
         type: RuntimeDefault
 {{- end -}}

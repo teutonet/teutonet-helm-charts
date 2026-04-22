@@ -24,19 +24,43 @@ spec:
       namespace: monitoring
   values:
     fullnameOverride: telemetry-gateway
-    {{- if .Values.global.imageRegistry }}
     global:
+      {{- if .Values.global.imageRegistry }}
       image:
         registry: {{ $.Values.global.imageRegistry }}
-    {{- end }}
+      {{- end }}
+      podSecurityContext:
+        runAsNonRoot: true
+        runAsUser: 473
+        runAsGroup: 473
+        fsGroup: 473
+        seccompProfile:
+          type: RuntimeDefault
+    configReloader:
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        runAsNonRoot: true
+        runAsUser: 473
+        runAsGroup: 473
+        readOnlyRootFilesystem: true
+        seccompProfile:
+          type: RuntimeDefault
     alloy:
       enableReporting: false
       resources: {{- include "common.resources" .Values.monitoring.alloy.gateway | nindent 8 }}
-      {{- if .Values.monitoring.loki.enabled }}
-      mounts:
-        varlog: true
-      {{- end }}
       securityContext:
+        privileged: false
+        allowPrivilegeEscalation: false
+        runAsNonRoot: true
+        runAsUser: 473
+        runAsGroup: 473
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - ALL
         seccompProfile:
           type: RuntimeDefault
       configMap:
@@ -127,4 +151,33 @@ spec:
       enabled: true
       additionalLabels:
         monitoring/provisioned-by: base-cluster
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: telemetry-gateway
+            patch: |-
+              - op: add
+                path: /spec/template/spec/securityContext
+                value:
+                  runAsNonRoot: true
+                  runAsUser: 473
+                  runAsGroup: 473
+                  fsGroup: 473
+                  seccompProfile:
+                    type: RuntimeDefault
+              - op: add
+                path: /spec/template/spec/containers/1/securityContext
+                value:
+                  allowPrivilegeEscalation: false
+                  capabilities:
+                    drop:
+                      - ALL
+                  runAsNonRoot: true
+                  runAsUser: 473
+                  runAsGroup: 473
+                  readOnlyRootFilesystem: true
+                  seccompProfile:
+                    type: RuntimeDefault
 {{- end -}}
