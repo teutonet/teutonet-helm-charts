@@ -76,3 +76,15 @@ jobs:
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
       - run: pluto detect-files -d /tmp/templated -o custom --columns 'FILEPATH,NAME,KIND,VERSION,REPLACEMENT,REMOVED,DEPRECATED,REPL AVAIL'
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
+      - name: Install kubescape
+        if: ${{ steps.templateChart.outputs.skipped == 'false' }}
+        run: /home/linuxbrew/.linuxbrew/bin/brew install kubescape
+      - name: Run kubescape
+        if: ${{ steps.templateChart.outputs.skipped == 'false' }}
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          kubescape_args=(/tmp/templated)
+          if [[ -f "charts/$CHART/kubescape-exceptions.json" ]]; then
+            kubescape_args+=(--exceptions "charts/$CHART/kubescape-exceptions.json")
+          fi
+          kubescape scan "${kubescape_args[@]}"
