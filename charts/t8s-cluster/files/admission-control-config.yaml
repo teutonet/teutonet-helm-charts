@@ -3,3 +3,13 @@ kind: AdmissionConfiguration
 plugins:
   - name: EventRateLimit
     path: event-rate-limit-config.yaml
+  - name: PodSecurity
+    configuration:
+      apiVersion: pod-security.admission.config.k8s.io/v1
+      kind: PodSecurityConfiguration
+      defaults:
+        audit: restricted
+        warn: restricted
+      exemptions:
+        namespaces:
+          - kube-system
