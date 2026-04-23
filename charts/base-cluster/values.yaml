@@ -156,6 +156,11 @@ global:
         descheduler 0.29.x: 0.31.0
         descheduler 0.28.x: 0.30.0
       condition: "{{ .Values.descheduler.enabled }}"
+    onechart:
+      url: https://chart.onechart.dev
+      charts:
+        onechart: 0.70.x
+      condition: "{{ .Values.flux.capacitor.enabled }}"
     jetstack:
       url: oci://quay.io/jetstack/charts
       charts:
@@ -459,6 +464,12 @@ externalDNS:
 
 flux:
   gitRepositories: {}
+  capacitor:
+    enabled: false
+    ingress:
+      enabled: false
+      host: capacitor
+      customDomain: ""
 
 ingress:
   provider: traefik
