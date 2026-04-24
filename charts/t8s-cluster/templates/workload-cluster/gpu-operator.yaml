@@ -42,6 +42,8 @@ spec:
                   capabilities:
                     drop:
                       - ALL
+                  runAsNonRoot: true
+                  runAsGroup: 1000
           - target:
               kind: Job
               name: gpu-operator-upgrade-crd
@@ -59,6 +61,36 @@ spec:
                   capabilities:
                     drop:
                       - ALL
+                  runAsNonRoot: true
+                  runAsGroup: 1000
+          - target:
+              kind: Deployment
+              name: gpu-operator-node-feature-discovery-master
+            patch: |
+              - op: add
+                path: /spec/template/spec/containers/0/securityContext/runAsGroup
+                value: 1000
+          - target:
+              kind: Deployment
+              name: gpu-operator-node-feature-discovery-gc
+            patch: |
+              - op: add
+                path: /spec/template/spec/containers/0/securityContext/runAsGroup
+                value: 1000
+          - target:
+              kind: DaemonSet
+              name: gpu-operator-node-feature-discovery-worker
+            patch: |
+              - op: add
+                path: /spec/template/spec/containers/0/securityContext/runAsGroup
+                value: 1000
+          - target:
+              kind: Job
+              name: gpu-operator-node-feature-discovery-prune
+            patch: |
+              - op: add
+                path: /spec/template/spec/containers/0/securityContext/runAsGroup
+                value: 1000
   storageNamespace: kube-system
   targetNamespace: kube-system
   releaseName: gpu-operator
