@@ -287,6 +287,9 @@ rules:
       - group: ""
         resources:
           - events
+      - group: authorization.k8s.io
+        resources:
+          - selfsubjectaccessreviews
   - level: Metadata
     verbs: [] # All verbs
     resources:
