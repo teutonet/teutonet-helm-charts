@@ -123,14 +123,14 @@ global:
     grafana:
       url: https://grafana.github.io/helm-charts
       charts:
-        loki: 6.55.0
         alloy: 1.7.0
       condition: "{{ .Values.monitoring.prometheus.enabled }}"
     grafana-community:
       url: https://grafana-community.github.io/helm-charts
       charts:
+        loki: 13.2.3
         tempo: 2.0.0
-      condition: "{{ and .Values.monitoring.prometheus.enabled .Values.monitoring.tracing.enabled }}"
+      condition: "{{ and .Values.monitoring.prometheus.enabled (or .Values.monitoring.tracing.enabled .Values.monitoring.loki.enabled) }}"
     external-dns:
       url: https://kubernetes-sigs.github.io/external-dns
       charts:
