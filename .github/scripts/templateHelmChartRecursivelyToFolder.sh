@@ -35,4 +35,4 @@ function templateAndSplit() {
 export -f templateAndSplit
 
 export BIN="$(dirname "$0")"
-parallel $([[ -v GITHUB_JOB ]] || printf --bar) -P 100% templateAndSplit {} "$chart" "$targetDir" ::: "$chart/values.yaml" "$chart/ci/"*-values.yaml
+parallel $([[ -v GITHUB_JOB ]] || printf -- --bar) -P 100% templateAndSplit {} "$chart" "$targetDir" ::: "$chart/values.yaml" "$chart/ci/"*-values.yaml
