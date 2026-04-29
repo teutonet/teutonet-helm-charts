@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/part-of: monitoring
 spec:
   chart:
-    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "grafana" "chart" "loki" "context" $) | nindent 6 }}
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "grafana-community" "chart" "loki" "context" $) | nindent 6 }}
   interval: 1h
   driftDetection:
     mode: enabled
@@ -23,9 +23,9 @@ spec:
   values:
     {{- if .Values.global.imageRegistry }}
     global:
-      registry: {{ $.Values.global.imageRegistry }}
+      imageRegistry: {{ $.Values.global.imageRegistry }}
     {{- end }}
-    deploymentMode: SingleBinary
+    deploymentMode: Monolithic
     lokiCanary:
       enabled: false
     test:
