@@ -49,7 +49,7 @@ function generateSarifReport() {
   chartsJson="$(yq --arg image "$image" -r '.annotations["artifacthub.io/images"] | split("\n")[] | select(contains($image))' "$chart/Chart.yaml" |
     awk '{print $NF}' |
     jq -r -c -Rn '[inputs]')"
-if GRYPE_DB_AUTO_UPDATE=false grype "$image" -o sarif --by-cve --only-fixed | jq -r --arg category "$chart/${GITHUB_JOB:-local}" --argjson subCharts "$chartsJson" --arg chart "$chartName" '.runs |= map( . as $run | .tool.driver.rules |= map(select(((.properties["security-severity"]) | tonumber) >= 9)) | (.tool.driver.rules | map(.id)) as $ruleIds | .results |= map(select(.ruleId | IN($ruleIds[]))) | .automationDetails = {id: $category} | .properties = {chart: $chart, subCharts: $subCharts})' >"$tmpFile"; then
+  if GRYPE_DB_AUTO_UPDATE=false grype "$image" -o sarif --by-cve --only-fixed | jq -r --arg category "$chart/${GITHUB_JOB:-local}" --argjson subCharts "$chartsJson" --arg chart "$chartName" '.runs |= map( . as $run | .tool.driver.rules |= ((. // []) | map(select(((.properties["security-severity"]) | tonumber) >= 9))) | ((.tool.driver.rules // []) | map(.id)) as $ruleIds | .results |= map(select(.ruleId | IN($ruleIds[]))) | .automationDetails = {id: $category} | .properties = {chart: $chart, subCharts: $subCharts})' >"$tmpFile"; then
     mv "${tmpFile}" "${outFile}"
   else
     rm "$tmpFile"
