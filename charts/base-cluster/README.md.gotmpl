@@ -437,6 +437,6 @@ of `.monitoring.tracing.ingester.<field>`
 
 - This release upgrades velero to the latest version. In that the uploader type changed from restic to kopia and restic
 repositories are no longer supported. For the upgrade you have to create a new bucket and configure it as new
-`backup.velero.defaultLocation`. Please also delete all old restic repositories.
+`backup.provider.velero.defaultLocation`. Please also delete all old restic repositories.
 
 {{ .Files.Get "values.md"  }}
