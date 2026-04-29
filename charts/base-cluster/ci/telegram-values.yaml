@@ -1,0 +1,10 @@
+monitoring:
+  prometheus:
+    alertmanager:
+      receivers:
+        telegram:
+          botToken: botToken
+          chatid: 123456789
+        telegram zwei:
+          botToken: botToken2
+          chatid: 987654321
