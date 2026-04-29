@@ -1,5 +1,34 @@
 # Changelog
 
+## [12.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v11.2.0...base-cluster-v12.0.0) (2026-04-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* **base-cluster/trivy:** set trivy disabled by default ([#2100](https://github.com/teutonet/teutonet-helm-charts/issues/2100))
+* **base-cluster:** remove unnecessary enabled field for deadMansSwitch ([#1652](https://github.com/teutonet/teutonet-helm-charts/issues/1652))
+* **base-cluster:** migrate kube-janitor to k8s-ttl-controller ([#2091](https://github.com/teutonet/teutonet-helm-charts/issues/2091))
+
+### Features
+
+* **base-cluster:** remove unnecessary enabled field for deadMansSwitch ([#1652](https://github.com/teutonet/teutonet-helm-charts/issues/1652)) ([b1bc781](https://github.com/teutonet/teutonet-helm-charts/commit/b1bc781a206f26cfbd63e96083f4e2331d7e4e10))
+
+
+### Bug Fixes
+
+* **base-cluster/cert-manager:** add new line to fix breaking yaml file ([#2010](https://github.com/teutonet/teutonet-helm-charts/issues/2010)) ([90ab5b5](https://github.com/teutonet/teutonet-helm-charts/commit/90ab5b5c667d1eb2bd9ba26c5f9daf6caa6c57b5))
+* **base-cluster:** add missing descheduler config ([#2092](https://github.com/teutonet/teutonet-helm-charts/issues/2092)) ([6ecbbae](https://github.com/teutonet/teutonet-helm-charts/commit/6ecbbaebe520cfb817da1b58d643df910da542d1))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update docker.io/curlimages/curl:8.19.0 docker digest to c03110c ([#2102](https://github.com/teutonet/teutonet-helm-charts/issues/2102)) ([5de17f0](https://github.com/teutonet/teutonet-helm-charts/commit/5de17f0acdd125f8ed85f0adbcce5f101bd0143b))
+* **base-cluster/dependencies:** update docker.io/fluxcd/flux-cli docker tag to v2.8.6 ([#2093](https://github.com/teutonet/teutonet-helm-charts/issues/2093)) ([6a2a884](https://github.com/teutonet/teutonet-helm-charts/commit/6a2a88425d989752018842f0546e2ff94c9eb773))
+* **base-cluster/dependencies:** update helm release kube-prometheus-stack to v83.7.0 ([#2096](https://github.com/teutonet/teutonet-helm-charts/issues/2096)) ([aa0845b](https://github.com/teutonet/teutonet-helm-charts/commit/aa0845b02cb7d919b84da7cd49c919676c9cdeb1))
+* **base-cluster/dependencies:** update helm release reflector to v10.0.37 ([#2097](https://github.com/teutonet/teutonet-helm-charts/issues/2097)) ([3c2a070](https://github.com/teutonet/teutonet-helm-charts/commit/3c2a070f90bb0630b3965d2a21253276c9377dac))
+* **base-cluster/trivy:** set trivy disabled by default ([#2100](https://github.com/teutonet/teutonet-helm-charts/issues/2100)) ([39e7f6a](https://github.com/teutonet/teutonet-helm-charts/commit/39e7f6a175a310574c30903a3fb020a73feb9921))
+* **base-cluster:** migrate kube-janitor to k8s-ttl-controller ([#2091](https://github.com/teutonet/teutonet-helm-charts/issues/2091)) ([5ee6289](https://github.com/teutonet/teutonet-helm-charts/commit/5ee6289f3b24941abcc31c274580a94341bb4984))
+
 ## [11.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v11.1.3...base-cluster-v11.2.0) (2026-04-21)
 
 
