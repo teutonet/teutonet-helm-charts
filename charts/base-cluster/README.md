@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 11.2.0](https://img.shields.io/badge/Version-11.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 12.0.0](https://img.shields.io/badge/Version-12.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -23,7 +23,7 @@ The `.x.x` part of the versions can be left as is, helm uses that as a range. If
 git init
 
 # create empty cluster HelmRelease;
-flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 11.x.x > cluster.yaml
+flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 12.x.x > cluster.yaml
 
 # maybe use the following name for your cluster;
 kubectl get node -o jsonpath='{.items[0].metadata.annotations.cluster\.x-k8s\.io/cluster-name}'
@@ -50,7 +50,7 @@ helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io
 
 # manual initial installation of the chart, afterwards the chart takes over
 # after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
-helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 11.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
+helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 12.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
 
 # you can use this command to get the instructions again
 # e.g. when adding users, gitRepositories, ...
@@ -246,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v11.2.0/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v12.0.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -425,6 +425,25 @@ For this we switched from the distributed deployment to the single binary deploy
 Because of this you need to migrate to the `.monitoring.tracing.<field>` instead
 of `.monitoring.tracing.ingester.<field>`
 
+### 11.x.x -> 12.0.0
+
+- `kube-janitor` is replaced by `ttl-controller` ([k8s-ttl-controller](https://github.com/TwiN/k8s-ttl-controller)).
+
+  If you had `kube-janitor.enabled: true`, change it to:
+
+  ```yaml
+  ttl-controller:
+    enabled: true
+  ```
+
+  Resources annotated with `janitor/ttl` must be re-annotated to `k8s-ttl-controller.twin.sh/ttl`.
+  Duration values (e.g. `1h`, `7d`) transfer as-is. However, `janitor/expires` absolute timestamps and
+  the `forever` value are not supported by `k8s-ttl-controller` and must be removed or replaced.
+
+- This release also removes the `monitoring.deadMansSwitch.enabled` field, it is just active when the `monitoring.deadMansSwitch` block is set.
+
+- This release disables the trivy-operator by default.
+  To continue using the operator set `.monitoring.securityScanning.enabled` to `true`.
 # base cluster configuration
 
 **Title:** base cluster configuration
@@ -434,24 +453,24 @@ of `.monitoring.tracing.ingester.<field>`
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                         | Pattern | Type   | Deprecated | Definition | Title/Description    |
-| -------------------------------- | ------- | ------ | ---------- | ---------- | -------------------- |
-| - [global](#global )             | No      | object | No         | -          | -                    |
-| - [kyverno](#kyverno )           | No      | object | No         | -          | -                    |
-| - [tetragon](#tetragon )         | No      | object | No         | -          | -                    |
-| - [monitoring](#monitoring )     | No      | object | No         | -          | -                    |
-| - [descheduler](#descheduler )   | No      | object | No         | -          | -                    |
-| - [dns](#dns )                   | No      | object | No         | -          | -                    |
-| - [certManager](#certManager )   | No      | object | No         | -          | -                    |
-| - [externalDNS](#externalDNS )   | No      | object | No         | -          | -                    |
-| - [flux](#flux )                 | No      | object | No         | -          | -                    |
-| - [ingress](#ingress )           | No      | object | No         | -          | -                    |
-| - [storage](#storage )           | No      | object | No         | -          | -                    |
-| - [reflector](#reflector )       | No      | object | No         | -          | -                    |
-| - [rbac](#rbac )                 | No      | object | No         | -          | -                    |
-| - [backup](#backup )             | No      | object | No         | -          | -                    |
-| - [kube-janitor](#kube-janitor ) | No      | object | No         | -          | -                    |
-| - [common](#common )             | No      | object | No         | -          | Values for sub-chart |
+| Property                             | Pattern | Type   | Deprecated | Definition | Title/Description    |
+| ------------------------------------ | ------- | ------ | ---------- | ---------- | -------------------- |
+| - [global](#global )                 | No      | object | No         | -          | -                    |
+| - [kyverno](#kyverno )               | No      | object | No         | -          | -                    |
+| - [tetragon](#tetragon )             | No      | object | No         | -          | -                    |
+| - [monitoring](#monitoring )         | No      | object | No         | -          | -                    |
+| - [descheduler](#descheduler )       | No      | object | No         | -          | -                    |
+| - [dns](#dns )                       | No      | object | No         | -          | -                    |
+| - [certManager](#certManager )       | No      | object | No         | -          | -                    |
+| - [externalDNS](#externalDNS )       | No      | object | No         | -          | -                    |
+| - [flux](#flux )                     | No      | object | No         | -          | -                    |
+| - [ingress](#ingress )               | No      | object | No         | -          | -                    |
+| - [storage](#storage )               | No      | object | No         | -          | -                    |
+| - [reflector](#reflector )           | No      | object | No         | -          | -                    |
+| - [rbac](#rbac )                     | No      | object | No         | -          | -                    |
+| - [backup](#backup )                 | No      | object | No         | -          | -                    |
+| - [ttl-controller](#ttl-controller ) | No      | object | No         | -          | -                    |
+| - [common](#common )                 | No      | object | No         | -          | Values for sub-chart |
 
 ## <a name="global"></a>1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global`
 
@@ -2145,19 +2164,12 @@ Must be one of:
 
 **Description:** This needs `.global.clusterName` to be set up as an integration in healthchecks.io. Also, `.global.baseDomain` has to be set.
 
-| Property                                         | Pattern | Type    | Deprecated | Definition | Title/Description                        |
-| ------------------------------------------------ | ------- | ------- | ---------- | ---------- | ---------------------------------------- |
-| - [enabled](#monitoring_deadMansSwitch_enabled ) | No      | boolean | No         | -          | -                                        |
-| - [apiKey](#monitoring_deadMansSwitch_apiKey )   | No      | string  | No         | -          | Used for registration and unregistration |
-| - [pingKey](#monitoring_deadMansSwitch_pingKey ) | No      | string  | No         | -          | -                                        |
+| Property                                         | Pattern | Type   | Deprecated | Definition | Title/Description                        |
+| ------------------------------------------------ | ------- | ------ | ---------- | ---------- | ---------------------------------------- |
+| + [apiKey](#monitoring_deadMansSwitch_apiKey )   | No      | string | No         | -          | Used for registration and unregistration |
+| + [pingKey](#monitoring_deadMansSwitch_pingKey ) | No      | string | No         | -          | -                                        |
 
-#### <a name="monitoring_deadMansSwitch_enabled"></a>4.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > deadMansSwitch > enabled`
-
-|          |           |
-| -------- | --------- |
-| **Type** | `boolean` |
-
-#### <a name="monitoring_deadMansSwitch_apiKey"></a>4.2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > deadMansSwitch > apiKey`
+#### <a name="monitoring_deadMansSwitch_apiKey"></a>4.2.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > monitoring > deadMansSwitch > apiKey`
 
 |          |          |
 | -------- | -------- |
@@ -2165,7 +2177,7 @@ Must be one of:
 
 **Description:** Used for registration and unregistration
 
-#### <a name="monitoring_deadMansSwitch_pingKey"></a>4.2.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > deadMansSwitch > pingKey`
+#### <a name="monitoring_deadMansSwitch_pingKey"></a>4.2.2. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > monitoring > deadMansSwitch > pingKey`
 
 |          |          |
 | -------- | -------- |
@@ -5196,18 +5208,18 @@ Specific value: `"auto"`
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-## <a name="kube-janitor"></a>15. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > kube-janitor`
+## <a name="ttl-controller"></a>15. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ttl-controller`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                            | Pattern | Type    | Deprecated | Definition | Title/Description |
-| ----------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
-| - [enabled](#kube-janitor_enabled ) | No      | boolean | No         | -          | -                 |
+| Property                              | Pattern | Type    | Deprecated | Definition | Title/Description |
+| ------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
+| - [enabled](#ttl-controller_enabled ) | No      | boolean | No         | -          | -                 |
 
-### <a name="kube-janitor_enabled"></a>15.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > kube-janitor > enabled`
+### <a name="ttl-controller_enabled"></a>15.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ttl-controller > enabled`
 
 |          |           |
 | -------- | --------- |
