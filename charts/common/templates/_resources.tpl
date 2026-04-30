@@ -18,3 +18,47 @@ If you want to set CPU limits, set the "setCPULimits" value to true.
   {{- end -}}
   {{- toYaml $resources -}}
 {{- end -}}
+
+{{- define "common.convert" -}}
+  {{- $input := .value | toString | trim -}}
+  {{- $toUnit := .to  -}}
+
+  {{- /* Extract numeric part */ -}}
+  {{- $number := regexFind "[0-9.]+" $input | float64 -}}
+
+  {{- /* Extract unit part */ -}}
+  {{- $fromUnit := regexFind "[a-zA-Z]+" $input  -}}
+
+  {{- /* Define multipliers (binary base 1024) */ -}}
+  {{- $units := dict
+    ""  1
+    "k" 1e3
+    "M" 1e6
+    "G" 1e9
+    "T" 1e12
+    "P" 1e15
+    "E" 1e18
+    "Ki" 1024
+    "Mi" (mul 1024 1024)
+    "Gi" (mul 1024 (mul 1024 1024))
+    "Ti" (mul 1024 (mul 1024 (mul 1024 1024)))
+    "Pi" (mul 1024 (mul 1024 (mul 1024 (mul 1024 1024))))
+    "Ei" (mul 1024 (mul 1024 (mul 1024 (mul 1024 (mul 1024 1024)))))
+  -}}
+
+  {{- $fromFactor := index $units $fromUnit -}}
+  {{- $toFactor := index $units $toUnit -}}
+
+  {{- if not $fromFactor -}}
+  {{- fail (printf "Unknown source unit: %s" $fromUnit) -}}
+  {{- end -}}
+
+  {{- if not $toFactor -}}
+  {{- fail (printf "Unknown target unit: %s" $toUnit) -}}
+  {{- end -}}
+
+  {{- $bytes := mul $number $fromFactor -}}
+  {{- $result := divf $bytes $toFactor -}}
+
+  {{- printf "%f%s" $result $toUnit -}}
+{{- end -}}
