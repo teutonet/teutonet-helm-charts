@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v2.0.0...common-v2.1.0) (2026-04-30)
+
+
+### Features
+
+* **common:** add function for retention ([#2126](https://github.com/teutonet/teutonet-helm-charts/issues/2126)) ([fe878fb](https://github.com/teutonet/teutonet-helm-charts/commit/fe878fbe7c342146180cc9875e23319a1623fbb8))
+
+
+### Miscellaneous Chores
+
+* **common/dependencies:** update helm release common to v2.38.0 ([#2062](https://github.com/teutonet/teutonet-helm-charts/issues/2062)) ([2eb5e2b](https://github.com/teutonet/teutonet-helm-charts/commit/2eb5e2b18b4ca12ecea709e3f0e187e4e39fc9ca))
+
 ## [2.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v1.8.0...common-v2.0.0) (2026-02-24)
 
 
