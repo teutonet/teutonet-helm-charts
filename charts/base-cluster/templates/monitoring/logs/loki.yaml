@@ -23,7 +23,7 @@ spec:
   values:
     {{- if .Values.global.imageRegistry }}
     global:
-      registry: {{ $.Values.global.imageRegistry }}
+      imageRegistry: {{ $.Values.global.imageRegistry }}
     {{- end }}
     deploymentMode: SingleBinary
     lokiCanary:
