@@ -14,6 +14,7 @@
 {{- end -}}
 
 {{- define "base-cluster.prometheus-stack.alertmanager.config" -}}
+{{- $credentialPath := "/var/run/secrets/alertmanager" -}}
 {{- if include "base-cluster.prometheus-stack.alertmanager.enabled" . -}}
 enabled: true
 podDisruptionBudget:
@@ -29,6 +30,14 @@ alertmanagerSpec:
   {{- end }}
   retention: {{ .Values.monitoring.prometheus.alertmanager.retentionDuration }}
   priorityClassName: monitoring-components
+  volumes:
+    - name: alertmanager-receiver-credentials
+      secret:
+        secretName: alertmanager-receiver-credentials
+  volumeMounts:
+    - name: alertmanager-receiver-credentials
+      mountPath: {{ printf "%s" $credentialPath }}
+      readOnly: true
   storageSpec:
     volumeClaimTemplate:
       spec: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.prometheus.alertmanager.persistence "global" $.Values.global) | nindent 8 }}
@@ -43,7 +52,7 @@ config:
     {{- $receivers = set $receivers "healthchecks.io" (dict
           "webhook_configs" (list
             (dict
-              "url" (printf "https://hc-ping.com/%s/%s-monitoring" .Values.monitoring.deadMansSwitch.pingKey (include "base-cluster.deadMansSwitch.checkName" .))
+              "url_file" (printf "%s/%s" $credentialPath "healthchecks.io")
               "send_resolved" false
             )
           )
@@ -51,17 +60,17 @@ config:
     -}}
   {{- end -}}
   {{- range $name, $config := .Values.monitoring.prometheus.alertmanager.receivers -}}
-    {{- $type := $name -}}
-    {{- $splitted := splitList " " $name -}}
-    {{- if eq (len $splitted) 2 -}}
-      {{- $type = index $splitted 0 -}}
-      {{- $name = index $splitted 1 -}}
+    {{- $receiverInfo := include "base-cluster.monitoring.alertmanager.receiver.splitName" (dict "name" $name) | fromYaml -}}
+    {{- $type := $receiverInfo.type -}}
+    {{- $name = $receiverInfo.name -}}
+    {{- if hasKey $receivers $name -}}
+      {{- fail (printf "Duplicate: %s" $name) -}}
     {{- end -}}
     {{- if eq $type "pagerduty" -}}
-      {{- $receivers = set $receivers "pagerduty" (dict
+      {{- $receivers = set $receivers $name (dict
             "pagerduty_configs" (list
               (dict
-                "routing_key" $config.integrationKey
+                "routing_key_file" (printf "%s/%s" $credentialPath $name)
                 "url" ($config.url | default "https://events.pagerduty.com/v2/enqueue")
                 "send_resolved" true
                 "http_config" (dict "follow_redirects" true)
@@ -78,13 +87,25 @@ config:
                 "smarthost" (printf "%s:%d" $config.host (int64 $config.port))
                 "send_resolved" (dig "sendResolved" false $config)
                 "auth_username" $config.username
-                "auth_password" $config.password
+                "auth_password_file" (printf "%s/%s" $credentialPath $name)
+              )
+            )
+        )
+      -}}
+    {{- else if eq $type "telegram" -}}
+      {{- $receivers = set $receivers $name (dict
+            "telegram_configs" (list
+              (dict
+                "bot_token_file" (printf "%s/%s" $credentialPath $name)
+                "chat_id" $config.chatid
+                "send_resolved" (dig "sendResolved" true $config)
               )
             )
         )
       -}}
     {{- end -}}
   {{- end -}}
+
   {{- $receiversList := list -}}
   {{- range $name, $receiver := $receivers -}}
     {{- $receiversList = append $receiversList (mustMerge (dict "name" $name) $receiver) -}}
