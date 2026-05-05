@@ -285,7 +285,6 @@ monitoring:
     enabled: true
     replicas: 2
     retentionDuration: 4w
-    retentionSize: 90GB
     persistence:
       storageClass: ""
       size: 100Gi
