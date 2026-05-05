@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/common-v2.1.0...common-v2.1.1) (2026-05-05)
+
+
+### Miscellaneous Chores
+
+* **common:** add none preset ([#2146](https://github.com/teutonet/teutonet-helm-charts/issues/2146)) ([282544f](https://github.com/teutonet/teutonet-helm-charts/commit/282544f0c00bf9964dba5d004edd49d848fdabcb))
+
 ## [2.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v2.0.0...common-v2.1.0) (2026-04-30)
 
 
