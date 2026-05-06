@@ -45,6 +45,13 @@ global:
       registry: docker.io
       repository: minio/mc
       tag: RELEASE.2024-11-21T17-21-54Z@sha256:771f5ad7925a6b5e069786d8e847a292de320f1e3e3203647e29f47ec9b3d93b
+  networkPolicy:
+    dnsLabels:
+      io.kubernetes.pod.namespace: kube-system
+      k8s-app: kube-dns
+    metricsLabels:
+      io.kubernetes.pod.namespace: monitoring
+      app.kubernetes.io/name: prometheus
   injectedCertificateAuthorities: ""
   kubeletExtraConfig:
     # This is only used when using 1.27 or later

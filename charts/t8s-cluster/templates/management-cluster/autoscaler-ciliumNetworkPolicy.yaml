@@ -1,0 +1,30 @@
+{{- if include "t8s-cluster.autoscaler.enabled" . -}}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: {{ printf "%s-autoscaler" .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ printf "%s-autoscaler" .Release.Name }}
+      app.kubernetes.io/name: clusterapi-cluster-autoscaler
+  ingress:
+    {{- include "t8s-cluster.networkPolicy.healthIngress" . | nindent 4 }}
+    - fromEndpoints:
+        - matchLabels: {{- .Values.global.networkPolicy.metricsLabels | toYaml | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "8085"
+              protocol: TCP
+  egress:
+    {{- include "t8s-cluster.networkPolicy.dnsEgress" .Values.global.networkPolicy.dnsLabels | nindent 4 }}
+    {{- include "t8s-cluster.networkPolicy.kubeApiserverEgress" . | nindent 4 }}
+    - toFQDNs:
+        - matchName: {{ include "t8s-cluster.hostedControlPlane.apiServerHost" . }}
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+{{- end -}}

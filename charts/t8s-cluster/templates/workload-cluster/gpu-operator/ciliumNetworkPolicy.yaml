@@ -1,0 +1,6 @@
+{{- /* TODO: needs to be tested on a real GPU cluster before enabling */ -}}
+{{- if false -}}
+{{- if and (eq (include "t8s-cluster.hasGPUNodes" (dict "context" $)) "true") (eq (include "t8s-cluster.cni" .) "cilium") -}}
+  {{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "gpu-operator-cnp" "resource" (include "t8s-cluster.networkPolicy.gpu-operator" (dict "dnsLabels" $.Values.global.networkPolicy.dnsLabels)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "gpu-operator")) | nindent 0 }}
+{{- end }}
+{{- end }}

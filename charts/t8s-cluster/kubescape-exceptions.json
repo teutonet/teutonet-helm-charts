@@ -1,0 +1,92 @@
+[
+  {
+    "name": "gpu-operator-hostpath",
+    "description": "GPU operator and NFD worker require HostPath mounts to access host GPU devices and hardware features",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator",
+          "namespace": ".*",
+          "kind": "Deployment"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator-node-feature-discovery-worker",
+          "namespace": "kube-system",
+          "kind": "DaemonSet"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0048",
+        "controlName": "HostPath mount"
+      }
+    ]
+  },
+  {
+    "name": "gpu-operator-rbac",
+    "description": "GPU operator and NFD require broad RBAC permissions (secret access, delete) defined by upstream Helm charts that cannot be modified",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator",
+          "namespace": "kube-system",
+          "kind": "ServiceAccount"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "node-feature-discovery",
+          "namespace": "kube-system",
+          "kind": "ServiceAccount"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0015",
+        "controlName": "List Kubernetes secrets"
+      },
+      {
+        "controlID": "C-0007",
+        "controlName": "Roles with delete capabilities"
+      }
+    ]
+  },
+  {
+    "name": "gpu-operator-cilium-network-policy",
+    "description": "GPU operator resources are covered by CiliumNetworkPolicies which kubescape does not recognize as standard NetworkPolicy",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "gpu-operator.*"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0260",
+        "controlName": "Missing network policy"
+      }
+    ]
+  }
+]
