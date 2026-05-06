@@ -1,0 +1,62 @@
+[
+  {
+    "name": "operator-rbac",
+    "description": "Operators and admin/edit RBAC roles require broad permissions that cannot be restricted without breaking functionality",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": ".*"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0035",
+        "controlName": "Administrative Roles"
+      },
+      {
+        "controlID": "C-0015",
+        "controlName": "List Kubernetes secrets"
+      },
+      {
+        "controlID": "C-0063",
+        "controlName": "Portforwarding privileges"
+      },
+      {
+        "controlID": "C-0002",
+        "controlName": "Prevent containers from allowing command execution"
+      },
+      {
+        "controlID": "C-0007",
+        "controlName": "Roles with delete capabilities"
+      }
+    ]
+  },
+  {
+    "name": "operators-missing-network-policy",
+    "description": "CiliumNetworkPolicies for base-cluster operators are not yet created; this is tracked as a separate effort",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": ".*"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0260",
+        "controlName": "Missing network policy"
+      }
+    ]
+  }
+]

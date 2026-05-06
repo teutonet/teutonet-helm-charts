@@ -1,5 +1,4 @@
 global:
-  serviceLevelAgreement: None
   namespaces:
     main0:
       resources:
