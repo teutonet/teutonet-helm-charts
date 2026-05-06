@@ -64,9 +64,27 @@ jobs:
 
           # must work three times, (sometimes) the github API drops jobs that are currently restarting
           tries=3; while (( --tries >= 0 )); do
-            while unfinished_jobs="$(fetch_check_runs | jq --arg ignored "$IGNORED_JOBS,$CURRENT_JOB" -e '.check_runs | map(select(([.conclusion] | inside(["success","skipped","cancelled"]) | not) and ([.name] | inside($ignored | split(",")) | not))) | map("\(.name) (\(.conclusion // .status)) (\(.html_url))") | if length == 0 then halt_error(1) else . end')"; do
+            while true; do
+              check_result="$(fetch_check_runs | jq --arg ignored "$IGNORED_JOBS,$CURRENT_JOB" '
+                .check_runs
+                | map(select(
+                    ([.conclusion] | inside(["success","skipped","cancelled"]) | not)
+                    and ([.name] | inside($ignored | split(",")) | not)
+                  )) as $pending
+                | {
+                    done: ($pending | length == 0),
+                    all_completed: ($pending | all(.status == "completed")),
+                    jobs: ($pending | map("\(.name) (\(.conclusion // .status)) (\(.html_url))"))
+                  }')"
+              if [[ "$(echo "$check_result" | jq -r '.done')" == "true" ]]; then
+                break
+              fi
               echo "The following jobs are not (successfully) finished yet:" >&2
-              echo "$unfinished_jobs" >&2
+              echo "$check_result" | jq '.jobs' >&2
+              if [[ "$(echo "$check_result" | jq -r '.all_completed')" == "true" ]]; then
+                echo "All remaining jobs have terminated with failures, exiting early." >&2
+                exit 1
+              fi
               sleep 30
             done
             sleep 5
