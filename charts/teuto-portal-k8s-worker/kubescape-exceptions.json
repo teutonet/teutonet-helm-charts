@@ -1,0 +1,90 @@
+[
+  {
+    "name": "cilium-network-policy",
+    "description": "Workload is covered by a CiliumNetworkPolicy which kubescape does not recognize for C-0260",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "teuto-portal-k8s-worker"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0260",
+        "controlName": "Missing network policy"
+      }
+    ]
+  },
+  {
+    "name": "no-readiness-probe",
+    "description": "No readiness probe is needed for this background worker — it processes jobs from a queue and does not serve traffic, so readiness gating is not applicable",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "teuto-portal-k8s-worker"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0018",
+        "controlName": "Configured readiness probe"
+      }
+    ]
+  },
+  {
+    "name": "cilium-ingress-egress",
+    "description": "Ingress and egress are controlled by a CiliumNetworkPolicy which kubescape does not recognize for C-0030",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "teuto-portal-k8s-worker"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0030",
+        "controlName": "Ingress and Egress blocked"
+      }
+    ]
+  },
+  {
+    "name": "default-namespace-ci-artifact",
+    "description": "Pod appears in the default namespace only as a CI templating artifact — helm template renders without a namespace override, this is not a production concern",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "teuto-portal-k8s-worker"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0061",
+        "controlName": "Pods in default namespace"
+      }
+    ]
+  }
+]
