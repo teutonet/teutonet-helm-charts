@@ -1,5 +1,9 @@
 global:
   imagePullSecrets: []
+  networkPolicy:
+    dnsLabels:
+      io.kubernetes.pod.namespace: kube-system
+      k8s-app: kube-dns
   podSecurityContext:
     runAsNonRoot: true
     readOnlyRootFilesystem: true
