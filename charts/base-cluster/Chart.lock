@@ -1,6 +1,6 @@
 dependencies:
 - name: common
   repository: oci://ghcr.io/teutonet/teutonet-helm-charts
-  version: 2.1.0
-digest: sha256:b27cb5d12bea4c406446aef3dd650aa4e5bb23a4763a146374a80dada98ef161
-generated: "2026-05-04T09:54:03.495785814Z"
+  version: 2.1.1
+digest: sha256:c35e8eb9b4ebebc22e38c09318e9a7bc4120488129e076b78f868f2614d38910
+generated: "2026-05-06T10:40:39.985584858Z"
