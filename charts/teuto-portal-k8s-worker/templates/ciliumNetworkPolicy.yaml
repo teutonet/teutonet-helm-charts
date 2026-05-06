@@ -1,0 +1,52 @@
+{{- $kubeconfigSecret := lookup "v1" "Secret" .Release.Namespace .Values.worker.kubeconfig.secret.name -}}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  endpointSelector:
+    matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}
+  ingress:
+    - fromEntities:
+        - health
+  egress:
+    {{- with .Values.global.networkPolicy.dnsLabels }}
+    - toEndpoints:
+        - matchLabels: {{- . | toYaml | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "53"
+          rules:
+            dns:
+              - matchPattern: "*"
+    {{- end }}
+    - toFQDNs:
+        - matchName: {{ .Values.worker.database.host }}
+      toPorts:
+        - ports:
+            - port: {{ .Values.worker.database.port | quote }}
+              protocol: TCP
+    {{- if $kubeconfigSecret }}
+      {{- $kubeconfig := index $kubeconfigSecret.data "config" | b64dec | fromYaml }}
+      {{- $server := index $kubeconfig.clusters 0 "cluster" "server" }}
+      {{- $serverPart := $server | trimPrefix "https://" | trimPrefix "http://" }}
+      {{- $serverHost := $serverPart | splitList ":" | first }}
+      {{- $serverPort := $serverPart | splitList ":" | last }}
+    - toFQDNs:
+        - matchName: {{ $serverHost }}
+      toPorts:
+        - ports:
+            - port: {{ $serverPort | quote }}
+              protocol: TCP
+    {{- else }}
+    - toEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+            - port: "6443"
+              protocol: TCP
+    {{- end }}

@@ -1,0 +1,24 @@
+[
+  {
+    "name": "cilium-network-policy",
+    "description": "Workload is covered by a CiliumNetworkPolicy which kubescape does not recognize for C-0260",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "teuto-portal-k8s-worker"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0260",
+        "controlName": "Missing network policy"
+      }
+    ]
+  }
+]
