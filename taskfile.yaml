@@ -48,6 +48,7 @@ tasks:
         check_tool helm
         check_tool ct
         check_tool helm-docs
+        helm unittest --help >/dev/null 2>&1 && echo "✓ helm-unittest" || { echo "✗ helm-unittest (missing)"; MISSING="$MISSING helm-unittest"; }
         check_tool cog
         check_tool actionlint
         check_tool pluto
@@ -97,6 +98,7 @@ tasks:
 
   chart:prepare-values:
     desc: Prepare chart values with CI overrides (requires CHART variable)
+    label: prepare-values ({{ .CHART }})
     requires:
       vars:
         - CHART
@@ -110,6 +112,7 @@ tasks:
 
   chart:template:
     desc: Template chart with all values files (requires CHART variable)
+    label: template ({{ .CHART }})
     requires:
       vars:
         - CHART
@@ -121,8 +124,27 @@ tasks:
         vars:
           CHART: '{{.CHART}}'
 
+  internal:dependency-update:
+    internal: true
+    label: dependency-update ({{ .CHART }})
+    requires:
+      vars:
+        - CHART
+    sources:
+      - '{{.CHARTS_DIR}}/{{.CHART}}/Chart.yaml'
+    generates:
+      - '{{.CHARTS_DIR}}/{{.CHART}}/Chart.lock'
+      - '{{.CHARTS_DIR}}/{{.CHART}}/charts/**'
+    cmds:
+      - helm dependency update "{{.CHARTS_DIR}}/{{.CHART}}"
+
   internal:template:
     internal: true
+    label: template ({{ .CHART }})
+    deps:
+      - task: internal:dependency-update
+        vars:
+          CHART: '{{.CHART}}'
     requires:
       vars:
         - CHART
@@ -142,6 +164,7 @@ tasks:
 
   chart:lint:
     desc: Run helm lint and chart-testing on chart (requires CHART variable)
+    label: lint ({{ .CHART }})
     requires:
       vars:
         - CHART
@@ -155,6 +178,11 @@ tasks:
 
   internal:lint:
     internal: true
+    label: lint ({{ .CHART }})
+    deps:
+      - task: internal:dependency-update
+        vars:
+          CHART: '{{.CHART}}'
     requires:
       vars:
         - CHART
@@ -167,13 +195,41 @@ tasks:
       - |
         CHART_PATH="{{.CHARTS_DIR}}/{{.CHART}}"
         if [ -f "$CHART_PATH/values.yaml" ]; then
-          ct lint --charts "$CHART_PATH" --check-version-increment=false
+          CT_CHART_REPOS="$(yq -r '.dependencies[] | .repository' "$CHART_PATH/Chart.yaml" | sort -u | grep https:// | awk '{printf (NR>1 ? "," : "") NR "=" $1}')" ct lint --charts "$CHART_PATH" --check-version-increment=false
         else
           helm lint "$CHART_PATH"
         fi
 
+  chart:test:
+    desc: Run helm-unittest for chart (requires CHART variable)
+    label: test ({{ .CHART }})
+    deps:
+      - task: internal:dependency-update
+        vars:
+          CHART: '{{.CHART}}'
+    requires:
+      vars:
+        - CHART
+    sources:
+      - '{{.CHARTS_DIR}}/{{.CHART}}/templates/**/*'
+      - '{{.CHARTS_DIR}}/{{.CHART}}/tests/**/*'
+      - '!{{.CHARTS_DIR}}/{{.CHART}}/tests/charts/*'
+      - '!{{.CHARTS_DIR}}/{{.CHART}}/tests/Chart.lock'
+      - '{{.CHARTS_DIR}}/{{.CHART}}/values.yaml'
+    cmds:
+      - |
+        if [[ -d "{{.CHARTS_DIR}}/{{.CHART}}/tests" ]]; then
+          if [[ -f "{{.CHARTS_DIR}}/{{.CHART}}/tests/Chart.yaml" ]]; then
+            helm dependency build "{{.CHARTS_DIR}}/{{.CHART}}/tests"
+            helm unittest "{{.CHARTS_DIR}}/{{.CHART}}/tests"
+          else
+            helm unittest "{{.CHARTS_DIR}}/{{.CHART}}"
+          fi
+        fi
+
   chart:extract-images:
     desc: Extract container images to Chart.yaml annotations (requires CHART variable)
+    label: extract-images ({{ .CHART }})
     requires:
       vars:
         - CHART
@@ -190,6 +246,7 @@ tasks:
 
   chart:docs:
     desc: Generate README documentation for chart (requires CHART variable)
+    label: docs ({{ .CHART }})
     requires:
       vars:
         - CHART
@@ -213,6 +270,7 @@ tasks:
 
   validate:registries:
     desc: Ensure all images come from trusted registries (requires CHART variable)
+    label: registries ({{ .CHART }})
     requires:
       vars:
         - CHART
@@ -227,6 +285,7 @@ tasks:
 
   validate:licenses-metadata:
     desc: Check image licenses from metadata file (requires CHART variable)
+    label: licenses-metadata ({{ .CHART }})
     requires:
       vars:
         - CHART
@@ -240,6 +299,7 @@ tasks:
 
   validate:deprecated-apis:
     desc: Detect deprecated Kubernetes APIs using pluto (requires CHART variable)
+    label: deprecated-apis ({{ .CHART }})
     requires:
       vars:
         - CHART
@@ -258,6 +318,7 @@ tasks:
 
   security:licenses-deep:
     desc: Deep license scanning with syft and trivy (requires CHART variable)
+    label: licenses-deep ({{ .CHART }})
     requires:
       vars:
         - CHART
@@ -270,6 +331,7 @@ tasks:
 
   security:cves:
     desc: Scan for CVEs with grype (requires CHART variable)
+    label: cves ({{ .CHART }})
     requires:
       vars:
         - CHART
@@ -290,6 +352,9 @@ tasks:
         - CHART
     cmds:
       - task: chart:lint
+        vars:
+          CHART: '{{.CHART}}'
+      - task: chart:test
         vars:
           CHART: '{{.CHART}}'
       - task: chart:template
@@ -324,6 +389,7 @@ tasks:
 
   validate:chart:
     desc: Full validation of a specific chart (requires CHART variable)
+    label: validate ({{ .CHART }})
     requires:
       vars:
         - CHART
