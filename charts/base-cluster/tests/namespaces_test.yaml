@@ -1,0 +1,55 @@
+suite: namespace PSS label generation
+templates:
+  - templates/global/namespaces.yaml
+release:
+  name: base-cluster
+set:
+  global.namespaces.myns.additionalLabels.test-target: "true"
+tests:
+  - it: adds warn and audit labels by default, no enforce label
+    asserts:
+      - equal:
+          path: metadata.labels["pod-security.kubernetes.io/warn"]
+          value: restricted
+        documentSelector:
+          path: metadata.labels.test-target
+          value: "true"
+      - equal:
+          path: metadata.labels["pod-security.kubernetes.io/audit"]
+          value: restricted
+        documentSelector:
+          path: metadata.labels.test-target
+          value: "true"
+      - notExists:
+          path: metadata.labels["pod-security.kubernetes.io/enforce"]
+        documentSelector:
+          path: metadata.labels.test-target
+          value: "true"
+
+  - it: adds enforce label when enforce is set to restricted
+    set:
+      global.namespaces.myns.podSecurityStandards.enforce: restricted
+    asserts:
+      - equal:
+          path: metadata.labels["pod-security.kubernetes.io/enforce"]
+          value: restricted
+        documentSelector:
+          path: metadata.labels.test-target
+          value: "true"
+
+  - it: omits warn label when warn is set to none
+    set:
+      global.namespaces.myns.podSecurityStandards.warn: none
+    asserts:
+      - notExists:
+          path: metadata.labels["pod-security.kubernetes.io/warn"]
+        documentSelector:
+          path: metadata.labels.test-target
+          value: "true"
+
+  - it: rejects blacklisted system namespaces
+    set:
+      global.namespaces.kube-system.podSecurityStandards.enforce: restricted
+    asserts:
+      - failedTemplate:
+          errorMessage: "Using namespace 'kube-system' is not allowed"

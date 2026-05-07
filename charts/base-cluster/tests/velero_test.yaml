@@ -1,0 +1,73 @@
+suite: velero backup validation and credential dispatch
+templates:
+  - templates/backup/velero/validation.yaml
+release:
+  name: base-cluster
+tests:
+  - it: no error when velero not configured
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: no error when defaultLocation matches a backupStorageLocation
+    set:
+      backup.provider.velero.defaultLocation: primary
+      backup.provider.velero.backupStorageLocations.primary.bucket: my-bucket
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.url: https://s3.example.com
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.accessKeyID: mykey
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.secretAccessKey: mysecret
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: fails when defaultLocation not in backupStorageLocations
+    set:
+      backup.provider.velero.defaultLocation: nonexistent
+      backup.provider.velero.backupStorageLocations.primary.bucket: my-bucket
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.url: https://s3.example.com
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.accessKeyID: mykey
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.secretAccessKey: mysecret
+    asserts:
+      - failedTemplate:
+          errorMessage: "The `defaultLocation` 'nonexistent' must exist in `backupStorageLocations`"
+
+---
+suite: velero credential secret generation
+templates:
+  - templates/backup/velero/credentials.yaml
+release:
+  name: base-cluster
+tests:
+  - it: no output when no backupStorageLocations configured
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: generates Secret with AWS credentials for minio accessKeyID
+    set:
+      backup.provider.velero.defaultLocation: primary
+      backup.provider.velero.backupStorageLocations.primary.bucket: my-bucket
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.url: https://s3.example.com
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.accessKeyID: mykey
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.secretAccessKey: mysecret
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Secret
+      - matchRegex:
+          path: stringData.minio
+          pattern: "aws_access_key_id=mykey"
+      - matchRegex:
+          path: stringData.minio
+          pattern: "aws_secret_access_key=mysecret"
+
+  - it: no Secret generated when using existingSecret credential type
+    set:
+      backup.provider.velero.defaultLocation: primary
+      backup.provider.velero.backupStorageLocations.primary.bucket: my-bucket
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.url: https://s3.example.com
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.existingSecret.name: my-creds
+    asserts:
+      - hasDocuments:
+          count: 0

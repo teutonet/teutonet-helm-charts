@@ -1,0 +1,35 @@
+suite: chart-level validation guards (non-default namespace)
+templates:
+  - templates/validation.yaml
+release:
+  name: base-cluster
+  namespace: kube-system
+tests:
+  - it: fails when clusterName is not set
+    asserts:
+      - failedTemplate:
+          errorMessage: "You need to specify a .Values.global.clusterName"
+
+  - it: no error when clusterName is set
+    set:
+      global.clusterName: my-cluster
+      global.serviceLevelAgreement: None
+    asserts:
+      - hasDocuments:
+          count: 0
+
+---
+suite: chart-level validation guards (wrong release name)
+templates:
+  - templates/validation.yaml
+release:
+  name: wrong-name
+  namespace: kube-system
+tests:
+  - it: fails when release name is not base-cluster
+    set:
+      global.clusterName: my-cluster
+      global.serviceLevelAgreement: None
+    asserts:
+      - failedTemplate:
+          errorMessage: "This chart must be installed with the release name 'base-cluster'"

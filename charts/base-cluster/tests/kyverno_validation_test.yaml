@@ -1,0 +1,73 @@
+suite: kyverno version upgrade guard
+templates:
+  - templates/kyverno/validation.tpl
+release:
+  name: base-cluster
+tests:
+  - it: no error when no existing kyverno HelmRelease
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: no error when existing kyverno is version 3.x
+    kubernetesProvider:
+      scheme:
+        "helm.toolkit.fluxcd.io/v2/HelmRelease":
+          gvr:
+            group: "helm.toolkit.fluxcd.io"
+            version: "v2"
+            resource: "helmreleases"
+          namespaced: true
+      objects:
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: kyverno
+            namespace: kyverno
+          status:
+            lastAppliedRevision: "3.7.2"
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: fails when existing kyverno is version 2.x (in-place upgrade blocked)
+    kubernetesProvider:
+      scheme:
+        "helm.toolkit.fluxcd.io/v2/HelmRelease":
+          gvr:
+            group: "helm.toolkit.fluxcd.io"
+            version: "v2"
+            resource: "helmreleases"
+          namespaced: true
+      objects:
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: kyverno
+            namespace: kyverno
+          status:
+            lastAppliedRevision: "2.7.3"
+    asserts:
+      - failedTemplate:
+          errorMessage: "Cannot upgrade kyverno in-place, please backup your resources and delete it beforehand, see https://artifacthub.io/packages/helm/kyverno/kyverno#option-1---uninstallation-and-reinstallation"
+
+  - it: version from lastAttemptedRevision used when lastApplied is absent
+    kubernetesProvider:
+      scheme:
+        "helm.toolkit.fluxcd.io/v2/HelmRelease":
+          gvr:
+            group: "helm.toolkit.fluxcd.io"
+            version: "v2"
+            resource: "helmreleases"
+          namespaced: true
+      objects:
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: kyverno
+            namespace: kyverno
+          status:
+            lastAttemptedRevision: "2.6.0"
+    asserts:
+      - failedTemplate:
+          errorMessage: "Cannot upgrade kyverno in-place, please backup your resources and delete it beforehand, see https://artifacthub.io/packages/helm/kyverno/kyverno#option-1---uninstallation-and-reinstallation"

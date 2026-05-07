@@ -1,0 +1,49 @@
+suite: reflector enabled logic
+templates:
+  - templates/global/reflector.yaml
+release:
+  name: base-cluster
+tests:
+  - it: disables when explicitly set to false
+    set:
+      reflector.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: enables when explicitly set to true
+    set:
+      reflector.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HelmRelease
+
+  - it: disables when auto and no imageCredentials and no custom certs
+    # Default values: reflector.enabled=auto, imageCredentials={}, baseDomain="" → no reflector
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: enables when auto and imageCredentials are present
+    set:
+      global.imageCredentials.myreg.host: registry.example.com
+      global.imageCredentials.myreg.username: user
+      global.imageCredentials.myreg.password: pass
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HelmRelease
+
+  - it: enables when auto and a custom cert is configured via baseDomain+dns.provider
+    set:
+      global.clusterName: test-cluster
+      global.baseDomain: test.example.com
+      dns.provider.cloudflare.apiToken: fake-token
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HelmRelease

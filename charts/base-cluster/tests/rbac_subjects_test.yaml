@@ -1,0 +1,23 @@
+suite: RBAC subject kind dispatch
+templates:
+  - templates/rbac/roleBindings.yaml
+release:
+  name: base-cluster
+tests:
+  - it: email account gets User subject kind in ClusterRoleBinding
+    values:
+      - fixtures/rbac-email-account.yaml
+    asserts:
+      - equal:
+          path: subjects[0].kind
+          value: User
+
+  - it: service account name gets ServiceAccount subject kind
+    values:
+      - fixtures/rbac-pod-reader-role.yaml
+    set:
+      rbac.accounts.myaccount.clusterRoles[0]: pod-reader
+    asserts:
+      - equal:
+          path: subjects[0].kind
+          value: ServiceAccount

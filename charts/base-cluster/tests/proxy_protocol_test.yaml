@@ -1,0 +1,63 @@
+suite: proxy protocol detection
+templates:
+  - templates/ingress/traefik.yaml
+release:
+  name: base-cluster
+tests:
+  - it: proxy protocol enabled by default in auto mode (no nodes available)
+    asserts:
+      - equal:
+          path: spec.values.ports.web.proxyProtocol.insecure
+          value: true
+
+  - it: openstack node detected but no OVN config — proxy protocol stays enabled
+    kubernetesProvider:
+      scheme:
+        "v1/Node":
+          gvr:
+            version: "v1"
+            resource: "nodes"
+          namespaced: false
+      objects:
+        - apiVersion: v1
+          kind: Node
+          metadata:
+            name: worker-1
+          spec:
+            providerID: "openstack://region/some-uuid"
+    asserts:
+      - equal:
+          path: spec.values.ports.web.proxyProtocol.insecure
+          value: true
+
+  - it: openstack node with OVN cloud config — proxy protocol disabled
+    kubernetesProvider:
+      scheme:
+        "v1/Node":
+          gvr:
+            version: "v1"
+            resource: "nodes"
+          namespaced: false
+        "v1/Secret":
+          gvr:
+            version: "v1"
+            resource: "secrets"
+          namespaced: true
+      objects:
+        - apiVersion: v1
+          kind: Node
+          metadata:
+            name: worker-1
+          spec:
+            providerID: "openstack://region/some-uuid"
+        - apiVersion: v1
+          kind: Secret
+          metadata:
+            name: cloud-config
+            namespace: kube-system
+          data:
+            cloud.conf: "W0xvYWRCYWxhbmNlcl0KbGItcHJvdmlkZXIgPSBvdm4K"
+    asserts:
+      - equal:
+          path: spec.values.ports.web.proxyProtocol.insecure
+          value: false

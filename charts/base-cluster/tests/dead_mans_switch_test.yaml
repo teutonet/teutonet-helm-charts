@@ -1,0 +1,40 @@
+suite: deadMansSwitch required field guards
+templates:
+  - templates/monitoring/deadMansSwitch/secret.yaml
+release:
+  name: base-cluster
+tests:
+  - it: no secret when deadMansSwitch not configured
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders secret with both keys provided
+    set:
+      monitoring.deadMansSwitch.apiKey: myapikey
+      monitoring.deadMansSwitch.pingKey: mypingkey
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: stringData.apiKey
+          value: myapikey
+      - equal:
+          path: stringData.pingKey
+          value: mypingkey
+
+  - it: fails when apiKey is empty
+    set:
+      monitoring.deadMansSwitch.apiKey: ""
+      monitoring.deadMansSwitch.pingKey: mypingkey
+    asserts:
+      - failedTemplate:
+          errorMessage: "You need to provide the `.Values.monitoring.deadMansSwitch.apiKey`"
+
+  - it: fails when pingKey is empty
+    set:
+      monitoring.deadMansSwitch.apiKey: myapikey
+      monitoring.deadMansSwitch.pingKey: ""
+    asserts:
+      - failedTemplate:
+          errorMessage: "You need to provide the `.Values.monitoring.deadMansSwitch.pingKey`"
