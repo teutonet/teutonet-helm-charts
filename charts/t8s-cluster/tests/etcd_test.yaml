@@ -1,0 +1,47 @@
+suite: etcd-defrag gating
+templates:
+  - templates/workload-cluster/etcd-defrag.yaml
+release:
+  name: my-cluster
+tests:
+  - it: no output when controlPlane is hosted
+    set:
+      controlPlane.hosted: true
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders HelmRelease when controlPlane is not hosted
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HelmRelease
+
+---
+suite: etcd-backup gating
+templates:
+  - templates/workload-cluster/etcd-backup.yaml
+release:
+  name: my-cluster
+tests:
+  - it: no output when controlPlane is hosted
+    set:
+      controlPlane.hosted: true
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: no output when etcdBackup is false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders HelmRelease when not hosted and etcdBackup is true
+    set:
+      controlPlane.etcdBackup: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HelmRelease

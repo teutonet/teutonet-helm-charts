@@ -1,0 +1,69 @@
+suite: TeutonetesCluster required field and replicas guards
+templates:
+  - templates/management-cluster/cluster.yaml
+release:
+  name: my-cluster
+tests:
+  - it: fails when customerID is missing
+    asserts:
+      - failedTemplate:
+          errorMessage: "You need to set the `customerID`"
+
+  - it: fails when cloud is missing
+    set:
+      metadata.customerID: 12345
+    asserts:
+      - failedTemplate:
+          errorMessage: "You need to set the `cloud`"
+
+  - it: fails when nodePool replicas exceeds maxReplicas
+    set:
+      metadata.customerID: 12345
+      cloud: my-cloud
+      nodePools.workers.flavor: m1.medium
+      nodePools.workers.replicas: 5
+      nodePools.workers.maxReplicas: 3
+    asserts:
+      - failedTemplate:
+          errorMessage: "nodePools.workers.replicas must not be greater than nodePools.workers.maxReplicas"
+
+  - it: fails when nodePool replicas is 0 without maxReplicas
+    set:
+      metadata.customerID: 12345
+      cloud: my-cloud
+      nodePools.workers.flavor: m1.medium
+      nodePools.workers.replicas: 0
+    asserts:
+      - failedTemplate:
+          errorMessage: "if nodePools.workers.replicas is 0, nodePools.workers.maxReplicas must be set"
+
+  - it: renders fixed replicas when replicas equals maxReplicas
+    set:
+      metadata.customerID: 12345
+      cloud: my-cloud
+      nodePools.workers.flavor: m1.medium
+      nodePools.workers.replicas: 3
+      nodePools.workers.maxReplicas: 3
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.nodePools.workers.replicas
+          value: 3
+
+  - it: renders minReplicas and maxReplicas when autoscaling range is set
+    set:
+      metadata.customerID: 12345
+      cloud: my-cloud
+      nodePools.workers.flavor: m1.medium
+      nodePools.workers.replicas: 1
+      nodePools.workers.maxReplicas: 5
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.nodePools.workers.minReplicas
+          value: 1
+      - equal:
+          path: spec.nodePools.workers.maxReplicas
+          value: 5

@@ -1,0 +1,31 @@
+suite: GPU operator conditional rendering
+templates:
+  - templates/workload-cluster/gpu-operator.yaml
+release:
+  name: my-cluster
+tests:
+  - it: no output when no GPU flavors in nodePools
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders HelmRelease when nodePool has GPU flavor
+    set:
+      nodePools.gpuworkers.flavor: m1.gpu-large
+      nodePools.gpuworkers.replicas: 1
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HelmRelease
+      - equal:
+          path: spec.values.node-feature-discovery.worker.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms[0].matchExpressions[0].values[0]
+          value: m1.gpu-large
+
+  - it: GPU detection is case-insensitive
+    set:
+      nodePools.gpuworkers.flavor: m1.GPU-LARGE
+      nodePools.gpuworkers.replicas: 1
+    asserts:
+      - hasDocuments:
+          count: 1
