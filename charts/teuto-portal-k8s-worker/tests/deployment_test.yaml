@@ -1,0 +1,64 @@
+suite: deployment required field guards and config transformation
+templates:
+  - templates/deployment.yaml
+release:
+  name: portal-worker
+tests:
+  - it: fails when db credentials secret name is not set
+    asserts:
+      - failedTemplate:
+          errorMessage: "A secretName containing the database credentials is required"
+
+  - it: fails when kubeconfig secret name is not set
+    set:
+      worker.database.credentials.secret.name: my-db-secret
+    asserts:
+      - failedTemplate:
+          errorMessage: "k8s access token for the management cluster must be provided"
+
+  - it: JDBC URL contains configured host and port
+    set:
+      worker.database.credentials.secret.name: my-db-secret
+      worker.kubeconfig.secret.name: my-kube-secret
+      worker.database.host: db.example.com
+      worker.database.port: 5433
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: JDBC_URL
+            value: "jdbc:postgresql://db.example.com:5433/teuto_domain?currentSchema=app_public"
+
+  - it: worker.config keys are snake_cased and uppercased as env var names
+    set:
+      worker.database.credentials.secret.name: my-db-secret
+      worker.kubeconfig.secret.name: my-kube-secret
+      worker.config.loggingFormat: iso8601
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: LOGGING_FORMAT
+            value: iso8601
+
+  - it: array config values are joined with comma in env var
+    values:
+      - fixtures/flavour-prefix-filter.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: FLAVOUR_PREFIX_FILTER
+            value: "m1.,m2."
+
+  - it: false boolean config values are still emitted as env vars
+    set:
+      worker.database.credentials.secret.name: my-db-secret
+      worker.kubeconfig.secret.name: my-kube-secret
+      worker.config.dryRun: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: DRY_RUN
+            value: "false"
