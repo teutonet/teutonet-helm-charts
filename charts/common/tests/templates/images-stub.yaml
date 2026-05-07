@@ -1,0 +1,4 @@
+{{- range $name, $image := .Values.images }}
+---
+pullPolicy: {{ include "common.images.pullPolicy" $image }}
+{{- end }}

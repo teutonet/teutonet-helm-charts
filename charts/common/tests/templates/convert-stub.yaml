@@ -1,0 +1,4 @@
+{{- if .Values.convert }}
+---
+result: {{ include "common.convert" .Values.convert }}
+{{- end }}

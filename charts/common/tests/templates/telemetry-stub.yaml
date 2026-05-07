@@ -1,0 +1,4 @@
+{{- if .Values.protocol }}
+---
+{{ include "common.telemetry.conf" (dict "protocol" .Values.protocol "global" .Values.global) | fromYaml | toYaml | trim }}
+{{- end }}

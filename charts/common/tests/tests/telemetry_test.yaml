@@ -1,0 +1,63 @@
+suite: common.telemetry.conf
+templates:
+  - templates/telemetry-stub.yaml
+release:
+  name: common-test
+tests:
+  - it: no output when protocol not set
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: disabled when no endpoint configured and no service found
+    set:
+      protocol: otlp
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: enabled
+          value: false
+
+  - it: parses host and port from endpoint string
+    set:
+      protocol: otlp
+      global.telemetry.otlp.endpoint: "otel-collector:4317"
+    asserts:
+      - equal:
+          path: enabled
+          value: true
+      - equal:
+          path: host
+          value: otel-collector
+      - equal:
+          path: port
+          value: 4317
+
+  - it: uses explicit port when provided
+    set:
+      protocol: otlp
+      global.telemetry.otlp.endpoint: "otel-collector:4317"
+      global.telemetry.otlp.port: 9999
+    asserts:
+      - equal:
+          path: port
+          value: 9999
+
+  - it: explicit host overrides endpoint-parsed host
+    set:
+      protocol: otlp
+      global.telemetry.otlp.endpoint: "otel-collector:4317"
+      global.telemetry.otlp.host: custom-host
+    asserts:
+      - equal:
+          path: host
+          value: custom-host
+
+  - it: fails when endpoint has no port and port not set
+    set:
+      protocol: otlp
+      global.telemetry.otlp.endpoint: "otel-collector"
+    asserts:
+      - failedTemplate:
+          errorMessage: "You need to provide the port, at least in the endpoint"

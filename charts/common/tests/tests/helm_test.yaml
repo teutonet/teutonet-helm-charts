@@ -1,0 +1,42 @@
+suite: common.helm.chartVersion
+templates:
+  - templates/helm-stub.yaml
+release:
+  name: common-test
+tests:
+  - it: no output when lookupChart not set
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: returns version from helmRepositories
+    set:
+      lookupChart.repo: bitnami
+      lookupChart.chart: redis
+      global.helmRepositories.bitnami.url: "https://charts.bitnami.com/bitnami"
+      global.helmRepositories.bitnami.charts.redis: "20.0.0"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: version
+          value: "20.0.0"
+
+  - it: fails when repo is missing from helmRepositories
+    set:
+      lookupChart.repo: bitnami
+      lookupChart.chart: redis
+      global.helmRepositories.other.url: "https://charts.other.com/"
+    asserts:
+      - failedTemplate:
+          errorMessage: "The repo 'bitnami' is either missing or doesn't contain the chart 'redis'"
+
+  - it: fails when chart is missing from repo
+    set:
+      lookupChart.repo: bitnami
+      lookupChart.chart: redis
+      global.helmRepositories.bitnami.url: "https://charts.bitnami.com/bitnami"
+      global.helmRepositories.bitnami.charts.other: "1.0.0"
+    asserts:
+      - failedTemplate:
+          errorMessage: "The repo 'bitnami' is either missing or doesn't contain the chart 'redis'"

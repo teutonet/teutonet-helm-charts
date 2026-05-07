@@ -1,0 +1,37 @@
+suite: common.images.pullPolicy
+templates:
+  - templates/images-stub.yaml
+release:
+  name: common-test
+tests:
+  - it: no output when no images configured
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: returns Always for plain tag
+    set:
+      images.app.tag: latest
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: pullPolicy
+          value: Always
+
+  - it: returns IfNotPresent when tag contains @
+    set:
+      images.app.tag: "sha256@abc123"
+    asserts:
+      - equal:
+          path: pullPolicy
+          value: IfNotPresent
+
+  - it: returns IfNotPresent when digest is set
+    set:
+      images.app.tag: latest
+      images.app.digest: "sha256:abc123"
+    asserts:
+      - equal:
+          path: pullPolicy
+          value: IfNotPresent

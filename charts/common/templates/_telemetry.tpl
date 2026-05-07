@@ -83,7 +83,7 @@ Be sure to cast the port back to int by using `{{ int64 $telemetryConf.port }}` 
   {{- else -}}
     {{- $enabled = true -}}
     {{- $endpoint = $config.endpoint -}}
-    {{- $splittedEndpoint := splitList $endpoint ":" -}}
+    {{- $splittedEndpoint := splitList ":" $endpoint -}}
     {{- $host = $config.host | default ($splittedEndpoint | first) -}}
     {{- if $config.port -}}
       {{- $port = $config.port -}}
