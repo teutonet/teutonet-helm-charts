@@ -33,6 +33,18 @@ function prepare-values() {
       cat "$values" >&2
     fi
   done
+  for valuesScript in "$chart/ci/"*-gen-values-multi.sh; do
+    [[ -f "$valuesScript" ]] || continue
+    local multiOutput
+    multiOutput="$("$valuesScript")"
+    while IFS= read -r name; do
+      values="$chart/ci/${name}-multi-values.yaml"
+      jq --arg k "$name" '.[$k]' <<<"$multiOutput" | yq -y | sponge "$values"
+      if [[ "$RUNNER_DEBUG" == 1 ]]; then
+        cat "$values" >&2
+      fi
+    done < <(jq -r 'keys[]' <<<"$multiOutput")
+  done
 }
 
 set -ex
