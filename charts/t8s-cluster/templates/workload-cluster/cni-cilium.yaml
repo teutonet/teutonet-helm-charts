@@ -92,9 +92,56 @@ spec:
         enabled: true
         prometheus:
           enabled: true
+        resources: {{- include "common.resources" .Values.global.hubble.relay | nindent 10 }}
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 65532
+          runAsGroup: 65532
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+            drop:
+              - ALL
       ui:
         rollOutPods: true
         enabled: true
+        backend:
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          livenessProbe:
+            enabled: true
+          readinessProbe:
+            enabled: true
+          resources: {{- include "common.resources" .Values.global.hubble.ui.backend | nindent 12 }}
+        frontend:
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          resources: {{- include "common.resources" .Values.global.hubble.ui.frontend | nindent 12 }}
+          extraVolumes:
+            - name: nginx-cache
+              emptyDir: {}
+            - name: nginx-run
+              emptyDir: {}
+          extraVolumeMounts:
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+            - name: nginx-run
+              mountPath: /var/run
       export:
         static:
           enabled: true
