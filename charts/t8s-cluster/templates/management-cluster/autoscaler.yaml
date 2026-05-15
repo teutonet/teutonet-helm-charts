@@ -20,6 +20,7 @@ spec:
   driftDetection:
     mode: enabled
   values:
+    fullnameOverride: {{ printf "as-%s-autoscaler" .Release.Name }}
     autoDiscovery:
       clusterName: {{ .Release.Name }}
     cloudProvider: clusterapi
