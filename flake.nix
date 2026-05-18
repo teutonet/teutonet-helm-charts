@@ -16,6 +16,9 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        helm-with-plugins = pkgs.wrapHelm pkgs.kubernetes-helm {
+          plugins = [ pkgs.kubernetes-helmPlugins.helm-unittest ];
+        };
       in
       {
         devShells.default = pkgs.mkShell {
@@ -24,7 +27,7 @@
             go-task
 
             # Helm ecosystem
-            kubernetes-helm
+            helm-with-plugins
             chart-testing
             helm-docs
 

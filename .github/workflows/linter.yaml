@@ -53,6 +53,21 @@ jobs:
         with:
           python-version: 3.14
 
+      - name: Build test wrapper dependencies
+        if: hashFiles(format('charts/{0}/tests/Chart.yaml', env.CHART)) != ''
+        run: helm dep build "charts/$CHART/tests"
+
+      - name: Run helm unit tests
+        if: hashFiles(format('charts/{0}/tests/**', env.CHART)) != ''
+        uses: d3adb5/helm-unittest-action@850bc76597579183998069830d5fa8c3ef0ea34a # v2.5.0
+        with:
+          helm-version: v3.20.2
+          charts: >-
+            ${{ hashFiles(format('charts/{0}/tests/Chart.yaml', env.CHART)) != ''
+              && format('charts/{0}/tests', env.CHART)
+              || format('charts/{0}', env.CHART) }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
       - run: ./.github/scripts/prepare-values.sh "charts/$CHART"
       - uses: helm/chart-testing-action@6ec842c01de15ebb84c8627d2744a0c2f2755c9f # v2.8.0
 
