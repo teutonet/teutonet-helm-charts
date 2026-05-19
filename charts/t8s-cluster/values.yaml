@@ -70,6 +70,26 @@ controlPlane:
       memory: 4Gi
   etcdBackup: false
 
+oidcProviders:
+  https://staff-auth.k8s.teuto.net:
+    audiences:
+      - kubernetes
+    claimMappings:
+      username: claims.email
+      groups: dyn(claims.groups).map(g, "teuto.net:" + g)
+    claimValidationRules:
+      - expression: (has(claims.email_verified) && claims.email_verified) || !has(claims.email_verified)
+        message: email must be verified
+  https://auth.k8s.teuto.net:
+    audiences:
+      - kubernetes
+    claimMappings:
+      username: claims.email
+      groups: dyn(claims.groups).map(g, "teuto.net:" + g)
+    claimValidationRules:
+      - expression: (has(claims.email_verified) && claims.email_verified) || !has(claims.email_verified)
+        message: email must be verified
+
 quotas: {}
 
 version:

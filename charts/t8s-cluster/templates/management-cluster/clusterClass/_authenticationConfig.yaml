@@ -1,29 +1,24 @@
 {{- define "t8s-cluster.clusterClass.apiServer.authenticationConfig" -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
 apiVersion: apiserver.config.k8s.io/v1beta1
 kind: AuthenticationConfiguration
 jwt:
+  {{- range $issuerUrl, $provider := .Values.oidcProviders }}
   - issuer:
-      url: https://staff-auth.k8s.teuto.net
-      audiences:
-        - kubernetes
+      url: {{ $issuerUrl }}
+      {{- with $provider.certificateAuthority }}
+      certificateAuthority: {{ . | quote }}
+      {{- end }}
+      audiences: {{- toYaml $provider.audiences | nindent 8 }}
     claimMappings:
       username:
-        expression: claims.email
+        expression: {{ $provider.claimMappings.username | quote }}
+      {{- with $provider.claimMappings.groups }}
       groups:
-        expression: dyn(claims.groups).map(g, "teuto.net:" + g)
-    claimValidationRules:
-      - expression: (has(claims.email_verified) && claims.email_verified) || !has(claims.email_verified)
-        message: email must be verified
-  - issuer:
-      url: https://auth.k8s.teuto.net
-      audiences:
-        - kubernetes
-    claimMappings:
-      username:
-        expression: claims.email
-      groups:
-        expression: dyn(claims.groups).map(g, "teuto.net:" + g)
-    claimValidationRules:
-      - expression: (has(claims.email_verified) && claims.email_verified) || !has(claims.email_verified)
-        message: email must be verified
+        expression: {{ . | quote }}
+      {{- end }}
+    {{- with $provider.claimValidationRules }}
+    claimValidationRules: {{- toYaml . | nindent 6 }}
+    {{- end }}
+  {{- end }}
 {{- end -}}

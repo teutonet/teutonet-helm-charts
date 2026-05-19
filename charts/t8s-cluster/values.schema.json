@@ -181,6 +181,66 @@
     "cloud": {
       "type": "string"
     },
+    "oidcProviders": {
+      "type": "object",
+      "description": "OIDC providers for structured JWT authentication. The key is the issuer URL.",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^https://.+"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "certificateAuthority": {
+            "type": "string",
+            "description": "PEM-encoded CA bundle to verify the OIDC provider's TLS connection. If empty, the system verifier is used."
+          },
+          "audiences": {
+            "type": "array",
+            "description": "Set of acceptable audiences the JWT must be issued to. At least one must match the 'aud' claim.",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "claimMappings": {
+            "type": "object",
+            "description": "Maps token claims to Kubernetes user attributes.",
+            "properties": {
+              "username": {
+                "type": "string",
+                "description": "CEL expression producing the Kubernetes username."
+              },
+              "groups": {
+                "type": "string",
+                "description": "CEL expression producing the Kubernetes groups (string or []string)."
+              }
+            },
+            "required": ["username"],
+            "additionalProperties": false
+          },
+          "claimValidationRules": {
+            "type": "array",
+            "description": "CEL expressions evaluated against token claims. All rules must return true.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "expression": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": ["expression"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["audiences", "claimMappings"],
+        "additionalProperties": false
+      }
+    },
     "quotas": {
       "type": "object",
       "properties": {
