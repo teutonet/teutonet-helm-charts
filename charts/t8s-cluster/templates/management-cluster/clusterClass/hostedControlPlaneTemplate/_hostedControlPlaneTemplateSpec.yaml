@@ -45,6 +45,9 @@ etcd:
   {{- end }}
 kubeProxy:
   disabled: {{ .Values.controlPlane.hosted }}
+{{- with .Values.oidcProviders }}
+oidcProviders: {{- toYaml . | nindent 2 }}
+{{- end }}
 gateway:
   namespace: capi-hosted-control-plane-system
   name: controlplane

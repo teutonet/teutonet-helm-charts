@@ -209,7 +209,9 @@ admission-control-config.yaml
 {{- define "t8s-cluster.clusterClass.args.apiServer" -}}
   {{- $args := include "t8s-cluster.clusterClass.args.base" (dict "context" .context) | fromYaml -}}
   {{- $args = mustMerge (include "t8s-cluster.clusterClass.args.sharedController" (dict "context" .context) | fromYaml) $args -}}
-  {{- $args = set $args "authentication-config" (include "t8s-cluster.clusterClass.apiServer.authenticationConfigPath" (dict)) -}}
+  {{- if not .context.Values.controlPlane.hosted -}}
+    {{- $args = set $args "authentication-config" (include "t8s-cluster.clusterClass.apiServer.authenticationConfigPath" (dict)) -}}
+  {{- end -}}
   {{- $args = set $args "admission-control-config-file" (include "t8s-cluster.clusterClass.apiServer.admissionControlConfigPath" (dict)) -}}
   {{- $args = set $args "enable-admission-plugins" (include "t8s-cluster.clusterClass.apiServer.admissionPlugins" (dict "context" .context) | fromYamlArray | join ",") -}}
   {{- $args = set $args "event-ttl" "4h" -}}
@@ -335,13 +337,16 @@ current-context: webhook
 
 {{- define "t8s-cluster.clusterClass.apiServer.dynamicFiles" -}}
   {{- $_ := mustMerge . (pick .context "Values") -}}
-  {{- $files := dict
-      (include "t8s-cluster.clusterClass.apiServer.authenticationConfigFileName" (dict)) (dict
-        "path" (include "t8s-cluster.clusterClass.apiServer.authenticationConfigPath" (dict))
-        "fileName" (include "t8s-cluster.clusterClass.apiServer.authenticationConfigFileName" (dict))
-        "content" (include "t8s-cluster.clusterClass.apiServer.authenticationConfig" (dict "context" .context))
-      )
-  -}}
+  {{- $files := dict -}}
+  {{- if not .Values.controlPlane.hosted -}}
+    {{- $files = set $files
+        (include "t8s-cluster.clusterClass.apiServer.authenticationConfigFileName" (dict)) (dict
+          "path" (include "t8s-cluster.clusterClass.apiServer.authenticationConfigPath" (dict))
+          "fileName" (include "t8s-cluster.clusterClass.apiServer.authenticationConfigFileName" (dict))
+          "content" (include "t8s-cluster.clusterClass.apiServer.authenticationConfig" (dict "context" .context))
+        )
+    -}}
+  {{- end -}}
   {{- if .Values.controlPlane.audit -}}
     {{- $_ := set $files (include "t8s-cluster.clusterClass.apiServer.auditPolicyFileName" (dict)) (dict
         "path" (include "t8s-cluster.clusterClass.apiServer.auditPolicyPath" (dict))
