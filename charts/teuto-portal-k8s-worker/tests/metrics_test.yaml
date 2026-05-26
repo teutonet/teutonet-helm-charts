@@ -1,0 +1,24 @@
+suite: metrics ServiceMonitor capability gate
+templates:
+  - templates/metrics.yaml
+release:
+  name: portal-worker
+tests:
+  - it: no output when monitoring.coreos.com API is absent
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: generates Service and ServiceMonitor when monitoring API is present
+    capabilities:
+      apiVersions:
+        - monitoring.coreos.com/v1/ServiceMonitor
+    asserts:
+      - hasDocuments:
+          count: 2
+      - isKind:
+          of: Service
+        documentIndex: 0
+      - isKind:
+          of: ServiceMonitor
+        documentIndex: 1

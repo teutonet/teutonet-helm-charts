@@ -1,0 +1,12 @@
+worker:
+  database:
+    credentials:
+      secret:
+        name: my-db-secret
+  kubeconfig:
+    secret:
+      name: my-kube-secret
+  config:
+    flavourPrefixFilter:
+      - "m1."
+      - "m2."
