@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/part-of: monitoring
 spec:
   chart:
-    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "grafana" "chart" "loki" "context" $) | nindent 6 }}
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "grafana-community" "chart" "loki" "context" $) | nindent 6 }}
   interval: 1h
   driftDetection:
     mode: enabled
@@ -23,9 +23,9 @@ spec:
   values:
     {{- if .Values.global.imageRegistry }}
     global:
-      registry: {{ $.Values.global.imageRegistry }}
+      imageRegistry: {{ $.Values.global.imageRegistry }}
     {{- end }}
-    deploymentMode: SingleBinary
+    deploymentMode: Monolithic
     lokiCanary:
       enabled: false
     test:
@@ -41,23 +41,16 @@ spec:
     sidecar:
       rules:
         enabled: false
-    loki:
+    defaults:
       enableServiceLinks: false
+    loki:
       livenessProbe:
         httpGet:
           path: /ready
           port: http-metrics
         initialDelaySeconds: 45
       containerSecurityContext:
-        seccompProfile:
-          type: RuntimeDefault
         privileged: false
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-            - ALL
-      podSecurityContext:
-        fsGroupChangePolicy: OnRootMismatch
       auth_enabled: false
       storage:
         type: filesystem
@@ -99,7 +92,6 @@ spec:
       persistence: {{- include "common.storage.class" (dict "persistence" .Values.monitoring.loki.persistence "global" $.Values.global) | nindent 8 }}
         enabled: true
         whenScaled: Retain
-        whenDeleted: Delete
         enableStatefulSetRecreationForSizeChange: true
         size: {{ .Values.monitoring.loki.persistence.size }}
       resources: {{- include "common.resources" .Values.monitoring.loki | nindent 8 }}
