@@ -1,0 +1,44 @@
+suite: CNI cilium explicit selection
+templates:
+  - templates/workload-cluster/cni-cilium.yaml
+release:
+  name: my-cluster
+tests:
+  - it: renders HelmRelease when cni is cilium
+    set:
+      cni: cilium
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HelmRelease
+
+  - it: no output when cni is calico
+    set:
+      cni: calico
+    asserts:
+      - hasDocuments:
+          count: 0
+
+---
+suite: CNI calico explicit selection
+templates:
+  - templates/workload-cluster/cni-calico.yaml
+release:
+  name: my-cluster
+tests:
+  - it: renders Kustomization when cni is calico
+    set:
+      cni: calico
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Kustomization
+
+  - it: no output when cni is cilium
+    set:
+      cni: cilium
+    asserts:
+      - hasDocuments:
+          count: 0
