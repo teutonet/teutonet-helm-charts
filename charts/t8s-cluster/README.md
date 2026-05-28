@@ -1,7 +1,7 @@
 <!-- vim: set ft=markdown: -->
 # t8s-cluster
 
-![Version: 9.8.0](https://img.shields.io/badge/Version-9.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 9.9.0](https://img.shields.io/badge/Version-9.9.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -17,14 +17,14 @@ t8s-operator cluster with necessary addons
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.8.0/charts/t8s-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.9.0/charts/t8s-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster>
 
 ## Requirements
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 1.8.0 |
+| oci://ghcr.io/teutonet/teutonet-helm-charts | common | 2.0.0 |
 
 ## Initial installation
 
@@ -64,6 +64,7 @@ Removed the unused `.metadata.gopassName` field.
 | + [metadata](#metadata )                                                         | No      | object           | No         | -                                                                           | -                                                                                              |
 | + [controlPlane](#controlPlane )                                                 | No      | object           | No         | -                                                                           | -                                                                                              |
 | - [cloud](#cloud )                                                               | No      | string           | No         | -                                                                           | -                                                                                              |
+| - [oidcProviders](#oidcProviders )                                               | No      | object           | No         | -                                                                           | OIDC providers for structured JWT authentication. The key is the issuer URL.                   |
 | - [quotas](#quotas )                                                             | No      | object           | No         | -                                                                           | -                                                                                              |
 | + [version](#version )                                                           | No      | object           | No         | -                                                                           | -                                                                                              |
 | + [nodePools](#nodePools )                                                       | No      | object           | No         | -                                                                           | -                                                                                              |
@@ -87,6 +88,7 @@ Removed the unused `.metadata.gopassName` field.
 | - [helmRepositories](#global_helmRepositories )                             | No      | object | No         | In https://raw.githubusercontent.com/teutonet/teutonet-helm-charts/main/charts/common/values.schema.json#/$defs/helmRepositories | A map of helmRepositories to create, the key is the name |
 | - [kubectl](#global_kubectl )                                               | No      | object | No         | -                                                                                                                                | Image with \`kubectl\` binary                            |
 | - [etcd](#global_etcd )                                                     | No      | object | No         | -                                                                                                                                | Image with \`etcdctl\` binary                            |
+| - [s3](#global_s3 )                                                         | No      | object | No         | -                                                                                                                                | Image with an S3 client (mc) for etcd backup uploads     |
 | - [injectedCertificateAuthorities](#global_injectedCertificateAuthorities ) | No      | string | No         | -                                                                                                                                | -                                                        |
 | - [kubeletExtraConfig](#global_kubeletExtraConfig )                         | No      | object | No         | -                                                                                                                                | Additional kubelet configuration                         |
 
@@ -579,13 +581,34 @@ bitnami/kubectl
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 | **Same definition as**    | [image](#global_kubectl_image)                                 |
 
-### <a name="global_injectedCertificateAuthorities"></a>1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > injectedCertificateAuthorities`
+### <a name="global_s3"></a>1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > s3`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+**Description:** Image with an S3 client (mc) for etcd backup uploads
+
+| Property                     | Pattern | Type   | Deprecated | Definition                              | Title/Description |
+| ---------------------------- | ------- | ------ | ---------- | --------------------------------------- | ----------------- |
+| - [image](#global_s3_image ) | No      | object | No         | Same as [image](#global_kubectl_image ) | -                 |
+
+#### <a name="global_s3_image"></a>1.4.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > s3 > image`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+| **Same definition as**    | [image](#global_kubectl_image)                                 |
+
+### <a name="global_injectedCertificateAuthorities"></a>1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > injectedCertificateAuthorities`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="global_kubeletExtraConfig"></a>1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubeletExtraConfig`
+### <a name="global_kubeletExtraConfig"></a>1.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubeletExtraConfig`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -598,7 +621,7 @@ bitnami/kubectl
 | ---------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ------------------------------------------------------------------------------------ |
 | - [maxParallelImagePulls](#global_kubeletExtraConfig_maxParallelImagePulls ) | No      | integer | No         | -          | Only valid for k8s version 1.27 and later. The number of images to pull in parallel. |
 
-#### <a name="global_kubeletExtraConfig_maxParallelImagePulls"></a>1.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubeletExtraConfig > maxParallelImagePulls`
+#### <a name="global_kubeletExtraConfig_maxParallelImagePulls"></a>1.6.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > global > kubeletExtraConfig > maxParallelImagePulls`
 
 |          |           |
 | -------- | --------- |
@@ -677,15 +700,17 @@ Must be one of:
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                                      | Pattern | Type            | Deprecated | Definition                      | Title/Description                                                 |
-| ----------------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------------- | ----------------------------------------------------------------- |
-| - [hosted](#controlPlane_hosted )                                             | No      | boolean         | No         | -                               | Whether the control plane is hosted on the management cluster     |
-| - [flavor](#controlPlane_flavor )                                             | No      | string          | No         | -                               | -                                                                 |
-| - [singleNode](#controlPlane_singleNode )                                     | No      | boolean         | No         | -                               | -                                                                 |
-| - [additionalSecurityGroups](#controlPlane_additionalSecurityGroups )         | No      | array of string | No         | In #/$defs/securityGroups       | -                                                                 |
-| - [additionalSecurityGroupRules](#controlPlane_additionalSecurityGroupRules ) | No      | object          | No         | -                               | -                                                                 |
-| - [allowedCIDRs](#controlPlane_allowedCIDRs )                                 | No      | array of string | No         | -                               | -                                                                 |
-| - [resources](#controlPlane_resources )                                       | No      | object          | No         | In #/$defs/resourceRequirements | ResourceRequirements describes the compute resource requirements. |
+| Property                                                                      | Pattern | Type            | Deprecated | Definition                      | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ----------------------------------------------------------------------------- | ------- | --------------- | ---------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [hosted](#controlPlane_hosted )                                             | No      | boolean         | No         | -                               | Whether the control plane is hosted on the management cluster                                                                                                                                                                                                                                                                                                                                                                                        |
+| - [audit](#controlPlane_audit )                                               | No      | boolean         | No         | -                               | Whether to configure audit logging for kubeadm control planes (opt-in). Do not set this for hosted control planes, as they always have audit logging enabled via their own mechanism.                                                                                                                                                                                                                                                                |
+| - [flavor](#controlPlane_flavor )                                             | No      | string          | No         | -                               | -                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| - [singleNode](#controlPlane_singleNode )                                     | No      | boolean         | No         | -                               | -                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| - [additionalSecurityGroups](#controlPlane_additionalSecurityGroups )         | No      | array of string | No         | In #/$defs/securityGroups       | -                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| - [additionalSecurityGroupRules](#controlPlane_additionalSecurityGroupRules ) | No      | object          | No         | -                               | -                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| - [allowedCIDRs](#controlPlane_allowedCIDRs )                                 | No      | array of string | No         | -                               | -                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| - [resources](#controlPlane_resources )                                       | No      | object          | No         | In #/$defs/resourceRequirements | ResourceRequirements describes the compute resource requirements.                                                                                                                                                                                                                                                                                                                                                                                    |
+| - [etcdBackup](#controlPlane_etcdBackup )                                     | No      | boolean         | No         | -                               | Enable daily etcd backups for KCP (non-hosted) clusters. Credentials are read from secret 'etcd-backup' in kube-system of the workload cluster. The secret must contain: accessKeyID (required), secretAccessKey (required), host (required), region (optional). Backups are stored at $cloud/$namespace/$name. For hosted clusters, backup is always enabled via the HCP controller using secret 'etcd-backup' in capi-hosted-control-plane-system. |
 
 ### <a name="controlPlane_hosted"></a>3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > hosted`
 
@@ -695,19 +720,27 @@ Must be one of:
 
 **Description:** Whether the control plane is hosted on the management cluster
 
-### <a name="controlPlane_flavor"></a>3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > flavor`
-
-|          |          |
-| -------- | -------- |
-| **Type** | `string` |
-
-### <a name="controlPlane_singleNode"></a>3.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > singleNode`
+### <a name="controlPlane_audit"></a>3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > audit`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-### <a name="controlPlane_additionalSecurityGroups"></a>3.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroups`
+**Description:** Whether to configure audit logging for kubeadm control planes (opt-in). Do not set this for hosted control planes, as they always have audit logging enabled via their own mechanism.
+
+### <a name="controlPlane_flavor"></a>3.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > flavor`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+### <a name="controlPlane_singleNode"></a>3.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > singleNode`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+### <a name="controlPlane_additionalSecurityGroups"></a>3.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroups`
 
 |                |                        |
 | -------------- | ---------------------- |
@@ -726,13 +759,13 @@ Must be one of:
 | ------------------------------------------------------------------------------ | ----------- |
 | [additionalSecurityGroups items](#controlPlane_additionalSecurityGroups_items) | -           |
 
-#### <a name="controlPlane_additionalSecurityGroups_items"></a>3.4.1. t8s cluster configuration > controlPlane > additionalSecurityGroups > additionalSecurityGroups items
+#### <a name="controlPlane_additionalSecurityGroups_items"></a>3.5.1. t8s cluster configuration > controlPlane > additionalSecurityGroups > additionalSecurityGroups items
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="controlPlane_additionalSecurityGroupRules"></a>3.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules`
+### <a name="controlPlane_additionalSecurityGroupRules"></a>3.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules`
 
 |                           |                                                                                                                                        |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
@@ -743,7 +776,7 @@ Must be one of:
 | ---------------------------------------------------------------------- | ------- | ----------- | ---------- | ---------- | ----------------- |
 | - [](#controlPlane_additionalSecurityGroupRules_additionalProperties ) | No      | Combination | No         | -          | -                 |
 
-#### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties"></a>3.5.1. Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties`
+#### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties"></a>3.6.1. Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -764,28 +797,28 @@ Must be one of:
 | [item 0](#controlPlane_additionalSecurityGroupRules_additionalProperties_oneOf_i0) |
 | [item 1](#controlPlane_additionalSecurityGroupRules_additionalProperties_oneOf_i1) |
 
-##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_oneOf_i0"></a>3.5.1.1. Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > oneOf > item 0`
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_oneOf_i0"></a>3.6.1.1. Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > oneOf > item 0`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_14"></a>3.5.1.1.1. The following properties are required
+###### <a name="autogenerated_heading_14"></a>3.6.1.1.1. The following properties are required
 * port
 
-##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_oneOf_i1"></a>3.5.1.2. Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > oneOf > item 1`
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_oneOf_i1"></a>3.6.1.2. Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > oneOf > item 1`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-###### <a name="autogenerated_heading_15"></a>3.5.1.2.1. The following properties are required
+###### <a name="autogenerated_heading_15"></a>3.6.1.2.1. The following properties are required
 * portMin
 * portMax
 
-##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_protocol"></a>3.5.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > protocol`
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_protocol"></a>3.6.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > protocol`
 
 |          |                    |
 | -------- | ------------------ |
@@ -797,32 +830,32 @@ Must be one of:
 * "4"
 * "icmp"
 
-##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_port"></a>3.5.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > port`
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_port"></a>3.6.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > port`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `integer` |
 
-##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_portMin"></a>3.5.1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > portMin`
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_portMin"></a>3.6.1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > portMin`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `integer` |
 
-##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_portMax"></a>3.5.1.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > portMax`
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_portMax"></a>3.6.1.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > portMax`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `integer` |
 
-##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_description"></a>3.5.1.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > description`
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_description"></a>3.6.1.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > description`
 
 |             |                              |
 | ----------- | ---------------------------- |
 | **Type**    | `string`                     |
 | **Default** | `"(falls back to the name)"` |
 
-##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_remoteGroupID"></a>3.5.1.8. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > remoteGroupID`
+##### <a name="controlPlane_additionalSecurityGroupRules_additionalProperties_remoteGroupID"></a>3.6.1.8. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > controlPlane > additionalSecurityGroupRules > additionalProperties > remoteGroupID`
 
 |          |          |
 | -------- | -------- |
@@ -830,7 +863,7 @@ Must be one of:
 
 **Description:** The ID of the security group to allow traffic from
 
-### <a name="controlPlane_allowedCIDRs"></a>3.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > allowedCIDRs`
+### <a name="controlPlane_allowedCIDRs"></a>3.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > allowedCIDRs`
 
 |          |                   |
 | -------- | ----------------- |
@@ -848,7 +881,7 @@ Must be one of:
 | ------------------------------------------------------ | ----------- |
 | [allowedCIDRs items](#controlPlane_allowedCIDRs_items) | -           |
 
-#### <a name="controlPlane_allowedCIDRs_items"></a>3.6.1. t8s cluster configuration > controlPlane > allowedCIDRs > allowedCIDRs items
+#### <a name="controlPlane_allowedCIDRs_items"></a>3.7.1. t8s cluster configuration > controlPlane > allowedCIDRs > allowedCIDRs items
 
 |          |          |
 | -------- | -------- |
@@ -858,7 +891,7 @@ Must be one of:
 | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Must match regular expression** | ```^((25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)\.){3}(25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)(/([0-9]\|[1-2][0-9]\|3[0-2]))?$``` [Test](https://regex101.com/?regex=%5E%28%2825%5B0-5%5D%7C2%5B0-4%5D%5Cd%7C1%5Cd%5Cd%7C%5B1-9%5D%3F%5Cd%29%5C.%29%7B3%7D%2825%5B0-5%5D%7C2%5B0-4%5D%5Cd%7C1%5Cd%5Cd%7C%5B1-9%5D%3F%5Cd%29%28%2F%28%5B0-9%5D%7C%5B1-2%5D%5B0-9%5D%7C3%5B0-2%5D%29%29%3F%24) |
 
-### <a name="controlPlane_resources"></a>3.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > resources`
+### <a name="controlPlane_resources"></a>3.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > resources`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -874,7 +907,7 @@ Must be one of:
 | - [limits](#controlPlane_resources_limits )     | No      | object | No         | -          | Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/                                                                                                                                                                                |
 | - [requests](#controlPlane_resources_requests ) | No      | object | No         | -          | Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
 
-#### <a name="controlPlane_resources_claims"></a>3.7.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > resources > claims`
+#### <a name="controlPlane_resources_claims"></a>3.8.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > resources > claims`
 
 |          |         |
 | -------- | ------- |
@@ -898,7 +931,7 @@ This field is immutable. It can only be set for containers.
 | ------------------------------------------------------------------------ | ------------------------------------------------------------- |
 | [io.k8s.api.core.v1.ResourceClaim](#controlPlane_resources_claims_items) | ResourceClaim references one entry in PodSpec.ResourceClaims. |
 
-##### <a name="controlPlane_resources_claims_items"></a>3.7.1.1. t8s cluster configuration > controlPlane > resources > claims > io.k8s.api.core.v1.ResourceClaim
+##### <a name="controlPlane_resources_claims_items"></a>3.8.1.1. t8s cluster configuration > controlPlane > resources > claims > io.k8s.api.core.v1.ResourceClaim
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -913,7 +946,7 @@ This field is immutable. It can only be set for containers.
 | + [name](#controlPlane_resources_claims_items_name )       | No      | string | No         | -          | Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.          |
 | - [request](#controlPlane_resources_claims_items_request ) | No      | string | No         | -          | Request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request. |
 
-###### <a name="controlPlane_resources_claims_items_name"></a>3.7.1.1.1. Property `t8s cluster configuration > controlPlane > resources > claims > claims items > name`
+###### <a name="controlPlane_resources_claims_items_name"></a>3.8.1.1.1. Property `t8s cluster configuration > controlPlane > resources > claims > claims items > name`
 
 |          |          |
 | -------- | -------- |
@@ -921,7 +954,7 @@ This field is immutable. It can only be set for containers.
 
 **Description:** Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
 
-###### <a name="controlPlane_resources_claims_items_request"></a>3.7.1.1.2. Property `t8s cluster configuration > controlPlane > resources > claims > claims items > request`
+###### <a name="controlPlane_resources_claims_items_request"></a>3.8.1.1.2. Property `t8s cluster configuration > controlPlane > resources > claims > claims items > request`
 
 |          |          |
 | -------- | -------- |
@@ -929,7 +962,7 @@ This field is immutable. It can only be set for containers.
 
 **Description:** Request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request.
 
-#### <a name="controlPlane_resources_limits"></a>3.7.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > resources > limits`
+#### <a name="controlPlane_resources_limits"></a>3.8.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > resources > limits`
 
 |                           |                                                                                                                            |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
@@ -942,7 +975,7 @@ This field is immutable. It can only be set for containers.
 | ---------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------- | ----------------- |
 | - [](#controlPlane_resources_limits_additionalProperties ) | No      | object | No         | In #/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity | -                 |
 
-##### <a name="controlPlane_resources_limits_additionalProperties"></a>3.7.2.1. Property `t8s cluster configuration > controlPlane > resources > limits > io.k8s.apimachinery.pkg.api.resource.Quantity`
+##### <a name="controlPlane_resources_limits_additionalProperties"></a>3.8.2.1. Property `t8s cluster configuration > controlPlane > resources > limits > io.k8s.apimachinery.pkg.api.resource.Quantity`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -955,19 +988,19 @@ This field is immutable. It can only be set for containers.
 | [item 0](#controlPlane_resources_limits_additionalProperties_oneOf_i0) |
 | [item 1](#controlPlane_resources_limits_additionalProperties_oneOf_i1) |
 
-###### <a name="controlPlane_resources_limits_additionalProperties_oneOf_i0"></a>3.7.2.1.1. Property `t8s cluster configuration > controlPlane > resources > limits > additionalProperties > oneOf > item 0`
+###### <a name="controlPlane_resources_limits_additionalProperties_oneOf_i0"></a>3.8.2.1.1. Property `t8s cluster configuration > controlPlane > resources > limits > additionalProperties > oneOf > item 0`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-###### <a name="controlPlane_resources_limits_additionalProperties_oneOf_i1"></a>3.7.2.1.2. Property `t8s cluster configuration > controlPlane > resources > limits > additionalProperties > oneOf > item 1`
+###### <a name="controlPlane_resources_limits_additionalProperties_oneOf_i1"></a>3.8.2.1.2. Property `t8s cluster configuration > controlPlane > resources > limits > additionalProperties > oneOf > item 1`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `number` |
 
-#### <a name="controlPlane_resources_requests"></a>3.7.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > resources > requests`
+#### <a name="controlPlane_resources_requests"></a>3.8.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > resources > requests`
 
 |                           |                                                                                                                              |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
@@ -980,7 +1013,7 @@ This field is immutable. It can only be set for containers.
 | ------------------------------------------------------------ | ------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------ | ----------------- |
 | - [](#controlPlane_resources_requests_additionalProperties ) | No      | object | No         | Same as [controlPlane_resources_limits_additionalProperties](#controlPlane_resources_limits_additionalProperties ) | -                 |
 
-##### <a name="controlPlane_resources_requests_additionalProperties"></a>3.7.3.1. Property `t8s cluster configuration > controlPlane > resources > requests > io.k8s.apimachinery.pkg.api.resource.Quantity`
+##### <a name="controlPlane_resources_requests_additionalProperties"></a>3.8.3.1. Property `t8s cluster configuration > controlPlane > resources > requests > io.k8s.apimachinery.pkg.api.resource.Quantity`
 
 |                           |                                                                                                           |
 | ------------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -988,13 +1021,156 @@ This field is immutable. It can only be set for containers.
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                               |
 | **Same definition as**    | [controlPlane_resources_limits_additionalProperties](#controlPlane_resources_limits_additionalProperties) |
 
+### <a name="controlPlane_etcdBackup"></a>3.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > etcdBackup`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+**Description:** Enable daily etcd backups for KCP (non-hosted) clusters. Credentials are read from secret 'etcd-backup' in kube-system of the workload cluster. The secret must contain: accessKeyID (required), secretAccessKey (required), host (required), region (optional). Backups are stored at $cloud/$namespace/$name. For hosted clusters, backup is always enabled via the HCP controller using secret 'etcd-backup' in capi-hosted-control-plane-system.
+
 ## <a name="cloud"></a>4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > cloud`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-## <a name="quotas"></a>5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > quotas`
+## <a name="oidcProviders"></a>5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > oidcProviders`
+
+|                           |                                                                                                            |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                   |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#oidcProviders_additionalProperties) |
+
+**Description:** OIDC providers for structured JWT authentication. The key is the issuer URL.
+
+| Property                                   | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [](#oidcProviders_additionalProperties ) | No      | object | No         | -          | -                 |
+
+### <a name="oidcProviders_additionalProperties"></a>5.1. Property `t8s cluster configuration > oidcProviders > additionalProperties`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                                            | Pattern | Type            | Deprecated | Definition | Title/Description                                                                                          |
+| ----------------------------------------------------------------------------------- | ------- | --------------- | ---------- | ---------- | ---------------------------------------------------------------------------------------------------------- |
+| - [certificateAuthority](#oidcProviders_additionalProperties_certificateAuthority ) | No      | string          | No         | -          | PEM-encoded CA bundle to verify the OIDC provider's TLS connection. If empty, the system verifier is used. |
+| + [audiences](#oidcProviders_additionalProperties_audiences )                       | No      | array of string | No         | -          | Set of acceptable audiences the JWT must be issued to. At least one must match the 'aud' claim.            |
+| + [claimMappings](#oidcProviders_additionalProperties_claimMappings )               | No      | object          | No         | -          | Maps token claims to Kubernetes user attributes.                                                           |
+| - [claimValidationRules](#oidcProviders_additionalProperties_claimValidationRules ) | No      | array of object | No         | -          | CEL expressions evaluated against token claims. All rules must return true.                                |
+
+#### <a name="oidcProviders_additionalProperties_certificateAuthority"></a>5.1.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > oidcProviders > additionalProperties > certificateAuthority`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** PEM-encoded CA bundle to verify the OIDC provider's TLS connection. If empty, the system verifier is used.
+
+#### <a name="oidcProviders_additionalProperties_audiences"></a>5.1.2. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > oidcProviders > additionalProperties > audiences`
+
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of string` |
+
+**Description:** Set of acceptable audiences the JWT must be issued to. At least one must match the 'aud' claim.
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | 1                  |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                        | Description |
+| ---------------------------------------------------------------------- | ----------- |
+| [audiences items](#oidcProviders_additionalProperties_audiences_items) | -           |
+
+##### <a name="oidcProviders_additionalProperties_audiences_items"></a>5.1.2.1. t8s cluster configuration > oidcProviders > additionalProperties > audiences > audiences items
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+#### <a name="oidcProviders_additionalProperties_claimMappings"></a>5.1.3. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > oidcProviders > additionalProperties > claimMappings`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+**Description:** Maps token claims to Kubernetes user attributes.
+
+| Property                                                                  | Pattern | Type   | Deprecated | Definition | Title/Description                                                    |
+| ------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | -------------------------------------------------------------------- |
+| + [username](#oidcProviders_additionalProperties_claimMappings_username ) | No      | string | No         | -          | CEL expression producing the Kubernetes username.                    |
+| - [groups](#oidcProviders_additionalProperties_claimMappings_groups )     | No      | string | No         | -          | CEL expression producing the Kubernetes groups (string or []string). |
+
+##### <a name="oidcProviders_additionalProperties_claimMappings_username"></a>5.1.3.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > oidcProviders > additionalProperties > claimMappings > username`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** CEL expression producing the Kubernetes username.
+
+##### <a name="oidcProviders_additionalProperties_claimMappings_groups"></a>5.1.3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > oidcProviders > additionalProperties > claimMappings > groups`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+**Description:** CEL expression producing the Kubernetes groups (string or []string).
+
+#### <a name="oidcProviders_additionalProperties_claimValidationRules"></a>5.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > oidcProviders > additionalProperties > claimValidationRules`
+
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of object` |
+
+**Description:** CEL expressions evaluated against token claims. All rules must return true.
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                                              | Description |
+| -------------------------------------------------------------------------------------------- | ----------- |
+| [claimValidationRules items](#oidcProviders_additionalProperties_claimValidationRules_items) | -           |
+
+##### <a name="oidcProviders_additionalProperties_claimValidationRules_items"></a>5.1.4.1. t8s cluster configuration > oidcProviders > additionalProperties > claimValidationRules > claimValidationRules items
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                                                   | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ----------------- |
+| + [expression](#oidcProviders_additionalProperties_claimValidationRules_items_expression ) | No      | string | No         | -          | -                 |
+| - [message](#oidcProviders_additionalProperties_claimValidationRules_items_message )       | No      | string | No         | -          | -                 |
+
+###### <a name="oidcProviders_additionalProperties_claimValidationRules_items_expression"></a>5.1.4.1.1. Property `t8s cluster configuration > oidcProviders > additionalProperties > claimValidationRules > claimValidationRules items > expression`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+###### <a name="oidcProviders_additionalProperties_claimValidationRules_items_message"></a>5.1.4.1.2. Property `t8s cluster configuration > oidcProviders > additionalProperties > claimValidationRules > claimValidationRules items > message`
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+## <a name="quotas"></a>6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > quotas`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -1006,7 +1182,7 @@ This field is immutable. It can only be set for containers.
 | - [floatingIPs](#quotas_floatingIPs ) | No      | integer | No         | -          | -                 |
 | - [storage](#quotas_storage )         | No      | integer | No         | -          | -                 |
 
-### <a name="quotas_floatingIPs"></a>5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > quotas > floatingIPs`
+### <a name="quotas_floatingIPs"></a>6.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > quotas > floatingIPs`
 
 |          |           |
 | -------- | --------- |
@@ -1016,7 +1192,7 @@ This field is immutable. It can only be set for containers.
 | ------------ | ------- |
 | **Minimum**  | &ge; -1 |
 
-### <a name="quotas_storage"></a>5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > quotas > storage`
+### <a name="quotas_storage"></a>6.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > quotas > storage`
 
 |          |           |
 | -------- | --------- |
@@ -1026,7 +1202,7 @@ This field is immutable. It can only be set for containers.
 | ------------ | ------- |
 | **Minimum**  | &ge; -1 |
 
-## <a name="version"></a>6. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version`
+## <a name="version"></a>7. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -1039,7 +1215,7 @@ This field is immutable. It can only be set for containers.
 | + [minor](#version_minor ) | No      | integer | No         | -          | The minor version of the k8s cluster. |
 | + [patch](#version_patch ) | No      | integer | No         | -          | -                                     |
 
-### <a name="version_major"></a>6.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > major`
+### <a name="version_major"></a>7.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > major`
 
 |          |         |
 | -------- | ------- |
@@ -1047,7 +1223,7 @@ This field is immutable. It can only be set for containers.
 
 Specific value: `1`
 
-### <a name="version_minor"></a>6.2. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > minor`
+### <a name="version_minor"></a>7.2. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > minor`
 
 |          |           |
 | -------- | --------- |
@@ -1059,13 +1235,13 @@ Specific value: `1`
 | ------------ | ------- |
 | **Minimum**  | &ge; 25 |
 
-### <a name="version_patch"></a>6.3. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > patch`
+### <a name="version_patch"></a>7.3. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > version > patch`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `integer` |
 
-## <a name="nodePools"></a>7. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools`
+## <a name="nodePools"></a>8. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools`
 
 |                           |                                                                                                        |
 | ------------------------- | ------------------------------------------------------------------------------------------------------ |
@@ -1076,7 +1252,7 @@ Specific value: `1`
 | -------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [](#nodePools_additionalProperties ) | No      | object | No         | -          | -                 |
 
-### <a name="nodePools_additionalProperties"></a>7.1. Property `t8s cluster configuration > nodePools > additionalProperties`
+### <a name="nodePools_additionalProperties"></a>8.1. Property `t8s cluster configuration > nodePools > additionalProperties`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -1090,7 +1266,7 @@ Specific value: `1`
 | - [availabilityZone](#nodePools_additionalProperties_availabilityZone ) | No      | string  | No         | -          | -                 |
 | + [flavor](#nodePools_additionalProperties_flavor )                     | No      | string  | No         | -          | -                 |
 
-#### <a name="nodePools_additionalProperties_replicas"></a>7.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools > additionalProperties > replicas`
+#### <a name="nodePools_additionalProperties_replicas"></a>8.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools > additionalProperties > replicas`
 
 |          |           |
 | -------- | --------- |
@@ -1100,7 +1276,7 @@ Specific value: `1`
 | ------------ | ------ |
 | **Minimum**  | &ge; 0 |
 
-#### <a name="nodePools_additionalProperties_maxReplicas"></a>7.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > nodePools > additionalProperties > maxReplicas`
+#### <a name="nodePools_additionalProperties_maxReplicas"></a>8.1.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > nodePools > additionalProperties > maxReplicas`
 
 |          |           |
 | -------- | --------- |
@@ -1110,26 +1286,26 @@ Specific value: `1`
 | ------------ | ------ |
 | **Minimum**  | &ge; 1 |
 
-#### <a name="nodePools_additionalProperties_availabilityZone"></a>7.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > nodePools > additionalProperties > availabilityZone`
+#### <a name="nodePools_additionalProperties_availabilityZone"></a>8.1.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > nodePools > additionalProperties > availabilityZone`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-#### <a name="nodePools_additionalProperties_flavor"></a>7.1.4. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools > additionalProperties > flavor`
+#### <a name="nodePools_additionalProperties_flavor"></a>8.1.4. ![Required](https://img.shields.io/badge/Required-blue) Property `t8s cluster configuration > nodePools > additionalProperties > flavor`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-## <a name="additionalComputePlaneSecurityGroups"></a>8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > additionalComputePlaneSecurityGroups`
+## <a name="additionalComputePlaneSecurityGroups"></a>9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > additionalComputePlaneSecurityGroups`
 
 |                        |                                                                    |
 | ---------------------- | ------------------------------------------------------------------ |
 | **Type**               | `array of string`                                                  |
 | **Same definition as** | [additionalSecurityGroups](#controlPlane_additionalSecurityGroups) |
 
-## <a name="bastion"></a>9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion`
+## <a name="bastion"></a>10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -1142,25 +1318,25 @@ Specific value: `1`
 | - [availabilityZone](#bastion_availabilityZone ) | No      | null or string | No         | -          | -                 |
 | - [sshKeyName](#bastion_sshKeyName )             | No      | null or string | No         | -          | -                 |
 
-### <a name="bastion_enabled"></a>9.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion > enabled`
+### <a name="bastion_enabled"></a>10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion > enabled`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-### <a name="bastion_availabilityZone"></a>9.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion > availabilityZone`
+### <a name="bastion_availabilityZone"></a>10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion > availabilityZone`
 
 |          |                  |
 | -------- | ---------------- |
 | **Type** | `null or string` |
 
-### <a name="bastion_sshKeyName"></a>9.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion > sshKeyName`
+### <a name="bastion_sshKeyName"></a>10.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > bastion > sshKeyName`
 
 |          |                  |
 | -------- | ---------------- |
 | **Type** | `null or string` |
 
-## <a name="containerRegistryMirror"></a>10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryMirror`
+## <a name="containerRegistryMirror"></a>11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryMirror`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -1172,7 +1348,7 @@ Specific value: `1`
 | - [additionallyMirroredRegistries](#containerRegistryMirror_additionallyMirroredRegistries ) | No      | array of string | No         | -          | -                 |
 | - [mirrorEndpoint](#containerRegistryMirror_mirrorEndpoint )                                 | No      | string          | No         | -          | -                 |
 
-### <a name="containerRegistryMirror_additionallyMirroredRegistries"></a>10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryMirror > additionallyMirroredRegistries`
+### <a name="containerRegistryMirror_additionallyMirroredRegistries"></a>11.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryMirror > additionallyMirroredRegistries`
 
 |          |                   |
 | -------- | ----------------- |
@@ -1190,25 +1366,25 @@ Specific value: `1`
 | ----------------------------------------------------------------------------------------------------- | ----------- |
 | [additionallyMirroredRegistries items](#containerRegistryMirror_additionallyMirroredRegistries_items) | -           |
 
-#### <a name="containerRegistryMirror_additionallyMirroredRegistries_items"></a>10.1.1. t8s cluster configuration > containerRegistryMirror > additionallyMirroredRegistries > additionallyMirroredRegistries items
+#### <a name="containerRegistryMirror_additionallyMirroredRegistries_items"></a>11.1.1. t8s cluster configuration > containerRegistryMirror > additionallyMirroredRegistries > additionallyMirroredRegistries items
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="containerRegistryMirror_mirrorEndpoint"></a>10.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryMirror > mirrorEndpoint`
+### <a name="containerRegistryMirror_mirrorEndpoint"></a>11.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > containerRegistryMirror > mirrorEndpoint`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-## <a name="sshKeyName"></a>11. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > sshKeyName`
+## <a name="sshKeyName"></a>12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > sshKeyName`
 
 |          |                  |
 | -------- | ---------------- |
 | **Type** | `string or null` |
 
-## <a name="cni"></a>12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > cni`
+## <a name="cni"></a>13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > cni`
 
 |          |                    |
 | -------- | ------------------ |
@@ -1221,13 +1397,13 @@ Must be one of:
 * "auto"
 * "calico"
 
-## <a name="openstackImageNamePrefix"></a>13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > openstackImageNamePrefix`
+## <a name="openstackImageNamePrefix"></a>14. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > openstackImageNamePrefix`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-## <a name="common"></a>14. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > common`
+## <a name="common"></a>15. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > common`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
