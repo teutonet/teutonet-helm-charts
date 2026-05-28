@@ -54,6 +54,36 @@ tests:
           path: host
           value: custom-host
 
+  - it: parses host and port from endpoint with http scheme
+    set:
+      protocol: otlp
+      global.telemetry.otlp.endpoint: "http://otel-collector:4317"
+    asserts:
+      - equal:
+          path: enabled
+          value: true
+      - equal:
+          path: host
+          value: otel-collector
+      - equal:
+          path: port
+          value: 4317
+
+  - it: parses host and port from endpoint with https scheme
+    set:
+      protocol: otlp
+      global.telemetry.otlp.endpoint: "https://otel-collector:4317"
+    asserts:
+      - equal:
+          path: enabled
+          value: true
+      - equal:
+          path: host
+          value: otel-collector
+      - equal:
+          path: port
+          value: 4317
+
   - it: fails when endpoint has no port and port not set
     set:
       protocol: otlp
