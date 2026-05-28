@@ -1,0 +1,34 @@
+suite: monitoring ingress enabled logic
+templates:
+  - templates/monitoring/kube-prometheus-stack/oauth-proxy-secret.yaml
+release:
+  name: base-cluster
+set:
+  global.authentication.config.clientId: test-client
+  global.authentication.config.clientSecret: test-secret
+  global.authentication.config.issuerHost: sso.example.com
+  global.clusterName: test-cluster
+tests:
+  - it: oauth-proxy-secret absent when certManager.email not set
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: oauth-proxy-secret present when certManager.email and baseDomain are set
+    set:
+      certManager.email: admin@example.com
+      global.baseDomain: example.com
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Secret
+
+  - it: oauth-proxy-secret absent when ingress.provider is none
+    set:
+      certManager.email: admin@example.com
+      global.baseDomain: example.com
+      ingress.provider: none
+    asserts:
+      - hasDocuments:
+          count: 0

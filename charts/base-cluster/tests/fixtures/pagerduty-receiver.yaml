@@ -1,0 +1,6 @@
+monitoring:
+  prometheus:
+    alertmanager:
+      receivers:
+        "pagerduty ops-team":
+          integrationKey: "12345678901234567890123456789012"

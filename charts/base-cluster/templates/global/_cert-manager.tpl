@@ -1,0 +1,54 @@
+{{- define "base-cluster.cert-manager.custom-certificates" -}}
+  {{- $certs := dict -}}
+  {{- range $name, $cert := deepCopy .Values.global.certificates -}}
+    {{- $create := true -}}
+    {{- if $cert.condition -}}
+      {{- $create = eq (include "common.tplvalues.render" (dict "value" $cert.condition "context" (deepCopy $))) "true" -}}
+    {{- end -}}
+    {{- if $create -}}
+      {{- $dnsNames := include "common.tplvalues.render" (dict "value" $cert.dnsNames "context" (deepCopy $)) | fromYamlArray | uniq -}}
+      {{- if not $.Values.dns.provider -}}
+        {{- range $dnsName := $dnsNames -}}
+          {{- if $dnsName | contains "*" -}}
+            {{- $create = false -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+      {{- $cert = set $cert "dnsNames" $dnsNames -}}
+    {{- end -}}
+    {{- if $create -}}
+      {{- $certs = set $certs $name $cert -}}
+    {{- end -}}
+  {{- end -}}
+  {{- toYaml $certs -}}
+{{- end -}}
+
+{{- define "base-cluster.cert-manager.custom-certificates-yaml" -}}
+  {{- $_ := mustMerge . (pick .context "Release") -}}
+  {{- range $name, $cert := .certs -}}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $.Release.Namespace }}
+  labels: {{- include "common.helm.labels" (dict) | nindent 4 }}
+spec:
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-production
+  dnsNames: {{- toYaml $cert.dnsNames | nindent 4 }}
+  secretName: {{ printf "%s-certificate" $name | quote }}
+  {{- if include "base-cluster.reflector.enabled" (dict "context" $.context) }}
+  secretTemplate:
+    annotations:
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+      {{- if not (typeIs "string" ($cert.targetNamespaces | default "ALL")) }}
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: {{ $cert.targetNamespaces | join "," | quote }}
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: {{ $cert.targetNamespaces | join "," | quote }}
+      {{- end }}
+  {{- end }}
+---
+  {{ end -}}
+{{- end -}}

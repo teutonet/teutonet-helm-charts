@@ -1,0 +1,6 @@
+rbac:
+  roles:
+    pod-reader:
+      - apiGroups: [""]
+        resources: [pods]
+        verbs: [get, list]

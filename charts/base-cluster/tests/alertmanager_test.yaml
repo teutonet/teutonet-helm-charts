@@ -1,0 +1,30 @@
+suite: alertmanager receiver dispatch
+templates:
+  - templates/monitoring/kube-prometheus-stack/receiver-secret.yaml
+release:
+  name: base-cluster
+tests:
+  - it: receiver secret absent when no receivers configured
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: single-token receiver uses key name as credential key
+    set:
+      monitoring.prometheus.alertmanager.receivers.pagerduty.integrationKey: "12345678901234567890123456789012"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: stringData.pagerduty
+          value: "12345678901234567890123456789012"
+
+  - it: two-token receiver splits name from "pagerduty ops-team" into credential key
+    values:
+      - fixtures/pagerduty-receiver.yaml
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: stringData.ops-team
+          value: "12345678901234567890123456789012"

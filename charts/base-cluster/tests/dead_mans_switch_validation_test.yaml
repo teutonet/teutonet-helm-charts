@@ -1,0 +1,27 @@
+suite: deadMansSwitch baseDomain validation
+templates:
+  - templates/monitoring/deadMansSwitch/validation.tpl
+release:
+  name: base-cluster
+tests:
+  - it: no error when deadMansSwitch not configured
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: no error when deadMansSwitch configured with baseDomain
+    set:
+      monitoring.deadMansSwitch.apiKey: mykey
+      monitoring.deadMansSwitch.pingKey: myping
+      global.baseDomain: example.com
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: fails when deadMansSwitch is configured without baseDomain
+    set:
+      monitoring.deadMansSwitch.apiKey: mykey
+      monitoring.deadMansSwitch.pingKey: myping
+    asserts:
+      - failedTemplate:
+          errorMessage: "You need to provide a `.Values.global.baseDomain` when enabling the dead mans switch"

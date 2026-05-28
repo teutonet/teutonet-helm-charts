@@ -1,0 +1,57 @@
+suite: RBAC fail guards
+templates:
+  - templates/rbac/roles.yaml
+release:
+  name: base-cluster
+tests:
+  - it: no output when rbac not configured
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: fails when account references undefined role
+    set:
+      rbac.accounts.myaccount.clusterRoles[0]: nonexistent-role
+    asserts:
+      - failedTemplate:
+          errorMessage: "Role 'nonexistent-role' doesn't exist, used in account 'myaccount'"
+
+  - it: fails when role defined but not used by any account
+    values:
+      - fixtures/rbac-pod-reader-role.yaml
+    asserts:
+      - failedTemplate:
+          errorMessage: "Role 'pod-reader' is not used by any account"
+
+  - it: fails when account namespace not in global.namespaces
+    values:
+      - fixtures/rbac-pod-reader-role.yaml
+    set:
+      rbac.accounts.myaccount.roles.pod-reader[0]: nonexistent-ns
+    asserts:
+      - failedTemplate:
+          errorMessage: "Role 'pod-reader' wants to be in the undefined namespace 'nonexistent-ns'"
+
+  - it: fails when defined role clashes with a preexisting bootstrapped ClusterRole
+    values:
+      - fixtures/rbac-pod-reader-role.yaml
+    set:
+      rbac.accounts.myaccount.clusterRoles[0]: pod-reader
+    kubernetesProvider:
+      scheme:
+        "rbac.authorization.k8s.io/v1/ClusterRole":
+          gvr:
+            group: "rbac.authorization.k8s.io"
+            version: "v1"
+            resource: "clusterroles"
+          namespaced: false
+      objects:
+        - apiVersion: rbac.authorization.k8s.io/v1
+          kind: ClusterRole
+          metadata:
+            name: pod-reader
+            labels:
+              kubernetes.io/bootstrapping: rbac-defaults
+    asserts:
+      - failedTemplate:
+          errorMessage: "Role 'pod-reader' clashes with preexisting ClusterRole"

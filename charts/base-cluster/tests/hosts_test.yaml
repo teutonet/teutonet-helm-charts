@@ -1,0 +1,54 @@
+suite: domain helper and cluster ingress
+templates:
+  - templates/global/cluster-ingress.yaml
+release:
+  name: base-cluster
+capabilities:
+  apiVersions:
+    - networking.k8s.io/v1/Ingress
+tests:
+  - it: builds domain as clusterName.baseDomain
+    set:
+      global.clusterName: test-cluster
+      global.baseDomain: example.com
+      dns.provider.cloudflare.apiToken: fake-token
+    asserts:
+      - equal:
+          path: spec.rules[0].host
+          value: test-cluster.example.com
+
+  - it: wildcard host is second ingress rule
+    set:
+      global.clusterName: test-cluster
+      global.baseDomain: example.com
+      dns.provider.cloudflare.apiToken: fake-token
+    asserts:
+      - equal:
+          path: spec.rules[1].host
+          value: "*.test-cluster.example.com"
+
+  - it: no ingress when dns.provider not set
+    set:
+      global.clusterName: test-cluster
+      global.baseDomain: example.com
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: no ingress when provider is none
+    set:
+      global.clusterName: test-cluster
+      global.baseDomain: example.com
+      dns.provider.cloudflare.apiToken: fake-token
+      ingress.provider: none
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: fails when clusterName is missing
+    set:
+      global.baseDomain: example.com
+      dns.provider.cloudflare.apiToken: fake-token
+    asserts:
+      - failedTemplate:
+          errorMessage: "You must provide a cluster name"
