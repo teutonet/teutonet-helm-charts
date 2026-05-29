@@ -1,5 +1,9 @@
 global:
   imagePullSecrets: []
+  networkPolicy:
+    dnsLabels:
+      io.kubernetes.pod.namespace: kube-system
+      k8s-app: kube-dns
   podSecurityContext:
     runAsNonRoot: true
     readOnlyRootFilesystem: true
@@ -35,4 +39,6 @@ worker:
     secret:
       name: ""
   resourcesPreset: micro
-  resources: {}
+  resources:
+    limits:
+      memory: 1Gi
