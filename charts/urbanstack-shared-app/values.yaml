@@ -1,0 +1,35 @@
+image:
+  repository: ""
+  registry: ""
+  digest: ""
+
+registryAuth:
+  username: null
+  password: null
+
+host: null
+certIssuer: null
+postgres:
+  host: null
+  secret: null
+  database: null
+  networkPolicy:
+    matchLabels: {}
+keycloakIssuer: null
+keycloakClientId: null
+allowExternalEgress: true
+
+tenant: ""
+citytool: ""
+contact: ""
+
+storage:
+  size: 5Gi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 50Mi
+  limits:
+    cpu: 400m
+    memory: 200Mi

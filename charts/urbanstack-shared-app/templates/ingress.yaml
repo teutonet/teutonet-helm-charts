@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name | quote }}
+  labels: {{- include "urbanstack-shared-app.labels" . | nindent 4 }}
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    {{- with .Values.certIssuer }}
+    cert-manager.io/issuer: {{ . | quote }}
+    {{- end }}
+spec:
+  rules:
+    - host: {{ .Values.host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend: {{- include "common.ingress.backend" (dict "serviceName" .Release.Name "servicePort" "http" "context" $) | nindent 14 }}
+  tls:
+  - hosts:
+    - {{ .Values.host | quote }}
+    secretName: {{ printf "%s-tls" .Values.host | quote }}
