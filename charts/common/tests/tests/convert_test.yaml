@@ -1,0 +1,53 @@
+suite: common.convert
+templates:
+  - templates/convert-stub.yaml
+release:
+  name: common-test
+tests:
+  - it: no output when convert not set
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: converts Mi to Gi
+    set:
+      convert.value: 1024Mi
+      convert.to: Gi
+    asserts:
+      - equal:
+          path: result
+          value: "1.000000Gi"
+
+  - it: converts G to M
+    set:
+      convert.value: 1G
+      convert.to: M
+    asserts:
+      - equal:
+          path: result
+          value: "1000.000000M"
+
+  - it: converts unitless bytes to Ki
+    set:
+      convert.value: 2048
+      convert.to: Ki
+    asserts:
+      - equal:
+          path: result
+          value: "2.000000Ki"
+
+  - it: fails on unknown source unit
+    set:
+      convert.value: 1X
+      convert.to: Gi
+    asserts:
+      - failedTemplate:
+          errorMessage: "Unknown source unit: X"
+
+  - it: fails on unknown target unit
+    set:
+      convert.value: 1Mi
+      convert.to: X
+    asserts:
+      - failedTemplate:
+          errorMessage: "Unknown target unit: X"

@@ -1,0 +1,8 @@
+apiVersion: v2
+name: common-test
+type: application
+version: 0.1.0
+dependencies:
+  - name: common
+    version: "*"
+    repository: "file://../"

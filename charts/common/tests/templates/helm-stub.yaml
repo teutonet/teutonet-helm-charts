@@ -1,0 +1,4 @@
+{{- if .Values.lookupChart }}
+---
+version: {{ include "common.helm.chartVersion" (dict "context" . "repo" .Values.lookupChart.repo "chart" .Values.lookupChart.chart) }}
+{{- end }}
