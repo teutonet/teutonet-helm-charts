@@ -30,7 +30,21 @@ spec:
     extraArgs:
       scale-down-utilization-threshold: 0.8
       skip-nodes-with-local-storage: false
+    podDisruptionBudget: false
     serviceMonitor:
       enabled: true
       namespace: {{ .Release.Namespace }}
+    rbac:
+      # needed until https://github.com/kubernetes/autoscaler/issues/6490#issuecomment-4590829570
+      # has been addressed
+      clusterScoped: true
+      additionalRules:
+        - apiGroups:
+            - infrastructure.cluster.x-k8s.io
+          resources:
+            - openstackmachinetemplates
+          verbs:
+            - get
+            - list
+            - watch
 {{- end -}}
