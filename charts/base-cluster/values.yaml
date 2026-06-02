@@ -89,7 +89,7 @@ global:
     image:
       registry: docker.io
       repository: vladgh/gpg
-      tag: 1.3.9@sha256:56bf9450d67348d80899b186f026fb8d8ceb904cd8a48700c1ab9440257754fd
+      tag: 1.3.10@sha256:afefb91a21a1580285f15521cc35b060ef525073854678bf5b0916ff7d6ca74d
   curl:
     image:
       registry: docker.io
