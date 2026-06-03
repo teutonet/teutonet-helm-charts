@@ -144,4 +144,7 @@ managedSecurityGroups:
   allowAllInClusterTraffic: {{ $allowNativeRouting }}
 managedSubnets:
   - cidr: 10.6.0.0/24
+externalNetwork:
+  filter:
+    name: extern
 {{- end -}}
