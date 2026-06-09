@@ -91,6 +91,11 @@ spec:
       kubernetesGateway:
         enabled: true
         experimentalChannel: true
+      {{- if .Values.ingress.useTraefikNginxCompatibility }}
+      kubernetesIngressNGINX:
+        enabled: true
+        watchIngressWithoutClass: true # required, because uninstalling nginx also removes the ingress class and it is recommended to not use an IngressClass anyways.
+      {{- end }}
     logs:
       general:
         format: json

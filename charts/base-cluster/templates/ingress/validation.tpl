@@ -2,6 +2,10 @@
   {{- fail "allowNginxConfigurationSnippets cannot be enabled when using traefik as the ingress provider" -}}
 {{- end -}}
 
+{{- if and (eq .Values.ingress.provider "nginx") .Values.ingress.useTraefikNginxCompatibility -}}
+  {{- fail "useTraefikNginxCompatibility cannot be enabled when using nginx as the ingress provider" -}}
+{{- end -}}
+
 {{- if eq .Values.ingress.provider "traefik" -}}
   {{- $existingNginx := lookup "helm.toolkit.fluxcd.io/v2" "HelmRelease" "ingress-nginx" "ingress-nginx" -}}
   {{- if $existingNginx -}}

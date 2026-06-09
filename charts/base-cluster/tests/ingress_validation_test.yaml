@@ -23,6 +23,14 @@ tests:
       - failedTemplate:
           errorMessage: "allowNginxConfigurationSnippets cannot be enabled when using traefik as the ingress provider"
 
+  - it: fails immediately when nginx traefik compatibility enabled with nginx
+    set:
+      ingress.provider: nginx
+      ingress.useTraefikNginxCompatibility: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "useTraefikNginxCompatibility cannot be enabled when using nginx as the ingress provider"
+
   - it: fails when switching to traefik while nginx HelmRelease exists
     kubernetesProvider:
       scheme:
