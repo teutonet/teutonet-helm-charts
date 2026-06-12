@@ -42,6 +42,18 @@ spec:
       websecure:
         proxyProtocol:
           insecure: {{ include "base-cluster.ingress.useProxyProtocol" (dict "context" $) }}
+      {{- range $name, $cfg := .Values.ingress.extraPorts }}
+      {{ $name }}:
+        expose:
+          default: {{ $cfg.expose.default }}
+        exposedPort: {{ $cfg.exposedPort }}
+        port: {{ $cfg.port }}
+        protocol: {{ $cfg.protocol }}
+        {{- with $cfg.proxyProtocol }}
+        proxyProtocol:
+          insecure: {{ .insecure }}
+        {{- end }}
+      {{- end }}
     service:
       annotations:
         loadbalancer.openstack.org/timeout-client-data: "2073600000"

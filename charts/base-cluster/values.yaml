@@ -468,6 +468,7 @@ ingress:
   resources:
     limits:
       cpu: 1
+  extraPorts: {}
 
 storage:
   readWriteMany:
