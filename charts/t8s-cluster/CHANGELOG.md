@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.9.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.9.1...t8s-cluster-v9.9.2) (2026-06-24)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** cert-manager has [an integer overflow bug](https://github.com/cert-manager/cert-manager/issues/8937) ([#2195](https://github.com/teutonet/teutonet-helm-charts/issues/2195)) ([5e659af](https://github.com/teutonet/teutonet-helm-charts/commit/5e659af7e916f419f41dd9564da4c8af47eca2e8))
+
 ## [9.9.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.9.0...t8s-cluster-v9.9.1) (2026-06-24)
 
 
