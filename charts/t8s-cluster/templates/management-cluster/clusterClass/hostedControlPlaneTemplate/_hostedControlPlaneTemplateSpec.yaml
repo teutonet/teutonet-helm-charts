@@ -52,5 +52,5 @@ gateway:
   namespace: capi-hosted-control-plane-system
   name: controlplane
 certificates:
-  rootCaCertificateDuration: 87600h
+  rootCaCertificateDuration: 43800h
 {{- end -}}
