@@ -1,5 +1,21 @@
 # Changelog
 
+## [9.9.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.9.0...t8s-cluster-v9.9.1) (2026-06-24)
+
+
+### Bug Fixes
+
+* **t8s-cluster/management-cluster:** filter network by name ([#2179](https://github.com/teutonet/teutonet-helm-charts/issues/2179)) ([77f1374](https://github.com/teutonet/teutonet-helm-charts/commit/77f137405bd8c1b905bfc99284cd8cf900dcb3f6))
+* **t8s-cluster:** correctly set flags for MutatingAdmissionPolicy ([#2176](https://github.com/teutonet/teutonet-helm-charts/issues/2176)) ([085a4e2](https://github.com/teutonet/teutonet-helm-charts/commit/085a4e2fe03bdc9f65ac8dd146cfeda7e3aa5403))
+* **t8s-cluster:** missing rbac ([#2175](https://github.com/teutonet/teutonet-helm-charts/issues/2175)) ([2a5f703](https://github.com/teutonet/teutonet-helm-charts/commit/2a5f703a43318fb0c818556656d1b3d7128115ff))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update cilium docker tag to v1.19.5 ([#2186](https://github.com/teutonet/teutonet-helm-charts/issues/2186)) ([e29dfe3](https://github.com/teutonet/teutonet-helm-charts/commit/e29dfe326da05f6ef1fde1c4f2030bb665233308))
+* **t8s-cluster/dependencies:** update common docker tag to v2.1.1 ([#2151](https://github.com/teutonet/teutonet-helm-charts/issues/2151)) ([19deca5](https://github.com/teutonet/teutonet-helm-charts/commit/19deca58b1462eb07e269aa89172c1750a4c966c))
+* **t8s-cluster/management-cluster:** set rootCaCertificateDuration to 10 Years ([#2193](https://github.com/teutonet/teutonet-helm-charts/issues/2193)) ([14de2c5](https://github.com/teutonet/teutonet-helm-charts/commit/14de2c586e4f9f5971b4106215cde0387255dcea))
+
 ## [9.9.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.8.0...t8s-cluster-v9.9.0) (2026-05-28)
 
 
