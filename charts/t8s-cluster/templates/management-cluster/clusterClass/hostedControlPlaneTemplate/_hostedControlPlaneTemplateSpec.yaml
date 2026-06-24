@@ -51,4 +51,6 @@ oidcProviders: {{- toYaml . | nindent 2 }}
 gateway:
   namespace: capi-hosted-control-plane-system
   name: controlplane
+certificates:
+  rootCaCertificateDuration: 87600h
 {{- end -}}
