@@ -460,6 +460,7 @@ flux:
 ingress:
   provider: traefik
   allowNginxConfigurationSnippets: false
+  useTraefikNginxCompatibility: false
   useProxyProtocol: auto
   replicas: 2
   resourcesPreset: nano
