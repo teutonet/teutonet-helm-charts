@@ -1,5 +1,17 @@
 # Changelog
 
+## [12.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v12.0.0...base-cluster-v12.0.1) (2026-06-25)
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update docker.io/grafana/grafana-image-renderer docker tag to v5.8.11 ([#2181](https://github.com/teutonet/teutonet-helm-charts/issues/2181)) ([5b00500](https://github.com/teutonet/teutonet-helm-charts/commit/5b00500b045f6c829366d92e000be8b42b23f3db))
+* **base-cluster/dependencies:** update helm release descheduler to v0.36.0 ([#2188](https://github.com/teutonet/teutonet-helm-charts/issues/2188)) ([40f5331](https://github.com/teutonet/teutonet-helm-charts/commit/40f5331df5828e19791d6c9cc892f7a53dd7f393))
+* **base-cluster/dependencies:** update helm release kyverno to v3.8.1 ([#2182](https://github.com/teutonet/teutonet-helm-charts/issues/2182)) ([5eb55d6](https://github.com/teutonet/teutonet-helm-charts/commit/5eb55d673a43998ec9e35f3b0f14501879887482))
+* **base-cluster/dependencies:** update helm release reflector to v10.0.52 ([#2184](https://github.com/teutonet/teutonet-helm-charts/issues/2184)) ([497b17b](https://github.com/teutonet/teutonet-helm-charts/commit/497b17ba90837fc8d47c0b395c12cb26179cf5b4))
+* **base-cluster/dependencies:** update helm release tempo to v2.1.2 ([#2185](https://github.com/teutonet/teutonet-helm-charts/issues/2185)) ([d003102](https://github.com/teutonet/teutonet-helm-charts/commit/d00310219ee46c0ee0588ffafa9b6b7a15f6517b))
+* **base-cluster/dependencies:** update helm release tetragon to v1.7.0 ([#2149](https://github.com/teutonet/teutonet-helm-charts/issues/2149)) ([1798063](https://github.com/teutonet/teutonet-helm-charts/commit/1798063f64e68e00367ca8603ec1befb3170b475))
+
 ## [12.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v11.2.0...base-cluster-v12.0.0) (2026-06-15)
 
 
