@@ -129,7 +129,7 @@ global:
       url: https://grafana-community.github.io/helm-charts
       charts:
         loki: 13.2.3
-        tempo: 2.1.2
+        tempo: 2.2.3
       condition: "{{ and .Values.monitoring.prometheus.enabled (or .Values.monitoring.tracing.enabled .Values.monitoring.loki.enabled) }}"
     external-dns:
       url: https://kubernetes-sigs.github.io/external-dns
