@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v2.1.1...common-v2.2.0) (2026-06-25)
+
+
+### Features
+
+* **common:** add unit tests ([#2163](https://github.com/teutonet/teutonet-helm-charts/issues/2163)) ([a3578ff](https://github.com/teutonet/teutonet-helm-charts/commit/a3578ff359f00edd1638580b6896da815228cfad))
+
+
+### Miscellaneous Chores
+
+* **common/dependencies:** update helm release common to v2.40.0 ([#2150](https://github.com/teutonet/teutonet-helm-charts/issues/2150)) ([7e118c0](https://github.com/teutonet/teutonet-helm-charts/commit/7e118c0499425572c262ccafe85e05676e75ec63))
+
 ## [2.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/common-v2.1.0...common-v2.1.1) (2026-05-05)
 
 
