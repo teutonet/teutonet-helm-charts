@@ -79,6 +79,9 @@ spec:
       prometheus:
         enabled: true
     hubble:
+      tls:
+        auto:
+          method: cronJob
       metrics:
         enabled:
           - dns
