@@ -146,6 +146,9 @@ licenses:
   quay.io/cilium/hubble-ui-backend:
     license: Apache-2.0
     licenseLink: https://github.com/cilium/hubble-ui/blob/master/LICENSE
+  quay.io/cilium/certgen:
+    license: Apache-2.0
+    licenseLink: https://github.com/cilium/certgen/blob/main/LICENSE
   quay.io/cilium/operator-generic:
     license: Apache-2.0
     licenseLink: https://hub.docker.com/r/cilium/operator-generic
