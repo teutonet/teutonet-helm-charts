@@ -17,7 +17,10 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         helm-with-plugins = pkgs.wrapHelm pkgs.kubernetes-helm {
-          plugins = [ pkgs.kubernetes-helmPlugins.helm-unittest ];
+          plugins = [
+            pkgs.kubernetes-helmPlugins.helm-unittest
+            pkgs.kubernetes-helmPlugins.helm-diff
+          ];
         };
       in
       {
