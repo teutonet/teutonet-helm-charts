@@ -1,0 +1,25 @@
+suite: certificate condition logic
+templates:
+  - templates/global/certificates.yaml
+release:
+  name: base-cluster
+set:
+  certManager.email: admin@example.com
+tests:
+  - it: creates certificate when condition is true
+    set:
+      global.certificates.test-cert.dnsNames[0]: example.com
+      global.certificates.test-cert.condition: "true"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HelmRelease
+
+  - it: does not create certificate when condition is false
+    set:
+      global.certificates.test-cert.dnsNames[0]: example.com
+      global.certificates.test-cert.condition: "false"
+    asserts:
+      - hasDocuments:
+          count: 0
