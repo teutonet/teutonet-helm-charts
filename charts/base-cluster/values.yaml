@@ -334,6 +334,9 @@ monitoring:
       persistence:
         storageClass: ""
         size: 1Gi
+    kubeProxy: auto
+    kubeScheduler: auto
+    kubeControllerManager: auto
   loki:
     enabled: true
     retentionPeriod: 45d
