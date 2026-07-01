@@ -1,0 +1,297 @@
+suite: prometheus control plane component detection
+templates:
+  - templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+  - templates/monitoring/kube-prometheus-stack/grafana-secret.yaml
+release:
+  name: base-cluster
+tests:
+  - it: auto disables kubeProxy when lookup returns empty (no live cluster)
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+    asserts:
+      - equal:
+          path: spec.values.kubeProxy.enabled
+          value: false
+      - equal:
+          path: spec.values.defaultRules.rules.kubeProxy
+          value: false
+
+  - it: auto disables kubeScheduler when lookup returns empty
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+    asserts:
+      - equal:
+          path: spec.values.kubeScheduler.enabled
+          value: false
+      - equal:
+          path: spec.values.defaultRules.rules.kubeScheduler
+          value: false
+
+  - it: auto disables kubeControllerManager when lookup returns empty
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+    asserts:
+      - equal:
+          path: spec.values.kubeControllerManager.enabled
+          value: false
+      - equal:
+          path: spec.values.defaultRules.rules.kubeControllerManager
+          value: false
+
+  - it: auto enables kubeProxy when kube-proxy DaemonSet is present
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    kubernetesProvider:
+      scheme:
+        apps/v1/DaemonSet:
+          gvr:
+            group: apps
+            version: v1
+            resource: daemonsets
+          namespaced: true
+      objects:
+        - kind: DaemonSet
+          apiVersion: apps/v1
+          metadata:
+            name: kube-proxy
+            namespace: kube-system
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.kubeScheduler: false
+      monitoring.prometheus.kubeControllerManager: false
+    asserts:
+      - equal:
+          path: spec.values.kubeProxy.enabled
+          value: true
+      - equal:
+          path: spec.values.defaultRules.rules.kubeProxy
+          value: true
+
+  - it: auto enables kubeScheduler when kube-scheduler Pod is present
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    kubernetesProvider:
+      scheme:
+        apps/v1/DaemonSet:
+          gvr:
+            group: apps
+            version: v1
+            resource: daemonsets
+          namespaced: true
+        v1/Pod:
+          gvr:
+            version: v1
+            resource: pods
+          namespaced: true
+      objects:
+        - kind: Pod
+          apiVersion: v1
+          metadata:
+            name: kube-scheduler-master
+            namespace: kube-system
+            labels:
+              component: kube-scheduler
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+    asserts:
+      - equal:
+          path: spec.values.kubeScheduler.enabled
+          value: true
+      - equal:
+          path: spec.values.defaultRules.rules.kubeScheduler
+          value: true
+
+  - it: auto enables kubeControllerManager when kube-controller-manager Pod is present
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    kubernetesProvider:
+      scheme:
+        apps/v1/DaemonSet:
+          gvr:
+            group: apps
+            version: v1
+            resource: daemonsets
+          namespaced: true
+        v1/Pod:
+          gvr:
+            version: v1
+            resource: pods
+          namespaced: true
+      objects:
+        - kind: Pod
+          apiVersion: v1
+          metadata:
+            name: kube-controller-manager-master
+            namespace: kube-system
+            labels:
+              component: kube-controller-manager
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+    asserts:
+      - equal:
+          path: spec.values.kubeControllerManager.enabled
+          value: true
+      - equal:
+          path: spec.values.defaultRules.rules.kubeControllerManager
+          value: true
+
+  - it: auto enables all three when all control plane components are present
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    kubernetesProvider:
+      scheme:
+        apps/v1/DaemonSet:
+          gvr:
+            group: apps
+            version: v1
+            resource: daemonsets
+          namespaced: true
+        v1/Pod:
+          gvr:
+            version: v1
+            resource: pods
+          namespaced: true
+      objects:
+        - kind: DaemonSet
+          apiVersion: apps/v1
+          metadata:
+            name: kube-proxy
+            namespace: kube-system
+        - kind: Pod
+          apiVersion: v1
+          metadata:
+            name: kube-scheduler-master
+            namespace: kube-system
+            labels:
+              component: kube-scheduler
+        - kind: Pod
+          apiVersion: v1
+          metadata:
+            name: kube-controller-manager-master
+            namespace: kube-system
+            labels:
+              component: kube-controller-manager
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+    asserts:
+      - equal:
+          path: spec.values.kubeProxy.enabled
+          value: true
+      - equal:
+          path: spec.values.kubeScheduler.enabled
+          value: true
+      - equal:
+          path: spec.values.kubeControllerManager.enabled
+          value: true
+      - equal:
+          path: spec.values.defaultRules.rules.kubeProxy
+          value: true
+      - equal:
+          path: spec.values.defaultRules.rules.kubeScheduler
+          value: true
+      - equal:
+          path: spec.values.defaultRules.rules.kubeControllerManager
+          value: true
+
+  - it: explicit true overrides auto for kubeProxy
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.kubeProxy: true
+    asserts:
+      - equal:
+          path: spec.values.kubeProxy.enabled
+          value: true
+      - equal:
+          path: spec.values.defaultRules.rules.kubeProxy
+          value: true
+
+  - it: explicit false overrides auto for kubeProxy
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.kubeProxy: false
+    asserts:
+      - equal:
+          path: spec.values.kubeProxy.enabled
+          value: false
+      - equal:
+          path: spec.values.defaultRules.rules.kubeProxy
+          value: false
+
+  - it: explicit true overrides auto for kubeScheduler
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.kubeScheduler: true
+    asserts:
+      - equal:
+          path: spec.values.kubeScheduler.enabled
+          value: true
+      - equal:
+          path: spec.values.defaultRules.rules.kubeScheduler
+          value: true
+
+  - it: explicit false overrides auto for kubeScheduler
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.kubeScheduler: false
+    asserts:
+      - equal:
+          path: spec.values.kubeScheduler.enabled
+          value: false
+      - equal:
+          path: spec.values.defaultRules.rules.kubeScheduler
+          value: false
+
+  - it: explicit true overrides auto for kubeControllerManager
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.kubeControllerManager: true
+    asserts:
+      - equal:
+          path: spec.values.kubeControllerManager.enabled
+          value: true
+      - equal:
+          path: spec.values.defaultRules.rules.kubeControllerManager
+          value: true
+
+  - it: explicit false overrides auto for kubeControllerManager
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.kubeControllerManager: false
+    asserts:
+      - equal:
+          path: spec.values.kubeControllerManager.enabled
+          value: false
+      - equal:
+          path: spec.values.defaultRules.rules.kubeControllerManager
+          value: false

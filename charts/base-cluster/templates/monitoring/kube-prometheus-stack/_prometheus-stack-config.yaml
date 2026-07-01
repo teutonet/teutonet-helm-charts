@@ -1,4 +1,5 @@
 {{- define "base-cluster.prometheus.config" -}}
+{{- $cp := include "base-cluster.prometheus.controlPlaneComponents" . | fromYaml -}}
 global:
   rbac:
     createAggregateClusterRoles: true
@@ -16,9 +17,18 @@ prometheusOperator:
 defaultRules:
   disabled:
     etcdHighNumberOfFailedGRPCRequests: true
-    PrometheusNotConnectedToAlertmanagers: {{- not (include "base-cluster.prometheus-stack.alertmanager.enabled" .) -}}
+    PrometheusNotConnectedToAlertmanagers: {{ not (include "base-cluster.prometheus-stack.alertmanager.enabled" .) }}
   rules:
     kubeApiserverAvailability: false
+    kubeProxy: {{ $cp.kubeProxy }}
+    kubeScheduler: {{ $cp.kubeScheduler }}
+    kubeControllerManager: {{ $cp.kubeControllerManager }}
+kubeProxy:
+  enabled: {{ $cp.kubeProxy }}
+kubeScheduler:
+  enabled: {{ $cp.kubeScheduler }}
+kubeControllerManager:
+  enabled: {{ $cp.kubeControllerManager }}
 kubelet:
   serviceMonitor:
     resource: false
