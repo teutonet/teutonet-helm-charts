@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.4.2...teuto-portal-k8s-worker-v3.5.0) (2026-06-25)
+
+
+### Features
+
+* **teuto-portal-k8s-worker:** add unit tests ([#2164](https://github.com/teutonet/teutonet-helm-charts/issues/2164)) ([8dc5c03](https://github.com/teutonet/teutonet-helm-charts/commit/8dc5c03470a947c5138d0e9a15a8382b4fa33799))
+* **teuto-portal-k8s-worker:** harden deployment ([#2157](https://github.com/teutonet/teutonet-helm-charts/issues/2157)) ([879526c](https://github.com/teutonet/teutonet-helm-charts/commit/879526c031ee38df50675db6670f941c522a8ae4))
+
+
+### Miscellaneous Chores
+
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v1.8.0 ([#1942](https://github.com/teutonet/teutonet-helm-charts/issues/1942)) ([d26b65c](https://github.com/teutonet/teutonet-helm-charts/commit/d26b65c782c9aefe2a35b668bff46f680695d8ca))
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v2 ([#2081](https://github.com/teutonet/teutonet-helm-charts/issues/2081)) ([925ad7b](https://github.com/teutonet/teutonet-helm-charts/commit/925ad7b8e95127ee86005bb854ab210a7401b4f3))
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v2.1.1 ([#2152](https://github.com/teutonet/teutonet-helm-charts/issues/2152)) ([875ebae](https://github.com/teutonet/teutonet-helm-charts/commit/875ebae93f42c8a5876fb0c328b7a6432f5a57bd))
+
 ## [3.4.2](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.4.1...teuto-portal-k8s-worker-v3.4.2) (2026-01-21)
 
 
