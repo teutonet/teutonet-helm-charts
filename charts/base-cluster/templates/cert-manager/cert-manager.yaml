@@ -68,6 +68,19 @@ spec:
       image:
         repository: {{ printf "%s/jetstack/cert-manager-webhook" $.Values.global.imageRegistry }}
       {{- end }}
+    startupapicheck:
+      podSecurityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containerSecurityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        readOnlyRootFilesystem: true
     prometheus:
       enabled: {{ .Values.monitoring.prometheus.enabled }}
       servicemonitor:

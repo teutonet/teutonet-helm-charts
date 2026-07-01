@@ -358,11 +358,34 @@ monitoring:
         cpu: 1
         memory: 128Mi
     gateway:
-      resourcesPreset: small
+      resourcesPreset: nano
+      resources:
+        requests:
+          cpu: 25m
+        limits:
+          memory: 256Mi
+      configReloader:
+        resourcesPreset: nano
+        resources:
+          requests:
+            cpu: 10m
   metricsServer:
     enabled: true
+    resourcesPreset: nano
+    resources:
+      requests:
+        cpu: 25m
+        memory: 32Mi
+      limits:
+        memory: 128Mi
   securityScanning:
     enabled: false
+    resourcesPreset: nano
+    resources:
+      requests:
+        cpu: 50m
+      limits:
+        memory: 2Gi
     nodeCollector:
       tolerations:
         - key: node-role.kubernetes.io/control-plane
@@ -479,6 +502,12 @@ storage:
 
 reflector:
   enabled: auto
+  resourcesPreset: nano
+  resources:
+    requests:
+      cpu: 10m
+    limits:
+      memory: 512Mi
 
 rbac:
   roles: {}

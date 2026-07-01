@@ -1,0 +1,23 @@
+{{- if and (dig "ttl-controller" "enabled" false .Values.AsMap) (eq (include "common.networkPolicy.type" .) "cilium") }}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: ttl-controller
+  namespace: kube-system
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ttl-controller
+spec:
+  endpointSelector:
+    matchLabels:
+      app: k8s-ttl-controller
+  ingress:
+    - fromEndpoints:
+        - matchLabels: {{- include "common.tplvalues.render" (dict "value" (include "common.dict.filterEmptyValues" .Values.global.networkPolicy.metricsLabels) "context" $) | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+  egress:
+    - toEntities:
+        - kube-apiserver
+{{- end }}

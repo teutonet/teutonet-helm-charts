@@ -892,6 +892,17 @@
                 },
                 "resources": {
                   "$ref": "#/$defs/resourceRequirements"
+                },
+                "configReloader": {
+                  "type": "object",
+                  "properties": {
+                    "resourcesPreset": {
+                      "$ref": "#/$defs/resourcesPreset"
+                    },
+                    "resources": {
+                      "$ref": "#/$defs/resourceRequirements"
+                    }
+                  }
                 }
               },
               "additionalProperties": false
@@ -904,6 +915,12 @@
           "properties": {
             "enabled": {
               "type": "boolean"
+            },
+            "resourcesPreset": {
+              "$ref": "#/$defs/resourcesPreset"
+            },
+            "resources": {
+              "$ref": "#/$defs/resourceRequirements"
             }
           },
           "additionalProperties": false
@@ -955,6 +972,12 @@
                   }
                 }
               }
+            },
+            "resourcesPreset": {
+              "$ref": "#/$defs/resourcesPreset"
+            },
+            "resources": {
+              "$ref": "#/$defs/resourceRequirements"
             }
           },
           "additionalProperties": false
@@ -1460,6 +1483,12 @@
               "type": "boolean"
             }
           ]
+        },
+        "resourcesPreset": {
+          "$ref": "#/$defs/resourcesPreset"
+        },
+        "resources": {
+          "$ref": "#/$defs/resourceRequirements"
         }
       },
       "additionalProperties": false

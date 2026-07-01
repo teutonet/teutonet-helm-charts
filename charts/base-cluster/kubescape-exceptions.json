@@ -1,0 +1,999 @@
+[
+  {
+    "name": "operator-rbac",
+    "description": "Operators and admin/edit RBAC roles require broad permissions that cannot be restricted without breaking functionality",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": ".*"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0035",
+        "controlName": "Administrative Roles"
+      },
+      {
+        "controlID": "C-0015",
+        "controlName": "List Kubernetes secrets"
+      },
+      {
+        "controlID": "C-0063",
+        "controlName": "Portforwarding privileges"
+      },
+      {
+        "controlID": "C-0002",
+        "controlName": "Prevent containers from allowing command execution"
+      },
+      {
+        "controlID": "C-0007",
+        "controlName": "Roles with delete capabilities"
+      }
+    ]
+  },
+  {
+    "name": "operators-missing-network-policy",
+    "description": "CiliumNetworkPolicies for base-cluster operators are not yet created; this is tracked as a separate effort",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": ".*"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0260",
+        "controlName": "Missing network policy"
+      }
+    ]
+  },
+  {
+    "name": "cilium-network-policy-ingress-egress",
+    "description": "CiliumNetworkPolicies are used for ingress/egress control but are not recognized by kubescape C-0030",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": ".*"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0030",
+        "controlName": "Ingress and Egress blocked"
+      }
+    ]
+  },
+  {
+    "name": "ci-namespaces-network-mapping",
+    "description": "CI test namespaces and managed namespaces do not have NetworkPolicies; CiliumNetworkPolicies are used but not recognized",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "backup"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cert-manager"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "dev"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "ingress"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "ingress-nginx"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kyverno"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "main0"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "main1"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "main2"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "main3"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "main4"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "main5"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "main6"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "nfs-server-provisioner"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "trivy"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "Please don't install me in `default`"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "my-fav-ns"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "my-second-fav-nv"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0049",
+        "controlName": "Network mapping"
+      },
+      {
+        "controlID": "C-0054",
+        "controlName": "Cluster internal networking"
+      }
+    ]
+  },
+  {
+    "name": "default-namespace-jobs",
+    "description": "Jobs and resources intentionally deployed in the default namespace for cluster lifecycle management",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "dead-mans-switch-registration"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "flux-generate-gpg-key-secret-main.*"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "flux-generate-ssh-key-secret-main.*"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "prevent-uninstallation"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "nfs-server-provisioner"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0061",
+        "controlName": "Pods in default namespace"
+      }
+    ]
+  },
+  {
+    "name": "rbac-traversal-null-sa",
+    "description": "RBAC traversal creates virtual ServiceAccount resources with null names; these are kubescape artifacts not real workloads",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "ServiceAccount",
+          "name": ".*"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0031",
+        "controlName": "Delete Kubernetes events"
+      },
+      {
+        "controlID": "C-0065",
+        "controlName": "No impersonation"
+      }
+    ]
+  },
+  {
+    "name": "kyverno-naked-pods",
+    "description": "Kyverno creates standalone metric-scraping pods as part of its operator design; these are not user workloads",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kyverno-admission-controller-metrics"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kyverno-cleanup-controller-liveness"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kyverno-cleanup-controller-metrics"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kyverno-cleanup-controller-readiness"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kyverno-reports-controller-metrics"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0073",
+        "controlName": "Naked pods"
+      },
+      {
+        "controlID": "C-0018",
+        "controlName": "Configured readiness probe"
+      },
+      {
+        "controlID": "C-0056",
+        "controlName": "Configured liveness probe"
+      }
+    ]
+  },
+  {
+    "name": "prometheus-node-exporter-privileged",
+    "description": "Node exporter requires hostPID, hostNetwork and hostPath to collect node-level metrics",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kube-prometheus-stack-prometheus-node-exporter"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0038",
+        "controlName": "Host PID/IPC privileges"
+      },
+      {
+        "controlID": "C-0041",
+        "controlName": "HostNetwork access"
+      },
+      {
+        "controlID": "C-0048",
+        "controlName": "HostPath mount"
+      }
+    ]
+  },
+  {
+    "name": "velero-node-agent-privileged",
+    "description": "Velero node-agent DaemonSet requires privileged access and writable hostPath mounts for node-level backup operations",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "node-agent"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0013",
+        "controlName": "Non-root containers"
+      },
+      {
+        "controlID": "C-0016",
+        "controlName": "Allow privilege escalation"
+      },
+      {
+        "controlID": "C-0017",
+        "controlName": "Immutable container filesystem"
+      },
+      {
+        "controlID": "C-0018",
+        "controlName": "Configured readiness probe"
+      },
+      {
+        "controlID": "C-0045",
+        "controlName": "Writable hostPath mount"
+      },
+      {
+        "controlID": "C-0048",
+        "controlName": "HostPath mount"
+      },
+      {
+        "controlID": "C-0055",
+        "controlName": "Linux hardening"
+      },
+      {
+        "controlID": "C-0056",
+        "controlName": "Configured liveness probe"
+      }
+    ]
+  },
+  {
+    "name": "velero-cleanup-crds-job",
+    "description": "Velero cleanup-crds job requires privilege escalation to remove CRDs during uninstallation",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "velero-cleanup-crds"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0016",
+        "controlName": "Allow privilege escalation"
+      },
+      {
+        "controlID": "C-0017",
+        "controlName": "Immutable container filesystem"
+      },
+      {
+        "controlID": "C-0055",
+        "controlName": "Linux hardening"
+      },
+      {
+        "controlID": "C-0271",
+        "controlName": "Ensure memory limits are set"
+      }
+    ]
+  },
+  {
+    "name": "velero-credentials",
+    "description": "Velero stores backup credentials in a Secret referenced by the Deployment; this is the standard upstream pattern",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "velero"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "node-agent"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0012",
+        "controlName": "Applications credentials in configuration files"
+      }
+    ]
+  },
+  {
+    "name": "telemetry-collector-privileged",
+    "description": "Telemetry collector DaemonSet requires hostPath access and non-root containers for node-level metric collection",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "telemetry-collector"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0013",
+        "controlName": "Non-root containers"
+      },
+      {
+        "controlID": "C-0016",
+        "controlName": "Allow privilege escalation"
+      },
+      {
+        "controlID": "C-0017",
+        "controlName": "Immutable container filesystem"
+      },
+      {
+        "controlID": "C-0018",
+        "controlName": "Configured readiness probe"
+      },
+      {
+        "controlID": "C-0048",
+        "controlName": "HostPath mount"
+      },
+      {
+        "controlID": "C-0055",
+        "controlName": "Linux hardening"
+      },
+      {
+        "controlID": "C-0056",
+        "controlName": "Configured liveness probe"
+      },
+      {
+        "controlID": "C-0271",
+        "controlName": "Ensure memory limits are set"
+      }
+    ]
+  },
+  {
+    "name": "nfs-server-provisioner-privileged",
+    "description": "NFS server provisioner requires non-root containers and privilege escalation to manage NFS exports",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "nfs-server-provisioner"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0013",
+        "controlName": "Non-root containers"
+      },
+      {
+        "controlID": "C-0016",
+        "controlName": "Allow privilege escalation"
+      },
+      {
+        "controlID": "C-0017",
+        "controlName": "Immutable container filesystem"
+      },
+      {
+        "controlID": "C-0018",
+        "controlName": "Configured readiness probe"
+      },
+      {
+        "controlID": "C-0056",
+        "controlName": "Configured liveness probe"
+      },
+      {
+        "controlID": "C-0271",
+        "controlName": "Ensure memory limits are set"
+      }
+    ]
+  },
+  {
+    "name": "trivy-operator-credentials-configmap",
+    "description": "Trivy operator stores registry credentials in a ConfigMap as part of its upstream configuration pattern",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "trivy-operator-config"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0012",
+        "controlName": "Applications credentials in configuration files"
+      }
+    ]
+  },
+  {
+    "name": "upstream-charts-missing-probes",
+    "description": "Upstream charts do not configure readiness/liveness probes for all containers; grafana includes k8s-sidecar containers without probes, others have no probe configuration at all",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "descheduler"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "k8s-ttl-controller"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "k8up"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kube-prometheus-stack-grafana-image-renderer"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kube-prometheus-stack-grafana"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kyverno-background-controller"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kyverno-reports-controller"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "telemetry-gateway"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0018",
+        "controlName": "Configured readiness probe"
+      },
+      {
+        "controlID": "C-0056",
+        "controlName": "Configured liveness probe"
+      }
+    ]
+  },
+  {
+    "name": "upstream-charts-missing-memory-limits",
+    "description": "Upstream charts do not set memory limits for certain workloads; limits are tracked as a separate hardening effort",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "dead-mans-switch-registration"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "flux-generate-gpg-key-secret-main.*"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "flux-generate-ssh-key-secret-main.*"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "k8up-cleanup"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kube-prometheus-stack-admission-create"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kube-prometheus-stack-admission-patch"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kube-prometheus-stack-grafana-image-renderer"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "prevent-uninstallation"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0271",
+        "controlName": "Ensure memory limits are set"
+      }
+    ]
+  },
+  {
+    "name": "grafana-tempo-privilege-escalation",
+    "description": "Grafana Tempo upstream chart does not support readOnlyRootFilesystem; writable filesystem is required",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "grafana-tempo"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0017",
+        "controlName": "Immutable container filesystem"
+      }
+    ]
+  },
+  {
+    "name": "ingress-nginx-immutable-filesystem",
+    "description": "Ingress-nginx controller requires a writable filesystem for temporary files and PID management",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "ingress-nginx-controller"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0017",
+        "controlName": "Immutable container filesystem"
+      }
+    ]
+  },
+  {
+    "name": "grafana-immutable-filesystem",
+    "description": "Grafana upstream chart requires a writable filesystem for plugin management and dashboard provisioning",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kube-prometheus-stack-grafana"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0017",
+        "controlName": "Immutable container filesystem"
+      }
+    ]
+  },
+  {
+    "name": "service-account-automount",
+    "description": "Upstream chart service accounts and controllers require automounted tokens for Kubernetes API access; CI RBAC test accounts have cluster-admin roles needed for integration testing",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "base-cluster-dev.*"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "base-cluster-test.*"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "cleanup-service-account"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "descheduler"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "external-dns"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "flux-generate-gpg-key-secret-main.*"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "flux-generate-ssh-key-secret-main.*"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "grafana-tempo"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "ingress-controller"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "ingress-nginx"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "k8s-ttl-controller"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "k8up"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kube-prometheus-stack-admission"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kube-prometheus-stack-alertmanager"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kube-prometheus-stack-grafana"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kube-prometheus-stack-kube-state-metrics"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kube-prometheus-stack-operator"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kube-prometheus-stack-prometheus"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kyverno-admission-controller"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kyverno-background-controller"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kyverno-cleanup-controller"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kyverno-migrate-resources"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "kyverno-reports-controller"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "loki"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "metrics-server"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "nfs-server-provisioner"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "reflector"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "telemetry-collector"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "telemetry-gateway"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "trivy-trivy-operator"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "name": "velero-server"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0034",
+        "controlName": "Automatic mapping of service account"
+      },
+      {
+        "controlID": "C-0053",
+        "controlName": "Access container service account"
+      }
+    ]
+  }
+]

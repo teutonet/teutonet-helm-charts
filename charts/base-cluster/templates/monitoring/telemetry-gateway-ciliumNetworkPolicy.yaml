@@ -1,0 +1,47 @@
+{{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.tracing.enabled (eq (include "common.networkPolicy.type" .) "cilium") }}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: telemetry-gateway
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: alloy
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: telemetry-gateway
+      app.kubernetes.io/name: alloy
+  ingress:
+    - fromEndpoints:
+        - matchLabels: {{- include "common.tplvalues.render" (dict "value" (include "common.dict.filterEmptyValues" .Values.global.networkPolicy.metricsLabels) "context" $) | nindent 12 }}
+      toPorts:
+        - ports:
+            - port: "8888"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: telemetry-collector
+            app.kubernetes.io/name: alloy
+            io.kubernetes.pod.namespace: monitoring
+      toPorts:
+        - ports:
+            - port: "4317"
+              protocol: TCP
+    - fromEntities:
+        - health
+      toPorts:
+        - ports:
+            - port: "12345"
+              protocol: TCP
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: tempo
+            io.kubernetes.pod.namespace: monitoring
+      toPorts:
+        - ports:
+            - port: "4317"
+              protocol: TCP
+    - toEntities:
+        - kube-apiserver
+{{- end }}

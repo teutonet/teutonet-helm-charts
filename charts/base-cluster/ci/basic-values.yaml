@@ -1,8 +1,6 @@
 global:
-  clusterName: test
   namespaces:
     dev: {}
-  serviceLevelAgreement: None
 flux:
   gitRepositories:
     main:
@@ -27,6 +25,3 @@ rbac:
       roles:
         admin:
           - dev
-monitoring:
-  grafana:
-    adminPassword: test

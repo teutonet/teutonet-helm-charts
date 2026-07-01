@@ -4,6 +4,7 @@
 ---
 apiVersion: v1
 kind: ServiceAccount
+automountServiceAccountToken: false
 metadata:
   name: {{ $fullName }}
   namespace: {{ $.Release.Namespace }}
