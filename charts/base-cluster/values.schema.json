@@ -1363,6 +1363,10 @@
           "type": "boolean",
           "description": "Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets"
         },
+        "useTraefikNginxCompatibility": {
+          "type": "boolean",
+          "description": "Enables the kubernetesIngressNGINX provider in traefik, which supports a subset of the annotations from the deprecated nginx ingress. Ref.: https://doc.traefik.io/traefik/reference/routing-configuration/kubernetes/ingress-nginx/"
+        },
         "useProxyProtocol": {
           "oneOf": [
             {
