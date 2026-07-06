@@ -22,7 +22,7 @@ jobs:
     name: lint helm chart
     permissions:
       contents: read
-    runs-on: self-hosted
+    runs-on: self-hosted-big
     needs:
       - getChangedCharts
     strategy:
