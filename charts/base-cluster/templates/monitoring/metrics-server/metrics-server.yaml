@@ -34,6 +34,7 @@ spec:
       minAvailable: 1
     tls:
       type: cert-manager
+    resources: {{- include "common.resources" $.Values.monitoring.metricsServer | nindent 6 }}
     defaultArgs:
       - --cert-dir=/tmp
       - --kubelet-preferred-address-types=InternalIP
