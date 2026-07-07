@@ -684,8 +684,7 @@
                         "botToken"
                       ],
                       "additionalProperties": false
-                    },
-                    "additionalProperties": false
+                    }
                   },
                   "additionalProperties": false
                 },
@@ -1386,33 +1385,52 @@
           "description": "Try to use specified IP as loadbalancer IP"
         },
         "extraPorts": {
-              "type": "object",
-              "additionalProperties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": [
+              "port",
+              "exposedPort",
+              "protocol"
+            ],
+            "properties": {
+              "port": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 65535
+              },
+              "exposedPort": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 65535
+              },
+              "protocol": {
+                "type": "string",
+                "enum": [
+                  "TCP",
+                  "UDP"
+                ]
+              },
+              "expose": {
                 "type": "object",
-                "required": ["port", "exposedPort", "protocol"],
                 "properties": {
-                  "port": { "type": "integer", "minimum": 1, "maximum": 65535  },
-                  "exposedPort": { "type": "integer", "minimum": 1, "maximum": 65535  },
-                  "protocol": {
-                    "type": "string",
-                    "enum": ["TCP", "UDP"]
-                  },
-                  "expose": {
-                    "type": "object",
-                    "properties": {
-                      "default": { "type": "boolean" }
-                    }
-                  },
-                  "proxyProtocol": {
-                    "type": "object",
-                    "properties": {
-                      "insecure": { "type": "boolean" }
-                    }
+                  "default": {
+                    "type": "boolean"
                   }
-                },
-                "additionalProperties": true
+                }
+              },
+              "proxyProtocol": {
+                "type": "object",
+                "properties": {
+                  "insecure": {
+                    "type": "boolean"
+                  }
+                }
               }
-            }
+            },
+            "additionalProperties": true
+          }
+        }
       },
       "additionalProperties": false
     },
