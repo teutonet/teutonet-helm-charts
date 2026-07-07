@@ -686,7 +686,8 @@
                       "additionalProperties": false
                     },
                     "additionalProperties": false
-                  }
+                  },
+                  "additionalProperties": false
                 },
                 "routes": {
                   "$ref": "#/$defs/alertmanagerConfigRoutes"
