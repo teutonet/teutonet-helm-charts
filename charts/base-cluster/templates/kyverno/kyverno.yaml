@@ -65,7 +65,7 @@ spec:
         address: {{ $telemetryConf.host }}
         port: {{ int64 $telemetryConf.port }}
       {{- end }}
-      resources: &resources {{- include "common.resources" .Values.kyverno.resources | nindent 8 }}
+      resources: &resources {{- include "common.resources" .Values.kyverno | nindent 8 }}
     backgroundController:
       replicas: 2
       priorityClassName: system-cluster-critical
