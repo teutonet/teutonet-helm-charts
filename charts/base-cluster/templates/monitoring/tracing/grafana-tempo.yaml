@@ -21,7 +21,7 @@ spec:
       {{- with .Values.global.imageRegistry }}
       registry: {{ . }}
       {{- end }}
-      resources: {{- include "common.resources" .Values.monitoring.tracing.resources | nindent 8 }}
+      resources: {{- include "common.resources" .Values.monitoring.tracing | nindent 8 }}
       securityContext:
         privileged: false
         seLinuxOptions: {}
