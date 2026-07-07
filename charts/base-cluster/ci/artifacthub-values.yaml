@@ -40,6 +40,8 @@ monitoring:
       receivers:
         pagerduty:
           integrationKey: INTEGRATION_KEY__INTEGRATION_KEY
+    blackboxExporter:
+      enabled: true
   loki:
     enabled: true
   metricsServer:

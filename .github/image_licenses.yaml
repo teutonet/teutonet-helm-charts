@@ -173,6 +173,9 @@ licenses:
   quay.io/prometheus/alertmanager:
     license: Apache-2.0
     licenseLink: https://github.com/prometheus/alertmanager/blob/main/LICENSE
+  quay.io/prometheus/blackbox-exporter:
+    license: Apache-2.0
+    licenseLink: https://github.com/prometheus/blackbox_exporter/blob/master/LICENSE
   quay.io/prometheus/node-exporter:
     license: Apache-2.0
     licenseLink: https://github.com/prometheus/node_exporter/blob/master/LICENSE

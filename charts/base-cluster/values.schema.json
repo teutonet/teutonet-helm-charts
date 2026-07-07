@@ -728,6 +728,21 @@
             },
             "kubeControllerManager": {
               "$ref": "#/$defs/triState"
+            },
+            "blackboxExporter": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "resourcesPreset": {
+                  "$ref": "#/$defs/resourcesPreset"
+                },
+                "resources": {
+                  "$ref": "#/$defs/resourceRequirements"
+                }
+              },
+              "additionalProperties": false
             }
           },
           "additionalProperties": false
