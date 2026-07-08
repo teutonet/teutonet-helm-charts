@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 12.0.0](https://img.shields.io/badge/Version-12.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 12.1.0](https://img.shields.io/badge/Version-12.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -246,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v12.0.0/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v12.1.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -2191,19 +2191,22 @@ Must be one of:
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                         | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
-| ---------------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| - [enabled](#monitoring_prometheus_enabled )                     | No      | boolean          | No         | -                                                                             | -                                                                 |
-| - [replicas](#monitoring_prometheus_replicas )                   | No      | integer          | No         | -                                                                             | -                                                                 |
-| - [resourcesPreset](#monitoring_prometheus_resourcesPreset )     | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
-| - [resources](#monitoring_prometheus_resources )                 | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
-| - [retentionDuration](#monitoring_prometheus_retentionDuration ) | No      | string           | No         | -                                                                             | -                                                                 |
-| - [persistence](#monitoring_prometheus_persistence )             | No      | object           | No         | -                                                                             | -                                                                 |
-| - [operator](#monitoring_prometheus_operator )                   | No      | object           | No         | -                                                                             | -                                                                 |
-| - [kubeStateMetrics](#monitoring_prometheus_kubeStateMetrics )   | No      | object           | No         | -                                                                             | -                                                                 |
-| - [nodeExporter](#monitoring_prometheus_nodeExporter )           | No      | object           | No         | -                                                                             | -                                                                 |
-| - [ingress](#monitoring_prometheus_ingress )                     | No      | object           | No         | In #/$defs/toolIngress                                                        | -                                                                 |
-| - [alertmanager](#monitoring_prometheus_alertmanager )           | No      | object           | No         | -                                                                             | -                                                                 |
+| Property                                                                 | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
+| ------------------------------------------------------------------------ | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| - [enabled](#monitoring_prometheus_enabled )                             | No      | boolean          | No         | -                                                                             | -                                                                 |
+| - [replicas](#monitoring_prometheus_replicas )                           | No      | integer          | No         | -                                                                             | -                                                                 |
+| - [resourcesPreset](#monitoring_prometheus_resourcesPreset )             | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
+| - [resources](#monitoring_prometheus_resources )                         | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
+| - [retentionDuration](#monitoring_prometheus_retentionDuration )         | No      | string           | No         | -                                                                             | -                                                                 |
+| - [persistence](#monitoring_prometheus_persistence )                     | No      | object           | No         | -                                                                             | -                                                                 |
+| - [operator](#monitoring_prometheus_operator )                           | No      | object           | No         | -                                                                             | -                                                                 |
+| - [kubeStateMetrics](#monitoring_prometheus_kubeStateMetrics )           | No      | object           | No         | -                                                                             | -                                                                 |
+| - [nodeExporter](#monitoring_prometheus_nodeExporter )                   | No      | object           | No         | -                                                                             | -                                                                 |
+| - [ingress](#monitoring_prometheus_ingress )                             | No      | object           | No         | In #/$defs/toolIngress                                                        | -                                                                 |
+| - [alertmanager](#monitoring_prometheus_alertmanager )                   | No      | object           | No         | -                                                                             | -                                                                 |
+| - [kubeProxy](#monitoring_prometheus_kubeProxy )                         | No      | object           | No         | In #/$defs/triState                                                           | -                                                                 |
+| - [kubeScheduler](#monitoring_prometheus_kubeScheduler )                 | No      | object           | No         | Same as [kubeProxy](#monitoring_prometheus_kubeProxy )                        | -                                                                 |
+| - [kubeControllerManager](#monitoring_prometheus_kubeControllerManager ) | No      | object           | No         | Same as [kubeProxy](#monitoring_prometheus_kubeProxy )                        | -                                                                 |
 
 #### <a name="monitoring_prometheus_enabled"></a>4.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > enabled`
 
@@ -2463,17 +2466,16 @@ Must be one of:
 
 ##### <a name="monitoring_prometheus_alertmanager_receivers"></a>4.3.11.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers`
 
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                    |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                                          | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                        |
-| --------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| - [^pagerduty( \S+)?$](#monitoring_prometheus_alertmanager_receivers_pattern1 )   | Yes     | object | No         | -          | -                                                                                                                                        |
-| - [^email( \S+)?$](#monitoring_prometheus_alertmanager_receivers_pattern2 )       | Yes     | object | No         | -          | Sets up an email receiver, if suffixed with \` $name\` \`$name\` will be used as the name of the receiver, otherwise it's \`email\`      |
-| - [^telegram( \S+)?$](#monitoring_prometheus_alertmanager_receivers_pattern3 )    | Yes     | object | No         | -          | Sets up a telegram receiver, if suffixed with \` $name\` \`$name\` will be used as the name of the receiver, otherwise it's \`telegram\` |
-| - [additionalProperties](#monitoring_prometheus_alertmanager_receivers_pattern4 ) | Yes     | object | No         | -          | -                                                                                                                                        |
+| Property                                                                        | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                        |
+| ------------------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| - [^pagerduty( \S+)?$](#monitoring_prometheus_alertmanager_receivers_pattern1 ) | Yes     | object | No         | -          | -                                                                                                                                        |
+| - [^email( \S+)?$](#monitoring_prometheus_alertmanager_receivers_pattern2 )     | Yes     | object | No         | -          | Sets up an email receiver, if suffixed with \` $name\` \`$name\` will be used as the name of the receiver, otherwise it's \`email\`      |
+| - [^telegram( \S+)?$](#monitoring_prometheus_alertmanager_receivers_pattern3 )  | Yes     | object | No         | -          | Sets up a telegram receiver, if suffixed with \` $name\` \`$name\` will be used as the name of the receiver, otherwise it's \`telegram\` |
 
 ###### <a name="monitoring_prometheus_alertmanager_receivers_pattern1"></a>4.3.11.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Pattern Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > ^pagerduty( \S+)?$`
 > All properties whose name matches the regular expression
@@ -2620,16 +2622,6 @@ must respect the following conditions
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
-
-###### <a name="monitoring_prometheus_alertmanager_receivers_pattern4"></a>4.3.11.2.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Pattern Property `base cluster configuration > monitoring > prometheus > alertmanager > receivers > additionalProperties`
-> All properties whose name matches the regular expression
-```additionalProperties``` ([Test](https://regex101.com/?regex=additionalProperties))
-must respect the following conditions
-
-|                           |                                                                             |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Type**                  | `object`                                                                    |
-| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
 ##### <a name="monitoring_prometheus_alertmanager_routes"></a>4.3.11.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > alertmanager > routes`
 
@@ -2918,6 +2910,49 @@ must respect the following conditions
 | **Type**                  | `object`                                                                                                                                  |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green)                                                               |
 | **Same definition as**    | [io.k8s.apimachinery.pkg.api.resource.Quantity](#global_namespaces_additionalProperties_resources_defaults_requests_additionalProperties) |
+
+#### <a name="monitoring_prometheus_kubeProxy"></a>4.3.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > kubeProxy`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Defined in**            | #/$defs/triState                                                            |
+
+| One of(Option)                                      |
+| --------------------------------------------------- |
+| [item 0](#monitoring_prometheus_kubeProxy_oneOf_i0) |
+| [item 1](#monitoring_prometheus_kubeProxy_oneOf_i1) |
+
+##### <a name="monitoring_prometheus_kubeProxy_oneOf_i0"></a>4.3.12.1. Property `base cluster configuration > monitoring > prometheus > kubeProxy > oneOf > item 0`
+
+|          |         |
+| -------- | ------- |
+| **Type** | `const` |
+
+Specific value: `"auto"`
+
+##### <a name="monitoring_prometheus_kubeProxy_oneOf_i1"></a>4.3.12.2. Property `base cluster configuration > monitoring > prometheus > kubeProxy > oneOf > item 1`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+#### <a name="monitoring_prometheus_kubeScheduler"></a>4.3.13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > kubeScheduler`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [kubeProxy](#monitoring_prometheus_kubeProxy)                               |
+
+#### <a name="monitoring_prometheus_kubeControllerManager"></a>4.3.14. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > kubeControllerManager`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [kubeProxy](#monitoring_prometheus_kubeProxy)                               |
 
 ### <a name="monitoring_grafana"></a>4.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana`
 
@@ -4408,16 +4443,17 @@ Must be one of:
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                                       | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                                                                                                                                                                             |
-| ------------------------------------------------------------------------------ | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| - [replicas](#ingress_replicas )                                               | No      | integer          | No         | -                                                                             | -                                                                                                                                                                                                                             |
-| - [resourcesPreset](#ingress_resourcesPreset )                                 | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                                                                                                                                                                             |
-| - [resources](#ingress_resources )                                             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements.                                                                                                                                                             |
-| - [provider](#ingress_provider )                                               | No      | enum (of string) | No         | -                                                                             | Which ingress controller to use                                                                                                                                                                                               |
-| - [allowNginxConfigurationSnippets](#ingress_allowNginxConfigurationSnippets ) | No      | boolean          | No         | -                                                                             | Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets |
-| - [useProxyProtocol](#ingress_useProxyProtocol )                               | No      | Combination      | No         | -                                                                             | -                                                                                                                                                                                                                             |
-| - [IP](#ingress_IP )                                                           | No      | string           | No         | -                                                                             | Try to use specified IP as loadbalancer IP                                                                                                                                                                                    |
-| - [extraPorts](#ingress_extraPorts )                                           | No      | object           | No         | -                                                                             | -                                                                                                                                                                                                                             |
+| Property                                                                       | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                                                                                                                                                                                    |
+| ------------------------------------------------------------------------------ | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| - [replicas](#ingress_replicas )                                               | No      | integer          | No         | -                                                                             | -                                                                                                                                                                                                                                    |
+| - [resourcesPreset](#ingress_resourcesPreset )                                 | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                                                                                                                                                                                    |
+| - [resources](#ingress_resources )                                             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements.                                                                                                                                                                    |
+| - [provider](#ingress_provider )                                               | No      | enum (of string) | No         | -                                                                             | Which ingress controller to use                                                                                                                                                                                                      |
+| - [allowNginxConfigurationSnippets](#ingress_allowNginxConfigurationSnippets ) | No      | boolean          | No         | -                                                                             | Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets        |
+| - [useTraefikNginxCompatibility](#ingress_useTraefikNginxCompatibility )       | No      | boolean          | No         | -                                                                             | Enables the kubernetesIngressNGINX provider in traefik, which supports a subset of the annotations from the deprecated nginx ingress. Ref.: https://doc.traefik.io/traefik/reference/routing-configuration/kubernetes/ingress-nginx/ |
+| - [useProxyProtocol](#ingress_useProxyProtocol )                               | No      | Combination      | No         | -                                                                             | -                                                                                                                                                                                                                                    |
+| - [IP](#ingress_IP )                                                           | No      | string           | No         | -                                                                             | Try to use specified IP as loadbalancer IP                                                                                                                                                                                           |
+| - [extraPorts](#ingress_extraPorts )                                           | No      | object           | No         | -                                                                             | -                                                                                                                                                                                                                                    |
 
 ### <a name="ingress_replicas"></a>10.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > replicas`
 
@@ -4468,7 +4504,15 @@ Must be one of:
 
 **Description:** Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets
 
-### <a name="ingress_useProxyProtocol"></a>10.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > useProxyProtocol`
+### <a name="ingress_useTraefikNginxCompatibility"></a>10.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > useTraefikNginxCompatibility`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+**Description:** Enables the kubernetesIngressNGINX provider in traefik, which supports a subset of the annotations from the deprecated nginx ingress. Ref.: https://doc.traefik.io/traefik/reference/routing-configuration/kubernetes/ingress-nginx/
+
+### <a name="ingress_useProxyProtocol"></a>10.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > useProxyProtocol`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -4480,13 +4524,13 @@ Must be one of:
 | [item 0](#ingress_useProxyProtocol_oneOf_i0) |
 | [item 1](#ingress_useProxyProtocol_oneOf_i1) |
 
-#### <a name="ingress_useProxyProtocol_oneOf_i0"></a>10.6.1. Property `base cluster configuration > ingress > useProxyProtocol > oneOf > item 0`
+#### <a name="ingress_useProxyProtocol_oneOf_i0"></a>10.7.1. Property `base cluster configuration > ingress > useProxyProtocol > oneOf > item 0`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-#### <a name="ingress_useProxyProtocol_oneOf_i1"></a>10.6.2. Property `base cluster configuration > ingress > useProxyProtocol > oneOf > item 1`
+#### <a name="ingress_useProxyProtocol_oneOf_i1"></a>10.7.2. Property `base cluster configuration > ingress > useProxyProtocol > oneOf > item 1`
 
 |          |         |
 | -------- | ------- |
@@ -4498,7 +4542,7 @@ The code figures out the cloud by the node provider ID, which is assumed to be t
 
 Specific value: `"auto"`
 
-### <a name="ingress_IP"></a>10.7. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > IP`
+### <a name="ingress_IP"></a>10.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > IP`
 
 |          |          |
 | -------- | -------- |
@@ -4510,7 +4554,7 @@ Specific value: `"auto"`
 | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Must match regular expression** | ```^((25[0-5]\|(2[0-4]\|1\d\|[1-9]\|)\d)\.?\b){4}$``` [Test](https://regex101.com/?regex=%5E%28%2825%5B0-5%5D%7C%282%5B0-4%5D%7C1%5Cd%7C%5B1-9%5D%7C%29%5Cd%29%5C.%3F%5Cb%29%7B4%7D%24) |
 
-### <a name="ingress_extraPorts"></a>10.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > extraPorts`
+### <a name="ingress_extraPorts"></a>10.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > extraPorts`
 
 |                           |                                                                                                                 |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -4521,7 +4565,7 @@ Specific value: `"auto"`
 | ----------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [](#ingress_extraPorts_additionalProperties ) | No      | object | No         | -          | -                 |
 
-#### <a name="ingress_extraPorts_additionalProperties"></a>10.8.1. Property `base cluster configuration > ingress > extraPorts > additionalProperties`
+#### <a name="ingress_extraPorts_additionalProperties"></a>10.9.1. Property `base cluster configuration > ingress > extraPorts > additionalProperties`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -4537,7 +4581,7 @@ Specific value: `"auto"`
 | - [proxyProtocol](#ingress_extraPorts_additionalProperties_proxyProtocol ) | No      | object           | No         | -          | -                 |
 | - [](#ingress_extraPorts_additionalProperties_additionalProperties )       | No      | object           | No         | -          | -                 |
 
-##### <a name="ingress_extraPorts_additionalProperties_port"></a>10.8.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > ingress > extraPorts > additionalProperties > port`
+##### <a name="ingress_extraPorts_additionalProperties_port"></a>10.9.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > ingress > extraPorts > additionalProperties > port`
 
 |          |           |
 | -------- | --------- |
@@ -4548,7 +4592,7 @@ Specific value: `"auto"`
 | **Minimum**  | &ge; 1     |
 | **Maximum**  | &le; 65535 |
 
-##### <a name="ingress_extraPorts_additionalProperties_exposedPort"></a>10.8.1.2. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > ingress > extraPorts > additionalProperties > exposedPort`
+##### <a name="ingress_extraPorts_additionalProperties_exposedPort"></a>10.9.1.2. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > ingress > extraPorts > additionalProperties > exposedPort`
 
 |          |           |
 | -------- | --------- |
@@ -4559,7 +4603,7 @@ Specific value: `"auto"`
 | **Minimum**  | &ge; 1     |
 | **Maximum**  | &le; 65535 |
 
-##### <a name="ingress_extraPorts_additionalProperties_protocol"></a>10.8.1.3. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > ingress > extraPorts > additionalProperties > protocol`
+##### <a name="ingress_extraPorts_additionalProperties_protocol"></a>10.9.1.3. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > ingress > extraPorts > additionalProperties > protocol`
 
 |          |                    |
 | -------- | ------------------ |
@@ -4569,7 +4613,7 @@ Must be one of:
 * "TCP"
 * "UDP"
 
-##### <a name="ingress_extraPorts_additionalProperties_expose"></a>10.8.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > extraPorts > additionalProperties > expose`
+##### <a name="ingress_extraPorts_additionalProperties_expose"></a>10.9.1.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > extraPorts > additionalProperties > expose`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -4580,13 +4624,13 @@ Must be one of:
 | --------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
 | - [default](#ingress_extraPorts_additionalProperties_expose_default ) | No      | boolean | No         | -          | -                 |
 
-###### <a name="ingress_extraPorts_additionalProperties_expose_default"></a>10.8.1.4.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > extraPorts > additionalProperties > expose > default`
+###### <a name="ingress_extraPorts_additionalProperties_expose_default"></a>10.9.1.4.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > extraPorts > additionalProperties > expose > default`
 
 |          |           |
 | -------- | --------- |
 | **Type** | `boolean` |
 
-##### <a name="ingress_extraPorts_additionalProperties_proxyProtocol"></a>10.8.1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > extraPorts > additionalProperties > proxyProtocol`
+##### <a name="ingress_extraPorts_additionalProperties_proxyProtocol"></a>10.9.1.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > extraPorts > additionalProperties > proxyProtocol`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -4597,7 +4641,7 @@ Must be one of:
 | ------------------------------------------------------------------------------ | ------- | ------- | ---------- | ---------- | ----------------- |
 | - [insecure](#ingress_extraPorts_additionalProperties_proxyProtocol_insecure ) | No      | boolean | No         | -          | -                 |
 
-###### <a name="ingress_extraPorts_additionalProperties_proxyProtocol_insecure"></a>10.8.1.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > extraPorts > additionalProperties > proxyProtocol > insecure`
+###### <a name="ingress_extraPorts_additionalProperties_proxyProtocol_insecure"></a>10.9.1.5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > extraPorts > additionalProperties > proxyProtocol > insecure`
 
 |          |           |
 | -------- | --------- |
@@ -4688,9 +4732,9 @@ Must be one of:
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                         | Pattern | Type        | Deprecated | Definition | Title/Description |
-| -------------------------------- | ------- | ----------- | ---------- | ---------- | ----------------- |
-| - [enabled](#reflector_enabled ) | No      | Combination | No         | -          | -                 |
+| Property                         | Pattern | Type   | Deprecated | Definition                                             | Title/Description |
+| -------------------------------- | ------- | ------ | ---------- | ------------------------------------------------------ | ----------------- |
+| - [enabled](#reflector_enabled ) | No      | object | No         | Same as [kubeProxy](#monitoring_prometheus_kubeProxy ) | -                 |
 
 ### <a name="reflector_enabled"></a>12.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > reflector > enabled`
 
@@ -4698,25 +4742,7 @@ Must be one of:
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `combining`                                                                 |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
-
-| One of(Option)                        |
-| ------------------------------------- |
-| [item 0](#reflector_enabled_oneOf_i0) |
-| [item 1](#reflector_enabled_oneOf_i1) |
-
-#### <a name="reflector_enabled_oneOf_i0"></a>12.1.1. Property `base cluster configuration > reflector > enabled > oneOf > item 0`
-
-|          |         |
-| -------- | ------- |
-| **Type** | `const` |
-
-Specific value: `"auto"`
-
-#### <a name="reflector_enabled_oneOf_i1"></a>12.1.2. Property `base cluster configuration > reflector > enabled > oneOf > item 1`
-
-|          |           |
-| -------- | --------- |
-| **Type** | `boolean` |
+| **Same definition as**    | [kubeProxy](#monitoring_prometheus_kubeProxy)                               |
 
 ## <a name="rbac"></a>13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > rbac`
 
