@@ -6,15 +6,19 @@
   {{- fail "useTraefikNginxCompatibility cannot be enabled when using nginx as the ingress provider" -}}
 {{- end -}}
 
-{{- if eq .Values.ingress.provider "traefik" -}}
-  {{- $existingNginx := lookup "helm.toolkit.fluxcd.io/v2" "HelmRelease" "ingress-nginx" "ingress-nginx" -}}
-  {{- if $existingNginx -}}
-    {{- fail "Cannot switch to traefik while nginx is installed. If you want to switch to traefik, please delete the HelmRelease 'ingress-nginx/ingress-nginx' first. Note: You might want to set .Values.ingress.IP to the current nginx LoadBalancer IP to keep the same IP. Warning: Switching providers will cause downtime until the new provider is fully deployed." -}}
-  {{- end -}}
-{{- else if eq .Values.ingress.provider "nginx" -}}
-  {{- $existingTraefik := lookup "helm.toolkit.fluxcd.io/v2" "HelmRelease" "ingress" "ingress-controller" -}}
-  {{- if $existingTraefik -}}
-    {{- fail "Cannot switch to nginx while traefik is installed. If you want to switch to nginx, please delete the HelmRelease 'ingress/ingress-controller' first. Note: You might want to set .Values.ingress.IP to the current traefik LoadBalancer IP to keep the same IP. Warning: Switching providers will cause downtime until the new provider is fully deployed." -}}
+{{- $existingNginx := lookup "helm.toolkit.fluxcd.io/v2" "HelmRelease" "ingress-nginx" "ingress-nginx" -}}
+{{- $existingTraefik := lookup "helm.toolkit.fluxcd.io/v2" "HelmRelease" "ingress" "ingress-controller" -}}
+{{- if and $existingNginx $existingTraefik -}}
+  {{/* both are deployed, skip any checks; manual dual-mode */}}
+{{- else -}}
+  {{- if eq .Values.ingress.provider "traefik" -}}
+    {{- if $existingNginx -}}
+      {{- fail "Cannot switch to traefik while nginx is installed. If you want to switch to traefik, please delete the HelmRelease 'ingress-nginx/ingress-nginx' first. Note: You might want to set .Values.ingress.IP to the current nginx LoadBalancer IP to keep the same IP. Warning: Switching providers will cause downtime until the new provider is fully deployed." -}}
+    {{- end -}}
+  {{- else if eq .Values.ingress.provider "nginx" -}}
+    {{- if $existingTraefik -}}
+      {{- fail "Cannot switch to nginx while traefik is installed. If you want to switch to nginx, please delete the HelmRelease 'ingress/ingress-controller' first. Note: You might want to set .Values.ingress.IP to the current traefik LoadBalancer IP to keep the same IP. Warning: Switching providers will cause downtime until the new provider is fully deployed." -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
 

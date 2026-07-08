@@ -71,6 +71,56 @@ tests:
       - failedTemplate:
           errorMessage: "Cannot switch to nginx while traefik is installed. If you want to switch to nginx, please delete the HelmRelease 'ingress/ingress-controller' first. Note: You might want to set .Values.ingress.IP to the current traefik LoadBalancer IP to keep the same IP. Warning: Switching providers will cause downtime until the new provider is fully deployed."
 
+  - it: no error when both nginx and traefik HelmReleases exist with traefik provider
+    kubernetesProvider:
+      scheme:
+        "helm.toolkit.fluxcd.io/v2/HelmRelease":
+          gvr:
+            group: "helm.toolkit.fluxcd.io"
+            version: "v2"
+            resource: "helmreleases"
+          namespaced: true
+      objects:
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-nginx
+            namespace: ingress-nginx
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-controller
+            namespace: ingress
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: no error when both nginx and traefik HelmReleases exist with nginx provider
+    set:
+      ingress.provider: nginx
+    kubernetesProvider:
+      scheme:
+        "helm.toolkit.fluxcd.io/v2/HelmRelease":
+          gvr:
+            group: "helm.toolkit.fluxcd.io"
+            version: "v2"
+            resource: "helmreleases"
+          namespaced: true
+      objects:
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-nginx
+            namespace: ingress-nginx
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-controller
+            namespace: ingress
+    asserts:
+      - hasDocuments:
+          count: 0
+
   - it: fails when desired IP differs from existing service loadBalancerIP
     set:
       ingress.IP: 10.0.0.100
