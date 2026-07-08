@@ -15,7 +15,7 @@ metadata:
     app.kubernetes.io/part-of: cert-manager
 spec:
   acme:
-    email: {{ .Values.certManager.email }}
+    email: {{ include "common.tplvalues.render" (dict "value" .Values.certManager.email "context" .) }}
     solvers:
       {{- if .Values.dns.provider }}
       - dns01:
