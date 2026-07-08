@@ -36,27 +36,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Homebrew
-        run: |
-          NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          {
-            echo "/home/linuxbrew/.linuxbrew/bin"
-            echo "/home/linuxbrew/.linuxbrew/sbin"
-          } >> "$GITHUB_PATH"
-          {
-            echo "HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew"
-            echo "HOMEBREW_CELLAR=/home/linuxbrew/.linuxbrew/Cellar"
-            echo "HOMEBREW_REPOSITORY=/home/linuxbrew/.linuxbrew/Homebrew"
-          } >> "$GITHUB_ENV"
-      - name: Install kubectl
-        run: brew install kubectl
-
-      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
-        with:
-          python-version: 3.14
-      - run: pip install yq
-      - name: Install apt dependencies
-        run: sudo apt-get -yq update && sudo apt-get -yq install jq moreutils parallel
       - name: Extract helm repos
         id: helm-repos
         run: |
@@ -66,8 +45,6 @@ jobs:
             yq -r '.dependencies[] | .repository' "charts/$CHART/Chart.yaml" | sort -u | grep https:// | awk '{printf (NR>1 ? "," : "") NR "=" $1}'
             echo
           ) | tee -a "$GITHUB_OUTPUT"
-
-      - uses: helm/chart-testing-action@6ec842c01de15ebb84c8627d2744a0c2f2755c9f # v2.8.0
 
       - name: Build test wrapper dependencies
         if: hashFiles(format('charts/{0}/tests/Chart.yaml', env.CHART)) != ''
@@ -101,14 +78,8 @@ jobs:
 
       - run: ./.github/scripts/templateHelmChartRecursivelyToFolder.sh "charts/$CHART" /tmp/templated
         id: templateChart
-      - name: Install Pluto
-        if: ${{ steps.templateChart.outputs.skipped == 'false' }}
-        run: brew install pluto
       - run: pluto detect-files -d /tmp/templated -o custom --columns 'FILEPATH,NAME,KIND,VERSION,REPLACEMENT,REMOVED,DEPRECATED,REPL AVAIL'
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
-      - name: Install kubescape
-        if: ${{ steps.templateChart.outputs.skipped == 'false' }}
-        run: /home/linuxbrew/.linuxbrew/bin/brew install kubescape
       - name: Run kubescape
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
         run: |
