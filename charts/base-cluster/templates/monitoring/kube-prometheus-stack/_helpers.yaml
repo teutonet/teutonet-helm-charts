@@ -63,3 +63,32 @@ privileged: false
     {{- and (not (empty .Values.global.authentication.config)) (dig "enabled" true $ingress) | ternary true "" -}}
   {{- end -}}
 {{- end -}}
+
+{{- define "base-cluster.prometheus.controlPlaneComponents" -}}
+  {{- $kubeProxy := false -}}
+  {{- if typeIs "bool" .Values.monitoring.prometheus.kubeProxy -}}
+    {{- $kubeProxy = .Values.monitoring.prometheus.kubeProxy -}}
+  {{- else -}}
+    {{- $kubeProxy = not (empty (lookup "apps/v1" "DaemonSet" "kube-system" "kube-proxy")) -}}
+  {{- end -}}
+  {{- $kubeScheduler := false -}}
+  {{- $kubeControllerManager := false -}}
+  {{- if typeIs "bool" .Values.monitoring.prometheus.kubeScheduler -}}
+    {{- $kubeScheduler = .Values.monitoring.prometheus.kubeScheduler -}}
+  {{- end -}}
+  {{- if typeIs "bool" .Values.monitoring.prometheus.kubeControllerManager -}}
+    {{- $kubeControllerManager = .Values.monitoring.prometheus.kubeControllerManager -}}
+  {{- end -}}
+  {{- if or (not (typeIs "bool" .Values.monitoring.prometheus.kubeScheduler)) (not (typeIs "bool" .Values.monitoring.prometheus.kubeControllerManager)) -}}
+    {{- range (dig "items" (list) (lookup "v1" "Pod" "kube-system" "")) -}}
+      {{- $component := dig "metadata" "labels" "component" "" . -}}
+      {{- if and (eq $component "kube-scheduler") (not (typeIs "bool" $.Values.monitoring.prometheus.kubeScheduler)) -}}
+        {{- $kubeScheduler = true -}}
+      {{- end -}}
+      {{- if and (eq $component "kube-controller-manager") (not (typeIs "bool" $.Values.monitoring.prometheus.kubeControllerManager)) -}}
+        {{- $kubeControllerManager = true -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- dict "kubeProxy" $kubeProxy "kubeScheduler" $kubeScheduler "kubeControllerManager" $kubeControllerManager | toYaml -}}
+{{- end -}}

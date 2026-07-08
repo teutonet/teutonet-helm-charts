@@ -719,6 +719,15 @@
               "required": [
                 "defaultReceiver"
               ]
+            },
+            "kubeProxy": {
+              "$ref": "#/$defs/triState"
+            },
+            "kubeScheduler": {
+              "$ref": "#/$defs/triState"
+            },
+            "kubeControllerManager": {
+              "$ref": "#/$defs/triState"
             }
           },
           "additionalProperties": false
@@ -1475,14 +1484,7 @@
       "type": "object",
       "properties": {
         "enabled": {
-          "oneOf": [
-            {
-              "const": "auto"
-            },
-            {
-              "type": "boolean"
-            }
-          ]
+          "$ref": "#/$defs/triState"
         }
       },
       "additionalProperties": false
@@ -1854,6 +1856,16 @@
         "privileged",
         "baseline",
         "restricted"
+      ]
+    },
+    "triState": {
+      "oneOf": [
+        {
+          "const": "auto"
+        },
+        {
+          "type": "boolean"
+        }
       ]
     }
   }
