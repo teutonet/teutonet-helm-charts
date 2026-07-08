@@ -52,14 +52,12 @@ jobs:
 
       - name: Run helm unit tests
         if: hashFiles(format('charts/{0}/tests/**', env.CHART)) != ''
-        uses: d3adb5/helm-unittest-action@850bc76597579183998069830d5fa8c3ef0ea34a # v2.5.0
-        with:
-          helm-version: v3.20.2
-          charts: >-
-            ${{ hashFiles(format('charts/{0}/tests/Chart.yaml', env.CHART)) != ''
-              && format('charts/{0}/tests', env.CHART)
-              || format('charts/{0}', env.CHART) }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ -f "charts/$CHART/tests/Chart.yaml" ]]; then
+            helm unittest "charts/$CHART/tests"
+          else
+            helm unittest "charts/$CHART"
+          fi
 
       - run: ./.github/scripts/prepare-values.sh "charts/$CHART"
 
