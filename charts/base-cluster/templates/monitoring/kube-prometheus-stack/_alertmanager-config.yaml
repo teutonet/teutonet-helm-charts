@@ -3,13 +3,14 @@
 {{- end -}}
 
 {{- define "base-cluster.prometheus-stack.alertmanager.validateReceiverInRoute" -}}
+  {{- $_ := set . "path" ($.path | default ".alertmanager")  -}}
   {{- if .route.receiver -}}
     {{- if not (hasKey .receivers .route.receiver) -}}
-      {{- fail (printf "Receiver '%s' is not configured" .route.receiver) -}}
+      {{- fail (printf "Receiver '%s' (path: '%s.receiver') is not configured" .route.receiver .path) -}}
     {{- end -}}
   {{- end -}}
-  {{- range $route := dig "routes" (list) .route -}}
-    {{- include "base-cluster.prometheus-stack.alertmanager.validateReceiverInRoute" (dict "route" $route "receivers" $.receivers) -}}
+  {{- range $index, $route := dig "routes" (list) .route -}}
+    {{- include "base-cluster.prometheus-stack.alertmanager.validateReceiverInRoute" (dict "route" $route "receivers" $.receivers "path" (printf "%s%s%d%s" $.path ".routes[" $index "]")) -}}
   {{- end -}}
 {{- end -}}
 
@@ -124,6 +125,7 @@ config:
     )
   -}}
   {{- with .Values.monitoring.prometheus.alertmanager.routes -}}
+    {{- include "base-cluster.prometheus-stack.alertmanager.validateReceiverInRoute" (dict "route" (dict "routes" .) "receivers" $receivers) -}}
     {{- $routes = concat $routes . -}}
   {{- end -}}
 
