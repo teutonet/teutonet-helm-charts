@@ -32,6 +32,10 @@ You can use the OCI registry; `oci://ghcr.io/teutonet/teutonet-helm-charts`
 
 [Code Scanning Results](https://github.com/teutonet/teutonet-helm-charts/blob/code-scanning/open-alerts.md)
 
+## Contact
+
+[kubernetes@teuto.net](mailto:kubernetes@teuto.net)
+
 ## License
 
 [MIT](https://github.com/teutonet/teutonet-helm-charts/blob/main/LICENSE).
