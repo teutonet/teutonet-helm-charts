@@ -1,0 +1,3 @@
+ingress:
+  enabled: true
+  host: "chirpstack.example.com"

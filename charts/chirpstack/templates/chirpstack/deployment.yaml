@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {{- include "chirpstack.commonMetadata" (dict "context" . "component" "chirpstack") | nindent 2 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: chirpstack
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: chirpstack
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/chirpstack/configmap.yaml") . | sha256sum }}
+    spec:
+      securityContext: {{- include "chirpstack.securityContext" (dict) | nindent 8 }}
+      {{- include "chirpstack.securityOptions" (dict) | nindent 6 }}
+      initContainers:
+        - name: prepare-git
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.global.curl.image "global" .Values.global) }}
+          env: {{- include "chirpstack.chirpstack.env" . | nindent 12 }}
+          securityContext: {{- include "chirpstack.containerSecurityContext" (dict) | nindent 12 }}
+          resources: {{- .Values.global.curl.resources | toYaml | nindent 12 }}
+          command:
+            - /bin/sh
+            - -exc
+            - |-
+              set -o pipefail
+              curl -fsSL https://github.com/brocaar/lorawan-devices/tarball/master | tar -C /tmp/lorawan-devices --strip-components=1 -xz
+          volumeMounts:
+            - mountPath: /etc/chirpstack/chirpstack.toml
+              name: chirpstack-config
+              subPath: chirpstack.toml
+            - mountPath: /tmp/lorawan-devices
+              name: chirpstack-lorawan-devices
+        - name: prepare-chirpstack
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.chirpstack.image "global" .Values.global) }}
+          env: {{- include "chirpstack.chirpstack.env" . | nindent 12 }}
+          securityContext: {{- include "chirpstack.containerSecurityContext" (dict) | nindent 12 }}
+          resources: {{- .Values.chirpstack.resources | toYaml | nindent 12 }}
+          args:
+            - -c
+            - /etc/chirpstack
+            - import-legacy-lorawan-devices-repository
+            - -d
+            - /opt/lorawan-devices
+          volumeMounts:
+            - mountPath: /etc/chirpstack/chirpstack.toml
+              name: chirpstack-config
+              subPath: chirpstack.toml
+            - mountPath: /opt/lorawan-devices
+              name: chirpstack-lorawan-devices
+      containers:
+        - name: chirpstack
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+            httpGet:
+              port: 8080
+              path: /
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.chirpstack.image "global" .Values.global) }}
+          env: {{- include "chirpstack.chirpstack.env" . | nindent 12 }}
+          securityContext: {{- include "chirpstack.containerSecurityContext" (dict) | nindent 12 }}
+          args:
+            - -c
+            - /etc/chirpstack
+          ports:
+            - containerPort: 8080
+              name: chirpstack
+          resources: {{- .Values.chirpstack.resources | toYaml | nindent 12 }}
+          volumeMounts:
+            - mountPath: /etc/chirpstack/chirpstack.toml
+              name: chirpstack-config
+              subPath: chirpstack.toml
+            - mountPath: /opt/lorawan-devices
+              name: chirpstack-lorawan-devices
+            - mountPath: /tmp
+              name: tmp
+      restartPolicy: Always
+      volumes:
+        - name: chirpstack-config
+          configMap:
+            name: {{ include "chirpstack.fullname" (dict "context" . "component" "chirpstack") }}
+        - name: chirpstack-lorawan-devices
+          emptyDir:
+            sizeLimit: 700Mi
+        - name: tmp
+          emptyDir:
+            sizeLimit: 10Mi

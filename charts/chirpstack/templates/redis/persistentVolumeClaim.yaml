@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: {{- include "chirpstack.commonMetadata" (dict "context" . "component" "redis") | nindent 2 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.redis.persistence.size }}
+  {{ include "common.storage.class" ( dict "persistence" .Values.redis.persistence "global" .Values.global) }}
