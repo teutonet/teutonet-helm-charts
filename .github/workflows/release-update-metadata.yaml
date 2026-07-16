@@ -120,8 +120,8 @@ jobs:
           old_major=$(( new_major - 1 ))
           new_header="### ${old_major}.x.x -> ${new_major}.0.0"
 
-          sed -i "0,/^### [Uu]nreleased [Bb]reaking [Cc]hanges$/{s/^### [Uu]nreleased [Bb]reaking [Cc]hanges$/${new_header}/}" "$readme"
-          sed -i "/^$/{N;/\n### [Uu]nreleased [Bb]reaking [Cc]hanges$/d}" "$readme"
+          sed -i -E "0,/^### unreleased breaking changes[[:space:]]*$/I{s/^### unreleased breaking changes[[:space:]]*$/${new_header}/I}" "$readme"
+          sed -i -E "/^$/{N;/\n### unreleased breaking changes[[:space:]]*$/Id}" "$readme"
       - name: Commit README.md.gotmpl
         uses: EndBug/add-and-commit@290ea2c423ad77ca9c62ae0f5b224379612c0321 # v10
         with:

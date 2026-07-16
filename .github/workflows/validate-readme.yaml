@@ -59,7 +59,7 @@ jobs:
           done
 
           if [[ "$hasBreakingChange" == true ]]; then
-            if [[ "$(gh api --paginate "/repos/${GITHUB_REPOSITORY}/contents/charts/${CHANGED_CHART}/README.md.gotmpl?ref=${HEAD_COMMIT}" | jq -er .content | base64 -d | grep -Fci "### unreleased breaking changes")" -lt 1 ]]; then
+            if ! gh api --paginate "/repos/${GITHUB_REPOSITORY}/contents/charts/${CHANGED_CHART}/README.md.gotmpl?ref=${HEAD_COMMIT}" | jq -er .content | base64 -d | grep -qiF "### unreleased breaking changes"; then
               echo "You need to provide a migration info for this breaking change" >&2
               echo 'Add "### unreleased breaking changes" section to README.md.gotmpl' >&2
               exit 1
