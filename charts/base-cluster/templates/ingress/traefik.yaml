@@ -21,6 +21,16 @@ spec:
     crds: Skip
   upgrade:
     crds: Skip
+  postRenderers:
+    - kustomize:
+        patches:
+          # this forces traefik to sync the class after each update
+          - target:
+              kind: GatewayClass
+            patch: |
+              - op: add
+                path: /spec/description
+                value: {{ .Values.global.helmRepositories.traefik.charts.traefik | quote }}
   values:
     fullnameOverride: ingress-controller
     {{- with .Values.global.imageRegistry }}
