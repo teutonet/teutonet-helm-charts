@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 12.1.0](https://img.shields.io/badge/Version-12.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 12.2.0](https://img.shields.io/badge/Version-12.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster
 
@@ -246,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v12.1.0/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v12.2.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -4799,11 +4799,11 @@ Must be one of:
 
 | Property                                                                     | Pattern | Type            | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                                                                                           |
 | ---------------------------------------------------------------------------- | ------- | --------------- | ---------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| - [apiGroups](#rbac_roles_additionalProperties_items_apiGroups )             | No      | array of string | No         | -          | APIGroups is the name of the APIGroup that contains the resources.  If multiple API groups are specified, any action requested against one of the enumerated resources in any API group will be allowed. "" represents the core API group and "*" represents all API groups.                                                                                                                                |
-| - [nonResourceURLs](#rbac_roles_additionalProperties_items_nonResourceURLs ) | No      | array of string | No         | -          | NonResourceURLs is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path Since non-resource URLs are not namespaced, this field is only applicable for ClusterRoles referenced from a ClusterRoleBinding. Rules can either apply to API resources (such as "pods" or "secrets") or non-resource URL paths (such as "/api"),  but not both. |
-| - [resourceNames](#rbac_roles_additionalProperties_items_resourceNames )     | No      | array of string | No         | -          | ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.                                                                                                                                                                                                                                                                                  |
-| - [resources](#rbac_roles_additionalProperties_items_resources )             | No      | array of string | No         | -          | Resources is a list of resources this rule applies to. '*' represents all resources.                                                                                                                                                                                                                                                                                                                        |
-| + [verbs](#rbac_roles_additionalProperties_items_verbs )                     | No      | array of string | No         | -          | Verbs is a list of Verbs that apply to ALL the ResourceKinds contained in this rule. '*' represents all verbs.                                                                                                                                                                                                                                                                                              |
+| - [apiGroups](#rbac_roles_additionalProperties_items_apiGroups )             | No      | array of string | No         | -          | apiGroups is the name of the APIGroup that contains the resources.  If multiple API groups are specified, any action requested against one of the enumerated resources in any API group will be allowed. "" represents the core API group and "*" represents all API groups.                                                                                                                                |
+| - [nonResourceURLs](#rbac_roles_additionalProperties_items_nonResourceURLs ) | No      | array of string | No         | -          | nonResourceURLs is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path Since non-resource URLs are not namespaced, this field is only applicable for ClusterRoles referenced from a ClusterRoleBinding. Rules can either apply to API resources (such as "pods" or "secrets") or non-resource URL paths (such as "/api"),  but not both. |
+| - [resourceNames](#rbac_roles_additionalProperties_items_resourceNames )     | No      | array of string | No         | -          | resourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.                                                                                                                                                                                                                                                                                  |
+| - [resources](#rbac_roles_additionalProperties_items_resources )             | No      | array of string | No         | -          | resources is a list of resources this rule applies to. '*' represents all resources.                                                                                                                                                                                                                                                                                                                        |
+| + [verbs](#rbac_roles_additionalProperties_items_verbs )                     | No      | array of string | No         | -          | verbs is a list of Verbs that apply to ALL the ResourceKinds contained in this rule. '*' represents all verbs.                                                                                                                                                                                                                                                                                              |
 
 ###### <a name="rbac_roles_additionalProperties_items_apiGroups"></a>13.1.1.1.1. Property `base cluster configuration > rbac > roles > additionalProperties > additionalProperties items > apiGroups`
 
@@ -4811,7 +4811,7 @@ Must be one of:
 | -------- | ----------------- |
 | **Type** | `array of string` |
 
-**Description:** APIGroups is the name of the APIGroup that contains the resources.  If multiple API groups are specified, any action requested against one of the enumerated resources in any API group will be allowed. "" represents the core API group and "*" represents all API groups.
+**Description:** apiGroups is the name of the APIGroup that contains the resources.  If multiple API groups are specified, any action requested against one of the enumerated resources in any API group will be allowed. "" represents the core API group and "*" represents all API groups.
 
 |                      | Array restrictions |
 | -------------------- | ------------------ |
@@ -4837,7 +4837,7 @@ Must be one of:
 | -------- | ----------------- |
 | **Type** | `array of string` |
 
-**Description:** NonResourceURLs is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path Since non-resource URLs are not namespaced, this field is only applicable for ClusterRoles referenced from a ClusterRoleBinding. Rules can either apply to API resources (such as "pods" or "secrets") or non-resource URL paths (such as "/api"),  but not both.
+**Description:** nonResourceURLs is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path Since non-resource URLs are not namespaced, this field is only applicable for ClusterRoles referenced from a ClusterRoleBinding. Rules can either apply to API resources (such as "pods" or "secrets") or non-resource URL paths (such as "/api"),  but not both.
 
 |                      | Array restrictions |
 | -------------------- | ------------------ |
@@ -4863,7 +4863,7 @@ Must be one of:
 | -------- | ----------------- |
 | **Type** | `array of string` |
 
-**Description:** ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.
+**Description:** resourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.
 
 |                      | Array restrictions |
 | -------------------- | ------------------ |
@@ -4889,7 +4889,7 @@ Must be one of:
 | -------- | ----------------- |
 | **Type** | `array of string` |
 
-**Description:** Resources is a list of resources this rule applies to. '*' represents all resources.
+**Description:** resources is a list of resources this rule applies to. '*' represents all resources.
 
 |                      | Array restrictions |
 | -------------------- | ------------------ |
@@ -4915,7 +4915,7 @@ Must be one of:
 | -------- | ----------------- |
 | **Type** | `array of string` |
 
-**Description:** Verbs is a list of Verbs that apply to ALL the ResourceKinds contained in this rule. '*' represents all verbs.
+**Description:** verbs is a list of Verbs that apply to ALL the ResourceKinds contained in this rule. '*' represents all verbs.
 
 |                      | Array restrictions |
 | -------------------- | ------------------ |
