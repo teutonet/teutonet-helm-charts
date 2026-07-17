@@ -1,5 +1,13 @@
 # Changelog
 
+## [12.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v12.1.0...base-cluster-v12.2.0) (2026-07-17)
+
+
+### Features
+
+* **base-cluster/cert-manager:** allow templating in email ([#2226](https://github.com/teutonet/teutonet-helm-charts/issues/2226)) ([942bf84](https://github.com/teutonet/teutonet-helm-charts/commit/942bf841ce14bd3ccaf6075f17b4974993882901))
+* **base-cluster:** drop cpu limits across multiple components ([#2234](https://github.com/teutonet/teutonet-helm-charts/issues/2234)) ([5cacc0b](https://github.com/teutonet/teutonet-helm-charts/commit/5cacc0bb42870f968879e01f4dca53a2bfb47362))
+
 ## [12.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v12.0.0...base-cluster-v12.1.0) (2026-07-08)
 
 
