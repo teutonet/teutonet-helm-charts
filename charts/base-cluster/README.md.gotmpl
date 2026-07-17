@@ -45,11 +45,11 @@ git push
 # after this you should be on the KUBECONFIG for the cluster
 # we explicitly do not use `flux bootstrap` or `flux install` as this creates kustomization stuff and installs flux manually
 kubectl apply --server-side -f flux.yaml # ignore the errors about missing CRDs
-helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io/helm-charts --version {{ $fluxMajorVersion }}.x.x --atomic
+helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io/helm-charts --version {{ $fluxMajorVersion }}.x.x --rollback-on-failure
 
 # manual initial installation of the chart, afterwards the chart takes over
 # after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
-helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version {{ $majorVersion }}.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
+helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version {{ $majorVersion }}.x.x --rollback-on-failure --values <(cat cluster.yaml | yq -y .spec.values)
 
 # you can use this command to get the instructions again
 # e.g. when adding users, gitRepositories, ...
