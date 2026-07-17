@@ -41,6 +41,9 @@
     },
     "charts/teuto-cnpg": {
       "package-name": "teuto-cnpg"
+    },
+    "charts/urbanstack-shared-app": {
+      "package-name": "urbanstack-shared-app"
     }
   }
 }
