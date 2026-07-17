@@ -62,6 +62,5 @@ spec:
                   cpu: 100m
                   memory: 16Mi
                 limits:
-                  cpu: 100m
                   memory: 16Mi
 {{- end }}
