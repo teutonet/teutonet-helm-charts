@@ -1,7 +1,9 @@
 apiVersion: v2
 name: teuto-cnpg
-description: A Helm chart to abstract the managing of cnpg-databases from the original
-  resource.
+description: >-
+  This chart provides a way to create [Cloudnative-PG Helm chart](https://github.com/cloudnative-pg/charts) resources. It abstracts the configuration to be more streamlined and provides a nicer way
+  to manage users.
+
 maintainers:
   - email: cwr@teuto.net
     name: cwrau
