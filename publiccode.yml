@@ -1,0 +1,28 @@
+publiccodeYmlVersion: 0.4.0
+
+name: teuto.net Kubernetes Helm Charts
+url: https://github.com/teutonet/teutonet-helm-charts
+
+platforms:
+  - kubernetes
+
+developmentStatus: stable
+
+softwareType: configurationFiles
+
+description:
+  en:
+    shortDescription: >-
+      Helm charts for deploying and operating teuto.net Kubernetes clusters
+      and their infrastructure components.
+
+legal:
+  license: MIT
+
+maintenance:
+  type: internal
+
+localisation:
+  localisationReady: false
+  availableLanguages:
+    - en
