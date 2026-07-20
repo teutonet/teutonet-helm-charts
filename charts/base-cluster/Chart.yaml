@@ -3,7 +3,11 @@ dependencies:
   - name: common
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
     version: 2.1.1
-description: A common base for every kubernetes cluster
+description: >-
+  A common base for every kubernetes cluster. This chart bootstraps a cluster
+  with the shared components every teuto.net cluster needs. It is managed via
+  Flux and intended to be installed once, after which Flux takes over further
+  reconciliation of the chart itself.
 home: https://teuto.net
 icon: https://teuto.net/favicon.ico
 kubeVersion: '>=1.27.0-0'
