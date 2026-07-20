@@ -1,4 +1,4 @@
-{{- if eq .Values.ingress.provider "traefik" -}}
+{{- if include "base-cluster.ingress.hasTraefik" . -}}
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:

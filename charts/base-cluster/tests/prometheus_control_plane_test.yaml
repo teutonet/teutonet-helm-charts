@@ -57,12 +57,23 @@ tests:
             version: v1
             resource: daemonsets
           namespaced: true
+        helm.toolkit.fluxcd.io/v2/HelmRelease:
+          gvr:
+            group: helm.toolkit.fluxcd.io
+            version: v2
+            resource: helmreleases
+          namespaced: true
       objects:
         - kind: DaemonSet
           apiVersion: apps/v1
           metadata:
             name: kube-proxy
             namespace: kube-system
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: unrelated
+            namespace: unrelated
     set:
       global.clusterName: test
       monitoring.grafana.adminPassword: test
@@ -92,6 +103,12 @@ tests:
             version: v1
             resource: pods
           namespaced: true
+        helm.toolkit.fluxcd.io/v2/HelmRelease:
+          gvr:
+            group: helm.toolkit.fluxcd.io
+            version: v2
+            resource: helmreleases
+          namespaced: true
       objects:
         - kind: Pod
           apiVersion: v1
@@ -100,6 +117,11 @@ tests:
             namespace: kube-system
             labels:
               component: kube-scheduler
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: unrelated
+            namespace: unrelated
     set:
       global.clusterName: test
       monitoring.grafana.adminPassword: test
@@ -127,6 +149,12 @@ tests:
             version: v1
             resource: pods
           namespaced: true
+        helm.toolkit.fluxcd.io/v2/HelmRelease:
+          gvr:
+            group: helm.toolkit.fluxcd.io
+            version: v2
+            resource: helmreleases
+          namespaced: true
       objects:
         - kind: Pod
           apiVersion: v1
@@ -135,6 +163,11 @@ tests:
             namespace: kube-system
             labels:
               component: kube-controller-manager
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: unrelated
+            namespace: unrelated
     set:
       global.clusterName: test
       monitoring.grafana.adminPassword: test
@@ -162,6 +195,12 @@ tests:
             version: v1
             resource: pods
           namespaced: true
+        helm.toolkit.fluxcd.io/v2/HelmRelease:
+          gvr:
+            group: helm.toolkit.fluxcd.io
+            version: v2
+            resource: helmreleases
+          namespaced: true
       objects:
         - kind: DaemonSet
           apiVersion: apps/v1
@@ -182,6 +221,11 @@ tests:
             namespace: kube-system
             labels:
               component: kube-controller-manager
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: unrelated
+            namespace: unrelated
     set:
       global.clusterName: test
       monitoring.grafana.adminPassword: test

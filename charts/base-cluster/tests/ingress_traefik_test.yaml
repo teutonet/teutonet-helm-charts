@@ -1,0 +1,22 @@
+suite: ingress traefik
+templates:
+  - templates/ingress/traefik.yaml
+release:
+  name: base-cluster
+tests:
+  - it: traefik HelmRelease renders when provider is traefik (default)
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HelmRelease
+      - equal:
+          path: metadata.name
+          value: ingress-controller
+
+  - it: traefik HelmRelease does not render when provider is nginx
+    set:
+      ingress.provider: nginx
+    asserts:
+      - hasDocuments:
+          count: 0

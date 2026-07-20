@@ -126,12 +126,13 @@ dashboards:
     metrics:
       <<: *dashboard
       gnetId: 8588
-    {{- if eq .Values.ingress.provider "nginx" }}
+    {{- if include "base-cluster.ingress.hasNginx" . }}
     ingress-nginx:
       <<: *dashboard
       gnetId: 9614
       revision: 1
-    {{- else if eq .Values.ingress.provider "traefik" }}
+    {{- end }}
+    {{- if include "base-cluster.ingress.hasTraefik" . }}
     traefik:
       <<: *dashboard
       gnetId: 17347

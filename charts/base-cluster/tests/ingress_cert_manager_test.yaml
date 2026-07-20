@@ -1,0 +1,95 @@
+suite: ingress dual-mode helper functions
+templates:
+  - templates/cert-manager/cert-manager.yaml
+release:
+  name: base-cluster
+tests:
+  - it: cert-manager gatewayAPI enabled when provider is traefik (default)
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.values.config.enableGatewayAPI
+          value: true
+
+  - it: cert-manager gatewayAPI not set when provider is nginx
+    set:
+      ingress.provider: nginx
+    asserts:
+      - hasDocuments:
+          count: 1
+      - notExists:
+          path: spec.values.config
+
+  - it: cert-manager gatewayAPI enabled in dual-mode (both HelmReleases exist, provider is traefik)
+    kubernetesProvider:
+      scheme:
+        helm.toolkit.fluxcd.io/v2/HelmRelease:
+          gvr:
+            group: helm.toolkit.fluxcd.io
+            version: v2
+            resource: helmreleases
+          namespaced: true
+      objects:
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-nginx
+            namespace: ingress-nginx
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-controller
+            namespace: ingress
+    asserts:
+      - equal:
+          path: spec.values.config.enableGatewayAPI
+          value: true
+
+  - it: cert-manager gatewayAPI enabled in dual-mode (both HelmReleases exist, provider is nginx)
+    set:
+      ingress.provider: nginx
+    kubernetesProvider:
+      scheme:
+        helm.toolkit.fluxcd.io/v2/HelmRelease:
+          gvr:
+            group: helm.toolkit.fluxcd.io
+            version: v2
+            resource: helmreleases
+          namespaced: true
+      objects:
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-nginx
+            namespace: ingress-nginx
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-controller
+            namespace: ingress
+    asserts:
+      - equal:
+          path: spec.values.config.enableGatewayAPI
+          value: true
+
+  - it: cert-manager gatewayAPI not set when only nginx HelmRelease exists (no dual-mode)
+    set:
+      ingress.provider: nginx
+    kubernetesProvider:
+      scheme:
+        helm.toolkit.fluxcd.io/v2/HelmRelease:
+          gvr:
+            group: helm.toolkit.fluxcd.io
+            version: v2
+            resource: helmreleases
+          namespaced: true
+      objects:
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-nginx
+            namespace: ingress-nginx
+    asserts:
+      - notExists:
+          path: spec.values.config
