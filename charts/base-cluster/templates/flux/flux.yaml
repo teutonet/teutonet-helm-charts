@@ -1,4 +1,9 @@
 {{- range $name, $instance := .Values.flux.gitRepositories -}}
+  {{- $create := true -}}
+  {{- if $instance.condition -}}
+    {{- $create = eq (include "common.tplvalues.render" (dict "value" $instance.condition "context" (deepCopy $))) "true" -}}
+  {{- end -}}
+  {{- if $create }}
   {{- $authenticationMethod := (list nil) | first -}}
   {{- if and $instance.username $instance.password -}}
     {{- $authenticationMethod = "password" -}}
@@ -51,7 +56,7 @@ metadata:
 spec:
   interval: {{ $instance.gitInterval | default "1m" | quote }}
   url: {{ $instance.url | quote }}
-  {{- if ne $authenticationMethod "none" }}
+  {{- if $authenticationMethod }}
   secretRef:
     name: {{ $authenticationSecretName }}
   {{- end -}}
@@ -91,4 +96,5 @@ spec:
       name: {{ $decryptionSecretName }}
   {{- end }}
 ---
+  {{- end }}
 {{- end }}

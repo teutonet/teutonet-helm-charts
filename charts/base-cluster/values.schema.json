@@ -1335,6 +1335,9 @@
                 "pattern": "[0-9]+(ms|s|m|h|d|w|y)",
                 "default": "1m"
               },
+              "condition": {
+                "$ref": "#/$defs/condition"
+              },
               "decryption": {
                 "type": "object",
                 "properties": {

@@ -1,0 +1,118 @@
+suite: flux gitRepositories condition
+templates:
+  - flux/flux.yaml
+set:
+  global.clusterName: test
+  global.serviceLevelAgreement: None
+  monitoring.grafana.adminPassword: test
+tests:
+  - it: creates the GitRepository and Kustomization when condition is unset (defaults to true)
+    set:
+      flux.gitRepositories:
+        main:
+          url: https://github.com/example/repo
+          branch: main
+    asserts:
+      - containsDocument:
+          kind: GitRepository
+          apiVersion: source.toolkit.fluxcd.io/v1
+          name: release-name-base-cluster-flux-main
+          any: true
+      - containsDocument:
+          kind: Kustomization
+          apiVersion: kustomize.toolkit.fluxcd.io/v1
+          name: release-name-base-cluster-flux-main
+          any: true
+
+  - it: creates the GitRepository and Kustomization when condition renders to true
+    set:
+      flux.gitRepositories:
+        main:
+          url: https://github.com/example/repo
+          branch: main
+          condition: "{{ eq 1 1 }}"
+    asserts:
+      - containsDocument:
+          kind: GitRepository
+          apiVersion: source.toolkit.fluxcd.io/v1
+          name: release-name-base-cluster-flux-main
+          any: true
+      - containsDocument:
+          kind: Kustomization
+          apiVersion: kustomize.toolkit.fluxcd.io/v1
+          name: release-name-base-cluster-flux-main
+          any: true
+
+  - it: skips the GitRepository and Kustomization when condition renders to false
+    set:
+      flux.gitRepositories:
+        main:
+          url: https://github.com/example/repo
+          branch: main
+          condition: "{{ eq 1 2 }}"
+    asserts:
+      - not: true
+        containsDocument:
+          kind: GitRepository
+          apiVersion: source.toolkit.fluxcd.io/v1
+          name: release-name-base-cluster-flux-main
+          any: true
+      - not: true
+        containsDocument:
+          kind: Kustomization
+          apiVersion: kustomize.toolkit.fluxcd.io/v1
+          name: release-name-base-cluster-flux-main
+          any: true
+
+  - it: can reference other values in the condition
+    set:
+      ingress.provider: nginx
+      flux.gitRepositories:
+        main:
+          url: https://github.com/example/repo
+          branch: main
+          condition: '{{ eq .Values.ingress.provider "nginx" }}'
+    asserts:
+      - containsDocument:
+          kind: GitRepository
+          apiVersion: source.toolkit.fluxcd.io/v1
+          name: release-name-base-cluster-flux-main
+          any: true
+
+  - it: defaults to creating the gateway-api GitRepository since ingress.provider defaults to traefik
+    asserts:
+      - containsDocument:
+          kind: GitRepository
+          apiVersion: source.toolkit.fluxcd.io/v1
+          name: release-name-base-cluster-flux-gateway-api
+          any: true
+      - containsDocument:
+          kind: Kustomization
+          apiVersion: kustomize.toolkit.fluxcd.io/v1
+          name: release-name-base-cluster-flux-gateway-api
+          any: true
+
+  - it: skips the gateway-api GitRepository when ingress.provider is not traefik
+    set:
+      ingress.provider: nginx
+    asserts:
+      - not: true
+        containsDocument:
+          kind: GitRepository
+          apiVersion: source.toolkit.fluxcd.io/v1
+          name: release-name-base-cluster-flux-gateway-api
+          any: true
+      - not: true
+        containsDocument:
+          kind: Kustomization
+          apiVersion: kustomize.toolkit.fluxcd.io/v1
+          name: release-name-base-cluster-flux-gateway-api
+          any: true
+
+  - it: does not set a secretRef on the gateway-api GitRepository since it has no authentication configured
+    asserts:
+      - notExists:
+          path: spec.secretRef
+        documentSelector:
+          path: kind
+          value: GitRepository
