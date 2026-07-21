@@ -13,6 +13,9 @@ spec:
   interval: 1h
   driftDetection:
     mode: enabled
+  dependsOn:
+    - name: cert-manager
+      namespace: cert-manager
   values:
     apiService:
       create: true
