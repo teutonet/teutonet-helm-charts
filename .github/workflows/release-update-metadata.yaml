@@ -104,6 +104,31 @@ jobs:
             exit 0
           fi
           generate-schema-doc --config-file .github/json-schema-to-md.yaml "charts/$CHART/values.schema.json" "charts/$CHART/values.md"
+      - name: Replace unreleased migration sections in README.md.gotmpl
+        run: |
+          [[ "$RUNNER_DEBUG" == 1 ]] && set -x
+          set -e
+          set -o pipefail
+
+          readme="charts/${CHART}/README.md.gotmpl"
+          if ! grep -qiF "### unreleased breaking changes" "$readme"; then
+            exit 0
+          fi
+
+          version="$(jq -er --arg chart "${CHART}" '.["charts/\($chart)"]' .github/release-please/manifest.json)"
+          new_major="${version%%.*}"
+          old_major=$(( new_major - 1 ))
+          new_header="### ${old_major}.x.x -> ${new_major}.0.0"
+
+          sed -i -E "0,/^### unreleased breaking changes[[:space:]]*$/I{s/^### unreleased breaking changes[[:space:]]*$/${new_header}/I}" "$readme"
+          sed -i -E "/^$/{N;/\n### unreleased breaking changes[[:space:]]*$/Id}" "$readme"
+      - name: Commit README.md.gotmpl
+        uses: EndBug/add-and-commit@290ea2c423ad77ca9c62ae0f5b224379612c0321 # v10
+        with:
+          message: "ci: [bot] Replace unreleased migration sections in 'README.md.gotmpl'"
+          default_author: github_actions
+          push: false
+          add: charts/${{ env.CHART }}/README.md.gotmpl
       - name: generate Docs
         uses: docker://jnorwood/helm-docs:v1.14.2@sha256:7e562b49ab6b1dbc50c3da8f2dd6ffa8a5c6bba327b1c6335cc15ce29267979c
         with:
