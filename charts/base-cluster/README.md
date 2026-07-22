@@ -1,8 +1,8 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 12.2.0](https://img.shields.io/badge/Version-12.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 12.3.0](https://img.shields.io/badge/Version-12.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
-A common base for every kubernetes cluster
+A common base for every kubernetes cluster. This chart bootstraps a cluster with the shared components every teuto.net cluster needs. It is managed via Flux and intended to be installed once, after which Flux takes over further reconciliation of the chart itself.
 
 **Homepage:** <https://teuto.net>
 
@@ -50,7 +50,7 @@ helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io
 
 # manual initial installation of the chart, afterwards the chart takes over
 # after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
-helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 12.x.x --atomic --values <(cat cluster.yaml | yq -y .spec.values)
+helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 12.x.x --values <(cat cluster.yaml | yq -y .spec.values)
 
 # you can use this command to get the instructions again
 # e.g. when adding users, gitRepositories, ...
@@ -246,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v12.2.0/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v12.3.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -2207,6 +2207,7 @@ Must be one of:
 | - [kubeProxy](#monitoring_prometheus_kubeProxy )                         | No      | object           | No         | In #/$defs/triState                                                           | -                                                                 |
 | - [kubeScheduler](#monitoring_prometheus_kubeScheduler )                 | No      | object           | No         | Same as [kubeProxy](#monitoring_prometheus_kubeProxy )                        | -                                                                 |
 | - [kubeControllerManager](#monitoring_prometheus_kubeControllerManager ) | No      | object           | No         | Same as [kubeProxy](#monitoring_prometheus_kubeProxy )                        | -                                                                 |
+| - [blackboxExporter](#monitoring_prometheus_blackboxExporter )           | No      | object           | No         | -                                                                             | -                                                                 |
 
 #### <a name="monitoring_prometheus_enabled"></a>4.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > enabled`
 
@@ -2953,6 +2954,42 @@ Specific value: `"auto"`
 | **Type**                  | `combining`                                                                 |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 | **Same definition as**    | [kubeProxy](#monitoring_prometheus_kubeProxy)                               |
+
+#### <a name="monitoring_prometheus_blackboxExporter"></a>4.3.15. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > blackboxExporter`
+
+|                           |                                                                |
+| ------------------------- | -------------------------------------------------------------- |
+| **Type**                  | `object`                                                       |
+| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+
+| Property                                                                      | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                 |
+| ----------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| - [enabled](#monitoring_prometheus_blackboxExporter_enabled )                 | No      | boolean          | No         | -                                                                             | -                                                                 |
+| - [resourcesPreset](#monitoring_prometheus_blackboxExporter_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                 |
+| - [resources](#monitoring_prometheus_blackboxExporter_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements. |
+
+##### <a name="monitoring_prometheus_blackboxExporter_enabled"></a>4.3.15.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > blackboxExporter > enabled`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+##### <a name="monitoring_prometheus_blackboxExporter_resourcesPreset"></a>4.3.15.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > blackboxExporter > resourcesPreset`
+
+|                        |                                                                      |
+| ---------------------- | -------------------------------------------------------------------- |
+| **Type**               | `enum (of string)`                                                   |
+| **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
+
+##### <a name="monitoring_prometheus_blackboxExporter_resources"></a>4.3.15.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > prometheus > blackboxExporter > resources`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                    |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+| **Same definition as**    | [resources](#global_authentication_oauthProxy_resources)                    |
+
+**Description:** ResourceRequirements describes the compute resource requirements.
 
 ### <a name="monitoring_grafana"></a>4.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > grafana`
 
