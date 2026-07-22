@@ -6,8 +6,8 @@
   {{- fail "useTraefikNginxCompatibility cannot be enabled when using nginx as the ingress provider" -}}
 {{- end -}}
 
-{{- $existingNginx := lookup "helm.toolkit.fluxcd.io/v2" "HelmRelease" "ingress-nginx" "ingress-nginx" -}}
-{{- $existingTraefik := lookup "helm.toolkit.fluxcd.io/v2" "HelmRelease" "ingress" "ingress-controller" -}}
+{{- $existingNginx := include "base-cluster.ingress.existingNginx" . -}}
+{{- $existingTraefik := include "base-cluster.ingress.existingTraefik" . -}}
 {{- if and $existingNginx $existingTraefik -}}
   {{/* both are deployed, skip any checks; manual dual-mode */}}
 {{- else -}}

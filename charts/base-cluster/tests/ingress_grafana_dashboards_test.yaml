@@ -1,0 +1,130 @@
+suite: grafana ingress dashboard dual-mode
+templates:
+  - templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+  - templates/monitoring/kube-prometheus-stack/grafana-secret.yaml
+release:
+  name: base-cluster
+tests:
+  - it: only renders the ingress-nginx dashboard when provider is nginx
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      ingress.provider: nginx
+    asserts:
+      - exists:
+          path: spec.values.grafana.dashboards.custom.ingress-nginx
+      - notExists:
+          path: spec.values.grafana.dashboards.custom.traefik
+
+  - it: only renders the traefik dashboard when provider is traefik (default)
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+    asserts:
+      - notExists:
+          path: spec.values.grafana.dashboards.custom.ingress-nginx
+      - exists:
+          path: spec.values.grafana.dashboards.custom.traefik
+
+  - it: renders both dashboards in dual-mode (provider nginx, traefik HelmRelease also exists)
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.kubeProxy: false
+      monitoring.prometheus.kubeScheduler: false
+      monitoring.prometheus.kubeControllerManager: false
+      ingress.provider: nginx
+    kubernetesProvider:
+      scheme:
+        helm.toolkit.fluxcd.io/v2/HelmRelease:
+          gvr:
+            group: helm.toolkit.fluxcd.io
+            version: v2
+            resource: helmreleases
+          namespaced: true
+      objects:
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-nginx
+            namespace: ingress-nginx
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-controller
+            namespace: ingress
+    asserts:
+      - exists:
+          path: spec.values.grafana.dashboards.custom.ingress-nginx
+      - exists:
+          path: spec.values.grafana.dashboards.custom.traefik
+
+  - it: renders both dashboards in dual-mode (provider traefik, nginx HelmRelease also exists)
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.kubeProxy: false
+      monitoring.prometheus.kubeScheduler: false
+      monitoring.prometheus.kubeControllerManager: false
+    kubernetesProvider:
+      scheme:
+        helm.toolkit.fluxcd.io/v2/HelmRelease:
+          gvr:
+            group: helm.toolkit.fluxcd.io
+            version: v2
+            resource: helmreleases
+          namespaced: true
+      objects:
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-nginx
+            namespace: ingress-nginx
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-controller
+            namespace: ingress
+    asserts:
+      - exists:
+          path: spec.values.grafana.dashboards.custom.ingress-nginx
+      - exists:
+          path: spec.values.grafana.dashboards.custom.traefik
+
+  - it: renders only the provider dashboard when an unrelated HelmRelease exists in those namespaces
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.kubeProxy: false
+      monitoring.prometheus.kubeScheduler: false
+      monitoring.prometheus.kubeControllerManager: false
+      ingress.provider: nginx
+    kubernetesProvider:
+      scheme:
+        helm.toolkit.fluxcd.io/v2/HelmRelease:
+          gvr:
+            group: helm.toolkit.fluxcd.io
+            version: v2
+            resource: helmreleases
+          namespaced: true
+      objects:
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: unrelated
+            namespace: ingress
+    asserts:
+      - exists:
+          path: spec.values.grafana.dashboards.custom.ingress-nginx
+      - notExists:
+          path: spec.values.grafana.dashboards.custom.traefik

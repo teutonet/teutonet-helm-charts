@@ -1,0 +1,67 @@
+suite: ingress gateway-api dual-mode
+templates:
+  - templates/ingress/gateway-api.yaml
+release:
+  name: base-cluster
+tests:
+  - it: gateway-api renders when provider is traefik (default)
+    asserts:
+      - hasDocuments:
+          count: 2
+
+  - it: gateway-api does not render when provider is nginx
+    set:
+      ingress.provider: nginx
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: gateway-api renders in dual-mode with traefik provider
+    kubernetesProvider:
+      scheme:
+        helm.toolkit.fluxcd.io/v2/HelmRelease:
+          gvr:
+            group: helm.toolkit.fluxcd.io
+            version: v2
+            resource: helmreleases
+          namespaced: true
+      objects:
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-nginx
+            namespace: ingress-nginx
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-controller
+            namespace: ingress
+    asserts:
+      - hasDocuments:
+          count: 2
+
+  - it: gateway-api renders in dual-mode with nginx provider
+    set:
+      ingress.provider: nginx
+    kubernetesProvider:
+      scheme:
+        helm.toolkit.fluxcd.io/v2/HelmRelease:
+          gvr:
+            group: helm.toolkit.fluxcd.io
+            version: v2
+            resource: helmreleases
+          namespaced: true
+      objects:
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-nginx
+            namespace: ingress-nginx
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: ingress-controller
+            namespace: ingress
+    asserts:
+      - hasDocuments:
+          count: 2
