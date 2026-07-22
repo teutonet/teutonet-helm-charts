@@ -25,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - getChangedCharts
+    if: ${{ needs.getChangedCharts.outputs.count > 0 }}
     strategy:
       matrix:
         chart: ${{ fromJson(needs.getChangedCharts.outputs.charts) }}
