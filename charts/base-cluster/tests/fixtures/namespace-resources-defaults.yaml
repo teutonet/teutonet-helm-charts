@@ -1,0 +1,11 @@
+global:
+  namespaces:
+    myns:
+      resources:
+        defaults:
+          requests:
+            cpu: 77m
+            memory: 123Mi
+          limits:
+            cpu: 456m
+            memory: 234Mi

@@ -1,0 +1,55 @@
+suite: PriorityClass defaults and custom merge
+templates:
+  - templates/global/priorityClasses.yaml
+release:
+  name: base-cluster
+tests:
+  - it: renders the two default PriorityClasses with PreemptLowerPriority policy
+    asserts:
+      - hasDocuments:
+          count: 2
+      - equal:
+          path: value
+          value: 500000000
+        documentSelector:
+          path: metadata.name
+          value: cluster-components
+      - equal:
+          path: preemptionPolicy
+          value: PreemptLowerPriority
+        documentSelector:
+          path: metadata.name
+          value: cluster-components
+      - equal:
+          path: value
+          value: 250000000
+        documentSelector:
+          path: metadata.name
+          value: monitoring-components
+
+  - it: merges a custom PriorityClass alongside the defaults
+    set:
+      global.priorityClasses.test.value: 600
+      global.priorityClasses.test.description: test
+      global.priorityClasses.test.preemptionPolicy: Never
+    asserts:
+      - hasDocuments:
+          count: 3
+      - equal:
+          path: value
+          value: 600
+        documentSelector:
+          path: metadata.name
+          value: test
+      - equal:
+          path: description
+          value: test
+        documentSelector:
+          path: metadata.name
+          value: test
+      - equal:
+          path: preemptionPolicy
+          value: Never
+        documentSelector:
+          path: metadata.name
+          value: test

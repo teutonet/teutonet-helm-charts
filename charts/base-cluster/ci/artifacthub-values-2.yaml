@@ -4,3 +4,18 @@ global:
   serviceLevelAgreement: None
 ingress:
   provider: traefik
+  extraPorts:
+    mqtt:
+      expose:
+        default: true
+      exposedPort: 1883
+      port: 1883
+      protocol: TCP
+    mqtts:
+      expose:
+        default: true
+      exposedPort: 8883
+      port: 8883
+      protocol: TCP
+      proxyProtocol:
+        insecure: true

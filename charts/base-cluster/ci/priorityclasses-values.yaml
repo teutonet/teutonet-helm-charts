@@ -2,5 +2,5 @@ global:
   priorityClasses:
     test:
       value: 600
-      description: tesssssssst
+      description: test
       preemptionPolicy: Never

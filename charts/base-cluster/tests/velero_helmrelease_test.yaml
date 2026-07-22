@@ -1,0 +1,73 @@
+suite: velero HelmRelease backupStorageLocation rendering
+templates:
+  - templates/backup/velero/velero.yaml
+release:
+  name: base-cluster
+tests:
+  - it: renders prefix when set
+    set:
+      backup.provider.velero.defaultLocation: primary
+      backup.provider.velero.backupStorageLocations.primary.bucket: my-bucket
+      backup.provider.velero.backupStorageLocations.primary.prefix: /prod
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.url: https://s3.example.com
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.accessKeyID: mykey
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.secretAccessKey: mysecret
+    asserts:
+      - equal:
+          path: spec.values.configuration.backupStorageLocation[0].prefix
+          value: /prod
+
+  - it: omits prefix when not set
+    set:
+      backup.provider.velero.defaultLocation: primary
+      backup.provider.velero.backupStorageLocations.primary.bucket: my-bucket
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.url: https://s3.example.com
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.accessKeyID: mykey
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.secretAccessKey: mysecret
+    asserts:
+      - notExists:
+          path: spec.values.configuration.backupStorageLocation[0].prefix
+
+  - it: direct credentials reference the generated backuplocation Secret
+    set:
+      backup.provider.velero.defaultLocation: primary
+      backup.provider.velero.backupStorageLocations.primary.bucket: my-bucket
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.url: https://s3.example.com
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.accessKeyID: mykey
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.secretAccessKey: mysecret
+    asserts:
+      - equal:
+          path: spec.values.configuration.backupStorageLocation[0].credential
+          value:
+            name: base-cluster-velero-backuplocation-primary
+            key: minio
+      - equal:
+          path: spec.values.configuration.backupStorageLocation[0].provider
+          value: aws
+
+  - it: existingSecret credentials default the key to <provider>-<name>
+    set:
+      backup.provider.velero.defaultLocation: primary
+      backup.provider.velero.backupStorageLocations.primary.bucket: my-bucket
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.url: https://s3.example.com
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.existingSecret.name: my-creds
+    asserts:
+      - equal:
+          path: spec.values.configuration.backupStorageLocation[0].credential
+          value:
+            name: my-creds
+            key: minio-primary
+
+  - it: existingSecret credentials use the explicit key when provided
+    set:
+      backup.provider.velero.defaultLocation: primary
+      backup.provider.velero.backupStorageLocations.primary.bucket: my-bucket
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.url: https://s3.example.com
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.existingSecret.name: my-creds
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.existingSecret.key: custom-key
+    asserts:
+      - equal:
+          path: spec.values.configuration.backupStorageLocation[0].credential
+          value:
+            name: my-creds
+            key: custom-key
