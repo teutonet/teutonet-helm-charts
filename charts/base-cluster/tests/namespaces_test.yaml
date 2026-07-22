@@ -53,3 +53,78 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "Using namespace 'kube-system' is not allowed"
+
+  - it: LimitRange uses hardcoded defaultRequest when no resources configured
+    asserts:
+      - isKind:
+          of: LimitRange
+        documentSelector:
+          path: metadata.namespace
+          value: myns
+      - equal:
+          path: spec.limits[0].defaultRequest
+          value:
+            cpu: 100m
+            memory: 100Mi
+        documentSelector:
+          path: metadata.namespace
+          value: myns
+      - notExists:
+          path: spec.limits[0].default
+        documentSelector:
+          path: metadata.namespace
+          value: myns
+
+  - it: LimitRange applies custom defaults.requests and defaults.limits
+    values:
+      - fixtures/namespace-resources-defaults.yaml
+    asserts:
+      - isKind:
+          of: LimitRange
+        documentSelector:
+          path: metadata.namespace
+          value: myns
+      - equal:
+          path: spec.limits[0].defaultRequest
+          value:
+            cpu: 77m
+            memory: 123Mi
+        documentSelector:
+          path: metadata.namespace
+          value: myns
+      - equal:
+          path: spec.limits[0].default
+          value:
+            cpu: 456m
+            memory: 234Mi
+        documentSelector:
+          path: metadata.namespace
+          value: myns
+
+  - it: ResourceQuota renders when quotas configured
+    values:
+      - fixtures/namespace-resources-quotas.yaml
+    asserts:
+      - isKind:
+          of: ResourceQuota
+        documentSelector:
+          path: spec.hard["limits.cpu"]
+          value: "42"
+      - equal:
+          path: spec.hard
+          value:
+            limits.cpu: "42"
+            limits.memory: 7Gi
+        documentSelector:
+          path: spec.hard["limits.cpu"]
+          value: "42"
+
+  - it: no ResourceQuota when resources configured without quotas
+    values:
+      - fixtures/namespace-resources-defaults.yaml
+    asserts:
+      - isKind:
+          of: LimitRange
+        documentSelector:
+          path: metadata.namespace
+          value: myns

@@ -164,6 +164,9 @@ licenses:
   quay.io/kiwigrid/k8s-sidecar:
     license: MIT
     licenseLink: https://github.com/kiwigrid/k8s-sidecar/blob/master/LICENSE
+  quay.io/oauth2-proxy/oauth2-proxy:
+    license: MIT
+    licenseLink: https://raw.githubusercontent.com/oauth2-proxy/oauth2-proxy/refs/heads/master/LICENSE
   quay.io/prometheus-operator/prometheus-config-reloader:
     license: Apache-2.0
     licenseLink: https://github.com/prometheus-operator/prometheus-operator/blob/main/LICENSE

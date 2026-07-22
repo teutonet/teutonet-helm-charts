@@ -61,3 +61,34 @@ tests:
       - equal:
           path: spec.values.ports.web.proxyProtocol.insecure
           value: false
+
+  - it: renders additional ports from ingress.extraPorts
+    set:
+      ingress.extraPorts.mqtt.expose.default: true
+      ingress.extraPorts.mqtt.exposedPort: 1883
+      ingress.extraPorts.mqtt.port: 1883
+      ingress.extraPorts.mqtt.protocol: TCP
+      ingress.extraPorts.mqtts.expose.default: true
+      ingress.extraPorts.mqtts.exposedPort: 8883
+      ingress.extraPorts.mqtts.port: 8883
+      ingress.extraPorts.mqtts.protocol: TCP
+      ingress.extraPorts.mqtts.proxyProtocol.insecure: true
+    asserts:
+      - equal:
+          path: spec.values.ports.mqtt
+          value:
+            expose:
+              default: true
+            exposedPort: 1883
+            port: 1883
+            protocol: TCP
+      - equal:
+          path: spec.values.ports.mqtts
+          value:
+            expose:
+              default: true
+            exposedPort: 8883
+            port: 8883
+            protocol: TCP
+            proxyProtocol:
+              insecure: true

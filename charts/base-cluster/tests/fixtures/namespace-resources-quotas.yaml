@@ -1,0 +1,7 @@
+global:
+  namespaces:
+    myns:
+      resources:
+        quotas:
+          limits.cpu: "42"
+          limits.memory: 7Gi
