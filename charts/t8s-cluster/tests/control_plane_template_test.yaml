@@ -1,0 +1,54 @@
+suite: control plane template hosted/kubeadm gating
+templates:
+  - templates/management-cluster/clusterClass/hostedControlPlaneTemplate/hostedControlPlaneTemplate.yaml
+  - templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+release:
+  name: my-cluster
+set:
+  cloud: my-cloud
+tests:
+  - it: renders a KubeadmControlPlaneTemplate and no HostedControlPlaneTemplate by default
+    asserts:
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        hasDocuments:
+          count: 1
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        isKind:
+          of: KubeadmControlPlaneTemplate
+      - template: templates/management-cluster/clusterClass/hostedControlPlaneTemplate/hostedControlPlaneTemplate.yaml
+        hasDocuments:
+          count: 0
+
+  - it: renders a HostedControlPlaneTemplate and no KubeadmControlPlaneTemplate when hosted
+    set:
+      controlPlane:
+        hosted: true
+    asserts:
+      - template: templates/management-cluster/clusterClass/hostedControlPlaneTemplate/hostedControlPlaneTemplate.yaml
+        hasDocuments:
+          count: 1
+      - template: templates/management-cluster/clusterClass/hostedControlPlaneTemplate/hostedControlPlaneTemplate.yaml
+        isKind:
+          of: HostedControlPlaneTemplate
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        hasDocuments:
+          count: 0
+
+  - it: injects trusted CA certificates into the kubeadm control plane files and commands
+    set:
+      global:
+        injectedCertificateAuthorities: |
+          -----BEGIN CERTIFICATE-----
+          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+          -----END CERTIFICATE-----
+    asserts:
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        contains:
+          path: spec.template.spec.kubeadmConfigSpec.preKubeadmCommands
+          content: update-ca-certificates
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        contains:
+          path: spec.template.spec.kubeadmConfigSpec.files
+          content:
+            path: /usr/local/share/ca-certificates/injected-ca-certs.crt
+          any: true
