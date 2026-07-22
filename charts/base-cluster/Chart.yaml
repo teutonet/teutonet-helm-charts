@@ -4,10 +4,10 @@ dependencies:
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
     version: 2.1.1
 description: >-
-  A common base for every kubernetes cluster. This chart bootstraps a cluster
-  with the shared components every teuto.net cluster needs. It is managed via
-  Flux and intended to be installed once, after which Flux takes over further
-  reconciliation of the chart itself.
+  A common base for every kubernetes cluster. This chart bootstraps a cluster with
+  the shared components every teuto.net cluster needs. It is managed via Flux and
+  intended to be installed once, after which Flux takes over further reconciliation
+  of the chart itself.
 home: https://teuto.net
 icon: https://teuto.net/favicon.ico
 kubeVersion: '>=1.27.0-0'
@@ -20,7 +20,7 @@ maintainers:
     name: tasches
 name: base-cluster
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v12.2.0/charts/base-cluster
+  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v12.3.0/charts/base-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster
 type: application
 version: 12.3.0
