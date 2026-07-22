@@ -1,0 +1,150 @@
+suite: flux GitRepository authentication, decryption and ref dispatch
+templates:
+  - templates/flux/flux.yaml
+release:
+  name: base-cluster
+tests:
+  - it: password auth creates a credentials Secret and references it
+    set:
+      flux.gitRepositories.main.url: https://github.com/group/name.git
+      flux.gitRepositories.main.username: user
+      flux.gitRepositories.main.password: pass
+      flux.gitRepositories.main.branch: main
+    asserts:
+      - equal:
+          path: stringData.username
+          value: user
+        documentSelector:
+          path: kind
+          value: Secret
+      - equal:
+          path: stringData.password
+          value: pass
+        documentSelector:
+          path: kind
+          value: Secret
+      - equal:
+          path: spec.secretRef.name
+          value: base-cluster-flux-main
+        documentSelector:
+          path: kind
+          value: GitRepository
+      - equal:
+          path: spec.ref
+          value:
+            branch: main
+        documentSelector:
+          path: kind
+          value: GitRepository
+
+  - it: ssh:// URL without password triggers SSH key generation job instead of a plain Secret
+    set:
+      flux.gitRepositories.main.url: ssh://git@github.com/group/name.git
+      flux.gitRepositories.main.tag: 2.0.1
+    asserts:
+      - equal:
+          path: metadata.name
+          value: flux-generate-ssh-key-secret-main
+        documentSelector:
+          path: kind
+          value: Job
+      - equal:
+          path: spec.ref
+          value:
+            tag: 2.0.1
+        documentSelector:
+          path: kind
+          value: GitRepository
+
+  - it: https URL without credentials creates neither Secret nor key-generation Job
+    set:
+      flux.gitRepositories.main.url: https://github.com/group/name.git
+      flux.gitRepositories.main.semver: 1.0.0
+    asserts:
+      - hasDocuments:
+          count: 2
+      - equal:
+          path: spec.ref
+          value:
+            semver: 1.0.0
+        documentSelector:
+          path: kind
+          value: GitRepository
+
+  - it: sops decryption generates a GPG key job and sets Kustomization decryption
+    set:
+      flux.gitRepositories.main.url: https://github.com/group/name.git
+      flux.gitRepositories.main.commit: 549aee1
+      flux.gitRepositories.main.decryption.provider: sops
+    asserts:
+      - equal:
+          path: metadata.name
+          value: flux-generate-gpg-key-secret-main
+        documentSelector:
+          path: kind
+          value: Job
+      - equal:
+          path: spec.decryption.provider
+          value: sops
+        documentSelector:
+          path: kind
+          value: Kustomization
+      - equal:
+          path: spec.decryption.secretRef.name
+          value: base-cluster-flux-main-gpg
+        documentSelector:
+          path: kind
+          value: Kustomization
+      - equal:
+          path: spec.ref
+          value:
+            commit: 549aee1
+        documentSelector:
+          path: kind
+          value: GitRepository
+
+  - it: path is rendered through common.tplvalues.render templating
+    set:
+      global.clusterName: my-cluster
+      flux.gitRepositories.main.url: https://github.com/group/name.git
+      flux.gitRepositories.main.path: '{{ .Values.global.clusterName }}'
+    asserts:
+      - equal:
+          path: spec.path
+          value: my-cluster
+        documentSelector:
+          path: kind
+          value: Kustomization
+
+  - it: no path key when path is not set
+    set:
+      flux.gitRepositories.main.url: https://github.com/group/name.git
+    asserts:
+      - notExists:
+          path: spec.path
+        documentSelector:
+          path: kind
+          value: Kustomization
+
+  - it: gitInterval defaults to 1m when not set
+    set:
+      flux.gitRepositories.main.url: https://github.com/group/name.git
+    asserts:
+      - equal:
+          path: spec.interval
+          value: 1m
+        documentSelector:
+          path: kind
+          value: GitRepository
+
+  - it: gitInterval uses custom value when set
+    set:
+      flux.gitRepositories.main.url: https://github.com/group/name.git
+      flux.gitRepositories.main.gitInterval: 5m
+    asserts:
+      - equal:
+          path: spec.interval
+          value: 5m
+        documentSelector:
+          path: kind
+          value: GitRepository

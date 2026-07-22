@@ -1,0 +1,11 @@
+monitoring:
+  prometheus:
+    alertmanager:
+      receivers:
+        telegram:
+          botToken: botToken
+          chatid: 123456789
+      routes:
+        - matchers:
+            - namespace=~"test"
+          receiver: telegram

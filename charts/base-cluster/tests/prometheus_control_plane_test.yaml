@@ -295,3 +295,148 @@ tests:
       - equal:
           path: spec.values.defaultRules.rules.kubeControllerManager
           value: false
+
+  - it: builds email receiver config with smarthost, auth and custom defaultReceiver
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    values:
+      - fixtures/email-receiver.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+    asserts:
+      - contains:
+          path: spec.values.alertmanager.config.receivers
+          content:
+            name: testmail
+            email_configs:
+              - to: test@mail.com
+                from: test@mail.com
+                smarthost: "smtp.mail.com:587"
+                send_resolved: true
+                auth_username: root
+                auth_password_file: /var/run/secrets/alertmanager/testmail
+      - equal:
+          path: spec.values.alertmanager.config.route.receiver
+          value: testmail
+
+  - it: builds telegram receiver config and routes matcher to it
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    values:
+      - fixtures/telegram-receiver-with-route.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+    asserts:
+      - contains:
+          path: spec.values.alertmanager.config.receivers
+          content:
+            name: telegram
+            telegram_configs:
+              - bot_token_file: /var/run/secrets/alertmanager/telegram
+                chat_id: 123456789
+                send_resolved: true
+      - contains:
+          path: spec.values.alertmanager.config.route.routes
+          content:
+            matchers:
+              - namespace=~"test"
+            receiver: telegram
+
+  - it: fails when a route references an undefined receiver
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    values:
+      - fixtures/telegram-receiver-with-route.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.alertmanager.routes[0].receiver: nonexistent
+    asserts:
+      - failedTemplate:
+          errorMessage: "Receiver 'nonexistent' (path: '.alertmanager.routes[0].receiver') is not configured"
+
+  - it: renders a plain ingress when unauthenticated (no global.authentication.config)
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test-cluster
+      global.baseDomain: example.com
+      certManager.email: admin@example.com
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.ingress.enabled: true
+    asserts:
+      - equal:
+          path: spec.values.prometheus.ingress.enabled
+          value: true
+      - equal:
+          path: spec.values.prometheus.ingress.hosts[0]
+          value: prometheus.test-cluster.example.com
+      - notExists:
+          path: spec.values.prometheus.prometheusSpec.externalUrl
+
+  - it: sets externalUrl instead of ingress when authenticated
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test-cluster
+      global.baseDomain: example.com
+      certManager.email: admin@example.com
+      global.authentication.config.clientId: test-client
+      global.authentication.config.clientSecret: test-secret
+      global.authentication.config.issuerHost: sso.example.com
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+    asserts:
+      - notExists:
+          path: spec.values.prometheus.ingress
+      - equal:
+          path: spec.values.prometheus.prometheusSpec.externalUrl
+          value: https://prometheus.test-cluster.example.com
+
+  - it: builds grafana OIDC generic_oauth config from authentication.config.grafana
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test-cluster
+      global.baseDomain: example.com
+      certManager.email: admin@example.com
+      monitoring.grafana.adminPassword: test
+      global.authentication.config.clientId: test-client
+      global.authentication.config.clientSecret: test-secret
+      global.authentication.config.issuerHost: keycloak.de
+      global.authentication.config.issuerPath: /auth/realms/test
+      global.authentication.grafana.apiPath: /oauth2/userinfo/grafana
+      global.authentication.grafana.authenticationPath: /oauth2/authorize/grafana
+      global.authentication.grafana.tokenPath: /oauth2/token/grafana
+      global.authentication.grafana.roleAttributePath: "contains(groups, 'admin') && 'Admin' || 'Viewer'"
+    asserts:
+      - equal:
+          path: spec.values.grafana["grafana.ini"]["auth.generic_oauth"].api_url
+          value: https://keycloak.de/auth/realms/test/oauth2/userinfo/grafana
+      - equal:
+          path: spec.values.grafana["grafana.ini"]["auth.generic_oauth"].auth_url
+          value: https://keycloak.de/auth/realms/test/oauth2/authorize/grafana
+      - equal:
+          path: spec.values.grafana["grafana.ini"]["auth.generic_oauth"].token_url
+          value: https://keycloak.de/auth/realms/test/oauth2/token/grafana
+      - equal:
+          path: spec.values.grafana["grafana.ini"]["auth.generic_oauth"].role_attribute_path
+          value: "contains(groups, 'admin') && 'Admin' || 'Viewer'"
+
+  - it: explicit ingress.enabled false overrides the authenticated-default-true
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test-cluster
+      global.baseDomain: example.com
+      certManager.email: admin@example.com
+      global.authentication.config.clientId: test-client
+      global.authentication.config.clientSecret: test-secret
+      global.authentication.config.issuerHost: sso.example.com
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.ingress.enabled: false
+    asserts:
+      - notExists:
+          path: spec.values.prometheus.ingress
+      - notExists:
+          path: spec.values.prometheus.prometheusSpec.externalUrl
