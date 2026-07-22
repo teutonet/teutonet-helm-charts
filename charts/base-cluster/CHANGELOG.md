@@ -1,5 +1,28 @@
 # Changelog
 
+## [12.3.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v12.2.0...base-cluster-v12.3.0) (2026-07-22)
+
+
+### Features
+
+* **base-cluster/ingress:** Add sub-support for dual mode ([#2247](https://github.com/teutonet/teutonet-helm-charts/issues/2247)) ([b2007e3](https://github.com/teutonet/teutonet-helm-charts/commit/b2007e3132a1b408e59263bf31c52a585421316a))
+* **base-cluster/ingress:** force ingress-controller to sync GatewayClass ([#2231](https://github.com/teutonet/teutonet-helm-charts/issues/2231)) ([f5db7a7](https://github.com/teutonet/teutonet-helm-charts/commit/f5db7a774ae8c33eb412e7c3973723ff08d0df0e))
+* **base-cluster/monitoring:** add blackbox-exporter ([#2215](https://github.com/teutonet/teutonet-helm-charts/issues/2215)) ([e89f96e](https://github.com/teutonet/teutonet-helm-charts/commit/e89f96e2575c0771988dabd23c0c4e2cace78388))
+
+
+### Bug Fixes
+
+* **base-cluster/monitoring:** add missing cert-manager dependency ([#2248](https://github.com/teutonet/teutonet-helm-charts/issues/2248)) ([4f8340b](https://github.com/teutonet/teutonet-helm-charts/commit/4f8340b37a04c16999d415ba71984e0f94a3fa22))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update docker.io/fluxcd/flux-cli docker tag to v2.9.2 ([#2218](https://github.com/teutonet/teutonet-helm-charts/issues/2218)) ([c533661](https://github.com/teutonet/teutonet-helm-charts/commit/c533661dbc37cf8a45f79dcc3c85acda5267783d))
+* **base-cluster/dependencies:** update helm release loki to v13.7.2 ([#2202](https://github.com/teutonet/teutonet-helm-charts/issues/2202)) ([a4b81f4](https://github.com/teutonet/teutonet-helm-charts/commit/a4b81f4658c42a0188db7adf5556d0d122587ff9))
+* **base-cluster/dependencies:** update helm release reflector to v10.0.60 ([#2204](https://github.com/teutonet/teutonet-helm-charts/issues/2204)) ([c4b9c39](https://github.com/teutonet/teutonet-helm-charts/commit/c4b9c39589b9058750c8c9eb38bb0b8c76b76fd6))
+* **base-cluster/dependencies:** update helm release traefik to v40.3.0 ([#2219](https://github.com/teutonet/teutonet-helm-charts/issues/2219)) ([edbff17](https://github.com/teutonet/teutonet-helm-charts/commit/edbff171b5077d9906e44a559d67ce89276b97c0))
+* **base-cluster/dependencies:** update helm release trivy-operator to v0.34.0 ([#2220](https://github.com/teutonet/teutonet-helm-charts/issues/2220)) ([d58aa41](https://github.com/teutonet/teutonet-helm-charts/commit/d58aa41ccf1e0dede6658e3efe8f63c98fb5d015))
+
 ## [12.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v12.1.0...base-cluster-v12.2.0) (2026-07-17)
 
 
