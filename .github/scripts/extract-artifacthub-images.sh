@@ -28,9 +28,22 @@ function getImages() {
     cd "$tmpDir/helmRelease"
     rm -f -- */HelmRelease/*.yaml
     (
-      grep -Er '\s+image: \S+$' |
+      grep -Er '\s+image: \S+[/:]\S+$' |
         grep -v 'artifacthub-ignore' || { if [[ "$?" == 2 ]]; then exit 2; fi; }
     )
+    # some charts (e.g. nvidia/gpu-operator's ClusterPolicy) split the image
+    # reference into sibling `repository`/`image`/`version`(or `tag`) keys
+    # instead of a single `image: repo/name:tag` string
+    while IFS= read -r -d '' file; do
+      local ignoredImages
+      ignoredImages="$(grep -oP 'image:\s*\K\S+(?=.*artifacthub-ignore)' "$file" || true)"
+      yq -r --arg file "${file#./}" --arg ignored "$ignoredImages" '
+        ($ignored | split("\n")) as $ignoredList
+        | [.. | objects | select(has("repository") and has("image") and (.image | type == "string") and ((.version != null) or (.tag != null)) and ((.image as $i | $ignoredList | index($i)) == null))]
+        | .[]
+        | "\($file):  image: \(.repository)/\(.image):\(.version // .tag)"
+      ' "$file"
+    done < <(find . -name '*.yaml' -print0)
   )
 }
 
