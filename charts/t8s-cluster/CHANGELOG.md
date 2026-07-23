@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.9.3](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.9.2...t8s-cluster-v9.9.3) (2026-07-23)
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update helm release cluster-autoscaler to v9.58.0 ([#2222](https://github.com/teutonet/teutonet-helm-charts/issues/2222)) ([9eb07c9](https://github.com/teutonet/teutonet-helm-charts/commit/9eb07c99d9c88be0e3f052b04a9611863567d672))
+
 ## [9.9.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.9.1...t8s-cluster-v9.9.2) (2026-06-24)
 
 
