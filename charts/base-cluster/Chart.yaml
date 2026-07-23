@@ -4,10 +4,10 @@ dependencies:
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
     version: 2.1.1
 description: >-
-  A common base for every kubernetes cluster. This chart bootstraps a cluster
-  with the shared components every teuto.net cluster needs. It is managed via
-  Flux and intended to be installed once, after which Flux takes over further
-  reconciliation of the chart itself.
+  A common base for every kubernetes cluster. This chart bootstraps a cluster with
+  the shared components every teuto.net cluster needs. It is managed via Flux and
+  intended to be installed once, after which Flux takes over further reconciliation
+  of the chart itself.
 home: https://teuto.net
 icon: https://teuto.net/favicon.ico
 kubeVersion: '>=1.27.0-0'
@@ -20,24 +20,24 @@ maintainers:
     name: tasches
 name: base-cluster
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v12.2.0/charts/base-cluster
+  - https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v12.3.0/charts/base-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster
 type: application
-version: 12.2.0
+version: 12.3.0
 annotations:
   artifacthub.io/images: |-
     - image: docker.io/curlimages/curl:8.20.0                                                                                                        #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana.yaml
     - image: docker.io/curlimages/curl:8.21.0@sha256:7c12af72ceb38b7432ab85e1a265cff6ae58e06f95539d539b654f2cfa64bb13                                #  default/Job/dead-mans-switch-registration.yaml
     - image: docker.io/curlimages/curl:8.21.0@sha256:7c12af72ceb38b7432ab85e1a265cff6ae58e06f95539d539b654f2cfa64bb13                                #  monitoring/CronJob/dead-mans-switch.yaml
-    - image: docker.io/emberstack/kubernetes-reflector:10.0.52                                                                                       #  kube-system/HelmRelease/reflector/kube-system/Deployment/reflector.yaml
-    - image: docker.io/fluxcd/flux-cli:v2.8.8@sha256:3113a880461938a47ab2ec877aecbf19c570e4df9848d20228d1b4d2c7f8a764                                #  default/Job/flux-generate-ssh-key-secret-main.yaml
+    - image: docker.io/emberstack/kubernetes-reflector:10.0.60                                                                                       #  kube-system/HelmRelease/reflector/kube-system/Deployment/reflector.yaml
+    - image: docker.io/fluxcd/flux-cli:v2.9.2@sha256:816466603e4b2e30b4fce6ecc0df49c255660deb15f625ec84c9a0dc3c55b1dd                                #  default/Job/flux-generate-ssh-key-secret-main.yaml
     - image: docker.io/grafana/alloy:v1.17.0                                                                                                         #  monitoring/HelmRelease/telemetry-collector/monitoring/DaemonSet/telemetry-collector.yaml
     - image: docker.io/grafana/alloy:v1.17.0                                                                                                         #  monitoring/HelmRelease/telemetry-gateway/monitoring/Deployment/telemetry-gateway.yaml
     - image: docker.io/grafana/grafana-image-renderer:v5.9.1@sha256:c0c920e6974b0d30ae25313051344afcd2054362529968ebd9545a4b2bc8119b                 #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana-image-renderer.yaml
     - image: docker.io/grafana/grafana:13.0.1                                                                                                        #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-grafana.yaml
-    - image: docker.io/grafana/loki:3.7.1                                                                                                            #  monitoring/HelmRelease/loki/monitoring/StatefulSet/loki.yaml
+    - image: docker.io/grafana/loki:3.7.2                                                                                                            #  monitoring/HelmRelease/loki/monitoring/StatefulSet/loki.yaml
     - image: docker.io/grafana/tempo:2.10.7                                                                                                          #  monitoring/HelmRelease/grafana-tempo/monitoring/StatefulSet/grafana-tempo.yaml
-    - image: docker.io/traefik:v3.7.1                                                                                                                #  ingress/HelmRelease/ingress-controller/ingress/Deployment/ingress-controller.yaml
+    - image: docker.io/traefik:v3.7.4                                                                                                                #  ingress/HelmRelease/ingress-controller/ingress/Deployment/ingress-controller.yaml
     - image: docker.io/velero/velero-plugin-for-aws:v1.7.0                                                                                           #  backup/HelmRelease/velero/backup/Deployment/velero.yaml
     - image: docker.io/velero/velero:v1.14.1                                                                                                         #  backup/HelmRelease/velero/backup/DaemonSet/node-agent.yaml
     - image: docker.io/velero/velero:v1.14.1                                                                                                         #  backup/HelmRelease/velero/backup/Deployment/velero.yaml
@@ -55,7 +55,7 @@ annotations:
     - image: ghcr.io/kyverno/readiness-checker:v1.18.1                                                                                               #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-rm-webhooks.yaml
     - image: ghcr.io/kyverno/readiness-checker:v1.18.1                                                                                               #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-scale-to-zero.yaml
     - image: ghcr.io/twin/k8s-ttl-controller:v1.4.0                                                                                                  #  kube-system/HelmRelease/ttl-controller/kube-system/Deployment/k8s-ttl-controller.yaml
-    - image: mirror.gcr.io/aquasec/trivy-operator:0.30.1                                                                                             #  trivy/HelmRelease/trivy/trivy/Deployment/trivy-trivy-operator.yaml
+    - image: mirror.gcr.io/aquasec/trivy-operator:0.32.0                                                                                             #  trivy/HelmRelease/trivy/trivy/Deployment/trivy-trivy-operator.yaml
     - image: quay.io/jetstack/cert-manager-cainjector:v1.17.2                                                                                        #  cert-manager/HelmRelease/cert-manager/cert-manager/Deployment/cert-manager-cainjector.yaml
     - image: quay.io/jetstack/cert-manager-controller:v1.17.2                                                                                        #  cert-manager/HelmRelease/cert-manager/cert-manager/Deployment/cert-manager.yaml
     - image: quay.io/jetstack/cert-manager-startupapicheck:v1.17.2                                                                                   #  cert-manager/HelmRelease/cert-manager/cert-manager/Job/cert-manager-startupapicheck.yaml
@@ -65,6 +65,7 @@ annotations:
     - image: quay.io/prometheus-operator/prometheus-config-reloader:v0.91.0@sha256:7d9e4eea5f1139e602508871f422b0116c60e87c662f3dcd234d5ab60cd0d8c1  #  monitoring/HelmRelease/telemetry-gateway/monitoring/Deployment/telemetry-gateway.yaml
     - image: quay.io/prometheus-operator/prometheus-operator:v0.90.1                                                                                 #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Deployment/kube-prometheus-stack-operator.yaml
     - image: quay.io/prometheus/alertmanager:v0.32.1                                                                                                 #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Alertmanager/kube-prometheus-stack-alertmanager.yaml
+    - image: quay.io/prometheus/blackbox-exporter:v0.28.0                                                                                            #  monitoring/HelmRelease/prometheus-blackbox-exporter/monitoring/Deployment/prometheus-blackbox-exporter.yaml
     - image: quay.io/prometheus/node-exporter:v1.11.1                                                                                                #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/DaemonSet/kube-prometheus-stack-prometheus-node-exporter.yaml
     - image: quay.io/prometheus/prometheus:v3.11.3                                                                                                   #  monitoring/HelmRelease/kube-prometheus-stack/monitoring/Prometheus/kube-prometheus-stack-prometheus.yaml
     - image: reg.kyverno.io/kyverno/background-controller:v1.18.1                                                                                    #  kyverno/HelmRelease/kyverno/kyverno/Deployment/kyverno-background-controller.yaml
