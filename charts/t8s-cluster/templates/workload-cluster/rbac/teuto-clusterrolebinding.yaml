@@ -6,8 +6,12 @@ kind: ClusterRoleBinding
 metadata:
   name: teuto-staff
 subjects:
-  - kind: Group
-    name: teuto.net:staff
+  - kind: User
+    name: cwr@teuto.net
+  - kind: User
+    name: mw@teuto.net
+  - kind: User
+    name: st@teuto.net
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
