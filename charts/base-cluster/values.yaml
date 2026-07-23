@@ -455,7 +455,13 @@ externalDNS:
       memory: 128Mi
 
 flux:
-  gitRepositories: {}
+  # it's important that the `url` is the first key and `semver` is right below, otherwise renovate won't detect it
+  gitRepositories:
+    gateway-api:
+      url: https://github.com/kubernetes-sigs/gateway-api
+      semver: 1.5.1
+      path: config/crd/experimental
+      condition: '{{ include "base-cluster.ingress.hasTraefik" . }}'
 
 ingress:
   provider: traefik
