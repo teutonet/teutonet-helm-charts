@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v3.1.0...teuto-cnpg-v3.1.1) (2026-07-23)
+
+
+### Miscellaneous Chores
+
+* **teuto-cnpg/docs:** add description to project ([#2246](https://github.com/teutonet/teutonet-helm-charts/issues/2246)) ([8bf8193](https://github.com/teutonet/teutonet-helm-charts/commit/8bf8193e72a6912b6fad77ff426e0038b246a70b))
+
 ## [3.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-cnpg-v3.0.0...teuto-cnpg-v3.1.0) (2026-02-04)
 
 
