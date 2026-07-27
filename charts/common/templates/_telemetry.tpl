@@ -33,7 +33,7 @@
 {{- end -}}
 
 {{/*
-Returns a dict for configuring otel traces, containing `enabled`, `host`, `port`, `endpoint`, `serviceProtocol`, `insecure`.
+Returns a dict for configuring otel traces, containing `enabled`, `host`, `port`, `endpoint`, `serviceProtocol`, `insecure`. `serviceName` and `serviceNamespace` are also set, but only when the endpoint was auto-discovered.
 {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp" "serviceProtocol" "grpc" "global" $) | fromYaml }}
 `serviceProtocol` is optional, will just not be used (probably using `grpc`).
 Be sure to cast the port back to int by using `{{ int64 $telemetryConf.port }}` for usage, it's a float by default
@@ -46,6 +46,8 @@ Be sure to cast the port back to int by using `{{ int64 $telemetryConf.port }}` 
   {{- $host := "" -}}
   {{- $port := 0 -}}
   {{- $endpoint := "" -}}
+  {{- $discoveredServiceName := "" -}}
+  {{- $discoveredServiceNamespace := "" -}}
   {{- $serviceProtocol := .serviceProtocol -}}
   {{- $insecure := dig "insecure" true $config -}}
   {{- if eq (dig "endpoint" "auto" $config) "auto" -}}
@@ -59,7 +61,7 @@ Be sure to cast the port back to int by using `{{ int64 $telemetryConf.port }}` 
             {{- $servicePortName := dig "name" "" $portSpec -}}
             {{- $appProtocol := dig "appProtocol" "" $portSpec -}}
             {{- if and (hasPrefix $protocol $servicePortName) (or (not $serviceProtocol) (hasSuffix (printf "-%s" $serviceProtocol) $servicePortName) (eq $appProtocol $serviceProtocol)) -}}
-              {{- $servicePortPort = dig "port" 0 $portSpec -}}
+              {{- $servicePortPort = dig "port" 0 $portSpec | int64 -}}
               {{/* see https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_protocol */}}
               {{- if and (not $serviceProtocol) (eq $protocol "otlp") (has $appProtocol (list "grpc" "http/protobuf" "http/json")) -}}
                 {{- $serviceProtocol = $appProtocol -}}
@@ -69,6 +71,8 @@ Be sure to cast the port back to int by using `{{ int64 $telemetryConf.port }}` 
             {{- end -}}
           {{- end -}}
           {{- if $enabled -}}
+            {{- $discoveredServiceName = $serviceName -}}
+            {{- $discoveredServiceNamespace = $namespace -}}
             {{- $host = printf "%s.%s" $serviceName $namespace -}}
             {{- $port = $servicePortPort -}}
             {{- $endpoint = printf "%s:%d" $host $port -}}
@@ -108,6 +112,10 @@ Be sure to cast the port back to int by using `{{ int64 $telemetryConf.port }}` 
     {{- $conf = set $conf "host" $host -}}
     {{- $conf = set $conf "port" $port -}}
     {{- $conf = set $conf "endpoint" $endpoint -}}
+    {{- if $discoveredServiceName -}}
+      {{- $conf = set $conf "serviceName" $discoveredServiceName -}}
+      {{- $conf = set $conf "serviceNamespace" $discoveredServiceNamespace -}}
+    {{- end -}}
   {{- end -}}
   {{- toYaml $conf -}}
 {{- end -}}

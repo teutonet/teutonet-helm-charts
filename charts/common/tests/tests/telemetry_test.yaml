@@ -34,6 +34,61 @@ tests:
           path: port
           value: 4317
 
+  - it: exposes serviceName and serviceNamespace when auto-discovered
+    set:
+      protocol: otlp
+    kubernetesProvider:
+      scheme:
+        "v1/Service":
+          gvr:
+            group: ""
+            version: "v1"
+            resource: "services"
+          namespaced: true
+      objects:
+        - apiVersion: v1
+          kind: Service
+          metadata:
+            name: alloy
+            namespace: monitoring
+          spec:
+            ports:
+              - name: otlp-grpc
+                port: 4317.0
+                appProtocol: grpc
+    asserts:
+      - equal:
+          path: enabled
+          value: true
+      - equal:
+          path: serviceName
+          value: alloy
+      - equal:
+          path: serviceNamespace
+          value: monitoring
+      - equal:
+          path: host
+          value: alloy.monitoring
+      - equal:
+          path: port
+          value: 4317
+      - equal:
+          path: endpoint
+          value: http://alloy.monitoring:4317
+
+  - it: does not expose serviceName/serviceNamespace for an explicit external endpoint
+    set:
+      protocol: otlp
+      global.telemetry.otlp.endpoint: "otel-collector.example.com:4317"
+    asserts:
+      - equal:
+          path: enabled
+          value: true
+      - notExists:
+          path: serviceName
+      - notExists:
+          path: serviceNamespace
+
   - it: uses explicit port when provided
     set:
       protocol: otlp
