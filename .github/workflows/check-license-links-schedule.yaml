@@ -1,0 +1,35 @@
+name: Check license links (scheduled)
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch: {}
+
+jobs:
+  check-license-links:
+    uses: ./.github/workflows/check-license-links.yaml
+    permissions:
+      contents: read
+
+  createIssue:
+    runs-on: ubuntu-latest
+    if: ${{ always() && needs.check-license-links.result == 'failure' }}
+    needs: check-license-links
+    permissions:
+      issues: write
+    name: Create Issue
+    steps:
+      - run: |
+          gh issue create \
+            --title "$TITLE" \
+            --assignee "$ASSIGNEES" \
+            --label "$LABELS" \
+            --body "$BODY"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TITLE: Scheduled license link check failed
+          ASSIGNEES: cwrau,marvinWolff,tasches
+          LABELS: bug
+          BODY: |
+            Last scheduled run of check-license-links failed, see ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Likely a stale/drifted licenseLink in .github/image_licenses.yaml, but could also be an infra/checkout failure.
