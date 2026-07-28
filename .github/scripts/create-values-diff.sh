@@ -71,7 +71,7 @@ function generateComment() {
   local newResourcesDir
   local originalResourcesDir
 
-  for values in "$chart/values.yaml" "$chart/ci/"*-values.yaml; do
+  for values in "$chart/values.yaml" "$chart/ci/artifacthub-values"*.yaml; do
     [[ -f "$values" ]] || continue
     (
       set -e
@@ -96,7 +96,7 @@ function generateComment() {
     ) &
   done
   wait
-  for values in "$chart/values.yaml" "$chart/ci/"*-values.yaml; do
+  for values in "$chart/values.yaml" "$chart/ci/artifacthub-values"*.yaml; do
     [[ -f "$values" ]] || continue
     originalResourcesDir="$TMP_DIR/original-$(basename -s .yaml "$values")"
     newResourcesDir="$TMP_DIR/new-$(basename -s .yaml "$values")"
