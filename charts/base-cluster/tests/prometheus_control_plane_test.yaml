@@ -377,6 +377,7 @@ tests:
   - it: renders a plain ingress when unauthenticated (no global.authentication.config)
     template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
     set:
+      ingress.provider: traefik
       global.clusterName: test-cluster
       global.baseDomain: example.com
       certManager.email: admin@example.com

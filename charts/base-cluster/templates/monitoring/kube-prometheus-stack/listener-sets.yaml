@@ -1,0 +1,56 @@
+{{- if and (include "base-cluster.ingress.hasEnvoy" $) .Values.monitoring.prometheus.enabled -}}
+{{- $names := list "grafana" "prometheus" -}}
+{{- if include "base-cluster.prometheus-stack.alertmanager.enabled" $ -}}
+  {{- $names = append $names "alertmanager" -}}
+{{- end -}}
+{{- range $name := $names }}
+  {{- $ingress := include "base-cluster.monitoring.ingress.config" (dict "name" $name "context" $) | fromYaml -}}
+  {{- if and (include "base-cluster.monitoring.ingress.enabled" (dict "name" $name "context" $)) $ingress.customDomain }}
+    {{- $secretName := include "base-cluster.certificate" (dict "name" $name "customDomain" $ingress.customDomain "context" $) }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: ListenerSet
+metadata:
+  name: {{ printf "%s-listener-set" $name }}
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress
+spec:
+  parentRef:
+    name: ingress-controller
+    namespace: ingress
+    kind: Gateway
+    group: gateway.networking.k8s.io
+  listeners:
+    - name: main
+      hostname: {{ $ingress.customDomain | quote }}
+      protocol: HTTPS
+      port: 443
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            group: ""
+            name: {{ $secretName | quote }}
+      allowedRoutes:
+        namespaces:
+          from: All
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ $secretName }}
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress
+spec:
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-production
+  dnsNames:
+    - {{ $ingress.customDomain | quote }}
+  secretName: {{ $secretName | quote }}
+---
+  {{- end }}
+{{- end }}
+{{- end }}

@@ -17,7 +17,9 @@ kubernetesProvider:
         resource: "services"
       namespaced: true
 tests:
-  - it: no error with default traefik and no existing nginx
+  - it: no error with traefik and no existing nginx
+    set:
+      ingress.provider: traefik
     asserts:
       - hasDocuments:
           count: 0
@@ -31,6 +33,7 @@ tests:
 
   - it: fails immediately when nginx snippets enabled with traefik
     set:
+      ingress.provider: traefik
       ingress.allowNginxConfigurationSnippets: true
     asserts:
       - failedTemplate:
@@ -45,6 +48,8 @@ tests:
           errorMessage: "useTraefikNginxCompatibility cannot be enabled when using nginx as the ingress provider"
 
   - it: fails when switching to traefik while nginx HelmRelease exists
+    set:
+      ingress.provider: traefik
     kubernetesProvider:
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
@@ -71,6 +76,8 @@ tests:
           errorMessage: "Cannot switch to nginx while traefik is installed. If you want to switch to nginx, please delete the HelmRelease 'ingress/ingress-controller' first. Note: You might want to set .Values.ingress.IP to the current traefik LoadBalancer IP to keep the same IP. Warning: Switching providers will cause downtime until the new provider is fully deployed."
 
   - it: no error when both nginx and traefik HelmReleases exist with traefik provider
+    set:
+      ingress.provider: traefik
     kubernetesProvider:
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
@@ -137,3 +144,110 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+
+  - it: fails immediately when nginx snippets enabled with envoy
+    set:
+      ingress.provider: envoy
+      ingress.allowNginxConfigurationSnippets: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "allowNginxConfigurationSnippets cannot be enabled when using envoy as the ingress provider"
+
+  - it: fails immediately when nginx traefik compatibility enabled with envoy
+    set:
+      ingress.provider: envoy
+      ingress.useTraefikNginxCompatibility: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "useTraefikNginxCompatibility cannot be enabled when using envoy as the ingress provider"
+
+  - it: no error when grafana customDomain is set with envoy
+    set:
+      ingress.provider: envoy
+      monitoring.grafana.ingress.customDomain: grafana.custom.example.com
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: no error when prometheus customDomain is set with envoy
+    set:
+      ingress.provider: envoy
+      monitoring.prometheus.ingress.customDomain: prometheus.custom.example.com
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: no error when alertmanager customDomain is set with envoy
+    set:
+      ingress.provider: envoy
+      monitoring.prometheus.alertmanager.ingress.customDomain: alertmanager.custom.example.com
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: fails when telemetry has an explicit non-auto endpoint with envoy
+    set:
+      ingress.provider: envoy
+      global.telemetry.otlp.endpoint: "otel-collector.example.com:4317"
+    asserts:
+      - failedTemplate:
+          errorMessage: "Explicit (non-auto-discovered) telemetry endpoints are not supported with the envoy ingress provider yet"
+
+  - it: fails when an extraPorts entry is named http, colliding with the envoy Gateway's built-in listener
+    set:
+      ingress.provider: envoy
+      ingress.extraPorts:
+        http:
+          port: 8080
+          exposedPort: 8080
+          protocol: TCP
+    asserts:
+      - failedTemplate:
+          errorMessage: "ingress.extraPorts key \"http\" is reserved for the envoy Gateway's built-in http/https listeners, please choose a different name"
+
+  - it: fails when an extraPorts entry is named https, colliding with the envoy Gateway's built-in listener
+    set:
+      ingress.provider: envoy
+      ingress.extraPorts:
+        https:
+          port: 8443
+          exposedPort: 8443
+          protocol: TCP
+    asserts:
+      - failedTemplate:
+          errorMessage: "ingress.extraPorts key \"https\" is reserved for the envoy Gateway's built-in http/https listeners, please choose a different name"
+
+  - it: does not fail when an extraPorts entry uses a non-reserved name with envoy
+    set:
+      ingress.provider: envoy
+      ingress.extraPorts:
+        ssh:
+          port: 22
+          exposedPort: 22
+          protocol: TCP
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: resolves envoy's service identity correctly for the IP-immutability check
+    set:
+      ingress.provider: envoy
+      ingress.IP: 10.0.0.100
+    kubernetesProvider:
+      scheme:
+        "v1/Service":
+          gvr:
+            version: "v1"
+            resource: "services"
+          namespaced: true
+      objects:
+        - apiVersion: v1
+          kind: Service
+          metadata:
+            name: ingress-controller
+            namespace: ingress
+          spec:
+            loadBalancerIP: 10.0.0.200
+    asserts:
+      - failedTemplate:
+          errorMessage: "You cannot change the LoadBalancerIP on an existing service, if you really want to, please delete the service 'ingress/ingress-controller' beforehand"

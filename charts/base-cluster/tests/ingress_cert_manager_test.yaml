@@ -12,7 +12,19 @@ kubernetesProvider:
         resource: helmreleases
       namespaced: true
 tests:
-  - it: cert-manager gatewayAPI enabled when provider is traefik (default)
+  - it: cert-manager gatewayAPI enabled when provider is traefik
+    set:
+      ingress.provider: traefik
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.values.config.enableGatewayAPI
+          value: true
+
+  - it: cert-manager gatewayAPI enabled when provider is envoy
+    set:
+      ingress.provider: envoy
     asserts:
       - hasDocuments:
           count: 1
@@ -30,6 +42,8 @@ tests:
           path: spec.values.config
 
   - it: cert-manager gatewayAPI enabled in dual-mode (both HelmReleases exist, provider is traefik)
+    set:
+      ingress.provider: traefik
     kubernetesProvider:
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
