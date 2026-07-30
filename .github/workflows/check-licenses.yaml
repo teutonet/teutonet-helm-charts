@@ -11,6 +11,8 @@ on:
       - synchronize
     paths:
       - charts/**
+      - .github/image_licenses.yaml
+      - .github/scripts/check-license-links.sh
 
 jobs:
   getChangedChart:
@@ -21,6 +23,7 @@ jobs:
       pr_number: ${{ github.event.pull_request.number }}
   check-licenses:
     name: check licenses
+    if: ${{ needs.getChangedChart.outputs.found == 'true' }}
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -56,3 +59,7 @@ jobs:
           [[ "$RUNNER_DEBUG" == 1 ]] && set -x
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           ./scripts/.github/scripts/scan-for-licenses.sh "charts/${{ needs.getChangedChart.outputs.chart }}"
+  check-license-links:
+    uses: ./.github/workflows/check-license-links.yaml
+    permissions:
+      contents: read
