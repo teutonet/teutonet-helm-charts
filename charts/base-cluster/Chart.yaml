@@ -2,7 +2,7 @@ apiVersion: v2
 dependencies:
   - name: common
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
-    version: 2.1.1
+    version: 2.2.0
 description: >-
   A common base for every kubernetes cluster. This chart bootstraps a cluster with
   the shared components every teuto.net cluster needs. It is managed via Flux and

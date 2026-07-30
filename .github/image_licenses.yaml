@@ -47,6 +47,12 @@ licenses:
   docker.io/emberstack/kubernetes-reflector:
     license: MIT
     licenseLink: https://raw.githubusercontent.com/emberstack/kubernetes-reflector/refs/heads/main/LICENSE
+  docker.io/envoyproxy/gateway:
+    license: Apache-2.0
+    licenseLink: https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/LICENSE
+  docker.io/envoyproxy/ratelimit:
+    license: Apache-2.0
+    licenseLink: https://raw.githubusercontent.com/envoyproxy/ratelimit/refs/heads/main/LICENSE
   docker.io/fluxcd/flux-cli:
     license: Apache-2.0
     licenseLink: https://raw.githubusercontent.com/fluxcd/flux2/refs/heads/main/LICENSE

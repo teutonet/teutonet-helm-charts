@@ -1,0 +1,32 @@
+suite: global cluster-ingress
+templates:
+  - templates/global/cluster-ingress.yaml
+release:
+  name: base-cluster
+set:
+  dns.provider:
+    cloudflare:
+      apiToken: test-token
+  global.baseDomain: example.com
+  global.clusterName: test
+tests:
+  - it: renders for traefik provider
+    set:
+      ingress.provider: traefik
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: does not render for envoy provider
+    set:
+      ingress.provider: envoy
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: does not render for none provider
+    set:
+      ingress.provider: none
+    asserts:
+      - hasDocuments:
+          count: 0

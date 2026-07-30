@@ -14,6 +14,9 @@ docker.io:
     curl: ALL_TAGS
   emberstack:
     kubernetes-reflector: ALL_TAGS
+  envoyproxy:
+    gateway: ALL_TAGS
+    ratelimit: ALL_TAGS
   fluxcd: ALL_IMAGES
   grafana: ALL_IMAGES
   memcached: ALL_TAGS

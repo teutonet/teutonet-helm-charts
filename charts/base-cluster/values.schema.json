@@ -1381,6 +1381,7 @@
           "enum": [
             "nginx",
             "traefik",
+            "envoy",
             "external",
             "none"
           ],
