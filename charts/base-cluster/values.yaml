@@ -459,7 +459,7 @@ flux:
   gitRepositories:
     gateway-api:
       url: https://github.com/kubernetes-sigs/gateway-api
-      semver: 1.5.1
+      semver: 1.6.1
       path: config/crd/experimental
       condition: '{{ include "base-cluster.ingress.hasTraefik" . }}'
 
