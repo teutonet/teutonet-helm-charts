@@ -23,5 +23,5 @@ jobs:
           sparse-checkout-cone-mode: false
           persist-credentials: false
       - run: pip install yq
-      - run: gem install licensee --no-document --version 10.0.0
+      - run: gem install licensee --no-document --version 10.0.0 --user-install
       - run: ./scripts/.github/scripts/check-license-links.sh
