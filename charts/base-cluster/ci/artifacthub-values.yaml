@@ -19,6 +19,13 @@ backup:
                 name: secret
           prefix: /prefix
           bucket: bucket
+        location-direct:
+          provider:
+            minio:
+              url: https://minio.com
+              accessKeyID: accessKeyID
+              secretAccessKey: secretAccessKey
+          bucket: bucket-direct
 storage:
   readWriteMany:
     enabled: true
@@ -26,6 +33,37 @@ global:
   clusterName: test
   baseDomain: example.com
   serviceLevelAgreement: None
+  priorityClasses:
+    custom-priority:
+      value: 600
+      description: a custom priority class
+      preemptionPolicy: Never
+  namespaces:
+    custom-namespace:
+      resources:
+        defaults:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 300Mi
+        quotas:
+          limits.cpu: "1"
+          limits.memory: 1Gi
+  authentication:
+    config:
+      clientId: clientId
+      clientSecret: clientSecret
+      issuerHost: keycloak.example.com
+      issuerPath: /auth/realms/test
+    grafana:
+      apiPath: /oauth2/userinfo/grafana
+      authenticationPath: /oauth2/authorize/grafana
+      tokenPath: /oauth2/token/grafana
+      roleAttributePath: "contains(groups, 'admin') && 'Admin' || 'Viewer'"
+certManager:
+  email: admin@example.com
 monitoring:
   grafana:
     adminPassword: test
@@ -37,9 +75,25 @@ monitoring:
   prometheus:
     enabled: true
     alertmanager:
+      defaultReceiver: testmail
       receivers:
         pagerduty:
           integrationKey: INTEGRATION_KEY__INTEGRATION_KEY
+        email testmail:
+          from: test2@mail.com
+          to: test2@mail.com
+          host: smtp.mail.com
+          port: 587
+          username: root
+          password: abcd
+          sendResolved: false
+        telegram:
+          botToken: botToken
+          chatid: 123456789
+      routes:
+        - matchers:
+            - namespace=~"test"
+          receiver: pagerduty
     blackboxExporter:
       enabled: true
   loki:
