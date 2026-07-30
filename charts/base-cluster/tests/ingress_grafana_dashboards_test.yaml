@@ -18,12 +18,13 @@ tests:
       - notExists:
           path: spec.values.grafana.dashboards.custom.traefik
 
-  - it: only renders the traefik dashboard when provider is traefik (default)
+  - it: only renders the traefik dashboard when provider is traefik
     template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
     set:
       global.clusterName: test
       monitoring.grafana.adminPassword: test
       monitoring.prometheus.enabled: true
+      ingress.provider: traefik
     asserts:
       - notExists:
           path: spec.values.grafana.dashboards.custom.ingress-nginx
@@ -74,6 +75,7 @@ tests:
       monitoring.prometheus.kubeProxy: false
       monitoring.prometheus.kubeScheduler: false
       monitoring.prometheus.kubeControllerManager: false
+      ingress.provider: traefik
     kubernetesProvider:
       scheme:
         helm.toolkit.fluxcd.io/v2/HelmRelease:

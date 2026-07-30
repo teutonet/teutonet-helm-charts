@@ -3,6 +3,24 @@
   {{- $ingress := include "base-cluster.monitoring.ingress.config" (dict "name" .name "context" .context) | fromYaml -}}
   {{- if include "base-cluster.monitoring.ingress.enabled" (dict "name" .name "context" .context) -}}
     {{- $host := include (printf "base-cluster.%s.host" .name) .context -}}
+    {{- if include "base-cluster.ingress.hasEnvoy" .context -}}
+route:
+  main:
+    enabled: true
+    hostnames:
+      - {{ $host }}
+    parentRefs:
+    {{- if $ingress.customDomain }}
+      - name: {{ printf "%s-listener-set" .name }}
+        kind: ListenerSet
+        group: gateway.networking.k8s.io
+        sectionName: main
+    {{- else }}
+      - name: ingress-controller
+        namespace: ingress
+        sectionName: https
+    {{- end }}
+    {{- else -}}
 ingress:
   enabled: true
   {{- if or (not .Values.dns.provider) $ingress.customDomain }}
@@ -15,6 +33,7 @@ ingress:
     - hosts:
         - {{ $host }}
       secretName: {{ include "base-cluster.certificate" (dict "name" .name "customDomain" $ingress.customDomain "context" .context) }}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
 

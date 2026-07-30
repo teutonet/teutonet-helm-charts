@@ -12,6 +12,7 @@ tests:
       global.clusterName: test-cluster
       global.baseDomain: example.com
       dns.provider.cloudflare.apiToken: fake-token
+      ingress.provider: traefik
     asserts:
       - equal:
           path: spec.rules[0].host
@@ -22,6 +23,7 @@ tests:
       global.clusterName: test-cluster
       global.baseDomain: example.com
       dns.provider.cloudflare.apiToken: fake-token
+      ingress.provider: traefik
     asserts:
       - equal:
           path: spec.rules[1].host
@@ -31,6 +33,7 @@ tests:
     set:
       global.clusterName: test-cluster
       global.baseDomain: example.com
+      ingress.provider: traefik
     asserts:
       - hasDocuments:
           count: 0
@@ -49,6 +52,7 @@ tests:
     set:
       global.baseDomain: example.com
       dns.provider.cloudflare.apiToken: fake-token
+      ingress.provider: traefik
     asserts:
       - failedTemplate:
           errorMessage: "You must provide a cluster name"

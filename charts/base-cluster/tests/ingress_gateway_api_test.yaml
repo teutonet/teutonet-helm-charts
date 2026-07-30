@@ -4,7 +4,9 @@ templates:
 release:
   name: base-cluster
 tests:
-  - it: gateway-api renders when provider is traefik (default)
+  - it: gateway-api renders when provider is traefik
+    set:
+      ingress.provider: traefik
     asserts:
       - hasDocuments:
           count: 2
@@ -17,6 +19,8 @@ tests:
           count: 0
 
   - it: gateway-api renders in dual-mode with traefik provider
+    set:
+      ingress.provider: traefik
     kubernetesProvider:
       scheme:
         helm.toolkit.fluxcd.io/v2/HelmRelease:
@@ -62,6 +66,13 @@ tests:
           metadata:
             name: ingress-controller
             namespace: ingress
+    asserts:
+      - hasDocuments:
+          count: 2
+
+  - it: gateway-api renders when provider is envoy
+    set:
+      ingress.provider: envoy
     asserts:
       - hasDocuments:
           count: 2

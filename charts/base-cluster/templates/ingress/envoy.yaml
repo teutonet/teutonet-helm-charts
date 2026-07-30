@@ -1,0 +1,204 @@
+{{- if eq .Values.ingress.provider "envoy" -}}
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: envoy-gateway-crds
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress
+spec:
+  chart:
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "envoyGatewayCrds" "chart" "gateway-crds-helm" "context" $) | nindent 6 }}
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    crds:
+      gatewayAPI:
+        enabled: false
+      envoyGateway:
+        enabled: true
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ingress-controller
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress
+spec:
+  chart:
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "envoyGateway" "chart" "gateway-helm" "context" $) | nindent 6 }}
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  dependsOn:
+    - name: envoy-gateway-crds
+      namespace: ingress
+  {{- if .Values.monitoring.prometheus.enabled }}
+    - name: kube-prometheus-stack
+      namespace: monitoring
+  {{- end }}
+  values:
+    fullnameOverride: ingress-controller
+    crds:
+      enabled: false
+    {{- with .Values.global.imageRegistry }}
+    global:
+      imageRegistry: {{ . }}
+    {{- end }}
+    deployment:
+      replicas: {{ .Values.ingress.replicas }}
+    resources: {{- include "common.resources" .Values.ingress | nindent 6 }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: default
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: ingress-controller
+    namespace: ingress
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: ingress-controller
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        replicas: {{ .Values.ingress.replicas }}
+        pod:
+          labels:
+            app.kubernetes.io/name: ingress-controller
+        container:
+          resources: {{- include "common.resources" .Values.ingress | nindent 12 }}
+  {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp" "global" .Values.global) | fromYaml }}
+  {{- if and $telemetryConf.enabled $telemetryConf.serviceName }}
+  telemetry:
+    tracing:
+      provider:
+        type: OpenTelemetry
+        backendRefs:
+          - name: {{ $telemetryConf.serviceName }}
+            namespace: {{ $telemetryConf.serviceNamespace }}
+            port: {{ int64 $telemetryConf.port }}
+  {{- end }}
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: ingress-controller-service
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress
+spec:
+  # Gateway-scoped so a future additional Gateway on the same GatewayClass can get its own
+  # Service/IP via its own infrastructure.parametersRef, instead of inheriting this one.
+  mergeType: StrategicMerge
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyService:
+        name: ingress-controller
+        annotations:
+          loadbalancer.openstack.org/timeout-client-data: "2073600000"
+          loadbalancer.openstack.org/timeout-member-connect: "2073600000"
+          loadbalancer.openstack.org/timeout-member-data: "2073600000"
+          loadbalancer.openstack.org/timeout-tcp-inspect: "2073600000"
+          loadbalancer.openstack.org/proxy-protocol: {{ include "base-cluster.ingress.useProxyProtocol" (dict "context" $) | quote }}
+          load-balancer.hetzner.cloud/uses-proxyprotocol: {{ include "base-cluster.ingress.useProxyProtocol" (dict "context" $) | quote }}
+          load-balancer.hetzner.cloud/disable-private-ingress: "true"
+          {{- if .Values.ingress.IP }}
+          loadbalancer.openstack.org/keep-floatingip: "true"
+          {{- end }}
+        {{- if .Values.ingress.IP }}
+        loadBalancerIP: {{ .Values.ingress.IP | quote }}
+        {{- end }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: ingress-controller
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress
+spec:
+  gatewayClassName: default
+  infrastructure:
+    parametersRef:
+      group: gateway.envoyproxy.io
+      kind: EnvoyProxy
+      name: ingress-controller-service
+  allowedListeners:
+    namespaces:
+      from: All
+  listeners:
+    - name: http
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: https
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: cluster-wildcard-certificate
+      allowedRoutes:
+        namespaces:
+          from: All
+    {{- range $name, $cfg := .Values.ingress.extraPorts }}
+    - name: {{ $name }}
+      port: {{ $cfg.exposedPort }}
+      protocol: {{ $cfg.protocol }}
+      allowedRoutes:
+        namespaces:
+          from: All
+    {{- end }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ingress-controller-https-redirect
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress
+spec:
+  parentRefs:
+    - name: ingress-controller
+      namespace: ingress
+      sectionName: http
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: ClientTrafficPolicy
+metadata:
+  name: ingress-controller
+  namespace: ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ingress-controller
+  enableProxyProtocol: {{ include "base-cluster.ingress.useProxyProtocol" (dict "context" $) }}
+{{- end -}}
