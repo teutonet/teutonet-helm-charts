@@ -66,6 +66,7 @@ spec:
       {{- end }}
     service:
       annotations:
+        helm.sh/resource-policy: keep
         loadbalancer.openstack.org/timeout-client-data: "2073600000"
         loadbalancer.openstack.org/timeout-member-connect: "2073600000"
         loadbalancer.openstack.org/timeout-member-data: "2073600000"

@@ -20,3 +20,9 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+
+  - it: traefik Service carries resource-policy keep annotation
+    asserts:
+      - equal:
+          path: spec.values.service.annotations["helm.sh/resource-policy"]
+          value: keep
