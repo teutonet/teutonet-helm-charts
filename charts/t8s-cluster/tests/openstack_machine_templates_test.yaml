@@ -1,0 +1,48 @@
+suite: OpenStackMachineTemplate security groups and hosted gating
+templates:
+  - templates/management-cluster/clusterClass/openStackMachineTemplates/openStackMachineTemplates.yaml
+release:
+  name: my-cluster
+set:
+  cloud: my-cloud
+tests:
+  - it: renders both control-plane and compute-plane templates by default
+    asserts:
+      - hasDocuments:
+          count: 2
+
+  - it: renders only compute-plane template when control plane is hosted
+    set:
+      controlPlane:
+        hosted: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: applies additional security groups to the control-plane template
+    set:
+      controlPlane:
+        additionalSecurityGroups:
+          - kuchen
+          - pizza
+    asserts:
+      - documentIndex: 1
+        equal:
+          path: spec.template.spec.securityGroups
+          value:
+            - filter:
+                name: kuchen
+            - filter:
+                name: pizza
+
+  - it: does not apply additional security groups to the compute-plane template
+    set:
+      controlPlane:
+        additionalSecurityGroups:
+          - kuchen
+          - pizza
+    asserts:
+      - documentIndex: 0
+        equal:
+          path: spec.template.spec.securityGroups
+          value: []

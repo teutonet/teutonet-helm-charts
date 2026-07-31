@@ -1,0 +1,79 @@
+suite: OpenStackClusterTemplate bastion, CIDRs and security group rules
+templates:
+  - templates/management-cluster/clusterClass/openStackClusterTemplate/openStackClusterTemplate.yaml
+release:
+  name: my-cluster
+set:
+  cloud: my-cloud
+tests:
+  - it: renders without a bastion by default
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.template.spec.bastion.enabled
+          value: false
+
+  - it: renders a bastion when enabled
+    set:
+      bastion:
+        enabled: true
+        availabilityZone: Zone1
+        sshKeyName: my-key
+    asserts:
+      - equal:
+          path: spec.template.spec.bastion.enabled
+          value: true
+      - equal:
+          path: spec.template.spec.bastion.availabilityZone
+          value: Zone1
+      - equal:
+          path: spec.template.spec.bastion.spec.sshKeyName
+          value: my-key
+
+  - it: renders allowedCIDRs on the API server load balancer
+    set:
+      controlPlane:
+        allowedCIDRs:
+          - 1.2.3.4/32
+    asserts:
+      - equal:
+          path: spec.template.spec.apiServerLoadBalancer.allowedCIDRs
+          value:
+            - 1.2.3.4/32
+
+  - it: renders additional security group rules
+    set:
+      controlPlane:
+        additionalSecurityGroupRules:
+          api access (vpn):
+            port: 6443
+            description: falls back to the name
+            remoteGroupID: d0d85f22-0087-4a68-95a2-b96f9849075c
+          test:
+            remoteGroupID: hjkfasdkjhsadf
+            portMin: 1000
+            portMax: 2000
+    asserts:
+      - contains:
+          path: spec.template.spec.managedSecurityGroups.controlPlaneNodesSecurityGroupRules
+          content:
+            name: api access (vpn) (custom)
+            description: falls back to the name (custom)
+            direction: ingress
+            etherType: IPv4
+            protocol: tcp
+            portRangeMin: 6443
+            portRangeMax: 6443
+            remoteGroupID: d0d85f22-0087-4a68-95a2-b96f9849075c
+      - contains:
+          path: spec.template.spec.managedSecurityGroups.controlPlaneNodesSecurityGroupRules
+          content:
+            name: test (custom)
+            description: test (custom)
+            direction: ingress
+            etherType: IPv4
+            protocol: tcp
+            portRangeMin: 1000
+            portRangeMax: 2000
+            remoteGroupID: hjkfasdkjhsadf

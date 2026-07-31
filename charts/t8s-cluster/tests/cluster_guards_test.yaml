@@ -67,3 +67,15 @@ tests:
       - equal:
           path: spec.nodePools.workers.maxReplicas
           value: 5
+
+  - it: renders quotas when set
+    set:
+      metadata.customerID: 12345
+      cloud: my-cloud
+      quotas.floatingIPs: -1
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.quotas.floatingIPs
+          value: -1

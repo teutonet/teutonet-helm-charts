@@ -43,6 +43,9 @@ ghcr.io:
     k8s-ttl-controller: ALL_TAGS
 mirror.gcr.io:
   aquasec: ALL_IMAGES
+nvcr.io:
+  nvidia:
+    gpu-operator: ALL_TAGS
 quay.io:
   cilium: ALL_IMAGES
   jetstack: ALL_IMAGES
@@ -56,6 +59,8 @@ reg.kyverno.io:
   kyverno: ALL_IMAGES
 registry-gitlab.teuto.net: ALL_IMAGES
 registry.k8s.io:
+  autoscaling:
+    cluster-autoscaler: ALL_TAGS
   descheduler: ALL_IMAGES
   etcd: ALL_TAGS
   external-dns:
@@ -65,6 +70,8 @@ registry.k8s.io:
   kubectl: ALL_TAGS
   metrics-server:
     metrics-server: ALL_TAGS
+  nfd:
+    node-feature-discovery: ALL_TAGS
   provider-os: ALL_IMAGES
   sig-storage:
     csi-attacher: ALL_TAGS
