@@ -54,6 +54,9 @@ jobs:
         with:
           python-version: 3.14
 
+      - name: Build chart dependencies
+        run: helm dependency update "charts/$CHART"
+
       - name: Build test wrapper dependencies
         if: hashFiles(format('charts/{0}/tests/Chart.yaml', env.CHART)) != ''
         run: helm dep build "charts/$CHART/tests"

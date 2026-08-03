@@ -75,6 +75,8 @@ tests:
       - equal:
           path: endpoint
           value: http://alloy.monitoring:4317
+      - matchSnapshot:
+          path: ""
 
   - it: does not expose serviceName/serviceNamespace for an explicit external endpoint
     set:

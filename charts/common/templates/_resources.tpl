@@ -57,7 +57,7 @@ If you want to set CPU limits, set the "setCPULimits" value to true.
   {{- fail (printf "Unknown target unit: %s" $toUnit) -}}
   {{- end -}}
 
-  {{- $bytes := mul $number $fromFactor -}}
+  {{- $bytes := mulf $number $fromFactor -}}
   {{- $result := divf $bytes $toFactor -}}
 
   {{- printf "%f%s" $result $toUnit -}}

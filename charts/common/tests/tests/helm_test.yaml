@@ -21,6 +21,8 @@ tests:
       - equal:
           path: version
           value: "20.0.0"
+      - matchSnapshot:
+          path: ""
 
   - it: fails when repo is missing from helmRepositories
     set:

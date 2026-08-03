@@ -1,0 +1,66 @@
+{{/*
+Property-based check for common.convert, using sprig's own randInt for genuine per-run
+randomness instead of an external generator. Converting a random value from unit A to unit
+B and back to A should return (approximately, allowing for float64 rounding) the original
+value. This is a round-trip invariant, not a fixed expected value, so it needs no external
+"independent" implementation to compare against — it catches the class of bug where the
+arithmetic operation itself is wrong (e.g. int64 truncation/overflow from using `mul`
+instead of `mulf`), because a lossy op breaks symmetrically in a way an exact op doesn't.
+It can NOT catch a wrong unit-multiplier constant (the same wrong constant round-trips with
+itself) — that's what the hand-picked table in convert_test.yaml is for.
+
+from/to units are restricted to the same family (SI or binary) and at most 1 step apart —
+matching how this repo actually calls common.convert (e.g. Mi<->Gi, never k<->E or Ki<->Ei).
+Allowing a wider gap isn't "more thorough", it just breaks the round-trip on a real but
+irrelevant limitation: the intermediate result is formatted with a fixed 6 decimal places
+(`printf "%f"`), so the absolute rounding error at the intermediate step is roughly
+0.5e-6 * (toFactor/fromFactor) — a small but CONSTANT number, independent of `original`.
+A tolerance relative to `original` (e.g. `original * 1e-6`) is wrong: for small `original`
+values on a unit-increasing step, that shrinks below the constant rounding error and fails
+even though nothing is actually broken. The tolerance below is instead derived from the
+unit-factor ratio itself, with a generous safety margin — still far too small to hide a real
+arithmetic bug (the mul/mulf truncation this test was built to catch produces errors many
+orders of magnitude larger, not a few parts in a million).
+*/}}
+{{- if .Values.convertRoundtrip.enabled }}
+{{- $families := list (list "" "k" "M" "G" "T" "P" "E") (list "" "Ki" "Mi" "Gi" "Ti" "Pi" "Ei") -}}
+{{- $unitFactors := dict
+  ""   1.0
+  "k"  1e3
+  "M"  1e6
+  "G"  1e9
+  "T"  1e12
+  "P"  1e15
+  "E"  1e18
+  "Ki" 1024.0
+  "Mi" 1048576.0
+  "Gi" 1073741824.0
+  "Ti" 1099511627776.0
+  "Pi" 1125899906842624.0
+  "Ei" 1152921504606846976.0
+-}}
+{{- $family := index $families (randInt 0 (len $families)) -}}
+{{- $maxGap := 1 -}}
+{{- $fromIdx := randInt 0 (len $family) -}}
+{{- $gapLow := max 0 (sub $fromIdx $maxGap) | int -}}
+{{- $gapHigh := min (sub (len $family) 1) (add $fromIdx $maxGap) | int -}}
+{{- $toIdx := randInt $gapLow (add $gapHigh 1 | int) -}}
+{{- $fromUnit := index $family $fromIdx -}}
+{{- $toUnit := index $family $toIdx -}}
+{{- $intPart := randInt 1 1000000 -}}
+{{- $fracPart := randInt 0 1000 -}}
+{{- $original := printf "%d.%03d" $intPart $fracPart | float64 -}}
+{{- $converted := include "common.convert" (dict "value" (printf "%d.%03d%s" $intPart $fracPart $fromUnit) "to" $toUnit) -}}
+{{- $roundtripped := include "common.convert" (dict "value" $converted "to" $fromUnit) | regexFind "[0-9.]+" | float64 -}}
+{{- $diff := subf $original $roundtripped -}}
+{{- if lt $diff 0.0 -}}{{- $diff = mulf $diff -1.0 -}}{{- end -}}
+{{- $ratio := divf (index $unitFactors $toUnit) (index $unitFactors $fromUnit) -}}
+{{- if lt $ratio 1.0 -}}{{- $ratio = divf 1.0 $ratio -}}{{- end -}}
+{{- $tolerance := mulf 0.00001 $ratio -}}
+---
+fromUnit: {{ $fromUnit | quote }}
+toUnit: {{ $toUnit | quote }}
+original: {{ $original }}
+roundtripped: {{ $roundtripped }}
+withinTolerance: {{ lt $diff $tolerance }}
+{{- end }}

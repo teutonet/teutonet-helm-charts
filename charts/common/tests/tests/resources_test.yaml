@@ -1,0 +1,226 @@
+suite: common.resources
+templates:
+  - templates/resources-stub.yaml
+release:
+  name: common-test
+tests:
+  - it: empty object when nothing configured
+    asserts:
+      - equal:
+          path: resources
+          value: {}
+
+  - it: empty object when preset is explicitly none and no resources given
+    set:
+      resources.resourcesPreset: none
+    asserts:
+      - equal:
+          path: resources
+          value: {}
+
+  - it: uses only explicit resources when no preset given
+    set:
+      resources.resources.requests.cpu: 100m
+    asserts:
+      - equal:
+          path: resources
+          value:
+            requests:
+              cpu: 100m
+
+  - it: preset alone omits cpu limit by default
+    set:
+      resources.resourcesPreset: small
+    asserts:
+      - equal:
+          path: resources.requests
+          value:
+            cpu: 500m
+            memory: 512Mi
+            ephemeral-storage: 50Mi
+      - equal:
+          path: resources.limits
+          value:
+            memory: 768Mi
+            ephemeral-storage: 2Gi
+      - notExists:
+          path: resources.limits.cpu
+
+  - it: setCPULimits true keeps cpu limit from preset
+    set:
+      resources.resourcesPreset: small
+      resources.setCPULimits: true
+    asserts:
+      - equal:
+          path: resources.limits
+          value:
+            cpu: 750m
+            memory: 768Mi
+            ephemeral-storage: 2Gi
+
+  - it: setCPULimits true without a preset has no effect
+    set:
+      resources.setCPULimits: true
+    asserts:
+      - equal:
+          path: resources
+          value: {}
+
+  - it: explicit request field takes precedence over preset, rest fills in from preset
+    set:
+      resources.resources.requests.cpu: 100m
+      resources.resourcesPreset: small
+    asserts:
+      - equal:
+          path: resources.requests
+          value:
+            cpu: 100m
+            memory: 512Mi
+            ephemeral-storage: 50Mi
+
+  - it: explicit limits field takes precedence over preset, rest fills in from preset
+    set:
+      resources.resources.limits.memory: 999Mi
+      resources.resourcesPreset: small
+      resources.setCPULimits: true
+    asserts:
+      - equal:
+          path: resources.limits
+          value:
+            memory: 999Mi
+            cpu: 750m
+            ephemeral-storage: 2Gi
+
+  - it: fails on unknown preset
+    set:
+      resources.resourcesPreset: unobtainium
+    asserts:
+      - failedTemplate:
+          errorPattern: "ERROR: Preset key 'unobtainium' invalid\\."
+
+  - it: matches snapshot for preset + explicit override + setCPULimits
+    set:
+      resources.resources.requests.cpu: 100m
+      resources.resources.limits.memory: 999Mi
+      resources.resourcesPreset: medium
+      resources.setCPULimits: true
+    asserts:
+      - matchSnapshot:
+          path: ""
+
+  # Combinatorial sweep: every combination of {no resources, explicit resources} x
+  # {no preset, "none", "small"} x {setCPULimits unset, false, true}. Real resource
+  # values only change with the preset axis, so cases pin the SHAPE (which keys exist)
+  # instead of the exact numbers already covered above.
+  - it: "matrix: explicit=no preset=no cpuLimits=unset"
+    asserts:
+      - equal:
+          path: resources
+          value: {}
+
+  - it: "matrix: explicit=no preset=no cpuLimits=false"
+    set:
+      resources.setCPULimits: false
+    asserts:
+      - equal:
+          path: resources
+          value: {}
+
+  - it: "matrix: explicit=no preset=no cpuLimits=true"
+    set:
+      resources.setCPULimits: true
+    asserts:
+      - equal:
+          path: resources
+          value: {}
+
+  - it: "matrix: explicit=no preset=none cpuLimits=unset"
+    set:
+      resources.resourcesPreset: none
+    asserts:
+      - equal:
+          path: resources
+          value: {}
+
+  - it: "matrix: explicit=no preset=none cpuLimits=true"
+    set:
+      resources.resourcesPreset: none
+      resources.setCPULimits: true
+    asserts:
+      - equal:
+          path: resources
+          value: {}
+
+  - it: "matrix: explicit=no preset=small cpuLimits=unset"
+    set:
+      resources.resourcesPreset: small
+    asserts:
+      - notExists:
+          path: resources.limits.cpu
+      - exists:
+          path: resources.requests.cpu
+
+  - it: "matrix: explicit=no preset=small cpuLimits=false"
+    set:
+      resources.resourcesPreset: small
+      resources.setCPULimits: false
+    asserts:
+      - notExists:
+          path: resources.limits.cpu
+
+  - it: "matrix: explicit=no preset=small cpuLimits=true"
+    set:
+      resources.resourcesPreset: small
+      resources.setCPULimits: true
+    asserts:
+      - exists:
+          path: resources.limits.cpu
+
+  - it: "matrix: explicit=yes preset=no cpuLimits=unset"
+    set:
+      resources.resources.requests.memory: 1Gi
+    asserts:
+      - equal:
+          path: resources
+          value:
+            requests:
+              memory: 1Gi
+
+  - it: "matrix: explicit=yes preset=none cpuLimits=unset"
+    set:
+      resources.resources.requests.memory: 1Gi
+      resources.resourcesPreset: none
+    asserts:
+      - equal:
+          path: resources
+          value:
+            requests:
+              memory: 1Gi
+
+  - it: "matrix: explicit=yes preset=small cpuLimits=false"
+    set:
+      resources.resources.requests.memory: 1Gi
+      resources.resourcesPreset: small
+      resources.setCPULimits: false
+    asserts:
+      - equal:
+          path: resources.requests.memory
+          value: 1Gi
+      - equal:
+          path: resources.requests.cpu
+          value: 500m
+      - notExists:
+          path: resources.limits.cpu
+
+  - it: "matrix: explicit=yes preset=small cpuLimits=true"
+    set:
+      resources.resources.requests.memory: 1Gi
+      resources.resourcesPreset: small
+      resources.setCPULimits: true
+    asserts:
+      - equal:
+          path: resources.requests.memory
+          value: 1Gi
+      - equal:
+          path: resources.limits.cpu
+          value: 750m

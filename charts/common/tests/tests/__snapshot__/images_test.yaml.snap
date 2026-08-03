@@ -1,0 +1,7 @@
+matches snapshot:
+  1: |
+    pullPolicy: Always
+  2: |
+    pullPolicy: IfNotPresent
+  3: |
+    pullPolicy: IfNotPresent
