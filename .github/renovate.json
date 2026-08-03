@@ -45,6 +45,18 @@
       "versioningTemplate": "helm",
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://{{{ociUrl}}}"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)values\\.yaml$/"
+      ],
+      "matchStrings": [
+        " {4}\\S+:\\n {6}url: (?<packageName>\\S+)\\n {6}semver: [\"']?(?<currentValue>[0-9.]+)[\"']?\\s"
+      ],
+      "versioningTemplate": "semver",
+      "datasourceTemplate": "git-tags",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
     }
   ],
   "hostRules": [
