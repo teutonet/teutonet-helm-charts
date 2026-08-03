@@ -51,3 +51,93 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "Unknown target unit: X"
+
+  - it: matches snapshot
+    set:
+      convert.value: 1024Mi
+      convert.to: Gi
+    asserts:
+      - matchSnapshot:
+          path: ""
+
+  # Fractional/large-magnitude table: these guard against a real regression where the
+  # helper used sprig's `mul` (int64) instead of `mulf` (float64) for the byte conversion.
+  # That silently truncated any fractional input and overflowed/wrapped negative for
+  # exabyte-scale factors. None of the whole-number cases above would have caught it.
+  - it: "fractional unitless value to k (would truncate to 500.000000 under integer math)"
+    set:
+      convert.value: "500.5"
+      convert.to: k
+    asserts:
+      - equal:
+          path: result
+          value: "0.500500k"
+
+  - it: "fractional value with many decimal places"
+    set:
+      convert.value: "21111.381"
+      convert.to: k
+    asserts:
+      - equal:
+          path: result
+          value: "21.111381k"
+
+  - it: "E to P stays positive and precise at large SI magnitude"
+    set:
+      convert.value: 1288.53E
+      convert.to: P
+    asserts:
+      - equal:
+          path: result
+          value: "1288530.000000P"
+
+  - it: "Ei to M stays positive at binary magnitude near int64 overflow"
+    set:
+      convert.value: 6244.44Ei
+      convert.to: M
+    asserts:
+      - equal:
+          path: result
+          value: "7199349160227180.000000M"
+
+  - it: "fractional binary value: Gi to Mi"
+    set:
+      convert.value: 0.125Gi
+      convert.to: Mi
+    asserts:
+      - equal:
+          path: result
+          value: "128.000000Mi"
+
+  - it: "fractional binary value: Ti to Gi"
+    set:
+      convert.value: 3.5Ti
+      convert.to: Gi
+    asserts:
+      - equal:
+          path: result
+          value: "3584.000000Gi"
+
+  - it: "unitless to M"
+    set:
+      # quoted: a bare native-YAML number >= 1e6 hits a separate, unrelated bug where
+      # `toString` renders it in scientific notation ("1e+06"), breaking the unit regex.
+      # See CLAUDE.md.
+      convert.value: "1000000"
+      convert.to: M
+    asserts:
+      - equal:
+          path: result
+          value: "1.000000M"
+
+  - it: "k to unitless"
+    set:
+      convert.value: 2.5k
+      convert.to: ""
+    asserts:
+      # unquoted in the stub, so with no unit-letter suffix this is valid YAML number
+      # syntax, not a string — helm-unittest parses the manifest and hands back the
+      # numeric value, not the raw templated text.
+      - equal:
+          path: result
+          value: 2500

@@ -1,0 +1,158 @@
+suite: common.helm.chartSpec
+templates:
+  - templates/helm-chartspec-stub.yaml
+release:
+  name: common-test
+tests:
+  - it: no output when repo not set
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: "helm repo, prependReleaseName unset: sourceRef.name is the bare repo name"
+    set:
+      chartSpec.repo: bitnami
+      chartSpec.chart: redis
+      global.helmRepositories.bitnami.url: https://charts.bitnami.com/bitnami
+      global.helmRepositories.bitnami.charts.redis: "20.0.0"
+    asserts:
+      - equal:
+          path: chart
+          value: redis
+      - equal:
+          path: version
+          value: "20.0.0"
+      - equal:
+          path: sourceRef
+          value:
+            kind: HelmRepository
+            name: bitnami
+            namespace: NAMESPACE
+
+  - it: "helm repo, prependReleaseName true: sourceRef.name is release-prefixed"
+    set:
+      chartSpec.repo: bitnami
+      chartSpec.chart: redis
+      chartSpec.prependReleaseName: true
+      global.helmRepositories.bitnami.url: https://charts.bitnami.com/bitnami
+      global.helmRepositories.bitnami.charts.redis: "20.0.0"
+    asserts:
+      - equal:
+          path: sourceRef.name
+          value: common-test-bitnami
+
+  - it: "helm repo, repoNamespace override"
+    set:
+      chartSpec.repo: bitnami
+      chartSpec.chart: redis
+      chartSpec.repoNamespace: flux-system
+      global.helmRepositories.bitnami.url: https://charts.bitnami.com/bitnami
+      global.helmRepositories.bitnami.charts.redis: "20.0.0"
+    asserts:
+      - equal:
+          path: sourceRef.namespace
+          value: flux-system
+
+  - it: "helm repo, unknown chart fails via chartVersion"
+    set:
+      chartSpec.repo: bitnami
+      chartSpec.chart: unknown-chart
+      global.helmRepositories.bitnami.url: https://charts.bitnami.com/bitnami
+      global.helmRepositories.bitnami.charts.redis: "20.0.0"
+    asserts:
+      - failedTemplate:
+          errorMessage: "The repo 'bitnami' is either missing or doesn't contain the chart 'unknown-chart'"
+
+  - it: "git repo, defaults: chart path is charts/<chart>, reconcileStrategy is Revision"
+    set:
+      chartSpec.repo: cpo
+      chartSpec.chart: openstack-cinder-csi
+      global.helmRepositories.cpo.type: git
+      global.helmRepositories.cpo.url: https://github.com/kubernetes/cloud-provider-openstack
+      global.helmRepositories.cpo.charts.openstack-cinder-csi.tag: v1.2.3
+    asserts:
+      - equal:
+          path: chart
+          value: charts/openstack-cinder-csi
+      - equal:
+          path: reconcileStrategy
+          value: Revision
+      - equal:
+          path: sourceRef
+          value:
+            kind: GitRepository
+            name: cpo-openstack-cinder-csi
+            namespace: NAMESPACE
+
+  - it: "git repo, explicit chart path override"
+    set:
+      chartSpec.repo: cpo
+      chartSpec.chart: openstack-cinder-csi
+      global.helmRepositories.cpo.type: git
+      global.helmRepositories.cpo.url: https://github.com/kubernetes/cloud-provider-openstack
+      global.helmRepositories.cpo.charts.openstack-cinder-csi.tag: v1.2.3
+      global.helmRepositories.cpo.charts.openstack-cinder-csi.path: deploy/cinder-csi
+    asserts:
+      - equal:
+          path: chart
+          value: deploy/cinder-csi
+
+  - it: "git repo, reconcileStrategy override"
+    set:
+      chartSpec.repo: cpo
+      chartSpec.chart: openstack-cinder-csi
+      chartSpec.reconcileStrategy: ChartVersion
+      global.helmRepositories.cpo.type: git
+      global.helmRepositories.cpo.url: https://github.com/kubernetes/cloud-provider-openstack
+      global.helmRepositories.cpo.charts.openstack-cinder-csi.tag: v1.2.3
+    asserts:
+      - equal:
+          path: reconcileStrategy
+          value: ChartVersion
+
+  - it: "git repo, prependReleaseName true: sourceRef.name is release-repo-chart prefixed"
+    set:
+      chartSpec.repo: cpo
+      chartSpec.chart: openstack-cinder-csi
+      chartSpec.prependReleaseName: true
+      global.helmRepositories.cpo.type: git
+      global.helmRepositories.cpo.url: https://github.com/kubernetes/cloud-provider-openstack
+      global.helmRepositories.cpo.charts.openstack-cinder-csi.tag: v1.2.3
+    asserts:
+      - equal:
+          path: sourceRef.name
+          value: common-test-cpo-openstack-cinder-csi
+
+  - it: "git repo, repoNamespace override"
+    set:
+      chartSpec.repo: cpo
+      chartSpec.chart: openstack-cinder-csi
+      chartSpec.repoNamespace: flux-system
+      global.helmRepositories.cpo.type: git
+      global.helmRepositories.cpo.url: https://github.com/kubernetes/cloud-provider-openstack
+      global.helmRepositories.cpo.charts.openstack-cinder-csi.tag: v1.2.3
+    asserts:
+      - equal:
+          path: sourceRef.namespace
+          value: flux-system
+
+  - it: matches snapshot for a helm-type chart spec
+    set:
+      chartSpec.repo: bitnami
+      chartSpec.chart: redis
+      global.helmRepositories.bitnami.url: https://charts.bitnami.com/bitnami
+      global.helmRepositories.bitnami.charts.redis: "20.0.0"
+    asserts:
+      - matchSnapshot:
+          path: ""
+
+  - it: matches snapshot for a git-type chart spec
+    set:
+      chartSpec.repo: cpo
+      chartSpec.chart: openstack-cinder-csi
+      global.helmRepositories.cpo.type: git
+      global.helmRepositories.cpo.url: https://github.com/kubernetes/cloud-provider-openstack
+      global.helmRepositories.cpo.charts.openstack-cinder-csi.tag: v1.2.3
+    asserts:
+      - matchSnapshot:
+          path: ""

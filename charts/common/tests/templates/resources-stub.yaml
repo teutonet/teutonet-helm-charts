@@ -1,0 +1,2 @@
+---
+resources: {{- include "common.resources" (dict "resources" .Values.resources.resources "resourcesPreset" .Values.resources.resourcesPreset "setCPULimits" .Values.resources.setCPULimits) | nindent 2 }}

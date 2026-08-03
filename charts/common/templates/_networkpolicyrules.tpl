@@ -17,6 +17,8 @@
   {{- end -}}
   {{/* Create rules for each identity based on network policy type */}}
   {{- range $identity := $identities -}}
+    {{/* Native NetworkPolicy has no equivalent to cilium's abstract "entity" selector, so entity-only identities (no concrete endpoint) can't be expressed and are skipped */}}
+    {{- if or $useCilium (hasKey $identity "endpoint") -}}
     {{- $rule := dict -}}
     {{- $endpoint := $identity.endpoint -}}
     {{/* For cilium use entity or endpoint based rules */}}
@@ -46,6 +48,7 @@
     {{- end -}}
 
     {{- $rules = append $rules $rule -}}
+    {{- end -}}
   {{- end -}}
 
   {{- toYaml ($rules | default (dict)) -}}

@@ -1,0 +1,190 @@
+suite: common.networkPolicy
+templates:
+  - templates/networkpolicy-stub.yaml
+release:
+  name: common-test
+tests:
+  - it: "type: auto resolves to cilium when CiliumNetworkPolicy CRD is present"
+    set:
+      networkPolicyType.enabled: true
+      global.networkPolicy.type: auto
+    capabilities:
+      apiVersions:
+        - cilium.io/v2/CiliumNetworkPolicy
+    asserts:
+      - equal:
+          path: type
+          value: cilium
+
+  - it: "type: auto resolves to native when CiliumNetworkPolicy CRD is absent"
+    set:
+      networkPolicyType.enabled: true
+      global.networkPolicy.type: auto
+    asserts:
+      - equal:
+          path: type
+          value: native
+
+  - it: "type: explicit value passes through verbatim"
+    set:
+      networkPolicyType.enabled: true
+      global.networkPolicy.type: none
+    asserts:
+      - equal:
+          path: type
+          value: none
+
+  - it: "identity: falls back to static kube-apiserver identity when konnectivity is absent"
+    set:
+      identity.enabled: true
+    asserts:
+      - matchSnapshot:
+          path: identity
+
+  - it: "identity: uses konnectivity DaemonSet identity when present"
+    set:
+      identity.enabled: true
+    kubernetesProvider:
+      scheme:
+        apps/v1/DaemonSet:
+          gvr:
+            group: apps
+            version: v1
+            resource: daemonsets
+          namespaced: true
+        apps/v1/Deployment:
+          gvr:
+            group: apps
+            version: v1
+            resource: deployments
+          namespaced: true
+      objects:
+        - apiVersion: apps/v1
+          kind: DaemonSet
+          metadata:
+            name: konnectivity-agent
+            namespace: kube-system
+    asserts:
+      - equal:
+          path: identity[0].endpoint.serviceAccount
+          value: konnectivity-agent
+      - equal:
+          path: identity[0].endpoint.namespace
+          value: kube-system
+      - lengthEqual:
+          path: identity
+          count: 1
+
+  - it: "identity: uses konnectivity Deployment identity when present"
+    set:
+      identity.enabled: true
+    kubernetesProvider:
+      scheme:
+        apps/v1/DaemonSet:
+          gvr:
+            group: apps
+            version: v1
+            resource: daemonsets
+          namespaced: true
+        apps/v1/Deployment:
+          gvr:
+            group: apps
+            version: v1
+            resource: deployments
+          namespaced: true
+      objects:
+        - apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: konnectivity-agent
+            namespace: kube-system
+    asserts:
+      - equal:
+          path: identity[0].endpoint.serviceAccount
+          value: konnectivity-agent
+
+  - it: "rule: cilium mode with fallback identity uses fromEntities/fromEndpoints, no ports"
+    set:
+      rule.enabled: true
+      rule.cilium: true
+    asserts:
+      - matchSnapshot:
+          path: rule
+
+  - it: "rule: cilium mode with ports adds toPorts"
+    set:
+      rule.enabled: true
+      rule.cilium: true
+      rule.ports:
+        "10250": TCP
+    asserts:
+      - equal:
+          path: "rule[1].toPorts[0].ports[0]"
+          value:
+            port: "10250"
+            protocol: TCP
+
+  - it: "rule: cilium mode with a list of protocols for one port"
+    set:
+      rule.enabled: true
+      rule.cilium: true
+      rule.ports:
+        "8443":
+          - TCP
+          - UDP
+    asserts:
+      - lengthEqual:
+          path: "rule[1].toPorts[0].ports"
+          count: 2
+
+  - it: "rule: native mode with fallback identity"
+    set:
+      rule.enabled: true
+      rule.cilium: false
+    asserts:
+      - matchSnapshot:
+          path: rule
+
+  - it: "rule: native mode with ports"
+    set:
+      rule.enabled: true
+      rule.cilium: false
+      rule.ports:
+        "10250": TCP
+    asserts:
+      - matchSnapshot:
+          path: rule
+
+  - it: "rule: cilium mode with konnectivity identity uses fromEndpoints on serviceAccount"
+    set:
+      rule.enabled: true
+      rule.cilium: true
+    kubernetesProvider:
+      scheme:
+        apps/v1/DaemonSet:
+          gvr:
+            group: apps
+            version: v1
+            resource: daemonsets
+          namespaced: true
+        apps/v1/Deployment:
+          gvr:
+            group: apps
+            version: v1
+            resource: deployments
+          namespaced: true
+      objects:
+        - apiVersion: apps/v1
+          kind: DaemonSet
+          metadata:
+            name: konnectivity-agent
+            namespace: kube-system
+    asserts:
+      - lengthEqual:
+          path: rule
+          count: 1
+      - equal:
+          path: "rule[0].fromEndpoints[0].matchLabels"
+          value:
+            io.kubernetes.pod.namespace: kube-system
+            io.cilium.k8s.policy.serviceaccount: konnectivity-agent
