@@ -1,6 +1,6 @@
 suite: ingress gateway-api dual-mode
 templates:
-  - flux/flux.yaml
+  - templates/ingress/gateway-api.yaml
 release:
   name: base-cluster
 tests:
