@@ -1,5 +1,5 @@
 {{- if eq (include "t8s-cluster.cni" .) "cilium" -}}
-  {{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "openstack-cinder-csi" "resource" (include "t8s-cluster.networkPolicy.cinder-csi" (dict)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cinder-csi")) | nindent 0 }}
+  {{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "openstack-cinder-csi" "resource" (include "t8s-cluster.networkPolicy.cinder-csi" (dict)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cinder-csi") "dependsOn" (list (dict "name" (printf "%s-cni" $.Release.Name) "namespace" $.Release.Namespace))) | nindent 0 }}
 {{- end }}
 
 {{- define "t8s-cluster.networkPolicy.cinder-csi" -}}

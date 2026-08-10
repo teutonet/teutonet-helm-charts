@@ -19,6 +19,9 @@ spec:
   interval: 1h
   driftDetection:
     mode: enabled
+  {{- with .dependsOn }}
+  dependsOn: {{ toYaml . | nindent 4 }}
+  {{- end }}
   kubeConfig:
     secretRef:
       name: {{ .Release.Name }}-kubeconfig
