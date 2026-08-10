@@ -1,5 +1,31 @@
 # Changelog
 
+## [9.10.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.9.2...t8s-cluster-v9.10.0) (2026-08-10)
+
+
+### Features
+
+* **t8s-cluster:** migrate ci-values scenarios to helm-unittest coverage ([#2254](https://github.com/teutonet/teutonet-helm-charts/issues/2254)) ([d8b9c1a](https://github.com/teutonet/teutonet-helm-charts/commit/d8b9c1adfbe64ff313293c3d6973adf9c6b325bb))
+
+
+### Bug Fixes
+
+* **t8s-cluster:** add missing dependsOn on cinder-csi CiliumNetworkPolicy HelmRelease ([#2299](https://github.com/teutonet/teutonet-helm-charts/issues/2299)) ([5d87632](https://github.com/teutonet/teutonet-helm-charts/commit/5d87632a69b60d999fcf13790de817e2cabc0c4b))
+* **t8s-cluster:** set hubble cert renew method to cronJob ([#2206](https://github.com/teutonet/teutonet-helm-charts/issues/2206)) ([2fe29f0](https://github.com/teutonet/teutonet-helm-charts/commit/2fe29f0a54e4cca74f48230925b713347435d0b1))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update cilium docker tag to v1.19.6 ([#2240](https://github.com/teutonet/teutonet-helm-charts/issues/2240)) ([bbb262d](https://github.com/teutonet/teutonet-helm-charts/commit/bbb262d27e18889a4ba85c12c976db8b5008142f))
+* **t8s-cluster/dependencies:** update cilium docker tag to v1.20.0 ([#2284](https://github.com/teutonet/teutonet-helm-charts/issues/2284)) ([a5a303d](https://github.com/teutonet/teutonet-helm-charts/commit/a5a303d457c2c4d028d1c9e10170d79722704d17))
+* **t8s-cluster/dependencies:** update common docker tag to v2.2.0 ([#2285](https://github.com/teutonet/teutonet-helm-charts/issues/2285)) ([e9c1789](https://github.com/teutonet/teutonet-helm-charts/commit/e9c1789fa914dec4333efd6d9a058dbf53035d1f))
+* **t8s-cluster/dependencies:** update helm release cluster-autoscaler to v9.58.0 ([#2222](https://github.com/teutonet/teutonet-helm-charts/issues/2222)) ([9eb07c9](https://github.com/teutonet/teutonet-helm-charts/commit/9eb07c99d9c88be0e3f052b04a9611863567d672))
+* **t8s-cluster/dependencies:** update helm release cluster-autoscaler to v9.59.0 ([#2286](https://github.com/teutonet/teutonet-helm-charts/issues/2286)) ([8b1af6f](https://github.com/teutonet/teutonet-helm-charts/commit/8b1af6f50109f4e898002bfb1c4dc9e9877c61de))
+* **t8s-cluster/dependencies:** update helm release openstack-cinder-csi to v2.36.2 ([#2287](https://github.com/teutonet/teutonet-helm-charts/issues/2287)) ([798001c](https://github.com/teutonet/teutonet-helm-charts/commit/798001c49df1a7e8cc3e1db03e227ff41ae48992))
+* **t8s-cluster/dependencies:** update helm release openstack-cloud-controller-manager to v2.36.1 ([#2288](https://github.com/teutonet/teutonet-helm-charts/issues/2288)) ([4617e26](https://github.com/teutonet/teutonet-helm-charts/commit/4617e26d305992419421e9bb39a032e64d996929))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.6.14 ([#2263](https://github.com/teutonet/teutonet-helm-charts/issues/2263)) ([e2ddf00](https://github.com/teutonet/teutonet-helm-charts/commit/e2ddf008f6cf8009b795431c5e3dce61628d9235))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.7.1 ([#2289](https://github.com/teutonet/teutonet-helm-charts/issues/2289)) ([c888280](https://github.com/teutonet/teutonet-helm-charts/commit/c888280920f42852fbfdfe1c737e40af4baca000))
+
 ## [9.9.2](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.9.1...t8s-cluster-v9.9.2) (2026-06-24)
 
 
