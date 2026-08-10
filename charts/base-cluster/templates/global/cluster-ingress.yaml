@@ -1,4 +1,4 @@
-{{- if and .Values.dns.provider .Values.global.baseDomain (ne .Values.ingress.provider "none") }}
+{{- if and .Values.dns.provider .Values.global.baseDomain (ne .Values.ingress.provider "none") (not (include "base-cluster.ingress.hasEnvoy" $)) }}
 {{- if false }}
 apiVersion: networking.k8s.io/v1
 {{- else }}

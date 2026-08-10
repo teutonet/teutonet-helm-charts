@@ -39,6 +39,25 @@ spec:
     nameOverride: {{ printf "cluster-%s-oauth-proxy" $host }}
     redis:
       enabled: false
+    {{- if include "base-cluster.ingress.hasEnvoy" $ }}
+    ingress:
+      enabled: false
+    gatewayApi:
+      enabled: true
+      gatewayRef:
+      {{- if $ingress.customDomain }}
+        name: {{ printf "%s-listener-set" $host }}
+        kind: ListenerSet
+        group: gateway.networking.k8s.io
+        sectionName: main
+      {{- else }}
+        name: ingress-controller
+        namespace: ingress
+        sectionName: https
+      {{- end }}
+      hostnames:
+        - {{ include (printf "base-cluster.%s.host" $host) $ }}
+    {{- else }}
     ingress:
       enabled: true
       {{- if not $.Values.dns.provider }}
@@ -51,6 +70,7 @@ spec:
         - hosts:
             - *host
           secretName: {{ include "base-cluster.certificate" (dict "name" $host "customDomain" $ingress.customDomain "context" $) | quote }}
+    {{- end }}
     replicaCount: 2
     podDisruptionBudget:
       enabled: true

@@ -1,0 +1,208 @@
+suite: ingress envoy provider enum and namespace
+templates:
+  - templates/global/namespaces.yaml
+release:
+  name: base-cluster
+tests:
+  - it: ingress namespace renders when provider is envoy
+    set:
+      ingress.provider: envoy
+      global.baseDomain: example.com
+      global.clusterName: test
+    asserts:
+      - hasDocuments:
+          count: 7
+---
+suite: ingress envoy provider
+templates:
+  - templates/ingress/envoy.yaml
+release:
+  name: base-cluster
+set:
+  ingress.provider: envoy
+  global.baseDomain: example.com
+  global.clusterName: test
+  ingress.useProxyProtocol: false
+tests:
+  - it: renders CRDs HelmRelease, controller HelmRelease, GatewayClass, EnvoyProxy, Gateway, redirect HTTPRoute, and ClientTrafficPolicy
+    asserts:
+      - hasDocuments:
+          count: 7
+      - documentIndex: 0
+        isKind:
+          of: HelmRelease
+      - documentIndex: 0
+        equal:
+          path: metadata.name
+          value: envoy-gateway-crds
+      - documentIndex: 0
+        equal:
+          path: spec.values.crds.gatewayAPI.enabled
+          value: false
+      - documentIndex: 0
+        equal:
+          path: spec.values.crds.envoyGateway.enabled
+          value: true
+      - documentIndex: 1
+        isKind:
+          of: HelmRelease
+      - documentIndex: 1
+        equal:
+          path: metadata.name
+          value: ingress-controller
+      - documentIndex: 1
+        equal:
+          path: spec.values.crds.enabled
+          value: false
+      - documentIndex: 1
+        equal:
+          path: spec.dependsOn[0].name
+          value: envoy-gateway-crds
+      - documentIndex: 1
+        equal:
+          path: spec.dependsOn[0].namespace
+          value: ingress
+      - documentIndex: 2
+        isKind:
+          of: GatewayClass
+      - documentIndex: 2
+        equal:
+          path: metadata.name
+          value: default
+      - documentIndex: 2
+        equal:
+          path: spec.controllerName
+          value: gateway.envoyproxy.io/gatewayclass-controller
+      - documentIndex: 2
+        equal:
+          path: spec.parametersRef.name
+          value: ingress-controller
+      - documentIndex: 3
+        isKind:
+          of: EnvoyProxy
+      - documentIndex: 3
+        equal:
+          path: metadata.name
+          value: ingress-controller
+      - documentIndex: 3
+        equal:
+          path: spec.provider.kubernetes.envoyService.name
+          value: ingress-controller
+      - documentIndex: 3
+        equal:
+          path: spec.provider.kubernetes.envoyDeployment.replicas
+          value: 2
+      - documentIndex: 3
+        equal:
+          path: spec.provider.kubernetes.envoyDeployment.pod.labels
+          value:
+            app.kubernetes.io/name: ingress-controller
+      - documentIndex: 4
+        isKind:
+          of: Gateway
+      - documentIndex: 4
+        equal:
+          path: metadata.name
+          value: ingress-controller
+      - documentIndex: 4
+        equal:
+          path: spec.gatewayClassName
+          value: default
+      - documentIndex: 4
+        equal:
+          path: spec.allowedListeners.namespaces.from
+          value: All
+      - documentIndex: 4
+        equal:
+          path: spec.listeners[0].name
+          value: http
+      - documentIndex: 4
+        equal:
+          path: spec.listeners[0].port
+          value: 80
+      - documentIndex: 4
+        equal:
+          path: spec.listeners[1].name
+          value: https
+      - documentIndex: 4
+        equal:
+          path: spec.listeners[1].port
+          value: 443
+      - documentIndex: 4
+        equal:
+          path: spec.listeners[1].tls.certificateRefs[0].name
+          value: cluster-wildcard-certificate
+      - documentIndex: 5
+        isKind:
+          of: HTTPRoute
+      - documentIndex: 5
+        equal:
+          path: spec.parentRefs[0].sectionName
+          value: http
+      - documentIndex: 5
+        equal:
+          path: spec.rules[0].filters[0].type
+          value: RequestRedirect
+      - documentIndex: 5
+        equal:
+          path: spec.rules[0].filters[0].requestRedirect.scheme
+          value: https
+      - documentIndex: 6
+        isKind:
+          of: ClientTrafficPolicy
+      - documentIndex: 6
+        equal:
+          path: spec.enableProxyProtocol
+          value: false
+      - documentIndex: 6
+        equal:
+          path: spec.targetRefs[0].name
+          value: ingress-controller
+
+  - it: pins loadBalancerIP and floating-ip annotation when ingress.IP is set
+    set:
+      ingress.IP: 10.0.0.100
+    asserts:
+      - documentIndex: 3
+        equal:
+          path: spec.provider.kubernetes.envoyService.loadBalancerIP
+          value: 10.0.0.100
+      - documentIndex: 3
+        equal:
+          path: spec.provider.kubernetes.envoyService.annotations["loadbalancer.openstack.org/keep-floatingip"]
+          value: "true"
+
+  - it: does not render when provider is traefik
+    set:
+      ingress.provider: traefik
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: sets the OpenTelemetry tracing provider type when telemetry is auto-discovered
+    kubernetesProvider:
+      scheme:
+        "v1/Service":
+          gvr:
+            version: v1
+            resource: services
+          namespaced: true
+      objects:
+        - apiVersion: v1
+          kind: Service
+          metadata:
+            name: telemetry-collector
+            namespace: monitoring
+          spec:
+            ports:
+              - name: otlp
+                port: "4317"
+    asserts:
+      - documentIndex: 3
+        equal:
+          path: spec.telemetry.tracing.provider.type
+          value: OpenTelemetry
+      - documentIndex: 3
+        equal:
+          path: spec.telemetry.tracing.provider.backendRefs[0].name
+          value: telemetry-collector

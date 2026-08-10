@@ -32,6 +32,10 @@
   {{- or (eq .Values.ingress.provider "traefik") (eq (include "base-cluster.ingress.dualMode" .) "true") | ternary "true" "" -}}
 {{- end -}}
 
+{{- define "base-cluster.ingress.hasEnvoy" -}}
+  {{- eq .Values.ingress.provider "envoy" | ternary "true" "" -}}
+{{- end -}}
+
 {{- define "base-cluster.monitoring.alertmanager.receiver.splitName" -}}
   {{- $name := .name -}}
   {{- $type := $name -}}

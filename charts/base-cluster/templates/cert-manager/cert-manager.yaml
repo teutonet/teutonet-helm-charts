@@ -40,7 +40,7 @@ spec:
     extraArgs:
       - --dns01-recursive-nameservers={{- $nameservers | sortAlpha | join "," }}
     {{- end }}
-    {{- if include "base-cluster.ingress.hasTraefik" . }}
+    {{- if or (include "base-cluster.ingress.hasTraefik" .) (include "base-cluster.ingress.hasEnvoy" .) }}
     config:
       apiVersion: controller.config.cert-manager.io/v1alpha1
       kind: ControllerConfiguration
