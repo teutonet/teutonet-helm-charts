@@ -13,9 +13,9 @@ spec:
   driftDetection:
     mode: enabled
   values:
-    priorityClassName: cluster-components
     image:
       repository: {{ printf "%s/emberstack/kubernetes-reflector" ($.Values.global.imageRegistry | default (include "base-cluster.defaultRegistry" (dict))) }}
+    priorityClassName: cluster-components
     securityContext:
       privileged: false
       allowPrivilegeEscalation: false
