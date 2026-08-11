@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: {{- include "chirpstack.commonMetadata" (dict "component" "gateway-bridge" "context" .) | nindent 2 }}
+data:
+  chirpstack-gateway-bridge.toml: |
+    # See https://www.chirpstack.io/gateway-bridge/install/config/ for a full
+    # configuration example and documentation.
+
+    [integration.mqtt.auth.generic]
+    servers=["tcp://{{ include "chirpstack.fullname" (dict "context" . "component" "mosquitto") }}:1883"]
+    username=""
+    password=""
+
+    [integration.mqtt]
+    event_topic_template="eu868/gateway/{{ `{{ .GatewayID }}/event/{{ .EventType }}` }}"
+    state_topic_template="eu868/gateway/{{ `{{ .GatewayID }}/state/{{ .StateType }}` }}"
+    command_topic_template="eu868/gateway/{{ `{{ .GatewayID }}` }}/command/#"
