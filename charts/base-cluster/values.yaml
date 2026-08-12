@@ -114,7 +114,7 @@ global:
     prometheus:
       url: https://prometheus-community.github.io/helm-charts
       charts:
-        kube-prometheus-stack: 88.2.0
+        kube-prometheus-stack: 88.3.0
         prometheus-blackbox-exporter: 11.17.2
       type: helm
       condition: "{{ .Values.monitoring.prometheus.enabled }}"
