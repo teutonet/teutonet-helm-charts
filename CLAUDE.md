@@ -8,6 +8,7 @@ Try to keep this CLAUDE file up to date with any gotchas you encounter while wor
 - A scheme-registered GVR with a LIST-style `lookup` (empty name arg) and zero matching objects panics with the same error, even though the scheme entry exists. Fix: register at least one (even non-matching) dummy object of that kind, or skip the lookup entirely with an explicit override value.
 - GET-style `lookup` (name given) has no such restriction.
 - `kubernetesProvider.scheme` keys and `gvr.group/version/resource` values are unquoted by convention in this repo (e.g. `apps/v1/DaemonSet`, `group: apps`) — no quotes needed even for CRD groups with dots/slashes.
+- Testing "does resource X exist / is it ready" logic (a GET-style `lookup` by name) only needs `kubernetesProvider` on the specific `it:` cases that assert against a live object — the default (no `kubernetesProvider`) case already exercises the "doesn't exist" branch, since unmocked `lookup` returns nil.
 
 ## Go template gotchas
 

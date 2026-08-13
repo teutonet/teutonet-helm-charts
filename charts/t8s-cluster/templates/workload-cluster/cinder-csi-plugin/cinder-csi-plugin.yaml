@@ -1,9 +1,10 @@
 {{- $repoCharts := (index .Values.global.helmRepositories "cloud-provider-openstack").charts -}}
 {{- $selectedVersion := default (index $repoCharts "openstack-cinder-csi") (index $repoCharts (printf "openstack-cinder-csi 2.%d.x" ($.Values.version.minor | int))) -}}
+{{- $name := printf "%s-csi" .Release.Name -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: {{ printf "%s-csi" .Release.Name }}
+  name: {{ $name }}
   namespace: {{ .Release.Namespace}}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: cinder-csi
@@ -16,7 +17,7 @@ spec:
         name: cloud-provider-openstack
         namespace: flux-system
       version: {{ $selectedVersion | quote }}
-  interval: 1h
+  interval: {{ include "t8s-cluster.helm.dynamicInterval" (dict "name" $name "namespace" .Release.Namespace) }}
   driftDetection:
     mode: enabled
   {{- if eq (include "t8s-cluster.cni" .) "cilium" }}

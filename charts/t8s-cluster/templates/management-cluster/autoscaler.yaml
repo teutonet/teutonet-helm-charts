@@ -6,17 +6,19 @@
     {{- $enabled = true -}}
   {{- end }}
 {{- end }}
-{{- if $enabled -}}
+{{- $kubeconfigSecret := printf "%s-kubeconfig" .Release.Name -}}
+{{- if and $enabled (lookup "v1" "Secret" .Release.Namespace $kubeconfigSecret) -}}
+{{- $name := printf "%s-autoscaler" .Release.Name -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: {{ printf "%s-autoscaler" .Release.Name }}
+  name: {{ $name }}
   namespace: {{ .Release.Namespace }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   chart:
     spec: {{- include "common.helm.chartSpec" (dict "repo" "autoscaler" "repoNamespace" "flux-system" "chart" "cluster-autoscaler" "context" $) | nindent 6 }}
-  interval: 1h
+  interval: {{ include "t8s-cluster.helm.dynamicInterval" (dict "name" $name "namespace" .Release.Namespace) }}
   driftDetection:
     mode: enabled
   values:
@@ -26,7 +28,7 @@ spec:
     cloudProvider: clusterapi
     # workload-management
     clusterAPIMode: kubeconfig-incluster
-    clusterAPIKubeconfigSecret: {{ .Release.Name }}-kubeconfig
+    clusterAPIKubeconfigSecret: {{ $kubeconfigSecret }}
     extraArgs:
       scale-down-utilization-threshold: 0.8
       skip-nodes-with-local-storage: false
