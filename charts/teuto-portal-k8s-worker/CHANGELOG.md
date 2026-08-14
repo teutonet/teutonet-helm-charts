@@ -1,5 +1,23 @@
 # Changelog
 
+## [3.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.4.2...teuto-portal-k8s-worker-v3.5.0) (2026-08-14)
+
+
+### Features
+
+* **teuto-portal-k8s-worker:** add unit tests ([#2164](https://github.com/teutonet/teutonet-helm-charts/issues/2164)) ([8dc5c03](https://github.com/teutonet/teutonet-helm-charts/commit/8dc5c03470a947c5138d0e9a15a8382b4fa33799))
+* **teuto-portal-k8s-worker:** harden deployment ([#2157](https://github.com/teutonet/teutonet-helm-charts/issues/2157)) ([879526c](https://github.com/teutonet/teutonet-helm-charts/commit/879526c031ee38df50675db6670f941c522a8ae4))
+* **teuto-portal-k8s-worker:** migrate ci-values scenario to helm-unittest coverage ([#2255](https://github.com/teutonet/teutonet-helm-charts/issues/2255)) ([636e10b](https://github.com/teutonet/teutonet-helm-charts/commit/636e10b36b9603c00edee13994bdf59c6e21321d))
+
+
+### Miscellaneous Chores
+
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v1.8.0 ([#1942](https://github.com/teutonet/teutonet-helm-charts/issues/1942)) ([d26b65c](https://github.com/teutonet/teutonet-helm-charts/commit/d26b65c782c9aefe2a35b668bff46f680695d8ca))
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v2 ([#2081](https://github.com/teutonet/teutonet-helm-charts/issues/2081)) ([925ad7b](https://github.com/teutonet/teutonet-helm-charts/commit/925ad7b8e95127ee86005bb854ab210a7401b4f3))
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v2.1.1 ([#2152](https://github.com/teutonet/teutonet-helm-charts/issues/2152)) ([875ebae](https://github.com/teutonet/teutonet-helm-charts/commit/875ebae93f42c8a5876fb0c328b7a6432f5a57bd))
+* **teuto-portal-k8s-worker/dependencies:** update common docker tag to v2.2.0 ([#2291](https://github.com/teutonet/teutonet-helm-charts/issues/2291)) ([a7fbb5d](https://github.com/teutonet/teutonet-helm-charts/commit/a7fbb5d89f0afd78519beddb2b8cf830d59d58e2))
+* **teuto-portal-k8s-worker/dependencies:** update registry-gitlab.teuto.net/4teuto/dev/teuto-portal/teuto-portal-k8s-worker/teuto-portal-k8s-worker docker tag to v4.5.0 ([#2315](https://github.com/teutonet/teutonet-helm-charts/issues/2315)) ([2de77bf](https://github.com/teutonet/teutonet-helm-charts/commit/2de77bfd22f6f368567a85e579716b2f6c06caa3))
+
 ## [3.4.2](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.4.1...teuto-portal-k8s-worker-v3.4.2) (2026-01-21)
 
 
