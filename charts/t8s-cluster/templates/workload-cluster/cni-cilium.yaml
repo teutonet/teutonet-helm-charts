@@ -1,14 +1,15 @@
 {{- if eq (include "t8s-cluster.cni" .) "cilium" }}
+{{- $name := printf "%s-cni" .Release.Name }}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: {{ printf "%s-cni" .Release.Name }}
+  name: {{ $name }}
   namespace: {{ .Release.Namespace}}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   chart:
     spec: {{- include "common.helm.chartSpec" (dict "repo" "cilium" "repoNamespace" "flux-system" "chart" "cilium" "context" $) | nindent 6 }}
-  interval: 1h
+  interval: {{ include "t8s-cluster.helm.dynamicInterval" (dict "name" $name "namespace" .Release.Namespace) }}
   driftDetection:
     mode: enabled
   kubeConfig:

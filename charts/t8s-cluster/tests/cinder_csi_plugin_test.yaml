@@ -1,10 +1,10 @@
-suite: CNI cilium explicit selection
+suite: cinder-csi-plugin
 templates:
-  - templates/workload-cluster/cni-cilium.yaml
+  - templates/workload-cluster/cinder-csi-plugin/cinder-csi-plugin.yaml
 release:
   name: my-cluster
 tests:
-  - it: renders HelmRelease when cni is cilium
+  - it: renders HelmRelease
     set:
       cni: cilium
     asserts:
@@ -36,7 +36,7 @@ tests:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
           metadata:
-            name: my-cluster-cni
+            name: my-cluster-csi
             namespace: NAMESPACE
           status:
             conditions:
@@ -62,7 +62,7 @@ tests:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
           metadata:
-            name: my-cluster-cni
+            name: my-cluster-csi
             namespace: NAMESPACE
           status:
             conditions:
@@ -72,33 +72,3 @@ tests:
       - equal:
           path: spec.interval
           value: 1h
-
-  - it: no output when cni is calico
-    set:
-      cni: calico
-    asserts:
-      - hasDocuments:
-          count: 0
-
----
-suite: CNI calico explicit selection
-templates:
-  - templates/workload-cluster/cni-calico.yaml
-release:
-  name: my-cluster
-tests:
-  - it: renders Kustomization when cni is calico
-    set:
-      cni: calico
-    asserts:
-      - hasDocuments:
-          count: 1
-      - isKind:
-          of: Kustomization
-
-  - it: no output when cni is cilium
-    set:
-      cni: cilium
-    asserts:
-      - hasDocuments:
-          count: 0

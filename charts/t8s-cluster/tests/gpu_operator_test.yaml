@@ -29,3 +29,66 @@ tests:
     asserts:
       - hasDocuments:
           count: 1
+
+  - it: interval is 10s when the HelmRelease does not exist yet
+    set:
+      nodePools.gpuworkers.flavor: m1.gpu-large
+      nodePools.gpuworkers.replicas: 1
+    asserts:
+      - equal:
+          path: spec.interval
+          value: 10s
+
+  - it: interval is 10s when the HelmRelease exists but is not ready
+    set:
+      nodePools.gpuworkers.flavor: m1.gpu-large
+      nodePools.gpuworkers.replicas: 1
+    kubernetesProvider:
+      scheme:
+        helm.toolkit.fluxcd.io/v2/HelmRelease:
+          gvr:
+            group: helm.toolkit.fluxcd.io
+            version: v2
+            resource: helmreleases
+          namespaced: true
+      objects:
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: my-cluster-gpu-operator
+            namespace: NAMESPACE
+          status:
+            conditions:
+              - type: Ready
+                status: "False"
+    asserts:
+      - equal:
+          path: spec.interval
+          value: 10s
+
+  - it: interval is 1h when the HelmRelease exists and is ready
+    set:
+      nodePools.gpuworkers.flavor: m1.gpu-large
+      nodePools.gpuworkers.replicas: 1
+    kubernetesProvider:
+      scheme:
+        helm.toolkit.fluxcd.io/v2/HelmRelease:
+          gvr:
+            group: helm.toolkit.fluxcd.io
+            version: v2
+            resource: helmreleases
+          namespaced: true
+      objects:
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: my-cluster-gpu-operator
+            namespace: NAMESPACE
+          status:
+            conditions:
+              - type: Ready
+                status: "True"
+    asserts:
+      - equal:
+          path: spec.interval
+          value: 1h
