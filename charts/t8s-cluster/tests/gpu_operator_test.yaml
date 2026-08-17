@@ -3,6 +3,14 @@ templates:
   - templates/workload-cluster/gpu-operator.yaml
 release:
   name: my-cluster
+kubernetesProvider:
+  scheme:
+    helm.toolkit.fluxcd.io/v2/HelmRelease:
+      gvr:
+        group: helm.toolkit.fluxcd.io
+        version: v2
+        resource: helmreleases
+      namespaced: true
 tests:
   - it: no output when no GPU flavors in nodePools
     asserts:
@@ -44,13 +52,6 @@ tests:
       nodePools.gpuworkers.flavor: m1.gpu-large
       nodePools.gpuworkers.replicas: 1
     kubernetesProvider:
-      scheme:
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
@@ -71,13 +72,6 @@ tests:
       nodePools.gpuworkers.flavor: m1.gpu-large
       nodePools.gpuworkers.replicas: 1
     kubernetesProvider:
-      scheme:
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
