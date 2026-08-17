@@ -3,6 +3,19 @@ templates:
   - templates/ingress/validation.tpl
 release:
   name: base-cluster
+kubernetesProvider:
+  scheme:
+    "helm.toolkit.fluxcd.io/v2/HelmRelease":
+      gvr:
+        group: "helm.toolkit.fluxcd.io"
+        version: "v2"
+        resource: "helmreleases"
+      namespaced: true
+    "v1/Service":
+      gvr:
+        version: "v1"
+        resource: "services"
+      namespaced: true
 tests:
   - it: no error with default traefik and no existing nginx
     asserts:
@@ -33,13 +46,6 @@ tests:
 
   - it: fails when switching to traefik while nginx HelmRelease exists
     kubernetesProvider:
-      scheme:
-        "helm.toolkit.fluxcd.io/v2/HelmRelease":
-          gvr:
-            group: "helm.toolkit.fluxcd.io"
-            version: "v2"
-            resource: "helmreleases"
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
@@ -54,13 +60,6 @@ tests:
     set:
       ingress.provider: nginx
     kubernetesProvider:
-      scheme:
-        "helm.toolkit.fluxcd.io/v2/HelmRelease":
-          gvr:
-            group: "helm.toolkit.fluxcd.io"
-            version: "v2"
-            resource: "helmreleases"
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
@@ -73,13 +72,6 @@ tests:
 
   - it: no error when both nginx and traefik HelmReleases exist with traefik provider
     kubernetesProvider:
-      scheme:
-        "helm.toolkit.fluxcd.io/v2/HelmRelease":
-          gvr:
-            group: "helm.toolkit.fluxcd.io"
-            version: "v2"
-            resource: "helmreleases"
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
@@ -99,13 +91,6 @@ tests:
     set:
       ingress.provider: nginx
     kubernetesProvider:
-      scheme:
-        "helm.toolkit.fluxcd.io/v2/HelmRelease":
-          gvr:
-            group: "helm.toolkit.fluxcd.io"
-            version: "v2"
-            resource: "helmreleases"
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
@@ -125,12 +110,6 @@ tests:
     set:
       ingress.IP: 10.0.0.100
     kubernetesProvider:
-      scheme:
-        "v1/Service":
-          gvr:
-            version: "v1"
-            resource: "services"
-          namespaced: true
       objects:
         - apiVersion: v1
           kind: Service
@@ -147,12 +126,6 @@ tests:
     set:
       ingress.IP: 10.0.0.100
     kubernetesProvider:
-      scheme:
-        "v1/Service":
-          gvr:
-            version: "v1"
-            resource: "services"
-          namespaced: true
       objects:
         - apiVersion: v1
           kind: Service

@@ -3,6 +3,14 @@ templates:
   - templates/kyverno/validation.tpl
 release:
   name: base-cluster
+kubernetesProvider:
+  scheme:
+    "helm.toolkit.fluxcd.io/v2/HelmRelease":
+      gvr:
+        group: "helm.toolkit.fluxcd.io"
+        version: "v2"
+        resource: "helmreleases"
+      namespaced: true
 tests:
   - it: no error when no existing kyverno HelmRelease
     asserts:
@@ -11,13 +19,6 @@ tests:
 
   - it: no error when existing kyverno is version 3.x
     kubernetesProvider:
-      scheme:
-        "helm.toolkit.fluxcd.io/v2/HelmRelease":
-          gvr:
-            group: "helm.toolkit.fluxcd.io"
-            version: "v2"
-            resource: "helmreleases"
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
@@ -32,13 +33,6 @@ tests:
 
   - it: fails when existing kyverno is version 2.x (in-place upgrade blocked)
     kubernetesProvider:
-      scheme:
-        "helm.toolkit.fluxcd.io/v2/HelmRelease":
-          gvr:
-            group: "helm.toolkit.fluxcd.io"
-            version: "v2"
-            resource: "helmreleases"
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
@@ -53,13 +47,6 @@ tests:
 
   - it: version from lastAttemptedRevision used when lastApplied is absent
     kubernetesProvider:
-      scheme:
-        "helm.toolkit.fluxcd.io/v2/HelmRelease":
-          gvr:
-            group: "helm.toolkit.fluxcd.io"
-            version: "v2"
-            resource: "helmreleases"
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease

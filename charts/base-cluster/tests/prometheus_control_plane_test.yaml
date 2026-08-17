@@ -4,6 +4,30 @@ templates:
   - templates/monitoring/kube-prometheus-stack/grafana-secret.yaml
 release:
   name: base-cluster
+kubernetesProvider:
+  scheme:
+    apps/v1/DaemonSet:
+      gvr:
+        group: apps
+        version: v1
+        resource: daemonsets
+      namespaced: true
+    v1/Pod:
+      gvr:
+        version: v1
+        resource: pods
+      namespaced: true
+    helm.toolkit.fluxcd.io/v2/HelmRelease:
+      gvr:
+        group: helm.toolkit.fluxcd.io
+        version: v2
+        resource: helmreleases
+      namespaced: true
+    v1/Node:
+      gvr:
+        version: v1
+        resource: nodes
+      namespaced: false
 tests:
   - it: auto disables kubeProxy when lookup returns empty (no live cluster)
     template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
@@ -50,19 +74,6 @@ tests:
   - it: auto enables kubeProxy when kube-proxy DaemonSet is present
     template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
     kubernetesProvider:
-      scheme:
-        apps/v1/DaemonSet:
-          gvr:
-            group: apps
-            version: v1
-            resource: daemonsets
-          namespaced: true
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - kind: DaemonSet
           apiVersion: apps/v1
@@ -74,6 +85,10 @@ tests:
           metadata:
             name: unrelated
             namespace: unrelated
+        - apiVersion: v1
+          kind: Node
+          metadata:
+            name: dummy-node
     set:
       global.clusterName: test
       monitoring.grafana.adminPassword: test
@@ -91,24 +106,6 @@ tests:
   - it: auto enables kubeScheduler when kube-scheduler Pod is present
     template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
     kubernetesProvider:
-      scheme:
-        apps/v1/DaemonSet:
-          gvr:
-            group: apps
-            version: v1
-            resource: daemonsets
-          namespaced: true
-        v1/Pod:
-          gvr:
-            version: v1
-            resource: pods
-          namespaced: true
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - kind: Pod
           apiVersion: v1
@@ -122,6 +119,10 @@ tests:
           metadata:
             name: unrelated
             namespace: unrelated
+        - apiVersion: v1
+          kind: Node
+          metadata:
+            name: dummy-node
     set:
       global.clusterName: test
       monitoring.grafana.adminPassword: test
@@ -137,24 +138,6 @@ tests:
   - it: auto enables kubeControllerManager when kube-controller-manager Pod is present
     template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
     kubernetesProvider:
-      scheme:
-        apps/v1/DaemonSet:
-          gvr:
-            group: apps
-            version: v1
-            resource: daemonsets
-          namespaced: true
-        v1/Pod:
-          gvr:
-            version: v1
-            resource: pods
-          namespaced: true
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - kind: Pod
           apiVersion: v1
@@ -168,6 +151,10 @@ tests:
           metadata:
             name: unrelated
             namespace: unrelated
+        - apiVersion: v1
+          kind: Node
+          metadata:
+            name: dummy-node
     set:
       global.clusterName: test
       monitoring.grafana.adminPassword: test
@@ -183,24 +170,6 @@ tests:
   - it: auto enables all three when all control plane components are present
     template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
     kubernetesProvider:
-      scheme:
-        apps/v1/DaemonSet:
-          gvr:
-            group: apps
-            version: v1
-            resource: daemonsets
-          namespaced: true
-        v1/Pod:
-          gvr:
-            version: v1
-            resource: pods
-          namespaced: true
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - kind: DaemonSet
           apiVersion: apps/v1
@@ -226,6 +195,10 @@ tests:
           metadata:
             name: unrelated
             namespace: unrelated
+        - apiVersion: v1
+          kind: Node
+          metadata:
+            name: dummy-node
     set:
       global.clusterName: test
       monitoring.grafana.adminPassword: test

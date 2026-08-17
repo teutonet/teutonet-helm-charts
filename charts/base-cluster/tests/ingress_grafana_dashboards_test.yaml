@@ -4,6 +4,19 @@ templates:
   - templates/monitoring/kube-prometheus-stack/grafana-secret.yaml
 release:
   name: base-cluster
+kubernetesProvider:
+  scheme:
+    helm.toolkit.fluxcd.io/v2/HelmRelease:
+      gvr:
+        group: helm.toolkit.fluxcd.io
+        version: v2
+        resource: helmreleases
+      namespaced: true
+    v1/Node:
+      gvr:
+        version: v1
+        resource: nodes
+      namespaced: false
 tests:
   - it: only renders the ingress-nginx dashboard when provider is nginx
     template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
@@ -41,13 +54,6 @@ tests:
       monitoring.prometheus.kubeControllerManager: false
       ingress.provider: nginx
     kubernetesProvider:
-      scheme:
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
@@ -59,6 +65,10 @@ tests:
           metadata:
             name: ingress-controller
             namespace: ingress
+        - apiVersion: v1
+          kind: Node
+          metadata:
+            name: dummy-node
     asserts:
       - exists:
           path: spec.values.grafana.dashboards.custom.ingress-nginx
@@ -75,13 +85,6 @@ tests:
       monitoring.prometheus.kubeScheduler: false
       monitoring.prometheus.kubeControllerManager: false
     kubernetesProvider:
-      scheme:
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
@@ -93,6 +96,10 @@ tests:
           metadata:
             name: ingress-controller
             namespace: ingress
+        - apiVersion: v1
+          kind: Node
+          metadata:
+            name: dummy-node
     asserts:
       - exists:
           path: spec.values.grafana.dashboards.custom.ingress-nginx
@@ -110,19 +117,16 @@ tests:
       monitoring.prometheus.kubeControllerManager: false
       ingress.provider: nginx
     kubernetesProvider:
-      scheme:
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
           metadata:
             name: unrelated
             namespace: ingress
+        - apiVersion: v1
+          kind: Node
+          metadata:
+            name: dummy-node
     asserts:
       - exists:
           path: spec.values.grafana.dashboards.custom.ingress-nginx
