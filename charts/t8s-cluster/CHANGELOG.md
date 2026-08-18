@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.11.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.10.0...t8s-cluster-v9.11.0) (2026-08-18)
+
+
+### Features
+
+* **t8s-cluster:** set HelmRelease intervals dynamically based on readiness ([#2311](https://github.com/teutonet/teutonet-helm-charts/issues/2311)) ([f395bca](https://github.com/teutonet/teutonet-helm-charts/commit/f395bca7a6e2cd08440333fcb88f5653ba2365cd))
+
 ## [9.10.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.9.2...t8s-cluster-v9.10.0) (2026-08-10)
 
 
