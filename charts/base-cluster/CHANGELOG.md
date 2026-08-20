@@ -1,5 +1,21 @@
 # Changelog
 
+## [12.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v12.4.0...base-cluster-v12.5.0) (2026-08-20)
+
+
+### Features
+
+* **base-cluster:** create a StorageVersionMigration per installed CRD ([#2332](https://github.com/teutonet/teutonet-helm-charts/issues/2332)) ([840d04b](https://github.com/teutonet/teutonet-helm-charts/commit/840d04b59af2c326520b9d89e8b08e076a9857a7))
+* **base-cluster:** label alerts with auto-detected CAPI cluster identity ([#2324](https://github.com/teutonet/teutonet-helm-charts/issues/2324)) ([f99398f](https://github.com/teutonet/teutonet-helm-charts/commit/f99398fc5018889e2731ff0cbdbb16da22eb93af))
+* **base-cluster:** re-add gwapi kustomization migration ([#2275](https://github.com/teutonet/teutonet-helm-charts/issues/2275)) ([9720056](https://github.com/teutonet/teutonet-helm-charts/commit/9720056554670850e0b405318307b75c939de732))
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update helm release loki to v18.8.1 ([#2314](https://github.com/teutonet/teutonet-helm-charts/issues/2314)) ([2de0964](https://github.com/teutonet/teutonet-helm-charts/commit/2de0964e9ea269d48a6a41c9653a98fa21879b64))
+* **base-cluster/dependencies:** update helm release loki to v18.9.0 ([#2320](https://github.com/teutonet/teutonet-helm-charts/issues/2320)) ([8237395](https://github.com/teutonet/teutonet-helm-charts/commit/8237395607f6336f11d862fb04b9b16619d55337))
+* **base-cluster/dependencies:** update helm release reflector to v10.0.65 ([#2319](https://github.com/teutonet/teutonet-helm-charts/issues/2319)) ([ac2ee21](https://github.com/teutonet/teutonet-helm-charts/commit/ac2ee21811c8419e65b15306a1388110b4e00c53))
+
 ## [12.4.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v12.3.0...base-cluster-v12.4.0) (2026-08-13)
 
 
