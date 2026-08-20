@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 12.4.0](https://img.shields.io/badge/Version-12.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 12.5.0](https://img.shields.io/badge/Version-12.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster. This chart bootstraps a cluster with the shared components every teuto.net cluster needs. It is managed via Flux and intended to be installed once, after which Flux takes over further reconciliation of the chart itself.
 
@@ -246,7 +246,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v12.4.0/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v12.5.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -4112,18 +4112,19 @@ must respect the following conditions
 | **Type**                  | `combining`                                                    |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description                            |
-| ------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | -------------------------------------------- |
-| + [url](#flux_gitRepositories_additionalProperties_url )                 | No      | string | No         | -          | -                                            |
-| - [username](#flux_gitRepositories_additionalProperties_username )       | No      | string | No         | -          | -                                            |
-| - [password](#flux_gitRepositories_additionalProperties_password )       | No      | string | No         | -          | -                                            |
-| - [branch](#flux_gitRepositories_additionalProperties_branch )           | No      | string | No         | -          | -                                            |
-| - [commit](#flux_gitRepositories_additionalProperties_commit )           | No      | string | No         | -          | -                                            |
-| - [semver](#flux_gitRepositories_additionalProperties_semver )           | No      | string | No         | -          | -                                            |
-| - [tag](#flux_gitRepositories_additionalProperties_tag )                 | No      | string | No         | -          | -                                            |
-| - [path](#flux_gitRepositories_additionalProperties_path )               | No      | string | No         | -          | -                                            |
-| - [gitInterval](#flux_gitRepositories_additionalProperties_gitInterval ) | No      | string | No         | -          | The interval in which to sync the repository |
-| - [decryption](#flux_gitRepositories_additionalProperties_decryption )   | No      | object | No         | -          | -                                            |
+| Property                                                                 | Pattern | Type   | Deprecated | Definition                                                                | Title/Description                                                                                                                             |
+| ------------------------------------------------------------------------ | ------- | ------ | ---------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [url](#flux_gitRepositories_additionalProperties_url )                 | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [username](#flux_gitRepositories_additionalProperties_username )       | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [password](#flux_gitRepositories_additionalProperties_password )       | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [branch](#flux_gitRepositories_additionalProperties_branch )           | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [commit](#flux_gitRepositories_additionalProperties_commit )           | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [semver](#flux_gitRepositories_additionalProperties_semver )           | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [tag](#flux_gitRepositories_additionalProperties_tag )                 | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [path](#flux_gitRepositories_additionalProperties_path )               | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [gitInterval](#flux_gitRepositories_additionalProperties_gitInterval ) | No      | string | No         | -                                                                         | The interval in which to sync the repository                                                                                                  |
+| - [condition](#flux_gitRepositories_additionalProperties_condition )     | No      | string | No         | Same as [condition](#global_certificates_additionalProperties_condition ) | A condition with which to decide to include the resource. This will be templated. Must return the literal \`true\`, truthy values don't work. |
+| - [decryption](#flux_gitRepositories_additionalProperties_decryption )   | No      | object | No         | -                                                                         | -                                                                                                                                             |
 
 | All of(Requirement)                                           |
 | ------------------------------------------------------------- |
@@ -4453,7 +4454,16 @@ must respect the following conditions
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | **Must match regular expression** | ```[0-9]+(ms\|s\|m\|h\|d\|w\|y)``` [Test](https://regex101.com/?regex=%5B0-9%5D%2B%28ms%7Cs%7Cm%7Ch%7Cd%7Cw%7Cy%29) |
 
-##### <a name="flux_gitRepositories_additionalProperties_decryption"></a>9.1.1.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption`
+##### <a name="flux_gitRepositories_additionalProperties_condition"></a>9.1.1.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > condition`
+
+|                        |                                                                  |
+| ---------------------- | ---------------------------------------------------------------- |
+| **Type**               | `string`                                                         |
+| **Same definition as** | [condition](#global_certificates_additionalProperties_condition) |
+
+**Description:** A condition with which to decide to include the resource. This will be templated. Must return the literal `true`, truthy values don't work.
+
+##### <a name="flux_gitRepositories_additionalProperties_decryption"></a>9.1.1.13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -4464,7 +4474,7 @@ must respect the following conditions
 | ----------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ---------- | ----------------- |
 | + [provider](#flux_gitRepositories_additionalProperties_decryption_provider ) | No      | enum (of string) | No         | -          | -                 |
 
-###### <a name="flux_gitRepositories_additionalProperties_decryption_provider"></a>9.1.1.12.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption > provider`
+###### <a name="flux_gitRepositories_additionalProperties_decryption_provider"></a>9.1.1.13.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption > provider`
 
 |          |                    |
 | -------- | ------------------ |
