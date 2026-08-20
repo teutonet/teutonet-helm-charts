@@ -1,0 +1,81 @@
+global:
+  imagePullSecrets: []
+  podSecurityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    capabilities:
+      drop:
+        - ALL
+    runAsGroup: 1000
+    runAsUser: 1000
+  securityContext:
+    fsGroup: 1000
+    runAsUser: 1000
+    runAsGroup: 1000
+    runAsNonRoot: true
+    fsGroupChangePolicy: OnRootMismatch
+
+registry:
+  image:
+    registry: docker.io
+    repository: mcronce/oci-registry
+    tag: v0.4.5
+    digest: ""
+  replicas: 2
+  resourcesPreset: nano
+  resources: {}
+  extraEnvVars: {}
+  checkCacheDigest: false
+  upstream:
+    config:
+      contents: []
+      # - namespace: docker.io
+      #   host: registry-1.docker.io
+      #   tls: true
+      #   accept_invalid_certs: false
+      #   user_agent: null
+      #   username: null
+      #   password: null
+      #   manifest_invalidation_time: 14d
+      #   blob_invalidation_time: 14d
+    defaultNamespace: docker.io
+  storage:
+    mode: filesystem
+    filesystem:
+      path: /data
+    # Leave s3.authSecret.name blank to have this chart deploy the Secret itself
+    # from accessKey/secretKey; set it to use an existing Secret (with access_key/
+    # secret_key keys) that you manage yourself instead.
+    s3:
+      host: ""
+      region: us-east-1
+      bucket: oci-registry
+      authSecret:
+        name: ""
+        accessKey: ""
+        secretKey: ""
+  service:
+    type: ClusterIP
+    annotations: {}
+  # `type: gatewayApi` uses Gateway API instead of a plain Ingress -- we always
+  # terminate our own TLS listener attached to `gatewayApi.gateway` (rather than
+  # depending on the Gateway owner to pre-provision one for us). Either way, unless
+  # tls.existingSecret is set, the cert is auto-issued by cert-manager into a Secret
+  # named "<fullname>-tls" (via `kubernetes.io/tls-acme` for `ingress`,
+  # or `gatewayApi.clusterIssuer` for `gatewayApi`).
+  ingress:
+    enabled: false
+    type: ingress  # ingress | gatewayApi
+    hostname: ""
+    annotations: {}
+    tls:
+      existingSecret: ""
+    ingress:
+      className: ""
+    gatewayApi:
+      gateway:
+        name: ""
+        namespace: ""
+      clusterIssuer: letsencrypt-production

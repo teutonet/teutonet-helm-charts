@@ -1,0 +1,32 @@
+{{- if and .Values.registry.ingress.enabled (eq .Values.registry.ingress.type "gatewayApi") -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: ListenerSet
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  {{- if or (not .Values.registry.ingress.tls.existingSecret) .Values.registry.ingress.annotations }}
+  annotations:
+    {{- if not .Values.registry.ingress.tls.existingSecret }}
+    cert-manager.io/cluster-issuer: {{ required "registry.ingress.gatewayApi.clusterIssuer is required when registry.ingress.enabled is true and registry.ingress.tls.existingSecret is not set" .Values.registry.ingress.gatewayApi.clusterIssuer | quote }}
+    {{- end }}
+    {{- with .Values.registry.ingress.annotations }}
+    {{- include "common.tplvalues.render" (dict "value" . "context" $) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  parentRef:
+    name: {{ required "registry.ingress.gatewayApi.gateway.name is required when registry.ingress.enabled is true" .Values.registry.ingress.gatewayApi.gateway.name | quote }}
+    {{- with .Values.registry.ingress.gatewayApi.gateway.namespace }}
+    namespace: {{ . | quote }}
+    {{- end }}
+  listeners:
+    - name: https
+      hostname: {{ include "oci-registry.requiredHostname" . | quote }}
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: {{ .Values.registry.ingress.tls.existingSecret | default (include "oci-registry.tlsSecretName" .) }}
+{{- end }}

@@ -30,6 +30,7 @@ jobs:
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.ACTIONS_BOT_TOKEN }}
       - name: Install sponge
         run: sudo apt-get -yq install moreutils
 
