@@ -15,10 +15,10 @@ maintainers:
     name: tasches
 name: t8s-cluster
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.10.0/charts/t8s-cluster
+  - https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.11.0/charts/t8s-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster
 type: application
-version: 9.10.0
+version: 9.11.0
 annotations:
   artifacthub.io/images: |-
     - image: nvcr.io/nvidia/gpu-operator:v24.9.2                                                                                                                              #  default/HelmRelease/t8s-cluster-gpu-operator/kube-system/Job/gpu-operator-upgrade-crd.yaml
@@ -31,7 +31,6 @@ annotations:
     - image: quay.io/cilium/hubble-ui-backend:v0.13.5@sha256:fac0c300ae119274edca11fd89b1ad23c788792d8bc4ea2ba631c709e8d3c688                                                 #  default/HelmRelease/t8s-cluster-cni/kube-system/Deployment/hubble-ui.yaml
     - image: quay.io/cilium/hubble-ui:v0.13.5@sha256:f7d514fc54d784ed6df9d58cf0e97648b143f92b766dd1780ed3fc845bd4c516                                                         #  default/HelmRelease/t8s-cluster-cni/kube-system/Deployment/hubble-ui.yaml
     - image: quay.io/cilium/operator-generic:v1.20.0@sha256:80744a8cc7c91c2f9e6347629406844eb35d79b30a732c6d41c15b17232a74f3                                                  #  default/HelmRelease/t8s-cluster-cni/kube-system/Deployment/cilium-operator.yaml
-    - image: registry.k8s.io/autoscaling/cluster-autoscaler:v1.35.0                                                                                                           #  default/HelmRelease/t8s-cluster-autoscaler/default/Deployment/as-t8s-cluster-autoscaler.yaml
     - image: registry.k8s.io/etcd:3.7.1-0@sha256:a9983dd6d9283138ab926daa307c6c25623636703ecf5645d5df4d666ce9eba2                                                             #  default/HelmRelease/t8s-cluster-etcd-defrag/kube-system/CronJob/kube-etcd-defrag.yaml
     - image: registry.k8s.io/nfd/node-feature-discovery:v0.16.6                                                                                                               #  default/HelmRelease/t8s-cluster-gpu-operator/kube-system/DaemonSet/gpu-operator-node-feature-discovery-worker.yaml
     - image: registry.k8s.io/nfd/node-feature-discovery:v0.16.6                                                                                                               #  default/HelmRelease/t8s-cluster-gpu-operator/kube-system/Deployment/gpu-operator-node-feature-discovery-gc.yaml
