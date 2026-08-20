@@ -34,6 +34,70 @@ tests:
         hasDocuments:
           count: 0
 
+  - it: does not enable StorageVersionMigrator below k8s 1.36
+    set:
+      version:
+        major: 1
+        minor: 35
+        patch: 0
+    asserts:
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        notContains:
+          path: spec.template.spec.kubeadmConfigSpec.clusterConfiguration.controllerManager.extraArgs
+          content:
+            name: feature-gates
+            value: StorageVersionMigrator=true
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        contains:
+          path: spec.template.spec.kubeadmConfigSpec.clusterConfiguration.apiServer.extraArgs
+          content:
+            name: runtime-config
+            value: admissionregistration.k8s.io/v1beta1=true
+
+  - it: enables StorageVersionMigrator on apiserver and controller-manager from k8s 1.36
+    set:
+      version:
+        major: 1
+        minor: 36
+        patch: 0
+    asserts:
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        contains:
+          path: spec.template.spec.kubeadmConfigSpec.clusterConfiguration.apiServer.extraArgs
+          content:
+            name: feature-gates
+            value: ImageVolume=true,StorageVersionMigrator=true
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        contains:
+          path: spec.template.spec.kubeadmConfigSpec.clusterConfiguration.controllerManager.extraArgs
+          content:
+            name: feature-gates
+            value: StorageVersionMigrator=true
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        contains:
+          path: spec.template.spec.kubeadmConfigSpec.clusterConfiguration.apiServer.extraArgs
+          content:
+            name: runtime-config
+            value: storagemigration.k8s.io/v1beta1=true
+
+  - it: enables StorageVersionMigrator on the hosted control plane apiserver and controller-manager from k8s 1.36
+    set:
+      controlPlane:
+        hosted: true
+      version:
+        major: 1
+        minor: 36
+        patch: 0
+    asserts:
+      - template: templates/management-cluster/clusterClass/hostedControlPlaneTemplate/hostedControlPlaneTemplate.yaml
+        equal:
+          path: spec.template.spec.deployment.apiServer.args.feature-gates
+          value: ImageVolume=true,StorageVersionMigrator=true
+      - template: templates/management-cluster/clusterClass/hostedControlPlaneTemplate/hostedControlPlaneTemplate.yaml
+        equal:
+          path: spec.template.spec.deployment.controllerManager.args.feature-gates
+          value: StorageVersionMigrator=true
+
   - it: injects trusted CA certificates into the kubeadm control plane files and commands
     set:
       global:

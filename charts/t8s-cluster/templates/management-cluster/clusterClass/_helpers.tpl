@@ -86,6 +86,9 @@ server = {{ printf "https://%s" .registry | quote }}
   {{- if semverCompare ">=1.34.0 <1.36.0" (include "t8s-cluster.k8s-version" .context) -}}
     {{- $featureGates = set $featureGates "MutatingAdmissionPolicy" (list "apiserver") -}}
   {{- end -}}
+  {{- if semverCompare ">=1.36.0" (include "t8s-cluster.k8s-version" .context) -}}
+    {{- $featureGates = set $featureGates "StorageVersionMigrator" (list "apiserver" "controllermanager") -}}
+  {{- end -}}
   {{- toYaml $featureGates -}}
 {{- end -}}
 
@@ -98,6 +101,17 @@ server = {{ printf "https://%s" .registry | quote }}
     {{- end -}}
   {{- end -}}
   {{- toYaml $featureGates -}}
+{{- end -}}
+
+{{- define "t8s-cluster.clusterClass.apiServer.runtimeConfig" -}}
+  {{- $runtimeConfig := dict -}}
+  {{- if semverCompare ">=1.34.0 <1.36.0" (include "t8s-cluster.k8s-version" .context) -}}
+    {{- $runtimeConfig = set $runtimeConfig "admissionregistration.k8s.io/v1beta1" true -}}
+  {{- end -}}
+  {{- if semverCompare ">=1.36.0" (include "t8s-cluster.k8s-version" .context) -}}
+    {{- $runtimeConfig = set $runtimeConfig "storagemigration.k8s.io/v1beta1" true -}}
+  {{- end -}}
+  {{- toYaml $runtimeConfig -}}
 {{- end -}}
 
 {{- define "t8s-cluster.clusterClass.containerdConfig.containerRegistryMirrorConfigs" -}}
@@ -167,6 +181,13 @@ server = {{ printf "https://%s" .registry | quote }}
   {{- if .Values.controlPlane.hosted -}}
     {{- $args = set $args "allocate-node-cidrs" "true" -}}
   {{- end }}
+  {{- $featureFlags := list -}}
+  {{- range $featureFlag, $enabled := include "t8s-cluster.featureGates.forComponent" (dict "component" "controllermanager" "context" .context) | fromYaml -}}
+    {{- $featureFlags = append $featureFlags (printf "%s=%t" $featureFlag $enabled) -}}
+  {{- end -}}
+  {{- if $featureFlags -}}
+    {{- $args = set $args "feature-gates" ($featureFlags | join ",") -}}
+  {{- end -}}
   {{- toYaml $args -}}
 {{- end }}
 
@@ -216,8 +237,12 @@ admission-control-config.yaml
   {{- $args = set $args "enable-admission-plugins" (include "t8s-cluster.clusterClass.apiServer.admissionPlugins" (dict "context" .context) | fromYamlArray | join ",") -}}
   {{- $args = set $args "event-ttl" "4h" -}}
   {{- $args = set $args "tls-cipher-suites" (include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) | fromYamlArray | join ",") -}}
-  {{- if semverCompare ">=1.34.0 <1.36.0" (include "t8s-cluster.k8s-version" .context) -}}
-    {{- $args = set $args "runtime-config" "admissionregistration.k8s.io/v1beta1=true" -}}
+  {{- $runtimeConfigFlags := list -}}
+  {{- range $api, $enabled := include "t8s-cluster.clusterClass.apiServer.runtimeConfig" (dict "context" .context) | fromYaml -}}
+    {{- $runtimeConfigFlags = append $runtimeConfigFlags (printf "%s=%t" $api $enabled) -}}
+  {{- end -}}
+  {{- if $runtimeConfigFlags -}}
+    {{- $args = set $args "runtime-config" ($runtimeConfigFlags | join ",") -}}
   {{- end -}}
   {{- $featureFlags := list -}}
   {{- range $featureFlag, $enabled := include "t8s-cluster.featureGates.forComponent" (dict "component" "apiserver" "context" .context) | fromYaml -}}
