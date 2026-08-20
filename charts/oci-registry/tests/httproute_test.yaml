@@ -1,0 +1,60 @@
+suite: HTTPRoute rendered only for ingress.type gatewayApi
+templates:
+  - templates/httproute.yaml
+release:
+  name: oci-registry
+tests:
+  - it: renders nothing by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders nothing when type is ingress even if enabled
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.hostname: registry.example.com
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: always attaches to our own ListenerSet, not a user-supplied parentRef
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.type: gatewayApi
+      registry.ingress.hostname: registry.example.com
+      registry.ingress.gatewayApi.gateway.name: shared-gateway
+    asserts:
+      - equal:
+          path: spec.parentRefs[0]
+          value:
+            group: gateway.networking.k8s.io
+            kind: ListenerSet
+            name: oci-registry
+      - equal:
+          path: spec.hostnames[0]
+          value: registry.example.com
+      - equal:
+          path: spec.rules[0].backendRefs[0].name
+          value: oci-registry
+
+  - it: fails without a hostname
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.type: gatewayApi
+      registry.ingress.gatewayApi.gateway.name: shared-gateway
+    asserts:
+      - failedTemplate:
+          errorMessage: "registry.ingress.hostname is required when registry.ingress.enabled is true"
+
+  - it: renders template expressions inside annotations instead of emitting them literally
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.type: gatewayApi
+      registry.ingress.hostname: registry.example.com
+      registry.ingress.gatewayApi.gateway.name: shared-gateway
+      registry.ingress.annotations:
+        foo: "{{ .Release.Name }}"
+    asserts:
+      - equal:
+          path: metadata.annotations.foo
+          value: oci-registry

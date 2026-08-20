@@ -1,0 +1,32 @@
+{{- if and .Values.registry.ingress.enabled (eq .Values.registry.ingress.type "ingress") -}}
+{{- $fullName := include "common.names.fullname" . -}}
+{{- $hostname := include "oci-registry.requiredHostname" . -}}
+apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  annotations:
+    {{- if not .Values.registry.ingress.tls.existingSecret }}
+    kubernetes.io/tls-acme: "true"
+    {{- end }}
+    {{- with .Values.registry.ingress.annotations }}
+    {{- include "common.tplvalues.render" (dict "value" . "context" $) | nindent 4 }}
+    {{- end }}
+spec:
+  {{- if .Values.registry.ingress.ingress.className }}
+  ingressClassName: {{ .Values.registry.ingress.ingress.className | quote }}
+  {{- end }}
+  rules:
+    - host: {{ $hostname | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend: {{- include "common.ingress.backend" (dict "serviceName" $fullName "servicePort" "http" "context" $) | nindent 14 }}
+  tls:
+    - hosts:
+        - {{ $hostname | quote }}
+      secretName: {{ .Values.registry.ingress.tls.existingSecret | default (include "oci-registry.tlsSecretName" .) }}
+{{- end }}
