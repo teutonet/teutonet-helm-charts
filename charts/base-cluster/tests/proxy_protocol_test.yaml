@@ -3,6 +3,18 @@ templates:
   - templates/ingress/traefik.yaml
 release:
   name: base-cluster
+kubernetesProvider:
+  scheme:
+    "v1/Node":
+      gvr:
+        version: "v1"
+        resource: "nodes"
+      namespaced: false
+    "v1/Secret":
+      gvr:
+        version: "v1"
+        resource: "secrets"
+      namespaced: true
 tests:
   - it: proxy protocol enabled by default in auto mode (no nodes available)
     asserts:
@@ -12,12 +24,6 @@ tests:
 
   - it: openstack node detected but no OVN config — proxy protocol stays enabled
     kubernetesProvider:
-      scheme:
-        "v1/Node":
-          gvr:
-            version: "v1"
-            resource: "nodes"
-          namespaced: false
       objects:
         - apiVersion: v1
           kind: Node
@@ -32,17 +38,6 @@ tests:
 
   - it: openstack node with OVN cloud config — proxy protocol disabled
     kubernetesProvider:
-      scheme:
-        "v1/Node":
-          gvr:
-            version: "v1"
-            resource: "nodes"
-          namespaced: false
-        "v1/Secret":
-          gvr:
-            version: "v1"
-            resource: "secrets"
-          namespaced: true
       objects:
         - apiVersion: v1
           kind: Node

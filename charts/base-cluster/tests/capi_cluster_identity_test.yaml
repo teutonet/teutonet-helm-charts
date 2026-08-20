@@ -1,0 +1,182 @@
+suite: CAPI cluster identity detection
+templates:
+  - templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+  - templates/monitoring/kube-prometheus-stack/grafana-secret.yaml
+  - templates/monitoring/kube-prometheus-stack/capi-cluster-identity.yaml
+release:
+  name: base-cluster
+kubernetesProvider:
+  scheme:
+    v1/Node:
+      gvr:
+        version: v1
+        resource: nodes
+      namespaced: false
+    v1/ConfigMap:
+      gvr:
+        version: v1
+        resource: configmaps
+      namespaced: true
+tests:
+  - it: skips labels and ConfigMap when there is no live cluster to look up
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+    asserts:
+      - notContains:
+          path: spec.values.prometheus.prometheusSpec.additionalAlertRelabelConfigs
+          content:
+            target_label: capiclustername
+          any: true
+
+  - it: does not render the ConfigMap when there is no live cluster to look up
+    template: templates/monitoring/kube-prometheus-stack/capi-cluster-identity.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: derives all three labels from a node when no ConfigMap exists yet
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    kubernetesProvider:
+      objects:
+        - apiVersion: v1
+          kind: Node
+          metadata:
+            name: node-a
+            annotations:
+              cluster.x-k8s.io/cluster-name: efac7c4c-b677-479e-a693-33a815e5adf9
+              cluster.x-k8s.io/cluster-namespace: teuto-portal-clusters
+              cluster.x-k8s.io/cluster-cloud: ffm3
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.kubeProxy: false
+      monitoring.prometheus.kubeScheduler: false
+      monitoring.prometheus.kubeControllerManager: false
+    asserts:
+      - contains:
+          path: spec.values.prometheus.prometheusSpec.additionalAlertRelabelConfigs
+          content:
+            source_labels:
+              - __address__
+            target_label: capiclustername
+            replacement: efac7c4c-b677-479e-a693-33a815e5adf9
+      - contains:
+          path: spec.values.prometheus.prometheusSpec.additionalAlertRelabelConfigs
+          content:
+            source_labels:
+              - __address__
+            target_label: capiclusternamespace
+            replacement: teuto-portal-clusters
+      - contains:
+          path: spec.values.prometheus.prometheusSpec.additionalAlertRelabelConfigs
+          content:
+            source_labels:
+              - __address__
+            target_label: capiclustercloud
+            replacement: ffm3
+
+  - it: writes name/namespace/cloud into the ConfigMap when derived from a node
+    template: templates/monitoring/kube-prometheus-stack/capi-cluster-identity.yaml
+    kubernetesProvider:
+      objects:
+        - apiVersion: v1
+          kind: Node
+          metadata:
+            name: node-a
+            annotations:
+              cluster.x-k8s.io/cluster-name: efac7c4c-b677-479e-a693-33a815e5adf9
+              cluster.x-k8s.io/cluster-namespace: teuto-portal-clusters
+              cluster.x-k8s.io/cluster-cloud: ffm3
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.kubeProxy: false
+      monitoring.prometheus.kubeScheduler: false
+      monitoring.prometheus.kubeControllerManager: false
+    asserts:
+      - equal:
+          path: data.name
+          value: efac7c4c-b677-479e-a693-33a815e5adf9
+      - equal:
+          path: data.namespace
+          value: teuto-portal-clusters
+      - equal:
+          path: data.cloud
+          value: ffm3
+
+  - it: only sets the labels it can find when cluster-cloud annotation is missing from nodes
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    kubernetesProvider:
+      objects:
+        - apiVersion: v1
+          kind: Node
+          metadata:
+            name: node-a
+            annotations:
+              cluster.x-k8s.io/cluster-name: efac7c4c-b677-479e-a693-33a815e5adf9
+              cluster.x-k8s.io/cluster-namespace: teuto-portal-clusters
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.kubeProxy: false
+      monitoring.prometheus.kubeScheduler: false
+      monitoring.prometheus.kubeControllerManager: false
+    asserts:
+      - contains:
+          path: spec.values.prometheus.prometheusSpec.additionalAlertRelabelConfigs
+          content:
+            source_labels:
+              - __address__
+            target_label: capiclustername
+            replacement: efac7c4c-b677-479e-a693-33a815e5adf9
+      - notContains:
+          path: spec.values.prometheus.prometheusSpec.additionalAlertRelabelConfigs
+          content:
+            target_label: capiclustercloud
+          any: true
+
+  - it: uses the already-persisted ConfigMap and skips the node lookup once complete
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    kubernetesProvider:
+      objects:
+        - apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: capi-cluster-identity
+            namespace: monitoring
+          data:
+            name: efac7c4c-b677-479e-a693-33a815e5adf9
+            namespace: teuto-portal-clusters
+            cloud: ffm3
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      monitoring.prometheus.kubeProxy: false
+      monitoring.prometheus.kubeScheduler: false
+      monitoring.prometheus.kubeControllerManager: false
+    asserts:
+      - contains:
+          path: spec.values.prometheus.prometheusSpec.additionalAlertRelabelConfigs
+          content:
+            source_labels:
+              - __address__
+            target_label: capiclustername
+            replacement: efac7c4c-b677-479e-a693-33a815e5adf9
+      - contains:
+          path: spec.values.prometheus.prometheusSpec.additionalAlertRelabelConfigs
+          content:
+            source_labels:
+              - __address__
+            target_label: capiclustercloud
+            replacement: ffm3

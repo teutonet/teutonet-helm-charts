@@ -3,6 +3,14 @@ templates:
   - templates/cert-manager/cert-manager.yaml
 release:
   name: base-cluster
+kubernetesProvider:
+  scheme:
+    helm.toolkit.fluxcd.io/v2/HelmRelease:
+      gvr:
+        group: helm.toolkit.fluxcd.io
+        version: v2
+        resource: helmreleases
+      namespaced: true
 tests:
   - it: cert-manager gatewayAPI enabled when provider is traefik (default)
     asserts:
@@ -23,13 +31,6 @@ tests:
 
   - it: cert-manager gatewayAPI enabled in dual-mode (both HelmReleases exist, provider is traefik)
     kubernetesProvider:
-      scheme:
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
@@ -50,13 +51,6 @@ tests:
     set:
       ingress.provider: nginx
     kubernetesProvider:
-      scheme:
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
@@ -77,13 +71,6 @@ tests:
     set:
       ingress.provider: nginx
     kubernetesProvider:
-      scheme:
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease

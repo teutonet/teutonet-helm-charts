@@ -60,6 +60,25 @@ prometheusSpec:
         - __address__
       target_label: cluster
       replacement: {{ .Values.global.clusterName }}
+  {{- $capiClusterIdentity := include "base-cluster.prometheus-stack.capi-cluster-identity" . | fromYaml }}
+  {{- if $capiClusterIdentity.name }}
+    - source_labels:
+        - __address__
+      target_label: capiclustername
+      replacement: {{ $capiClusterIdentity.name }}
+  {{- end }}
+  {{- if $capiClusterIdentity.namespace }}
+    - source_labels:
+        - __address__
+      target_label: capiclusternamespace
+      replacement: {{ $capiClusterIdentity.namespace }}
+  {{- end }}
+  {{- if $capiClusterIdentity.cloud }}
+    - source_labels:
+        - __address__
+      target_label: capiclustercloud
+      replacement: {{ $capiClusterIdentity.cloud }}
+  {{- end }}
   {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp") | fromYaml }}
   {{- if $telemetryConf.enabled }}
   tracingConfig:

@@ -3,6 +3,14 @@ templates:
   - templates/ingress/gateway-api.yaml
 release:
   name: base-cluster
+kubernetesProvider:
+  scheme:
+    helm.toolkit.fluxcd.io/v2/HelmRelease:
+      gvr:
+        group: helm.toolkit.fluxcd.io
+        version: v2
+        resource: helmreleases
+      namespaced: true
 tests:
   - it: gateway-api renders when provider is traefik (default)
     asserts:
@@ -18,13 +26,6 @@ tests:
 
   - it: gateway-api renders in dual-mode with traefik provider
     kubernetesProvider:
-      scheme:
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
@@ -44,13 +45,6 @@ tests:
     set:
       ingress.provider: nginx
     kubernetesProvider:
-      scheme:
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease

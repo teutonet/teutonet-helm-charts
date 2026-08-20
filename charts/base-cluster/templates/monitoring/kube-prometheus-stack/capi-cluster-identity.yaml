@@ -1,0 +1,12 @@
+{{- $identity := include "base-cluster.prometheus-stack.capi-cluster-identity" . | fromYaml -}}
+{{- if $identity }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: capi-cluster-identity
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/part-of: monitoring
+data: {{- toYaml $identity | nindent 2 }}
+{{- end }}

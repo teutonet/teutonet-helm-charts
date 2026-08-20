@@ -64,6 +64,28 @@ privileged: false
   {{- end -}}
 {{- end -}}
 
+{{- define "base-cluster.prometheus-stack.capi-cluster-identity" -}}
+  {{- $configMap := lookup "v1" "ConfigMap" "monitoring" "capi-cluster-identity" -}}
+  {{- $data := dig "data" (dict) $configMap -}}
+  {{- $name := dig "name" "" $data -}}
+  {{- $namespace := dig "namespace" "" $data -}}
+  {{- $cloud := dig "cloud" "" $data -}}
+  {{- if not (and $name $namespace $cloud) -}}
+    {{- $node := dig "items" (list) (lookup "v1" "Node" "" "") | first -}}
+    {{- if $node -}}
+      {{- $annotations := dig "metadata" "annotations" (dict) $node -}}
+      {{- $name = dig "cluster.x-k8s.io/cluster-name" "" $annotations -}}
+      {{- $namespace = dig "cluster.x-k8s.io/cluster-namespace" "" $annotations -}}
+      {{- $cloud = dig "cluster.x-k8s.io/cluster-cloud" "" $annotations -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $data = dict -}}
+  {{- if $name -}}{{- $data = set $data "name" $name -}}{{- end -}}
+  {{- if $namespace -}}{{- $data = set $data "namespace" $namespace -}}{{- end -}}
+  {{- if $cloud -}}{{- $data = set $data "cloud" $cloud -}}{{- end -}}
+  {{- $data | toYaml -}}
+{{- end -}}
+
 {{- define "base-cluster.prometheus.controlPlaneComponents" -}}
   {{- $kubeProxy := false -}}
   {{- if typeIs "bool" .Values.monitoring.prometheus.kubeProxy -}}
