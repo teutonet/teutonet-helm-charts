@@ -16,6 +16,10 @@ spec:
     secretRef:
       name: {{ .Release.Name }}-kubeconfig
   healthCheckExprs:
+    - apiVersion: batch/v1
+      kind: Job
+      current: "true"
+      inProgress: "false"
     - apiVersion: apps/v1
       kind: DaemonSet
       current: status.numberAvailable == status.desiredNumberScheduled
