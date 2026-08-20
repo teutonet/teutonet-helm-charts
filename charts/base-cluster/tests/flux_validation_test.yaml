@@ -1,0 +1,72 @@
+suite: gateway-api Kustomization deletionPolicy guard
+templates:
+  - templates/flux/validation.tpl
+release:
+  name: base-cluster
+tests:
+  - it: no error when no existing gateway-api Kustomization
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: no error when existing gateway-api Kustomization already has deletionPolicy Orphan
+    kubernetesProvider:
+      scheme:
+        kustomize.toolkit.fluxcd.io/v1/Kustomization:
+          gvr:
+            group: kustomize.toolkit.fluxcd.io
+            version: v1
+            resource: kustomizations
+          namespaced: true
+      objects:
+        - apiVersion: kustomize.toolkit.fluxcd.io/v1
+          kind: Kustomization
+          metadata:
+            name: gateway-api
+            namespace: ingress
+          spec:
+            deletionPolicy: Orphan
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: fails when existing gateway-api Kustomization does not have deletionPolicy Orphan
+    kubernetesProvider:
+      scheme:
+        kustomize.toolkit.fluxcd.io/v1/Kustomization:
+          gvr:
+            group: kustomize.toolkit.fluxcd.io
+            version: v1
+            resource: kustomizations
+          namespaced: true
+      objects:
+        - apiVersion: kustomize.toolkit.fluxcd.io/v1
+          kind: Kustomization
+          metadata:
+            name: gateway-api
+            namespace: ingress
+          spec:
+            deletionPolicy: MirrorPrune
+    asserts:
+      - failedTemplate:
+          errorMessage: "The existing 'gateway-api' Kustomization must have spec.deletionPolicy set to 'Orphan' before upgrading, otherwise the gateway-api CRDs (and everything relying on them) will be pruned when it is replaced: kubectl patch kustomization gateway-api -n ingress --type=merge -p '{\"spec\":{\"deletionPolicy\":\"Orphan\"}}'"
+
+  - it: fails when existing gateway-api Kustomization has no deletionPolicy set (default MirrorPrune)
+    kubernetesProvider:
+      scheme:
+        kustomize.toolkit.fluxcd.io/v1/Kustomization:
+          gvr:
+            group: kustomize.toolkit.fluxcd.io
+            version: v1
+            resource: kustomizations
+          namespaced: true
+      objects:
+        - apiVersion: kustomize.toolkit.fluxcd.io/v1
+          kind: Kustomization
+          metadata:
+            name: gateway-api
+            namespace: ingress
+          spec: {}
+    asserts:
+      - failedTemplate:
+          errorMessage: "The existing 'gateway-api' Kustomization must have spec.deletionPolicy set to 'Orphan' before upgrading, otherwise the gateway-api CRDs (and everything relying on them) will be pruned when it is replaced: kubectl patch kustomization gateway-api -n ingress --type=merge -p '{\"spec\":{\"deletionPolicy\":\"Orphan\"}}'"
