@@ -13,7 +13,7 @@ spec:
     {{- if not .Values.controlPlane.hosted }}
     metadata:
       annotations:
-        cluster.x-k8s.io/cluster-cloud: {{ .Values.cloud }}
+        node.cluster.x-k8s.io/cluster-cloud: {{ .Values.cloud }}
     healthCheck:
       remediation:
         triggerIf:
@@ -149,7 +149,7 @@ spec:
           labels:
             node-role.kubernetes.io/compute-plane: ""
           annotations:
-            cluster.x-k8s.io/cluster-cloud: {{ $.Values.cloud }}
+            node.cluster.x-k8s.io/cluster-cloud: {{ $.Values.cloud }}
         healthCheck:
           checks:
             nodeStartupTimeoutSeconds: 480
