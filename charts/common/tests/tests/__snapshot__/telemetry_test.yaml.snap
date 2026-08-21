@@ -1,0 +1,10 @@
+exposes serviceName and serviceNamespace when auto-discovered:
+  1: |
+    enabled: true
+    endpoint: http://alloy.monitoring:4317
+    host: alloy.monitoring
+    insecure: true
+    port: 4317
+    serviceName: alloy
+    serviceNamespace: monitoring
+    serviceProtocol: grpc

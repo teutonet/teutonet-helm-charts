@@ -35,3 +35,14 @@ tests:
       - equal:
           path: pullPolicy
           value: IfNotPresent
+
+  - it: matches snapshot
+    set:
+      images.app.tag: latest
+      images.sidecar.tag: "sha256@abc123"
+      images.init.tag: latest
+      images.init.digest: "sha256:abc123"
+    asserts:
+      - matchSnapshot:
+          documentIndex: -1
+          path: ""

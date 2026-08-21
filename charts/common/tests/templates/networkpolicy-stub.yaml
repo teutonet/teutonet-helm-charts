@@ -1,0 +1,14 @@
+{{- if .Values.networkPolicyType.enabled }}
+---
+type: {{ include "common.networkPolicy.type" . }}
+{{- end }}
+{{- if .Values.identity.enabled }}
+---
+identity:
+{{- include "common.networkPolicy.identity.kube-apiserver" (dict) | nindent 2 }}
+{{- end }}
+{{- if .Values.rule.enabled }}
+---
+rule:
+{{- include "common.networkPolicy.rule.from.kube-apiserver" (dict "cilium" .Values.rule.cilium "ports" .Values.rule.ports) | nindent 2 }}
+{{- end }}
