@@ -16,6 +16,8 @@ docker.io:
     kubernetes-reflector: ALL_TAGS
   fluxcd: ALL_IMAGES
   grafana: ALL_IMAGES
+  mcronce:
+    oci-registry: ALL_TAGS
   memcached: ALL_TAGS
   otel:
     opentelemetry-collector-contrib: ALL_TAGS

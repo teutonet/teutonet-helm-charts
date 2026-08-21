@@ -1,0 +1,358 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "oci-registry helmchart",
+  "properties": {
+    "global": {
+      "type": "object",
+      "properties": {
+        "imagePullSecrets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "properties": {
+            "runAsNonRoot": {
+              "type": "boolean"
+            },
+            "readOnlyRootFilesystem": {
+              "type": "boolean"
+            },
+            "allowPrivilegeEscalation": {
+              "type": "boolean"
+            },
+            "privileged": {
+              "type": "boolean"
+            },
+            "capabilities": {
+              "type": "object",
+              "properties": {
+                "drop": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "additionalProperties": false
+            },
+            "runAsGroup": {
+              "type": "integer"
+            },
+            "runAsUser": {
+              "type": "integer"
+            }
+          },
+          "additionalProperties": false
+        },
+        "securityContext": {
+          "type": "object",
+          "properties": {
+            "fsGroup": {
+              "type": "integer"
+            },
+            "runAsUser": {
+              "type": "integer"
+            },
+            "runAsGroup": {
+              "type": "integer"
+            },
+            "runAsNonRoot": {
+              "type": "boolean"
+            },
+            "fsGroupChangePolicy": {
+              "type": "string",
+              "enum": [
+                "Always",
+                "OnRootMismatch"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "registry": {
+      "type": "object",
+      "description": "An implementation of the OCI Registry spec with filesystem and S3 storage back-ends, acting as a pull-through cache (mirror)",
+      "properties": {
+        "image": {
+          "type": "object",
+          "properties": {
+            "registry": {
+              "type": "string",
+              "description": "The host of the registry",
+              "examples": [
+                "docker.io"
+              ]
+            },
+            "repository": {
+              "type": "string",
+              "description": "The image path in the registry",
+              "examples": [
+                "mcronce/oci-registry"
+              ]
+            },
+            "tag": {
+              "type": "string"
+            },
+            "digest": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "replicas": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "resourcesPreset": {
+          "$ref": "#/$defs/resourcesPreset"
+        },
+        "resources": {
+          "$ref": "#/$defs/resourceRequirements"
+        },
+        "extraEnvVars": {
+          "type": "object",
+          "description": "Map of env var name to either a plain string value, or an object for the remaining Kubernetes EnvVar fields (e.g. valueFrom)",
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          }
+        },
+        "checkCacheDigest": {
+          "type": "boolean",
+          "description": "Whether to check the digest of a cached blob/manifest against upstream before serving it"
+        },
+        "upstream": {
+          "type": "object",
+          "properties": {
+            "config": {
+              "type": "object",
+              "description": "Rendered as-is into the upstream registries configuration file consumed by the application",
+              "properties": {
+                "contents": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "namespace": {
+                        "type": "string"
+                      },
+                      "host": {
+                        "type": "string"
+                      },
+                      "tls": {
+                        "type": "boolean"
+                      },
+                      "accept_invalid_certs": {
+                        "type": "boolean"
+                      },
+                      "user_agent": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "password": {
+                        "type": "string"
+                      },
+                      "manifest_invalidation_time": {
+                        "type": "string"
+                      },
+                      "blob_invalidation_time": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "namespace",
+                      "host"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "additionalProperties": false
+            },
+            "defaultNamespace": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "storage": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "filesystem",
+                "s3"
+              ]
+            },
+            "filesystem": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "s3": {
+              "type": "object",
+              "properties": {
+                "host": {
+                  "type": "string",
+                  "description": "Leave blank to use AWS"
+                },
+                "region": {
+                  "type": "string"
+                },
+                "bucket": {
+                  "type": "string"
+                },
+                "authSecret": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Use an existing Secret (with access_key/secret_key keys) instead of deploying one from accessKey/secretKey"
+                    },
+                    "accessKey": {
+                      "type": "string"
+                    },
+                    "secretKey": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "service": {
+          "type": "object",
+          "properties": {
+            "port": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "ClusterIP",
+                "NodePort",
+                "LoadBalancer"
+              ]
+            },
+            "annotations": {
+              "type": "object"
+            }
+          },
+          "additionalProperties": false
+        },
+        "ingress": {
+          "type": "object",
+          "description": "External access to the registry. type: gatewayApi uses Gateway API (an HTTPRoute plus our own ListenerSet for TLS) instead of a plain Ingress; the `ingress` sub-object only applies to type: ingress, `gatewayApi` only applies to type: gatewayApi. Unless tls.existingSecret is set, the cert is auto-issued by cert-manager into a Secret named \"<fullname>-tls\" -- via the kubernetes.io/tls-acme annotation for type: ingress, or gatewayApi.clusterIssuer for type: gatewayApi.",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "ingress",
+                "gatewayApi"
+              ]
+            },
+            "hostname": {
+              "type": "string"
+            },
+            "annotations": {
+              "type": "object"
+            },
+            "tls": {
+              "type": "object",
+              "properties": {
+                "existingSecret": {
+                  "type": "string",
+                  "description": "Use an existing cert Secret instead of having cert-manager issue one, for either ingress type"
+                }
+              },
+              "additionalProperties": false
+            },
+            "ingress": {
+              "type": "object",
+              "properties": {
+                "className": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "gatewayApi": {
+              "type": "object",
+              "properties": {
+                "gateway": {
+                  "type": "object",
+                  "description": "The Gateway our ListenerSet attaches to. The listener's hostname is `hostname` above.",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "namespace": {
+                      "type": "string",
+                      "description": "If different from this release's namespace"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "clusterIssuer": {
+                  "type": "string",
+                  "description": "cert-manager ClusterIssuer name, used unless tls.existingSecret is set"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "common": {
+      "type": "object",
+      "description": "Values for sub-chart"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "resourceRequirements": {
+      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+    },
+    "resourcesPreset": {
+      "$ref": "https://raw.githubusercontent.com/teutonet/teutonet-helm-charts/main/charts/common/values.schema.json#/$defs/resourcesPreset"
+    }
+  }
+}

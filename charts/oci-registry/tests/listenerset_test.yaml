@@ -1,0 +1,129 @@
+suite: ListenerSet rendered only for ingress.type gatewayApi, derived listener config
+templates:
+  - templates/listenerset.yaml
+release:
+  name: oci-registry
+tests:
+  - it: renders nothing by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders nothing when type is ingress even if enabled
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.hostname: registry.example.com
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: fails when enabled without a hostname
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.type: gatewayApi
+      registry.ingress.gatewayApi.gateway.name: shared-gateway
+    asserts:
+      - failedTemplate:
+          errorMessage: "registry.ingress.hostname is required when registry.ingress.enabled is true"
+
+  - it: fails when enabled without a gateway name
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.type: gatewayApi
+      registry.ingress.hostname: registry.example.com
+    asserts:
+      - failedTemplate:
+          errorMessage: "registry.ingress.gatewayApi.gateway.name is required when registry.ingress.enabled is true"
+
+  - it: derives a single HTTPS listener terminating TLS at our own secret, issued via the default cluster-issuer
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.type: gatewayApi
+      registry.ingress.hostname: registry.example.com
+      registry.ingress.gatewayApi.gateway.name: shared-gateway
+      registry.ingress.gatewayApi.gateway.namespace: gateway-system
+    asserts:
+      - equal:
+          path: apiVersion
+          value: gateway.networking.k8s.io/v1
+      - equal:
+          path: kind
+          value: ListenerSet
+      - equal:
+          path: metadata.annotations["cert-manager.io/cluster-issuer"]
+          value: letsencrypt-production
+      - equal:
+          path: spec.parentRef.name
+          value: shared-gateway
+      - equal:
+          path: spec.parentRef.namespace
+          value: gateway-system
+      - equal:
+          path: spec.listeners[0]
+          value:
+            name: https
+            hostname: registry.example.com
+            port: 443
+            protocol: HTTPS
+            tls:
+              mode: Terminate
+              certificateRefs:
+                - name: oci-registry-tls
+
+  - it: uses a custom cluster-issuer when overridden
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.type: gatewayApi
+      registry.ingress.hostname: registry.example.com
+      registry.ingress.gatewayApi.gateway.name: shared-gateway
+      registry.ingress.gatewayApi.clusterIssuer: letsencrypt-staging
+    asserts:
+      - equal:
+          path: metadata.annotations["cert-manager.io/cluster-issuer"]
+          value: letsencrypt-staging
+
+  - it: uses the existing secret and skips the cluster-issuer annotation when tls.existingSecret is set
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.type: gatewayApi
+      registry.ingress.hostname: registry.example.com
+      registry.ingress.gatewayApi.gateway.name: shared-gateway
+      registry.ingress.tls.existingSecret: registry-tls
+    asserts:
+      - notExists:
+          path: metadata.annotations["cert-manager.io/cluster-issuer"]
+      - equal:
+          path: spec.listeners[0].tls.certificateRefs[0].name
+          value: registry-tls
+
+  - it: merges user-supplied annotations alongside the cluster-issuer annotation, rendering template expressions
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.type: gatewayApi
+      registry.ingress.hostname: registry.example.com
+      registry.ingress.gatewayApi.gateway.name: shared-gateway
+      registry.ingress.annotations:
+        foo: "{{ .Release.Name }}"
+    asserts:
+      - equal:
+          path: metadata.annotations["cert-manager.io/cluster-issuer"]
+          value: letsencrypt-production
+      - equal:
+          path: metadata.annotations.foo
+          value: oci-registry
+
+  - it: still applies user-supplied annotations when tls.existingSecret is set and no cluster-issuer annotation is needed
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.type: gatewayApi
+      registry.ingress.hostname: registry.example.com
+      registry.ingress.gatewayApi.gateway.name: shared-gateway
+      registry.ingress.tls.existingSecret: registry-tls
+      registry.ingress.annotations:
+        foo: bar
+    asserts:
+      - notExists:
+          path: metadata.annotations["cert-manager.io/cluster-issuer"]
+      - equal:
+          path: metadata.annotations.foo
+          value: bar

@@ -1,0 +1,44 @@
+suite: service defaults and overrides
+templates:
+  - templates/service.yaml
+release:
+  name: oci-registry
+tests:
+  - it: uses ClusterIP and port 80 by default
+    asserts:
+      - equal:
+          path: spec.type
+          value: ClusterIP
+      - equal:
+          path: spec.ports[0].port
+          value: 80
+
+  - it: honors a custom port and type
+    set:
+      registry.service.port: 8080
+      registry.service.type: NodePort
+    asserts:
+      - equal:
+          path: spec.type
+          value: NodePort
+      - equal:
+          path: spec.ports[0].port
+          value: 8080
+
+  - it: renders annotations when set
+    set:
+      registry.service.annotations:
+        foo: bar
+    asserts:
+      - equal:
+          path: metadata.annotations.foo
+          value: bar
+
+  - it: renders template expressions inside annotations instead of emitting them literally
+    set:
+      registry.service.annotations:
+        foo: "{{ .Release.Name }}"
+    asserts:
+      - equal:
+          path: metadata.annotations.foo
+          value: oci-registry

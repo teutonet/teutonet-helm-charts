@@ -1,0 +1,119 @@
+{{- $resources := include "common.resources" (dict "resources" .Values.registry.resources "resourcesPreset" .Values.registry.resourcesPreset) | fromYaml -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+spec:
+  replicas: {{ .Values.registry.replicas }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" $ | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" $ | nindent 8 }}
+    spec: {{- include "common.images.renderPullSecrets" (dict "images" (list .Values.registry.image) "context" $) | nindent 6 }}
+      securityContext: {{- toYaml .Values.global.securityContext | nindent 8 }}
+      automountServiceAccountToken: false
+      containers:
+        - name: oci-registry
+          securityContext: {{- toYaml .Values.global.podSecurityContext | nindent 12 }}
+          image: {{ include "oci-registry.image" . }}
+          imagePullPolicy: {{ include "common.images.pullPolicy" .Values.registry.image }}
+          {{- if eq .Values.registry.storage.mode "s3" }}
+          args: ["s3"]
+          {{- else if eq .Values.registry.storage.mode "filesystem" }}
+          args: ["filesystem"]
+          {{- else }}
+          {{- fail "registry.storage.mode must be either 's3' or 'filesystem'" }}
+          {{- end }}
+          env:
+            {{- if eq .Values.registry.storage.mode "s3" }}
+            {{- with .Values.registry.storage.s3.host }}
+            - name: S3_HOST
+              value: {{ . | quote }}
+            {{- end }}
+            - name: S3_REGION
+              value: {{ .Values.registry.storage.s3.region | quote }}
+            - name: S3_BUCKET
+              value: {{ .Values.registry.storage.s3.bucket | quote }}
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "oci-registry.s3SecretName" . }}
+                  key: access_key
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "oci-registry.s3SecretName" . }}
+                  key: secret_key
+            {{- else }}
+            - name: FILESYSTEM_ROOT
+              value: {{ .Values.registry.storage.filesystem.path | quote }}
+            {{- end }}
+            {{- if .Values.registry.checkCacheDigest }}
+            - name: CHECK_CACHE_DIGEST
+              value: "true"
+            {{- end }}
+            - name: UPSTREAM_CONFIG_FILE
+              value: /upstream.yaml
+            - name: DEFAULT_NAMESPACE
+              value: {{ .Values.registry.upstream.defaultNamespace | quote }}
+            - name: DEFAULT_UPSTREAM_NAMESPACE
+              value: {{ .Values.registry.upstream.defaultNamespace | quote }}
+            - name: RUST_LOG
+              value: info,actix-web=debug
+            {{- with (dig "requests" "cpu" "" $resources) }}
+            {{- $cpu := . | toString }}
+            - name: TOKIO_WORKER_THREADS
+              {{- if hasSuffix "m" $cpu }}
+              value: {{ divf (trimSuffix "m" $cpu | float64) 1000 | ceil | int64 | quote }}
+              {{- else }}
+              value: {{ $cpu | float64 | ceil | int64 | quote }}
+              {{- end }}
+            {{- end }}
+            {{- $extraEnvVars := list }}
+            {{- range $name, $value := .Values.registry.extraEnvVars }}
+              {{- if kindIs "string" $value }}
+                {{- $extraEnvVars = append $extraEnvVars (dict "name" $name "value" $value) }}
+              {{- else }}
+                {{- $extraEnvVars = append $extraEnvVars (merge (dict "name" $name) $value) }}
+              {{- end }}
+            {{- end }}
+            {{- with $extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" . "context" $) | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 80
+          volumeMounts:
+            - mountPath: /upstream.yaml
+              name: upstream
+              subPath: upstream.yaml
+              readOnly: true
+            {{- if eq .Values.registry.storage.mode "filesystem" }}
+            - mountPath: {{ .Values.registry.storage.filesystem.path }}
+              name: data
+            {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 1
+            periodSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 1
+            periodSeconds: 2
+            failureThreshold: 5
+          resources: {{- toYaml $resources | nindent 12 }}
+      volumes:
+        - name: upstream
+          secret:
+            secretName: {{ include "oci-registry.upstreamSecretName" . }}
+        {{- if eq .Values.registry.storage.mode "filesystem" }}
+        - name: data
+          emptyDir: {}
+        {{- end }}
