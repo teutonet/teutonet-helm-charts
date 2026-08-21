@@ -76,7 +76,7 @@ privileged: false
       {{- $annotations := dig "metadata" "annotations" (dict) $node -}}
       {{- $name = dig "cluster.x-k8s.io/cluster-name" "" $annotations -}}
       {{- $namespace = dig "cluster.x-k8s.io/cluster-namespace" "" $annotations -}}
-      {{- $cloud = dig "cluster.x-k8s.io/cluster-cloud" "" $annotations -}}
+      {{- $cloud = dig "node.cluster.x-k8s.io/cluster-cloud" "" $annotations -}}
     {{- end -}}
   {{- end -}}
   {{- $data = dict -}}
