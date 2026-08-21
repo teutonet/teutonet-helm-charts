@@ -3,6 +3,19 @@ templates:
   - templates/management-cluster/autoscaler.yaml
 release:
   name: my-cluster
+kubernetesProvider:
+  scheme:
+    v1/Secret:
+      gvr:
+        version: v1
+        resource: secrets
+      namespaced: true
+    helm.toolkit.fluxcd.io/v2/HelmRelease:
+      gvr:
+        group: helm.toolkit.fluxcd.io
+        version: v2
+        resource: helmreleases
+      namespaced: true
 tests:
   - it: no output when no nodePool has maxReplicas above replicas
     set:
@@ -27,12 +40,6 @@ tests:
       nodePools.workers.replicas: 1
       nodePools.workers.maxReplicas: 3
     kubernetesProvider:
-      scheme:
-        v1/Secret:
-          gvr:
-            version: v1
-            resource: secrets
-          namespaced: true
       objects:
         - apiVersion: v1
           kind: Secret
@@ -51,12 +58,6 @@ tests:
       nodePools.workers.replicas: 1
       nodePools.workers.maxReplicas: 3
     kubernetesProvider:
-      scheme:
-        v1/Secret:
-          gvr:
-            version: v1
-            resource: secrets
-          namespaced: true
       objects:
         - apiVersion: v1
           kind: Secret
@@ -74,18 +75,6 @@ tests:
       nodePools.workers.replicas: 1
       nodePools.workers.maxReplicas: 3
     kubernetesProvider:
-      scheme:
-        v1/Secret:
-          gvr:
-            version: v1
-            resource: secrets
-          namespaced: true
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - apiVersion: v1
           kind: Secret
@@ -112,18 +101,6 @@ tests:
       nodePools.workers.replicas: 1
       nodePools.workers.maxReplicas: 3
     kubernetesProvider:
-      scheme:
-        v1/Secret:
-          gvr:
-            version: v1
-            resource: secrets
-          namespaced: true
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - apiVersion: v1
           kind: Secret
