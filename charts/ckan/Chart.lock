@@ -4,12 +4,12 @@ dependencies:
   version: 1.2.1
 - name: postgresql
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 15.5.38
+  version: 18.8.13
 - name: valkey
   repository: oci://registry-1.docker.io/cloudpirates
   version: 0.8.0
 - name: solr
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 9.6.5
-digest: sha256:714e04c2bf9b4d2e2413c3d267b9c0b67ce7d0a6d2c91ca733f3216f5141000b
-generated: "2025-10-28T13:54:38.317175008+01:00"
+digest: sha256:1215302730ed7ec5a17c1b9691212abe272eae047fa5c47437ca3bd0b2f44f24
+generated: "2026-08-22T13:00:40.03973509Z"
