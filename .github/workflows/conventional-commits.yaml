@@ -13,7 +13,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b9e0990d219a03df7633c93f6f005a8fecbcab22 # main
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # main
         with:
           fetch-depth: 0
 
