@@ -7,9 +7,9 @@ dependencies:
   version: 15.5.38
 - name: valkey
   repository: oci://registry-1.docker.io/cloudpirates
-  version: 0.8.0
+  version: 0.25.5
 - name: solr
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 9.6.5
-digest: sha256:714e04c2bf9b4d2e2413c3d267b9c0b67ce7d0a6d2c91ca733f3216f5141000b
-generated: "2025-10-28T13:54:38.317175008+01:00"
+digest: sha256:4b9a91a08ee2db80293a6146dd74c69341f082e54248f955290a4d5441a08b0d
+generated: "2026-08-21T08:18:52.853028137Z"
