@@ -52,7 +52,7 @@ tests:
             annotations:
               cluster.x-k8s.io/cluster-name: efac7c4c-b677-479e-a693-33a815e5adf9
               cluster.x-k8s.io/cluster-namespace: teuto-portal-clusters
-              cluster.x-k8s.io/cluster-cloud: ffm3
+              node.cluster.x-k8s.io/cluster-cloud: ffm3
     set:
       global.clusterName: test
       monitoring.grafana.adminPassword: test
@@ -94,7 +94,7 @@ tests:
             annotations:
               cluster.x-k8s.io/cluster-name: efac7c4c-b677-479e-a693-33a815e5adf9
               cluster.x-k8s.io/cluster-namespace: teuto-portal-clusters
-              cluster.x-k8s.io/cluster-cloud: ffm3
+              node.cluster.x-k8s.io/cluster-cloud: ffm3
     set:
       global.clusterName: test
       monitoring.grafana.adminPassword: test
