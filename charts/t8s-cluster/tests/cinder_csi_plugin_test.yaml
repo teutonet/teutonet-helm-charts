@@ -3,6 +3,14 @@ templates:
   - templates/workload-cluster/cinder-csi-plugin/cinder-csi-plugin.yaml
 release:
   name: my-cluster
+kubernetesProvider:
+  scheme:
+    helm.toolkit.fluxcd.io/v2/HelmRelease:
+      gvr:
+        group: helm.toolkit.fluxcd.io
+        version: v2
+        resource: helmreleases
+      namespaced: true
 tests:
   - it: renders HelmRelease
     set:
@@ -25,13 +33,6 @@ tests:
     set:
       cni: cilium
     kubernetesProvider:
-      scheme:
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
@@ -51,13 +52,6 @@ tests:
     set:
       cni: cilium
     kubernetesProvider:
-      scheme:
-        helm.toolkit.fluxcd.io/v2/HelmRelease:
-          gvr:
-            group: helm.toolkit.fluxcd.io
-            version: v2
-            resource: helmreleases
-          namespaced: true
       objects:
         - apiVersion: helm.toolkit.fluxcd.io/v2
           kind: HelmRelease
