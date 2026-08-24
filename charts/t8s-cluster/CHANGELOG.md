@@ -1,5 +1,19 @@
 # Changelog
 
+## [9.12.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.11.0...t8s-cluster-v9.12.0) (2026-08-24)
+
+
+### Features
+
+* **t8s-cluster:** add cluster.x-k8s.io/cluster-cloud annotation to nodes ([#2322](https://github.com/teutonet/teutonet-helm-charts/issues/2322)) ([4c4a438](https://github.com/teutonet/teutonet-helm-charts/commit/4c4a438d45fb154bef0bc7ad56d4b47bb9b31daf))
+* **t8s-cluster:** enable StorageVersionMigrator feature gate for k8s &gt;=1.36 ([#2331](https://github.com/teutonet/teutonet-helm-charts/issues/2331)) ([e4deca0](https://github.com/teutonet/teutonet-helm-charts/commit/e4deca0f31c4ef94538dd8731a8db53f1dce8510))
+
+
+### Bug Fixes
+
+* **t8s-cluster:** don't let stuck Jobs block cilium HelmRelease readiness ([#2330](https://github.com/teutonet/teutonet-helm-charts/issues/2330)) ([ffc81d6](https://github.com/teutonet/teutonet-helm-charts/commit/ffc81d678850a74afc93b797c0c360b84a8ddb3f))
+* **t8s-cluster:** move cluster-cloud annotation to node.cluster.x-k8s.io domain ([#2336](https://github.com/teutonet/teutonet-helm-charts/issues/2336)) ([279c357](https://github.com/teutonet/teutonet-helm-charts/commit/279c3573e413fa8574487141787f72ee4d26dad4))
+
 ## [9.11.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.10.0...t8s-cluster-v9.11.0) (2026-08-18)
 
 
