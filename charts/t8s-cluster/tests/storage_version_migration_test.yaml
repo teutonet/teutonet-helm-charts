@@ -1,0 +1,148 @@
+suite: storage version migration cronjob gating
+templates:
+  - templates/management-cluster/storageVersionMigration.yaml
+release:
+  name: my-cluster
+kubernetesProvider:
+  scheme:
+    v1/Secret:
+      gvr:
+        version: v1
+        resource: secrets
+      namespaced: true
+tests:
+  - it: no output below k8s 1.36 even when the kubeconfig secret exists
+    set:
+      version:
+        major: 1
+        minor: 35
+        patch: 0
+    kubernetesProvider:
+      objects:
+        - apiVersion: v1
+          kind: Secret
+          metadata:
+            name: my-cluster-kubeconfig
+            namespace: NAMESPACE
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders a CronJob from k8s 1.36 even when the kubeconfig secret does not exist
+    set:
+      version:
+        major: 1
+        minor: 36
+        patch: 0
+    capabilities:
+      majorVersion: "1"
+      minorVersion: "36"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: CronJob
+
+  - it: no output when the management cluster itself is below k8s 1.36, even if the workload cluster is 1.36
+    set:
+      version:
+        major: 1
+        minor: 36
+        patch: 0
+    capabilities:
+      majorVersion: "1"
+      minorVersion: "35"
+    kubernetesProvider:
+      objects:
+        - apiVersion: v1
+          kind: Secret
+          metadata:
+            name: my-cluster-kubeconfig
+            namespace: NAMESPACE
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders a CronJob from k8s 1.36 when the kubeconfig secret exists
+    set:
+      version:
+        major: 1
+        minor: 36
+        patch: 0
+    capabilities:
+      majorVersion: "1"
+      minorVersion: "36"
+    kubernetesProvider:
+      objects:
+        - apiVersion: v1
+          kind: Secret
+          metadata:
+            name: my-cluster-kubeconfig
+            namespace: NAMESPACE
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: CronJob
+      - equal:
+          path: metadata.name
+          value: my-cluster-storage-version-migration
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.volumes[0].secret.secretName
+          value: my-cluster-kubeconfig
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.volumes[2].image.reference
+          value: registry.k8s.io/kubectl:v1.36.0
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.volumes[3].image.reference
+          value: ghcr.io/jqlang/jq:1.8.1@sha256:4f34c6d23f4b1372ac789752cc955dc67c2ae177eb1b5860b75cdc5091ce6f91
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.initContainers[0].name
+          value: plan-create
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.initContainers[1].name
+          value: plan-delete
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[0].name
+          value: create
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[1].name
+          value: delete
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.initContainers[0].volumeMounts[0]
+          value:
+            mountPath: /.kube/config
+            name: workload-kubeconfig
+            subPath: value
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.initContainers[0].volumeMounts[1]
+          value:
+            mountPath: /opt/kubectl-bin
+            name: kubectl-bin
+            subPath: bin
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.initContainers[0].volumeMounts[2]
+          value:
+            mountPath: /opt/jq-bin
+            name: jq-bin
+
+  - it: schedule minute is stable for a given cluster namespace and name
+    set:
+      version:
+        major: 1
+        minor: 36
+        patch: 0
+    capabilities:
+      majorVersion: "1"
+      minorVersion: "36"
+    kubernetesProvider:
+      objects:
+        - apiVersion: v1
+          kind: Secret
+          metadata:
+            name: my-cluster-kubeconfig
+            namespace: NAMESPACE
+    asserts:
+      - matchRegex:
+          path: spec.schedule
+          pattern: "^[0-9]+ \\* \\* \\* \\*$"

@@ -25,14 +25,16 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: no output when enabled but the kubeconfig secret does not exist
+  - it: renders HelmRelease when enabled even when the kubeconfig secret does not exist
     set:
       nodePools.workers.flavor: m1.medium
       nodePools.workers.replicas: 1
       nodePools.workers.maxReplicas: 3
     asserts:
       - hasDocuments:
-          count: 0
+          count: 1
+      - isKind:
+          of: HelmRelease
 
   - it: renders HelmRelease when enabled and the kubeconfig secret exists
     set:
