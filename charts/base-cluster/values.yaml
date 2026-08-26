@@ -143,7 +143,7 @@ global:
     metrics-server:
       url: https://kubernetes-sigs.github.io/metrics-server
       charts:
-        metrics-server: 3.13.1
+        metrics-server: 3.14.0
       condition: "{{ .Values.monitoring.metricsServer.enabled }}"
     descheduler:
       url: https://kubernetes-sigs.github.io/descheduler
