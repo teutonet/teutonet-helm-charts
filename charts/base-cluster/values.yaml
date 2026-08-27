@@ -165,7 +165,7 @@ global:
     traefik:
       url: https://helm.traefik.io/traefik
       charts:
-        traefik: 41.3.0
+        traefik: 41.4.0
       condition: '{{ eq .Values.ingress.provider "traefik" }}'
     kyverno:
       url: https://kyverno.github.io/kyverno
