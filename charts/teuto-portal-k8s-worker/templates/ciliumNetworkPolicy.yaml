@@ -22,8 +22,9 @@ spec:
             dns:
               - matchPattern: "*"
     {{- end }}
-    - toFQDNs:
-        - matchName: {{ .Values.worker.database.host }}
+    - toServices:
+        - k8sService:
+            serviceName: {{ .Values.worker.database.host }}
       toPorts:
         - ports:
             - port: {{ .Values.worker.database.port | quote }}
@@ -36,8 +37,14 @@ spec:
         {{- $serverPart := $server | trimPrefix "https://" | trimPrefix "http://" }}
         {{- $serverHost := $serverPart | splitList ":" | first }}
         {{- $serverPort := $serverPart | splitList ":" | last | splitList "/" | first }}
-    - toFQDNs:
+        {{- $serverIsIP := regexMatch "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$" $serverHost }}
+    - {{- if $serverIsIP }}
+      toCIDR:
+        - {{ $serverHost }}/32
+      {{- else }}
+      toFQDNs:
         - matchName: {{ $serverHost }}
+      {{- end }}
       toPorts:
         - ports:
             - port: {{ $serverPort | quote }}
