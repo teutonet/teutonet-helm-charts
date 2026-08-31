@@ -6,6 +6,26 @@
   {{- fail "useTraefikNginxCompatibility cannot be enabled when using nginx as the ingress provider" -}}
 {{- end -}}
 
+{{- if and (eq .Values.ingress.provider "envoy") .Values.ingress.allowNginxConfigurationSnippets -}}
+  {{- fail "allowNginxConfigurationSnippets cannot be enabled when using envoy as the ingress provider" -}}
+{{- end -}}
+
+{{- if and (eq .Values.ingress.provider "envoy") .Values.ingress.useTraefikNginxCompatibility -}}
+  {{- fail "useTraefikNginxCompatibility cannot be enabled when using envoy as the ingress provider" -}}
+{{- end -}}
+
+{{- if eq .Values.ingress.provider "envoy" -}}
+  {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp" "global" .Values.global) | fromYaml -}}
+  {{- if and $telemetryConf.enabled (not $telemetryConf.serviceName) -}}
+    {{- fail "Explicit (non-auto-discovered) telemetry endpoints are not supported with the envoy ingress provider yet" -}}
+  {{- end -}}
+  {{- range $name, $cfg := .Values.ingress.extraPorts -}}
+    {{- if or (eq $name "http") (eq $name "https") -}}
+      {{- fail (printf "ingress.extraPorts key %q is reserved for the envoy Gateway's built-in http/https listeners, please choose a different name" $name) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
 {{- $existingNginx := include "base-cluster.ingress.existingNginx" . -}}
 {{- $existingTraefik := include "base-cluster.ingress.existingTraefik" . -}}
 {{- if and $existingNginx $existingTraefik -}}
@@ -24,8 +44,8 @@
 
 {{- if .Values.ingress.IP -}}
   {{- $loadBalancerIP := (list nil) | first -}}
-  {{- $serviceName := (eq .Values.ingress.provider "traefik") | ternary "ingress-controller" "ingress-nginx-controller" -}}
-  {{- $serviceNamespace := (eq .Values.ingress.provider "traefik") | ternary "ingress" "ingress-nginx" -}}
+  {{- $serviceName := (eq .Values.ingress.provider "nginx") | ternary "ingress-nginx-controller" "ingress-controller" -}}
+  {{- $serviceNamespace := (eq .Values.ingress.provider "nginx") | ternary "ingress-nginx" "ingress" -}}
   {{- $existingService := lookup "v1" "Service" $serviceNamespace $serviceName -}}
   {{- if $existingService -}}
     {{- $existingSpecIP := $existingService.spec.loadBalancerIP -}}

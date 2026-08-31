@@ -2,6 +2,15 @@
 
 Try to keep this CLAUDE file up to date with any gotchas you encounter while working on this repo. It is not a replacement for the official Helm docs, but a supplement to them.
 
+## Style
+
+- branches are always $type/$scope/$name
+  - $type and $scope are from <https://www.conventionalcommits.org>
+  - meaning a docs change for base-cluster would be docs/base-cluster/add-info-about-new-feature
+- commits are always conventional commits, often without any body, but if a body is useful, a rather short one
+  - big explanations can be written in the PR body
+  - don't set footers like `BREAKING CHANGE:`, this is parsed automatically via the `!` in the first line
+
 ## helm-unittest gotchas
 
 - Once a test sets `kubernetesProvider:`, ALL `lookup` calls in the rendered template chain go through the fake client — not just the ones under test. Every GVR touched by any lookup in that render path needs a `scheme:` entry, or it panics: `coding error: you must register resource to list kind...`.
@@ -11,6 +20,12 @@ Try to keep this CLAUDE file up to date with any gotchas you encounter while wor
 - Testing "does resource X exist / is it ready" logic (a GET-style `lookup` by name) only needs `kubernetesProvider` on the specific `it:` cases that assert against a live object — the default (no `kubernetesProvider`) case already exercises the "doesn't exist" branch, since unmocked `lookup` returns nil.
 - A suite's top-level `templates:` list is rendered in full for every `it:` case, regardless of which one the case's own `template:` field targets. If any rendered template pulls in another via `common.utils.checksumTemplate` (or similar), that other template must be listed too, or it fails with `no template "..." associated with template "gotpl"`. Same consequence for `kubernetesProvider` scheme entries: they must cover every `lookup` reachable from the whole suite's template set, not just the one under test.
 - `kubernetesProvider` can also be set at the suite level (sibling to `templates:`/`tests:`), not just per `it:`. Its `scheme` gets merged into every test's own scheme, and its `objects` get appended after each test's own objects. Hoist a shared `scheme:` block to suite level freely — merging it in doesn't activate the fake client by itself. Do NOT hoist shared `objects:` to suite level unless every test in that suite already sets `kubernetesProvider` — the fake client only activates when a test's (post-merge) object list is non-empty, so adding suite-level objects would silently pull tests that currently rely on "no `kubernetesProvider` → all lookups nil" into fake-client mode, requiring scheme coverage for every GVR they touch.
+
+## Chart README gotchas
+
+- `charts/*/README.md` is a generated artifact — never hand-edit it. Only edit `charts/*/README.md.gotmpl`; regeneration happens via the `release-update-metadata` CI workflow at release time (and needs `values.md`, see below).
+- `go-task chart:docs CHART=<chart>` runs bare `helm-docs`, which reads `{{ .Files.Get "values.md" }}` for the Values section. `values.md` is gitignored and only produced in CI (`generate-schema-doc` from `json-schema-for-humans`, driven by `.github/workflows/release-update-metadata.yaml`). Running `chart:docs` locally without first generating `values.md` silently wipes the entire Values section from `README.md` instead of erroring.
+- Any instruction to "adjust/update/fix the README" (or similar) for a chart always means `README.md.gotmpl`, never the rendered `README.md` — except the repo-root `README.md`, which is a plain hand-written file (no `.gotmpl` source) and is edited directly.
 
 ## Go template gotchas
 

@@ -7,7 +7,7 @@ global:
   priorityClasses: {}
   namespaces:
     ingress:
-      condition: '{{ or (not (empty .Values.dns.provider)) (eq .Values.ingress.provider "traefik") }}'
+      condition: '{{ or (not (empty .Values.dns.provider)) (eq .Values.ingress.provider "traefik") (eq .Values.ingress.provider "envoy") }}'
       podSecurityStandards:
         enforce: restricted
       additionalLabels:
@@ -106,9 +106,14 @@ global:
     metricsLabels:
       io.kubernetes.pod.namespace: monitoring
       app.kubernetes.io/name: prometheus
-    ingressLabels:
-      io.kubernetes.pod.namespace: '{{ eq .Values.ingress.provider "nginx" | ternary "ingress-nginx" "ingress" }}'
-      app.kubernetes.io/name: '{{ eq .Values.ingress.provider "nginx" | ternary "ingress-nginx" "ingress-controller" }}'
+    ingressLabels: |-
+      {{- if eq .Values.ingress.provider "nginx" }}
+      io.kubernetes.pod.namespace: ingress-nginx
+      app.kubernetes.io/name: ingress-nginx
+      {{- else }}
+      io.kubernetes.pod.namespace: ingress
+      app.kubernetes.io/name: ingress-controller
+      {{- end }}
   # it's important that the `url` is the first key and `charts` is right below, otherwise renovate won't detect it
   helmRepositories:
     prometheus:
@@ -167,6 +172,16 @@ global:
       charts:
         traefik: 41.4.0
       condition: '{{ eq .Values.ingress.provider "traefik" }}'
+    envoyGatewayCrds:
+      url: oci://docker.io/envoyproxy
+      charts:
+        gateway-crds-helm: v1.8.3
+      condition: '{{ eq .Values.ingress.provider "envoy" }}'
+    envoyGateway:
+      url: oci://docker.io/envoyproxy
+      charts:
+        gateway-helm: v1.8.3
+      condition: '{{ eq .Values.ingress.provider "envoy" }}'
     kyverno:
       url: https://kyverno.github.io/kyverno
       charts:
@@ -461,10 +476,10 @@ flux:
       url: https://github.com/kubernetes-sigs/gateway-api
       semver: 1.6.1
       path: config/crd/experimental
-      condition: '{{ include "base-cluster.ingress.hasTraefik" . }}'
+      condition: '{{ or (include "base-cluster.ingress.hasTraefik" .) (include "base-cluster.ingress.hasEnvoy" .) }}'
 
 ingress:
-  provider: traefik
+  provider: envoy
   allowNginxConfigurationSnippets: false
   useTraefikNginxCompatibility: false
   useProxyProtocol: auto

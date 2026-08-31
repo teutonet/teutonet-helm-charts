@@ -4,7 +4,9 @@ templates:
 release:
   name: base-cluster
 tests:
-  - it: traefik HelmRelease renders when provider is traefik (default)
+  - it: traefik HelmRelease renders when provider is traefik
+    set:
+      ingress.provider: traefik
     asserts:
       - hasDocuments:
           count: 1
@@ -22,6 +24,8 @@ tests:
           count: 0
 
   - it: traefik Service carries resource-policy keep annotation
+    set:
+      ingress.provider: traefik
     asserts:
       - equal:
           path: spec.values.service.annotations["helm.sh/resource-policy"]

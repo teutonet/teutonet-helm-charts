@@ -16,7 +16,9 @@ tests:
           path: metadata.name
           value: ingress-nginx
 
-  - it: nginx HelmRelease does not render when provider is traefik (default)
+  - it: nginx HelmRelease does not render when provider is traefik
+    set:
+      ingress.provider: traefik
     asserts:
       - hasDocuments:
           count: 0

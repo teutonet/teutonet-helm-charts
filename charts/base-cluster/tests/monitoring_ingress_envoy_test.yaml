@@ -1,0 +1,296 @@
+suite: monitoring ingress route (envoy)
+templates:
+  - templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+  - templates/monitoring/kube-prometheus-stack/grafana-secret.yaml
+release:
+  name: base-cluster
+set:
+  ingress.provider: envoy
+  certManager.email: admin@example.com
+  global.baseDomain: example.com
+  global.clusterName: test
+  monitoring.prometheus.enabled: true
+  monitoring.grafana.ingress.host: grafana
+  monitoring.grafana.ingress.enabled: true
+  monitoring.prometheus.ingress.host: prometheus
+  monitoring.prometheus.ingress.enabled: true
+  monitoring.prometheus.alertmanager.receivers:
+    pagerduty:
+      integrationKey: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  monitoring.prometheus.alertmanager.ingress.host: alertmanager
+  monitoring.prometheus.alertmanager.ingress.enabled: true
+tests:
+  - it: grafana gets a route instead of an ingress
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    asserts:
+      - equal:
+          path: spec.values.grafana.route.main.enabled
+          value: true
+      - equal:
+          path: spec.values.grafana.route.main.hostnames[0]
+          value: grafana.test.example.com
+      - equal:
+          path: spec.values.grafana.route.main.parentRefs[0].name
+          value: ingress-controller
+      - equal:
+          path: spec.values.grafana.route.main.parentRefs[0].namespace
+          value: ingress
+      - equal:
+          path: spec.values.grafana.route.main.parentRefs[0].sectionName
+          value: https
+      - notExists:
+          path: spec.values.grafana.ingress.enabled
+
+  - it: prometheus gets a route instead of an ingress
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    asserts:
+      - equal:
+          path: spec.values.prometheus.route.main.enabled
+          value: true
+      - equal:
+          path: spec.values.prometheus.route.main.hostnames[0]
+          value: prometheus.test.example.com
+
+  - it: alertmanager gets a route instead of an ingress
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    asserts:
+      - equal:
+          path: spec.values.alertmanager.route.main.enabled
+          value: true
+      - equal:
+          path: spec.values.alertmanager.route.main.hostnames[0]
+          value: alertmanager.test.example.com
+
+  - it: grafana gets an ingress (not a route) with traefik
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      ingress.provider: traefik
+    asserts:
+      - equal:
+          path: spec.values.grafana.ingress.enabled
+          value: true
+      - notExists:
+          path: spec.values.grafana.route
+
+  - it: grafana route targets its ListenerSet instead of the shared Gateway when customDomain is set
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      monitoring.grafana.ingress.customDomain: grafana.custom.example.com
+    asserts:
+      - equal:
+          path: spec.values.grafana.route.main.hostnames[0]
+          value: grafana.custom.example.com
+      - equal:
+          path: spec.values.grafana.route.main.parentRefs[0]
+          value:
+            name: grafana-listener-set
+            kind: ListenerSet
+            group: gateway.networking.k8s.io
+            sectionName: main
+
+---
+suite: monitoring ListenerSets and certificates (envoy customDomain)
+templates:
+  - templates/monitoring/kube-prometheus-stack/listener-sets.yaml
+release:
+  name: base-cluster
+set:
+  ingress.provider: envoy
+  certManager.email: admin@example.com
+  global.baseDomain: example.com
+  global.clusterName: test
+  monitoring.prometheus.enabled: true
+  monitoring.grafana.ingress.host: grafana
+  monitoring.grafana.ingress.enabled: true
+  monitoring.prometheus.ingress.host: prometheus
+  monitoring.prometheus.ingress.enabled: true
+  monitoring.prometheus.alertmanager.receivers:
+    pagerduty:
+      integrationKey: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  monitoring.prometheus.alertmanager.ingress.host: alertmanager
+  monitoring.prometheus.alertmanager.ingress.enabled: true
+tests:
+  - it: renders nothing when no component has a customDomain
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders a ListenerSet and Certificate for grafana's customDomain
+    set:
+      monitoring.grafana.ingress.customDomain: grafana.custom.example.com
+    asserts:
+      - documentIndex: 0
+        isKind:
+          of: ListenerSet
+      - documentIndex: 0
+        equal:
+          path: metadata.name
+          value: grafana-listener-set
+      - documentIndex: 0
+        equal:
+          path: metadata.namespace
+          value: ingress
+      - documentIndex: 0
+        equal:
+          path: spec.parentRef
+          value:
+            name: ingress-controller
+            namespace: ingress
+            kind: Gateway
+            group: gateway.networking.k8s.io
+      - documentIndex: 0
+        equal:
+          path: spec.listeners[0].hostname
+          value: grafana.custom.example.com
+      - documentIndex: 0
+        equal:
+          path: spec.listeners[0].tls.certificateRefs[0].name
+          value: grafana-certificate
+      - documentIndex: 1
+        isKind:
+          of: Certificate
+      - documentIndex: 1
+        equal:
+          path: metadata.name
+          value: grafana-certificate
+      - documentIndex: 1
+        equal:
+          path: metadata.namespace
+          value: ingress
+      - documentIndex: 1
+        equal:
+          path: spec.dnsNames[0]
+          value: grafana.custom.example.com
+      - documentIndex: 1
+        equal:
+          path: spec.secretName
+          value: grafana-certificate
+      - hasDocuments:
+          count: 2
+
+  - it: renders a ListenerSet and Certificate per component when all three have a customDomain
+    set:
+      monitoring.grafana.ingress.customDomain: grafana.custom.example.com
+      monitoring.prometheus.ingress.customDomain: prometheus.custom.example.com
+      monitoring.prometheus.alertmanager.ingress.customDomain: alertmanager.custom.example.com
+    asserts:
+      - hasDocuments:
+          count: 6
+
+  - it: does not render a ListenerSet when the whole monitoring stack is disabled
+    set:
+      monitoring.prometheus.enabled: false
+      monitoring.grafana.ingress.customDomain: grafana.custom.example.com
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: does not render a ListenerSet for traefik even with a customDomain set
+    set:
+      ingress.provider: traefik
+      monitoring.grafana.ingress.customDomain: grafana.custom.example.com
+    asserts:
+      - hasDocuments:
+          count: 0
+
+---
+suite: oauth2-proxy gatewayApi routing (envoy)
+templates:
+  - templates/monitoring/kube-prometheus-stack/oauth-proxy.yaml
+  - templates/monitoring/kube-prometheus-stack/oauth-proxy-secret.yaml
+release:
+  name: base-cluster
+set:
+  ingress.provider: envoy
+  certManager.email: admin@example.com
+  global.baseDomain: example.com
+  global.clusterName: test
+  global.authentication.config.clientId: test-client
+  global.authentication.config.clientSecret: test-secret
+  global.authentication.config.issuerHost: sso.example.com
+  monitoring.prometheus.enabled: true
+  monitoring.prometheus.ingress.host: prometheus
+tests:
+  - it: uses gatewayApi instead of ingress
+    template: templates/monitoring/kube-prometheus-stack/oauth-proxy.yaml
+    documentIndex: 0
+    asserts:
+      - equal:
+          path: spec.values.ingress.enabled
+          value: false
+      - equal:
+          path: spec.values.gatewayApi.enabled
+          value: true
+      - equal:
+          path: spec.values.gatewayApi.gatewayRef.name
+          value: ingress-controller
+      - equal:
+          path: spec.values.gatewayApi.gatewayRef.namespace
+          value: ingress
+      - equal:
+          path: spec.values.gatewayApi.gatewayRef.sectionName
+          value: https
+      - equal:
+          path: spec.values.gatewayApi.hostnames[0]
+          value: prometheus.test.example.com
+
+  - it: targets prometheus's ListenerSet instead of the shared Gateway when customDomain is set
+    template: templates/monitoring/kube-prometheus-stack/oauth-proxy.yaml
+    documentIndex: 0
+    set:
+      monitoring.prometheus.ingress.customDomain: prometheus.custom.example.com
+    asserts:
+      - equal:
+          path: spec.values.gatewayApi.gatewayRef
+          value:
+            name: prometheus-listener-set
+            kind: ListenerSet
+            group: gateway.networking.k8s.io
+            sectionName: main
+      - equal:
+          path: spec.values.gatewayApi.hostnames[0]
+          value: prometheus.custom.example.com
+
+  - it: CiliumNetworkPolicy selects the envoy data-plane pods by the same generic name label as traefik/nginx
+    template: templates/monitoring/kube-prometheus-stack/oauth-proxy.yaml
+    documentIndex: 1
+    set:
+      global.networkPolicy.type: cilium
+    asserts:
+      - isKind:
+          of: CiliumNetworkPolicy
+      - equal:
+          path: spec.ingress[0].fromEndpoints[0].matchLabels
+          value:
+            io.kubernetes.pod.namespace: ingress
+            app.kubernetes.io/name: ingress-controller
+
+  - it: CiliumNetworkPolicy still selects the traefik ingress-controller Deployment by name (no regression)
+    template: templates/monitoring/kube-prometheus-stack/oauth-proxy.yaml
+    documentIndex: 1
+    set:
+      ingress.provider: traefik
+      global.networkPolicy.type: cilium
+    asserts:
+      - isKind:
+          of: CiliumNetworkPolicy
+      - equal:
+          path: spec.ingress[0].fromEndpoints[0].matchLabels
+          value:
+            io.kubernetes.pod.namespace: ingress
+            app.kubernetes.io/name: ingress-controller
+
+  - it: CiliumNetworkPolicy still selects the nginx ingress-controller Deployment by name (no regression)
+    template: templates/monitoring/kube-prometheus-stack/oauth-proxy.yaml
+    documentIndex: 1
+    set:
+      ingress.provider: nginx
+      global.networkPolicy.type: cilium
+    asserts:
+      - isKind:
+          of: CiliumNetworkPolicy
+      - equal:
+          path: spec.ingress[0].fromEndpoints[0].matchLabels
+          value:
+            io.kubernetes.pod.namespace: ingress-nginx
+            app.kubernetes.io/name: ingress-nginx

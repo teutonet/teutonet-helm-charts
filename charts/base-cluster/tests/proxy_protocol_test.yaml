@@ -3,6 +3,8 @@ templates:
   - templates/ingress/traefik.yaml
 release:
   name: base-cluster
+set:
+  ingress.provider: traefik
 kubernetesProvider:
   scheme:
     "v1/Node":
@@ -87,3 +89,19 @@ tests:
             protocol: TCP
             proxyProtocol:
               insecure: true
+
+  - it: literal boolean true override passes through unchanged
+    set:
+      ingress.useProxyProtocol: true
+    asserts:
+      - equal:
+          path: spec.values.ports.web.proxyProtocol.insecure
+          value: true
+
+  - it: literal boolean false override passes through unchanged
+    set:
+      ingress.useProxyProtocol: false
+    asserts:
+      - equal:
+          path: spec.values.ports.web.proxyProtocol.insecure
+          value: false
