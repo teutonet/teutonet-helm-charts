@@ -26,7 +26,7 @@
   {{- range $file := $files -}}
     {{- $file = set $file "content" (get $file "content" | trim) -}}
   {{- end -}}
-  {{- $dynamicFiles := include "t8s-cluster.clusterClass.apiServer.dynamicFiles" (dict "context" .) | fromYaml | values -}}
+  {{- $dynamicFiles := include "t8s-cluster.clusterClass.apiServer.dynamicFiles" (dict "context" .) | fromYaml -}}
   {{- range $name, $file := $dynamicFiles -}}
     {{- if hasKey $file "contentFrom" -}}
       {{- $files = append $files (dict "contentFrom" (get $file "contentFrom") "path" (get $file "path" | required (printf "missing path for %s" $name))) -}}

@@ -1,0 +1,220 @@
+# regression test: apiServer.dynamicFiles used to be turned into a list via
+# the sprig `values` function, which ranges over a Go map without the
+# deterministic key-sort that the template `range` action applies, so the
+# `files` order (and therefore the name hash) was random per evaluation.
+# controlPlane.audit: true is what makes dynamicFiles hold more than one
+# entry, which is required to make that ordering ambiguity observable.
+# helm-unittest has no way to repeat a single `it:` case, and each `it:`
+# case is an independent template render, so the case below is duplicated
+# to fuzz for non-determinism across many renders in one `helm unittest` run.
+suite: KubeadmControlPlaneTemplate spec hash determinism
+templates:
+  - templates/management-cluster/clusterClass/clusterClass.yaml
+  - templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+release:
+  name: my-cluster
+set:
+  cloud: my-cloud
+  controlPlane:
+    audit: true
+tests:
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 1)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 2)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 3)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 4)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 5)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 6)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 7)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 8)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 9)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 10)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 11)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 12)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 13)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 14)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 15)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 16)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 17)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 18)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 19)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
+  - it: hashes the same name in the ClusterClass templateRef and the KubeadmControlPlaneTemplate itself (attempt 20)
+    asserts:
+      - template: templates/management-cluster/clusterClass/clusterClass.yaml
+        equal:
+          path: spec.controlPlane.templateRef.name
+          value: my-cluster-e8678655
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: metadata.name
+          value: my-cluster-e8678655
