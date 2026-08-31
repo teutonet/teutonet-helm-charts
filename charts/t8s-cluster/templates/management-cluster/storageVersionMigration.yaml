@@ -1,0 +1,119 @@
+{{- $kubeconfigSecret := printf "%s-kubeconfig" .Release.Name -}}
+{{- if and (semverCompare ">=1.36.0" (include "t8s-cluster.k8s-version" .)) (semverCompare ">=1.36.0" .Capabilities.KubeVersion.Version) -}}
+{{- $name := printf "%s-storage-version-migration" .Release.Name -}}
+{{- $minute := mod (atoi (adler32sum (printf "%s/%s" .Release.Namespace .Release.Name))) 60 -}}
+{{- $managedByLabel := "t8s-cluster-storage-version-migration" -}}
+{{- $busyboxImage := include "common.images.image" (dict "imageRoot" .Values.global.busybox.image "global" .Values.global) -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ $name }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: storage-version-migration
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  successfulJobsHistoryLimit: 1
+  schedule: {{ printf "%d * * * *" $minute | quote }}
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsGroup: 1000
+            runAsUser: 1000
+            fsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
+          initContainers:
+            - name: plan-create
+              image: {{ $busyboxImage }}
+              imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.busybox.image }}
+              securityContext: &toolSecurityContext
+                readOnlyRootFilesystem: true
+                privileged: false
+                capabilities:
+                  drop:
+                    - ALL
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts: &toolVolumeMounts
+                - mountPath: /.kube/config
+                  name: workload-kubeconfig
+                  subPath: value
+                - mountPath: /opt/kubectl-bin
+                  name: kubectl-bin
+                  subPath: bin
+                - mountPath: /opt/jq-bin
+                  name: jq-bin
+                - mountPath: /shared
+                  name: shared
+              command:
+                - sh
+                - -exc
+                - |-
+                  /opt/kubectl-bin/kubectl get customresourcedefinitions.apiextensions.k8s.io -o json \
+                    | /opt/jq-bin/jq '{apiVersion:"v1",kind:"List",items:[.items[] | select((.status.storedVersions // []) | length >= 2) | {apiVersion:"storagemigration.k8s.io/v1beta1",kind:"StorageVersionMigration",metadata:{name:.metadata.name,labels:{"app.kubernetes.io/managed-by":{{ $managedByLabel | quote }}}},spec:{resource:{group:.spec.group,resource:.spec.names.plural}}}]}' \
+                    > /shared/create.json
+            - name: plan-delete
+              image: {{ $busyboxImage }}
+              imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.busybox.image }}
+              securityContext: *toolSecurityContext
+              volumeMounts: *toolVolumeMounts
+              command:
+                - sh
+                - -exc
+                - |-
+                  /opt/kubectl-bin/kubectl get storageversionmigrations.storagemigration.k8s.io -l {{ printf "app.kubernetes.io/managed-by=%s" $managedByLabel }} -o json \
+                    | /opt/jq-bin/jq '{apiVersion:"v1",kind:"List",items:[.items[] | select(any(.status.conditions[]?; .type == "Succeeded" and .status == "True")) | {apiVersion:"storagemigration.k8s.io/v1beta1",kind:"StorageVersionMigration",metadata:{name:.metadata.name}}]}' \
+                    > /shared/delete.json
+          containers:
+            - name: create
+              image: {{ $busyboxImage }}
+              imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.busybox.image }}
+              securityContext: *toolSecurityContext
+              volumeMounts: *toolVolumeMounts
+              command:
+                - sh
+                - -exc
+                - |-
+                  if [ "$(/opt/jq-bin/jq '.items | length' /shared/create.json)" -gt 0 ]; then
+                    /opt/kubectl-bin/kubectl apply -f /shared/create.json
+                  else
+                    echo "nothing to create"
+                  fi
+            - name: delete
+              image: {{ $busyboxImage }}
+              imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.busybox.image }}
+              securityContext: *toolSecurityContext
+              volumeMounts: *toolVolumeMounts
+              command:
+                - sh
+                - -exc
+                - |-
+                  if [ "$(/opt/jq-bin/jq '.items | length' /shared/delete.json)" -gt 0 ]; then
+                    /opt/kubectl-bin/kubectl delete -f /shared/delete.json
+                  else
+                    echo "nothing to delete"
+                  fi
+          volumes:
+            - name: workload-kubeconfig
+              secret:
+                secretName: {{ $kubeconfigSecret }}
+            - name: shared
+              emptyDir: {}
+            - name: kubectl-bin
+              image:
+                reference: {{ include "common.images.image" (dict "imageRoot" (mustMerge (dict "tag" (include "t8s-cluster.k8s-version" .)) .Values.global.kubectl.image) "global" .Values.global) }}
+                pullPolicy: {{ include "common.images.pullPolicy" .Values.global.kubectl.image }}
+            - name: jq-bin
+              image:
+                reference: {{ include "common.images.image" (dict "imageRoot" .Values.global.jq.image "global" .Values.global) }}
+                pullPolicy: {{ include "common.images.pullPolicy" .Values.global.jq.image }}
+{{- end -}}

@@ -30,16 +30,26 @@ global:
         cluster-autoscaler: 9.59.0
     cetic:
       url: https://cetic.github.io/helm-charts
+  busybox:
+    image:
+      registry: docker.io
+      repository: busybox
+      tag: 1.37.0@sha256:9db7b59979c38555a39def84a31fb98b5296952f9e3afd4f6f11f05b07adfab0
   etcd:
     image:
       registry: registry.k8s.io
       repository: etcd
       tag: 3.7.1-0@sha256:a9983dd6d9283138ab926daa307c6c25623636703ecf5645d5df4d666ce9eba2
+  jq:
+    image:
+      registry: ghcr.io
+      repository: jqlang/jq
+      tag: 1.8.1@sha256:4f34c6d23f4b1372ac789752cc955dc67c2ae177eb1b5860b75cdc5091ce6f91
   kubectl:
     image:
-      registry: docker.io
-      repository: bitnami/kubectl
-      tag: 1.31.4-debian-12-r1@sha256:64614ef8290f3fb27fed5164b338debeeb79a1e5e26c93eb920770b71abd7c48
+      registry: registry.k8s.io
+      repository: kubectl
+      tag: 1.33.4@sha256:261a9ed843eb68e3d50da132245e2221d75ca19504130e47bd32788c0ff339a0
   s3:
     image:
       registry: docker.io

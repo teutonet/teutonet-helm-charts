@@ -7,7 +7,7 @@
   {{- end }}
 {{- end }}
 {{- $kubeconfigSecret := printf "%s-kubeconfig" .Release.Name -}}
-{{- if and $enabled (lookup "v1" "Secret" .Release.Namespace $kubeconfigSecret) -}}
+{{- if $enabled -}}
 {{- $name := printf "%s-autoscaler" .Release.Name -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
