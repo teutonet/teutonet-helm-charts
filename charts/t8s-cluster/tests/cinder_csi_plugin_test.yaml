@@ -66,3 +66,32 @@ tests:
       - equal:
           path: spec.interval
           value: 1h
+
+---
+suite: openstack-cinder-csi PodDisruptionBudget
+templates:
+  - templates/workload-cluster/cinder-csi-plugin/podDisruptionBudget.yaml
+release:
+  name: my-cluster
+tests:
+  - it: renders HelmRelease wrapping a PodDisruptionBudget for the controller plugin
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HelmRelease
+      - matchRegex:
+          path: spec.values.static
+          pattern: "kind: PodDisruptionBudget"
+      - matchRegex:
+          path: spec.values.static
+          pattern: "maxUnavailable: 1"
+      - matchRegex:
+          path: spec.values.static
+          pattern: "app: openstack-cinder-csi"
+      - matchRegex:
+          path: spec.values.static
+          pattern: "component: controllerplugin"
+      - matchRegex:
+          path: spec.values.static
+          pattern: "release: csi"

@@ -1,0 +1,17 @@
+{{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "openstack-cinder-csi-pdb" "resource" (include "t8s-cluster.podDisruptionBudget.cinder-csi" (dict)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cinder-csi") "dependsOn" (list (dict "name" (printf "%s-csi" $.Release.Name) "namespace" $.Release.Namespace))) | nindent 0 }}
+
+{{- define "t8s-cluster.podDisruptionBudget.cinder-csi" -}}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: openstack-cinder-csi-controllerplugin
+  namespace: kube-system
+  labels: {{- include "common.helm.labels" (dict) | nindent 4 }}
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: openstack-cinder-csi
+      component: controllerplugin
+      release: csi
+{{- end -}}

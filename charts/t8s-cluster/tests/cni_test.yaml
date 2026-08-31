@@ -74,6 +74,17 @@ tests:
       - hasDocuments:
           count: 0
 
+  - it: enables PodDisruptionBudgets for cilium-operator and hubble-ui
+    set:
+      cni: cilium
+    asserts:
+      - equal:
+          path: spec.values.operator.podDisruptionBudget.enabled
+          value: true
+      - equal:
+          path: spec.values.hubble.ui.podDisruptionBudget.enabled
+          value: true
+
 ---
 suite: CNI calico explicit selection
 templates:
