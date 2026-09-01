@@ -1,8 +1,7 @@
 apiVersion: v2
 name: oci-registry
-description: An implementation of the OCI Registry spec with filesystem and S3
-  storage back-ends, acting as a pull-through cache (mirror); pushing is not yet
-  implemented
+description: An implementation of the OCI Registry spec with filesystem and S3 storage
+  back-ends, acting as a pull-through cache (mirror); pushing is not yet implemented
 type: application
 version: 1.0.0
 appVersion: 0.4.5
@@ -18,5 +17,7 @@ dependencies:
     version: 2.2.0
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
 annotations:
-  artifacthub.io/images: '- image:
-    docker.io/mcronce/oci-registry:v0.4.5  #  default/Deployment/oci-registry.yaml'
+  artifacthub.io/images: '- image: docker.io/mcronce/oci-registry:v0.4.5  #  default/Deployment/oci-registry.yaml'
+sources:
+  - https://github.com/teutonet/teutonet-helm-charts/tree/oci-registry-v1.0.0/charts/oci-registry
+  - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/oci-registry
