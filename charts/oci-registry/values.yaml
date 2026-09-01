@@ -21,7 +21,7 @@ registry:
   image:
     registry: docker.io
     repository: mcronce/oci-registry
-    tag: v0.4.5
+    tag: v0.4.5@sha256:09519cd7bd2f8da6130062b8e1d3dbf57a0dcff599eb26e8a5d12ce5317fcb91
     digest: ""
   replicas: 2
   resourcesPreset: nano
