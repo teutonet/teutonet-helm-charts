@@ -41,6 +41,9 @@
     },
     "charts/teuto-cnpg": {
       "package-name": "teuto-cnpg"
+    },
+    "charts/oci-registry": {
+      "package-name": "oci-registry"
     }
   }
 }

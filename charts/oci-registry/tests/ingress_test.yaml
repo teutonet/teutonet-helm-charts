@@ -1,0 +1,83 @@
+suite: ingress toggling and required hostname
+templates:
+  - templates/ingress.yaml
+release:
+  name: oci-registry
+tests:
+  - it: renders nothing by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: fails when enabled without a hostname
+    set:
+      registry.ingress.enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "registry.ingress.hostname is required when registry.ingress.enabled is true"
+
+  - it: renders a rule for the configured hostname
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.hostname: registry.example.com
+    asserts:
+      - equal:
+          path: spec.rules[0].host
+          value: registry.example.com
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.name
+          value: oci-registry
+
+  - it: sets tls-acme and derives a secretName by default
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.hostname: registry.example.com
+    asserts:
+      - equal:
+          path: metadata.annotations["kubernetes.io/tls-acme"]
+          value: "true"
+      - equal:
+          path: spec.tls[0].secretName
+          value: oci-registry-tls
+
+  - it: uses tls secretName and skips tls-acme when an existing secret is given
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.hostname: registry.example.com
+      registry.ingress.tls.existingSecret: registry-tls
+    asserts:
+      - equal:
+          path: spec.tls[0].secretName
+          value: registry-tls
+      - notExists:
+          path: metadata.annotations["kubernetes.io/tls-acme"]
+
+  - it: renders template expressions inside annotations instead of emitting them literally
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.hostname: registry.example.com
+      registry.ingress.annotations:
+        foo: "{{ .Release.Name }}"
+    asserts:
+      - equal:
+          path: metadata.annotations.foo
+          value: oci-registry
+
+  - it: sets ingressClassName when configured
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.hostname: registry.example.com
+      registry.ingress.ingress.className: nginx
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
+
+  - it: renders nothing when type is gatewayApi
+    set:
+      registry.ingress.enabled: true
+      registry.ingress.type: gatewayApi
+      registry.ingress.hostname: registry.example.com
+    asserts:
+      - hasDocuments:
+          count: 0

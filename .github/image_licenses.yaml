@@ -74,6 +74,9 @@ licenses:
   docker.io/grafana/tempo:
     license: AGPL-3.0-only
     licenseLink: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/LICENSE
+  docker.io/mcronce/oci-registry:
+    license: MIT
+    licenseLink: https://raw.githubusercontent.com/mcronce/oci-registry/refs/heads/master/LICENSE
   docker.io/memcached:
     license: BSD-3
     licenseLink: https://raw.githubusercontent.com/memcached/memcached/refs/heads/master/LICENSE

@@ -1,0 +1,223 @@
+suite: deployment storage mode branching and config
+templates:
+  - templates/deployment.yaml
+release:
+  name: oci-registry
+tests:
+  - it: defaults to filesystem storage mode with a writable /data volume
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].args
+          value: ["filesystem"]
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: FILESYSTEM_ROOT
+            value: /data
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: S3_HOST
+            value: ""
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: data
+            mountPath: /data
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            emptyDir: {}
+
+  - it: omits the data volume in s3 storage mode
+    set:
+      registry.storage.mode: s3
+      registry.storage.s3.authSecret.accessKey: key
+      registry.storage.s3.authSecret.secretKey: secret
+    asserts:
+      - notContains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            emptyDir: {}
+
+  - it: switches to s3 storage mode and references the s3 secret
+    set:
+      registry.storage.mode: s3
+      registry.storage.s3.host: s3.example.com
+      registry.storage.s3.authSecret.accessKey: key
+      registry.storage.s3.authSecret.secretKey: secret
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].args
+          value: ["s3"]
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: S3_HOST
+            value: s3.example.com
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: S3_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: oci-registry-s3
+                key: access_key
+
+  - it: omits S3_HOST entirely when left blank, so the app falls back to real AWS
+    set:
+      registry.storage.mode: s3
+      registry.storage.s3.authSecret.accessKey: key
+      registry.storage.s3.authSecret.secretKey: secret
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: S3_HOST
+            value: ""
+
+  - it: sets both DEFAULT_NAMESPACE and DEFAULT_UPSTREAM_NAMESPACE from upstream.defaultNamespace
+    set:
+      registry.upstream.defaultNamespace: quay.io
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: DEFAULT_NAMESPACE
+            value: quay.io
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: DEFAULT_UPSTREAM_NAMESPACE
+            value: quay.io
+
+  - it: omits CHECK_CACHE_DIGEST by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: CHECK_CACHE_DIGEST
+            value: "true"
+
+  - it: sets CHECK_CACHE_DIGEST when enabled
+    set:
+      registry.checkCacheDigest: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: CHECK_CACHE_DIGEST
+            value: "true"
+
+  - it: passes through a plain string extraEnvVars entry as value
+    set:
+      registry.extraEnvVars:
+        FOO: bar
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: FOO
+            value: bar
+
+  - it: passes through an object extraEnvVars entry as-is alongside the derived name
+    set:
+      registry.extraEnvVars:
+        FOO:
+          valueFrom:
+            secretKeyRef:
+              name: some-secret
+              key: some-key
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: FOO
+            valueFrom:
+              secretKeyRef:
+                name: some-secret
+                key: some-key
+
+  - it: renders template expressions inside extraEnvVars instead of emitting them literally
+    set:
+      registry.extraEnvVars:
+        RELEASE: "{{ .Release.Name }}"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: RELEASE
+            value: oci-registry
+
+  - it: quotes a whole-core resources.requests.cpu (unquoted int) directly as thread count
+    set:
+      registry.resourcesPreset: none
+      registry.resources.requests.cpu: 2
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TOKIO_WORKER_THREADS
+            value: "2"
+
+  - it: treats a quoted whole-core cpu string (no unit, no decimal) as cores, not millicores
+    set:
+      registry.resourcesPreset: none
+      registry.resources.requests.cpu: "2"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TOKIO_WORKER_THREADS
+            value: "2"
+
+  - it: rounds up an unquoted fractional cpu core count
+    set:
+      registry.resourcesPreset: none
+      registry.resources.requests.cpu: 1.5
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TOKIO_WORKER_THREADS
+            value: "2"
+
+  - it: rounds up a quoted fractional cpu core count
+    set:
+      registry.resourcesPreset: none
+      registry.resources.requests.cpu: "1.5"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TOKIO_WORKER_THREADS
+            value: "2"
+
+  - it: rounds up a millicore resources.requests.cpu to whole thread count
+    set:
+      registry.resourcesPreset: none
+      registry.resources.requests.cpu: 1500m
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TOKIO_WORKER_THREADS
+            value: "2"
+
+  - it: omits TOKIO_WORKER_THREADS entirely when no cpu request is set
+    set:
+      registry.resourcesPreset: none
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers[0].env
+          count: 5
+
+  - it: fails loudly on a cpu quantity it can't parse instead of silently emitting 0
+    set:
+      registry.resourcesPreset: none
+      registry.resources.requests.cpu: 2Gi
+    asserts:
+      - failedTemplate:
+          errorMessage: 'registry.resources.requests.cpu: "2Gi" is not a valid CPU quantity'
