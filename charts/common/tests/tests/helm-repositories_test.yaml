@@ -1,0 +1,149 @@
+suite: common.helm.repositories
+templates:
+  - templates/helm-repositories-stub.yaml
+release:
+  name: common-test
+tests:
+  - it: no output when no repositories configured
+    set:
+      global.helmRepositories: {}
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders a HelmRepository with default interval
+    set:
+      global.helmRepositories.bitnami.url: https://charts.bitnami.com/bitnami
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HelmRepository
+      - equal:
+          path: metadata.name
+          value: bitnami
+      - equal:
+          path: spec.interval
+          value: 5m
+      - equal:
+          path: spec.url
+          value: https://charts.bitnami.com/bitnami
+      - notExists:
+          path: spec.type
+
+  - it: renders explicit interval override
+    set:
+      global.helmRepositories.bitnami.url: https://charts.bitnami.com/bitnami
+      global.helmRepositories.bitnami.interval: 1h
+    asserts:
+      - equal:
+          path: spec.interval
+          value: 1h
+
+  - it: sets type oci for oci:// urls
+    set:
+      global.helmRepositories.cilium.url: oci://quay.io/cilium/charts
+    asserts:
+      - equal:
+          path: spec.type
+          value: oci
+
+  - it: skips a HelmRepository when condition renders false
+    set:
+      global.helmRepositories.bitnami.url: https://charts.bitnami.com/bitnami
+      global.helmRepositories.bitnami.condition: "{{ .Values.enabled }}"
+      enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: keeps a HelmRepository when condition renders true
+    set:
+      global.helmRepositories.bitnami.url: https://charts.bitnami.com/bitnami
+      global.helmRepositories.bitnami.condition: "{{ .Values.enabled }}"
+      enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: renders one GitRepository per chart for type git
+    set:
+      global.helmRepositories.cpo.type: git
+      global.helmRepositories.cpo.url: https://github.com/kubernetes/cloud-provider-openstack
+      global.helmRepositories.cpo.charts.openstack-cinder-csi.tag: v1.2.3
+      global.helmRepositories.cpo.charts.openstack-cloud-controller-manager.branch: master
+    asserts:
+      - hasDocuments:
+          count: 2
+      - isKind:
+          of: GitRepository
+          documentIndex: 0
+      - isKind:
+          of: GitRepository
+          documentIndex: 1
+
+  - it: git chart with only a branch ref
+    set:
+      global.helmRepositories.cpo.type: git
+      global.helmRepositories.cpo.url: https://github.com/kubernetes/cloud-provider-openstack
+      global.helmRepositories.cpo.charts.openstack-cinder-csi.branch: master
+    asserts:
+      - equal:
+          path: spec.ref
+          value:
+            branch: master
+
+  - it: git chart with only a commit ref
+    set:
+      global.helmRepositories.cpo.type: git
+      global.helmRepositories.cpo.url: https://github.com/kubernetes/cloud-provider-openstack
+      global.helmRepositories.cpo.charts.openstack-cinder-csi.commit: abc1234
+    asserts:
+      - equal:
+          path: spec.ref
+          value:
+            commit: abc1234
+
+  - it: git chart with only a tag ref
+    set:
+      global.helmRepositories.cpo.type: git
+      global.helmRepositories.cpo.url: https://github.com/kubernetes/cloud-provider-openstack
+      global.helmRepositories.cpo.charts.openstack-cinder-csi.tag: v1.2.3
+    asserts:
+      - equal:
+          path: spec.ref
+          value:
+            tag: v1.2.3
+
+  - it: git chart with only a semver ref
+    set:
+      global.helmRepositories.cpo.type: git
+      global.helmRepositories.cpo.url: https://github.com/kubernetes/cloud-provider-openstack
+      global.helmRepositories.cpo.charts.openstack-cinder-csi.semver: ">=1.2.3"
+    asserts:
+      - equal:
+          path: spec.ref
+          value:
+            semver: ">=1.2.3"
+
+  - it: git chart with no ref option omits spec.ref
+    set:
+      global.helmRepositories.cpo.type: git
+      global.helmRepositories.cpo.url: https://github.com/kubernetes/cloud-provider-openstack
+      global.helmRepositories.cpo.charts.openstack-cinder-csi: {}
+    asserts:
+      - notExists:
+          path: spec.ref
+
+  - it: matches snapshot for a full mixed configuration
+    set:
+      global.helmRepositories.bitnami.url: https://charts.bitnami.com/bitnami
+      global.helmRepositories.cilium.url: oci://quay.io/cilium/charts
+      global.helmRepositories.cilium.charts.cilium: 1.19.5
+      global.helmRepositories.cpo.type: git
+      global.helmRepositories.cpo.url: https://github.com/kubernetes/cloud-provider-openstack
+      global.helmRepositories.cpo.charts.openstack-cinder-csi.tag: v1.2.3
+    asserts:
+      - matchSnapshot:
+          documentIndex: -1
+          path: ""

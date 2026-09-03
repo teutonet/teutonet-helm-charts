@@ -1,0 +1,17 @@
+suite: common.convert (random round-trip property)
+templates:
+  - templates/convert-roundtrip-stub.yaml
+release:
+  name: common-test
+tests:
+  # Each `helm unittest` run generates fresh random inputs via sprig's randInt — this is
+  # genuine per-run fuzzing, not a fixed example. See convert-roundtrip-stub.yaml for why a
+  # round-trip check needs no independently-computed expected value, and CLAUDE.md for why
+  # this complements rather than replaces the hand-picked table in convert_test.yaml.
+  - it: converting a random value to a random unit and back returns the original value
+    set:
+      convertRoundtrip.enabled: true
+    asserts:
+      - equal:
+          path: withinTolerance
+          value: true

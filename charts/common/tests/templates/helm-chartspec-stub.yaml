@@ -1,0 +1,11 @@
+{{- if .Values.chartSpec.repo }}
+---
+{{ include "common.helm.chartSpec" (dict
+  "context" .
+  "repo" .Values.chartSpec.repo
+  "chart" .Values.chartSpec.chart
+  "prependReleaseName" .Values.chartSpec.prependReleaseName
+  "repoNamespace" .Values.chartSpec.repoNamespace
+  "reconcileStrategy" .Values.chartSpec.reconcileStrategy
+) }}
+{{- end }}

@@ -1,0 +1,11 @@
+matches snapshot for preset + explicit override + setCPULimits:
+  1: |
+    resources:
+      limits:
+        cpu: 750m
+        ephemeral-storage: 2Gi
+        memory: 999Mi
+      requests:
+        cpu: 100m
+        ephemeral-storage: 50Mi
+        memory: 1024Mi

@@ -1,0 +1,46 @@
+matches snapshot for a full mixed configuration:
+  1: |
+    apiVersion: source.toolkit.fluxcd.io/v1
+    kind: HelmRepository
+    metadata:
+      labels:
+        app.kubernetes.io/instance: common-test
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: common-test
+        helm.sh/chart: common-test-0.1.0
+      name: bitnami
+      namespace: NAMESPACE
+    spec:
+      interval: 5m
+      url: https://charts.bitnami.com/bitnami
+  2: |
+    apiVersion: source.toolkit.fluxcd.io/v1
+    kind: HelmRepository
+    metadata:
+      labels:
+        app.kubernetes.io/instance: common-test
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: common-test
+        helm.sh/chart: common-test-0.1.0
+      name: cilium
+      namespace: NAMESPACE
+    spec:
+      interval: 5m
+      type: oci
+      url: oci://quay.io/cilium/charts
+  3: |
+    apiVersion: source.toolkit.fluxcd.io/v1
+    kind: GitRepository
+    metadata:
+      labels:
+        app.kubernetes.io/instance: common-test
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: common-test
+        helm.sh/chart: common-test-0.1.0
+      name: cpo-openstack-cinder-csi
+      namespace: NAMESPACE
+    spec:
+      interval: 5m
+      ref:
+        tag: v1.2.3
+      url: https://github.com/kubernetes/cloud-provider-openstack

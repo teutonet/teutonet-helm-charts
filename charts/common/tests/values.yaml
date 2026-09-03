@@ -1,1 +1,25 @@
-{}
+resources: {}
+
+networkPolicyType:
+  enabled: false
+
+identity:
+  enabled: false
+
+rule:
+  enabled: false
+  cilium: false
+  ports: {}
+
+chartSpec: {}
+
+convertRoundtrip:
+  enabled: false
+
+# real consuming charts always declare these under global themselves; the fake client / plain
+# `helm template` doesn't auto-populate `global`, so it must be set here to avoid nil-pointer
+# chained access in helpers that read `.Values.global.*` directly (no `dig`/`default` guard).
+global:
+  helmRepositories: {}
+  networkPolicy: {}
+

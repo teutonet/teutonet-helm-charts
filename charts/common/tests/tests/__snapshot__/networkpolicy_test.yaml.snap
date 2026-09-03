@@ -1,0 +1,40 @@
+'identity: falls back to static kube-apiserver identity when konnectivity is absent':
+  1: |
+    - endpoint:
+        namespace: kube-system
+        pod:
+          component: kube-apiserver
+          tier: control-plane
+    - entity: kube-apiserver
+'rule: cilium mode with fallback identity uses fromEntities/fromEndpoints, no ports':
+  1: |
+    - fromEndpoints:
+        - matchLabels:
+            component: kube-apiserver
+            io.kubernetes.pod.namespace: kube-system
+            tier: control-plane
+    - fromEntities:
+        - kube-apiserver
+'rule: native mode with fallback identity':
+  1: |
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              component: kube-apiserver
+              tier: control-plane
+'rule: native mode with ports':
+  1: |
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              component: kube-apiserver
+              tier: control-plane
+      ports:
+        - port: "10250"
+          protocol: TCP

@@ -1,0 +1,16 @@
+matches snapshot for a git-type chart spec:
+  1: |
+    chart: charts/openstack-cinder-csi
+    reconcileStrategy: Revision
+    sourceRef:
+      kind: GitRepository
+      name: cpo-openstack-cinder-csi
+      namespace: NAMESPACE
+matches snapshot for a helm-type chart spec:
+  1: |
+    chart: redis
+    sourceRef:
+      kind: HelmRepository
+      name: bitnami
+      namespace: NAMESPACE
+    version: 20.0.0
