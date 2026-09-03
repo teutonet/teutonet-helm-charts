@@ -54,4 +54,11 @@ spec:
     image:
       repository: {{ printf "%s/descheduler/descheduler" .Values.global.imageRegistry }}
     {{- end }}
+    {{- if .Values.monitoring.prometheus.enabled }}
+    service:
+      enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels: {{ .Values.monitoring.labels | toYaml | nindent 8 }}
+    {{- end }}
   {{- end -}}
