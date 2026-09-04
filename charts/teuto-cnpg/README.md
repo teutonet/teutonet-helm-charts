@@ -1,8 +1,8 @@
 <!-- vim: set ft=markdown: --># teuto-cnpg
 
-![Version: 3.1.0](https://img.shields.io/badge/Version-3.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 3.1.1](https://img.shields.io/badge/Version-3.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
-A Helm chart to abstract the managing of cnpg-databases from the original resource.
+This chart provides a way to create [Cloudnative-PG Helm chart](https://github.com/cloudnative-pg/charts) resources. It abstracts the configuration to be more streamlined and provides a nicer way to manage users.
 
 ## Maintainers
 
