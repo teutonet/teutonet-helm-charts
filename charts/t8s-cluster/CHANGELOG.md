@@ -1,5 +1,21 @@
 # Changelog
 
+## [9.12.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.12.0...t8s-cluster-v9.12.1) (2026-09-04)
+
+
+### Bug Fixes
+
+* **t8s-cluster:** add PodDisruptionBudgets for cilium-operator, hubble-ui and cinder-csi controller plugin ([#2352](https://github.com/teutonet/teutonet-helm-charts/issues/2352)) ([37d35b6](https://github.com/teutonet/teutonet-helm-charts/commit/37d35b653ce394e68f2c63cb3f2bdff53f463757))
+* **t8s-cluster:** HR reconciliation cannot be relied upon ([#2338](https://github.com/teutonet/teutonet-helm-charts/issues/2338)) ([e254bb5](https://github.com/teutonet/teutonet-helm-charts/commit/e254bb5551f85c7faa1dda704fe41d5180ad30bc))
+* **t8s-cluster:** make KubeadmControlPlaneTemplate spec hash deterministic ([#2353](https://github.com/teutonet/teutonet-helm-charts/issues/2353)) ([0425d20](https://github.com/teutonet/teutonet-helm-charts/commit/0425d203b82362a6233a99bae45a81f3c07e8948))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update cilium docker tag to v1.20.1 ([#2325](https://github.com/teutonet/teutonet-helm-charts/issues/2325)) ([67b5c11](https://github.com/teutonet/teutonet-helm-charts/commit/67b5c114a4bdf41c56a8811038cd836ba8ecb6f6))
+* **t8s-cluster/dependencies:** update docker.io/busybox docker tag to v1.38.0 ([#2362](https://github.com/teutonet/teutonet-helm-charts/issues/2362)) ([edf925e](https://github.com/teutonet/teutonet-helm-charts/commit/edf925e7568570c8ff02d34ff2bd25b636162caf))
+* **t8s-cluster/dependencies:** update helm release openstack-cloud-controller-manager to v2.36.3 ([#2355](https://github.com/teutonet/teutonet-helm-charts/issues/2355)) ([952f73c](https://github.com/teutonet/teutonet-helm-charts/commit/952f73c0376de828e656e576784407bec91b0c15))
+
 ## [9.12.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.11.0...t8s-cluster-v9.12.0) (2026-08-24)
 
 
