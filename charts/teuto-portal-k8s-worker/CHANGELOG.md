@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.5.0...teuto-portal-k8s-worker-v3.6.0) (2026-09-04)
+
+
+### Features
+
+* **teuto-portal-k8s-worker:** allow CiliumNetworkPolicy egress to IP kube-apiserver via /32 CIDR ([#2335](https://github.com/teutonet/teutonet-helm-charts/issues/2335)) ([3a7e5c0](https://github.com/teutonet/teutonet-helm-charts/commit/3a7e5c075aa94be1af802a32ed11e17620293507))
+
 ## [3.5.0](https://github.com/teutonet/teutonet-helm-charts/compare/teuto-portal-k8s-worker-v3.4.2...teuto-portal-k8s-worker-v3.5.0) (2026-08-14)
 
 
