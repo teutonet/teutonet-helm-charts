@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 12.4.0](https://img.shields.io/badge/Version-12.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 13.0.0](https://img.shields.io/badge/Version-13.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster. This chart bootstraps a cluster with the shared components every teuto.net cluster needs. It is managed via Flux and intended to be installed once, after which Flux takes over further reconciliation of the chart itself.
 
@@ -23,7 +23,7 @@ The `.x.x` part of the versions can be left as is, helm uses that as a range. If
 git init
 
 # create empty cluster HelmRelease;
-flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 12.x.x > cluster.yaml
+flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 13.x.x > cluster.yaml
 
 # maybe use the following name for your cluster;
 kubectl get node -o jsonpath='{.items[0].metadata.annotations.cluster\.x-k8s\.io/cluster-name}'
@@ -50,7 +50,7 @@ helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io
 
 # manual initial installation of the chart, afterwards the chart takes over
 # after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
-helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 12.x.x --values <(cat cluster.yaml | yq -y .spec.values)
+helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 13.x.x --values <(cat cluster.yaml | yq -y .spec.values)
 
 # you can use this command to get the instructions again
 # e.g. when adding users, gitRepositories, ...
@@ -108,16 +108,36 @@ which is also supported by [cert-manager](https://cert-manager.io/docs/configura
 
 ### Component [ingress](#ingress)
 
-The chart supports two ingress controllers:
+The chart supports three ingress controllers:
 
-1. [`nginx` ingress-controller](https://docs.nginx.com/nginx-ingress-controller) (default)
+1. [`nginx` ingress-controller](https://docs.nginx.com/nginx-ingress-controller)
    - Works with `IngressClassName: nginx` or if none is defined
    - Provides built-in metrics and tracing support
 
-2. [`traefik`](https://traefik.io) (recommended)
+2. [`traefik`](https://traefik.io)
    - Works with `IngressClassName: ingress-controller` or if none is defined
    - Provides built-in metrics and tracing support
    - Also supports [Gateway API](https://gateway-api.sigs.k8s.io)
+
+3. [`envoy`](https://gateway.envoyproxy.io) (default)
+   - [Gateway API](https://gateway-api.sigs.k8s.io)-based, deployed via [Envoy Gateway](https://gateway.envoyproxy.io)
+   - Full feature parity with `traefik` for IP handling, resources and proxy-protocol
+   - Tracing requires the OTLP endpoint to be auto-discovered (the default): envoy
+     wires up tracing via a Gateway API-style backend reference to the discovered
+     collector Service, whereas `traefik`/`nginx` accept any host:port. Setting
+     `global.telemetry.otlp.endpoint` explicitly is not yet supported with `envoy`
+     and fails the template render
+   - `customDomain` on the grafana/prometheus/alertmanager ingresses is served via a
+     per-component [Gateway API `ListenerSet`](https://gateway-api.sigs.k8s.io/geps/gep-1713/)
+     attached to the shared `Gateway`, each with its own cert-manager-issued certificate;
+     requires the cluster's Gateway API CRDs to include `ListenerSet` (Gateway API >= v1.5)
+   - Migrates cleanly from `traefik`: same `ingress` namespace, no namespace deletion, and
+     the existing Service - including its LoadBalancer IP - keeps being used as-is (reuse
+     comes from `envoy` targeting the same Service name/namespace as `traefik`, not from
+     the `helm.sh/resource-policy: keep` annotation, which only stops Helm from deleting
+     the Service when the `traefik` HelmRelease is removed)
+   - Cannot be adopted directly from `nginx` - there is no dual-mode path for that
+     combination, migrate to `traefik` first, then to `envoy`
 
 #### TLS
 
@@ -131,7 +151,7 @@ The chart supports two ingress controllers:
 
 If you want to make sure that, in the event of a catastrophic failure, you keep the
 same IP address, you should roll this out, get the assigned IP
-(`kubectl -n ingress-nginx get svc ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress}'` for nginx or `kubectl -n ingress get svc ingress-controller -o jsonpath='{.status.loadBalancer.ingress}'` for traefik)
+(`kubectl -n ingress-nginx get svc ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress}'` for nginx or `kubectl -n ingress get svc ingress-controller -o jsonpath='{.status.loadBalancer.ingress}'` for traefik or envoy)
 and set `.ingress.IP=<ip>` in the values. This makes sure the IP is kept in your
 project (may incur cost!), which means you can reuse it later or after recovery.
 
@@ -246,7 +266,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v12.4.0/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v13.0.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -444,6 +464,44 @@ of `.monitoring.tracing.ingester.<field>`
 
 - This release disables the trivy-operator by default.
   To continue using the operator set `.monitoring.securityScanning.enabled` to `true`.
+
+### 12.x.x -> 13.0.0
+
+This release makes [envoy](https://gateway.envoyproxy.io) (deployed via
+[Envoy Gateway](https://gateway.envoyproxy.io)) the default ingress provider instead
+of `traefik`.
+
+If you are currently on `traefik` (the previous default) and don't change anything,
+you will be switched over to `envoy` on the next reconcile.
+
+This is a clean migration: `envoy` uses the same `ingress` namespace and the same
+`ingress-controller` Service name as `traefik`, so the existing Service - including its
+LoadBalancer IP - keeps being used as-is; no namespace gets deleted, and no new Service
+needs to be provisioned. The `helm.sh/resource-policy: keep` annotation already present
+on the `traefik` Service only prevents Helm from deleting it when the `traefik`
+HelmRelease is removed - the reuse itself comes from `envoy` targeting that same
+name/namespace, not from the annotation. There will still be a short downtime while the
+new controller becomes ready.
+
+Because the `default` `GatewayClass` is rendered by `base-cluster`'s own release under
+`envoy` but by the nested `ingress-controller` release under `traefik`, the two
+HelmReleases reconciling out of order during the exact cutover moment can cause a
+transient Helm ownership-conflict error on that one object; it self-heals on the next
+reconcile once the old release's prune and the new release's create have both settled.
+
+If you are currently on `nginx`, you cannot switch directly to `envoy`; there is no
+dual-mode path for that combination. Migrate to `traefik` first (see the
+`7.x.x -> 8.0.0` notes above), then migrate to `envoy` afterwards.
+
+`customDomain` on the grafana/prometheus/alertmanager ingresses now works with `envoy`
+too, via a per-component `ListenerSet` attached to the shared `Gateway`. This requires
+the cluster's Gateway API CRDs to include the `ListenerSet` kind (Gateway API >= v1.5).
+If your cluster's CRDs aren't updated yet, stay on `traefik` for now:
+
+```yaml
+ingress:
+  provider: traefik
+```
 # base cluster configuration
 
 **Title:** base cluster configuration
@@ -4112,18 +4170,19 @@ must respect the following conditions
 | **Type**                  | `combining`                                                    |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description                            |
-| ------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | -------------------------------------------- |
-| + [url](#flux_gitRepositories_additionalProperties_url )                 | No      | string | No         | -          | -                                            |
-| - [username](#flux_gitRepositories_additionalProperties_username )       | No      | string | No         | -          | -                                            |
-| - [password](#flux_gitRepositories_additionalProperties_password )       | No      | string | No         | -          | -                                            |
-| - [branch](#flux_gitRepositories_additionalProperties_branch )           | No      | string | No         | -          | -                                            |
-| - [commit](#flux_gitRepositories_additionalProperties_commit )           | No      | string | No         | -          | -                                            |
-| - [semver](#flux_gitRepositories_additionalProperties_semver )           | No      | string | No         | -          | -                                            |
-| - [tag](#flux_gitRepositories_additionalProperties_tag )                 | No      | string | No         | -          | -                                            |
-| - [path](#flux_gitRepositories_additionalProperties_path )               | No      | string | No         | -          | -                                            |
-| - [gitInterval](#flux_gitRepositories_additionalProperties_gitInterval ) | No      | string | No         | -          | The interval in which to sync the repository |
-| - [decryption](#flux_gitRepositories_additionalProperties_decryption )   | No      | object | No         | -          | -                                            |
+| Property                                                                 | Pattern | Type   | Deprecated | Definition                                                                | Title/Description                                                                                                                             |
+| ------------------------------------------------------------------------ | ------- | ------ | ---------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [url](#flux_gitRepositories_additionalProperties_url )                 | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [username](#flux_gitRepositories_additionalProperties_username )       | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [password](#flux_gitRepositories_additionalProperties_password )       | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [branch](#flux_gitRepositories_additionalProperties_branch )           | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [commit](#flux_gitRepositories_additionalProperties_commit )           | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [semver](#flux_gitRepositories_additionalProperties_semver )           | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [tag](#flux_gitRepositories_additionalProperties_tag )                 | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [path](#flux_gitRepositories_additionalProperties_path )               | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [gitInterval](#flux_gitRepositories_additionalProperties_gitInterval ) | No      | string | No         | -                                                                         | The interval in which to sync the repository                                                                                                  |
+| - [condition](#flux_gitRepositories_additionalProperties_condition )     | No      | string | No         | Same as [condition](#global_certificates_additionalProperties_condition ) | A condition with which to decide to include the resource. This will be templated. Must return the literal \`true\`, truthy values don't work. |
+| - [decryption](#flux_gitRepositories_additionalProperties_decryption )   | No      | object | No         | -                                                                         | -                                                                                                                                             |
 
 | All of(Requirement)                                           |
 | ------------------------------------------------------------- |
@@ -4453,7 +4512,16 @@ must respect the following conditions
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | **Must match regular expression** | ```[0-9]+(ms\|s\|m\|h\|d\|w\|y)``` [Test](https://regex101.com/?regex=%5B0-9%5D%2B%28ms%7Cs%7Cm%7Ch%7Cd%7Cw%7Cy%29) |
 
-##### <a name="flux_gitRepositories_additionalProperties_decryption"></a>9.1.1.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption`
+##### <a name="flux_gitRepositories_additionalProperties_condition"></a>9.1.1.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > condition`
+
+|                        |                                                                  |
+| ---------------------- | ---------------------------------------------------------------- |
+| **Type**               | `string`                                                         |
+| **Same definition as** | [condition](#global_certificates_additionalProperties_condition) |
+
+**Description:** A condition with which to decide to include the resource. This will be templated. Must return the literal `true`, truthy values don't work.
+
+##### <a name="flux_gitRepositories_additionalProperties_decryption"></a>9.1.1.13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -4464,7 +4532,7 @@ must respect the following conditions
 | ----------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ---------- | ----------------- |
 | + [provider](#flux_gitRepositories_additionalProperties_decryption_provider ) | No      | enum (of string) | No         | -          | -                 |
 
-###### <a name="flux_gitRepositories_additionalProperties_decryption_provider"></a>9.1.1.12.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption > provider`
+###### <a name="flux_gitRepositories_additionalProperties_decryption_provider"></a>9.1.1.13.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption > provider`
 
 |          |                    |
 | -------- | ------------------ |
@@ -4530,6 +4598,7 @@ Must be one of:
 Must be one of:
 * "nginx"
 * "traefik"
+* "envoy"
 * "external"
 * "none"
 
