@@ -53,9 +53,15 @@ prometheusSpec:
       replacement: kubernetes # TODO: really needed?
 
     - source_labels:
-        - __address__
-      target_label: teutosla
+        - sla
+      regex: ^$
+      target_label: sla
       replacement: {{ .Values.global.serviceLevelAgreement }}
+    - source_labels:
+        - sla
+      regex: (.+)
+      target_label: teutosla
+      replacement: $1
     - source_labels:
         - __address__
       target_label: cluster
