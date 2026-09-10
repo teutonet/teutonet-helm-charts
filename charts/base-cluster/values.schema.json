@@ -8,7 +8,7 @@
       "properties": {
         "serviceLevelAgreement": {
           "type": "string",
-          "description": "The ServiceLevelAgreement with teutonet, will be applied to all alerts as label `teutosla`",
+          "description": "The ServiceLevelAgreement with teutonet, will be applied to all alerts as label `sla` (mirrored to `teutosla`), unless an alert already sets its own `sla` label",
           "enum": [
             "None",
             "24x7",
