@@ -29,12 +29,13 @@ spec:
     secretRef:
       name: {{ .Release.Name }}-kubeconfig
   install:
+    timeout: {{ include "t8s-cluster.helm.daemonSetTimeout" (dict "context" $) }}
     remediation:
       retries: -1
   uninstall:
     disableWait: true
   upgrade:
-    timeout: 5m
+    timeout: {{ include "t8s-cluster.helm.daemonSetTimeout" (dict "context" $) }}
   storageNamespace: kube-system
   targetNamespace: kube-system
   releaseName: csi

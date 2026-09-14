@@ -28,6 +28,15 @@
   {{- $ready | ternary "1h" "10s" -}}
 {{- end -}}
 
+{{- define "t8s-cluster.helm.daemonSetTimeout" -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
+  {{- $maxNodes := 0 -}}
+  {{- range $name, $nodePool := .Values.nodePools -}}
+    {{- $maxNodes = add $maxNodes (max (int $nodePool.replicas) (int (default $nodePool.replicas $nodePool.maxReplicas))) -}}
+  {{- end -}}
+  {{- printf "%ds" (max 300 (mul $maxNodes 60)) -}}
+{{- end -}}
+
 {{- define "t8s-cluster.cni" -}}
   {{- if eq .Values.cni "auto" -}}
     {{- if lookup "kustomize.toolkit.fluxcd.io/v1" "Kustomization" .Release.Namespace (printf "%s-cni" .Release.Name) -}}
