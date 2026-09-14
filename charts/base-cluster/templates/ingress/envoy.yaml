@@ -51,6 +51,10 @@ spec:
       replicas: {{ .Values.ingress.replicas }}
     resources: {{- include "common.resources" .Values.ingress | nindent 6 }}
 ---
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "ingress-controller-resources" "namespace" "ingress" "resource" (include "base-cluster.ingress.envoy.resources" $) "dependencies" (dict "ingress" "envoy-gateway-crds") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "ingress")) | nindent 0 }}
+{{- end -}}
+
+{{- define "base-cluster.ingress.envoy.resources" -}}
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
 metadata:
