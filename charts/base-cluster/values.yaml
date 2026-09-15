@@ -388,7 +388,9 @@ monitoring:
   tracing:
     enabled: false
     resourcesPreset: small
-    resources: {}
+    resources:
+      limits:
+        memory: 2Gi
     persistence:
       size: 10Gi
 
