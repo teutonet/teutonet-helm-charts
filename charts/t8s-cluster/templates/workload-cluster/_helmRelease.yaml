@@ -1,10 +1,9 @@
-{{- define "t8s-cluster.helm.resourceIntoCluster" -}}
+{{- define "t8s-cluster.helm._resourceIntoClusterBody" -}}
   {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
-  {{- $name := printf "%s-%s" .Release.Name .name -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: {{ $name }}
+  name: {{ .fullName }}
   namespace: {{ .Release.Namespace }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     {{- with .additionalLabels }}{{- toYaml . | nindent 4 }}{{- end }}
@@ -17,7 +16,7 @@ spec:
         kind: HelmRepository
         name: cetic
         namespace: flux-system
-  interval: {{ include "t8s-cluster.helm.dynamicInterval" (dict "name" $name "namespace" .Release.Namespace) }}
+  interval: {{ include "t8s-cluster.helm.dynamicInterval" (dict "name" .fullName "namespace" .Release.Namespace) }}
   driftDetection:
     mode: enabled
   {{- with .dependsOn }}
@@ -42,4 +41,29 @@ spec:
     {{- else }}
     static: {{ toYaml .resource | replace "{{" "{{ `{{` }}" | indent 6 }}
     {{- end }}
+{{- end -}}
+
+{{- define "t8s-cluster.helm.resourceIntoCluster" -}}
+  {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
+  {{- $fullName := printf "%s-%s" .Release.Name .name -}}
+  {{- $bodyArgs := dict "context" .context "fullName" $fullName "name" .name "resource" .resource "additionalLabels" .additionalLabels "dependsOn" .dependsOn "render" .render -}}
+  {{- if .waitForCluster }}
+apiVersion: fluxcd.controlplane.io/v1
+kind: ResourceSet
+metadata:
+  name: {{ $fullName }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    {{- if and .Release.IsUpgrade (not (lookup "fluxcd.controlplane.io/v1" "ResourceSet" .Release.Namespace $fullName)) }}
+    fluxcd.controlplane.io/reconcileEvery: 1m
+    {{- end }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- with .additionalLabels }}{{- toYaml . | nindent 4 }}{{- end }}
+spec:
+  {{- include "t8s-cluster.resourceSet.dependsOnCluster" (dict "context" .context) | nindent 2 }}
+  resources:
+    - {{- include "t8s-cluster.helm._resourceIntoClusterBody" $bodyArgs | nindent 6 }}
+  {{- else -}}
+  {{- include "t8s-cluster.helm._resourceIntoClusterBody" $bodyArgs -}}
+  {{- end }}
 {{- end -}}
