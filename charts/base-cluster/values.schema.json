@@ -750,6 +750,9 @@
         "grafana": {
           "type": "object",
           "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
             "adminPassword": {
               "type": "string"
             },

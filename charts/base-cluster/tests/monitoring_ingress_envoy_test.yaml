@@ -100,6 +100,7 @@ set:
   global.baseDomain: example.com
   global.clusterName: test
   monitoring.prometheus.enabled: true
+  monitoring.grafana.enabled: true
   monitoring.grafana.ingress.host: grafana
   monitoring.grafana.ingress.enabled: true
   monitoring.prometheus.ingress.host: prometheus

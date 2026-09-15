@@ -1,5 +1,8 @@
 {{- if and (include "base-cluster.ingress.hasEnvoy" $) .Values.monitoring.prometheus.enabled -}}
-{{- $names := list "grafana" "prometheus" -}}
+{{- $names := list "prometheus" -}}
+{{- if .Values.monitoring.grafana.enabled -}}
+  {{- $names = append $names "grafana" -}}
+{{- end -}}
 {{- if include "base-cluster.prometheus-stack.alertmanager.enabled" $ -}}
   {{- $names = append $names "alertmanager" -}}
 {{- end -}}

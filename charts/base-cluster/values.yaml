@@ -267,6 +267,7 @@ kyverno:
 monitoring:
   monitorAllNamespaces: true
   grafana:
+    enabled: false
     adminPassword: ""
     ingress:
       enabled: true
@@ -276,7 +277,9 @@ monitoring:
     additionalPlugins: []
     notifiers: []
     resourcesPreset: nano
-    resources: {}
+    resources:
+      limits:
+        memory: 1Gi
     persistence:
       enabled: false
       size: 10Gi
