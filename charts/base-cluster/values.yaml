@@ -276,7 +276,9 @@ monitoring:
     additionalPlugins: []
     notifiers: []
     resourcesPreset: nano
-    resources: {}
+    resources:
+      limits:
+        memory: 512Mi
     persistence:
       enabled: false
       size: 10Gi
