@@ -85,6 +85,33 @@ tests:
           path: spec.values.hubble.ui.podDisruptionBudget.enabled
           value: true
 
+  - it: install and upgrade timeout default to 300s when there are no node pools
+    set:
+      cni: cilium
+    asserts:
+      - equal:
+          path: spec.install.timeout
+          value: 300s
+      - equal:
+          path: spec.upgrade.timeout
+          value: 300s
+
+  - it: install and upgrade timeout scale with the summed node pool sizes
+    set:
+      cni: cilium
+      nodePools.workers.flavor: m1.medium
+      nodePools.workers.replicas: 2
+      nodePools.workers.maxReplicas: 5
+      nodePools.gpu.flavor: m1.medium
+      nodePools.gpu.replicas: 3
+    asserts:
+      - equal:
+          path: spec.install.timeout
+          value: 480s
+      - equal:
+          path: spec.upgrade.timeout
+          value: 480s
+
 ---
 suite: CNI calico explicit selection
 templates:

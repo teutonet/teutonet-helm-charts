@@ -30,12 +30,13 @@ spec:
       current: metadata.name != "cilium-operator" || (has(status.conditions) && status.conditions.exists(c, c.type == "Available" && c.status == "True"))
       inProgress: metadata.name == "cilium-operator" && (!has(status.conditions) || !status.conditions.exists(c, c.type == "Available" && c.status == "True"))
   install:
+    timeout: {{ include "t8s-cluster.helm.daemonSetTimeout" (dict "context" $) }}
     remediation:
       retries: -1
   uninstall:
     disableWait: true
   upgrade:
-    timeout: 5m
+    timeout: {{ include "t8s-cluster.helm.daemonSetTimeout" (dict "context" $) }}
   storageNamespace: kube-system
   targetNamespace: kube-system
   releaseName: cni
