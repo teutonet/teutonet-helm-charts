@@ -1,0 +1,49 @@
+suite: cert-manager ClusterIssuer http01 solver
+templates:
+  - templates/cert-manager/clusterissuer.yaml
+release:
+  name: base-cluster
+set:
+  certManager.email: admin@example.com
+tests:
+  - it: uses ingress http01 solver when provider is nginx
+    set:
+      ingress.provider: nginx
+    asserts:
+      - hasDocuments:
+          count: 2
+      - matchRegex:
+          path: spec.values.static
+          pattern: "http01:\\n\\s+ingress:\\n\\s+serviceType: ClusterIP"
+      - notMatchRegex:
+          path: spec.values.static
+          pattern: "gatewayHTTPRoute"
+
+  - it: uses ingress http01 solver when provider is traefik
+    set:
+      ingress.provider: traefik
+    asserts:
+      - matchRegex:
+          path: spec.values.static
+          pattern: "http01:\\n\\s+ingress:\\n\\s+serviceType: ClusterIP"
+      - notMatchRegex:
+          path: spec.values.static
+          pattern: "gatewayHTTPRoute"
+
+  - it: uses gatewayHTTPRoute http01 solver when provider is envoy
+    set:
+      ingress.provider: envoy
+    asserts:
+      - matchRegex:
+          path: spec.values.static
+          pattern: "http01:\\n\\s+gatewayHTTPRoute:\\n\\s+serviceType: ClusterIP\\n\\s+parentRefs:\\n\\s+- name: ingress-controller\\n\\s+namespace: ingress\\n\\s+sectionName: http\\n\\s+kind: Gateway"
+      - notMatchRegex:
+          path: spec.values.static
+          pattern: "http01:\\n\\s+ingress:"
+
+  - it: does not render when provider is none
+    set:
+      ingress.provider: none
+    asserts:
+      - hasDocuments:
+          count: 0

@@ -32,8 +32,18 @@ spec:
         {{- end }}
       {{- end }}
       - http01:
+          {{- if eq (include "base-cluster.ingress.hasEnvoy" .) "true" }}
+          gatewayHTTPRoute:
+            serviceType: ClusterIP
+            parentRefs:
+              - name: ingress-controller
+                namespace: ingress
+                sectionName: http
+                kind: Gateway
+          {{- else }}
           ingress:
             serviceType: ClusterIP
+          {{- end }}
     privateKeySecretRef:
       name: letsencrypt-{{ .name }}-account
     server: {{ .url | quote }}
