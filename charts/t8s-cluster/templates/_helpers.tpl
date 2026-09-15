@@ -48,3 +48,15 @@
     {{- .Values.cni -}}
   {{- end -}}
 {{- end -}}
+
+{{- define "t8s-cluster.resourceSet.dependsOnCluster" -}}
+  {{- $_ := mustMerge . (pick .context "Release") -}}
+dependsOn:
+  - apiVersion: cluster.x-k8s.io/v1beta2
+    kind: Cluster
+    name: {{ .Release.Name }}
+    namespace: {{ .Release.Namespace }}
+    ready: true
+    readyExpr: |
+      status.conditions.exists(c, c.type == "ControlPlaneAvailable" && c.status == "True")
+{{- end -}}

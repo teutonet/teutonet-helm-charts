@@ -1,4 +1,4 @@
-{{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "teuto-rbac" "resource" (include "t8s-cluster.rbac.teuto" (dict)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "rbac")) | nindent 0 -}}
+{{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "teuto-rbac" "resource" (include "t8s-cluster.rbac.teuto" (dict)) "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "rbac") "waitForCluster" true) | nindent 0 -}}
 
 {{- define "t8s-cluster.rbac.teuto" -}}
 apiVersion: rbac.authorization.k8s.io/v1

@@ -1,0 +1,99 @@
+suite: storage classes ResourceSet gating
+templates:
+  - templates/workload-cluster/storageClasses.yaml
+release:
+  name: my-cluster
+kubernetesProvider:
+  scheme:
+    t8s-engine.teuto.net/v1beta1/TeutonetesCloud:
+      gvr:
+        group: t8s-engine.teuto.net
+        version: v1beta1
+        resource: teutonetesclouds
+      namespaced: false
+  objects:
+    - apiVersion: t8s-engine.teuto.net/v1beta1
+      kind: TeutonetesCloud
+      metadata:
+        name: ffm3
+      spec:
+        volumeTypes:
+          default: standard
+          types:
+            standard: __DEFAULT__
+tests:
+  - it: wraps storage classes in a ResourceSet
+    set:
+      cloud: ffm3
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ResourceSet
+      - equal:
+          path: metadata.name
+          value: my-cluster-storageclasses
+      - isNullOrEmpty:
+          path: metadata.annotations
+      - equal:
+          path: spec.resources[0].kind
+          value: HelmRelease
+      - equal:
+          path: spec.resources[0].metadata.name
+          value: my-cluster-storageclasses
+      - matchRegex:
+          path: spec.resources[0].spec.values.static
+          pattern: "kind: StorageClass"
+
+  - it: sets the reconcile annotation on upgrade when the ResourceSet doesn't exist yet
+    set:
+      cloud: ffm3
+    release:
+      upgrade: true
+    asserts:
+      - equal:
+          path: metadata.annotations["fluxcd.controlplane.io/reconcileEvery"]
+          value: 1m
+
+  - it: omits the reconcile annotation when the ResourceSet already exists
+    set:
+      cloud: ffm3
+    release:
+      upgrade: true
+    kubernetesProvider:
+      scheme:
+        fluxcd.controlplane.io/v1/ResourceSet:
+          gvr:
+            group: fluxcd.controlplane.io
+            version: v1
+            resource: resourcesets
+          namespaced: true
+      objects:
+        - apiVersion: fluxcd.controlplane.io/v1
+          kind: ResourceSet
+          metadata:
+            name: my-cluster-storageclasses
+            namespace: NAMESPACE
+    asserts:
+      - isNullOrEmpty:
+          path: metadata.annotations
+
+  - it: gates on Cluster ControlPlaneAvailable
+    set:
+      cloud: ffm3
+    asserts:
+      - equal:
+          path: spec.dependsOn[0].apiVersion
+          value: cluster.x-k8s.io/v1beta2
+      - equal:
+          path: spec.dependsOn[0].kind
+          value: Cluster
+      - equal:
+          path: spec.dependsOn[0].name
+          value: my-cluster
+      - equal:
+          path: spec.dependsOn[0].ready
+          value: true
+      - matchRegex:
+          path: spec.dependsOn[0].readyExpr
+          pattern: ControlPlaneAvailable

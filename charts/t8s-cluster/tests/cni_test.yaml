@@ -12,21 +12,65 @@ kubernetesProvider:
         resource: helmreleases
       namespaced: true
 tests:
-  - it: renders HelmRelease when cni is cilium
+  - it: wraps the HelmRelease in a ResourceSet when cni is cilium
     set:
       cni: cilium
     asserts:
       - hasDocuments:
           count: 1
       - isKind:
-          of: HelmRelease
+          of: ResourceSet
+      - equal:
+          path: metadata.name
+          value: my-cluster-cni
+      - isNullOrEmpty:
+          path: metadata.annotations
+      - equal:
+          path: spec.resources[0].kind
+          value: HelmRelease
+      - equal:
+          path: spec.resources[0].metadata.name
+          value: my-cluster-cni
+
+  - it: sets the reconcile annotation on upgrade when the ResourceSet doesn't exist yet
+    set:
+      cni: cilium
+    release:
+      upgrade: true
+    asserts:
+      - equal:
+          path: metadata.annotations["fluxcd.controlplane.io/reconcileEvery"]
+          value: 1m
+
+  - it: gates on Cluster ControlPlaneAvailable
+    set:
+      cni: cilium
+    asserts:
+      - equal:
+          path: spec.dependsOn[0].apiVersion
+          value: cluster.x-k8s.io/v1beta2
+      - equal:
+          path: spec.dependsOn[0].kind
+          value: Cluster
+      - equal:
+          path: spec.dependsOn[0].name
+          value: my-cluster
+      - equal:
+          path: spec.dependsOn[0].namespace
+          value: NAMESPACE
+      - equal:
+          path: spec.dependsOn[0].ready
+          value: true
+      - matchRegex:
+          path: spec.dependsOn[0].readyExpr
+          pattern: ControlPlaneAvailable
 
   - it: interval is 10s when the HelmRelease does not exist yet
     set:
       cni: cilium
     asserts:
       - equal:
-          path: spec.interval
+          path: spec.resources[0].spec.interval
           value: 10s
 
   - it: interval is 10s when the HelmRelease exists but is not ready
@@ -45,7 +89,7 @@ tests:
                 status: "False"
     asserts:
       - equal:
-          path: spec.interval
+          path: spec.resources[0].spec.interval
           value: 10s
 
   - it: interval is 1h when the HelmRelease exists and is ready
@@ -64,7 +108,7 @@ tests:
                 status: "True"
     asserts:
       - equal:
-          path: spec.interval
+          path: spec.resources[0].spec.interval
           value: 1h
 
   - it: no output when cni is calico
@@ -74,15 +118,38 @@ tests:
       - hasDocuments:
           count: 0
 
+  - it: omits the reconcile annotation when the ResourceSet already exists
+    set:
+      cni: cilium
+    release:
+      upgrade: true
+    kubernetesProvider:
+      scheme:
+        fluxcd.controlplane.io/v1/ResourceSet:
+          gvr:
+            group: fluxcd.controlplane.io
+            version: v1
+            resource: resourcesets
+          namespaced: true
+      objects:
+        - apiVersion: fluxcd.controlplane.io/v1
+          kind: ResourceSet
+          metadata:
+            name: my-cluster-cni
+            namespace: NAMESPACE
+    asserts:
+      - isNullOrEmpty:
+          path: metadata.annotations
+
   - it: enables PodDisruptionBudgets for cilium-operator and hubble-ui
     set:
       cni: cilium
     asserts:
       - equal:
-          path: spec.values.operator.podDisruptionBudget.enabled
+          path: spec.resources[0].spec.values.operator.podDisruptionBudget.enabled
           value: true
       - equal:
-          path: spec.values.hubble.ui.podDisruptionBudget.enabled
+          path: spec.resources[0].spec.values.hubble.ui.podDisruptionBudget.enabled
           value: true
 
   - it: install and upgrade timeout default to 300s when there are no node pools
@@ -90,10 +157,10 @@ tests:
       cni: cilium
     asserts:
       - equal:
-          path: spec.install.timeout
+          path: spec.resources[0].spec.install.timeout
           value: 300s
       - equal:
-          path: spec.upgrade.timeout
+          path: spec.resources[0].spec.upgrade.timeout
           value: 300s
 
   - it: install and upgrade timeout scale with the summed node pool sizes
@@ -106,10 +173,10 @@ tests:
       nodePools.gpu.replicas: 3
     asserts:
       - equal:
-          path: spec.install.timeout
+          path: spec.resources[0].spec.install.timeout
           value: 480s
       - equal:
-          path: spec.upgrade.timeout
+          path: spec.resources[0].spec.upgrade.timeout
           value: 480s
 
 ---
@@ -119,14 +186,55 @@ templates:
 release:
   name: my-cluster
 tests:
-  - it: renders Kustomization when cni is calico
+  - it: wraps the Kustomization in a ResourceSet when cni is calico
     set:
       cni: calico
     asserts:
       - hasDocuments:
           count: 1
       - isKind:
-          of: Kustomization
+          of: ResourceSet
+      - equal:
+          path: metadata.name
+          value: my-cluster-cni
+      - isNullOrEmpty:
+          path: metadata.annotations
+      - equal:
+          path: spec.resources[0].kind
+          value: Kustomization
+      - equal:
+          path: spec.resources[0].metadata.name
+          value: my-cluster-cni
+
+  - it: sets the reconcile annotation on upgrade when the ResourceSet doesn't exist yet
+    set:
+      cni: calico
+    release:
+      upgrade: true
+    asserts:
+      - equal:
+          path: metadata.annotations["fluxcd.controlplane.io/reconcileEvery"]
+          value: 1m
+
+  - it: gates on Cluster ControlPlaneAvailable
+    set:
+      cni: calico
+    asserts:
+      - equal:
+          path: spec.dependsOn[0].apiVersion
+          value: cluster.x-k8s.io/v1beta2
+      - equal:
+          path: spec.dependsOn[0].kind
+          value: Cluster
+      - equal:
+          path: spec.dependsOn[0].name
+          value: my-cluster
+      - equal:
+          path: spec.dependsOn[0].ready
+          value: true
+      - matchRegex:
+          path: spec.dependsOn[0].readyExpr
+          pattern: ControlPlaneAvailable
 
   - it: no output when cni is cilium
     set:
@@ -134,3 +242,26 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+
+  - it: omits the reconcile annotation when the ResourceSet already exists
+    set:
+      cni: calico
+    release:
+      upgrade: true
+    kubernetesProvider:
+      scheme:
+        fluxcd.controlplane.io/v1/ResourceSet:
+          gvr:
+            group: fluxcd.controlplane.io
+            version: v1
+            resource: resourcesets
+          namespaced: true
+      objects:
+        - apiVersion: fluxcd.controlplane.io/v1
+          kind: ResourceSet
+          metadata:
+            name: my-cluster-cni
+            namespace: NAMESPACE
+    asserts:
+      - isNullOrEmpty:
+          path: metadata.annotations
