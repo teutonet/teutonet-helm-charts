@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/component: ingress
 spec:
   chart:
-    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "envoyGatewayCrds" "chart" "gateway-crds-helm" "context" $) | nindent 6 }}
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "envoy-gateway-crds" "chart" "gateway-crds-helm" "context" $) | nindent 6 }}
   interval: 1h
   driftDetection:
     mode: enabled
@@ -28,7 +28,7 @@ metadata:
     app.kubernetes.io/component: ingress
 spec:
   chart:
-    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "envoyGateway" "chart" "gateway-helm" "context" $) | nindent 6 }}
+    spec: {{- include "base-cluster.helm.chartSpec" (dict "repo" "envoy-gateway" "chart" "gateway-helm" "context" $) | nindent 6 }}
   interval: 1h
   driftDetection:
     mode: enabled
