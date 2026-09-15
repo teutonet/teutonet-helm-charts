@@ -118,6 +118,9 @@ spec:
         enabled: true
       podDisruptionBudget:
         enabled: true
+    {{- if eq (include "t8s-cluster.singleNode" (dict "context" $)) "true" }}
+      replicas: 1
+    {{- end }}
     {{- if .Values.controlPlane.hosted }}
       tolerations:
         - key: node.cluster.x-k8s.io/uninitialized

@@ -37,6 +37,15 @@
   {{- printf "%ds" (max 300 (mul $maxNodes 60)) -}}
 {{- end -}}
 
+{{- define "t8s-cluster.singleNode" -}}
+  {{- $_ := mustMerge . (pick .context "Values") -}}
+  {{- $maxWorkerNodes := 0 -}}
+  {{- range $name, $nodePool := .Values.nodePools -}}
+    {{- $maxWorkerNodes = add $maxWorkerNodes (max (int $nodePool.replicas) (int (default $nodePool.replicas $nodePool.maxReplicas))) -}}
+  {{- end -}}
+  {{- and .Values.controlPlane.singleNode (eq $maxWorkerNodes 0) | ternary true "" -}}
+{{- end -}}
+
 {{- define "t8s-cluster.cni" -}}
   {{- if eq .Values.cni "auto" -}}
     {{- if lookup "kustomize.toolkit.fluxcd.io/v1" "Kustomization" .Release.Namespace (printf "%s-cni" .Release.Name) -}}
