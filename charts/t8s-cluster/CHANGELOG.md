@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.13.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.12.1...t8s-cluster-v9.13.0) (2026-09-15)
+
+
+### Features
+
+* **t8s-cluster:** scale cni/csi HelmRelease timeout with node pool size ([#2388](https://github.com/teutonet/teutonet-helm-charts/issues/2388)) ([8e71702](https://github.com/teutonet/teutonet-helm-charts/commit/8e71702635db602ff3ce3557df503d3f8388fe69))
+
 ## [9.12.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.12.0...t8s-cluster-v9.12.1) (2026-09-14)
 
 
