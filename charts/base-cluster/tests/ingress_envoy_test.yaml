@@ -24,10 +24,10 @@ set:
   global.clusterName: test
   ingress.useProxyProtocol: false
 tests:
-  - it: renders CRDs HelmRelease, controller HelmRelease, GatewayClass, EnvoyProxy (shared), EnvoyProxy (service), Gateway, redirect HTTPRoute, and ClientTrafficPolicy
+  - it: renders CRDs HelmRelease, controller HelmRelease, and the wrapped GatewayClass/EnvoyProxy/Gateway/HTTPRoute/ClientTrafficPolicy resources
     asserts:
       - hasDocuments:
-          count: 8
+          count: 3
       - documentIndex: 0
         isKind:
           of: HelmRelease
@@ -64,128 +64,84 @@ tests:
           value: ingress
       - documentIndex: 2
         isKind:
-          of: GatewayClass
+          of: HelmRelease
       - documentIndex: 2
         equal:
           path: metadata.name
-          value: default
+          value: ingress-controller-resources
       - documentIndex: 2
         equal:
-          path: spec.controllerName
-          value: gateway.envoyproxy.io/gatewayclass-controller
+          path: spec.dependsOn[0].name
+          value: envoy-gateway-crds
       - documentIndex: 2
         equal:
-          path: spec.parametersRef.name
-          value: ingress-controller
-      - documentIndex: 3
-        isKind:
-          of: EnvoyProxy
-      - documentIndex: 3
-        equal:
-          path: metadata.name
-          value: ingress-controller
-      - documentIndex: 3
-        equal:
-          path: spec.provider.kubernetes.envoyDeployment.replicas
-          value: 2
-      - documentIndex: 3
-        equal:
-          path: spec.provider.kubernetes.envoyDeployment.pod.labels
-          value:
-            app.kubernetes.io/name: ingress-controller
-      - documentIndex: 4
-        isKind:
-          of: EnvoyProxy
-      - documentIndex: 4
-        equal:
-          path: metadata.name
-          value: ingress-controller-service
-      - documentIndex: 4
-        equal:
-          path: spec.mergeType
-          value: StrategicMerge
-      - documentIndex: 4
-        equal:
-          path: spec.provider.kubernetes.envoyService.name
-          value: ingress-controller
-      - documentIndex: 5
-        isKind:
-          of: Gateway
-      - documentIndex: 5
-        equal:
-          path: metadata.name
-          value: ingress-controller
-      - documentIndex: 5
-        equal:
-          path: spec.gatewayClassName
-          value: default
-      - documentIndex: 5
-        equal:
-          path: spec.infrastructure.parametersRef.name
-          value: ingress-controller-service
-      - documentIndex: 5
-        equal:
-          path: spec.allowedListeners.namespaces.from
-          value: All
-      - documentIndex: 5
-        equal:
-          path: spec.listeners[0].name
-          value: http
-      - documentIndex: 5
-        equal:
-          path: spec.listeners[0].port
-          value: 80
-      - documentIndex: 5
-        equal:
-          path: spec.listeners[1].name
-          value: https
-      - documentIndex: 5
-        equal:
-          path: spec.listeners[1].port
-          value: 443
-      - documentIndex: 5
-        equal:
-          path: spec.listeners[1].tls.certificateRefs[0].name
-          value: cluster-wildcard-certificate
-      - documentIndex: 6
-        isKind:
-          of: HTTPRoute
-      - documentIndex: 6
-        equal:
-          path: spec.parentRefs[0].sectionName
-          value: http
-      - documentIndex: 6
-        equal:
-          path: spec.rules[0].filters[0].type
-          value: RequestRedirect
-      - documentIndex: 6
-        equal:
-          path: spec.rules[0].filters[0].requestRedirect.scheme
-          value: https
-      - documentIndex: 7
-        isKind:
-          of: ClientTrafficPolicy
-      - documentIndex: 7
-        equal:
-          path: spec.enableProxyProtocol
-          value: false
-      - documentIndex: 7
-        equal:
-          path: spec.targetRefs[0].name
-          value: ingress-controller
+          path: spec.dependsOn[0].namespace
+          value: ingress
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "kind: GatewayClass"
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "controllerName: gateway.envoyproxy.io/gatewayclass-controller"
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "kind: EnvoyProxy"
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "name: ingress-controller-service"
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "mergeType: StrategicMerge"
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "replicas: 2"
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "kind: Gateway"
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "gatewayClassName: default"
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "name: cluster-wildcard-certificate"
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "kind: HTTPRoute"
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "type: RequestRedirect"
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "kind: ClientTrafficPolicy"
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "enableProxyProtocol: false"
 
   - it: pins loadBalancerIP and floating-ip annotation when ingress.IP is set
     set:
       ingress.IP: 10.0.0.100
     asserts:
-      - documentIndex: 4
-        equal:
-          path: spec.provider.kubernetes.envoyService.loadBalancerIP
-          value: 10.0.0.100
-      - documentIndex: 4
-        equal:
-          path: spec.provider.kubernetes.envoyService.annotations["loadbalancer.openstack.org/keep-floatingip"]
-          value: "true"
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: 'loadBalancerIP: "10\.0\.0\.100"'
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: 'loadbalancer.openstack.org/keep-floatingip: "true"'
 
   - it: does not render when provider is traefik
     set:
@@ -193,6 +149,13 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+
+  - it: wrapped resources HelmRelease depends on the CRDs HelmRelease so it is not applied before the CRDs are ready
+    asserts:
+      - documentIndex: 2
+        lengthEqual:
+          path: spec.dependsOn
+          count: 1
 
   - it: sets the OpenTelemetry tracing provider type when telemetry is auto-discovered
     kubernetesProvider:
@@ -213,11 +176,11 @@ tests:
               - name: otlp
                 port: "4317"
     asserts:
-      - documentIndex: 3
-        equal:
-          path: spec.telemetry.tracing.provider.type
-          value: OpenTelemetry
-      - documentIndex: 3
-        equal:
-          path: spec.telemetry.tracing.provider.backendRefs[0].name
-          value: telemetry-collector
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "type: OpenTelemetry"
+      - documentIndex: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "name: telemetry-collector"

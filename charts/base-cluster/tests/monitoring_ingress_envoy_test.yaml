@@ -115,13 +115,15 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: renders a ListenerSet and Certificate for grafana's customDomain
+  - it: renders a wrapped HelmRelease with a ListenerSet and Certificate for grafana's customDomain
     set:
       monitoring.grafana.ingress.customDomain: grafana.custom.example.com
     asserts:
+      - hasDocuments:
+          count: 1
       - documentIndex: 0
         isKind:
-          of: ListenerSet
+          of: HelmRelease
       - documentIndex: 0
         equal:
           path: metadata.name
@@ -132,50 +134,47 @@ tests:
           value: ingress
       - documentIndex: 0
         equal:
-          path: spec.parentRef
+          path: spec.dependsOn[0]
           value:
-            name: ingress-controller
+            name: ingress-controller-resources
             namespace: ingress
-            kind: Gateway
-            group: gateway.networking.k8s.io
       - documentIndex: 0
-        equal:
-          path: spec.listeners[0].hostname
-          value: grafana.custom.example.com
+        matchRegex:
+          path: spec.values.static
+          pattern: "kind: ListenerSet"
       - documentIndex: 0
-        equal:
-          path: spec.listeners[0].tls.certificateRefs[0].name
-          value: grafana-certificate
-      - documentIndex: 1
-        isKind:
-          of: Certificate
-      - documentIndex: 1
-        equal:
-          path: metadata.name
-          value: grafana-certificate
-      - documentIndex: 1
-        equal:
-          path: metadata.namespace
-          value: ingress
-      - documentIndex: 1
-        equal:
-          path: spec.dnsNames[0]
-          value: grafana.custom.example.com
-      - documentIndex: 1
-        equal:
-          path: spec.secretName
-          value: grafana-certificate
-      - hasDocuments:
-          count: 2
+        matchRegex:
+          path: spec.values.static
+          pattern: "name: grafana-listener-set"
+      - documentIndex: 0
+        matchRegex:
+          path: spec.values.static
+          pattern: 'hostname: "grafana\.custom\.example\.com"'
+      - documentIndex: 0
+        matchRegex:
+          path: spec.values.static
+          pattern: "name: grafana-certificate"
+      - documentIndex: 0
+        matchRegex:
+          path: spec.values.static
+          pattern: "kind: Certificate"
+      - documentIndex: 0
+        matchRegex:
+          path: spec.values.static
+          pattern: "kind: ClusterIssuer"
+      - documentIndex: 0
+        matchRegex:
+          path: spec.values.static
+          pattern: 'dnsNames:\n    - "grafana\.custom\.example\.com"'
 
-  - it: renders a ListenerSet and Certificate per component when all three have a customDomain
+  - it: renders a wrapped HelmRelease per component when all three have a customDomain
     set:
       monitoring.grafana.ingress.customDomain: grafana.custom.example.com
       monitoring.prometheus.ingress.customDomain: prometheus.custom.example.com
       monitoring.prometheus.alertmanager.ingress.customDomain: alertmanager.custom.example.com
     asserts:
       - hasDocuments:
-          count: 6
+          count: 3
 
   - it: does not render a ListenerSet when the whole monitoring stack is disabled
     set:

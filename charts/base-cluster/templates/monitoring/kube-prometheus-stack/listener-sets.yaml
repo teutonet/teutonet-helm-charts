@@ -7,12 +7,19 @@
   {{- $ingress := include "base-cluster.monitoring.ingress.config" (dict "name" $name "context" $) | fromYaml -}}
   {{- if and (include "base-cluster.monitoring.ingress.enabled" (dict "name" $name "context" $)) $ingress.customDomain }}
     {{- $secretName := include "base-cluster.certificate" (dict "name" $name "customDomain" $ingress.customDomain "context" $) }}
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" (printf "%s-listener-set" $name) "namespace" "ingress" "resource" (include "base-cluster.monitoring.listenerSet.resources" (dict "name" $name "ingress" $ingress "secretName" $secretName "context" $)) "dependencies" (dict "ingress" "ingress-controller-resources") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "ingress")) | nindent 0 }}
+---
+  {{- end }}
+{{- end }}
+{{- end }}
+
+{{- define "base-cluster.monitoring.listenerSet.resources" -}}
 apiVersion: gateway.networking.k8s.io/v1
 kind: ListenerSet
 metadata:
-  name: {{ printf "%s-listener-set" $name }}
+  name: {{ printf "%s-listener-set" .name }}
   namespace: ingress
-  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+  labels: {{- include "common.labels.standard" .context | nindent 4 }}
     app.kubernetes.io/component: ingress
 spec:
   parentRef:
@@ -22,7 +29,7 @@ spec:
     group: gateway.networking.k8s.io
   listeners:
     - name: main
-      hostname: {{ $ingress.customDomain | quote }}
+      hostname: {{ .ingress.customDomain | quote }}
       protocol: HTTPS
       port: 443
       tls:
@@ -30,17 +37,21 @@ spec:
         certificateRefs:
           - kind: Secret
             group: ""
-            name: {{ $secretName | quote }}
+            name: {{ .secretName | quote }}
       allowedRoutes:
         namespaces:
           from: All
 ---
+# TODO: cert-manager's gateway-shim only supports the cert-manager.io/cluster-issuer annotation on
+# ListenerSet from v1.20 (alpha-gated) onwards; this chart pins cert-manager v1.17.2. Once the chart
+# upgrades past that and the shim is stable, drop this hand-authored Certificate and annotate the
+# ListenerSet above instead.
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ $secretName }}
+  name: {{ .secretName }}
   namespace: ingress
-  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+  labels: {{- include "common.labels.standard" .context | nindent 4 }}
     app.kubernetes.io/component: ingress
 spec:
   issuerRef:
@@ -48,9 +59,6 @@ spec:
     kind: ClusterIssuer
     name: letsencrypt-production
   dnsNames:
-    - {{ $ingress.customDomain | quote }}
-  secretName: {{ $secretName | quote }}
----
-  {{- end }}
-{{- end }}
-{{- end }}
+    - {{ .ingress.customDomain | quote }}
+  secretName: {{ .secretName | quote }}
+{{- end -}}
