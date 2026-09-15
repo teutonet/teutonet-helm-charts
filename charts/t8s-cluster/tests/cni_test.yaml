@@ -96,6 +96,33 @@ tests:
           path: spec.upgrade.timeout
           value: 300s
 
+  - it: operator replicas is unset when controlPlane is not single-node
+    set:
+      cni: cilium
+      controlPlane.singleNode: false
+    asserts:
+      - notExists:
+          path: spec.values.operator.replicas
+
+  - it: operator replicas is 1 when controlPlane is single-node and there are no node pools
+    set:
+      cni: cilium
+      controlPlane.singleNode: true
+    asserts:
+      - equal:
+          path: spec.values.operator.replicas
+          value: 1
+
+  - it: operator replicas is unset when controlPlane is single-node but node pools add workers
+    set:
+      cni: cilium
+      controlPlane.singleNode: true
+      nodePools.workers.flavor: m1.medium
+      nodePools.workers.replicas: 1
+    asserts:
+      - notExists:
+          path: spec.values.operator.replicas
+
   - it: install and upgrade timeout scale with the summed node pool sizes
     set:
       cni: cilium
