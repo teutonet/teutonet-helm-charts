@@ -47,6 +47,7 @@ Use the following commands to create a kubeconfig for an account if it's not a u
 
 function generateKubeconfig() {
   local user="${1?Missing user parameter}"
+  user="${user#{{ include "common.names.fullname" . }}-}"
   local namespace="{{ .Release.Namespace }}"
   local cluster="$(kubectl config view --raw -o json | jq --arg context $(kubectl config current-context) -r '.contexts[] | select(.name == $context) | .context.cluster')"
 
