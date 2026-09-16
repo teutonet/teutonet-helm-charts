@@ -14,7 +14,7 @@
     {{- $storageClasses = append $storageClasses (include "t8s-cluster.storageclass" (dict "name" $name "type" $type "default" (eq $defaultClass $name))) -}}
   {{- end -}}
 
-  {{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "storageclasses" "resource" ($storageClasses | join "\n---\n") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "storage")) | nindent 0 -}}
+  {{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "storageclasses" "resource" ($storageClasses | join "\n---\n") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "storage") "waitForCluster" true) | nindent 0 -}}
 {{- end -}}
 
 {{- define "t8s-cluster.storageclass" -}}

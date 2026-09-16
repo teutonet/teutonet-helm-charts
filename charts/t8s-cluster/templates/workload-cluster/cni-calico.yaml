@@ -1,8 +1,27 @@
 {{- if eq (include "t8s-cluster.cni" .) "calico" }}
+{{- $name := printf "%s-cni" .Release.Name }}
+apiVersion: fluxcd.controlplane.io/v1
+kind: ResourceSet
+metadata:
+  name: {{ $name }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    {{- if and .Release.IsUpgrade (not (lookup "fluxcd.controlplane.io/v1" "ResourceSet" .Release.Namespace $name)) }}
+    fluxcd.controlplane.io/reconcileEvery: 1m
+    {{- end }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  {{- include "t8s-cluster.resourceSet.dependsOnCluster" (dict "context" $) | nindent 2 }}
+  resources:
+    - {{- include "t8s-cluster.cni.calico.kustomization" (dict "context" $ "fullName" $name) | nindent 6 }}
+{{- end }}
+
+{{- define "t8s-cluster.cni.calico.kustomization" -}}
+  {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: {{ printf "%s-cni" .Release.Name }}
+  name: {{ .fullName }}
   namespace: {{ .Release.Namespace}}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
@@ -16,4 +35,4 @@ spec:
   interval: 5m
   prune: true
   path: /manifests
-{{- end }}
+{{- end -}}

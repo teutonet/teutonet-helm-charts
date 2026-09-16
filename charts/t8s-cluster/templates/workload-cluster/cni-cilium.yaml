@@ -1,15 +1,33 @@
 {{- if eq (include "t8s-cluster.cni" .) "cilium" }}
 {{- $name := printf "%s-cni" .Release.Name }}
+apiVersion: fluxcd.controlplane.io/v1
+kind: ResourceSet
+metadata:
+  name: {{ $name }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    {{- if and .Release.IsUpgrade (not (lookup "fluxcd.controlplane.io/v1" "ResourceSet" .Release.Namespace $name)) }}
+    fluxcd.controlplane.io/reconcileEvery: 1m
+    {{- end }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  {{- include "t8s-cluster.resourceSet.dependsOnCluster" (dict "context" $) | nindent 2 }}
+  resources:
+    - {{- include "t8s-cluster.cni.cilium.helmRelease" (dict "context" $ "fullName" $name) | nindent 6 }}
+{{- end }}
+
+{{- define "t8s-cluster.cni.cilium.helmRelease" -}}
+  {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: {{ $name }}
+  name: {{ .fullName }}
   namespace: {{ .Release.Namespace}}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   chart:
-    spec: {{- include "common.helm.chartSpec" (dict "repo" "cilium" "repoNamespace" "flux-system" "chart" "cilium" "context" $) | nindent 6 }}
-  interval: {{ include "t8s-cluster.helm.dynamicInterval" (dict "name" $name "namespace" .Release.Namespace) }}
+    spec: {{- include "common.helm.chartSpec" (dict "repo" "cilium" "repoNamespace" "flux-system" "chart" "cilium" "context" .context) | nindent 6 }}
+  interval: {{ include "t8s-cluster.helm.dynamicInterval" (dict "name" .fullName "namespace" .Release.Namespace) }}
   driftDetection:
     mode: enabled
   kubeConfig:
@@ -130,4 +148,4 @@ spec:
     {{- end }}
     prometheus:
       enabled: true
-{{- end }}
+{{- end -}}
