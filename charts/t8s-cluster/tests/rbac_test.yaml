@@ -1,0 +1,82 @@
+suite: teuto RBAC ResourceSet gating
+templates:
+  - templates/workload-cluster/rbac/teuto-clusterrolebinding.yaml
+release:
+  name: my-cluster
+kubernetesProvider:
+  scheme:
+    helm.toolkit.fluxcd.io/v2/HelmRelease:
+      gvr:
+        group: helm.toolkit.fluxcd.io
+        version: v2
+        resource: helmreleases
+      namespaced: true
+tests:
+  - it: wraps the teuto ClusterRoleBinding HelmRelease in a ResourceSet
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ResourceSet
+      - equal:
+          path: metadata.name
+          value: my-cluster-teuto-rbac
+      - isNullOrEmpty:
+          path: metadata.annotations
+      - equal:
+          path: spec.resources[0].kind
+          value: HelmRelease
+      - equal:
+          path: spec.resources[0].metadata.name
+          value: my-cluster-teuto-rbac
+      - matchRegex:
+          path: spec.resources[0].spec.values.static
+          pattern: "kind: ClusterRoleBinding"
+
+  - it: sets the reconcile annotation on upgrade when the ResourceSet doesn't exist yet
+    release:
+      upgrade: true
+    asserts:
+      - equal:
+          path: metadata.annotations["fluxcd.controlplane.io/reconcileEvery"]
+          value: 1m
+
+  - it: omits the reconcile annotation when the ResourceSet already exists
+    kubernetesProvider:
+      scheme:
+        fluxcd.controlplane.io/v1/ResourceSet:
+          gvr:
+            group: fluxcd.controlplane.io
+            version: v1
+            resource: resourcesets
+          namespaced: true
+      objects:
+        - apiVersion: fluxcd.controlplane.io/v1
+          kind: ResourceSet
+          metadata:
+            name: my-cluster-teuto-rbac
+            namespace: NAMESPACE
+    asserts:
+      - isNullOrEmpty:
+          path: metadata.annotations
+
+  - it: gates on Cluster ControlPlaneAvailable
+    asserts:
+      - equal:
+          path: spec.dependsOn[0].apiVersion
+          value: cluster.x-k8s.io/v1beta2
+      - equal:
+          path: spec.dependsOn[0].kind
+          value: Cluster
+      - equal:
+          path: spec.dependsOn[0].name
+          value: my-cluster
+      - equal:
+          path: spec.dependsOn[0].namespace
+          value: NAMESPACE
+      - equal:
+          path: spec.dependsOn[0].ready
+          value: true
+      - matchRegex:
+          path: spec.dependsOn[0].readyExpr
+          pattern: ControlPlaneAvailable
