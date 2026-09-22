@@ -502,6 +502,7 @@ reflector:
 rbac:
   roles: {}
   accounts: {}
+  groups: {}
 
 backup:
   provider: null
