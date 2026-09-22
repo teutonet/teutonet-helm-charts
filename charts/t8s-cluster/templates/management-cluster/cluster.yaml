@@ -15,7 +15,7 @@ spec:
   customerID: {{ .Values.metadata.customerID }}
   customerName: {{ .Values.metadata.customerName }}
   {{- with .Values.metadata.friendlyName }}
-  friendlyName: {{ . }}
+  friendlyName: {{ . | quote }}
   {{- end }}
   controlPlane:
     singleNode: {{ .Values.controlPlane.singleNode }}

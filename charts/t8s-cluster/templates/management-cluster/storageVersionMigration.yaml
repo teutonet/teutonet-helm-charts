@@ -1,6 +1,6 @@
 {{- $kubeconfigSecret := printf "%s-kubeconfig" .Release.Name -}}
 {{- if and (semverCompare ">=1.36.0" (include "t8s-cluster.k8s-version" .)) (semverCompare ">=1.36.0" .Capabilities.KubeVersion.Version) -}}
-{{- $name := printf "%s-storage-version-migration" .Release.Name -}}
+{{- $name := printf "%s-svm" .Release.Name | trunc 52 | trimSuffix "-" -}}
 {{- $minute := mod (atoi (adler32sum (printf "%s/%s" .Release.Namespace .Release.Name))) 60 -}}
 {{- $managedByLabel := "t8s-cluster-storage-version-migration" -}}
 {{- $busyboxImage := include "common.images.image" (dict "imageRoot" .Values.global.busybox.image "global" .Values.global) -}}

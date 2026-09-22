@@ -79,3 +79,15 @@ tests:
       - equal:
           path: spec.quotas.floatingIPs
           value: -1
+
+  - it: quotes friendlyName so a colon in it does not break the rendered YAML
+    set:
+      metadata.customerID: 12345
+      cloud: my-cloud
+      metadata.friendlyName: "prod (prod): prod prod$@.\\"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.friendlyName
+          value: "prod (prod): prod prod$@.\\"
