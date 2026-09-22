@@ -46,10 +46,20 @@ spec:
       valuesKey: cloud.conf
     - <<: *valuesFrom
       targetPath: cloudConfig.metadata.hash
-  {{- if .Values.controlPlane.hosted }}
   postRenderers:
     - kustomize:
         patches:
+          # TODO: drop once https://github.com/kubernetes/cloud-provider-openstack/pull/3228 is merged and released; it restores this nodes delete permission upstream
+          - target:
+              kind: ClusterRole
+            patch: |
+              - op: test
+                path: /rules/2/resources/0
+                value: nodes
+              - op: add
+                path: /rules/2/verbs/-
+                value: delete
+          {{- if .Values.controlPlane.hosted }}
           - target:
               kind: DaemonSet
             patch: |
@@ -61,7 +71,7 @@ spec:
               - op: move
                 from: /spec/updateStrategy
                 path: /spec/strategy
-  {{- end }}
+          {{- end }}
   values:
     priorityClassName: system-cluster-critical
   {{- if .Values.controlPlane.hosted }}
