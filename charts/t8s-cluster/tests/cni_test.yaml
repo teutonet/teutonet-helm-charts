@@ -11,6 +11,15 @@ kubernetesProvider:
         version: v2
         resource: helmreleases
       namespaced: true
+    gateway.networking.k8s.io/v1/Gateway:
+      gvr:
+        group: gateway.networking.k8s.io
+        version: v1
+        # not the real API plural ("gateways"): helm-unittest's fake client derives
+        # the storage bucket via meta.UnsafeGuessKindToResource, which naively turns
+        # any Kind ending in "y" into "...ies", so it must match here or Get finds nothing
+        resource: gatewaies
+      namespaced: true
 tests:
   - it: renders HelmRelease when cni is cilium
     set:
@@ -95,6 +104,75 @@ tests:
       - equal:
           path: spec.upgrade.timeout
           value: 300s
+
+  - it: operator replicas is unset when controlPlane is not single-node
+    set:
+      cni: cilium
+      controlPlane.singleNode: false
+    asserts:
+      - notExists:
+          path: spec.values.operator.replicas
+
+  - it: operator replicas is 1 when controlPlane is single-node and there are no node pools
+    set:
+      cni: cilium
+      controlPlane.singleNode: true
+    asserts:
+      - equal:
+          path: spec.values.operator.replicas
+          value: 1
+
+  - it: operator replicas is unset when controlPlane is single-node but node pools add workers
+    set:
+      cni: cilium
+      controlPlane.singleNode: true
+      nodePools.workers.flavor: m1.medium
+      nodePools.workers.replicas: 1
+    asserts:
+      - notExists:
+          path: spec.values.operator.replicas
+
+  - it: operator replicas is 1 when controlPlane is hosted with exactly one worker node
+    set:
+      cni: cilium
+      controlPlane.hosted: true
+      controlPlane.singleNode: false
+      nodePools.workers.flavor: m1.medium
+      nodePools.workers.replicas: 1
+    kubernetesProvider:
+      objects:
+        - apiVersion: gateway.networking.k8s.io/v1
+          kind: Gateway
+          metadata:
+            name: controlplane
+            namespace: capi-hosted-control-plane-system
+          spec:
+            listeners:
+              - hostname: "*.example.com"
+    asserts:
+      - equal:
+          path: spec.values.operator.replicas
+          value: 1
+
+  - it: operator replicas is unset when controlPlane is hosted with more than one worker node
+    set:
+      cni: cilium
+      controlPlane.hosted: true
+      nodePools.workers.flavor: m1.medium
+      nodePools.workers.replicas: 2
+    kubernetesProvider:
+      objects:
+        - apiVersion: gateway.networking.k8s.io/v1
+          kind: Gateway
+          metadata:
+            name: controlplane
+            namespace: capi-hosted-control-plane-system
+          spec:
+            listeners:
+              - hostname: "*.example.com"
+    asserts:
+      - notExists:
+          path: spec.values.operator.replicas
 
   - it: install and upgrade timeout scale with the summed node pool sizes
     set:
