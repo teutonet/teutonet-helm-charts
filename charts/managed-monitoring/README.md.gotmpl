@@ -1,0 +1,24 @@
+<!-- vim: set ft=markdown: -->
+{{ template "chart.header" . }}
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+{{ template "chart.maintainersSection" . }}
+
+## Usage
+
+This chart is installed on the **management cluster**, once per workload cluster, into that cluster's own CAPI namespace (the
+same namespace as its `<cluster>-kubeconfig` secret). It renders two `HelmRelease`s targeting the workload cluster remotely via
+`spec.kubeConfig` (so the workload cluster itself doesn't need Flux installed):
+
+- a copy of `prometheus.existingSecret.name` (which must already exist on the management cluster, in this release's own
+  namespace) into the workload cluster as a Secret named `prometheus-write`
+- the metrics agent itself, which scrapes `teuto-cnpg`-managed database and operator pods and remote-writes to
+  `prometheus.url`, authenticating with the copied secret
+
+{{ .Files.Get "values.md" }}

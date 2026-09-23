@@ -1,0 +1,26 @@
+apiVersion: v2
+name: managed-monitoring
+description: >-
+  Deploys the metrics-forwarding agent for a managed service (e.g. teuto-cnpg databases)
+  into a workload cluster remotely from the management cluster, without requiring
+  Flux on the workload cluster itself.
+maintainers:
+  - email: cwr@teuto.net
+    name: cwrau
+  - email: mw@teuto.net
+    name: marvinWolff
+  - email: st@teuto.net
+    name: tasches
+type: application
+version: 0.1.0
+dependencies:
+  - name: common
+    repository: oci://ghcr.io/teutonet/teutonet-helm-charts
+    version: 2.2.0
+sources:
+  - https://github.com/teutonet/teutonet-helm-charts/tree/managed-monitoring-v0.1.0/charts/managed-monitoring
+  - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/managed-monitoring
+annotations:
+  artifacthub.io/images: |-
+    - image: docker.io/grafana/alloy:v1.19.2                                                                                                         #  default/HelmRelease/managed-monitoring-ma/teuto-managed-operators/Deployment/metrics-agent.yaml
+    - image: quay.io/prometheus-operator/prometheus-config-reloader:v0.91.0@sha256:7d9e4eea5f1139e602508871f422b0116c60e87c662f3dcd234d5ab60cd0d8c1  #  default/HelmRelease/managed-monitoring-ma/teuto-managed-operators/Deployment/metrics-agent.yaml

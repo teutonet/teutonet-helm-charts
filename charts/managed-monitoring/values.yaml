@@ -1,0 +1,22 @@
+global:
+  helmRepositories:
+    grafana:
+      url: https://grafana.github.io/helm-charts
+      charts:
+        alloy: 1.12.1
+    cetic:
+      url: https://cetic.github.io/helm-charts
+
+targetCluster:
+  kubeconfigSecretName: ""
+
+namespace: teuto-managed-operators
+
+prometheus:
+  url: https://prometheus.teuto.net:9090/api/v1/write
+  existingSecret:
+    name: ""
+
+resources:
+  resourcesPreset: nano
+  resources: {}
