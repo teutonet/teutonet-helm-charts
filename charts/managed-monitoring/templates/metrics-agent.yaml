@@ -1,0 +1,161 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: {{ printf "%s-ma" .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: metrics-agent
+spec:
+  chart:
+    spec: {{- include "common.helm.chartSpec" (dict "repo" "grafana" "repoNamespace" "flux-system" "chart" "alloy" "context" $) | nindent 6 }}
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  dependsOn:
+    - name: {{ printf "%s-pw" .Release.Name }}
+      namespace: {{ .Release.Namespace }}
+  kubeConfig:
+    secretRef:
+      name: {{ include "managed-monitoring.kubeconfigSecretName" $ }}
+  install:
+    timeout: 10m0s
+    remediation:
+      retries: -1
+  upgrade:
+    timeout: 10m0s
+  uninstall:
+    disableWait: true
+  storageNamespace: {{ .Values.namespace }}
+  targetNamespace: {{ .Values.namespace }}
+  releaseName: metrics-agent
+  values:
+    fullnameOverride: metrics-agent
+    alloy:
+      stabilityLevel: experimental
+      resources: {{- include "common.resources" .Values.resources | nindent 8 }}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      extraEnv:
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: prometheus-write
+              key: username
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: prometheus-write
+              key: password
+      configMap:
+        content: |
+          discovery.kubernetes "pods" {
+            role = "pod"
+
+            selectors {
+              role  = "pod"
+              label = "cnpg.io/podRole=instance"
+            }
+          }
+
+          discovery.kubernetes "operator" {
+            role = "pod"
+
+            selectors {
+              role  = "pod"
+              label = "app.kubernetes.io/instance=cloudnative-pg"
+            }
+          }
+
+          discovery.relabel "databases" {
+            targets = discovery.kubernetes.pods.targets
+
+            rule {
+              source_labels = ["__meta_kubernetes_namespace"]
+              target_label  = "db_cluster_namespace"
+            }
+            rule {
+              source_labels = ["__meta_kubernetes_pod_label_cnpg_io_cluster"]
+              target_label  = "db_cluster"
+            }
+          }
+
+          discovery.relabel "metrics" {
+            targets = array.concat(discovery.relabel.databases.output, discovery.kubernetes.operator.targets)
+
+            rule {
+              action = "labeldrop"
+              regex  = "^instance$"
+            }
+
+            rule {
+              source_labels = ["__meta_kubernetes_pod_name"]
+              target_label  = "pod_name"
+            }
+
+            rule {
+              source_labels = ["__meta_kubernetes_pod_ip", "__meta_kubernetes_pod_container_port_number"]
+              separator     = ":"
+              target_label  = "__address__"
+            }
+
+            rule {
+              source_labels = ["__meta_kubernetes_pod_container_port_name"]
+              regex         = "^metrics$"
+              action        = "keep"
+            }
+          }
+
+          prometheus.remote_write "ffm" {
+            endpoint {
+              url = {{ .Values.prometheus.url | quote }}
+              basic_auth {
+                username = sys.env("USERNAME")
+                password = sys.env("PASSWORD")
+              }
+            }
+          }
+
+          prometheus.relabel "identity" {
+            forward_to = [prometheus.remote_write.ffm.receiver]
+
+            rule {
+              action       = "replace"
+              target_label = "cluster"
+              replacement  = {{ trimSuffix "-mm" .Release.Name | quote }}
+            }
+
+            rule {
+              action       = "replace"
+              target_label = "cluster_namespace"
+              replacement  = {{ .Release.Namespace | quote }}
+            }
+          }
+
+          prometheus.scrape "pods" {
+            job_name        = "managed_services"
+            targets         = discovery.relabel.metrics.output
+            scrape_interval = "30s"
+            forward_to      = [prometheus.relabel.identity.receiver]
+          }
+    crds:
+      create: false
+    rbac:
+      # the chart concatenates both into one ClusterRole and can't render an empty clusterRules, so pod read access is split across them
+      rules:
+        - apiGroups:
+            - ""
+          resources:
+            - pods
+          verbs:
+            - get
+      clusterRules:
+        - apiGroups:
+            - ""
+          resources:
+            - pods
+          verbs:
+            - list
+            - watch
+    controller:
+      type: deployment

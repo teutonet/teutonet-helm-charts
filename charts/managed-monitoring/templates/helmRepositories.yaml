@@ -1,0 +1,12 @@
+{{/*
+The 'grafana' and 'cetic' HelmRepositories referenced by the other templates in this chart already exist centrally in
+flux-system on the management cluster -- this chart never creates them. This block only self-renders them (into the fake
+'flux-system' namespace) when Release.Namespace is "default", i.e. during local/CI template validation with no live cluster,
+so tooling that resolves HelmRelease sourceRefs against this chart's own rendered output (e.g. recursive template validation,
+deprecated-API scanning) has something to resolve against.
+*/}}
+{{ if eq .Release.Namespace "default" -}}
+  {{- $release := mustDeepCopy .Release -}}
+  {{- $release = set $release "Namespace" "flux-system" -}}
+  {{- include "common.helm.repositories" (dict "context" (dict "Values" .Values "Chart" .Chart "Release" $release)) -}}
+{{- end -}}
