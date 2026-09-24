@@ -59,17 +59,10 @@ tests:
           path: spec.values.ports.web.proxyProtocol.insecure
           value: false
 
-  - it: renders additional ports from ingress.extraPorts
+  - it: renders additional ports from ingress.extraPorts, applying defaults
     set:
-      ingress.extraPorts.mqtt.expose.default: true
-      ingress.extraPorts.mqtt.exposedPort: 1883
-      ingress.extraPorts.mqtt.port: 1883
-      ingress.extraPorts.mqtt.protocol: TCP
-      ingress.extraPorts.mqtts.expose.default: true
-      ingress.extraPorts.mqtts.exposedPort: 8883
+      ingress.extraPorts.mqtt: 1883
       ingress.extraPorts.mqtts.port: 8883
-      ingress.extraPorts.mqtts.protocol: TCP
-      ingress.extraPorts.mqtts.proxyProtocol.insecure: true
     asserts:
       - equal:
           path: spec.values.ports.mqtt
@@ -79,6 +72,8 @@ tests:
             exposedPort: 1883
             port: 1883
             protocol: TCP
+            proxyProtocol:
+              insecure: true
       - equal:
           path: spec.values.ports.mqtts
           value:
@@ -89,6 +84,15 @@ tests:
             protocol: TCP
             proxyProtocol:
               insecure: true
+
+  - it: extraPorts follow the same proxyProtocol setting as the builtin ports
+    set:
+      ingress.useProxyProtocol: false
+      ingress.extraPorts.mqtt: 1883
+    asserts:
+      - equal:
+          path: spec.values.ports.mqtt.proxyProtocol.insecure
+          value: false
 
   - it: literal boolean true override passes through unchanged
     set:
