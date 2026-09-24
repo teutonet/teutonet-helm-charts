@@ -16,6 +16,13 @@ tests:
       - failedTemplate:
           errorMessage: "Role 'nonexistent-role' doesn't exist, used in account 'myaccount'"
 
+  - it: fails when group references undefined role
+    set:
+      rbac.groups.my-group.clusterRoles[0]: nonexistent-role
+    asserts:
+      - failedTemplate:
+          errorMessage: "Role 'nonexistent-role' doesn't exist, used in group 'my-group'"
+
   - it: fails when role defined but not used by any account
     values:
       - fixtures/rbac-pod-reader-role.yaml

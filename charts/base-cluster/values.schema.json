@@ -1524,32 +1524,16 @@
         },
         "accounts": {
           "type": "object",
-          "description": "A map of an account to it's (Cluster-)Roles",
+          "description": "A map of an account (a user's email, or another OIDC identity name) to it's (Cluster-)Roles",
           "additionalProperties": {
-            "type": "object",
-            "properties": {
-              "roles": {
-                "type": "object",
-                "description": "A map of a role to it's intended namespaces",
-                "additionalProperties": {
-                  "type": "array",
-                  "additionalItems": {
-                    "type": "string"
-                  },
-                  "minItems": 1
-                },
-                "minProperties": 1
-              },
-              "clusterRoles": {
-                "type": "array",
-                "additionalItems": {
-                  "type": "string"
-                },
-                "minItems": 1
-              }
-            },
-            "minProperties": 1,
-            "additionalProperties": false
+            "$ref": "#/$defs/rbacSubjectRoles"
+          }
+        },
+        "groups": {
+          "type": "object",
+          "description": "A map of an OIDC group name to it's (Cluster-)Roles",
+          "additionalProperties": {
+            "$ref": "#/$defs/rbacSubjectRoles"
           }
         }
       },
@@ -1886,6 +1870,32 @@
           "type": "boolean"
         }
       ]
+    },
+    "rbacSubjectRoles": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "object",
+          "description": "A map of a role to it's intended namespaces",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "minProperties": 1
+        },
+        "clusterRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
     }
   }
 }

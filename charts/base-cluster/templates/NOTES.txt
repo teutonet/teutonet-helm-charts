@@ -43,12 +43,25 @@ Password: $ kubectl -n monitoring get secret {{ $secretName | quote }} -o json |
 {{- if .Values.rbac.accounts }}
 
 ===
-Use the following commands to create a kubeconfig for an account if it's not a user with an email, for that you use OIDC as per your hoster;
+Use the following commands to create a kubeconfig for an account, this requires
+[kubelogin](https://github.com/int128/kubelogin) (`kubectl oidc-login`) to be
+installed and needs the issuer url of your OIDC provider as per your hoster;
+
+Your OIDC provider may prefix or suffix the username/group claims (e.g.
+"oidc:someone@example.com" instead of "someone@example.com") before the
+apiserver sees them, so the "rbac.accounts" name you bind against might need
+to include that. If it's not working, ask your kubernetes hoster or check the
+--oidc-username-claim/--oidc-username-prefix/--oidc-groups-claim/--oidc-groups-prefix
+flags on your apiserver;
+
+Note that "$user" below is only a local label for the generated kubeconfig
+context, the actually authenticated identity is whoever completes the
+interactive OIDC login in the browser, and its token is cached by
+kubelogin per issuer/client, not per "$user";
 
 function generateKubeconfig() {
-  local user="${1?Missing user parameter}"
-  user="${user#{{ include "common.names.fullname" . }}-}"
-  local namespace="{{ .Release.Namespace }}"
+  local user="${1:?Missing user parameter}"
+  local issuer="${2:?Missing issuer parameter}"
   local cluster="$(kubectl config view --raw -o json | jq --arg context $(kubectl config current-context) -r '.contexts[] | select(.name == $context) | .context.cluster')"
 
   cat - <<EOF
@@ -68,10 +81,24 @@ current-context: ${user}@${cluster}
 users:
 - name: ${user}@${cluster}
   user:
-    token: $(kubectl -n $namespace get secret "{{ include "common.names.fullname" . }}-$user" -o jsonpath={.data.token} | base64 -d)
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      command: timeout
+      args:
+        - 1m
+        - kubectl
+        - oidc-login
+        - get-token
+        - --oidc-issuer-url=${issuer}
+        - --token-cache-storage=keyring
+        - --oidc-client-id=kubernetes
+        - --oidc-extra-scope=email
+        - --oidc-extra-scope=groups
+        - --oidc-extra-scope=offline_access
+        - --open-url-after-authentication=
 EOF
 }
 
 # example usage:
-$ generateKubeconfig {{ .Values.rbac.accounts | keys | first }}
+$ generateKubeconfig {{ .Values.rbac.accounts | keys | first }} https://your-oidc-issuer.example.com
 {{- end -}}
