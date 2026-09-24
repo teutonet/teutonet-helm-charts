@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 12.4.0](https://img.shields.io/badge/Version-12.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 13.0.0](https://img.shields.io/badge/Version-13.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster. This chart bootstraps a cluster with the shared components every teuto.net cluster needs. It is managed via Flux and intended to be installed once, after which Flux takes over further reconciliation of the chart itself.
 
@@ -23,7 +23,7 @@ The `.x.x` part of the versions can be left as is, helm uses that as a range. If
 git init
 
 # create empty cluster HelmRelease;
-flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 12.x.x > cluster.yaml
+flux create helmrelease --export base-cluster -n flux-system --source HelmRepository/teuto-net.flux-system --chart base-cluster --chart-version 13.x.x > cluster.yaml
 
 # maybe use the following name for your cluster;
 kubectl get node -o jsonpath='{.items[0].metadata.annotations.cluster\.x-k8s\.io/cluster-name}'
@@ -50,7 +50,7 @@ helm install -n flux-system flux flux2 --repo https://fluxcd-community.github.io
 
 # manual initial installation of the chart, afterwards the chart takes over
 # after the installation finished, follow the on-screen instructions to configure your flux, distribute KUBECONFIGs, ...
-helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 12.x.x --values <(cat cluster.yaml | yq -y .spec.values)
+helm install -n flux-system base-cluster oci://ghcr.io/teutonet/teutonet-helm-charts/base-cluster --version 13.x.x --values <(cat cluster.yaml | yq -y .spec.values)
 
 # you can use this command to get the instructions again
 # e.g. when adding users, gitRepositories, ...
@@ -108,16 +108,36 @@ which is also supported by [cert-manager](https://cert-manager.io/docs/configura
 
 ### Component [ingress](#ingress)
 
-The chart supports two ingress controllers:
+The chart supports three ingress controllers:
 
-1. [`nginx` ingress-controller](https://docs.nginx.com/nginx-ingress-controller) (default)
+1. [`nginx` ingress-controller](https://docs.nginx.com/nginx-ingress-controller)
    - Works with `IngressClassName: nginx` or if none is defined
    - Provides built-in metrics and tracing support
 
-2. [`traefik`](https://traefik.io) (recommended)
+2. [`traefik`](https://traefik.io)
    - Works with `IngressClassName: ingress-controller` or if none is defined
    - Provides built-in metrics and tracing support
    - Also supports [Gateway API](https://gateway-api.sigs.k8s.io)
+
+3. [`envoy`](https://gateway.envoyproxy.io) (default)
+   - [Gateway API](https://gateway-api.sigs.k8s.io)-based, deployed via [Envoy Gateway](https://gateway.envoyproxy.io)
+   - Full feature parity with `traefik` for IP handling, resources and proxy-protocol
+   - Tracing requires the OTLP endpoint to be auto-discovered (the default): envoy
+     wires up tracing via a Gateway API-style backend reference to the discovered
+     collector Service, whereas `traefik`/`nginx` accept any host:port. Setting
+     `global.telemetry.otlp.endpoint` explicitly is not yet supported with `envoy`
+     and fails the template render
+   - `customDomain` on the grafana/prometheus/alertmanager ingresses is served via a
+     per-component [Gateway API `ListenerSet`](https://gateway-api.sigs.k8s.io/geps/gep-1713/)
+     attached to the shared `Gateway`, each with its own cert-manager-issued certificate;
+     requires the cluster's Gateway API CRDs to include `ListenerSet` (Gateway API >= v1.5)
+   - Migrates cleanly from `traefik`: same `ingress` namespace, no namespace deletion, and
+     the existing Service - including its LoadBalancer IP - keeps being used as-is (reuse
+     comes from `envoy` targeting the same Service name/namespace as `traefik`, not from
+     the `helm.sh/resource-policy: keep` annotation, which only stops Helm from deleting
+     the Service when the `traefik` HelmRelease is removed)
+   - Cannot be adopted directly from `nginx` - there is no dual-mode path for that
+     combination, migrate to `traefik` first, then to `envoy`
 
 #### TLS
 
@@ -131,7 +151,7 @@ The chart supports two ingress controllers:
 
 If you want to make sure that, in the event of a catastrophic failure, you keep the
 same IP address, you should roll this out, get the assigned IP
-(`kubectl -n ingress-nginx get svc ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress}'` for nginx or `kubectl -n ingress get svc ingress-controller -o jsonpath='{.status.loadBalancer.ingress}'` for traefik)
+(`kubectl -n ingress-nginx get svc ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress}'` for nginx or `kubectl -n ingress get svc ingress-controller -o jsonpath='{.status.loadBalancer.ingress}'` for traefik or envoy)
 and set `.ingress.IP=<ip>` in the values. This makes sure the IP is kept in your
 project (may incur cost!), which means you can reuse it later or after recovery.
 
@@ -246,7 +266,7 @@ output of `helm -n flux-system get notes base-cluster`
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v12.4.0/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v13.0.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -444,6 +464,44 @@ of `.monitoring.tracing.ingester.<field>`
 
 - This release disables the trivy-operator by default.
   To continue using the operator set `.monitoring.securityScanning.enabled` to `true`.
+
+### 12.x.x -> 13.0.0
+
+This release makes [envoy](https://gateway.envoyproxy.io) (deployed via
+[Envoy Gateway](https://gateway.envoyproxy.io)) the default ingress provider instead
+of `traefik`.
+
+If you are currently on `traefik` (the previous default) and don't change anything,
+you will be switched over to `envoy` on the next reconcile.
+
+This is a clean migration: `envoy` uses the same `ingress` namespace and the same
+`ingress-controller` Service name as `traefik`, so the existing Service - including its
+LoadBalancer IP - keeps being used as-is; no namespace gets deleted, and no new Service
+needs to be provisioned. The `helm.sh/resource-policy: keep` annotation already present
+on the `traefik` Service only prevents Helm from deleting it when the `traefik`
+HelmRelease is removed - the reuse itself comes from `envoy` targeting that same
+name/namespace, not from the annotation. There will still be a short downtime while the
+new controller becomes ready.
+
+Because the `default` `GatewayClass` is rendered by `base-cluster`'s own release under
+`envoy` but by the nested `ingress-controller` release under `traefik`, the two
+HelmReleases reconciling out of order during the exact cutover moment can cause a
+transient Helm ownership-conflict error on that one object; it self-heals on the next
+reconcile once the old release's prune and the new release's create have both settled.
+
+If you are currently on `nginx`, you cannot switch directly to `envoy`; there is no
+dual-mode path for that combination. Migrate to `traefik` first (see the
+`7.x.x -> 8.0.0` notes above), then migrate to `envoy` afterwards.
+
+`customDomain` on the grafana/prometheus/alertmanager ingresses now works with `envoy`
+too, via a per-component `ListenerSet` attached to the shared `Gateway`. This requires
+the cluster's Gateway API CRDs to include the `ListenerSet` kind (Gateway API >= v1.5).
+If your cluster's CRDs aren't updated yet, stay on `traefik` for now:
+
+```yaml
+ingress:
+  provider: traefik
+```
 # base cluster configuration
 
 **Title:** base cluster configuration
@@ -481,7 +539,7 @@ of `.monitoring.tracing.ingester.<field>`
 
 | Property                                                  | Pattern | Type             | Deprecated | Definition                                                                                                                       | Title/Description                                                                                                                                                                             |
 | --------------------------------------------------------- | ------- | ---------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| - [serviceLevelAgreement](#global_serviceLevelAgreement ) | No      | enum (of string) | No         | -                                                                                                                                | The ServiceLevelAgreement with teutonet, will be applied to all alerts as label \`teutosla\`                                                                                                  |
+| - [serviceLevelAgreement](#global_serviceLevelAgreement ) | No      | enum (of string) | No         | -                                                                                                                                | The ServiceLevelAgreement with teutonet, will be applied to all alerts as label \`sla\` (mirrored to \`teutosla\`), unless an alert already sets its own \`sla\` label                        |
 | - [clusterName](#global_clusterName )                     | No      | string           | No         | -                                                                                                                                | The name of the cluster, used as subdomain under \`baseDomain\` and as label \`cluster\` on all alerts                                                                                        |
 | - [baseDomain](#global_baseDomain )                       | No      | string           | No         | -                                                                                                                                | The base domain to be used for cluster ingress                                                                                                                                                |
 | - [imageRegistry](#global_imageRegistry )                 | No      | string           | No         | -                                                                                                                                | The global container image proxy, e.g. [Nexus](https://artifacthub.io/packages/helm/sonatype/nexus-repository-manager), this needs to support various registries                              |
@@ -507,7 +565,7 @@ of `.monitoring.tracing.ingester.<field>`
 | **Type**    | `enum (of string)` |
 | **Default** | `"None"`           |
 
-**Description:** The ServiceLevelAgreement with teutonet, will be applied to all alerts as label `teutosla`
+**Description:** The ServiceLevelAgreement with teutonet, will be applied to all alerts as label `sla` (mirrored to `teutosla`), unless an alert already sets its own `sla` label
 
 Must be one of:
 * "None"
@@ -1861,9 +1919,9 @@ Must be one of:
 
 | Property                                                            | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                          |
 | ------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| - [claims](#global_authentication_oauthProxy_resources_claims )     | No      | array  | No         | -          | Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.<br /><br />This field depends on the DynamicResourceAllocation feature gate.<br /><br />This field is immutable. It can only be set for containers.                                                                                  |
-| - [limits](#global_authentication_oauthProxy_resources_limits )     | No      | object | No         | -          | Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/                                                                                                                                                                                |
-| - [requests](#global_authentication_oauthProxy_resources_requests ) | No      | object | No         | -          | Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| - [claims](#global_authentication_oauthProxy_resources_claims )     | No      | array  | No         | -          | claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.<br /><br />This field is immutable. It can only be set for containers.                                                                                                                                                               |
+| - [limits](#global_authentication_oauthProxy_resources_limits )     | No      | object | No         | -          | limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/                                                                                                                                                                                |
+| - [requests](#global_authentication_oauthProxy_resources_requests ) | No      | object | No         | -          | requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
 
 ###### <a name="global_authentication_oauthProxy_resources_claims"></a>1.17.3.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > authentication > oauthProxy > resources > claims`
 
@@ -1871,9 +1929,7 @@ Must be one of:
 | -------- | ------- |
 | **Type** | `array` |
 
-**Description:** Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
-
-This field depends on the DynamicResourceAllocation feature gate.
+**Description:** claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
 
 This field is immutable. It can only be set for containers.
 
@@ -1901,8 +1957,8 @@ This field is immutable. It can only be set for containers.
 
 | Property                                                                       | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                   |
 | ------------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| + [name](#global_authentication_oauthProxy_resources_claims_items_name )       | No      | string | No         | -          | Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.          |
-| - [request](#global_authentication_oauthProxy_resources_claims_items_request ) | No      | string | No         | -          | Request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request. |
+| + [name](#global_authentication_oauthProxy_resources_claims_items_name )       | No      | string | No         | -          | name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.          |
+| - [request](#global_authentication_oauthProxy_resources_claims_items_request ) | No      | string | No         | -          | request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request. |
 
 ###### <a name="global_authentication_oauthProxy_resources_claims_items_name"></a>1.17.3.3.1.1.1. Property `base cluster configuration > global > authentication > oauthProxy > resources > claims > claims items > name`
 
@@ -1910,7 +1966,7 @@ This field is immutable. It can only be set for containers.
 | -------- | -------- |
 | **Type** | `string` |
 
-**Description:** Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+**Description:** name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
 
 ###### <a name="global_authentication_oauthProxy_resources_claims_items_request"></a>1.17.3.3.1.1.2. Property `base cluster configuration > global > authentication > oauthProxy > resources > claims > claims items > request`
 
@@ -1918,7 +1974,7 @@ This field is immutable. It can only be set for containers.
 | -------- | -------- |
 | **Type** | `string` |
 
-**Description:** Request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request.
+**Description:** request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request.
 
 ###### <a name="global_authentication_oauthProxy_resources_limits"></a>1.17.3.3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > global > authentication > oauthProxy > resources > limits`
 
@@ -1927,7 +1983,7 @@ This field is immutable. It can only be set for containers.
 | **Type**                  | `object`                                                                                                                                       |
 | **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_authentication_oauthProxy_resources_limits_additionalProperties) |
 
-**Description:** Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+**Description:** limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 
 | Property                                                                       | Pattern | Type   | Deprecated | Definition                                                                                                                                                                                   | Title/Description |
 | ------------------------------------------------------------------------------ | ------- | ------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
@@ -1948,7 +2004,7 @@ This field is immutable. It can only be set for containers.
 | **Type**                  | `object`                                                                                                                                         |
 | **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#global_authentication_oauthProxy_resources_requests_additionalProperties) |
 
-**Description:** Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+**Description:** requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 
 | Property                                                                         | Pattern | Type   | Deprecated | Definition                                                                                                                                                                                   | Title/Description |
 | -------------------------------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
@@ -3566,11 +3622,11 @@ currencyEUR
 
 | Property                                                                                               | Pattern | Type    | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                      |
 | ------------------------------------------------------------------------------------------------------ | ------- | ------- | ---------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| - [effect](#monitoring_securityScanning_nodeCollector_tolerations_items_effect )                       | No      | string  | No         | -          | Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.                                                                                                                                                                        |
-| - [key](#monitoring_securityScanning_nodeCollector_tolerations_items_key )                             | No      | string  | No         | -          | Key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys.                                                                                                                                          |
-| - [operator](#monitoring_securityScanning_nodeCollector_tolerations_items_operator )                   | No      | string  | No         | -          | Operator represents a key's relationship to the value. Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category. Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators). |
-| - [tolerationSeconds](#monitoring_securityScanning_nodeCollector_tolerations_items_tolerationSeconds ) | No      | integer | No         | -          | TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.            |
-| - [value](#monitoring_securityScanning_nodeCollector_tolerations_items_value )                         | No      | string  | No         | -          | Value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string.                                                                                                                                                                                             |
+| - [effect](#monitoring_securityScanning_nodeCollector_tolerations_items_effect )                       | No      | string  | No         | -          | effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.                                                                                                                                                                        |
+| - [key](#monitoring_securityScanning_nodeCollector_tolerations_items_key )                             | No      | string  | No         | -          | key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys.                                                                                                                                          |
+| - [operator](#monitoring_securityScanning_nodeCollector_tolerations_items_operator )                   | No      | string  | No         | -          | operator represents a key's relationship to the value. Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category. Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators). |
+| - [tolerationSeconds](#monitoring_securityScanning_nodeCollector_tolerations_items_tolerationSeconds ) | No      | integer | No         | -          | tolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.            |
+| - [value](#monitoring_securityScanning_nodeCollector_tolerations_items_value )                         | No      | string  | No         | -          | value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string.                                                                                                                                                                                             |
 
 ###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_effect"></a>4.9.2.1.1.1. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > effect`
 
@@ -3578,7 +3634,7 @@ currencyEUR
 | -------- | -------- |
 | **Type** | `string` |
 
-**Description:** Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
+**Description:** effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
 
 ###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_key"></a>4.9.2.1.1.2. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > key`
 
@@ -3586,7 +3642,7 @@ currencyEUR
 | -------- | -------- |
 | **Type** | `string` |
 
-**Description:** Key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys.
+**Description:** key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys.
 
 ###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_operator"></a>4.9.2.1.1.3. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > operator`
 
@@ -3594,7 +3650,7 @@ currencyEUR
 | -------- | -------- |
 | **Type** | `string` |
 
-**Description:** Operator represents a key's relationship to the value. Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category. Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
+**Description:** operator represents a key's relationship to the value. Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category. Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
 
 ###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_tolerationSeconds"></a>4.9.2.1.1.4. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > tolerationSeconds`
 
@@ -3603,7 +3659,7 @@ currencyEUR
 | **Type**   | `integer` |
 | **Format** | `int64`   |
 
-**Description:** TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.
+**Description:** tolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.
 
 ###### <a name="monitoring_securityScanning_nodeCollector_tolerations_items_value"></a>4.9.2.1.1.5. Property `base cluster configuration > monitoring > securityScanning > nodeCollector > tolerations > tolerations items > value`
 
@@ -3611,7 +3667,7 @@ currencyEUR
 | -------- | -------- |
 | **Type** | `string` |
 
-**Description:** Value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string.
+**Description:** value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string.
 
 ### <a name="monitoring_tracing"></a>4.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > monitoring > tracing`
 
@@ -3753,13 +3809,13 @@ currencyEUR
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                          | Pattern | Type   | Deprecated | Definition | Title/Description |
-| ----------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
-| - [^balance\|deschedule$](#descheduler_profile_plugins_pattern1 ) | Yes     | object | No         | -          | -                 |
+| Property                                                            | Pattern | Type   | Deprecated | Definition | Title/Description |
+| ------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
+| - [^(balance\|deschedule)$](#descheduler_profile_plugins_pattern1 ) | Yes     | object | No         | -          | -                 |
 
-##### <a name="descheduler_profile_plugins_pattern1"></a>5.2.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Pattern Property `base cluster configuration > descheduler > profile > plugins > ^balance\|deschedule$`
+##### <a name="descheduler_profile_plugins_pattern1"></a>5.2.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Pattern Property `base cluster configuration > descheduler > profile > plugins > ^(balance\|deschedule)$`
 > All properties whose name matches the regular expression
-```^balance|deschedule$``` ([Test](https://regex101.com/?regex=%5Ebalance%7Cdeschedule%24))
+```^(balance|deschedule)$``` ([Test](https://regex101.com/?regex=%5E%28balance%7Cdeschedule%29%24))
 must respect the following conditions
 
 |                           |                                                                |
@@ -3771,7 +3827,7 @@ must respect the following conditions
 | ----------------------------------------------------------- | ------- | --------------- | ---------- | ---------- | ----------------- |
 | + [enabled](#descheduler_profile_plugins_pattern1_enabled ) | No      | array of string | No         | -          | -                 |
 
-###### <a name="descheduler_profile_plugins_pattern1_enabled"></a>5.2.2.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > descheduler > profile > plugins > ^balance\|deschedule$ > enabled`
+###### <a name="descheduler_profile_plugins_pattern1_enabled"></a>5.2.2.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > descheduler > profile > plugins > ^(balance\|deschedule)$ > enabled`
 
 |          |                   |
 | -------- | ----------------- |
@@ -3789,7 +3845,7 @@ must respect the following conditions
 | -------------------------------------------------------------------- | ----------- |
 | [enabled items](#descheduler_profile_plugins_pattern1_enabled_items) | -           |
 
-###### <a name="descheduler_profile_plugins_pattern1_enabled_items"></a>5.2.2.1.1.1. base cluster configuration > descheduler > profile > plugins > ^balance\|deschedule$ > enabled > enabled items
+###### <a name="descheduler_profile_plugins_pattern1_enabled_items"></a>5.2.2.1.1.1. base cluster configuration > descheduler > profile > plugins > ^(balance\|deschedule)$ > enabled > enabled items
 
 |          |          |
 | -------- | -------- |
@@ -4029,19 +4085,16 @@ must respect the following conditions
 
 ### <a name="certManager_dnsChallengeNameservers"></a>7.6. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > certManager > dnsChallengeNameservers`
 
-|                           |                                                                |
-| ------------------------- | -------------------------------------------------------------- |
-| **Type**                  | `object`                                                       |
-| **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
+|                           |                                                                                                                                  |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**                  | `object`                                                                                                                         |
+| **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#certManager_dnsChallengeNameservers_additionalProperties) |
 
-| Property                                                                                            | Pattern | Type    | Deprecated | Definition | Title/Description |
-| --------------------------------------------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
-| - [^((25[0-5]\|(2[0-4]\|1\d\|[1-9]\|)\d)\.?\b){4}$](#certManager_dnsChallengeNameservers_pattern1 ) | Yes     | integer | No         | -          | -                 |
+| Property                                                         | Pattern | Type    | Deprecated | Definition | Title/Description |
+| ---------------------------------------------------------------- | ------- | ------- | ---------- | ---------- | ----------------- |
+| - [](#certManager_dnsChallengeNameservers_additionalProperties ) | No      | integer | No         | -          | -                 |
 
-#### <a name="certManager_dnsChallengeNameservers_pattern1"></a>7.6.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Pattern Property `base cluster configuration > certManager > dnsChallengeNameservers > ^((25[0-5]\|(2[0-4]\|1\d\|[1-9]\|)\d)\.?\b){4}$`
-> All properties whose name matches the regular expression
-```^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$``` ([Test](https://regex101.com/?regex=%5E%28%2825%5B0-5%5D%7C%282%5B0-4%5D%7C1%5Cd%7C%5B1-9%5D%7C%29%5Cd%29%5C.%3F%5Cb%29%7B4%7D%24))
-must respect the following conditions
+#### <a name="certManager_dnsChallengeNameservers_additionalProperties"></a>7.6.1. Property `base cluster configuration > certManager > dnsChallengeNameservers > additionalProperties`
 
 |          |           |
 | -------- | --------- |
@@ -4112,18 +4165,19 @@ must respect the following conditions
 | **Type**                  | `combining`                                                    |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                                                 | Pattern | Type   | Deprecated | Definition | Title/Description                            |
-| ------------------------------------------------------------------------ | ------- | ------ | ---------- | ---------- | -------------------------------------------- |
-| + [url](#flux_gitRepositories_additionalProperties_url )                 | No      | string | No         | -          | -                                            |
-| - [username](#flux_gitRepositories_additionalProperties_username )       | No      | string | No         | -          | -                                            |
-| - [password](#flux_gitRepositories_additionalProperties_password )       | No      | string | No         | -          | -                                            |
-| - [branch](#flux_gitRepositories_additionalProperties_branch )           | No      | string | No         | -          | -                                            |
-| - [commit](#flux_gitRepositories_additionalProperties_commit )           | No      | string | No         | -          | -                                            |
-| - [semver](#flux_gitRepositories_additionalProperties_semver )           | No      | string | No         | -          | -                                            |
-| - [tag](#flux_gitRepositories_additionalProperties_tag )                 | No      | string | No         | -          | -                                            |
-| - [path](#flux_gitRepositories_additionalProperties_path )               | No      | string | No         | -          | -                                            |
-| - [gitInterval](#flux_gitRepositories_additionalProperties_gitInterval ) | No      | string | No         | -          | The interval in which to sync the repository |
-| - [decryption](#flux_gitRepositories_additionalProperties_decryption )   | No      | object | No         | -          | -                                            |
+| Property                                                                 | Pattern | Type   | Deprecated | Definition                                                                | Title/Description                                                                                                                             |
+| ------------------------------------------------------------------------ | ------- | ------ | ---------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| + [url](#flux_gitRepositories_additionalProperties_url )                 | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [username](#flux_gitRepositories_additionalProperties_username )       | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [password](#flux_gitRepositories_additionalProperties_password )       | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [branch](#flux_gitRepositories_additionalProperties_branch )           | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [commit](#flux_gitRepositories_additionalProperties_commit )           | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [semver](#flux_gitRepositories_additionalProperties_semver )           | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [tag](#flux_gitRepositories_additionalProperties_tag )                 | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [path](#flux_gitRepositories_additionalProperties_path )               | No      | string | No         | -                                                                         | -                                                                                                                                             |
+| - [gitInterval](#flux_gitRepositories_additionalProperties_gitInterval ) | No      | string | No         | -                                                                         | The interval in which to sync the repository                                                                                                  |
+| - [condition](#flux_gitRepositories_additionalProperties_condition )     | No      | string | No         | Same as [condition](#global_certificates_additionalProperties_condition ) | A condition with which to decide to include the resource. This will be templated. Must return the literal \`true\`, truthy values don't work. |
+| - [decryption](#flux_gitRepositories_additionalProperties_decryption )   | No      | object | No         | -                                                                         | -                                                                                                                                             |
 
 | All of(Requirement)                                           |
 | ------------------------------------------------------------- |
@@ -4453,7 +4507,16 @@ must respect the following conditions
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | **Must match regular expression** | ```[0-9]+(ms\|s\|m\|h\|d\|w\|y)``` [Test](https://regex101.com/?regex=%5B0-9%5D%2B%28ms%7Cs%7Cm%7Ch%7Cd%7Cw%7Cy%29) |
 
-##### <a name="flux_gitRepositories_additionalProperties_decryption"></a>9.1.1.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption`
+##### <a name="flux_gitRepositories_additionalProperties_condition"></a>9.1.1.12. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > condition`
+
+|                        |                                                                  |
+| ---------------------- | ---------------------------------------------------------------- |
+| **Type**               | `string`                                                         |
+| **Same definition as** | [condition](#global_certificates_additionalProperties_condition) |
+
+**Description:** A condition with which to decide to include the resource. This will be templated. Must return the literal `true`, truthy values don't work.
+
+##### <a name="flux_gitRepositories_additionalProperties_decryption"></a>9.1.1.13. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -4464,7 +4527,7 @@ must respect the following conditions
 | ----------------------------------------------------------------------------- | ------- | ---------------- | ---------- | ---------- | ----------------- |
 | + [provider](#flux_gitRepositories_additionalProperties_decryption_provider ) | No      | enum (of string) | No         | -          | -                 |
 
-###### <a name="flux_gitRepositories_additionalProperties_decryption_provider"></a>9.1.1.12.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption > provider`
+###### <a name="flux_gitRepositories_additionalProperties_decryption_provider"></a>9.1.1.13.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > flux > gitRepositories > additionalProperties > decryption > provider`
 
 |          |                    |
 | -------- | ------------------ |
@@ -4530,6 +4593,7 @@ Must be one of:
 Must be one of:
 * "nginx"
 * "traefik"
+* "envoy"
 * "external"
 * "none"
 
