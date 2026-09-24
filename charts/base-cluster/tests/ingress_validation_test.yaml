@@ -229,6 +229,85 @@ tests:
       - hasDocuments:
           count: 0
 
+  - it: fails when an extraPorts entry's exposedPort clashes with envoy's built-in http listener
+    set:
+      ingress.provider: envoy
+      ingress.extraPorts.ssh: 80
+    asserts:
+      - failedTemplate:
+          errorMessage: "ingress.extraPorts \"ssh\" exposedPort 80 clashes with the envoy Gateway's built-in http/https listeners (80/443)"
+
+  - it: fails when an extraPorts entry's exposedPort clashes with envoy's built-in https listener
+    set:
+      ingress.provider: envoy
+      ingress.extraPorts.ssh: 443
+    asserts:
+      - failedTemplate:
+          errorMessage: "ingress.extraPorts \"ssh\" exposedPort 443 clashes with the envoy Gateway's built-in http/https listeners (80/443)"
+
+  - it: fails when two extraPorts entries share the same exposedPort with envoy
+    set:
+      ingress.provider: envoy
+      ingress.extraPorts.ssh: 22
+      ingress.extraPorts.sftp:
+        port: 2222
+        exposedPort: 22
+    asserts:
+      - failedTemplate:
+          errorMessage: "ingress.extraPorts \"ssh\" exposedPort 22 clashes with ingress.extraPorts \"sftp\""
+
+  - it: does not fail when an extraPorts entry uses the shorthand form with envoy
+    set:
+      ingress.provider: envoy
+      ingress.extraPorts.ssh: 22
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: fails when an extraPorts entry is named after one of traefik's built-in ports
+    set:
+      ingress.provider: traefik
+      ingress.extraPorts.websecure: 8444
+    asserts:
+      - failedTemplate:
+          errorMessage: "ingress.extraPorts key \"websecure\" is reserved for traefik's built-in ports, please choose a different name"
+
+  - it: fails when an extraPorts entry's port clashes with one of traefik's built-in ports
+    set:
+      ingress.provider: traefik
+      ingress.extraPorts.mqtt: 8443
+    asserts:
+      - failedTemplate:
+          errorMessage: "ingress.extraPorts \"mqtt\" port 8443 clashes with one of traefik's built-in ports (8000, 8443, 8080, 9100)"
+
+  - it: fails when two extraPorts entries share the same port with traefik
+    set:
+      ingress.provider: traefik
+      ingress.extraPorts.mqtt: 1883
+      ingress.extraPorts.mqtts.port: 1883
+    asserts:
+      - failedTemplate:
+          errorMessage: "ingress.extraPorts \"mqtts\" port 1883 clashes with ingress.extraPorts \"mqtt\""
+
+  - it: fails when two extraPorts entries share the same exposedPort with traefik
+    set:
+      ingress.provider: traefik
+      ingress.extraPorts.mqtt: 1883
+      ingress.extraPorts.mqtts:
+        port: 8883
+        exposedPort: 1883
+    asserts:
+      - failedTemplate:
+          errorMessage: "ingress.extraPorts \"mqtts\" exposedPort 1883 clashes with ingress.extraPorts \"mqtt\""
+
+  - it: does not fail when an extraPorts entry uses the shorthand form with traefik
+    set:
+      ingress.provider: traefik
+      ingress.extraPorts.mqtt: 1883
+    asserts:
+      - hasDocuments:
+          count: 0
+
   - it: resolves envoy's service identity correctly for the IP-immutability check
     set:
       ingress.provider: envoy

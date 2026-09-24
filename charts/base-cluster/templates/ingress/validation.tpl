@@ -19,10 +19,46 @@
   {{- if and $telemetryConf.enabled (not $telemetryConf.serviceName) -}}
     {{- fail "Explicit (non-auto-discovered) telemetry endpoints are not supported with the envoy ingress provider yet" -}}
   {{- end -}}
-  {{- range $name, $cfg := .Values.ingress.extraPorts -}}
+  {{- $seenExposedPorts := dict -}}
+  {{- range $name, $rawCfg := .Values.ingress.extraPorts -}}
     {{- if or (eq $name "http") (eq $name "https") -}}
       {{- fail (printf "ingress.extraPorts key %q is reserved for the envoy Gateway's built-in http/https listeners, please choose a different name" $name) -}}
     {{- end -}}
+    {{- $cfg := include "base-cluster.ingress.extraPorts.normalize" (dict "cfg" $rawCfg) | fromYaml -}}
+    {{- $exposedPort := $cfg.exposedPort | int -}}
+    {{- if has $exposedPort (list 80 443) -}}
+      {{- fail (printf "ingress.extraPorts %q exposedPort %d clashes with the envoy Gateway's built-in http/https listeners (80/443)" $name $exposedPort) -}}
+    {{- end -}}
+    {{- if hasKey $seenExposedPorts (toString $exposedPort) -}}
+      {{- fail (printf "ingress.extraPorts %q exposedPort %d clashes with ingress.extraPorts %q" $name $exposedPort (get $seenExposedPorts (toString $exposedPort))) -}}
+    {{- end -}}
+    {{- $_ := set $seenExposedPorts (toString $exposedPort) $name -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if eq .Values.ingress.provider "traefik" -}}
+  {{- $reservedNames := list "web" "websecure" "metrics" "traefik" -}}
+  {{- $reservedPorts := list 8000 8443 8080 9100 -}}
+  {{- $seenPorts := dict -}}
+  {{- $seenExposedPorts := dict -}}
+  {{- range $name, $rawCfg := .Values.ingress.extraPorts -}}
+    {{- if has $name $reservedNames -}}
+      {{- fail (printf "ingress.extraPorts key %q is reserved for traefik's built-in ports, please choose a different name" $name) -}}
+    {{- end -}}
+    {{- $cfg := include "base-cluster.ingress.extraPorts.normalize" (dict "cfg" $rawCfg) | fromYaml -}}
+    {{- $port := $cfg.port | int -}}
+    {{- $exposedPort := $cfg.exposedPort | int -}}
+    {{- if has $port $reservedPorts -}}
+      {{- fail (printf "ingress.extraPorts %q port %d clashes with one of traefik's built-in ports (%d, %d, %d, %d)" $name $port (index $reservedPorts 0) (index $reservedPorts 1) (index $reservedPorts 2) (index $reservedPorts 3)) -}}
+    {{- end -}}
+    {{- if hasKey $seenPorts (toString $port) -}}
+      {{- fail (printf "ingress.extraPorts %q port %d clashes with ingress.extraPorts %q" $name $port (get $seenPorts (toString $port))) -}}
+    {{- end -}}
+    {{- $_ := set $seenPorts (toString $port) $name -}}
+    {{- if hasKey $seenExposedPorts (toString $exposedPort) -}}
+      {{- fail (printf "ingress.extraPorts %q exposedPort %d clashes with ingress.extraPorts %q" $name $exposedPort (get $seenExposedPorts (toString $exposedPort))) -}}
+    {{- end -}}
+    {{- $_ := set $seenExposedPorts (toString $exposedPort) $name -}}
   {{- end -}}
 {{- end -}}
 
