@@ -1,8 +1,9 @@
 apiVersion: v2
 name: teuto-cnpg
 description: >-
-  This chart provides a way to create [Cloudnative-PG Helm chart](https://github.com/cloudnative-pg/charts) resources. It abstracts the configuration to be more streamlined and provides a nicer way
-  to manage users.
+  This chart provides a way to create [Cloudnative-PG Helm
+  chart](https://github.com/cloudnative-pg/charts) resources. It abstracts the
+  configuration to be more streamlined and provides a nicer way to manage users.
 
 maintainers:
   - email: cwr@teuto.net
@@ -12,7 +13,7 @@ maintainers:
   - email: st@teuto.net
     name: tasches
 type: application
-version: 3.1.0
+version: 3.1.1
 dependencies:
   - name: common
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
