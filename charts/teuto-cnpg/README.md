@@ -47,6 +47,15 @@ values:
 accessKeyId and accessSecretKey are set to `ACCESS_KEY_ID` and `accessSecretKeyEY` by default
 but can be overwritten with .values.backup.s3.accessKeyId or .values.backup.s3.accessSecretKey.
 
+## Migration from barman to pgbackrest
+
+- comment out the `.values.backup`-block
+- after rollout, remove barman CRDs
+- re-add backup section with `encrypted: true` and `bucketname`
+- path should look like `/backup`
+- the target bucket needs to be empty. Make sure to create it as
+  pgbackrest wont create the bucket.
+
 # cnpg-wrapper configuration
 
 **Title:** cnpg-wrapper configuration
@@ -522,4 +531,3 @@ cloudnative-pg/postgresql
 | **Type** | `string` |
 
 ----------------------------------------------------------------------------------------------------------------------------
-
