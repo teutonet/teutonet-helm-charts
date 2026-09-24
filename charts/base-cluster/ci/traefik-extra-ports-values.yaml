@@ -1,16 +1,5 @@
 ingress:
   extraPorts:
-    mqtt:
-      expose:
-        default: true
-      exposedPort: 1883
-      port: 1883
-      protocol: TCP
+    mqtt: 1883
     mqtts:
-      expose:
-        default: true
-      exposedPort: 8883
       port: 8883
-      protocol: TCP
-      proxyProtocol:
-        insecure: true
