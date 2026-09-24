@@ -1,0 +1,182 @@
+? derives the kubeconfig secret name from the release name when installed as <cluster>-mm and the secret exists, with defaults applied
+: 1: |
+    apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    metadata:
+      labels:
+        app.kubernetes.io/component: metrics-agent
+        app.kubernetes.io/instance: 9278-alte-oldenburger-2110-mm
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: managed-monitoring
+        helm.sh/chart: managed-monitoring-0.1.0
+      name: 9278-alte-oldenburger-2110-mm-ma
+      namespace: NAMESPACE
+    spec:
+      chart:
+        spec:
+          chart: alloy
+          sourceRef:
+            kind: HelmRepository
+            name: grafana
+            namespace: flux-system
+          version: 1.12.1
+      dependsOn:
+        - name: 9278-alte-oldenburger-2110-mm-pw
+          namespace: NAMESPACE
+      driftDetection:
+        mode: enabled
+      install:
+        remediation:
+          retries: -1
+        timeout: 10m0s
+      interval: 1h
+      kubeConfig:
+        secretRef:
+          name: 9278-alte-oldenburger-2110-kubeconfig
+      releaseName: metrics-agent
+      storageNamespace: teuto-managed-operators
+      targetNamespace: teuto-managed-operators
+      uninstall:
+        disableWait: true
+      upgrade:
+        timeout: 10m0s
+      values:
+        alloy:
+          configMap:
+            content: |
+              discovery.kubernetes "pods" {
+                role = "pod"
+
+                selectors {
+                  role  = "pod"
+                  label = "cnpg.io/podRole=instance"
+                }
+              }
+
+              discovery.kubernetes "operator" {
+                role = "pod"
+
+                selectors {
+                  role  = "pod"
+                  label = "app.kubernetes.io/instance=cloudnative-pg"
+                }
+              }
+
+              discovery.relabel "databases" {
+                targets = discovery.kubernetes.pods.targets
+
+                rule {
+                  source_labels = ["__meta_kubernetes_namespace"]
+                  target_label  = "db_cluster_namespace"
+                }
+                rule {
+                  source_labels = ["__meta_kubernetes_pod_label_cnpg_io_cluster"]
+                  target_label  = "db_cluster"
+                }
+              }
+
+              discovery.relabel "pods" {
+                targets = array.concat(discovery.relabel.databases.output, discovery.kubernetes.operator.targets)
+                rule {
+                  source_labels = ["__meta_kubernetes_pod_node_name"]
+                  target_label  = "node_name"
+                }
+              }
+
+              discovery.kubernetes "nodes" {
+                role = "node"
+              }
+
+              discovery.relabel "nodes" {
+                targets = discovery.kubernetes.nodes.targets
+                rule {
+                  source_labels = ["__meta_kubernetes_node_name"]
+                  target_label  = "node_name"
+                }
+              }
+
+              discovery.relabel "metrics" {
+                targets = array.combine_maps(discovery.relabel.pods.output, discovery.relabel.nodes.output, ["node_name"])
+
+                rule {
+                  source_labels = ["__meta_kubernetes_node_annotation_cluster_x_k8s_io_cluster_name"]
+                  target_label  = "cluster"
+                }
+
+                rule {
+                  source_labels = ["__meta_kubernetes_node_annotation_cluster_x_k8s_io_cluster_namespace"]
+                  target_label  = "cluster_namespace"
+                }
+
+                rule {
+                  action = "labeldrop"
+                  regex  = "^node_name$"
+                }
+
+                rule {
+                  action = "labeldrop"
+                  regex  = "^instance$"
+                }
+
+                rule {
+                  source_labels = ["__meta_kubernetes_pod_name"]
+                  target_label  = "pod_name"
+                }
+
+                rule {
+                  source_labels = ["__meta_kubernetes_pod_ip", "__meta_kubernetes_pod_container_port_number"]
+                  separator     = ":"
+                  target_label  = "__address__"
+                }
+
+                rule {
+                  source_labels = ["__meta_kubernetes_pod_container_port_name"]
+                  regex         = "^metrics$"
+                  action        = "keep"
+                }
+              }
+
+              prometheus.remote_write "ffm" {
+                endpoint {
+                  url = "https://prometheus.teuto.net:9090/api/v1/write"
+                  basic_auth {
+                    username = sys.env("USERNAME")
+                    password = sys.env("PASSWORD")
+                  }
+                }
+              }
+
+              prometheus.scrape "pods" {
+                job_name        = "managed_services"
+                targets         = discovery.relabel.metrics.output
+                scrape_interval = "30s"
+                forward_to      = [prometheus.remote_write.ffm.receiver]
+              }
+          extraEnv:
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: prometheus-write
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: prometheus-write
+          resources:
+            limits:
+              ephemeral-storage: 2Gi
+              memory: 192Mi
+            requests:
+              cpu: 100m
+              ephemeral-storage: 50Mi
+              memory: 128Mi
+          securityContext:
+            seccompProfile:
+              type: RuntimeDefault
+          stabilityLevel: experimental
+        controller:
+          type: deployment
+        crds:
+          create: false
+        fullnameOverride: metrics-agent

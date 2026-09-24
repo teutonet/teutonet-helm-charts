@@ -1,0 +1,26 @@
+suite: shared HelmRepositories self-render for CI/local template validation
+templates:
+  - templates/helmRepositories.yaml
+set:
+  prometheus.existingSecret.name: prometheus-write
+tests:
+  - it: renders nothing for a real release namespace
+    release:
+      namespace: teuto-managed-operators
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders the grafana and cetic HelmRepositories into flux-system when namespace is default
+    release:
+      namespace: default
+    asserts:
+      - hasDocuments:
+          count: 2
+      - equal:
+          path: metadata.namespace
+          value: flux-system
+          documentIndex: -1
+      - matchSnapshot:
+          path: ""
+          documentIndex: -1

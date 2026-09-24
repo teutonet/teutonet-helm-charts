@@ -1,0 +1,106 @@
+suite: metrics-agent HelmRelease
+templates:
+  - templates/metrics-agent.yaml
+kubernetesProvider:
+  scheme:
+    v1/Secret:
+      gvr:
+        version: v1
+        resource: secrets
+      namespaced: true
+set:
+  prometheus.existingSecret.name: prometheus-write
+tests:
+  - it: fails when the kubeconfig secret can't be derived or found, and no override is set
+    release:
+      name: some-cluster-mm
+    asserts:
+      - failedTemplate:
+          errorMessage: "Could not find Secret 'some-cluster-kubeconfig' derived from release name 'some-cluster-mm' (expected '<cluster-name>-mm'); set targetCluster.kubeconfigSecretName explicitly"
+
+  - it: derives the kubeconfig secret name from the release name when installed as <cluster>-mm and the secret exists, with defaults applied
+    release:
+      name: 9278-alte-oldenburger-2110-mm
+    kubernetesProvider:
+      objects:
+        - apiVersion: v1
+          kind: Secret
+          metadata:
+            name: 9278-alte-oldenburger-2110-kubeconfig
+            namespace: NAMESPACE
+    asserts:
+      - equal:
+          path: kind
+          value: HelmRelease
+      - equal:
+          path: metadata.name
+          value: 9278-alte-oldenburger-2110-mm-ma
+      - equal:
+          path: spec.kubeConfig.secretRef.name
+          value: 9278-alte-oldenburger-2110-kubeconfig
+      - equal:
+          path: spec.dependsOn[0].name
+          value: 9278-alte-oldenburger-2110-mm-pw
+      - equal:
+          path: spec.chart.spec.chart
+          value: alloy
+      - equal:
+          path: spec.chart.spec.version
+          value: 1.12.1
+      - equal:
+          path: spec.chart.spec.sourceRef
+          value:
+            kind: HelmRepository
+            name: grafana
+            namespace: flux-system
+      - equal:
+          path: spec.targetNamespace
+          value: teuto-managed-operators
+      - equal:
+          path: spec.values.fullnameOverride
+          value: metrics-agent
+      - equal:
+          path: spec.values.alloy.extraEnv[0].valueFrom.secretKeyRef.name
+          value: prometheus-write
+      - equal:
+          path: spec.values.alloy.extraEnv[1].valueFrom.secretKeyRef.name
+          value: prometheus-write
+      - matchRegex:
+          path: spec.values.alloy.configMap.content
+          pattern: url\s*=\s*"https://prometheus\.teuto\.net:9090/api/v1/write"
+      - matchSnapshot:
+          path: ""
+
+  - it: honors an explicit kubeconfig secret name override even when derivation would fail
+    release:
+      name: not-following-convention
+    set:
+      targetCluster.kubeconfigSecretName: explicit-kubeconfig
+    asserts:
+      - equal:
+          path: spec.kubeConfig.secretRef.name
+          value: explicit-kubeconfig
+
+  - it: honors a custom prometheus url and namespace
+    release:
+      name: another-cluster-mm
+    kubernetesProvider:
+      objects:
+        - apiVersion: v1
+          kind: Secret
+          metadata:
+            name: another-cluster-kubeconfig
+            namespace: NAMESPACE
+    set:
+      namespace: monitoring
+      prometheus.url: https://prometheus.example.com/api/v1/write
+    asserts:
+      - equal:
+          path: spec.targetNamespace
+          value: monitoring
+      - equal:
+          path: spec.storageNamespace
+          value: monitoring
+      - matchRegex:
+          path: spec.values.alloy.configMap.content
+          pattern: url\s*=\s*"https://prometheus\.example\.com/api/v1/write"

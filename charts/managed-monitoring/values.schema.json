@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "managed-monitoring configuration",
+  "required": [
+    "targetCluster",
+    "prometheus"
+  ],
+  "properties": {
+    "namespace": {
+      "type": "string",
+      "description": "The namespace on the workload cluster to deploy the metrics agent and the copied prometheus-write secret into"
+    },
+    "targetCluster": {
+      "type": "object",
+      "description": "The workload cluster the metrics agent gets deployed into remotely",
+      "properties": {
+        "kubeconfigSecretName": {
+          "type": "string",
+          "description": "Name of the Secret (in this release's own namespace, on the management cluster) holding the workload cluster's kubeconfig, e.g. the CAPI-provided '<cluster>-kubeconfig' secret. Only needed if this release isn't installed as '<cluster-name>-mm' -- otherwise it's derived automatically and this can be left empty"
+        }
+      },
+      "additionalProperties": false
+    },
+    "prometheus": {
+      "type": "object",
+      "description": "Central Prometheus this cluster's managed-service metrics get remote-written to",
+      "required": [
+        "url",
+        "existingSecret"
+      ],
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "existingSecret": {
+          "type": "object",
+          "description": "A Secret with 'username'/'password' keys, already present in this release's own namespace on the management cluster. It gets copied into the workload cluster (as 'prometheus-write') for the metrics agent to use",
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "resources": {
+      "type": "object",
+      "description": "See common.resources"
+    }
+  }
+}

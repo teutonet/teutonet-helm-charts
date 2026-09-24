@@ -44,6 +44,9 @@
     },
     "charts/oci-registry": {
       "package-name": "oci-registry"
+    },
+    "charts/managed-monitoring": {
+      "package-name": "managed-monitoring"
     }
   }
 }
