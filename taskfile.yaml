@@ -329,6 +329,22 @@ tasks:
     cmds:
       - '{{.SCRIPTS_DIR}}/scan-for-licenses.sh "{{.CHARTS_DIR}}/{{.CHART}}"'
 
+  chart:sbom:
+    desc: Generate merged SPDX SBOM for chart images (requires CHART variable)
+    label: sbom ({{ .CHART }})
+    requires:
+      vars:
+        - CHART
+    deps:
+      - chart:extract-images
+    sources:
+      - '{{.CHARTS_DIR}}/{{.CHART}}/Chart.yaml'
+    generates:
+      - '{{.REPORTS_DIR}}/{{.CHART}}.spdx.json'
+    cmds:
+      - mkdir -p {{.REPORTS_DIR}}
+      - '{{.SCRIPTS_DIR}}/generate-sbom.sh "{{.CHARTS_DIR}}/{{.CHART}}" "{{.REPORTS_DIR}}/{{.CHART}}.spdx.json"'
+
   security:cves:
     desc: Scan for CVEs with grype (requires CHART variable)
     label: cves ({{ .CHART }})
