@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "chirpstack configuration",
+  "properties": {
+    "global": {
+      "type": "object",
+      "properties": {
+        "curl": {
+          "$ref": "#/$defs/deployment"
+        },
+        "additionalProperties": false
+      }
+    },
+    "ingress": {
+      "type": "object",
+      "oneOf": [
+        {
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "const": true
+            },
+            "host": {
+              "type": "string"
+            },
+            "class": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "host"
+          ]
+        },
+        {
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "const": false
+            }
+          }
+        }
+      ]
+    },
+    "chirpstack": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/deployment"
+        },
+        {
+          "properties": {
+            "apiSecret": {
+              "type": "string",
+              "description": "This secret is used for generating login and API tokens, make sure this is never exposed. Changing this secret will invalidate all login and API tokens. The following command can be used to generate a random secret: openssl rand -base64 32",
+              "minLength": 1
+            },
+            "logLevel": {
+              "type": "string",
+              "description": "The loging level of chirpstack. Ooptions are trace, debug, info, warn and error"
+            }
+          }
+        }
+      ]
+    },
+    "chirpstackGatewayBridge": {
+      "$ref": "#/$defs/deployment"
+    },
+    "chirpstackRestAPI": {
+      "$ref": "#/$defs/deployment"
+    },
+    "mosquitto": {
+      "$ref": "#/$defs/deployment"
+    },
+    "postgres": {
+      "type": "object",
+      "$ref": "#/$defs/deployment",
+      "properties": {
+        "persistence": {
+          "$ref": "#/$defs/persistence"
+        },
+        "password": {
+          "desciption": "The password for the database",
+          "type": "string",
+          "minLength": 1
+        },
+        "existingSecretName": {
+          "description": "Use credentials from an existing secret",
+          "examples": [
+            "mypostgressecret"
+          ],
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "user": {
+          "description": "The username for the postgres database",
+          "examples": [
+            "chirpstack"
+          ],
+          "type": "string"
+        },
+        "dbname": {
+          "description": "The name of the chirpstack database",
+          "examples": [
+            "chirpstack"
+          ],
+          "type": "string"
+        },
+        "existingPSQL": {
+          "description": "Use an existing PSQL host",
+          "examples": [
+            "mypsqlhost"
+          ],
+          "type": "string"
+        },
+        "rootPassword": {
+          "description": "The password for the superuser. This is only used within the postgres container and is not available for any network logins.",
+          "type": "string"
+        }
+      }
+    },
+    "redis": {
+      "$ref": "#/$defs/deployment",
+      "properties": {
+        "persistence": {
+          "$ref": "#/$defs/persistence"
+        }
+      }
+    }
+  },
+  "required": [
+  ],
+  "$defs": {
+    "resourceRequirements": {
+      "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.24.4-standalone-strict/_definitions.json#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "registry": {
+          "type": "string",
+          "description": "The host of the registry",
+          "examples": [
+            "docker.io"
+          ]
+        },
+        "repository": {
+          "type": "string",
+          "description": "The image path in the registry",
+          "examples": [
+            "bitnami/kubectl"
+          ]
+        },
+        "tag": {
+          "type": "string"
+        },
+        "digest": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "deployment": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "$ref": "#/$defs/image"
+        },
+        "resources": {
+          "$ref": "#/$defs/resourceRequirements"
+        }
+      }
+    },
+    "persistence": {
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "storageClass": {
+          "type": "string"
+        },
+        "size": {
+          "$ref": "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.24.4-standalone-strict/_definitions.json#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        }
+      }
+    }
+  }
+}

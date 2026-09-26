@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {{- include "chirpstack.commonMetadata" (dict "component" "rest-api" "context" .) | nindent 2 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: rest-api
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: rest-api
+    spec:
+      securityContext: {{- include "chirpstack.securityContext" (dict) | nindent 8 }}
+      {{- include "chirpstack.securityOptions" (dict) | nindent 6 }}
+      containers:
+        - args:
+            - --server
+            - {{ include "chirpstack.fullname" (dict "context" . "component" "chirpstack") }}:8080
+            - --bind
+            - 0.0.0.0:8090
+            - --insecure
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.chirpstackRestAPI.image "global" .Values.global) }}
+          name: chirpstack-rest-api
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+            httpGet:
+              port: 8090
+              path: /
+          securityContext: {{- include "chirpstack.containerSecurityContext" (dict) | nindent 12 }}
+          resources: {{- .Values.chirpstackRestAPI.resources | toYaml | nindent 12 }}
+          ports:
+            - containerPort: 8090
+              name: rest-api
+      restartPolicy: Always
