@@ -1,5 +1,20 @@
 # Changelog
 
+## [9.13.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.12.1...t8s-cluster-v9.13.0) (2026-09-24)
+
+
+### Features
+
+* **t8s-cluster:** gate cni/rbac/storage/etcd on Cluster readiness via ResourceSet ([#2394](https://github.com/teutonet/teutonet-helm-charts/issues/2394)) ([a896457](https://github.com/teutonet/teutonet-helm-charts/commit/a8964570697d4ab4bc3f581b167d1667b480e222))
+* **t8s-cluster:** scale cni/csi HelmRelease timeout with node pool size ([#2388](https://github.com/teutonet/teutonet-helm-charts/issues/2388)) ([8e71702](https://github.com/teutonet/teutonet-helm-charts/commit/8e71702635db602ff3ce3557df503d3f8388fe69))
+
+
+### Bug Fixes
+
+* **t8s-cluster:** fix CronJob name length and unquoted friendlyName ([#2404](https://github.com/teutonet/teutonet-helm-charts/issues/2404)) ([b9bcf6a](https://github.com/teutonet/teutonet-helm-charts/commit/b9bcf6aadf97eb876c7c0d77050898d9ff1b3535))
+* **t8s-cluster:** limit cilium operator replicas to 1 for single-node clusters ([#2395](https://github.com/teutonet/teutonet-helm-charts/issues/2395)) ([034140b](https://github.com/teutonet/teutonet-helm-charts/commit/034140bed36f40c20cb49bf361097dfc9aae5878))
+* **t8s-cluster:** re-add nodes delete RBAC to ccm ClusterRole via postRenderer ([#2402](https://github.com/teutonet/teutonet-helm-charts/issues/2402)) ([5d920b6](https://github.com/teutonet/teutonet-helm-charts/commit/5d920b686809f47bc080ac5fdeebb308516ec0c4))
+
 ## [9.12.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.12.0...t8s-cluster-v9.12.1) (2026-09-14)
 
 

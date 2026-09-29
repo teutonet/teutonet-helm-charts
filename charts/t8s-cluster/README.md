@@ -1,7 +1,7 @@
 <!-- vim: set ft=markdown: -->
 # t8s-cluster
 
-![Version: 9.12.1](https://img.shields.io/badge/Version-9.12.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 9.13.0](https://img.shields.io/badge/Version-9.13.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -17,7 +17,7 @@ t8s-operator cluster with necessary addons
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.12.1/charts/t8s-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.13.0/charts/t8s-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster>
 
 ## Requirements
@@ -903,9 +903,9 @@ Must be one of:
 
 | Property                                        | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                          |
 | ----------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| - [claims](#controlPlane_resources_claims )     | No      | array  | No         | -          | Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.<br /><br />This field depends on the DynamicResourceAllocation feature gate.<br /><br />This field is immutable. It can only be set for containers.                                                                                  |
-| - [limits](#controlPlane_resources_limits )     | No      | object | No         | -          | Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/                                                                                                                                                                                |
-| - [requests](#controlPlane_resources_requests ) | No      | object | No         | -          | Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| - [claims](#controlPlane_resources_claims )     | No      | array  | No         | -          | claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.<br /><br />This field is immutable. It can only be set for containers.                                                                                                                                                               |
+| - [limits](#controlPlane_resources_limits )     | No      | object | No         | -          | limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/                                                                                                                                                                                |
+| - [requests](#controlPlane_resources_requests ) | No      | object | No         | -          | requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
 
 #### <a name="controlPlane_resources_claims"></a>3.8.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > resources > claims`
 
@@ -913,9 +913,7 @@ Must be one of:
 | -------- | ------- |
 | **Type** | `array` |
 
-**Description:** Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
-
-This field depends on the DynamicResourceAllocation feature gate.
+**Description:** claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
 
 This field is immutable. It can only be set for containers.
 
@@ -943,8 +941,8 @@ This field is immutable. It can only be set for containers.
 
 | Property                                                   | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                   |
 | ---------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| + [name](#controlPlane_resources_claims_items_name )       | No      | string | No         | -          | Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.          |
-| - [request](#controlPlane_resources_claims_items_request ) | No      | string | No         | -          | Request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request. |
+| + [name](#controlPlane_resources_claims_items_name )       | No      | string | No         | -          | name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.          |
+| - [request](#controlPlane_resources_claims_items_request ) | No      | string | No         | -          | request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request. |
 
 ###### <a name="controlPlane_resources_claims_items_name"></a>3.8.1.1.1. Property `t8s cluster configuration > controlPlane > resources > claims > claims items > name`
 
@@ -952,7 +950,7 @@ This field is immutable. It can only be set for containers.
 | -------- | -------- |
 | **Type** | `string` |
 
-**Description:** Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+**Description:** name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
 
 ###### <a name="controlPlane_resources_claims_items_request"></a>3.8.1.1.2. Property `t8s cluster configuration > controlPlane > resources > claims > claims items > request`
 
@@ -960,7 +958,7 @@ This field is immutable. It can only be set for containers.
 | -------- | -------- |
 | **Type** | `string` |
 
-**Description:** Request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request.
+**Description:** request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request.
 
 #### <a name="controlPlane_resources_limits"></a>3.8.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > resources > limits`
 
@@ -969,7 +967,7 @@ This field is immutable. It can only be set for containers.
 | **Type**                  | `object`                                                                                                                   |
 | **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#controlPlane_resources_limits_additionalProperties) |
 
-**Description:** Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+**Description:** limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 
 | Property                                                   | Pattern | Type   | Deprecated | Definition                                                     | Title/Description |
 | ---------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------- | ----------------- |
@@ -1007,7 +1005,7 @@ This field is immutable. It can only be set for containers.
 | **Type**                  | `object`                                                                                                                     |
 | **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#controlPlane_resources_requests_additionalProperties) |
 
-**Description:** Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+**Description:** requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 
 | Property                                                     | Pattern | Type   | Deprecated | Definition                                                                                                         | Title/Description |
 | ------------------------------------------------------------ | ------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------ | ----------------- |
