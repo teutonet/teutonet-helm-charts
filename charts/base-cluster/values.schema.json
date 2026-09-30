@@ -1414,49 +1414,44 @@
         },
         "extraPorts": {
           "type": "object",
+          "description": "Additional ports to expose on the ingress controller, key is the port name",
           "additionalProperties": {
-            "type": "object",
-            "required": [
-              "port",
-              "exposedPort",
-              "protocol"
-            ],
-            "properties": {
-              "port": {
+            "oneOf": [
+              {
                 "type": "integer",
                 "minimum": 1,
-                "maximum": 65535
+                "maximum": 65535,
+                "description": "simple form, used as both `port` and `exposedPort` with the `TCP` protocol"
               },
-              "exposedPort": {
-                "type": "integer",
-                "minimum": 1,
-                "maximum": 65535
-              },
-              "protocol": {
-                "type": "string",
-                "enum": [
-                  "TCP",
-                  "UDP"
-                ]
-              },
-              "expose": {
+              {
                 "type": "object",
+                "required": [
+                  "port"
+                ],
                 "properties": {
-                  "default": {
-                    "type": "boolean"
+                  "port": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 65535
+                  },
+                  "exposedPort": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 65535,
+                    "description": "defaults to `port`"
+                  },
+                  "protocol": {
+                    "type": "string",
+                    "enum": [
+                      "TCP",
+                      "UDP"
+                    ],
+                    "description": "defaults to `TCP`"
                   }
-                }
-              },
-              "proxyProtocol": {
-                "type": "object",
-                "properties": {
-                  "insecure": {
-                    "type": "boolean"
-                  }
-                }
+                },
+                "additionalProperties": false
               }
-            },
-            "additionalProperties": true
+            ]
           }
         }
       },

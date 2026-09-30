@@ -164,7 +164,8 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-    {{- range $name, $cfg := .Values.ingress.extraPorts }}
+    {{- range $name, $rawCfg := .Values.ingress.extraPorts }}
+    {{- $cfg := include "base-cluster.ingress.extraPorts.normalize" (dict "cfg" $rawCfg) | fromYaml }}
     - name: {{ $name }}
       port: {{ $cfg.exposedPort }}
       protocol: {{ $cfg.protocol }}
