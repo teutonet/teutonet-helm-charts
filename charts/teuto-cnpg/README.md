@@ -47,11 +47,6 @@ values:
 accessKeyId and accessSecretKey are set to `ACCESS_KEY_ID` and `accessSecretKeyEY` by default
 but can be overwritten with .values.backup.s3.accessKeyId or .values.backup.s3.accessSecretKey.
 
-## Check a backup restore
-
-See [RECOVERY.md](RECOVERY.md) for a tested Barman Cloud restore check using
-the chart's Cluster, ObjectStore, and ScheduledBackup names.
-
 # cnpg-wrapper configuration
 
 **Title:** cnpg-wrapper configuration
