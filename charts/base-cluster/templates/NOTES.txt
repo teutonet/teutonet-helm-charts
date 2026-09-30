@@ -15,7 +15,7 @@
   {{- end }}
 {{- end }}
 
-{{- if .Values.monitoring.prometheus.enabled }}
+{{- if and .Values.monitoring.prometheus.enabled .Values.monitoring.grafana.enabled }}
 
 ===
 You can access your grafana instance via
