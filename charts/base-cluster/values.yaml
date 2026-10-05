@@ -127,7 +127,7 @@ global:
     grafana:
       url: https://grafana.github.io/helm-charts
       charts:
-        alloy: 1.12.1
+        alloy: 1.13.0
       condition: "{{ .Values.monitoring.prometheus.enabled }}"
     grafana-community:
       url: https://grafana-community.github.io/helm-charts
