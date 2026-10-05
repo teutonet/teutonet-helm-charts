@@ -22,7 +22,7 @@ jobs:
     name: lint helm chart
     permissions:
       contents: read
-    runs-on: ubuntu-latest
+    runs-on: self-hosted-big
     needs:
       - getChangedCharts
     if: ${{ needs.getChangedCharts.outputs.count > 0 }}
@@ -36,10 +36,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
+          persist-credentials: false
 
-      - run: pip install yq
-      - name: Install sponge
-        run: sudo apt-get -yq install moreutils
       - name: Extract helm repos
         id: helm-repos
         run: |
@@ -50,10 +48,6 @@ jobs:
             echo
           ) | tee -a "$GITHUB_OUTPUT"
 
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
-        with:
-          python-version: 3.14
-
       - name: Build chart dependencies
         run: helm dependency update "charts/$CHART"
 
@@ -63,17 +57,14 @@ jobs:
 
       - name: Run helm unit tests
         if: hashFiles(format('charts/{0}/tests/**', env.CHART)) != ''
-        uses: d3adb5/helm-unittest-action@985d798b675caa501251573380b5e026ff768c50 # v2.5.1
-        with:
-          helm-version: v3.20.2
-          charts: >-
-            ${{ hashFiles(format('charts/{0}/tests/Chart.yaml', env.CHART)) != ''
-              && format('charts/{0}/tests', env.CHART)
-              || format('charts/{0}', env.CHART) }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ -f "charts/$CHART/tests/Chart.yaml" ]]; then
+            helm unittest "charts/$CHART/tests"
+          else
+            helm unittest "charts/$CHART"
+          fi
 
       - run: ./.github/scripts/prepare-values.sh "charts/$CHART"
-      - uses: helm/chart-testing-action@720270857a28afd41e2426521a7801db09e9b510 # v2.9.0
 
       - name: Lint chart
         env:
@@ -90,18 +81,11 @@ jobs:
 
       - run: ./.github/scripts/templateHelmChartRecursivelyToFolder.sh "charts/$CHART" /tmp/templated
         id: templateChart
-      - name: Download Pluto
-        uses: FairwindsOps/pluto/github-action@ac2c42d55d5ff46a1af0f4b15faf3555119eea23 # v5.24.4
-        if: ${{ steps.templateChart.outputs.skipped == 'false' }}
       - run: pluto detect-files -d /tmp/templated -o custom --columns 'FILEPATH,NAME,KIND,VERSION,REPLACEMENT,REMOVED,DEPRECATED,REPL AVAIL'
         if: ${{ steps.templateChart.outputs.skipped == 'false' }}
-      - name: Install kubescape
-        if: ${{ steps.templateChart.outputs.skipped == 'false' && matrix.chart != 'base-cluster' }} # base-cluster just times this step out...
-        run: /home/linuxbrew/.linuxbrew/bin/brew install kubescape
       - name: Run kubescape
-        if: ${{ steps.templateChart.outputs.skipped == 'false' && matrix.chart != 'base-cluster' }} # base-cluster just times this step out...
+        if: ${{ steps.templateChart.outputs.skipped == 'false' }}
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           kubescape_args=(/tmp/templated)
           if [[ -f "charts/$CHART/kubescape-exceptions.json" ]]; then
             kubescape_args+=(--exceptions <(jq -s 'add' .github/kubescape-exceptions.json "charts/$CHART/kubescape-exceptions.json"))
