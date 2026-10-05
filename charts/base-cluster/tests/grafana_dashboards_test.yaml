@@ -1,0 +1,34 @@
+suite: grafana backup dashboards
+templates:
+  - templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+  - templates/monitoring/kube-prometheus-stack/grafana-secret.yaml
+release:
+  name: base-cluster
+tests:
+  - it: renders the velero dashboard when velero is configured
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+      backup.provider.velero.defaultLocation: primary
+      backup.provider.velero.backupStorageLocations.primary.bucket: my-bucket
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.url: https://s3.example.com
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.accessKeyID: mykey
+      backup.provider.velero.backupStorageLocations.primary.provider.minio.secretAccessKey: mysecret
+    asserts:
+      - equal:
+          path: spec.values.grafana.dashboards.custom.velero.gnetId
+          value: 11055
+      - notExists:
+          path: spec.values.grafana.dashboards.custom.velero.condition
+
+  - it: omits the velero dashboard when no backup provider is set
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test
+      monitoring.grafana.adminPassword: test
+      monitoring.prometheus.enabled: true
+    asserts:
+      - notExists:
+          path: spec.values.grafana.dashboards.custom.velero

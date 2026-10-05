@@ -107,86 +107,17 @@ sidecar:
   resources: {{- include "common.resources" .Values.monitoring.grafana.sidecar | nindent 4 }}
   securityContext: {{- include "base-cluster.prometheus-stack.containerSecurityContext" (dict) | nindent 4 }}
 dashboards:
-  custom:
-    #capacity-planning:
-    #  gnetId: 22
-    #  revision: 7
-    #  datasource: Prometheus
-    kubernetes-cluster-monitoring-via-prometheus: &dashboard
-      datasource: prometheus
-      gnetId: 315
-      revision: 3
-    namespace-view:
-      <<: *dashboard
-      gnetId: 15758
-    node-exporter-full:
-      <<: *dashboard
-      gnetId: 1860
-      revision: 16
-    metrics:
-      <<: *dashboard
-      gnetId: 8588
-    {{- if include "base-cluster.ingress.hasNginx" . }}
-    ingress-nginx:
-      <<: *dashboard
-      gnetId: 9614
-      revision: 1
+  {{- $customDashboards := dict }}
+  {{- range $name, $dashboard := .Values.monitoring.grafana.dashboards.custom }}
+    {{- $create := true -}}
+    {{- if $dashboard.condition -}}
+      {{- $create = eq (include "common.tplvalues.render" (dict "value" $dashboard.condition "context" (deepCopy $))) "true" -}}
+    {{- end -}}
+    {{- if $create }}
+      {{- $customDashboards = set $customDashboards $name (omit $dashboard "condition") }}
     {{- end }}
-    {{- if include "base-cluster.ingress.hasTraefik" . }}
-    traefik:
-      <<: *dashboard
-      gnetId: 17347
-      revision: 9
-    {{- end }}
-    cert-manager:
-      <<: *dashboard
-      gnetId: 11001
-      revision: 1
-    flux:
-      <<: *dashboard
-      gnetId: 16714
-      revision: 1
-    {{- if .Values.dns.provider }}
-    external-dns:
-      <<: *dashboard
-      gnetId: 15038
-      revision: 1
-    {{- end }}
-    {{- if and .Values.monitoring.loki.enabled false }}
-    # TODO: this one is broken
-    loki:
-      <<: *dashboard
-      gnetId: 12611
-      revision: 1
-      datasource: Loki
-    {{- end }}
-    {{- if .Values.kyverno.enabled }}
-    kyverno:
-      <<: *dashboard
-      gnetId: 15804
-      revision: 4
-    {{- end }}
-    {{- if .Values.monitoring.securityScanning.enabled }}
-    trivy:
-      <<: *dashboard
-      gnetId: 17813
-      revision: 2
-    {{- end }}
-    {{- if (.Values.backup.provider).velero }}
-    velero:
-      <<: *dashboard
-      gnetId: 11055
-      revision: 2
-    {{- end }}
-    {{- if ne (.Values.backup.provider).k8up nil }}
-    k8up:
-      <<: *dashboard
-      gnetId: 20166
-      revision: 4
-    {{- end }}
-  {{- with .Values.monitoring.grafana.additionalDashboards }}
-  {{ toYaml . | nindent 4 }}
   {{- end }}
+  custom: {{- mustMerge (deepCopy .Values.monitoring.grafana.additionalDashboards) $customDashboards | toYaml | nindent 4 }}
 {{- include "base-cluster.monitoring.ingress" (dict "name" "grafana" "context" $) | nindent 0 }}
 {{- $grafanaIni := .Values.monitoring.grafana.config | default (dict) }}
 {{- if and (ne .Values.ingress.provider "none") .Values.monitoring.grafana.ingress.enabled .Values.certManager.email (or .Values.global.baseDomain .Values.monitoring.grafana.ingress.customDomain) }}
