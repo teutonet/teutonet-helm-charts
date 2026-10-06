@@ -91,3 +91,14 @@ tests:
       - equal:
           path: spec.friendlyName
           value: "prod (prod): prod prod$@.\\"
+
+  - it: does not render nodePools when none are set
+    set:
+      metadata.customerID: 12345
+      cloud: my-cloud
+      nodePools: {}
+    asserts:
+      - hasDocuments:
+          count: 1
+      - notExists:
+          path: spec.nodePools
