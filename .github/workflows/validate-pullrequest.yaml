@@ -65,7 +65,13 @@ jobs:
             exit 1
           fi
 
-          if gh api --paginate "/repos/${GITHUB_REPOSITORY}/pulls/${PULL_REQUEST_NUMBER}" | jq -cr .body | grep -q '…'; then
+          # strip <details> blocks (renovate/dependabot quote upstream changelogs there, which can
+          # legitimately contain "…" from an upstream PR title that GitHub itself truncated).
+          # Handle both inline (opened and closed on the same line) and multiline blocks, and
+          # opening tags with attributes (e.g. <details open>).
+          if gh api --paginate "/repos/${GITHUB_REPOSITORY}/pulls/${PULL_REQUEST_NUMBER}" | jq -cr .body | sed -E \
+            -e 's#<details([[:space:]][^>]*)?>.*</details>##g' \
+            -e '/<details([[:space:]][^>]*)?>/,/<\/details>/d' | grep -q '…'; then
             echo "The PR body shouldn't contain ellipses (…), did you remove the trailing stuff from the first line of the commit message?" >&2
             exit 1
           fi
