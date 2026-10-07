@@ -19,6 +19,21 @@ function generateImageSbom() {
   local image="${1?}"
   local outFile="${2?}"
   syft "$image" -o "spdx-json=$outFile"
+
+  # syft derives the image root's SPDXID from the repository name only, so two
+  # tags of the same repo would collide when merged. Suffix it with the scanned
+  # image digest, which also dedups refs that resolve to the same content.
+  jq '
+    (first(.packages[] | select(.primaryPackagePurpose == "CONTAINER")) // error("no image root in SBOM")) as $root |
+    (first($root.checksums[]? | select(.algorithm == "SHA256") | .checksumValue) // error("no SHA256 checksum on image root \($root.SPDXID)")) as $digest |
+    "\($root.SPDXID)-\($digest)" as $newId |
+    .packages |= map(if .SPDXID == $root.SPDXID then .SPDXID = $newId else . end) |
+    .relationships |= map(
+      (if .spdxElementId == $root.SPDXID then .spdxElementId = $newId else . end) |
+      (if .relatedSpdxElement == $root.SPDXID then .relatedSpdxElement = $newId else . end)
+    )
+  ' "$outFile" >"$outFile.tmp"
+  mv "$outFile.tmp" "$outFile"
 }
 export -f generateImageSbom
 
@@ -96,10 +111,12 @@ function generateChartSbom() {
     ]) as $containsRelationships |
     ([.[1:][] | .relationships[] | select(.relationshipType != "DESCRIBES")]) as $imageRelationships |
     ($base.relationships + $containsRelationships + $imageRelationships) as $relationships |
+    ([.[1:][] | .hasExtractedLicensingInfos // []] | add // []) as $licenseInfos |
     $base
     | .packages = ($packages | unique_by(.SPDXID))
     | .files = ($files | unique_by(.SPDXID))
     | .relationships = ($relationships | unique)
+    | if ($licenseInfos | length) > 0 then .hasExtractedLicensingInfos = ($licenseInfos | unique_by(.licenseId)) else . end
   ' "$tmpDir/chart.spdx.json" "${imageFiles[@]}" >"$outFile"
 }
 
