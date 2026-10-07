@@ -29,7 +29,7 @@ auth.generic_oauth:
 {{- end -}}
 
 {{- define "base-cluster.prometheus-stack.grafana.config" -}}
-enabled: true
+enabled: {{ .Values.monitoring.grafana.enabled }}
 securityContext:
   seccompProfile:
     type: RuntimeDefault
