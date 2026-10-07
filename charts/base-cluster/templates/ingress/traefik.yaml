@@ -52,17 +52,16 @@ spec:
       websecure:
         proxyProtocol:
           insecure: {{ include "base-cluster.ingress.useProxyProtocol" (dict "context" $) }}
-      {{- range $name, $cfg := .Values.ingress.extraPorts }}
+      {{- range $name, $rawCfg := .Values.ingress.extraPorts }}
+      {{- $cfg := include "base-cluster.ingress.extraPorts.normalize" (dict "cfg" $rawCfg) | fromYaml }}
       {{ $name }}:
         expose:
-          default: {{ $cfg.expose.default }}
+          default: true
         exposedPort: {{ $cfg.exposedPort }}
         port: {{ $cfg.port }}
         protocol: {{ $cfg.protocol }}
-        {{- with $cfg.proxyProtocol }}
         proxyProtocol:
-          insecure: {{ .insecure }}
-        {{- end }}
+          insecure: {{ include "base-cluster.ingress.useProxyProtocol" (dict "context" $) }}
       {{- end }}
     service:
       annotations:
