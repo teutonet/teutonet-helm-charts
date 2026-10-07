@@ -759,6 +759,36 @@
             "ingress": {
               "$ref": "#/$defs/toolIngress"
             },
+            "dashboards": {
+              "type": "object",
+              "properties": {
+                "custom": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "gnetId": {
+                        "type": "integer"
+                      },
+                      "revision": {
+                        "type": "integer"
+                      },
+                      "datasource": {
+                        "type": "string"
+                      },
+                      "condition": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "gnetId"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "additionalProperties": false
+            },
             "additionalDashboards": {
               "type": "object",
               "additionalProperties": {

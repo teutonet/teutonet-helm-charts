@@ -18,7 +18,27 @@
   "nix": {
     "enabled": true
   },
+  "customDatasources": {
+    "grafana-dashboard": {
+      "defaultRegistryUrlTemplate": "https://grafana.com/api/dashboards/{{packageName}}",
+      "format": "json",
+      "transformTemplates": [
+        "{\"releases\": [{\"version\": $string(revision)}]}"
+      ]
+    }
+  },
   "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)values\\.yaml$/"
+      ],
+      "matchStrings": [
+        "gnetId: (?<packageName>\\d+)\\n\\s+revision: (?<currentValue>\\d+)"
+      ],
+      "versioningTemplate": "loose",
+      "datasourceTemplate": "grafana-dashboard"
+    },
     {
       "customType": "regex",
       "managerFilePatterns": [
