@@ -30,7 +30,9 @@ spec:
   quotas: {{- toYaml . | nindent 4 }}
   {{- end }}
   clusterClass: {{ $.Release.Name }}
-  nodePools: {{- range $name, $machineDeploymentClass := .Values.nodePools }}
+  {{- if .Values.nodePools }}
+  nodePools:
+  {{- range $name, $machineDeploymentClass := .Values.nodePools }}
     {{ $name -}}:
       {{- if $machineDeploymentClass.availabilityZone }}
       availabilityZone: {{ $machineDeploymentClass.availabilityZone | quote }}
@@ -50,6 +52,7 @@ spec:
       {{- else }}
       replicas: {{ $replicas }}
       {{- end }}
+  {{- end }}
   {{- end }}
   {{- with .Values.openstackImageNamePrefix }}
   openStackImageNamePrefix: {{ . | quote }}
