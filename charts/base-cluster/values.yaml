@@ -207,7 +207,7 @@ global:
     trivy:
       url: https://aquasecurity.github.io/helm-charts
       charts:
-        trivy-operator: 0.36.0
+        trivy-operator: 0.37.0
       condition: "{{ .Values.monitoring.securityScanning.enabled }}"
     emberstack:
       url: https://emberstack.github.io/helm-charts
