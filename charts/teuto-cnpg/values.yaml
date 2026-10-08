@@ -5,5 +5,7 @@ databaseImage:
 instances: 3
 logLevel: info
 storageSize: 1Gi
-podMonitorLabels:
-  managed.by/monitoring: teutonet
+monitoring:
+  enabled: true
+  labels:
+    managed.by/monitoring: teutonet

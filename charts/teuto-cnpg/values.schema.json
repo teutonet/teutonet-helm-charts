@@ -7,13 +7,6 @@
     "databases"
   ],
   "properties": {
-    "podMonitorLabels": {
-      "type": "object",
-      "description": "The labels to set on ServiceMonitor which the prometheus uses to search for",
-      "additionalProperties": {
-        "type": "string"
-      }
-    },
     "instances": {
       "type": "integer",
       "minimum": 1
@@ -251,6 +244,24 @@
         }
       },
       "additionalProperties": false
+    },
+    "monitoring": {
+      "type": "object",
+      "description": "",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Flag if a PodMonitor should be created"
+        },
+        "labels": {
+          "type": "object",
+          "description": "The labels to set on ServiceMonitor which the prometheus uses to search for",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
     }
   }
 }
