@@ -4,7 +4,10 @@ kind: PodMonitor
 metadata:
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     cnpg.io/cluster: {{ printf "%s" .Release.Name }}
-    {{- with .Values.monitoring.labels }}{{- toYaml . | nindent 4 }}{{- end }}
+    {{- with .Values.monitoring.labels }}
+      {{- $customLabels := omit . "cnpg.io/cluster" }}
+      {{- with $customLabels }}{{- toYaml . | nindent 4 }}{{- end }}
+    {{- end }}
   name: {{ printf "%s" .Release.Name }}-podmonitor
   namespace: {{ .Release.Namespace}}
 spec:
