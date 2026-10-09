@@ -222,7 +222,7 @@ global:
     vmware:
       url: https://vmware-tanzu.github.io/helm-charts
       charts:
-        velero: 12.2.0
+        velero: 12.2.1
       condition: '{{ ne (.Values.backup.provider).velero nil }}'
     twin:
       url: https://twin.github.io/helm-charts
