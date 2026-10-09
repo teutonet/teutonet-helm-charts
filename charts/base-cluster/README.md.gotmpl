@@ -249,12 +249,22 @@ downtime for all attached applications!
 
 ### Component [rbac](#rbac)
 
-This chart gives you the ability to create serviceAccounts, roles, roleBindings,
-[namespaces](#miscellaneous) and KUBECONFIG files with a, hopefully easy to
-understand, DSL.
+This chart gives you the ability to create roles, roleBindings and
+[namespaces](#miscellaneous) with a, hopefully easy to understand, DSL.
 
-After configuring your stuff you can fetch the KUBECONFIGs with the help of the
-output of `helm -n flux-system get notes base-cluster`
+All accounts and groups authenticate via OIDC; no `ServiceAccount`s or tokens are
+created for them, as static service account tokens are a security risk. Accounts
+with an `@` in their name (an email) are bound as that user, accounts without one
+are bound using their OIDC identity name. `rbac.groups` works the same way as
+`rbac.accounts`, but binds the name as an OIDC group instead of a user; a name
+cannot be used as both an account and a group.
+
+Note that your OIDC provider may prefix or suffix the username/group claims (e.g.
+`oidc:someone@example.com` instead of `someone@example.com`) before the apiserver
+sees them, so the account/group name you bind against might need to include that.
+If it's not working, ask your kubernetes hoster or check the
+`--oidc-username-claim`/`--oidc-username-prefix`/`--oidc-groups-claim`/`--oidc-groups-prefix`
+flags on your apiserver.
 
 ### Miscellaneous
 
@@ -496,3 +506,13 @@ ingress:
 
 - This release remove the field `.monitoring.prometheus.retentionSize` as the retention is now automatically calculated
   and set. If data retention is happening an alert is triggered.
+
+- `rbac.accounts` no longer creates a `ServiceAccount`/long-lived token `Secret` for
+  accounts without an `@` in their name, as static service account tokens are a
+  security risk. Every account is now bound as an OIDC `User` subject: accounts with
+  an `@` (an email) behave as before, accounts without one are now expected to be an
+  OIDC identity name (e.g. the `sub`/username your OIDC provider presents) instead of
+  an arbitrary account name. The `generateKubeconfig` helper in the install notes now
+  builds a kubeconfig that authenticates via `kubectl oidc-login` instead of a
+  long-lived `Secret` token, and needs your OIDC issuer url as an additional
+  argument.
