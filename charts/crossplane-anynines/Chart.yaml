@@ -1,0 +1,20 @@
+apiVersion: v2
+name: crossplane-klutch
+type: application
+version: 0.1.0
+icon: https://docs.k8s.anynines.com/img/favicon.ico
+maintainers:
+  - name: cwrau
+    email: cwr@teuto.net
+  - name: marvinWolff
+    email: mw@teuto.net
+  - name: tasches
+    email: st@teuto.net
+sources:
+  - https://docs.k8s.anynines.com/docs/platform-operator/central-management-cluster-setup
+home: https://teuto.net
+description: Installs the crossplane provider for anynines klutch
+dependencies:
+  - name: common
+    version: 1.2.0
+    repository: oci://ghcr.io/teutonet/teutonet-helm-charts
