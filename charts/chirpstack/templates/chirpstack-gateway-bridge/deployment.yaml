@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {{- include "chirpstack.commonMetadata" (dict "component" "gateway-bridge" "context" .) | nindent 2 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: gateway-bridge
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: gateway-bridge
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/chirpstack-gateway-bridge/configmap.yaml") . | sha256sum }}
+    spec:
+      securityContext: {{- include "chirpstack.securityContext" (dict) | nindent 8 }}
+      {{- include "chirpstack.securityOptions" (dict) | nindent 6 }}
+      containers:
+        - image: {{ include "common.images.image" (dict "imageRoot" .Values.chirpstackGatewayBridge.image "global" .Values.global) }}
+          name: chirpstack-gateway-bridge
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+            exec:
+              command:
+                - sh
+                - -exc
+                - |-
+                  netstat -uln | grep -q :1700
+          resources: {{- .Values.chirpstackGatewayBridge.resources | toYaml | nindent 12 }}
+          securityContext: {{- include "chirpstack.containerSecurityContext" (dict) | nindent 12 }}
+          ports:
+            - containerPort: 1700
+              name: chirpstack-udp
+              protocol: UDP
+          volumeMounts:
+            - mountPath: /etc/chirpstack-gateway-bridge
+              name: chirpstack-gateway
+      restartPolicy: Always
+      volumes:
+        - name: chirpstack-gateway
+          configMap:
+            name: {{ include "chirpstack.fullname" (dict "context" . "component" "gateway-bridge") }}
