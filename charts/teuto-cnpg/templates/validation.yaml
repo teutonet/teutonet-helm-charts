@@ -1,0 +1,5 @@
+{{- if (.Values.backup).encrypted }}
+  {{- if not .Values.backup.s3.bucketName }}
+    {{ fail "bucketName must be set when encryption is activated"}}
+  {{- end }}
+{{- end }}
