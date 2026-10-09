@@ -36,8 +36,8 @@
       "matchStrings": [
         "gnetId: (?<packageName>\\d+)\\n\\s+revision: (?<currentValue>\\d+)"
       ],
-      "versioningTemplate": "loose",
-      "datasourceTemplate": "grafana-dashboard"
+      "versioningTemplate": "regex:^(?<minor>\\d+)$",
+      "datasourceTemplate": "custom.grafana-dashboard"
     },
     {
       "customType": "regex",
