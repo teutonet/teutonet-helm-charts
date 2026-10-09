@@ -1,5 +1,21 @@
 # Changelog
 
+## [9.14.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.13.0...t8s-cluster-v9.14.0) (2026-10-09)
+
+
+### Features
+
+* **t8s-cluster:** allow zero nodepools ([#2436](https://github.com/teutonet/teutonet-helm-charts/issues/2436)) ([b8c8ee6](https://github.com/teutonet/teutonet-helm-charts/commit/b8c8ee60d5370d16f3266e19b095556418416907))
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update cilium docker tag to v1.20.2 ([#2409](https://github.com/teutonet/teutonet-helm-charts/issues/2409)) ([1ada21b](https://github.com/teutonet/teutonet-helm-charts/commit/1ada21beabe7236c9e753dc065e82bec87a372b1))
+* **t8s-cluster/dependencies:** update docker.io/busybox:1.38.0 docker digest to fd7dc98 ([#2408](https://github.com/teutonet/teutonet-helm-charts/issues/2408)) ([5ba9230](https://github.com/teutonet/teutonet-helm-charts/commit/5ba9230a71657e91f17310c5e5bf50c9ed40d0b2))
+* **t8s-cluster/dependencies:** update docker.io/minio/mc:release.2024-11-21t17-21-54z docker digest to 993e8c4 ([#2427](https://github.com/teutonet/teutonet-helm-charts/issues/2427)) ([4cb6cb8](https://github.com/teutonet/teutonet-helm-charts/commit/4cb6cb8a071d52e42ba3278be048a5b3ffe57aac))
+* **t8s-cluster/dependencies:** update helm release openstack-cloud-controller-manager to v2.36.5 ([#2410](https://github.com/teutonet/teutonet-helm-charts/issues/2410)) ([c854f58](https://github.com/teutonet/teutonet-helm-charts/commit/c854f589670cbdefeba50655b3e8e01ae9ed0f6d))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.7.2 ([#2421](https://github.com/teutonet/teutonet-helm-charts/issues/2421)) ([4a69409](https://github.com/teutonet/teutonet-helm-charts/commit/4a694092432a0b78265069d8dfa9a9cbcf1a9ac3))
+
 ## [9.13.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.12.1...t8s-cluster-v9.13.0) (2026-09-24)
 
 
