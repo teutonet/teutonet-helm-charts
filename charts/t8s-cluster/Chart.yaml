@@ -15,16 +15,16 @@ maintainers:
     name: tasches
 name: t8s-cluster
 sources:
-  - https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.13.0/charts/t8s-cluster
+  - https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.14.0/charts/t8s-cluster
   - https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster
 type: application
-version: 9.13.0
+version: 9.14.0
 annotations:
   artifacthub.io/images: |-
     - image: nvcr.io/nvidia/gpu-operator:v24.9.2                                                                   #  default/HelmRelease/t8s-cluster-gpu-operator/kube-system/Job/gpu-operator-upgrade-crd.yaml
     - image: nvcr.io/nvidia/gpu-operator:v24.9.2                                                                   #  default/HelmRelease/t8s-cluster-gpu-operator/null/Deployment/gpu-operator.yaml
     - image: registry.k8s.io/autoscaling/cluster-autoscaler:v1.35.0                                                #  default/HelmRelease/t8s-cluster-autoscaler/default/Deployment/as-t8s-cluster-autoscaler.yaml
-    - image: registry.k8s.io/etcd:3.7.1-0@sha256:a9983dd6d9283138ab926daa307c6c25623636703ecf5645d5df4d666ce9eba2  #  default/ResourceSet/t8s-cluster-etcd-defrag.yaml
+    - image: registry.k8s.io/etcd:3.7.2-0@sha256:7c6c239825d00e3f6328a69caafd54be92063acf0c2ce78b8394699f52b75dc3  #  default/ResourceSet/t8s-cluster-etcd-defrag.yaml
     - image: registry.k8s.io/nfd/node-feature-discovery:v0.16.6                                                    #  default/HelmRelease/t8s-cluster-gpu-operator/kube-system/DaemonSet/gpu-operator-node-feature-discovery-worker.yaml
     - image: registry.k8s.io/nfd/node-feature-discovery:v0.16.6                                                    #  default/HelmRelease/t8s-cluster-gpu-operator/kube-system/Deployment/gpu-operator-node-feature-discovery-gc.yaml
     - image: registry.k8s.io/nfd/node-feature-discovery:v0.16.6                                                    #  default/HelmRelease/t8s-cluster-gpu-operator/kube-system/Deployment/gpu-operator-node-feature-discovery-master.yaml
