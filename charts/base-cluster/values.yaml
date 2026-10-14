@@ -180,7 +180,7 @@ global:
     envoy-gateway:
       url: oci://docker.io/envoyproxy
       charts:
-        gateway-helm: 1.8.5
+        gateway-helm: 1.9.2
       condition: '{{ eq .Values.ingress.provider "envoy" }}'
     kyverno:
       url: https://kyverno.github.io/kyverno
