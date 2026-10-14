@@ -64,9 +64,9 @@ tests:
       - hasDocuments:
           count: 2
 
-  - it: gateway-api renders when provider is envoy
+  - it: gateway-api and envoy-gateway-crds each render a GitRepository and Kustomization when provider is envoy
     set:
       ingress.provider: envoy
     asserts:
       - hasDocuments:
-          count: 2
+          count: 4
