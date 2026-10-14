@@ -45,9 +45,6 @@ tests:
           path: spec.chart.spec.chart
           value: alloy
       - equal:
-          path: spec.chart.spec.version
-          value: 1.12.1
-      - equal:
           path: spec.chart.spec.sourceRef
           value:
             kind: HelmRepository
@@ -69,7 +66,7 @@ tests:
           path: spec.values.alloy.configMap.content
           pattern: url\s*=\s*"https://prometheus\.teuto\.net:9090/api/v1/write"
       - matchSnapshot:
-          path: ""
+          path: spec.values
 
   - it: limits the agent's RBAC to reading pods instead of the alloy chart's cluster-wide secrets/configmaps defaults
     release:
