@@ -1,0 +1,29 @@
+renders the grafana and cetic HelmRepositories into flux-system when namespace is default:
+  1: |
+    apiVersion: source.toolkit.fluxcd.io/v1
+    kind: HelmRepository
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: managed-monitoring
+        helm.sh/chart: managed-monitoring-0.1.0
+      name: cetic
+      namespace: flux-system
+    spec:
+      interval: 5m
+      url: https://cetic.github.io/helm-charts
+  2: |
+    apiVersion: source.toolkit.fluxcd.io/v1
+    kind: HelmRepository
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: managed-monitoring
+        helm.sh/chart: managed-monitoring-0.1.0
+      name: grafana
+      namespace: flux-system
+    spec:
+      interval: 5m
+      url: https://grafana.github.io/helm-charts
