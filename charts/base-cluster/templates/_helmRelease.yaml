@@ -13,11 +13,13 @@ spec:
   interval: 1h
   driftDetection:
     mode: enabled
+  {{- if .dependencies }}
   dependsOn:
     {{- range $namespace, $name := .dependencies }}
     - name: {{ $name }}
       namespace: {{ $namespace }}
     {{- end }}
+  {{- end }}
   values:
     {{- if eq .render nil }}
     static: {{ toYaml .resource | indent 6 }}

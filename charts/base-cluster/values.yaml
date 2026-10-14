@@ -172,11 +172,6 @@ global:
       charts:
         traefik: 41.7.1
       condition: '{{ eq .Values.ingress.provider "traefik" }}'
-    envoy-gateway-crds:
-      url: oci://docker.io/envoyproxy
-      charts:
-        gateway-crds-helm: 1.8.5
-      condition: '{{ eq .Values.ingress.provider "envoy" }}'
     envoy-gateway:
       url: oci://docker.io/envoyproxy
       charts:
@@ -550,6 +545,16 @@ flux:
       semver: 1.6.3
       path: config/crd/experimental
       condition: '{{ or (include "base-cluster.ingress.hasTraefik" .) (include "base-cluster.ingress.hasEnvoy" .) }}'
+    # CRDs are applied raw instead of via the gateway-crds-helm chart, whose Helm release Secret exceeds the 1MiB limit
+    # keep `semver` in lockstep with `global.helmRepositories.envoy-gateway.charts.gateway-helm`
+    # https://github.com/envoyproxy/gateway/issues/6105
+    envoy-gateway-crds:
+      url: https://github.com/envoyproxy/gateway
+      semver: 1.8.5
+      path: charts/gateway-helm/charts/crds/crds/generated
+      wait: true
+      timeout: 5m
+      condition: '{{ include "base-cluster.ingress.hasEnvoy" . }}'
 
 ingress:
   provider: envoy
