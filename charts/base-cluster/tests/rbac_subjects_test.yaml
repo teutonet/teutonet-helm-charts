@@ -12,7 +12,7 @@ tests:
           path: subjects[0].kind
           value: User
 
-  - it: service account name gets ServiceAccount subject kind
+  - it: non-email account also gets User subject kind
     values:
       - fixtures/rbac-pod-reader-role.yaml
     set:
@@ -20,4 +20,51 @@ tests:
     asserts:
       - equal:
           path: subjects[0].kind
-          value: ServiceAccount
+          value: User
+      - equal:
+          path: subjects[0].name
+          value: myaccount
+
+  - it: group gets Group subject kind
+    values:
+      - fixtures/rbac-pod-reader-role.yaml
+    set:
+      rbac.groups.my-group.clusterRoles[0]: pod-reader
+    asserts:
+      - equal:
+          path: subjects[0].kind
+          value: Group
+      - equal:
+          path: subjects[0].name
+          value: my-group
+
+  - it: account and group both bound to the same role appear as separate subjects
+    values:
+      - fixtures/rbac-pod-reader-role.yaml
+    set:
+      rbac.accounts.myaccount.clusterRoles[0]: pod-reader
+      rbac.groups.my-group.clusterRoles[0]: pod-reader
+    asserts:
+      - lengthEqual:
+          path: subjects
+          count: 2
+      - contains:
+          path: subjects
+          content:
+            kind: User
+            name: myaccount
+      - contains:
+          path: subjects
+          content:
+            kind: Group
+            name: my-group
+
+  - it: fails when a name is used as both an account and a group
+    values:
+      - fixtures/rbac-pod-reader-role.yaml
+    set:
+      rbac.accounts.myaccount.clusterRoles[0]: pod-reader
+      rbac.groups.myaccount.clusterRoles[0]: pod-reader
+    asserts:
+      - failedTemplate:
+          errorMessage: "'myaccount' is used as both an account and a group"
