@@ -175,7 +175,7 @@ global:
     envoy-gateway-crds:
       url: oci://docker.io/envoyproxy
       charts:
-        gateway-crds-helm: v1.8.3
+        gateway-crds-helm: 1.8.5
       condition: '{{ eq .Values.ingress.provider "envoy" }}'
     envoy-gateway:
       url: oci://docker.io/envoyproxy
