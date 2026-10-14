@@ -1362,6 +1362,15 @@
               "path": {
                 "type": "string"
               },
+              "wait": {
+                "type": "boolean",
+                "description": "Whether the Kustomization waits for all applied resources to become ready (e.g. CRDs to be established)"
+              },
+              "timeout": {
+                "type": "string",
+                "description": "The timeout for the Kustomization's apply and health checks",
+                "pattern": "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
+              },
               "gitInterval": {
                 "type": "string",
                 "description": "The interval in which to sync the repository",
