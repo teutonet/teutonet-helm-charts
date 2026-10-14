@@ -209,3 +209,17 @@ tests:
       - matchRegex:
           path: spec.dependsOn[0].readyExpr
           pattern: ControlPlaneAvailable
+
+  - it: uploads the snapshot with the aws cli to a single object named after the release
+    set:
+      controlPlane.etcdBackup: true
+    asserts:
+      - matchRegex:
+          path: spec.resources[0].spec.values.static
+          pattern: "- aws\\n\\s+- s3\\n\\s+- cp\\n\\s+- /snapshot/snapshot.db\\n\\s+- s3://\\$\\(S3_BUCKET\\)/my-cluster/etcd-snapshot.db\\n\\s+- --no-progress"
+      - matchRegex:
+          path: spec.resources[0].spec.values.static
+          pattern: "name: S3_ENDPOINT[\\s\\S]*name: AWS_ENDPOINT_URL\\n\\s+value: https://\\$\\(S3_ENDPOINT\\)"
+      - notMatchRegex:
+          path: spec.resources[0].spec.values.static
+          pattern: "mc cp|MC_HOST"

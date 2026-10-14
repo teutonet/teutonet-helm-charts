@@ -53,8 +53,8 @@ global:
   s3:
     image:
       registry: docker.io
-      repository: minio/mc
-      tag: RELEASE.2024-11-21T17-21-54Z@sha256:993e8c454a7ec632923f7e3e61adf1d473261da6354cefd641aedd33a2cfe112
+      repository: amazon/aws-cli
+      tag: 2.37.13@sha256:d32864c20087d486f5988c3e70817d67a73f584a47535cada9ad97e0ea1e5196
   injectedCertificateAuthorities: ""
   kubeletExtraConfig:
     # This is only used when using 1.27 or later

@@ -56,11 +56,12 @@ spec:
                 - mountPath: /snapshot
                   name: snapshot
             - name: fix-snapshot-permissions
-              image: {{ include "common.images.image" (dict "imageRoot" .Values.global.s3.image "global" .Values.global) }}
-              imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.s3.image }}
+              image: {{ include "common.images.image" (dict "imageRoot" .Values.global.busybox.image "global" .Values.global) }}
+              imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.busybox.image }}
               command:
                 - chmod
-                - u=rw,g=r,o=
+                - -v
+                - u=r,g=r,o=
                 - /snapshot/snapshot.db
               securityContext:
                 runAsUser: 0
@@ -82,12 +83,20 @@ spec:
               image: {{ include "common.images.image" (dict "imageRoot" .Values.global.s3.image "global" .Values.global) }}
               imagePullPolicy: {{ include "common.images.pullPolicy" .Values.global.s3.image }}
               command:
-                - bash
-                - -exc
-                - mc cp /snapshot/snapshot.db "backup/{{ printf "${S3_BUCKET}/%s/%s" .Release.Namespace .Release.Name }}/$(date --iso-8601=seconds).etcd"
+                - aws
+                - s3
+                - cp
+                - /snapshot/snapshot.db
+                - s3://$(S3_BUCKET)/{{ .Release.Name }}/etcd-snapshot.db
+                - --no-progress
               env:
-                - name: MC_CONFIG_DIR
+                - name: HOME
                   value: /tmp
+                # non-AWS S3 implementations don't all support the default integrity checksums
+                - name: AWS_REQUEST_CHECKSUM_CALCULATION
+                  value: when_required
+                - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+                  value: when_required
                 - name: AWS_ACCESS_KEY_ID
                   valueFrom:
                     secretKeyRef:
@@ -109,13 +118,13 @@ spec:
                     secretKeyRef:
                       name: etcd-backup
                       key: host
+                - name: AWS_ENDPOINT_URL
+                  value: https://$(S3_ENDPOINT)
                 - name: S3_BUCKET
                   valueFrom:
                     secretKeyRef:
                       name: etcd-backup
                       key: bucket
-                - name: MC_HOST_backup
-                  value: https://$(AWS_ACCESS_KEY_ID):$(AWS_SECRET_ACCESS_KEY)@$(S3_ENDPOINT)
               securityContext:
                 runAsUser: 1000
                 runAsGroup: 1000
