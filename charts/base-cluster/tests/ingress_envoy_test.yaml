@@ -99,6 +99,21 @@ tests:
           path: spec.values.static
           pattern: "enableProxyProtocol: false"
 
+  - it: patches the proxy Deployment and Service selectors to the overridden pod name label, since Envoy Gateway otherwise builds a selector that does not match the template labels
+    asserts:
+      - documentIndex: 1
+        matchRegex:
+          path: spec.values.static
+          pattern: "(?s)labels:\\s+app.kubernetes.io/name: ingress-controller\\s+(#[^\\n]*\\s+)*patch:"
+      - documentIndex: 1
+        matchRegex:
+          path: spec.values.static
+          pattern: "(?s)envoyDeployment:.*?patch:\\s+type: StrategicMerge\\s+value:\\s+spec:\\s+selector:\\s+matchLabels:\\s+app.kubernetes.io/name: ingress-controller"
+      - documentIndex: 1
+        matchRegex:
+          path: spec.values.static
+          pattern: "(?s)envoyService:.*?patch:\\s+type: StrategicMerge\\s+value:\\s+spec:\\s+selector:\\s+app.kubernetes.io/name: ingress-controller"
+
   - it: pins loadBalancerIP and floating-ip annotation when ingress.IP is set
     set:
       ingress.IP: 10.0.0.100
