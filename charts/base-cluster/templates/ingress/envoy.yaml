@@ -63,6 +63,16 @@ spec:
         pod:
           labels:
             app.kubernetes.io/name: ingress-controller
+        # Envoy Gateway derives the Deployment (and Service) selector from `app.kubernetes.io/name: envoy` and merges
+        # the pod labels over the same keys, so overriding that label above makes the Deployment invalid
+        # (`selector` does not match template `labels`). Move the selectors to the overridden value.
+        patch:
+          type: StrategicMerge
+          value:
+            spec:
+              selector:
+                matchLabels:
+                  app.kubernetes.io/name: ingress-controller
         container:
           resources: {{- include "common.resources" .Values.ingress | nindent 12 }}
   {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp" "global" .Values.global) | fromYaml }}
@@ -107,6 +117,13 @@ spec:
         {{- if .Values.ingress.IP }}
         loadBalancerIP: {{ .Values.ingress.IP | quote }}
         {{- end }}
+        # must match the Deployment selector patched in the `ingress-controller` EnvoyProxy
+        patch:
+          type: StrategicMerge
+          value:
+            spec:
+              selector:
+                app.kubernetes.io/name: ingress-controller
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
