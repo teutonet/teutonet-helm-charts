@@ -502,7 +502,6 @@ If your cluster's CRDs aren't updated yet, stay on `traefik` for now:
 ingress:
   provider: traefik
 ```
-{{ .Files.Get "values.md"  }}
 
 - This release remove the field `.monitoring.prometheus.retentionSize` as the retention is now automatically calculated
   and set. If data retention is happening an alert is triggered.
@@ -516,3 +515,15 @@ ingress:
   builds a kubeconfig that authenticates via `kubectl oidc-login` instead of a
   long-lived `Secret` token, and needs your OIDC issuer url as an additional
   argument.
+
+- This release disables grafana by default. To keep using it set
+  `monitoring.grafana.enabled` to `true`. Grafana's `Secret`, `ListenerSet` and
+  `Certificate` are no longer rendered while it is disabled.
+
+- `ingress.extraPorts.<name>` is stricter now: the fields `expose` and `proxyProtocol`
+  are removed and the schema rejects them, so drop them from your values. Extra ports
+  are always exposed and follow the same `useProxyProtocol` setting as the builtin
+  ports. `exposedPort` defaults to `port` and `protocol` to `TCP`, and `<name>: <port>`
+  is a shorthand for `<name>: {port: <port>}`. Ports must not clash with each other
+  or with the builtin ports of the ingress provider.
+{{ .Files.Get "values.md"  }}
