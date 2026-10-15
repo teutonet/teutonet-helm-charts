@@ -442,8 +442,8 @@ of `.monitoring.tracing.ingester.<field>`
 
 - This release also removes the `monitoring.deadMansSwitch.enabled` field, it is just active when the `monitoring.deadMansSwitch` block is set.
 
-- This release remove the field `.monitoring.prometheus.retentionSize` as the retention is now automatically calculated
-  and set. If data retention is happening an alert is triggered.
+- This release removes the field `.monitoring.prometheus.retentionSize` as the retention is now automatically calculated
+  and set. If data retention is happening, an alert is triggered.
 
 - This release disables the trivy-operator by default.
   To continue using the operator set `.monitoring.securityScanning.enabled` to `true`.
