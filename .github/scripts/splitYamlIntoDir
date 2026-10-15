@@ -51,11 +51,37 @@ function splitHelmReleaseIntoDir() {
 }
 export -f splitHelmReleaseIntoDir
 
+function splitResourceSetIntoDir() {
+  [[ -v RUNNER_DEBUG && "$RUNNER_DEBUG" == 1 ]] && set -x
+  [[ -o xtrace ]] && export RUNNER_DEBUG=1
+
+  local resourceSet="${1?}"
+  local sources="${2?}"
+  local resourceSetDir
+  resourceSetDir="$(dirname "$resourceSet")/$(basename -s .yaml "$resourceSet")"
+  if ! [[ -d "$resourceSetDir" ]]; then
+    # a ResourceSet only wraps its resources, so unlike a HelmRelease there is nothing to template, just unwrap
+    yq -y '(.spec.resources // [])[]' <"$resourceSet" >"${resourceSet}_resources"
+    # the sources of nested HelmReleases can live next to the ResourceSet as well as inside of it
+    local ownSources
+    ownSources="$(yq -y 'select(.apiVersion | contains("source.toolkit.fluxcd.io"))' <"${resourceSet}_resources")"
+    {
+      cat "$sources"
+      [[ -z "$ownSources" ]] || printf -- '---\n%s\n' "$ownSources"
+    } >"${resourceSet}_sources"
+    splitYamlIntoDir "${resourceSet}_resources" "$resourceSetDir" "${resourceSet}_sources"
+    rm "${resourceSet}_resources" "${resourceSet}_sources"
+  fi
+}
+export -f splitResourceSetIntoDir
+
 function splitYamlIntoDir() {
   [[ -v RUNNER_DEBUG && "$RUNNER_DEBUG" == 1 ]] && set -x
   [[ -o xtrace ]] && export RUNNER_DEBUG=1
 
   local yaml="${1?}"
+  # the yaml containing the sources (HelmRepository, ...) of the HelmReleases, defaults to the yaml itself
+  local sources="${3:-$yaml}"
   local yamlDir
   yamlDir="$(dirname "$yaml")"
   local dir="${2?}"
@@ -73,7 +99,8 @@ function splitYamlIntoDir() {
 
   find "$yamlDir" -type f -name "${splitPrefix}*" -print0 | parallel -0 renameFile {} "$dir"
 
-  find "$dir" -type d -name HelmRelease -exec find {} -maxdepth 1 -type f -name '*.yaml' -print0 \; | parallel -0 splitHelmReleaseIntoDir {} "$yaml"
+  find "$dir" -type d -name ResourceSet -exec find {} -maxdepth 1 -type f -name '*.yaml' -print0 \; | parallel -0 splitResourceSetIntoDir {} "$sources"
+  find "$dir" -type d -name HelmRelease -exec find {} -maxdepth 1 -type f -name '*.yaml' -print0 \; | parallel -0 splitHelmReleaseIntoDir {} "$sources"
 }
 export -f splitYamlIntoDir
 

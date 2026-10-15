@@ -9,6 +9,7 @@ set -o pipefail
 [[ ! -v TMP_DIR ]] && trap 'rm -rf "$TMP_DIR"' EXIT
 TMP_DIR="${TMP_DIR:-$(mktemp -d)}"
 
+# shellcheck source=/dev/null
 source <(helm env)
 mkdir -p "${HELM_REPOSITORY_CACHE}"
 
@@ -144,11 +145,16 @@ function templateSubHelmCharts() {
   local tmpDir
   tmpDir=$(mktemp -d -p "$TMP_DIR")
 
+  # HelmReleases and their sources can also be nested in flux ResourceSets, at any depth, instead of being top-level documents
+  local nested='def nested: if .kind == "ResourceSet" then (.spec.resources // [])[] | nested else . end;'
+  local helmReleases='[.[] | nested | select(.kind == "HelmRelease")]'
+  local sources='.[] | nested | select(.kind | IN(["GitRepository", "HelmRepository"][]))'
+
   yaml=$(cat -)
-  numberOfHelmReleases=$(yq <<<"$yaml" -ers '[.[] | select(.kind == "HelmRelease")] | length')
+  numberOfHelmReleases=$(yq <<<"$yaml" -ers "$nested $helmReleases | length")
   echo "$yaml"
   for index in $(seq 0 $((numberOfHelmReleases - 1))); do
-    yq <<<"$yaml" -erys '([.[] | select(.kind == "HelmRelease")]['"$index"']),(.[] | select(.kind | IN(["GitRepository", "HelmRepository"][])))' | templateHelmRelease >"$tmpDir/$index.yaml" &
+    yq <<<"$yaml" -erys "$nested (${helmReleases}[${index}]),(${sources})" | templateHelmRelease >"$tmpDir/$index.yaml" &
   done
   wait
   for index in $(seq 0 $((numberOfHelmReleases - 1))); do
