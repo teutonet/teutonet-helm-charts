@@ -9,6 +9,7 @@ set -o pipefail
 [[ ! -v TMP_DIR ]] && trap 'rm -rf "$TMP_DIR"' EXIT
 TMP_DIR="${TMP_DIR:-$(mktemp -d)}"
 
+# shellcheck source=/dev/null
 source <(helm env)
 mkdir -p "${HELM_REPOSITORY_CACHE}"
 
@@ -144,11 +145,14 @@ function templateSubHelmCharts() {
   local tmpDir
   tmpDir=$(mktemp -d -p "$TMP_DIR")
 
+  # HelmReleases can also be nested in a flux ResourceSet instead of being top-level documents
+  local helmReleases='[(.[] | select(.kind == "HelmRelease")), (.[] | select(.kind == "ResourceSet") | (.spec.resources // [])[] | select(.kind == "HelmRelease"))]'
+
   yaml=$(cat -)
-  numberOfHelmReleases=$(yq <<<"$yaml" -ers '[.[] | select(.kind == "HelmRelease")] | length')
+  numberOfHelmReleases=$(yq <<<"$yaml" -ers "$helmReleases | length")
   echo "$yaml"
   for index in $(seq 0 $((numberOfHelmReleases - 1))); do
-    yq <<<"$yaml" -erys '([.[] | select(.kind == "HelmRelease")]['"$index"']),(.[] | select(.kind | IN(["GitRepository", "HelmRepository"][])))' | templateHelmRelease >"$tmpDir/$index.yaml" &
+    yq <<<"$yaml" -erys "(${helmReleases}[${index}]),(.[] | select(.kind | IN([\"GitRepository\", \"HelmRepository\"][])))" | templateHelmRelease >"$tmpDir/$index.yaml" &
   done
   wait
   for index in $(seq 0 $((numberOfHelmReleases - 1))); do

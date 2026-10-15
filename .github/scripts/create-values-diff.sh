@@ -114,6 +114,8 @@ function generateComment() {
   echo '"/$namespace/$kind/$name.yaml" for normal resources'
   # shellcheck disable=SC2016
   echo '"/$namespace/HelmRelease/$name/$namespace/$kind/$name.yaml" for HelmReleases <- this is recursive'
+  # shellcheck disable=SC2016
+  echo '"/$namespace/ResourceSet/$name/$namespace/$kind/$name.yaml" for the resources of ResourceSets <- this is recursive as well'
   echo "'null' means it's either cluster-scoped or it's in the default namespace for the HelmRelease"
   echo ---
   echo
