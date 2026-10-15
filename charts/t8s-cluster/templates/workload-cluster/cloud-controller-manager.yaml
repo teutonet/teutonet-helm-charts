@@ -1,5 +1,6 @@
 {{- $repoCharts := (index .Values.global.helmRepositories "cloud-provider-openstack").charts -}}
 {{- $selectedVersion := default (index $repoCharts "openstack-cloud-controller-manager") (index $repoCharts (printf "openstack-cloud-controller-manager 2.%d.x" ($.Values.version.minor | int))) -}}
+{{- $missingNodesDelete := eq (int (semver $selectedVersion).Minor) 36 -}}
 {{- $name := printf "%s-ccm" .Release.Name -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -46,10 +47,12 @@ spec:
       valuesKey: cloud.conf
     - <<: *valuesFrom
       targetPath: cloudConfig.metadata.hash
+  {{- if or $missingNodesDelete .Values.controlPlane.hosted }}
   postRenderers:
     - kustomize:
         patches:
-          # TODO: drop once https://github.com/kubernetes/cloud-provider-openstack/pull/3228 is merged and released; it restores this nodes delete permission upstream
+          {{- if $missingNodesDelete }}
+          # TODO: drop once a 2.36.x chart with https://github.com/kubernetes/cloud-provider-openstack/pull/3228 is released (fixed in 2.37.0); 2.36.2-2.36.5 lack the nodes delete verb
           - target:
               kind: ClusterRole
             patch: |
@@ -59,6 +62,7 @@ spec:
               - op: add
                 path: /rules/2/verbs/-
                 value: delete
+          {{- end }}
           {{- if .Values.controlPlane.hosted }}
           - target:
               kind: DaemonSet
@@ -72,6 +76,7 @@ spec:
                 from: /spec/updateStrategy
                 path: /spec/strategy
           {{- end }}
+  {{- end }}
   values:
     priorityClassName: system-cluster-critical
   {{- if .Values.controlPlane.hosted }}

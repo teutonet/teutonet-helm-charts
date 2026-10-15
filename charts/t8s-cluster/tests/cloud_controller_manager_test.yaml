@@ -21,6 +21,79 @@ tests:
       - isKind:
           of: HelmRelease
 
+  - it: re-adds nodes delete RBAC on the 2.36 chart line
+    set:
+      cni: cilium
+      version:
+        minor: 36
+    asserts:
+      - equal:
+          path: spec.postRenderers[0].kustomize.patches[0].target.kind
+          value: ClusterRole
+      - matchRegex:
+          path: spec.postRenderers[0].kustomize.patches[0].patch
+          pattern: "value: delete"
+
+  - it: re-adds nodes delete RBAC when a minor without own chart pin falls back to the 2.36 default
+    set:
+      cni: cilium
+      version:
+        minor: 35
+    asserts:
+      - equal:
+          path: spec.postRenderers[0].kustomize.patches[0].target.kind
+          value: ClusterRole
+
+  - it: does not patch RBAC for chart lines that already grant nodes delete
+    set:
+      cni: cilium
+      version:
+        minor: 34
+    asserts:
+      - notExists:
+          path: spec.postRenderers
+
+  - it: does not patch RBAC once the selected chart is 2.37 or newer
+    set:
+      cni: cilium
+      version:
+        minor: 37
+      global:
+        helmRepositories:
+          cloud-provider-openstack:
+            charts:
+              openstack-cloud-controller-manager: 2.37.0
+    asserts:
+      - notExists:
+          path: spec.postRenderers
+
+  - it: hosted control plane on a fixed chart line only patches the DaemonSet
+    set:
+      cni: cilium
+      version:
+        minor: 34
+      controlPlane:
+        hosted: true
+    asserts:
+      - lengthEqual:
+          path: spec.postRenderers[0].kustomize.patches
+          count: 1
+      - equal:
+          path: spec.postRenderers[0].kustomize.patches[0].target.kind
+          value: DaemonSet
+
+  - it: hosted control plane on the 2.36 line patches RBAC and DaemonSet
+    set:
+      cni: cilium
+      version:
+        minor: 36
+      controlPlane:
+        hosted: true
+    asserts:
+      - lengthEqual:
+          path: spec.postRenderers[0].kustomize.patches
+          count: 2
+
   - it: interval is 10s when the HelmRelease does not exist yet
     set:
       cni: cilium
