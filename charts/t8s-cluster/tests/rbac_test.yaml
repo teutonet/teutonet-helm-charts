@@ -62,7 +62,18 @@ tests:
       - isNullOrEmpty:
           path: metadata.annotations
 
-  - it: gates on Cluster ControlPlaneAvailable
+  - it: gates on Cluster ControlPlaneAvailable when hosted
+    set:
+      controlPlane.hosted: true
+    asserts:
+      - matchRegex:
+          path: spec.dependsOn[0].readyExpr
+          pattern: ControlPlaneAvailable
+      - notMatchRegex:
+          path: spec.dependsOn[0].readyExpr
+          pattern: ControlPlaneInitialized
+
+  - it: gates on Cluster ControlPlaneInitialized when not hosted
     asserts:
       - equal:
           path: spec.dependsOn[0].apiVersion
@@ -81,4 +92,4 @@ tests:
           value: true
       - matchRegex:
           path: spec.dependsOn[0].readyExpr
-          pattern: ControlPlaneAvailable
+          pattern: ControlPlaneInitialized

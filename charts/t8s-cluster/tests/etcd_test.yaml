@@ -63,7 +63,7 @@ tests:
       - isNullOrEmpty:
           path: metadata.annotations
 
-  - it: gates on Cluster ControlPlaneAvailable
+  - it: gates on Cluster ControlPlaneInitialized when not hosted
     asserts:
       - equal:
           path: spec.dependsOn[0].apiVersion
@@ -79,7 +79,7 @@ tests:
           value: true
       - matchRegex:
           path: spec.dependsOn[0].readyExpr
-          pattern: ControlPlaneAvailable
+          pattern: ControlPlaneInitialized
 
   - it: interval is 10s when the HelmRelease does not exist yet
     asserts:
@@ -190,7 +190,7 @@ tests:
       - isNullOrEmpty:
           path: metadata.annotations
 
-  - it: gates on Cluster ControlPlaneAvailable
+  - it: gates on Cluster ControlPlaneInitialized when not hosted
     set:
       controlPlane.etcdBackup: true
     asserts:
@@ -208,7 +208,7 @@ tests:
           value: true
       - matchRegex:
           path: spec.dependsOn[0].readyExpr
-          pattern: ControlPlaneAvailable
+          pattern: ControlPlaneInitialized
 
   - it: uploads the snapshot with the aws cli to a single object named after the release
     set:

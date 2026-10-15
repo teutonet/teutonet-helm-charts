@@ -51,7 +51,7 @@ tests:
           path: metadata.annotations["fluxcd.controlplane.io/reconcileEvery"]
           value: 1m
 
-  - it: gates on Cluster ControlPlaneAvailable
+  - it: gates on Cluster ControlPlaneInitialized when not hosted
     set:
       cni: cilium
     asserts:
@@ -72,7 +72,7 @@ tests:
           value: true
       - matchRegex:
           path: spec.dependsOn[0].readyExpr
-          pattern: ControlPlaneAvailable
+          pattern: ControlPlaneInitialized
 
   - it: interval is 10s when the HelmRelease does not exist yet
     set:
@@ -294,7 +294,7 @@ tests:
           path: metadata.annotations["fluxcd.controlplane.io/reconcileEvery"]
           value: 1m
 
-  - it: gates on Cluster ControlPlaneAvailable
+  - it: gates on Cluster ControlPlaneInitialized when not hosted
     set:
       cni: calico
     asserts:
@@ -312,7 +312,28 @@ tests:
           value: true
       - matchRegex:
           path: spec.dependsOn[0].readyExpr
+          pattern: ControlPlaneInitialized
+
+  - it: gates on Cluster ControlPlaneAvailable when hosted
+    set:
+      cni: calico
+      controlPlane.hosted: true
+    asserts:
+      - matchRegex:
+          path: spec.dependsOn[0].readyExpr
           pattern: ControlPlaneAvailable
+      - notMatchRegex:
+          path: spec.dependsOn[0].readyExpr
+          pattern: ControlPlaneInitialized
+
+  - it: gates exactly on ControlPlaneInitialized when not hosted
+    set:
+      cni: calico
+    asserts:
+      - equal:
+          path: spec.dependsOn[0].readyExpr
+          value: |
+            status.conditions.exists(c, c.type == "ControlPlaneInitialized" && c.status == "True")
 
   - it: no output when cni is cilium
     set:
