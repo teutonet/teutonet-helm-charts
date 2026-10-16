@@ -26,7 +26,8 @@ function getImages() {
 
   (
     cd "$tmpDir/helmRelease"
-    rm -f -- */HelmRelease/*.yaml
+    # drop the wrapper resources at every level, their (nested) contents are exploded into directories next to them
+    find . -type d \( -name HelmRelease -o -name ResourceSet \) -exec find {} -maxdepth 1 -type f -name '*.yaml' -delete \;
     (
       grep -Er '\s+image: \S+[/:]\S+$' |
         grep -v 'artifacthub-ignore' || { if [[ "$?" == 2 ]]; then exit 2; fi; }
