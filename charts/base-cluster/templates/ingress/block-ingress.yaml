@@ -1,0 +1,40 @@
+{{- if eq (include "base-cluster.ingress.blockIngressResource" $) "true" }}
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: block-ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups:
+          - networking.k8s.io
+        apiVersions:
+          - "*"
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - ingresses
+  matchConditions:
+    # removing a finalizer from an already deleting Ingress is an UPDATE, which must not hang the deletion
+    - name: not-being-deleted
+      expression: "!has(object.metadata.deletionTimestamp)"
+  validations:
+    - expression: "false"
+      message: Ingress resources are blocked because the envoy ingress provider only serves Gateway API resources, only deleting them is allowed. Set ingress.blockIngressResource to false to opt out.
+      reason: Forbidden
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: block-ingress
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress
+spec:
+  policyName: block-ingress
+  validationActions:
+    - Deny
+{{- end }}

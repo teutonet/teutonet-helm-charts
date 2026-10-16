@@ -1440,6 +1440,19 @@
             }
           ]
         },
+        "blockIngressResource": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string",
+              "const": "auto",
+              "description": "Auto will block Ingress resources if the ingress provider is `envoy`, as it only serves Gateway API resources, and the cluster supports `admissionregistration.k8s.io/v1` ValidatingAdmissionPolicies (kubernetes >= 1.30)."
+            }
+          ],
+          "description": "Deploys a ValidatingAdmissionPolicy that denies creating and updating Ingress resources, deleting them stays allowed."
+        },
         "IP": {
           "type": "string",
           "pattern": "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$",

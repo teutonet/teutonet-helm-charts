@@ -556,6 +556,7 @@ ingress:
   allowNginxConfigurationSnippets: false
   useTraefikNginxCompatibility: false
   useProxyProtocol: auto
+  blockIngressResource: auto
   replicas: 2
   resourcesPreset: nano
   extraPorts: {}

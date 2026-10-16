@@ -135,6 +135,9 @@ The chart supports three ingress controllers:
      comes from `envoy` targeting the same Service name/namespace as `traefik`, not from
      the `helm.sh/resource-policy: keep` annotation, which only stops Helm from deleting
      the Service when the `traefik` HelmRelease is removed)
+   - `Ingress` resources are not served, so a `ValidatingAdmissionPolicy` denies creating
+     and updating them (deleting stays allowed) to fail early instead of silently doing
+     nothing (on kubernetes >= 1.30). Opt out via `ingress.blockIngressResource: false`
    - Cannot be adopted directly from `nginx` - there is no dual-mode path for that
      combination, migrate to `traefik` first, then to `envoy`
 
