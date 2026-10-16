@@ -21,12 +21,18 @@ This chart deploys a TeutonetesCluster and all it's necessary infrastructure com
 
 [CLICK ME](./charts/t8s-cluster)
 
+### ckan - Comprehensive Knowledge Archive Network
+
+[CKAN](https://ckan.org) is the world's leading open-source data management system for publishing, sharing, and finding open data. This chart deploys a fully functional CKAN instance with PostgreSQL, Valkey (Redis), Solr, and DataPusher.
+
+[CLICK ME](./charts/ckan)
+
 ## Usage
 
 [Helm](https://helm.sh) must be installed to use the charts.
 Please refer to Helm's [documentation](https://helm.sh/docs/) to get started.
 
-You can use the OCI registry; `oci://ghcr.io/teutonet/teutonet-helm-charts`
+You can use the OCI registry: `oci://ghcr.io/teutonet/teutonet-helm-charts`
 
 ## Security
 
