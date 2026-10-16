@@ -116,7 +116,7 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: renders a wrapped HelmRelease with a ListenerSet and Certificate for grafana's customDomain
+  - it: renders a wrapped HelmRelease with an issuer-annotated ListenerSet for grafana's customDomain
     set:
       monitoring.grafana.ingress.customDomain: grafana.custom.example.com
     asserts:
@@ -154,19 +154,15 @@ tests:
       - documentIndex: 0
         matchRegex:
           path: spec.values.static
-          pattern: "name: grafana-certificate"
+          pattern: 'name: "grafana-certificate"'
       - documentIndex: 0
         matchRegex:
+          path: spec.values.static
+          pattern: 'annotations:\n    cert-manager\.io/cluster-issuer: letsencrypt-production'
+      - documentIndex: 0
+        notMatchRegex:
           path: spec.values.static
           pattern: "kind: Certificate"
-      - documentIndex: 0
-        matchRegex:
-          path: spec.values.static
-          pattern: "kind: ClusterIssuer"
-      - documentIndex: 0
-        matchRegex:
-          path: spec.values.static
-          pattern: 'dnsNames:\n    - "grafana\.custom\.example\.com"'
 
   - it: renders a wrapped HelmRelease per component when all three have a customDomain
     set:

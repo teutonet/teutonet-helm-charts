@@ -19,7 +19,7 @@ tests:
       - hasDocuments:
           count: 1
       - equal:
-          path: spec.values.config.enableGatewayAPI
+          path: spec.values.config.gatewayAPI.enabled
           value: true
 
   - it: cert-manager gatewayAPI enabled when provider is envoy
@@ -29,7 +29,7 @@ tests:
       - hasDocuments:
           count: 1
       - equal:
-          path: spec.values.config.enableGatewayAPI
+          path: spec.values.config.gatewayAPI.enabled
           value: true
 
   - it: cert-manager gatewayAPI not set when provider is nginx
@@ -58,7 +58,7 @@ tests:
             namespace: ingress
     asserts:
       - equal:
-          path: spec.values.config.enableGatewayAPI
+          path: spec.values.config.gatewayAPI.enabled
           value: true
 
   - it: cert-manager gatewayAPI enabled in dual-mode (both HelmReleases exist, provider is nginx)
@@ -78,7 +78,7 @@ tests:
             namespace: ingress
     asserts:
       - equal:
-          path: spec.values.config.enableGatewayAPI
+          path: spec.values.config.gatewayAPI.enabled
           value: true
 
   - it: cert-manager gatewayAPI not set when only nginx HelmRelease exists (no dual-mode)
@@ -91,6 +91,27 @@ tests:
           metadata:
             name: ingress-nginx
             namespace: ingress-nginx
+    asserts:
+      - notExists:
+          path: spec.values.config
+
+  - it: cert-manager ListenerSet support enabled when provider is envoy
+    set:
+      ingress.provider: envoy
+    asserts:
+      - equal:
+          path: spec.values.config.gatewayAPI
+          value:
+            enabled: true
+            enableListenerSet: true
+      - equal:
+          path: spec.values.config.featureGates
+          value:
+            ListenerSets: true
+
+  - it: cert-manager ListenerSet support not configured when provider is nginx
+    set:
+      ingress.provider: nginx
     asserts:
       - notExists:
           path: spec.values.config

@@ -24,6 +24,8 @@ metadata:
   namespace: ingress
   labels: {{- include "common.labels.standard" .context | nindent 4 }}
     app.kubernetes.io/component: ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
 spec:
   parentRef:
     name: ingress-controller
@@ -44,24 +46,4 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
----
-# TODO: cert-manager's gateway-shim only supports the cert-manager.io/cluster-issuer annotation on
-# ListenerSet from v1.20 (alpha-gated) onwards; this chart pins cert-manager v1.17.2. Once the chart
-# upgrades past that and the shim is stable, drop this hand-authored Certificate and annotate the
-# ListenerSet above instead.
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: {{ .secretName }}
-  namespace: ingress
-  labels: {{- include "common.labels.standard" .context | nindent 4 }}
-    app.kubernetes.io/component: ingress
-spec:
-  issuerRef:
-    group: cert-manager.io
-    kind: ClusterIssuer
-    name: letsencrypt-production
-  dnsNames:
-    - {{ .ingress.customDomain | quote }}
-  secretName: {{ .secretName | quote }}
 {{- end -}}
