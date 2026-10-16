@@ -52,16 +52,34 @@ jobs:
           hasBreakingChange=false
           #shellcheck disable=SC2086
           for commit in $(gh api --paginate "/repos/${GITHUB_REPOSITORY}/compare/${BASE_COMMIT}...${HEAD_COMMIT}" | jq -r '.commits | map(.sha)[]'); do
-            if cog verify "$(gh api --paginate /repos/${GITHUB_REPOSITORY}/commits/$commit | jq -r .commit.message)" 2>&1 | grep -qi 'BREAKING CHANGE'; then
+            # no `grep -q` here: it closes the pipe early, cog then aborts and pipefail reads that as "no breaking change"
+            if cog verify "$(gh api --paginate /repos/${GITHUB_REPOSITORY}/commits/$commit | jq -r .commit.message)" 2>&1 | grep -i 'BREAKING CHANGE' >/dev/null; then
               hasBreakingChange=true
               break
             fi
           done
 
           if [[ "$hasBreakingChange" == true ]]; then
-            if ! gh api --paginate "/repos/${GITHUB_REPOSITORY}/contents/charts/${CHANGED_CHART}/README.md.gotmpl?ref=${HEAD_COMMIT}" | jq -er .content | base64 -d | grep -qiF "### unreleased breaking changes"; then
+            readmePath="charts/${CHANGED_CHART}/README.md.gotmpl"
+            # everything from the header on, the header stays until the next release
+            unreleasedSection() {
+              gh api --paginate "/repos/${GITHUB_REPOSITORY}/contents/${readmePath}?ref=$1" 2>/dev/null | jq -er .content | base64 -d | sed -n '/^### unreleased breaking changes/I,$p' || true
+            }
+
+            headSection="$(unreleasedSection "$HEAD_COMMIT")"
+            if [[ -z "$headSection" ]]; then
               echo "You need to provide a migration info for this breaking change" >&2
               echo 'Add "### unreleased breaking changes" section to README.md.gotmpl' >&2
+              exit 1
+            fi
+
+            # the header may already exist from an earlier breaking change, so it has to gain content
+            # diff exits 1 on differences, which pipefail would turn into a failure
+            baseSection="$(unreleasedSection "$BASE_COMMIT")"
+            sectionDiff="$(diff <(echo "$baseSection") <(echo "$headSection") || true)"
+            if ! grep -q '^>' <<<"$sectionDiff"; then
+              echo "You need to provide a migration info for this breaking change" >&2
+              echo 'Add it below the "### unreleased breaking changes" header in README.md.gotmpl' >&2
               exit 1
             fi
           fi
