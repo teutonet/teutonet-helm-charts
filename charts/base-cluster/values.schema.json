@@ -1049,6 +1049,13 @@
         "enabled": {
           "type": "boolean"
         },
+        "excludedNamespaces": {
+          "type": "array",
+          "description": "Namespaces whose pods the descheduler never evicts to rebalance node utilization, e.g. for pods that run one-off jobs and have no controller to resume them",
+          "items": {
+            "type": "string"
+          }
+        },
         "profile": {
           "type": "object",
           "description": "See https://github.com/kubernetes-sigs/descheduler#policy-default-evictor-and-strategy-plugins. The key is the policy name",

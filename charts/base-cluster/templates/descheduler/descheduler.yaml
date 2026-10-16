@@ -1,6 +1,14 @@
 {{- if .Values.descheduler.enabled -}}
   {{- $repoCharts := (index .Values.global.helmRepositories "descheduler").charts -}}
   {{- $selectedVersion := default (index $repoCharts "descheduler") (index $repoCharts (printf "descheduler 0.%d.x" ($.Capabilities.KubeVersion.Minor | int))) -}}
+  {{- $profile := deepCopy .Values.descheduler.profile -}}
+  {{- if .Values.descheduler.excludedNamespaces -}}
+    {{- range $plugin := $profile.pluginConfig -}}
+      {{- if eq $plugin.name "LowNodeUtilization" -}}
+        {{- $_ := set $plugin "args" (merge (default dict $plugin.args) (dict "evictableNamespaces" (dict "exclude" $.Values.descheduler.excludedNamespaces))) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -49,7 +57,7 @@ spec:
     deschedulerPolicy:
       profiles:
         - name: default
-          {{- toYaml .Values.descheduler.profile | nindent 10 }}
+          {{- toYaml $profile | nindent 10 }}
     {{- if .Values.global.imageRegistry }}
     image:
       repository: {{ printf "%s/descheduler/descheduler" .Values.global.imageRegistry }}
