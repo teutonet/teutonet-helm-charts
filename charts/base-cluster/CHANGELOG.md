@@ -1,5 +1,13 @@
 # Changelog
 
+## [13.0.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v13.0.0...base-cluster-v13.0.1) (2026-10-16)
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update helm release kube-prometheus-stack to v92.9.0 ([#2490](https://github.com/teutonet/teutonet-helm-charts/issues/2490)) ([927b4ba](https://github.com/teutonet/teutonet-helm-charts/commit/927b4ba159c27d29b85649081548d9256fc09951))
+* **base-cluster/dependencies:** update helm release loki to v18.16.1 ([#2500](https://github.com/teutonet/teutonet-helm-charts/issues/2500)) ([3a4abab](https://github.com/teutonet/teutonet-helm-charts/commit/3a4abab2ca0a7a4837ff45d94328f8453df00fef))
+
 ## [13.0.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v12.4.0...base-cluster-v13.0.0) (2026-10-15)
 
 
