@@ -462,6 +462,10 @@ of `.monitoring.tracing.ingester.<field>`
 
 - This release also removes the `monitoring.deadMansSwitch.enabled` field, it is just active when the `monitoring.deadMansSwitch` block is set.
 
+- This releases remove the field `.monitoring.prometheus.retentionSize` as the retention is now automatically calculated
+  and set. If data retention is happening, an alert is triggered.
+
+
 - This release disables the trivy-operator by default.
   To continue using the operator set `.monitoring.securityScanning.enabled` to `true`.
 
@@ -502,9 +506,6 @@ If your cluster's CRDs aren't updated yet, stay on `traefik` for now:
 ingress:
   provider: traefik
 ```
-
-- This release remove the field `.monitoring.prometheus.retentionSize` as the retention is now automatically calculated
-  and set. If data retention is happening an alert is triggered.
 
 - `rbac.accounts` no longer creates a `ServiceAccount`/long-lived token `Secret` for
   accounts without an `@` in their name, as static service account tokens are a
