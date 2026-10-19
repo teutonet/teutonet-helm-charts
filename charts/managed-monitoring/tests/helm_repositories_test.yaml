@@ -21,6 +21,17 @@ tests:
           path: metadata.namespace
           value: flux-system
           documentIndex: -1
+      - equal:
+          path: apiVersion
+          value: source.toolkit.fluxcd.io/v1
+          documentIndex: -1
+      - equal:
+          path: kind
+          value: HelmRepository
+          documentIndex: -1
       - matchSnapshot:
-          path: ""
+          path: metadata.name
+          documentIndex: -1
+      - matchSnapshot:
+          path: spec
           documentIndex: -1
