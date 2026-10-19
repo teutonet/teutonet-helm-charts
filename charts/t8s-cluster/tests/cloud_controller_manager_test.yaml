@@ -21,6 +21,24 @@ tests:
       - isKind:
           of: HelmRelease
 
+  - it: uses the node DNS policy when not hosted
+    set:
+      cni: cilium
+    asserts:
+      - equal:
+          path: spec.values.dnsPolicy
+          value: Default
+
+  - it: keeps the chart default DNS policy when hosted
+    set:
+      cni: cilium
+      controlPlane.hosted: true
+    asserts:
+      - notExists:
+          path: spec.values.dnsPolicy
+      - exists:
+          path: spec.values.tolerations
+
   - it: interval is 10s when the HelmRelease does not exist yet
     set:
       cni: cilium

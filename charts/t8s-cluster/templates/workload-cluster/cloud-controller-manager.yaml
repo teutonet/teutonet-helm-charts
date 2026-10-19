@@ -81,4 +81,7 @@ spec:
       - key: node.cloudprovider.kubernetes.io/uninitialized
         value: "true"
         effect: NoSchedule
+  {{- else }}
+    # kubeadm CoreDNS can't schedule before the CCM removes the uninitialized taint, but the CCM needs DNS for Keystone
+    dnsPolicy: Default
   {{- end }}

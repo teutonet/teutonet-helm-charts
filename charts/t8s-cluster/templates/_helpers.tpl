@@ -71,5 +71,6 @@ dependsOn:
     namespace: {{ .Release.Namespace }}
     ready: true
     readyExpr: |
-      status.conditions.exists(c, c.type == "ControlPlaneAvailable" && c.status == "True")
+      {{- /* kubeadm: ControlPlaneAvailable needs Node providerIDs, which only the CCM (itself behind the CNI) sets, so it would deadlock */}}
+      status.conditions.exists(c, c.type == "{{ .context.Values.controlPlane.hosted | ternary "ControlPlaneAvailable" "ControlPlaneInitialized" }}" && c.status == "True")
 {{- end -}}
