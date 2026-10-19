@@ -85,6 +85,10 @@ The [descheduler](https://github.com/kubernetes-sigs/descheduler) runs periodica
 and tries to average the load across the nodes by deleting pods on fuller nodes
 so the kube-scheduler can, hopefully, schedule them on nodes with more space.
 
+Nodes are compared against the cluster-wide mean usage (`useDeviationThresholds`)
+instead of fixed percentages, so a nearly full cluster doesn't keep evicting pods
+that the scheduler places right back on the same node.
+
 Additionally, the descheduler also tries to reconcile `topologySpreadConstraints`
 and affinities.
 
