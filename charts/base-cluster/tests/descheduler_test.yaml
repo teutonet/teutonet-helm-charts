@@ -1,0 +1,24 @@
+suite: descheduler HelmRelease rendering
+templates:
+  - templates/descheduler/descheduler.yaml
+release:
+  name: base-cluster
+tests:
+  - it: does not restrict evictable namespaces by default
+    asserts:
+      - notExists:
+          path: spec.values.deschedulerPolicy.profiles[0].pluginConfig[?(@.name == "LowNodeUtilization")].args.evictableNamespaces
+  - it: excludes configured namespaces from LowNodeUtilization evictions
+    set:
+      descheduler.excludedNamespaces:
+        - arc-systems
+        - other
+    asserts:
+      - equal:
+          path: spec.values.deschedulerPolicy.profiles[0].pluginConfig[?(@.name == "LowNodeUtilization")].args.evictableNamespaces.exclude
+          value:
+            - arc-systems
+            - other
+      - equal:
+          path: spec.values.deschedulerPolicy.profiles[0].pluginConfig[?(@.name == "LowNodeUtilization")].args.thresholds.cpu
+          value: 50
