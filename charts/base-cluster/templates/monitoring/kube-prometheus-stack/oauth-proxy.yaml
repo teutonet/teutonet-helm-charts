@@ -98,7 +98,7 @@ spec:
       configFile: |-
         provider = "oidc"
         reverse_proxy = true
-        oidc_issuer_url = {{ printf "https://%s%s" $.Values.global.authentication.config.issuerHost $.Values.global.authentication.config.issuerPath | quote }}
+        oidc_issuer_url = {{ printf "https://%s%s" $.Values.global.authentication.config.issuerHost ($.Values.global.authentication.config.issuerPath | default "") | quote }}
         skip_provider_button = true
         {{- if $.Values.global.authentication.oauthProxy.emailDomains }}
         email_domains = [ "{{ $.Values.global.authentication.oauthProxy.emailDomains | join "\", \"" }}" ]
