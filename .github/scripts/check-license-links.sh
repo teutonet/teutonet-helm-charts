@@ -52,10 +52,9 @@ function isInList() {
   return 1
 }
 
-# This runs on pull_request_target against a PR-controlled licenseLink value, and
-# checkLicenseContent curls whatever host is given. Without an allowlist, a PR could point
-# licenseLink at an internal address (loopback, cloud metadata, ...) and turn this into an
-# SSRF probe from a privileged runner. Only fetch from hosts we've actually reviewed.
+# checkLicenseContent curls a PR-controlled licenseLink value. Without an allowlist, a PR
+# could point it at an internal address (loopback, cloud metadata, ...) and turn this into
+# an SSRF probe. Only fetch from hosts we've actually reviewed.
 ALLOWED_HOSTS=(
   "raw.githubusercontent.com"
   "gitlab.teuto.net"

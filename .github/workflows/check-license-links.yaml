@@ -12,16 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          repository: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name || github.repository }}
-          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
-          persist-credentials: false
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          path: scripts # needed because otherwise tokens could be stolen
-          sparse-checkout: |
-            .github
-          sparse-checkout-cone-mode: false
           persist-credentials: false
       - run: pip install yq
       - run: gem install licensee --no-document --version 10.0.0 --user-install
-      - run: ./scripts/.github/scripts/check-license-links.sh
+      - run: ./.github/scripts/check-license-links.sh
