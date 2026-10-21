@@ -10,6 +10,9 @@ on:
 
 jobs:
   getChangedChart:
+    # Both jobs below push commits to the PR branch with the bot token, which fork PRs neither get nor allow.
+    # They depend on this job, so skipping it skips them too, instead of failing on the missing token.
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     uses: ./.github/workflows/get-changed-chart.yaml
     permissions:
       pull-requests: read
