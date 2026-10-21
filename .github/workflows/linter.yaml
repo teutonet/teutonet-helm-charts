@@ -92,4 +92,12 @@ jobs:
           else
             kubescape_args+=(--exceptions .github/kubescape-exceptions.json)
           fi
-          kubescape scan "${kubescape_args[@]}"
+          # kubescape exits 1 with this message when the chart only renders kinds it can't scan (e.g. CRDs only).
+          # No other exit code is signalled for it, so match the message and keep every other failure fatal.
+          kubescape scan "${kubescape_args[@]}" 2>&1 | tee /tmp/kubescape.log
+          status=${PIPESTATUS[0]}
+          if [[ "$status" != 0 ]] && grep -q 'no resources found to scan' /tmp/kubescape.log; then
+            echo "::warning::kubescape found no scannable resources in '$CHART', skipping"
+            exit 0
+          fi
+          exit "$status"
