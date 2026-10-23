@@ -1,5 +1,13 @@
 # Changelog
 
+## [9.15.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.15.0...t8s-cluster-v9.15.1) (2026-10-23)
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update docker.io/amazon/aws-cli docker tag to v2.38.4 ([#2528](https://github.com/teutonet/teutonet-helm-charts/issues/2528)) ([ed12c8e](https://github.com/teutonet/teutonet-helm-charts/commit/ed12c8ea3fec2064913059d68410e4cf1a9c8900))
+* **t8s-cluster/dependencies:** update docker.io/amazon/aws-cli docker tag to v2.38.5 ([#2538](https://github.com/teutonet/teutonet-helm-charts/issues/2538)) ([1af00c5](https://github.com/teutonet/teutonet-helm-charts/commit/1af00c547ba08f27f98c61bf37da561d727eee81))
+
 ## [9.15.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.14.0...t8s-cluster-v9.15.0) (2026-10-21)
 
 
