@@ -1,6 +1,6 @@
 <!-- vim: set ft=markdown: --># base-cluster
 
-![Version: 13.0.0](https://img.shields.io/badge/Version-13.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 13.1.0](https://img.shields.io/badge/Version-13.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A common base for every kubernetes cluster. This chart bootstraps a cluster with the shared components every teuto.net cluster needs. It is managed via Flux and intended to be installed once, after which Flux takes over further reconciliation of the chart itself.
 
@@ -94,6 +94,10 @@ resource requests, the descheduler might lead to period restarting of random pod
 
 In that case you should disable the descheduler.
 
+Pods that run a one-off job without a controller to resume it (e.g. CI runners) are
+lost when evicted mid-job. List their namespaces in `descheduler.excludedNamespaces`
+to keep the descheduler from evicting them when rebalancing node utilization.
+
 ### Component [dns](#dns)
 
 The [external-dns](https://github.com/kubernetes-sigs/external-dns) creates, updates,
@@ -136,6 +140,9 @@ The chart supports three ingress controllers:
      comes from `envoy` targeting the same Service name/namespace as `traefik`, not from
      the `helm.sh/resource-policy: keep` annotation, which only stops Helm from deleting
      the Service when the `traefik` HelmRelease is removed)
+   - `Ingress` resources are not served, so a `ValidatingAdmissionPolicy` denies creating
+     and updating them (deleting stays allowed) to fail early instead of silently doing
+     nothing (on kubernetes >= 1.30). Opt out via `ingress.blockIngressResource: false`
    - Cannot be adopted directly from `nginx` - there is no dual-mode path for that
      combination, migrate to `traefik` first, then to `envoy`
 
@@ -276,7 +283,7 @@ flags on your apiserver.
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v13.0.0/charts/base-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/base-cluster-v13.1.0/charts/base-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/base-cluster>
 
 ## Requirements
@@ -3834,12 +3841,13 @@ currencyEUR
 | **Type**                  | `object`                                                       |
 | **Additional properties** | ![Not allowed](https://img.shields.io/badge/Not%20allowed-red) |
 
-| Property                                           | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                                                                          |
-| -------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| - [enabled](#descheduler_enabled )                 | No      | boolean          | No         | -                                                                             | -                                                                                                                          |
-| - [profile](#descheduler_profile )                 | No      | object           | No         | -                                                                             | See https://github.com/kubernetes-sigs/descheduler#policy-default-evictor-and-strategy-plugins. The key is the policy name |
-| - [resourcesPreset](#descheduler_resourcesPreset ) | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                                                                          |
-| - [resources](#descheduler_resources )             | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements.                                                          |
+| Property                                                 | Pattern | Type             | Deprecated | Definition                                                                    | Title/Description                                                                                                                                           |
+| -------------------------------------------------------- | ------- | ---------------- | ---------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [enabled](#descheduler_enabled )                       | No      | boolean          | No         | -                                                                             | -                                                                                                                                                           |
+| - [excludedNamespaces](#descheduler_excludedNamespaces ) | No      | array of string  | No         | -                                                                             | Namespaces whose pods the descheduler never evicts to rebalance node utilization, e.g. for pods that run one-off jobs and have no controller to resume them |
+| - [profile](#descheduler_profile )                       | No      | object           | No         | -                                                                             | See https://github.com/kubernetes-sigs/descheduler#policy-default-evictor-and-strategy-plugins. The key is the policy name                                  |
+| - [resourcesPreset](#descheduler_resourcesPreset )       | No      | enum (of string) | No         | Same as [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset ) | -                                                                                                                                                           |
+| - [resources](#descheduler_resources )                   | No      | object           | No         | Same as [resources](#global_authentication_oauthProxy_resources )             | ResourceRequirements describes the compute resource requirements.                                                                                           |
 
 ### <a name="descheduler_enabled"></a>5.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > enabled`
 
@@ -3847,7 +3855,33 @@ currencyEUR
 | -------- | --------- |
 | **Type** | `boolean` |
 
-### <a name="descheduler_profile"></a>5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > profile`
+### <a name="descheduler_excludedNamespaces"></a>5.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > excludedNamespaces`
+
+|          |                   |
+| -------- | ----------------- |
+| **Type** | `array of string` |
+
+**Description:** Namespaces whose pods the descheduler never evicts to rebalance node utilization, e.g. for pods that run one-off jobs and have no controller to resume them
+
+|                      | Array restrictions |
+| -------------------- | ------------------ |
+| **Min items**        | N/A                |
+| **Max items**        | N/A                |
+| **Items unicity**    | False              |
+| **Additional items** | False              |
+| **Tuple validation** | See below          |
+
+| Each item of this array must be                                   | Description |
+| ----------------------------------------------------------------- | ----------- |
+| [excludedNamespaces items](#descheduler_excludedNamespaces_items) | -           |
+
+#### <a name="descheduler_excludedNamespaces_items"></a>5.2.1. base cluster configuration > descheduler > excludedNamespaces > excludedNamespaces items
+
+|          |          |
+| -------- | -------- |
+| **Type** | `string` |
+
+### <a name="descheduler_profile"></a>5.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > profile`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -3861,7 +3895,7 @@ currencyEUR
 | - [pluginConfig](#descheduler_profile_pluginConfig ) | No      | array of object | No         | -          | -                 |
 | - [plugins](#descheduler_profile_plugins )           | No      | object          | No         | -          | -                 |
 
-#### <a name="descheduler_profile_pluginConfig"></a>5.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > profile > pluginConfig`
+#### <a name="descheduler_profile_pluginConfig"></a>5.3.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > profile > pluginConfig`
 
 |          |                   |
 | -------- | ----------------- |
@@ -3879,7 +3913,7 @@ currencyEUR
 | ------------------------------------------------------------- | ----------- |
 | [pluginConfig items](#descheduler_profile_pluginConfig_items) | -           |
 
-##### <a name="descheduler_profile_pluginConfig_items"></a>5.2.1.1. base cluster configuration > descheduler > profile > pluginConfig > pluginConfig items
+##### <a name="descheduler_profile_pluginConfig_items"></a>5.3.1.1. base cluster configuration > descheduler > profile > pluginConfig > pluginConfig items
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -3891,20 +3925,20 @@ currencyEUR
 | + [name](#descheduler_profile_pluginConfig_items_name ) | No      | string | No         | -          | -                 |
 | - [args](#descheduler_profile_pluginConfig_items_args ) | No      | object | No         | -          | -                 |
 
-###### <a name="descheduler_profile_pluginConfig_items_name"></a>5.2.1.1.1. Property `base cluster configuration > descheduler > profile > pluginConfig > pluginConfig items > name`
+###### <a name="descheduler_profile_pluginConfig_items_name"></a>5.3.1.1.1. Property `base cluster configuration > descheduler > profile > pluginConfig > pluginConfig items > name`
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-###### <a name="descheduler_profile_pluginConfig_items_args"></a>5.2.1.1.2. Property `base cluster configuration > descheduler > profile > pluginConfig > pluginConfig items > args`
+###### <a name="descheduler_profile_pluginConfig_items_args"></a>5.3.1.1.2. Property `base cluster configuration > descheduler > profile > pluginConfig > pluginConfig items > args`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Type**                  | `object`                                                                    |
 | **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
 
-#### <a name="descheduler_profile_plugins"></a>5.2.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > profile > plugins`
+#### <a name="descheduler_profile_plugins"></a>5.3.2. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > profile > plugins`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -3915,7 +3949,7 @@ currencyEUR
 | ------------------------------------------------------------------- | ------- | ------ | ---------- | ---------- | ----------------- |
 | - [^(balance\|deschedule)$](#descheduler_profile_plugins_pattern1 ) | Yes     | object | No         | -          | -                 |
 
-##### <a name="descheduler_profile_plugins_pattern1"></a>5.2.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Pattern Property `base cluster configuration > descheduler > profile > plugins > ^(balance\|deschedule)$`
+##### <a name="descheduler_profile_plugins_pattern1"></a>5.3.2.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Pattern Property `base cluster configuration > descheduler > profile > plugins > ^(balance\|deschedule)$`
 > All properties whose name matches the regular expression
 ```^(balance|deschedule)$``` ([Test](https://regex101.com/?regex=%5E%28balance%7Cdeschedule%29%24))
 must respect the following conditions
@@ -3929,7 +3963,7 @@ must respect the following conditions
 | ----------------------------------------------------------- | ------- | --------------- | ---------- | ---------- | ----------------- |
 | + [enabled](#descheduler_profile_plugins_pattern1_enabled ) | No      | array of string | No         | -          | -                 |
 
-###### <a name="descheduler_profile_plugins_pattern1_enabled"></a>5.2.2.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > descheduler > profile > plugins > ^(balance\|deschedule)$ > enabled`
+###### <a name="descheduler_profile_plugins_pattern1_enabled"></a>5.3.2.1.1. ![Required](https://img.shields.io/badge/Required-blue) Property `base cluster configuration > descheduler > profile > plugins > ^(balance\|deschedule)$ > enabled`
 
 |          |                   |
 | -------- | ----------------- |
@@ -3947,20 +3981,20 @@ must respect the following conditions
 | -------------------------------------------------------------------- | ----------- |
 | [enabled items](#descheduler_profile_plugins_pattern1_enabled_items) | -           |
 
-###### <a name="descheduler_profile_plugins_pattern1_enabled_items"></a>5.2.2.1.1.1. base cluster configuration > descheduler > profile > plugins > ^(balance\|deschedule)$ > enabled > enabled items
+###### <a name="descheduler_profile_plugins_pattern1_enabled_items"></a>5.3.2.1.1.1. base cluster configuration > descheduler > profile > plugins > ^(balance\|deschedule)$ > enabled > enabled items
 
 |          |          |
 | -------- | -------- |
 | **Type** | `string` |
 
-### <a name="descheduler_resourcesPreset"></a>5.3. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > resourcesPreset`
+### <a name="descheduler_resourcesPreset"></a>5.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > resourcesPreset`
 
 |                        |                                                                      |
 | ---------------------- | -------------------------------------------------------------------- |
 | **Type**               | `enum (of string)`                                                   |
 | **Same definition as** | [resourcesPreset](#global_authentication_oauthProxy_resourcesPreset) |
 
-### <a name="descheduler_resources"></a>5.4. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > resources`
+### <a name="descheduler_resources"></a>5.5. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > descheduler > resources`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -4654,6 +4688,7 @@ Must be one of:
 | - [allowNginxConfigurationSnippets](#ingress_allowNginxConfigurationSnippets ) | No      | boolean          | No         | -                                                                             | Please don't do it if not absolutely necessary, it goes against all best practices. Ref.: https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/command-line-arguments#cmdoption-enable-snippets        |
 | - [useTraefikNginxCompatibility](#ingress_useTraefikNginxCompatibility )       | No      | boolean          | No         | -                                                                             | Enables the kubernetesIngressNGINX provider in traefik, which supports a subset of the annotations from the deprecated nginx ingress. Ref.: https://doc.traefik.io/traefik/reference/routing-configuration/kubernetes/ingress-nginx/ |
 | - [useProxyProtocol](#ingress_useProxyProtocol )                               | No      | Combination      | No         | -                                                                             | -                                                                                                                                                                                                                                    |
+| - [blockIngressResource](#ingress_blockIngressResource )                       | No      | Combination      | No         | -                                                                             | Deploys a ValidatingAdmissionPolicy that denies creating and updating Ingress resources, deleting them stays allowed.                                                                                                                |
 | - [IP](#ingress_IP )                                                           | No      | string           | No         | -                                                                             | Try to use specified IP as loadbalancer IP                                                                                                                                                                                           |
 | - [extraPorts](#ingress_extraPorts )                                           | No      | object           | No         | -                                                                             | Additional ports to expose on the ingress controller, key is the port name                                                                                                                                                           |
 
@@ -4745,7 +4780,37 @@ The code figures out the cloud by the node provider ID, which is assumed to be t
 
 Specific value: `"auto"`
 
-### <a name="ingress_IP"></a>10.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > IP`
+### <a name="ingress_blockIngressResource"></a>10.8. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > blockIngressResource`
+
+|                           |                                                                             |
+| ------------------------- | --------------------------------------------------------------------------- |
+| **Type**                  | `combining`                                                                 |
+| **Additional properties** | ![Any type: allowed](https://img.shields.io/badge/Any%20type-allowed-green) |
+
+**Description:** Deploys a ValidatingAdmissionPolicy that denies creating and updating Ingress resources, deleting them stays allowed.
+
+| One of(Option)                                   |
+| ------------------------------------------------ |
+| [item 0](#ingress_blockIngressResource_oneOf_i0) |
+| [item 1](#ingress_blockIngressResource_oneOf_i1) |
+
+#### <a name="ingress_blockIngressResource_oneOf_i0"></a>10.8.1. Property `base cluster configuration > ingress > blockIngressResource > oneOf > item 0`
+
+|          |           |
+| -------- | --------- |
+| **Type** | `boolean` |
+
+#### <a name="ingress_blockIngressResource_oneOf_i1"></a>10.8.2. Property `base cluster configuration > ingress > blockIngressResource > oneOf > item 1`
+
+|          |         |
+| -------- | ------- |
+| **Type** | `const` |
+
+**Description:** Auto will block Ingress resources if the ingress provider is `envoy`, as it only serves Gateway API resources, and the cluster supports `admissionregistration.k8s.io/v1` ValidatingAdmissionPolicies (kubernetes >= 1.30).
+
+Specific value: `"auto"`
+
+### <a name="ingress_IP"></a>10.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > IP`
 
 |          |          |
 | -------- | -------- |
@@ -4757,7 +4822,7 @@ Specific value: `"auto"`
 | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Must match regular expression** | ```^((25[0-5]\|(2[0-4]\|1\d\|[1-9]\|)\d)\.?\b){4}$``` [Test](https://regex101.com/?regex=%5E%28%2825%5B0-5%5D%7C%282%5B0-4%5D%7C1%5Cd%7C%5B1-9%5D%7C%29%5Cd%29%5C.%3F%5Cb%29%7B4%7D%24) |
 
-### <a name="ingress_extraPorts"></a>10.9. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > extraPorts`
+### <a name="ingress_extraPorts"></a>10.10. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `base cluster configuration > ingress > extraPorts`
 
 |                           |                                                                                                                 |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -4770,7 +4835,7 @@ Specific value: `"auto"`
 | ----------------------------------------------- | ------- | ----------- | ---------- | ---------- | ----------------- |
 | - [](#ingress_extraPorts_additionalProperties ) | No      | Combination | No         | -          | -                 |
 
-#### <a name="ingress_extraPorts_additionalProperties"></a>10.9.1. Property `base cluster configuration > ingress > extraPorts > additionalProperties`
+#### <a name="ingress_extraPorts_additionalProperties"></a>10.10.1. Property `base cluster configuration > ingress > extraPorts > additionalProperties`
 
 |                           |                                                                             |
 | ------------------------- | --------------------------------------------------------------------------- |
@@ -4782,7 +4847,7 @@ Specific value: `"auto"`
 | [item 0](#ingress_extraPorts_additionalProperties_oneOf_i0) |
 | [item 1](#ingress_extraPorts_additionalProperties_oneOf_i1) |
 
-##### <a name="ingress_extraPorts_additionalProperties_oneOf_i0"></a>10.9.1.1. Property `base cluster configuration > ingress > extraPorts > additionalProperties > oneOf > item 0`
+##### <a name="ingress_extraPorts_additionalProperties_oneOf_i0"></a>10.10.1.1. Property `base cluster configuration > ingress > extraPorts > additionalProperties > oneOf > item 0`
 
 |          |           |
 | -------- | --------- |
@@ -4795,7 +4860,7 @@ Specific value: `"auto"`
 | **Minimum**  | &ge; 1     |
 | **Maximum**  | &le; 65535 |
 
-##### <a name="ingress_extraPorts_additionalProperties_oneOf_i1"></a>10.9.1.2. Property `base cluster configuration > ingress > extraPorts > additionalProperties > oneOf > item 1`
+##### <a name="ingress_extraPorts_additionalProperties_oneOf_i1"></a>10.10.1.2. Property `base cluster configuration > ingress > extraPorts > additionalProperties > oneOf > item 1`
 
 |                           |                                                                |
 | ------------------------- | -------------------------------------------------------------- |
@@ -4808,7 +4873,7 @@ Specific value: `"auto"`
 | - [exposedPort](#ingress_extraPorts_additionalProperties_oneOf_i1_exposedPort ) | No      | integer          | No         | -          | defaults to \`port\` |
 | - [protocol](#ingress_extraPorts_additionalProperties_oneOf_i1_protocol )       | No      | enum (of string) | No         | -          | defaults to \`TCP\`  |
 
-###### <a name="ingress_extraPorts_additionalProperties_oneOf_i1_port"></a>10.9.1.2.1. Property `base cluster configuration > ingress > extraPorts > additionalProperties > oneOf > item 1 > port`
+###### <a name="ingress_extraPorts_additionalProperties_oneOf_i1_port"></a>10.10.1.2.1. Property `base cluster configuration > ingress > extraPorts > additionalProperties > oneOf > item 1 > port`
 
 |          |           |
 | -------- | --------- |
@@ -4819,7 +4884,7 @@ Specific value: `"auto"`
 | **Minimum**  | &ge; 1     |
 | **Maximum**  | &le; 65535 |
 
-###### <a name="ingress_extraPorts_additionalProperties_oneOf_i1_exposedPort"></a>10.9.1.2.2. Property `base cluster configuration > ingress > extraPorts > additionalProperties > oneOf > item 1 > exposedPort`
+###### <a name="ingress_extraPorts_additionalProperties_oneOf_i1_exposedPort"></a>10.10.1.2.2. Property `base cluster configuration > ingress > extraPorts > additionalProperties > oneOf > item 1 > exposedPort`
 
 |          |           |
 | -------- | --------- |
@@ -4832,7 +4897,7 @@ Specific value: `"auto"`
 | **Minimum**  | &ge; 1     |
 | **Maximum**  | &le; 65535 |
 
-###### <a name="ingress_extraPorts_additionalProperties_oneOf_i1_protocol"></a>10.9.1.2.3. Property `base cluster configuration > ingress > extraPorts > additionalProperties > oneOf > item 1 > protocol`
+###### <a name="ingress_extraPorts_additionalProperties_oneOf_i1_protocol"></a>10.10.1.2.3. Property `base cluster configuration > ingress > extraPorts > additionalProperties > oneOf > item 1 > protocol`
 
 |          |                    |
 | -------- | ------------------ |
