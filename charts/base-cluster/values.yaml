@@ -497,14 +497,16 @@ descheduler:
           topologyBalanceNodeFit: true
       - name: LowNodeUtilization
         args:
+          # thresholds are percentage points around the cluster-wide mean usage, not absolute percentages
+          useDeviationThresholds: true
           thresholds:
-            cpu: 50
-            memory: 50
-            pods: 50
+            cpu: 20
+            memory: 20
+            pods: 30
           targetThresholds:
-            cpu: 70
-            memory: 80
-            pods: 95
+            cpu: 20
+            memory: 20
+            pods: 30
     plugins:
       balance:
         enabled:
