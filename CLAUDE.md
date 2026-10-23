@@ -56,7 +56,8 @@ Try to keep this CLAUDE file up to date with any gotchas you encounter while wor
 - `actions/checkout` v7 refuses fork PR code under `pull_request_target`/`workflow_run` (needs `allow-unsafe-pr-checkout: true`). Don't set that flag: anything that checks out fork code belongs on plain `pull_request`.
 - `.github/scripts/prepare-values.sh` executes the chart's `ci/_common.sh`, so any job running it executes PR code. That is fine on `pull_request` without secrets, never under `pull_request_target`.
 - Only `label-pullrequest.yaml` stays on `pull_request_target`, because it needs the bot token and never checks out PR code. Don't add a checkout there.
-- Jobs that need secrets (`check-licenses` image scan, `pr-comment-diff`) are skipped for fork PRs (`head.repo.full_name != github.repository`) instead of failing. The image scan still runs for fork PRs in the merge queue (`merge_group`), which only a maintainer can enter after reviewing the PR.
+- Jobs that need secrets (`check-licenses` image scan, `pr-comment-diff`, `release-update-metadata`) are skipped for fork PRs (`head.repo.full_name != github.repository`) instead of failing. The image scan still runs for fork PRs in the merge queue (`merge_group`), which only a maintainer can enter after reviewing the PR.
+- Skip by putting the `head.repo.full_name == github.repository` `if:` on the root `getChangedChart` job; jobs that `need` it are skipped implicitly (no `always()`/`!cancelled()` on them, or they would run anyway). `wait-for-checks` accepts `skipped` conclusions. Consequence: a fork PR adding a new chart doesn't get its `release-please/config.json` entry, a maintainer has to add it.
 - `merge_group` has no `github.event.pull_request`, so concurrency groups must fall back to `github.ref` and must not `cancel-in-progress` there.
 
 ## Scripts that process rendered charts
