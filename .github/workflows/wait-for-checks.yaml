@@ -13,7 +13,7 @@ on:
 
 jobs:
   wait-for-checks:
-    runs-on: self-hosted
+    runs-on: self-hosted-small
     permissions:
       checks: read
     steps:
