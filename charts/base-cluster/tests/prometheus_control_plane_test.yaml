@@ -2,6 +2,8 @@ suite: prometheus control plane component detection
 templates:
   - templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
   - templates/monitoring/kube-prometheus-stack/grafana-secret.yaml
+  - templates/monitoring/kube-prometheus-stack/oauth-proxy.yaml
+  - templates/monitoring/kube-prometheus-stack/oauth-proxy-secret.yaml
 release:
   name: base-cluster
 kubernetesProvider:
@@ -440,6 +442,70 @@ tests:
       - equal:
           path: spec.values.grafana["grafana.ini"]["auth.generic_oauth"].role_attribute_path
           value: "contains(groups, 'admin') && 'Admin' || 'Viewer'"
+
+  - it: falls back to an empty issuer path when authentication.config.issuerPath is not set
+    template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
+    set:
+      global.clusterName: test-cluster
+      global.baseDomain: example.com
+      certManager.email: admin@example.com
+      monitoring.grafana.adminPassword: test
+      global.authentication.config.clientId: test-client
+      global.authentication.config.clientSecret: test-secret
+      global.authentication.config.issuerHost: keycloak.de
+      global.authentication.grafana.apiPath: /oauth2/userinfo/grafana
+      global.authentication.grafana.authenticationPath: /oauth2/authorize/grafana
+      global.authentication.grafana.tokenPath: /oauth2/token/grafana
+      global.authentication.grafana.roleAttributePath: "contains(groups, 'admin') && 'Admin' || 'Viewer'"
+    asserts:
+      - equal:
+          path: spec.values.grafana["grafana.ini"]["auth.generic_oauth"].api_url
+          value: https://keycloak.de/oauth2/userinfo/grafana
+      - equal:
+          path: spec.values.grafana["grafana.ini"]["auth.generic_oauth"].auth_url
+          value: https://keycloak.de/oauth2/authorize/grafana
+      - equal:
+          path: spec.values.grafana["grafana.ini"]["auth.generic_oauth"].token_url
+          value: https://keycloak.de/oauth2/token/grafana
+
+  - it: sets oauth-proxy oidc_issuer_url from authentication.config when issuerPath is set
+    template: templates/monitoring/kube-prometheus-stack/oauth-proxy.yaml
+    set:
+      global.clusterName: test-cluster
+      global.baseDomain: example.com
+      certManager.email: admin@example.com
+      monitoring.prometheus.enabled: true
+      global.authentication.config.clientId: test-client
+      global.authentication.config.clientSecret: test-secret
+      global.authentication.config.issuerHost: keycloak.de
+      global.authentication.config.issuerPath: /auth/realms/test
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HelmRelease
+      - matchRegex:
+          path: spec.values.config.configFile
+          pattern: 'oidc_issuer_url = "https://keycloak.de/auth/realms/test"'
+
+  - it: sets oauth-proxy oidc_issuer_url without trailing path when issuerPath is not set
+    template: templates/monitoring/kube-prometheus-stack/oauth-proxy.yaml
+    set:
+      global.clusterName: test-cluster
+      global.baseDomain: example.com
+      certManager.email: admin@example.com
+      monitoring.prometheus.enabled: true
+      global.authentication.config.clientId: test-client
+      global.authentication.config.clientSecret: test-secret
+      global.authentication.config.issuerHost: keycloak.de
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HelmRelease
+      - matchRegex:
+          path: spec.values.config.configFile
+          pattern: 'oidc_issuer_url = "https://keycloak.de"'
 
   - it: explicit ingress.enabled false overrides the authenticated-default-true
     template: templates/monitoring/kube-prometheus-stack/prometheus-operator.yaml
