@@ -26,8 +26,15 @@ spec:
     secretRef:
       name: {{ .Release.Name }}-kubeconfig
   install:
+    {{- with .timeout }}
+    timeout: {{ . }}
+    {{- end }}
     remediation:
       retries: -1
+  {{- with .timeout }}
+  upgrade:
+    timeout: {{ . }}
+  {{- end }}
   uninstall:
     disableWait: true
   storageNamespace: kube-system
@@ -46,7 +53,7 @@ spec:
 {{- define "t8s-cluster.helm.resourceIntoCluster" -}}
   {{- $_ := mustMerge . (pick .context "Values" "Release" "Chart") -}}
   {{- $fullName := printf "%s-%s" .Release.Name .name -}}
-  {{- $bodyArgs := dict "context" .context "fullName" $fullName "name" .name "resource" .resource "additionalLabels" .additionalLabels "dependsOn" .dependsOn "render" .render -}}
+  {{- $bodyArgs := dict "context" .context "fullName" $fullName "name" .name "resource" .resource "additionalLabels" .additionalLabels "dependsOn" .dependsOn "render" .render "timeout" .timeout -}}
   {{- if .waitForCluster }}
 apiVersion: fluxcd.controlplane.io/v1
 kind: ResourceSet

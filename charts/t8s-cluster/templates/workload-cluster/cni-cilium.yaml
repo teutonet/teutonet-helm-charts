@@ -72,8 +72,6 @@ spec:
       enabled: true
     egressGateway:
       enabled: true
-    # currently not really possible with kubeadmcontrolplane, as they don't support disabling the built-in kube-proxy
-    kubeProxyReplacement: true
     ipam:
       mode: kubernetes
     routingMode: native
@@ -91,7 +89,12 @@ spec:
       {{- end }}
     k8sServicePort: 443
     ipv4NativeRoutingCIDR: 10.0.0.0/16 # default net, see hosted control plane controller
+    {{- else }}
+    # the API server endpoint isn't known upfront, so let cilium read host and port from the kubeadm cluster-info ConfigMap
+    k8sServiceHost: auto
     {{- end }}
+    # hostPort (incl. hostIP 127.0.0.1) is only served by cilium with kube-proxy replacement
+    kubeProxyReplacement: true
 
     policyDenyResponse: icmp
 

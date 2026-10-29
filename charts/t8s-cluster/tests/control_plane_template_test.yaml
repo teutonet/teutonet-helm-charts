@@ -19,6 +19,29 @@ tests:
         hasDocuments:
           count: 0
 
+  - it: skips the kube-proxy addon on init only, as cilium replaces kube-proxy
+    asserts:
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: spec.template.spec.kubeadmConfigSpec.initConfiguration.skipPhases
+          value:
+            - addon/kube-proxy
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        notExists:
+          path: spec.template.spec.kubeadmConfigSpec.joinConfiguration.skipPhases
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: spec.template.spec.kubeadmConfigSpec.joinConfiguration.nodeRegistration
+          value:
+            imagePullSerial: false
+            kubeletExtraArgs:
+              - name: cloud-provider
+                value: external
+      - template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+        equal:
+          path: spec.template.spec.kubeadmConfigSpec.joinConfiguration.patches.directory
+          value: /etc/kubernetes/patches
+
   - it: renders a HostedControlPlaneTemplate and no KubeadmControlPlaneTemplate when hosted
     set:
       controlPlane:
