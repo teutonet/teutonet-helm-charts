@@ -1,7 +1,7 @@
 <!-- vim: set ft=markdown: -->
 # t8s-cluster
 
-![Version: 9.15.0](https://img.shields.io/badge/Version-9.15.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 9.15.1](https://img.shields.io/badge/Version-9.15.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 t8s-operator cluster with necessary addons
 
@@ -17,7 +17,7 @@ t8s-operator cluster with necessary addons
 
 ## Source Code
 
-* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.15.0/charts/t8s-cluster>
+* <https://github.com/teutonet/teutonet-helm-charts/tree/t8s-cluster-v9.15.1/charts/t8s-cluster>
 * <https://github.com/teutonet/teutonet-helm-charts/tree/main/charts/t8s-cluster>
 
 ## Requirements
@@ -901,11 +901,11 @@ Must be one of:
 
 **Description:** ResourceRequirements describes the compute resource requirements.
 
-| Property                                        | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                          |
-| ----------------------------------------------- | ------- | ------ | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| - [claims](#controlPlane_resources_claims )     | No      | array  | No         | -          | claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.<br /><br />This field is immutable. It can only be set for containers.                                                                                                                                                               |
-| - [limits](#controlPlane_resources_limits )     | No      | object | No         | -          | limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/                                                                                                                                                                                |
-| - [requests](#controlPlane_resources_requests ) | No      | object | No         | -          | requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| Property                                        | Pattern | Type   | Deprecated | Definition | Title/Description                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ----------------------------------------------- | ------- | ------ | ---------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - [claims](#controlPlane_resources_claims )     | No      | array  | No         | -          | claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.<br /><br />This field is immutable. It can only be set for containers.                                                                                                                                                                                                                                                                       |
+| - [limits](#controlPlane_resources_limits )     | No      | object | No         | -          | limits describes the maximum amount of compute resources allowed. For kubelet cgroup enforcement: - cpu and memory: a limit of 0 is treated the same as an unspecified limit. If<br />  neither the container nor the pod specifies a limit, the resource is not limited.<br />- hugepages: an unspecified limit is treated the same as a limit of 0. More details: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| - [requests](#controlPlane_resources_requests ) | No      | object | No         | -          | requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/                                                                                                         |
 
 #### <a name="controlPlane_resources_claims"></a>3.8.1. ![Optional](https://img.shields.io/badge/Optional-yellow) Property `t8s cluster configuration > controlPlane > resources > claims`
 
@@ -967,7 +967,9 @@ This field is immutable. It can only be set for containers.
 | **Type**                  | `object`                                                                                                                   |
 | **Additional properties** | [![Should-conform](https://img.shields.io/badge/Should-conform-blue)](#controlPlane_resources_limits_additionalProperties) |
 
-**Description:** limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+**Description:** limits describes the maximum amount of compute resources allowed. For kubelet cgroup enforcement: - cpu and memory: a limit of 0 is treated the same as an unspecified limit. If
+  neither the container nor the pod specifies a limit, the resource is not limited.
+- hugepages: an unspecified limit is treated the same as a limit of 0. More details: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 
 | Property                                                   | Pattern | Type   | Deprecated | Definition                                                     | Title/Description |
 | ---------------------------------------------------------- | ------- | ------ | ---------- | -------------------------------------------------------------- | ----------------- |
