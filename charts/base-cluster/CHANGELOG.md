@@ -1,5 +1,17 @@
 # Changelog
 
+## [13.1.1](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v13.1.0...base-cluster-v13.1.1) (2026-10-30)
+
+
+### Miscellaneous Chores
+
+* **base-cluster/dependencies:** update docker.io/curlimages/curl:8.23.0 docker digest to 3fb7e13 ([#2565](https://github.com/teutonet/teutonet-helm-charts/issues/2565)) ([979fbc5](https://github.com/teutonet/teutonet-helm-charts/commit/979fbc5678f2cfcb722791f98a209fbe2d9d94f1))
+* **base-cluster/dependencies:** update docker.io/grafana/grafana-image-renderer docker tag to v5.12.10 ([#2564](https://github.com/teutonet/teutonet-helm-charts/issues/2564)) ([d66b489](https://github.com/teutonet/teutonet-helm-charts/commit/d66b4891ea8e76e470405e98893e7ff8573cdb64))
+* **base-cluster/dependencies:** update helm release alloy to v1.14.4 ([#2567](https://github.com/teutonet/teutonet-helm-charts/issues/2567)) ([63fe1fe](https://github.com/teutonet/teutonet-helm-charts/commit/63fe1fe6d0ea83cb7e1010796d356cd14a16dec1))
+* **base-cluster/dependencies:** update helm release loki to v20.0.3 ([#2573](https://github.com/teutonet/teutonet-helm-charts/issues/2573)) ([63a8067](https://github.com/teutonet/teutonet-helm-charts/commit/63a80673dcd8edf7cb620146a18f5454c27e6c19))
+* **base-cluster/dependencies:** update helm release reflector to v10.0.70 ([#2568](https://github.com/teutonet/teutonet-helm-charts/issues/2568)) ([4d1c2b4](https://github.com/teutonet/teutonet-helm-charts/commit/4d1c2b4cf00197e1ccdff3738e6b8c71b7cc8481))
+* **base-cluster/dependencies:** update helm release trivy-operator to v0.38.1 ([#2571](https://github.com/teutonet/teutonet-helm-charts/issues/2571)) ([745d21e](https://github.com/teutonet/teutonet-helm-charts/commit/745d21ebe2002cd69642454c9600df36c61f3d4c))
+
 ## [13.1.0](https://github.com/teutonet/teutonet-helm-charts/compare/base-cluster-v13.0.0...base-cluster-v13.1.0) (2026-10-28)
 
 
