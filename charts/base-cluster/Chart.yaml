@@ -26,16 +26,16 @@ type: application
 version: 13.1.1
 annotations:
   artifacthub.io/images: |-
-    - image: docker.io/curlimages/curl:8.23.0@sha256:11e64e28c5f58c8d93ee95fcf22ac055f48b0bc440e0ce7d8013bbb5ad6aa8ac                                #  default/Job/dead-mans-switch-registration.yaml
-    - image: docker.io/curlimages/curl:8.23.0@sha256:11e64e28c5f58c8d93ee95fcf22ac055f48b0bc440e0ce7d8013bbb5ad6aa8ac                                #  monitoring/CronJob/dead-mans-switch.yaml
-    - image: docker.io/emberstack/kubernetes-reflector:10.0.69                                                                                       #  kube-system/HelmRelease/reflector/kube-system/Deployment/reflector.yaml
+    - image: docker.io/curlimages/curl:8.23.0@sha256:3fb7e13e5d179a845c97d78204f3f1064d1907037f26a3ebf91710571151fd93                                #  default/Job/dead-mans-switch-registration.yaml
+    - image: docker.io/curlimages/curl:8.23.0@sha256:3fb7e13e5d179a845c97d78204f3f1064d1907037f26a3ebf91710571151fd93                                #  monitoring/CronJob/dead-mans-switch.yaml
+    - image: docker.io/emberstack/kubernetes-reflector:10.0.70                                                                                       #  kube-system/HelmRelease/reflector/kube-system/Deployment/reflector.yaml
     - image: docker.io/envoyproxy/gateway:v1.9.3                                                                                                     #  ingress/HelmRelease/ingress-controller/ingress/ConfigMap/envoy-gateway-config.yaml
     - image: docker.io/envoyproxy/gateway:v1.9.3                                                                                                     #  ingress/HelmRelease/ingress-controller/ingress/Deployment/envoy-gateway.yaml
     - image: docker.io/envoyproxy/gateway:v1.9.3                                                                                                     #  ingress/HelmRelease/ingress-controller/ingress/Job/ingress-controller-certgen.yaml
     - image: docker.io/envoyproxy/ratelimit:5ae0682e                                                                                                 #  ingress/HelmRelease/ingress-controller/ingress/ConfigMap/envoy-gateway-config.yaml
     - image: docker.io/fluxcd/flux-cli:v2.10.0@sha256:1a5178b1770052d6e88ab1c7c8434c5ac9bca8a8ab984dcaf6b9df31814ce9f2                               #  default/Job/flux-generate-ssh-key-secret-main.yaml
-    - image: docker.io/grafana/alloy:v1.21.2                                                                                                         #  monitoring/HelmRelease/telemetry-collector/monitoring/DaemonSet/telemetry-collector.yaml
-    - image: docker.io/grafana/alloy:v1.21.2                                                                                                         #  monitoring/HelmRelease/telemetry-gateway/monitoring/Deployment/telemetry-gateway.yaml
+    - image: docker.io/grafana/alloy:v1.21.3                                                                                                         #  monitoring/HelmRelease/telemetry-collector/monitoring/DaemonSet/telemetry-collector.yaml
+    - image: docker.io/grafana/alloy:v1.21.3                                                                                                         #  monitoring/HelmRelease/telemetry-gateway/monitoring/Deployment/telemetry-gateway.yaml
     - image: docker.io/grafana/loki:3.7.9                                                                                                            #  monitoring/HelmRelease/loki/monitoring/StatefulSet/loki.yaml
     - image: docker.io/grafana/tempo:2.10.8                                                                                                          #  monitoring/HelmRelease/grafana-tempo/monitoring/StatefulSet/grafana-tempo.yaml
     - image: docker.io/traefik:v3.7.16                                                                                                               #  ingress/HelmRelease/ingress-controller/ingress/Deployment/ingress-controller.yaml
@@ -53,7 +53,7 @@ annotations:
     - image: ghcr.io/kyverno/readiness-checker:v1.19.2                                                                                               #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-rm-webhooks.yaml
     - image: ghcr.io/kyverno/readiness-checker:v1.19.2                                                                                               #  kyverno/HelmRelease/kyverno/kyverno/Job/kyverno-scale-to-zero.yaml
     - image: ghcr.io/twin/k8s-ttl-controller:v1.4.0                                                                                                  #  kube-system/HelmRelease/ttl-controller/kube-system/Deployment/k8s-ttl-controller.yaml
-    - image: mirror.gcr.io/aquasec/trivy-operator:0.35.0                                                                                             #  trivy/HelmRelease/trivy/trivy/Deployment/trivy-trivy-operator.yaml
+    - image: mirror.gcr.io/aquasec/trivy-operator:0.36.1                                                                                             #  trivy/HelmRelease/trivy/trivy/Deployment/trivy-trivy-operator.yaml
     - image: quay.io/jetstack/cert-manager-cainjector:v1.21.3                                                                                        #  cert-manager/HelmRelease/cert-manager/cert-manager/Deployment/cert-manager-cainjector.yaml
     - image: quay.io/jetstack/cert-manager-controller:v1.21.3                                                                                        #  cert-manager/HelmRelease/cert-manager/cert-manager/Deployment/cert-manager.yaml
     - image: quay.io/jetstack/cert-manager-startupapicheck:v1.21.3                                                                                   #  cert-manager/HelmRelease/cert-manager/cert-manager/Job/cert-manager-startupapicheck.yaml
