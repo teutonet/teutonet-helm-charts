@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.2.1](https://github.com/teutonet/teutonet-helm-charts/compare/common-v2.2.0...common-v2.2.1) (2026-10-30)
+
+
+### Bug Fixes
+
+* **charts:** use v-prefixed kubectl image tag so renovate can resolve digests ([#2462](https://github.com/teutonet/teutonet-helm-charts/issues/2462)) ([b780d7b](https://github.com/teutonet/teutonet-helm-charts/commit/b780d7b209711c8846d6785b9e2b602bf9b669fe))
+* **common:** restrict helmRepositories keys to valid k8s names ([#2390](https://github.com/teutonet/teutonet-helm-charts/issues/2390)) ([f8dfab2](https://github.com/teutonet/teutonet-helm-charts/commit/f8dfab287467d0276d2c9f3638fce780066a5a23))
+
+
+### Miscellaneous Chores
+
+* **common/dependencies:** update helm release common to v2.41.0 ([#2221](https://github.com/teutonet/teutonet-helm-charts/issues/2221)) ([5ff0e2a](https://github.com/teutonet/teutonet-helm-charts/commit/5ff0e2ad4dca659c20787117f51faf67c17805cf))
+* **common/dependencies:** update registry.k8s.io/kubectl docker tag to v1.37.1 ([#2480](https://github.com/teutonet/teutonet-helm-charts/issues/2480)) ([433ecfb](https://github.com/teutonet/teutonet-helm-charts/commit/433ecfbcc4e7d72d25800b5fbf62550561fad25e))
+* **common/dependencies:** update registry.k8s.io/kubectl docker tag to v1.37.2 ([#2561](https://github.com/teutonet/teutonet-helm-charts/issues/2561)) ([38b09e0](https://github.com/teutonet/teutonet-helm-charts/commit/38b09e022c8797161480429c0e908d1b5c59d17f))
+
 ## [2.2.0](https://github.com/teutonet/teutonet-helm-charts/compare/common-v2.1.1...common-v2.2.0) (2026-07-31)
 
 
