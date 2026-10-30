@@ -21,4 +21,7 @@ tests:
             - other
       - equal:
           path: spec.values.deschedulerPolicy.profiles[0].pluginConfig[?(@.name == "LowNodeUtilization")].args.thresholds.cpu
-          value: 50
+          value: 20
+      - equal:
+          path: spec.values.deschedulerPolicy.profiles[0].pluginConfig[?(@.name == "LowNodeUtilization")].args.useDeviationThresholds
+          value: true
