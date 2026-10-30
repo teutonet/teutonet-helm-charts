@@ -110,9 +110,118 @@ tests:
           any: true
 
   - it: does not set a secretRef on the gateway-api GitRepository since it has no authentication configured
+    set:
+      ingress.provider: traefik
     asserts:
       - notExists:
           path: spec.secretRef
         documentSelector:
           path: kind
           value: GitRepository
+
+  - it: creates the envoy-gateway-crds GitRepository pinned to the upstream release tag when ingress.provider is envoy
+    set:
+      ingress.provider: envoy
+    documentSelector:
+      path: spec.url
+      value: https://github.com/envoyproxy/gateway
+    asserts:
+      - isKind:
+          of: GitRepository
+      - equal:
+          path: metadata.name
+          value: release-name-base-cluster-flux-envoy-gateway-crds
+      - exists:
+          path: spec.ref.semver
+
+  - it: applies the raw generated Envoy Gateway CRDs and waits for them to be established when ingress.provider is envoy
+    set:
+      ingress.provider: envoy
+    documentSelector:
+      path: spec.sourceRef.name
+      value: release-name-base-cluster-flux-envoy-gateway-crds
+    asserts:
+      - isKind:
+          of: Kustomization
+      - equal:
+          path: spec.path
+          value: charts/gateway-helm/charts/crds/crds/generated
+      - equal:
+          path: spec.wait
+          value: true
+      - equal:
+          path: spec.timeout
+          value: 5m
+
+  - it: skips the envoy-gateway-crds GitRepository and Kustomization when ingress.provider is not envoy
+    set:
+      ingress.provider: traefik
+    asserts:
+      - not: true
+        containsDocument:
+          kind: GitRepository
+          apiVersion: source.toolkit.fluxcd.io/v1
+          name: release-name-base-cluster-flux-envoy-gateway-crds
+          any: true
+      - not: true
+        containsDocument:
+          kind: Kustomization
+          apiVersion: kustomize.toolkit.fluxcd.io/v1
+          name: release-name-base-cluster-flux-envoy-gateway-crds
+          any: true
+
+  - it: omits wait and timeout on a Kustomization that does not configure them
+    set:
+      ingress.provider: nginx
+      flux.gitRepositories:
+        main:
+          url: https://github.com/example/repo
+          branch: main
+    documentSelector:
+      path: kind
+      value: Kustomization
+    asserts:
+      - notExists:
+          path: spec.wait
+      - notExists:
+          path: spec.timeout
+
+  - it: rejects a Kustomization timeout in days since Flux does not accept it
+    set:
+      ingress.provider: nginx
+      flux.gitRepositories:
+        main:
+          url: https://github.com/example/repo
+          branch: main
+          timeout: 1d
+    asserts:
+      - failedTemplate:
+          errorPattern: timeout
+
+  - it: rejects a Kustomization timeout with trailing or leading garbage
+    set:
+      ingress.provider: nginx
+      flux.gitRepositories:
+        main:
+          url: https://github.com/example/repo
+          branch: main
+          timeout: invalid5m
+    asserts:
+      - failedTemplate:
+          errorPattern: timeout
+
+  - it: accepts a compound Kustomization timeout
+    set:
+      ingress.provider: nginx
+      flux.gitRepositories:
+        main:
+          url: https://github.com/example/repo
+          branch: main
+          timeout: 1m30s
+    documentSelector:
+      path: kind
+      value: Kustomization
+    asserts:
+      - equal:
+          path: spec.timeout
+          value: 1m30s
