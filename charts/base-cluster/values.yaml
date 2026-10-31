@@ -170,7 +170,7 @@ global:
     traefik:
       url: https://helm.traefik.io/traefik
       charts:
-        traefik: 42.1.3
+        traefik: 42.2.0
       condition: '{{ eq .Values.ingress.provider "traefik" }}'
     envoy-gateway-crds:
       url: oci://docker.io/envoyproxy
