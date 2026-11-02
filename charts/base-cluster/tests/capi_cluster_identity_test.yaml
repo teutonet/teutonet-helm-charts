@@ -28,7 +28,7 @@ tests:
       - notContains:
           path: spec.values.prometheus.prometheusSpec.additionalAlertRelabelConfigs
           content:
-            target_label: capiclustername
+            target_label: capi_cluster_name
           any: true
 
   - it: does not render the ConfigMap when there is no live cluster to look up
@@ -66,21 +66,21 @@ tests:
           content:
             source_labels:
               - __address__
-            target_label: capiclustername
+            target_label: capi_cluster_name
             replacement: efac7c4c-b677-479e-a693-33a815e5adf9
       - contains:
           path: spec.values.prometheus.prometheusSpec.additionalAlertRelabelConfigs
           content:
             source_labels:
               - __address__
-            target_label: capiclusternamespace
+            target_label: capi_cluster_namespace
             replacement: teuto-portal-clusters
       - contains:
           path: spec.values.prometheus.prometheusSpec.additionalAlertRelabelConfigs
           content:
             source_labels:
               - __address__
-            target_label: capiclustercloud
+            target_label: capi_cluster_cloud
             replacement: ffm3
 
   - it: writes name/namespace/cloud into the ConfigMap when derived from a node
@@ -137,12 +137,12 @@ tests:
           content:
             source_labels:
               - __address__
-            target_label: capiclustername
+            target_label: capi_cluster_name
             replacement: efac7c4c-b677-479e-a693-33a815e5adf9
       - notContains:
           path: spec.values.prometheus.prometheusSpec.additionalAlertRelabelConfigs
           content:
-            target_label: capiclustercloud
+            target_label: capi_cluster_cloud
           any: true
 
   - it: uses the already-persisted ConfigMap and skips the node lookup once complete
@@ -171,12 +171,12 @@ tests:
           content:
             source_labels:
               - __address__
-            target_label: capiclustername
+            target_label: capi_cluster_name
             replacement: efac7c4c-b677-479e-a693-33a815e5adf9
       - contains:
           path: spec.values.prometheus.prometheusSpec.additionalAlertRelabelConfigs
           content:
             source_labels:
               - __address__
-            target_label: capiclustercloud
+            target_label: capi_cluster_cloud
             replacement: ffm3
