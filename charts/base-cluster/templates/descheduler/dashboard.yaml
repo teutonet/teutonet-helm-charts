@@ -1,0 +1,12 @@
+{{- if and .Values.monitoring.prometheus.enabled .Values.descheduler.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-descheduler
+  namespace: kube-system
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    grafana_dashboard: "1"
+    app.kubernetes.io/component: descheduler
+    app.kubernetes.io/part-of: monitoring
+data: {{- (.Files.Glob "dashboards/descheduler.json").AsConfig | nindent 2 }}
+{{- end }}
