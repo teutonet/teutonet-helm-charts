@@ -170,6 +170,24 @@
       ],
       "description": "See: https://cloudnative-pg.io/documentation/1.16/backup_recovery/",
       "properties": {
+        "bootstrapRestore": {
+          "type": "object",
+          "required": ["enabled"],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "If this database cluster should be bootstrapped from restoring this backup. This temporarily disables the backup plugin, so set this to false after the database cluster has been recovered.",
+              "default": false
+            },
+            "targetTime": {
+              "type": "string",
+              "description": "The target time as a timestamp in RFC3339 format or PostgreSQL timestamp format. Timestamps without an explicit timezone are interpreted as UTC.",
+              "examples": [
+                "2024-01-15T10:30:00Z"
+              ]
+            }
+          }
+        },
         "schedule": {
           "type": "string",
           "description": "cron syntax",
