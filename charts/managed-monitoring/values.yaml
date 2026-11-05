@@ -3,7 +3,7 @@ global:
     grafana:
       url: https://grafana.github.io/helm-charts
       charts:
-        alloy: 1.14.4
+        alloy: 1.15.0
     cetic:
       url: https://cetic.github.io/helm-charts
 
