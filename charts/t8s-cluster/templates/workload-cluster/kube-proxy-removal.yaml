@@ -1,0 +1,29 @@
+{{- /*
+Clusters created before cilium replaced kube-proxy still run it, remove it once (see files/kube-proxy-removal.yaml).
+New clusters skip the kube-proxy addon at init and never need this. It's only rendered for a KubeadmControlPlane that
+doesn't skip it yet; once the KCP is updated (right after the upgrade that introduced this), the next release drops
+this again, unless the removal didn't finish yet.
+*/ -}}
+{{- if and (not .Values.controlPlane.hosted) (eq (include "t8s-cluster.cni" .) "cilium") -}}
+  {{- $name := printf "%s-kube-proxy-removal" .Release.Name -}}
+  {{- $needed := false -}}
+  {{- range (lookup "controlplane.cluster.x-k8s.io/v1beta2" "KubeadmControlPlane" .Release.Namespace "").items -}}
+    {{- if and (eq (dig "metadata" "labels" "cluster.x-k8s.io/cluster-name" "" .) $.Release.Name) (not (has "addon/kube-proxy" (dig "spec" "kubeadmConfigSpec" "initConfiguration" "skipPhases" (list) .))) -}}
+      {{- $needed = true -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $existing := lookup "helm.toolkit.fluxcd.io/v2" "HelmRelease" .Release.Namespace $name -}}
+  {{- if $existing -}}
+    {{- $ready := false -}}
+    {{- range (dig "status" "conditions" (list) $existing) -}}
+      {{- if and (eq .type "Ready") (eq .status "True") -}}
+        {{- $ready = true -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $needed = or $needed (not $ready) -}}
+  {{- end -}}
+  {{- if $needed -}}
+    {{- $resource := .Files.Get "files/kube-proxy-removal.yaml" | replace "__KUBECTL_IMAGE__" (include "common.images.image" (dict "imageRoot" .Values.global.kubectl.image "global" .Values.global)) -}}
+    {{- include "t8s-cluster.helm.resourceIntoCluster" (dict "name" "kube-proxy-removal" "resource" $resource "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "cni") "dependsOn" (list (dict "name" (printf "%s-cni" $.Release.Name) "namespace" $.Release.Namespace)) "timeout" (include "t8s-cluster.helm.daemonSetTimeout" (dict "context" $)) "waitForCluster" true) | nindent 0 -}}
+  {{- end -}}
+{{- end -}}

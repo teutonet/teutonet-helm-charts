@@ -161,6 +161,44 @@ tests:
           path: spec.resources[0].spec.values.hubble.ui.podDisruptionBudget.enabled
           value: true
 
+  - it: replaces kube-proxy and looks up the API server from cluster-info when not hosted
+    set:
+      cni: cilium
+    asserts:
+      - equal:
+          path: spec.resources[0].spec.values.kubeProxyReplacement
+          value: true
+      - equal:
+          path: spec.resources[0].spec.values.k8sServiceHost
+          value: auto
+      - notExists:
+          path: spec.resources[0].spec.values.k8sServicePort
+
+  - it: replaces kube-proxy and uses the hosted control plane gateway when hosted
+    set:
+      cni: cilium
+      controlPlane.hosted: true
+    kubernetesProvider:
+      objects:
+        - apiVersion: gateway.networking.k8s.io/v1
+          kind: Gateway
+          metadata:
+            name: controlplane
+            namespace: capi-hosted-control-plane-system
+          spec:
+            listeners:
+              - hostname: "*.example.com"
+    asserts:
+      - equal:
+          path: spec.resources[0].spec.values.kubeProxyReplacement
+          value: true
+      - equal:
+          path: spec.resources[0].spec.values.k8sServiceHost
+          value: my-cluster.NAMESPACE.example.com
+      - equal:
+          path: spec.resources[0].spec.values.k8sServicePort
+          value: 443
+
   - it: install and upgrade timeout default to 300s when there are no node pools
     set:
       cni: cilium

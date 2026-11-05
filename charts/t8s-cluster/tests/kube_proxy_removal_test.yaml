@@ -1,0 +1,222 @@
+suite: kube-proxy removal ResourceSet gating
+templates:
+  - templates/workload-cluster/kube-proxy-removal.yaml
+release:
+  name: my-cluster
+kubernetesProvider:
+  scheme:
+    controlplane.cluster.x-k8s.io/v1beta2/KubeadmControlPlane:
+      gvr:
+        group: controlplane.cluster.x-k8s.io
+        version: v1beta2
+        resource: kubeadmcontrolplanes
+      namespaced: true
+    helm.toolkit.fluxcd.io/v2/HelmRelease:
+      gvr:
+        group: helm.toolkit.fluxcd.io
+        version: v2
+        resource: helmreleases
+      namespaced: true
+tests:
+  - it: no output without a KubeadmControlPlane, e.g. when the cluster is created
+    set:
+      cni: cilium
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: wraps the removal in a ResourceSet that waits for the cilium HelmRelease while the KubeadmControlPlane doesn't skip kube-proxy yet
+    set:
+      cni: cilium
+    kubernetesProvider:
+      objects:
+        - apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+          kind: KubeadmControlPlane
+          metadata:
+            name: my-cluster-abcde
+            namespace: NAMESPACE
+            labels:
+              cluster.x-k8s.io/cluster-name: my-cluster
+          spec:
+            kubeadmConfigSpec:
+              initConfiguration:
+                nodeRegistration: {}
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ResourceSet
+      - equal:
+          path: metadata.name
+          value: my-cluster-kube-proxy-removal
+      - equal:
+          path: spec.resources[0].kind
+          value: HelmRelease
+      - equal:
+          path: spec.resources[0].spec.dependsOn
+          value:
+            - name: my-cluster-cni
+              namespace: NAMESPACE
+      - equal:
+          path: spec.resources[0].spec.install.timeout
+          value: 300s
+      - equal:
+          path: spec.resources[0].spec.upgrade.timeout
+          value: 300s
+
+  - it: leaves the lookups to the workload cluster, runs as hooks and fills in the kubectl image
+    set:
+      cni: cilium
+    kubernetesProvider:
+      objects:
+        - apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+          kind: KubeadmControlPlane
+          metadata:
+            name: my-cluster-abcde
+            namespace: NAMESPACE
+            labels:
+              cluster.x-k8s.io/cluster-name: my-cluster
+          spec:
+            kubeadmConfigSpec: {}
+    asserts:
+      - matchRegex:
+          path: spec.resources[0].spec.values.static
+          pattern: 'lookup "apps/v1" "DaemonSet" "kube-system" "kube-proxy"'
+      - matchRegex:
+          path: spec.resources[0].spec.values.static
+          pattern: 'lookup "v1" "Node" "" ""'
+      - matchRegex:
+          path: spec.resources[0].spec.values.static
+          pattern: 'helm.sh/hook: post-install,post-upgrade'
+      - matchRegex:
+          path: spec.resources[0].spec.values.static
+          pattern: 'helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded'
+      - matchRegex:
+          path: spec.resources[0].spec.values.static
+          pattern: 'lookup "v1" "ConfigMap" "kube-system" "kubeadm-config"'
+      - matchRegex:
+          path: spec.resources[0].spec.values.static
+          pattern: 'clusterrolebinding/kubeadm:node-proxier'
+      - matchRegex:
+          path: spec.resources[0].spec.values.static
+          pattern: 'serviceaccount/kube-proxy'
+      - matchRegex:
+          path: spec.resources[0].spec.values.static
+          pattern: 'image:\s+registry\.k8s\.io/kubectl:'
+      - notMatchRegex:
+          path: spec.resources[0].spec.values.static
+          pattern: __KUBECTL_IMAGE__
+
+  - it: no output once the KubeadmControlPlane skips the kube-proxy addon
+    set:
+      cni: cilium
+    kubernetesProvider:
+      objects:
+        - apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+          kind: KubeadmControlPlane
+          metadata:
+            name: my-cluster-abcde
+            namespace: NAMESPACE
+            labels:
+              cluster.x-k8s.io/cluster-name: my-cluster
+          spec:
+            kubeadmConfigSpec:
+              initConfiguration:
+                skipPhases:
+                  - addon/kube-proxy
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: ignores KubeadmControlPlanes of other clusters
+    set:
+      cni: cilium
+    kubernetesProvider:
+      objects:
+        - apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+          kind: KubeadmControlPlane
+          metadata:
+            name: other-cluster-abcde
+            namespace: NAMESPACE
+            labels:
+              cluster.x-k8s.io/cluster-name: other-cluster
+          spec:
+            kubeadmConfigSpec: {}
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: keeps rendering while the removal HelmRelease isn't ready, even if the KubeadmControlPlane skips kube-proxy
+    set:
+      cni: cilium
+    kubernetesProvider:
+      objects:
+        - apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+          kind: KubeadmControlPlane
+          metadata:
+            name: my-cluster-abcde
+            namespace: NAMESPACE
+            labels:
+              cluster.x-k8s.io/cluster-name: my-cluster
+          spec:
+            kubeadmConfigSpec:
+              initConfiguration:
+                skipPhases:
+                  - addon/kube-proxy
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: my-cluster-kube-proxy-removal
+            namespace: NAMESPACE
+          status:
+            conditions:
+              - type: Ready
+                status: "False"
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: no output once the removal HelmRelease is ready and the KubeadmControlPlane skips kube-proxy
+    set:
+      cni: cilium
+    kubernetesProvider:
+      objects:
+        - apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+          kind: KubeadmControlPlane
+          metadata:
+            name: my-cluster-abcde
+            namespace: NAMESPACE
+            labels:
+              cluster.x-k8s.io/cluster-name: my-cluster
+          spec:
+            kubeadmConfigSpec:
+              initConfiguration:
+                skipPhases:
+                  - addon/kube-proxy
+        - apiVersion: helm.toolkit.fluxcd.io/v2
+          kind: HelmRelease
+          metadata:
+            name: my-cluster-kube-proxy-removal
+            namespace: NAMESPACE
+          status:
+            conditions:
+              - type: Ready
+                status: "True"
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: no output when hosted
+    set:
+      cni: cilium
+      controlPlane.hosted: true
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: no output when cni is calico
+    set:
+      cni: calico
+    asserts:
+      - hasDocuments:
+          count: 0

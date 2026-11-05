@@ -1,0 +1,219 @@
+{{- /*
+Evaluated by the `static` chart inside the workload cluster (via tpl), not by t8s-cluster, so `lookup` sees the workload cluster.
+Everything is a post-install/post-upgrade Helm hook that is deleted again once all hooks succeeded, so nothing stays behind.
+Renders nothing if there is no kube-proxy DaemonSet (anymore).
+Helm only waits for Jobs, so the per-node work is one Job per node instead of a DaemonSet.
+Leaves the cluster like one that skipped the kube-proxy addon at init: everything kubeadm installs for kube-proxy is deleted
+and the kubeadm-config ConfigMap says `proxy.disabled`, so no kubeadm run brings it back.
+*/ -}}
+{{- $kubeProxy := lookup "apps/v1" "DaemonSet" "kube-system" "kube-proxy" -}}
+{{- if $kubeProxy }}
+{{- $kubeProxyImage := (index $kubeProxy.spec.template.spec.containers 0).image }}
+{{- /* only the first node's Job marks the proxy as disabled, the patch is rendered here from the current ClusterConfiguration */ -}}
+{{- $disableProxyPatch := "" }}
+{{- with (lookup "v1" "ConfigMap" "kube-system" "kubeadm-config") }}
+  {{- $clusterConfiguration := get .data "ClusterConfiguration" | fromYaml }}
+  {{- if not (dig "proxy" "disabled" false $clusterConfiguration) }}
+    {{- $disableProxyPatch = dict "data" (dict "ClusterConfiguration" (set $clusterConfiguration "proxy" (dict "disabled" true) | toYaml)) | toJson }}
+  {{- end }}
+{{- end }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kube-proxy-removal
+  namespace: kube-system
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "-10"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: kube-proxy-removal
+  namespace: kube-system
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "-10"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+rules:
+  - apiGroups:
+      - apps
+    resources:
+      - daemonsets
+    resourceNames:
+      - kube-proxy
+    verbs:
+      - get
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - serviceaccounts
+    resourceNames:
+      - kube-proxy
+    verbs:
+      - get
+      - delete
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - roles
+      - rolebindings
+    resourceNames:
+      - kube-proxy
+    verbs:
+      - get
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    resourceNames:
+      - kubeadm-config
+    verbs:
+      - get
+      - patch
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: kube-proxy-removal
+  namespace: kube-system
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "-10"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: kube-proxy-removal
+subjects:
+  - kind: ServiceAccount
+    name: kube-proxy-removal
+    namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kube-proxy-removal
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "-10"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+rules:
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - clusterrolebindings
+    resourceNames:
+      - kubeadm:node-proxier
+    verbs:
+      - get
+      - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kube-proxy-removal
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "-10"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kube-proxy-removal
+subjects:
+  - kind: ServiceAccount
+    name: kube-proxy-removal
+    namespace: kube-system
+{{- $first := true }}
+{{- range $index, $node := (lookup "v1" "Node" "" "").items }}
+  {{- $ready := false }}
+  {{- range (dig "status" "conditions" (list) $node) }}
+    {{- if and (eq .type "Ready") (eq .status "True") }}
+      {{- $ready = true }}
+    {{- end }}
+  {{- end }}
+  {{- if $ready }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kube-proxy-removal-{{ $index }}
+  namespace: kube-system
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "0"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 6
+  template:
+    spec:
+      restartPolicy: OnFailure
+      serviceAccountName: kube-proxy-removal
+      hostNetwork: true
+      priorityClassName: system-node-critical
+      nodeSelector:
+        kubernetes.io/hostname: {{ index $node.metadata.labels "kubernetes.io/hostname" | quote }}
+      tolerations:
+        - operator: Exists
+      initContainers:
+        - name: delete-kube-proxy
+          image: __KUBECTL_IMAGE__
+          args:
+            - delete
+            - daemonset/kube-proxy
+            - configmap/kube-proxy
+            - serviceaccount/kube-proxy
+            - role/kube-proxy
+            - rolebinding/kube-proxy
+            - clusterrolebinding/kubeadm:node-proxier
+            - --namespace=kube-system
+            - --ignore-not-found
+            - --wait=false
+    {{- if and $first $disableProxyPatch }}
+        - name: mark-proxy-disabled
+          image: __KUBECTL_IMAGE__
+          args:
+            - patch
+            - configmap
+            - kubeadm-config
+            - --namespace=kube-system
+            - --type=merge
+            - {{ printf "--patch=%s" $disableProxyPatch | quote }}
+    {{- end }}
+        # kube-proxy keeps re-adding its rules until its pod on this node is gone
+        - name: wait-for-kube-proxy-pod
+          image: __KUBECTL_IMAGE__
+          args:
+            - wait
+            - pod
+            - --namespace=kube-system
+            - --selector=k8s-app=kube-proxy
+            - --field-selector=spec.nodeName={{ $node.metadata.name }}
+            - --for=delete
+            - --timeout=10m
+      containers:
+        - name: cleanup-rules
+          image: {{ $kubeProxyImage | quote }}
+          command:
+            - kube-proxy
+            - --cleanup
+          securityContext:
+            privileged: true
+            runAsUser: 0
+    {{- $first = false }}
+  {{- end }}
+{{- end }}
+{{- end }}
