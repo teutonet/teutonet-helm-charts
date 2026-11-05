@@ -81,6 +81,14 @@
   ],
   "packageRules": [
     {
+      "description": "The Envoy Gateway CRDs (git tag) must be bumped together with the gateway-helm chart",
+      "matchPackageNames": [
+        "gateway-helm",
+        "https://github.com/envoyproxy/gateway"
+      ],
+      "groupName": "envoy-gateway"
+    },
+    {
       "matchFileNames": [
         "charts/stellio-context-broker/**"
       ],

@@ -24,121 +24,105 @@ set:
   global.clusterName: test
   ingress.useProxyProtocol: false
 tests:
-  - it: renders CRDs HelmRelease, controller HelmRelease, and the wrapped GatewayClass/EnvoyProxy/Gateway/HTTPRoute/ClientTrafficPolicy resources
+  - it: renders the controller HelmRelease and the wrapped GatewayClass/EnvoyProxy/Gateway/HTTPRoute/ClientTrafficPolicy resources, but no CRDs HelmRelease
     asserts:
       - hasDocuments:
-          count: 3
+          count: 2
       - documentIndex: 0
         isKind:
           of: HelmRelease
       - documentIndex: 0
-        equal:
-          path: metadata.name
-          value: envoy-gateway-crds
-      - documentIndex: 0
-        equal:
-          path: spec.values.crds.gatewayAPI.enabled
-          value: false
-      - documentIndex: 0
-        equal:
-          path: spec.values.crds.envoyGateway.enabled
-          value: true
-      - documentIndex: 1
-        isKind:
-          of: HelmRelease
-      - documentIndex: 1
         equal:
           path: metadata.name
           value: ingress-controller
-      - documentIndex: 1
+      - documentIndex: 0
         equal:
           path: spec.values.crds.enabled
           value: false
       - documentIndex: 1
-        equal:
-          path: spec.dependsOn[0].name
-          value: envoy-gateway-crds
-      - documentIndex: 1
-        equal:
-          path: spec.dependsOn[0].namespace
-          value: ingress
-      - documentIndex: 2
         isKind:
           of: HelmRelease
-      - documentIndex: 2
+      - documentIndex: 1
         equal:
           path: metadata.name
           value: ingress-controller-resources
-      - documentIndex: 2
-        equal:
-          path: spec.dependsOn[0].name
-          value: envoy-gateway-crds
-      - documentIndex: 2
-        equal:
-          path: spec.dependsOn[0].namespace
-          value: ingress
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: "kind: GatewayClass"
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: "controllerName: gateway.envoyproxy.io/gatewayclass-controller"
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: "kind: EnvoyProxy"
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: "name: ingress-controller-service"
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: "mergeType: StrategicMerge"
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: "replicas: 2"
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: "kind: Gateway"
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: "gatewayClassName: default"
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: "name: cluster-wildcard-certificate"
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: "kind: HTTPRoute"
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: "type: RequestRedirect"
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: "kind: ClientTrafficPolicy"
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: "enableProxyProtocol: false"
+
+  - it: patches the proxy Deployment and Service selectors to the overridden pod name label, since Envoy Gateway otherwise builds a selector that does not match the template labels
+    asserts:
+      - documentIndex: 1
+        matchRegex:
+          path: spec.values.static
+          pattern: "(?s)labels:\\s+app.kubernetes.io/name: ingress-controller\\s+(#[^\\n]*\\s+)*patch:"
+      - documentIndex: 1
+        matchRegex:
+          path: spec.values.static
+          pattern: "(?s)envoyDeployment:.*?patch:\\s+type: StrategicMerge\\s+value:\\s+spec:\\s+selector:\\s+matchLabels:\\s+app.kubernetes.io/name: ingress-controller"
+      - documentIndex: 1
+        matchRegex:
+          path: spec.values.static
+          pattern: "(?s)envoyService:.*?patch:\\s+type: StrategicMerge\\s+value:\\s+spec:\\s+selector:\\s+app.kubernetes.io/name: ingress-controller"
 
   - it: pins loadBalancerIP and floating-ip annotation when ingress.IP is set
     set:
       ingress.IP: 10.0.0.100
     asserts:
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: 'loadBalancerIP: "10\.0\.0\.100"'
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: 'loadbalancer.openstack.org/keep-floatingip: "true"'
@@ -150,12 +134,17 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: wrapped resources HelmRelease depends on the CRDs HelmRelease so it is not applied before the CRDs are ready
+  - it: no HelmRelease depends on a CRDs HelmRelease, since the CRDs are installed by a Flux Kustomization instead
     asserts:
-      - documentIndex: 2
-        lengthEqual:
+      - documentIndex: 0
+        notContains:
           path: spec.dependsOn
-          count: 1
+          content:
+            name: envoy-gateway-crds
+            namespace: ingress
+      - documentIndex: 1
+        notExists:
+          path: spec.dependsOn
 
   - it: sets the OpenTelemetry tracing provider type when telemetry is auto-discovered
     kubernetesProvider:
@@ -176,11 +165,11 @@ tests:
               - name: otlp
                 port: "4317"
     asserts:
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: "type: OpenTelemetry"
-      - documentIndex: 2
+      - documentIndex: 1
         matchRegex:
           path: spec.values.static
           pattern: "name: telemetry-collector"
