@@ -20,11 +20,28 @@ spec:
   instances: {{ .Values.instances }}
   logLevel: {{ .Values.logLevel }}
   {{- if .Values.backup }}
+  {{- if and .Values.backup.bootstrapRestore .Values.backup.bootstrapRestore.enabled }}
+  bootstrap:
+    recovery:
+      source: source
+      {{- with .Values.backup.bootstrapRestore.targetTime }}
+      recoveryTarget:
+        targetTime: {{ . | quote }}
+      {{- end }}
+  externalClusters:
+  - name: source
+    plugin:
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        barmanObjectName: {{ .Release.Name }}
+        serverName: {{ .Release.Name }}
+  {{- else }}
   plugins:
   - name: barman-cloud.cloudnative-pg.io
     isWALArchiver: true
     parameters:
       barmanObjectName: {{ .Release.Name }}
+  {{- end }}
   {{- end }}
   managed:
     {{- $roles := dict -}}

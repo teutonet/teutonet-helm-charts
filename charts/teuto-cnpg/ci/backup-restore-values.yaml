@@ -1,0 +1,11 @@
+backup:
+  bootstrapRestore:
+    enabled: true
+    targetTime: 2026-01-01T01:01:00Z
+  s3:
+    path: "/test/path"
+    endpointURL: "endpointURL"
+    secret:
+      name: "MeinNameIstNichtGeheim"
+      accessKeyId: "dasjhiodsadas"
+      accessSecretKey: "jiopidasda"
