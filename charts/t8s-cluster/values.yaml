@@ -27,7 +27,7 @@ global:
     autoscaler:
       url: https://kubernetes.github.io/autoscaler
       charts:
-        cluster-autoscaler: 9.59.0
+        cluster-autoscaler: 9.60.0
     cetic:
       url: https://cetic.github.io/helm-charts
   busybox:
