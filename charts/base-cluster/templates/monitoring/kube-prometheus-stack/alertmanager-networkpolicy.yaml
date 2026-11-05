@@ -19,6 +19,16 @@ spec:
         {{- $ports := dig $receiver.host (list) $fqdns }}
         {{- $ports = append $ports $receiver.port }}
         {{- $fqdns = set $fqdns $receiver.host $ports }}
+      {{- else if eq (index (splitList " " $type) 0) "webhook" }}
+        {{- $url := urlParse $receiver.url }}
+        {{- $host := $url.hostname }}
+        {{- $port := (eq $url.scheme "https") | ternary "443" "80" }}
+        {{- if contains ":" $url.host }}
+          {{- $port = last (splitList ":" $url.host) }}
+        {{- end }}
+        {{- $ports := dig $host (list) $fqdns }}
+        {{- $ports = append $ports $port }}
+        {{- $fqdns = set $fqdns $host $ports }}
       {{- end }}
     {{- end }}
     {{- range $host, $ports := $fqdns}}
