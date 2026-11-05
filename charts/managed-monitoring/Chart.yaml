@@ -1,9 +1,9 @@
 apiVersion: v2
 name: managed-monitoring
 description: >-
-  Deploys the metrics-forwarding agent for a managed service (e.g. teuto-cnpg databases)
-  into a workload cluster remotely from the management cluster, without requiring
-  Flux on the workload cluster itself.
+  Deploys the metrics-forwarding agent for a managed service (e.g. teuto-cnpg
+  databases) into a workload cluster remotely from the management cluster,
+  without requiring Flux on the workload cluster itself.
 maintainers:
   - email: cwr@teuto.net
     name: cwrau
@@ -12,7 +12,7 @@ maintainers:
   - email: st@teuto.net
     name: tasches
 type: application
-version: 0.1.0
+version: 1.0.0
 dependencies:
   - name: common
     repository: oci://ghcr.io/teutonet/teutonet-helm-charts
