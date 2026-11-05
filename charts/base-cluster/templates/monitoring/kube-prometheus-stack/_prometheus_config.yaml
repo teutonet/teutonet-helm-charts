@@ -70,19 +70,19 @@ prometheusSpec:
   {{- if $capiClusterIdentity.name }}
     - source_labels:
         - __address__
-      target_label: capiclustername
+      target_label: capi_cluster_name
       replacement: {{ $capiClusterIdentity.name }}
   {{- end }}
   {{- if $capiClusterIdentity.namespace }}
     - source_labels:
         - __address__
-      target_label: capiclusternamespace
+      target_label: capi_cluster_namespace
       replacement: {{ $capiClusterIdentity.namespace }}
   {{- end }}
   {{- if $capiClusterIdentity.cloud }}
     - source_labels:
         - __address__
-      target_label: capiclustercloud
+      target_label: capi_cluster_cloud
       replacement: {{ $capiClusterIdentity.cloud }}
   {{- end }}
   {{- $telemetryConf := include "common.telemetry.conf" (dict "protocol" "otlp") | fromYaml }}
