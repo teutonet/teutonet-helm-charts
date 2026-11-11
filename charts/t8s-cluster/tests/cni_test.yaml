@@ -161,6 +161,38 @@ tests:
           path: spec.resources[0].spec.values.hubble.ui.podDisruptionBudget.enabled
           value: true
 
+  - it: enables the bandwidth manager with BBR and keeps eBPF host routing when controlPlane is hosted
+    set:
+      cni: cilium
+      controlPlane.hosted: true
+    kubernetesProvider:
+      objects:
+        - apiVersion: gateway.networking.k8s.io/v1
+          kind: Gateway
+          metadata:
+            name: controlplane
+            namespace: capi-hosted-control-plane-system
+          spec:
+            listeners:
+              - hostname: "*.example.com"
+    asserts:
+      - equal:
+          path: spec.resources[0].spec.values.bandwidthManager
+          value:
+            enabled: true
+            bbr: true
+      # BBR for pods needs eBPF host routing, so legacy host routing must stay at its default
+      - notExists:
+          path: spec.resources[0].spec.values.bpf.hostLegacyRouting
+
+  - it: leaves the bandwidth manager unset when controlPlane is not hosted
+    set:
+      cni: cilium
+      controlPlane.hosted: false
+    asserts:
+      - notExists:
+          path: spec.resources[0].spec.values.bandwidthManager
+
   - it: install and upgrade timeout default to 300s when there are no node pools
     set:
       cni: cilium
