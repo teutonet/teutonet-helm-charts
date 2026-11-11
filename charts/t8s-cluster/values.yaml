@@ -54,7 +54,7 @@ global:
     image:
       registry: docker.io
       repository: amazon/aws-cli
-      tag: 2.39.4@sha256:0aa3ae3c685574d7adc27fb19a0e1f192aa07b1487c16bd3ad03253b6de521ae
+      tag: 2.39.7@sha256:bba262340b0bc7cbf3a8a48612531263b56f4b280c4f036a07816af1b271bda0
   injectedCertificateAuthorities: ""
   kubeletExtraConfig:
     # This is only used when using 1.27 or later
