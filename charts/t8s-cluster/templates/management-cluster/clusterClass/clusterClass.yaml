@@ -168,12 +168,12 @@ spec:
           strategy:
             type: RollingUpdate
             rollingUpdate:
-              {{/* TODO: this is only for our beta phase */}}
+              {{/* TODO: this is only for our beta phase; maxSurge must stay <= the t8s-engine project quota factor of 1.5x replicas */}}
               {{- if $isGpuDeploymentClass }}
               maxSurge: 0
               maxUnavailable: 1
               {{- else }}
-              maxSurge: 75%
+              maxSurge: 50%
               maxUnavailable: 0
               {{- end }}
         bootstrap:

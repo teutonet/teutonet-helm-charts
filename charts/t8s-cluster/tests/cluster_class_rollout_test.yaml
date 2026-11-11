@@ -1,0 +1,29 @@
+suite: ClusterClass machine deployment rollout strategy
+templates:
+  - templates/management-cluster/clusterClass/clusterClass.yaml
+release:
+  name: my-cluster
+set:
+  cloud: my-cloud
+tests:
+  - it: standard compute plane surges at most 50% so that it fits the t8s-engine 1.5x project quota
+    documentSelector:
+      path: kind
+      value: ClusterClass
+    asserts:
+      - equal:
+          path: spec.workers.machineDeployments[?(@.class == "compute-plane")].rollout.strategy.rollingUpdate
+          value:
+            maxSurge: 50%
+            maxUnavailable: 0
+
+  - it: GPU compute plane replaces in place without surge
+    documentSelector:
+      path: kind
+      value: ClusterClass
+    asserts:
+      - equal:
+          path: spec.workers.machineDeployments[?(@.class == "gpu-compute-plane")].rollout.strategy.rollingUpdate
+          value:
+            maxSurge: 0
+            maxUnavailable: 1
