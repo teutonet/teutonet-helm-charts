@@ -47,6 +47,8 @@ spec:
       enabled: true
       name: cloud-config
     csi:
+      snapshotter:
+        enabled: false
       plugin:
         {{- if ge (int .Values.version.minor) 32 }}
         extraArgs: |
