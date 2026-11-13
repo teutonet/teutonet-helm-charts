@@ -1592,6 +1592,20 @@
           "additionalProperties": {
             "$ref": "#/$defs/rbacSubjectRoles"
           }
+        },
+        "legacy": {
+          "type": "object",
+          "description": "Deprecated, insecure ways of authenticating. Only use these until you have migrated to OIDC.",
+          "properties": {
+            "serviceAccounts": {
+              "type": "object",
+              "description": "DEPRECATED: A map of a ServiceAccount name to it's (Cluster-)Roles. Creates a ServiceAccount with a long-lived token Secret, static tokens are a security risk, migrate to `rbac.accounts` / `rbac.groups` (OIDC) instead.",
+              "additionalProperties": {
+                "$ref": "#/$defs/rbacSubjectRoles"
+              }
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false
