@@ -21,6 +21,14 @@ tests:
       - isKind:
           of: HelmRelease
 
+  - it: disables the snapshotter sidecar since the snapshot CRDs are not deployed
+    set:
+      cni: cilium
+    asserts:
+      - equal:
+          path: spec.values.csi.snapshotter.enabled
+          value: false
+
   - it: interval is 10s when the HelmRelease does not exist yet
     set:
       cni: cilium
