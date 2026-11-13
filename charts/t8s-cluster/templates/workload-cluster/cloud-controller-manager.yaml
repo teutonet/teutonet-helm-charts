@@ -47,7 +47,6 @@ spec:
       valuesKey: cloud.conf
     - <<: *valuesFrom
       targetPath: cloudConfig.metadata.hash
-  {{- if or $missingNodesDelete .Values.controlPlane.hosted }}
   postRenderers:
     - kustomize:
         patches:
@@ -63,6 +62,13 @@ spec:
                 path: /rules/2/verbs/-
                 value: delete
           {{- end }}
+          # the chart has no value for it; must come before the DaemonSet is turned into a Deployment below
+          - target:
+              kind: DaemonSet
+            patch: |
+              - op: add
+                path: /spec/template/spec/containers/0/terminationMessagePolicy
+                value: FallbackToLogsOnError
           {{- if .Values.controlPlane.hosted }}
           - target:
               kind: DaemonSet
@@ -76,9 +82,10 @@ spec:
                 from: /spec/updateStrategy
                 path: /spec/strategy
           {{- end }}
-  {{- end }}
   values:
     priorityClassName: system-cluster-critical
+    # CoreDNS can't schedule before the CCM removes the uninitialized taints (kubeadm) or may sit on a node that is still uninitialized (hosted), and a CCM that can't resolve the apiserver/Keystone never initializes the nodes
+    dnsPolicy: Default
   {{- if .Values.controlPlane.hosted }}
     tolerations:
       - key: node.cluster.x-k8s.io/uninitialized
@@ -86,7 +93,4 @@ spec:
       - key: node.cloudprovider.kubernetes.io/uninitialized
         value: "true"
         effect: NoSchedule
-  {{- else }}
-    # kubeadm CoreDNS can't schedule before the CCM removes the uninitialized taint, but the CCM needs DNS for Keystone
-    dnsPolicy: Default
   {{- end }}

@@ -29,15 +29,47 @@ tests:
           path: spec.values.dnsPolicy
           value: Default
 
-  - it: keeps the chart default DNS policy when hosted
+  - it: uses the node DNS policy when hosted
     set:
       cni: cilium
       controlPlane.hosted: true
     asserts:
-      - notExists:
+      - equal:
           path: spec.values.dnsPolicy
+          value: Default
       - exists:
           path: spec.values.tolerations
+
+  - it: falls back to the container logs for the termination message
+    set:
+      cni: cilium
+      version:
+        minor: 34
+    asserts:
+      - equal:
+          path: spec.postRenderers[0].kustomize.patches[0].target.kind
+          value: DaemonSet
+      - matchRegex:
+          path: spec.postRenderers[0].kustomize.patches[0].patch
+          pattern: "path: /spec/template/spec/containers/0/terminationMessagePolicy"
+      - matchRegex:
+          path: spec.postRenderers[0].kustomize.patches[0].patch
+          pattern: "value: FallbackToLogsOnError"
+
+  - it: sets the termination message policy before the hosted DaemonSet is turned into a Deployment
+    set:
+      cni: cilium
+      version:
+        minor: 34
+      controlPlane:
+        hosted: true
+    asserts:
+      - matchRegex:
+          path: spec.postRenderers[0].kustomize.patches[0].patch
+          pattern: "terminationMessagePolicy"
+      - matchRegex:
+          path: spec.postRenderers[0].kustomize.patches[1].patch
+          pattern: "value: Deployment"
 
   - it: re-adds nodes delete RBAC on the 2.36 chart line
     set:
@@ -68,8 +100,12 @@ tests:
       version:
         minor: 34
     asserts:
-      - notExists:
-          path: spec.postRenderers
+      - lengthEqual:
+          path: spec.postRenderers[0].kustomize.patches
+          count: 1
+      - equal:
+          path: spec.postRenderers[0].kustomize.patches[0].target.kind
+          value: DaemonSet
 
   - it: does not patch RBAC once the selected chart is 2.37 or newer
     set:
@@ -82,8 +118,12 @@ tests:
             charts:
               openstack-cloud-controller-manager: 2.37.0
     asserts:
-      - notExists:
-          path: spec.postRenderers
+      - lengthEqual:
+          path: spec.postRenderers[0].kustomize.patches
+          count: 1
+      - equal:
+          path: spec.postRenderers[0].kustomize.patches[0].target.kind
+          value: DaemonSet
 
   - it: hosted control plane on a fixed chart line only patches the DaemonSet
     set:
@@ -95,9 +135,12 @@ tests:
     asserts:
       - lengthEqual:
           path: spec.postRenderers[0].kustomize.patches
-          count: 1
+          count: 2
       - equal:
           path: spec.postRenderers[0].kustomize.patches[0].target.kind
+          value: DaemonSet
+      - equal:
+          path: spec.postRenderers[0].kustomize.patches[1].target.kind
           value: DaemonSet
 
   - it: hosted control plane on the 2.36 line patches RBAC and DaemonSet
@@ -110,7 +153,7 @@ tests:
     asserts:
       - lengthEqual:
           path: spec.postRenderers[0].kustomize.patches
-          count: 2
+          count: 3
 
   - it: interval is 10s when the HelmRelease does not exist yet
     set:
