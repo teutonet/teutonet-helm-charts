@@ -86,6 +86,12 @@ spec:
     kind: GitRepository
     name: {{ printf "%s-flux-%s" (include "common.names.fullname" $) $name }}
     namespace: {{ $.Release.Namespace }}
+  {{- if $instance.wait }}
+  wait: true
+  {{- end }}
+  {{- if $instance.timeout }}
+  timeout: {{ $instance.timeout | quote }}
+  {{- end }}
   {{- if $instance.path }}
   path: {{ include "common.tplvalues.render" (dict "value" $instance.path "context" (deepCopy $)) | quote }}
   {{- end }}
