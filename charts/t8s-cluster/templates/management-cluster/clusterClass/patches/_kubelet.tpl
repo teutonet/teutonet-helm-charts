@@ -17,6 +17,8 @@
   {{- $options = set $options "protectKernelDefaults" true -}}
   {{- $options = set $options "tlsCipherSuites" (include "t8s-cluster.clusterClass.tlsCipherSuites" (dict) | fromYamlArray) -}}
   {{- $options = set $options "seccompDefault" true -}}
+  {{/* kubelets request a serving certificate from the cluster CA instead of self-signing; approved by cluster-api-csr-approver, which has to run in the management cluster before this rolls out */}}
+  {{- $options = set $options "serverTLSBootstrap" true -}}
   {{- toYaml $options -}}
 {{- end -}}
 

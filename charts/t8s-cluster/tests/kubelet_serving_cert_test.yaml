@@ -1,0 +1,28 @@
+suite: kubelet serverTLSBootstrap
+templates:
+  - templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+  - templates/management-cluster/clusterClass/bootstrapConfigTemplate/standardNodePoolBootstrapConfigTemplate.yaml
+release:
+  name: my-cluster
+set:
+  cloud: my-cloud
+tests:
+  - it: enables serverTLSBootstrap in the control plane kubelet config patch
+    template: templates/management-cluster/clusterClass/kubeadmControlPlaneTemplate/kubeadmControlPlaneTemplate.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.kubeadmConfigSpec.files[1].path
+          value: /etc/kubernetes/patches/kubeletconfiguration-10-default.yaml
+      - matchRegex:
+          path: spec.template.spec.kubeadmConfigSpec.files[1].content
+          pattern: "serverTLSBootstrap: true"
+
+  - it: enables serverTLSBootstrap in the worker kubelet config patch
+    template: templates/management-cluster/clusterClass/bootstrapConfigTemplate/standardNodePoolBootstrapConfigTemplate.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.files[1].path
+          value: /etc/kubernetes/patches/kubeletconfiguration-10-default.yaml
+      - matchRegex:
+          path: spec.template.spec.files[1].content
+          pattern: "serverTLSBootstrap: true"
