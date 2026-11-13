@@ -1,0 +1,29 @@
+global:
+  namespaces:
+    my-fav-ns: {}
+rbac:
+  roles:
+    edit:
+      - apiGroups:
+          - ''
+        resources:
+          - pods
+        verbs:
+          - update
+  accounts:
+    test:
+      clusterRoles:
+        - edit
+  groups:
+    test-group:
+      roles:
+        edit:
+          - my-fav-ns
+  legacy:
+    serviceAccounts:
+      ci-bot:
+        roles:
+          edit:
+            - my-fav-ns
+        clusterRoles:
+          - edit

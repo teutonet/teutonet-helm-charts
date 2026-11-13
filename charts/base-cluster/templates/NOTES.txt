@@ -62,43 +62,95 @@ kubelogin per issuer/client, not per "$user";
 function generateKubeconfig() {
   local user="${1:?Missing user parameter}"
   local issuer="${2:?Missing issuer parameter}"
-  local cluster="$(kubectl config view --raw -o json | jq --arg context $(kubectl config current-context) -r '.contexts[] | select(.name == $context) | .context.cluster')"
+  local config kubeconfig
+  config="$(kubectl config view --minify --flatten --raw -o json)" || return 1
+  kubeconfig="$(issuer="$issuer" jq -e --arg user "$user" '
+    (.clusters[0] // error("no active cluster")) as $cluster
+    | "\($user)@\($cluster.name)" as $name
+    | {
+        apiVersion: "v1",
+        kind: "Config",
+        clusters: [$cluster],
+        contexts: [{name: $name, context: {cluster: $cluster.name, user: $name}}],
+        "current-context": $name,
+        users: [{
+          name: $name,
+          user: {
+            exec: {
+              apiVersion: "client.authentication.k8s.io/v1beta1",
+              command: "timeout",
+              args: [
+                "1m",
+                "kubectl",
+                "oidc-login",
+                "get-token",
+                "--oidc-issuer-url=\($ENV.issuer)",
+                "--token-cache-storage=keyring",
+                "--oidc-client-id=kubernetes",
+                "--oidc-extra-scope=email",
+                "--oidc-extra-scope=groups",
+                "--oidc-extra-scope=offline_access",
+                "--open-url-after-authentication="
+              ]
+            }
+          }
+        }]
+      }
+  ' <<< "$config")" || return 1
 
-  cat - <<EOF
-apiVersion: v1
-kind: Config
-clusters:
-- cluster:
-    certificate-authority-data: $(kubectl config view --raw -o json | jq --arg cluster $cluster -r '.clusters[] | select(.name == $cluster) | .cluster["certificate-authority-data"]')
-    server: $(kubectl config view --raw -o json | jq --arg cluster $cluster -r '.clusters[] | select(.name == $cluster) | .cluster.server')
-  name: $cluster
-contexts:
-- context:
-    cluster: $cluster
-    user: ${user}@${cluster}
-  name: ${user}@${cluster}
-current-context: ${user}@${cluster}
-users:
-- name: ${user}@${cluster}
-  user:
-    exec:
-      apiVersion: client.authentication.k8s.io/v1beta1
-      command: timeout
-      args:
-        - 1m
-        - kubectl
-        - oidc-login
-        - get-token
-        - --oidc-issuer-url=${issuer}
-        - --token-cache-storage=keyring
-        - --oidc-client-id=kubernetes
-        - --oidc-extra-scope=email
-        - --oidc-extra-scope=groups
-        - --oidc-extra-scope=offline_access
-        - --open-url-after-authentication=
-EOF
+  if yq --version 2>/dev/null | grep -q mikefarah; then
+    yq -P <<< "$kubeconfig"
+  elif command -v yq >/dev/null; then
+    yq -y . <<< "$kubeconfig"
+  else
+    echo "$kubeconfig"
+  fi
 }
 
 # example usage:
 $ generateKubeconfig {{ .Values.rbac.accounts | keys | first }} https://your-oidc-issuer.example.com
+{{- end }}
+
+{{- if .Values.rbac.legacy.serviceAccounts }}
+
+===
+DEPRECATED: "rbac.legacy.serviceAccounts" creates ServiceAccounts with static,
+long-lived tokens, which are a security risk. Migrate to OIDC ("rbac.accounts" /
+"rbac.groups") as soon as possible.
+
+Use the following commands to create a kubeconfig for a legacy ServiceAccount;
+
+function generateLegacyKubeconfig() {
+  local user="${1:?Missing user parameter}"
+  local namespace="{{ .Release.Namespace }}"
+  local token config kubeconfig
+  token="$(kubectl -n $namespace get secret "{{ include "common.names.fullname" . }}-$user" -o jsonpath={.data.token} | base64 -d)" && [[ -n "$token" ]] || {
+    echo "Token for '$user' not found or not populated yet" >&2
+    return 1
+  }
+  config="$(kubectl config view --minify --flatten --raw -o json)" || return 1
+  kubeconfig="$(token="$token" jq -e --arg user "$user" '
+    (.clusters[0] // error("no active cluster")) as $cluster
+    | "\($user)@\($cluster.name)" as $name
+    | {
+        apiVersion: "v1",
+        kind: "Config",
+        clusters: [$cluster],
+        contexts: [{name: $name, context: {cluster: $cluster.name, user: $name}}],
+        "current-context": $name,
+        users: [{name: $name, user: {token: $ENV.token}}]
+      }
+  ' <<< "$config")" || return 1
+
+  if yq --version 2>/dev/null | grep -q mikefarah; then
+    yq -P <<< "$kubeconfig"
+  elif command -v yq >/dev/null; then
+    yq -y . <<< "$kubeconfig"
+  else
+    echo "$kubeconfig"
+  fi
+}
+
+# example usage:
+$ generateLegacyKubeconfig {{ .Values.rbac.legacy.serviceAccounts | keys | first }}
 {{- end -}}
