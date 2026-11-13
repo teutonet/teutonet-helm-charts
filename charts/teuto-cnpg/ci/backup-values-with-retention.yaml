@@ -1,0 +1,9 @@
+backup:
+  retentionPolicy: "30d"
+  s3:
+    path: "/test/path"
+    endpointURL: "endpointURL"
+    secret:
+      name: "MeinNameIstNichtGeheim"
+      accessKeyId: "dasjhiodsadas"
+      accessSecretKey: "jiopidasda"
