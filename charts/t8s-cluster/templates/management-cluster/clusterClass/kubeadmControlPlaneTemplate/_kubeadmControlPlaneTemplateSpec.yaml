@@ -26,13 +26,18 @@ kubeadmConfigSpec:
     scheduler:
       extraArgs: {{- toYaml (include "t8s-cluster.clusterClass.argsMapToArray" (dict "args" (include "t8s-cluster.clusterClass.args.scheduler" (dict "context" .) | fromYaml)) | fromYamlArray) | nindent 8 }}
   files: {{- include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.files" . | nindent 4 }}
-  initConfiguration: &configuration
-    nodeRegistration:
+  initConfiguration:
+    nodeRegistration: &nodeRegistration
       kubeletExtraArgs: {{- toYaml (include "t8s-cluster.clusterClass.argsMapToArray" (dict "args" (include "t8s-cluster.clusterClass.kubeletExtraArgs" (dict "context" .) | fromYaml)) | fromYamlArray) | nindent 8 }}
       imagePullSerial: false
-    patches:
+    patches: &patches
       directory: {{ include "t8s-cluster.patches.directory" (dict) }}
-  joinConfiguration: *configuration
+    # cilium replaces kube-proxy; kubeadm records this as proxy.disabled in the kubeadm-config ConfigMap
+    skipPhases:
+      - addon/kube-proxy
+  joinConfiguration:
+    nodeRegistration: *nodeRegistration
+    patches: *patches
   {{- with include "t8s-cluster.clusterClass.kubeadmControlPlaneTemplate.preKubeadmCommands" (dict "context" .) | fromYamlArray }}
   preKubeadmCommands: {{- toYaml . | nindent 4 }}
   {{- end }}
