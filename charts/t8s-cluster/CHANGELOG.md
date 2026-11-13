@@ -1,5 +1,23 @@
 # Changelog
 
+## [9.15.1](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.15.0...t8s-cluster-v9.15.1) (2026-11-13)
+
+
+### Miscellaneous Chores
+
+* **t8s-cluster/dependencies:** update cilium docker tag to v1.20.4 ([#2545](https://github.com/teutonet/teutonet-helm-charts/issues/2545)) ([a9024c1](https://github.com/teutonet/teutonet-helm-charts/commit/a9024c1cd96a06d3dc7c02e0c6bc8fdf7caf58a9))
+* **t8s-cluster/dependencies:** update docker.io/amazon/aws-cli docker tag to v2.38.4 ([#2528](https://github.com/teutonet/teutonet-helm-charts/issues/2528)) ([ed12c8e](https://github.com/teutonet/teutonet-helm-charts/commit/ed12c8ea3fec2064913059d68410e4cf1a9c8900))
+* **t8s-cluster/dependencies:** update docker.io/amazon/aws-cli docker tag to v2.38.5 ([#2538](https://github.com/teutonet/teutonet-helm-charts/issues/2538)) ([1af00c5](https://github.com/teutonet/teutonet-helm-charts/commit/1af00c547ba08f27f98c61bf37da561d727eee81))
+* **t8s-cluster/dependencies:** update docker.io/amazon/aws-cli docker tag to v2.38.6 ([#2556](https://github.com/teutonet/teutonet-helm-charts/issues/2556)) ([d01b173](https://github.com/teutonet/teutonet-helm-charts/commit/d01b1737759d75c8472b619f1d58a3ce9dba995a))
+* **t8s-cluster/dependencies:** update docker.io/amazon/aws-cli docker tag to v2.39.0 ([#2563](https://github.com/teutonet/teutonet-helm-charts/issues/2563)) ([d6dd282](https://github.com/teutonet/teutonet-helm-charts/commit/d6dd28276a2e1f99ccc1c5aca666d6dd25701479))
+* **t8s-cluster/dependencies:** update docker.io/amazon/aws-cli docker tag to v2.39.2 ([#2570](https://github.com/teutonet/teutonet-helm-charts/issues/2570)) ([80d9cbb](https://github.com/teutonet/teutonet-helm-charts/commit/80d9cbbf69c8802810c9b358feaccaa855a2967c))
+* **t8s-cluster/dependencies:** update docker.io/amazon/aws-cli docker tag to v2.39.4 ([#2582](https://github.com/teutonet/teutonet-helm-charts/issues/2582)) ([4efa0c6](https://github.com/teutonet/teutonet-helm-charts/commit/4efa0c6c40f71f162449102364bccd71be0436ff))
+* **t8s-cluster/dependencies:** update docker.io/amazon/aws-cli docker tag to v2.39.7 ([#2599](https://github.com/teutonet/teutonet-helm-charts/issues/2599)) ([d74ac67](https://github.com/teutonet/teutonet-helm-charts/commit/d74ac67ab9347ed0b5f2cfbdee39f6cdb4eef6d5))
+* **t8s-cluster/dependencies:** update docker.io/busybox:1.38.0 docker digest to a46257e ([#2566](https://github.com/teutonet/teutonet-helm-charts/issues/2566)) ([9f511b7](https://github.com/teutonet/teutonet-helm-charts/commit/9f511b7baccf50895b251185505dd6464cfa6321))
+* **t8s-cluster/dependencies:** update helm release cluster-autoscaler to v9.60.0 ([#2593](https://github.com/teutonet/teutonet-helm-charts/issues/2593)) ([b0dafe5](https://github.com/teutonet/teutonet-helm-charts/commit/b0dafe5a17da3cfc8b2f049745969077bc8c5c20))
+* **t8s-cluster/dependencies:** update registry.k8s.io/etcd docker tag to v3.7.3 ([#2540](https://github.com/teutonet/teutonet-helm-charts/issues/2540)) ([7eabaea](https://github.com/teutonet/teutonet-helm-charts/commit/7eabaeab66e10d618606335dfcf6dd1a07357655))
+* **t8s-cluster/dependencies:** update registry.k8s.io/kubectl docker tag to v1.37.2 ([#2562](https://github.com/teutonet/teutonet-helm-charts/issues/2562)) ([e93174e](https://github.com/teutonet/teutonet-helm-charts/commit/e93174e59777884d13641dc728d46bc170ab19c6))
+
 ## [9.15.0](https://github.com/teutonet/teutonet-helm-charts/compare/t8s-cluster-v9.14.0...t8s-cluster-v9.15.0) (2026-10-21)
 
 
