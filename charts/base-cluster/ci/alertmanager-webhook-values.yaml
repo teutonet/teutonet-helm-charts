@@ -1,0 +1,14 @@
+monitoring:
+  prometheus:
+    alertmanager:
+      defaultReceiver: testhook
+      receivers:
+        webhook:
+          url: https://hooks.example.net/alerts
+          sendResolved: true
+        webhook testhook:
+          url: http://hooks.example.com:8080/alerts
+      routes:
+        - matchers:
+            - namespace=~"test"
+          receiver: webhook
