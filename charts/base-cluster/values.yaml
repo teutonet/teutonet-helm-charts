@@ -175,7 +175,7 @@ global:
     envoy-gateway:
       url: oci://docker.io/envoyproxy
       charts:
-        gateway-helm: 1.9.3
+        gateway-helm: 1.10.0
       condition: '{{ eq .Values.ingress.provider "envoy" }}'
     kyverno:
       url: https://kyverno.github.io/kyverno
@@ -553,7 +553,7 @@ flux:
     # https://github.com/envoyproxy/gateway/issues/6105
     envoy-gateway-crds:
       url: https://github.com/envoyproxy/gateway
-      semver: 1.9.3
+      semver: 1.10.0
       path: charts/gateway-helm/charts/crds/crds/generated
       wait: true
       timeout: 5m
