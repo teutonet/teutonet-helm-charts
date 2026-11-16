@@ -1,0 +1,46 @@
+{{- if .Values.monitoring.prometheus.enabled -}}
+{{- include "base-cluster.helm.resourceWithDependencies" (dict "name" "kube-client-certificate-expiration" "resource" (include "base-cluster.prometheus.clientCertificateExpirationRule" .) "render" false "dependencies" (dict "monitoring" "kube-prometheus-stack") "context" $ "additionalLabels" (dict "app.kubernetes.io/component" "prometheus" "app.kubernetes.io/part-of" "monitoring")) }}
+{{- end -}}
+
+{{- define "base-cluster.prometheus.clientCertificateExpirationRule" -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: kube-client-certificate-expiration
+  namespace: monitoring
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    monitoring/provisioned-by: base-cluster
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/part-of: monitoring
+spec:
+  groups:
+    - name: kube-client-certificate-expiration
+      rules:
+        # remaining lifetime of the soonest expiring client certificates per apiserver, `>= 0` drops NaN when no client certificates were used
+        - record: instance:apiserver_client_certificate_expiration_seconds:quantile01
+          expr: |-
+            histogram_quantile(0.01, sum without (namespace, service, endpoint) (rate(apiserver_client_certificate_expiration_seconds_bucket{job="apiserver"}[5m]))) >= 0
+        # right after a rotation the remaining lifetime equals the full lifetime, so the maximum over time approximates the lifetime
+        # the maximum is taken over all apiservers, including replaced ones, so replacing control plane nodes doesn't reset the history
+        # without a day of history, fall back to the upstream absolute threshold of 24h
+        - alert: KubeClientCertificateExpiration
+          annotations:
+            description: {{ "A client certificate used to authenticate to kubernetes apiserver is expiring in {{ humanizeDuration $value }}." | quote }}
+            runbook_url: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubeclientcertificateexpiration
+            summary: Client certificate is about to expire.
+          expr: |-
+            (
+              instance:apiserver_client_certificate_expiration_seconds:quantile01
+                < ignoring (instance, pod) group_left
+              0.25 * max without (instance, pod) (max_over_time(instance:apiserver_client_certificate_expiration_seconds:quantile01[28d]))
+            )
+            or
+            (
+              instance:apiserver_client_certificate_expiration_seconds:quantile01 < 86400
+                unless ignoring (instance, pod)
+              max without (instance, pod) (present_over_time(instance:apiserver_client_certificate_expiration_seconds:quantile01[1d] offset 1d))
+            )
+          for: 5m
+          labels:
+            severity: critical
+{{- end }}
