@@ -23,7 +23,8 @@ jobs:
           config-file: .github/release-please/config.json
           manifest-file: .github/release-please/manifest.json
   release_helm:
-    runs-on: ubuntu-latest
+    # registry-gitlab.teuto.net (and its token endpoint on gitlab.teuto.net) is only reachable from within our infrastructure
+    runs-on: ${{ matrix.chart == 'charts/teuto-portal-k8s-worker' && 'self-hosted-small' || 'ubuntu-latest' }}
     needs: release_please
     permissions:
       packages: write
@@ -37,6 +38,9 @@ jobs:
       CHART: ${{ matrix.chart }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      # check before anything gets pushed
+      - if: ${{ runner.environment == 'self-hosted' }}
+        run: ./.github/scripts/check-runner-tools.sh yq jq parallel sponge flock helm syft
       - uses: oras-project/setup-oras@ac735097e22fe643015b0d19645f7c9a69942128 # v2
       - uses: sigstore/cosign-installer@881c63bd87e38389154debd8331404ce7ca8a3ab # v4.1.4
 
@@ -51,17 +55,22 @@ jobs:
           cosign sign --yes "ghcr.io/${GITHUB_REPOSITORY}/${CHART#charts/}@${digest}"
       - run: oras push "ghcr.io/${GITHUB_REPOSITORY}/${CHART#charts/}:artifacthub.io" --config /dev/null:application/vnd.cncf.artifacthub.config.v1+yaml .github/artifacthub-repo.yaml:application/vnd.cncf.artifacthub.repository-metadata.layer.v1.yaml
 
-      - run: pip install yq
+      - if: ${{ runner.environment == 'github-hosted' }}
+        run: pip install yq
       - name: Install sponge
+        if: ${{ runner.environment == 'github-hosted' }}
         run: sudo apt-get -yq install moreutils
-      - run: /home/linuxbrew/.linuxbrew/bin/brew install syft
+      - if: ${{ runner.environment == 'github-hosted' }}
+        uses: anchore/sbom-action/download-syft@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
+        id: syft
       - name: Generate SBOM
         env:
           TEUTO_PORTAL_WORKER_PULL_TOKEN: ${{ secrets.TEUTO_PORTAL_WORKER_PULL_TOKEN }}
           GHCR_PULL_TOKEN: ${{ secrets.GHCR_PULL_TOKEN }}
+          SYFT: ${{ steps.syft.outputs.cmd }}
         run: |
           [[ "$RUNNER_DEBUG" == 1 ]] && set -x
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          [[ -n "$SYFT" ]] && PATH="$(dirname "$SYFT"):$PATH"
           mkdir -p reports
           ./.github/scripts/generate-sbom.sh "${CHART}" "reports/${CHART#charts/}.spdx.json"
       - name: Attach SBOM to chart artifact

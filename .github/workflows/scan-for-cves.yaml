@@ -17,7 +17,8 @@ jobs:
       showLibraryCharts: false
 
   generateSarifReports:
-    runs-on: ubuntu-latest
+    # registry-gitlab.teuto.net (and its token endpoint on gitlab.teuto.net) is only reachable from within our infrastructure
+    runs-on: ${{ matrix.chart == 'teuto-portal-k8s-worker' && 'self-hosted-small' || 'ubuntu-latest' }}
     needs: getAllCharts
     permissions:
       contents: read
@@ -28,17 +29,24 @@ jobs:
         chart: ${{ fromJson(needs.getAllCharts.outputs.charts) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - run: /home/linuxbrew/.linuxbrew/bin/brew install grype
-      - run: pip install yq
+      - if: ${{ runner.environment == 'github-hosted' }}
+        uses: anchore/scan-action/download-grype@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
+        id: grype
+      - if: ${{ runner.environment == 'github-hosted' }}
+        run: pip install yq
       - name: Install sponge
+        if: ${{ runner.environment == 'github-hosted' }}
         run: sudo apt-get -yq install moreutils
+      - if: ${{ runner.environment == 'self-hosted' }}
+        run: ./.github/scripts/check-runner-tools.sh yq jq parallel sponge grype
       - name: Generate sarif reports
         env:
           TEUTO_PORTAL_WORKER_PULL_TOKEN: ${{ secrets.TEUTO_PORTAL_WORKER_PULL_TOKEN }}
           GHCR_PULL_TOKEN: ${{ secrets.GHCR_PULL_TOKEN }}
+          GRYPE: ${{ steps.grype.outputs.cmd }}
         run: |
           [[ "$RUNNER_DEBUG" == 1 ]] && set -x
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          [[ -n "$GRYPE" ]] && PATH="$(dirname "$GRYPE"):$PATH"
           ./.github/scripts/generate-sarif-reports.sh "charts/${{ matrix.chart }}"
       - uses: github/codeql-action/upload-sarif@915412ff23e8b7659517e607487dbeae018f2934 # v4
         if: ${{ hashFiles('reports/*.sarif') != '' }}
