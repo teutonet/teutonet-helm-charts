@@ -31,7 +31,9 @@ jobs:
     if: ${{ needs.getChangedCharts.outputs.count > 0 }}
     permissions:
       contents: read
-    runs-on: ubuntu-latest
+    # registry-gitlab.teuto.net (and its token endpoint on gitlab.teuto.net) is only reachable from within our infrastructure,
+    # only use the self-hosted runner where the image scan runs, fork PRs must never run on it
+    runs-on: ${{ matrix.chart == 'teuto-portal-k8s-worker' && (github.event_name == 'merge_group' || github.event.pull_request.head.repo.full_name == github.repository) && 'self-hosted-small' || 'ubuntu-latest' }}
     needs: getChangedCharts
     strategy:
       matrix:
@@ -45,9 +47,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      - run: pip install yq
+      - if: ${{ runner.environment == 'github-hosted' }}
+        run: pip install yq
       - name: Install sponge
+        if: ${{ runner.environment == 'github-hosted' }}
         run: sudo apt-get -yq install moreutils
+      - if: ${{ runner.environment == 'self-hosted' }}
+        run: ./.github/scripts/check-runner-tools.sh yq jq parallel sponge flock syft trivy
 
       - run: ./.github/scripts/prepare-values.sh "charts/$CHART"
 
@@ -57,15 +63,19 @@ jobs:
 
       - run: ./.github/scripts/check-licenses.sh "charts/$CHART"
 
-      - if: ${{ env.CAN_SCAN == 'true' }}
-        run: /home/linuxbrew/.linuxbrew/bin/brew install syft trivy
+      - if: ${{ env.CAN_SCAN == 'true' && runner.environment == 'github-hosted' }}
+        uses: anchore/sbom-action/download-syft@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
+        id: syft
+      - if: ${{ env.CAN_SCAN == 'true' && runner.environment == 'github-hosted' }}
+        uses: aquasecurity/setup-trivy@81e514348e19b6112ce2a7e3ecbafe19c1e1f567 # v0.3.1
       - if: ${{ env.CAN_SCAN == 'true' }}
         env:
           TEUTO_PORTAL_WORKER_PULL_TOKEN: ${{ secrets.TEUTO_PORTAL_WORKER_PULL_TOKEN }}
           GHCR_PULL_TOKEN: ${{ secrets.GHCR_PULL_TOKEN }}
+          SYFT: ${{ steps.syft.outputs.cmd }}
         run: |
           [[ "$RUNNER_DEBUG" == 1 ]] && set -x
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          [[ -n "$SYFT" ]] && PATH="$(dirname "$SYFT"):$PATH"
           ./.github/scripts/scan-for-licenses.sh "charts/$CHART"
   check-license-links:
     if: ${{ github.event_name == 'pull_request' || needs.getChangedCharts.outputs.count > 0 }}
