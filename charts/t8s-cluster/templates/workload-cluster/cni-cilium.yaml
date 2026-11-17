@@ -70,6 +70,8 @@ spec:
       enabled: true
     bandwidthManager:
       enabled: true
+      # without this the agent resets net.ipv4.tcp_congestion_control to cubic at start, overriding the image's bbr sysctl
+      bbr: true
     egressGateway:
       enabled: true
     # currently not really possible with kubeadmcontrolplane, as they don't support disabling the built-in kube-proxy
