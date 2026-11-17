@@ -9,7 +9,7 @@ auth:
 {{- define "base-cluster.prometheus-stack.grafana.ini.oauth" -}}
   {{- $_ := mustMerge . (pick .context "Values") -}}
   {{- with .Values.global.authentication -}}
-    {{- $issuerUrl := printf "https://%s%s" .config.issuerHost .config.issuerPath -}}
+    {{- $issuerUrl := printf "https://%s%s" .config.issuerHost (.config.issuerPath | default "") -}}
 auth:
   oauth_auto_login: true
   disable_login_form: false
