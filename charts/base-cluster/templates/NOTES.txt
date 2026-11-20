@@ -101,4 +101,43 @@ EOF
 
 # example usage:
 $ generateKubeconfig {{ .Values.rbac.accounts | keys | first }} https://your-oidc-issuer.example.com
+{{- end }}
+
+{{- if .Values.rbac.legacy.serviceAccounts }}
+
+===
+DEPRECATED: "rbac.legacy.serviceAccounts" creates ServiceAccounts with static,
+long-lived tokens, which are a security risk. Migrate to OIDC ("rbac.accounts" /
+"rbac.groups") as soon as possible.
+
+Use the following commands to create a kubeconfig for a legacy ServiceAccount;
+
+function generateLegacyKubeconfig() {
+  local user="${1:?Missing user parameter}"
+  local namespace="{{ .Release.Namespace }}"
+  local cluster="$(kubectl config view --raw -o json | jq --arg context $(kubectl config current-context) -r '.contexts[] | select(.name == $context) | .context.cluster')"
+
+  cat - <<EOF
+apiVersion: v1
+kind: Config
+clusters:
+- cluster:
+    certificate-authority-data: $(kubectl config view --raw -o json | jq --arg cluster $cluster -r '.clusters[] | select(.name == $cluster) | .cluster["certificate-authority-data"]')
+    server: $(kubectl config view --raw -o json | jq --arg cluster $cluster -r '.clusters[] | select(.name == $cluster) | .cluster.server')
+  name: $cluster
+contexts:
+- context:
+    cluster: $cluster
+    user: ${user}@${cluster}
+  name: ${user}@${cluster}
+current-context: ${user}@${cluster}
+users:
+- name: ${user}@${cluster}
+  user:
+    token: $(kubectl -n $namespace get secret "{{ include "common.names.fullname" . }}-$user" -o jsonpath={.data.token} | base64 -d)
+EOF
+}
+
+# example usage:
+$ generateLegacyKubeconfig {{ .Values.rbac.legacy.serviceAccounts | keys | first }}
 {{- end -}}

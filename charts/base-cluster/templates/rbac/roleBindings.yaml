@@ -1,4 +1,4 @@
-{{- $roles := include "base-cluster.rbac.roles" (dict "accounts" .Values.rbac.accounts "groups" .Values.rbac.groups "roles" (.Values.rbac.roles | keys) "namespaces" (include "base-cluster.enabled-namespaces" (dict "context" .) | fromYaml | keys)) | fromYaml -}}
+{{- $roles := include "base-cluster.rbac.roles" (dict "accounts" .Values.rbac.accounts "groups" .Values.rbac.groups "serviceAccounts" .Values.rbac.legacy.serviceAccounts "namespace" .Release.Namespace "serviceAccountPrefix" (include "common.names.fullname" .) "roles" (.Values.rbac.roles | keys) "namespaces" (include "base-cluster.enabled-namespaces" (dict "context" .) | fromYaml | keys)) | fromYaml -}}
 {{- $definedRoles := .Values.rbac.roles | keys -}}
 
 {{- range $roleName, $roleMapping := $roles -}}

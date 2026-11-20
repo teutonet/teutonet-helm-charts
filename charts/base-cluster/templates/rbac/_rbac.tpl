@@ -12,13 +12,18 @@
 {{- define "base-cluster.rbac.mergeSubjects" -}}
   {{- $subjects := dict -}}
   {{- range $accountName, $account := .accounts -}}
-    {{- $subjects = set $subjects $accountName (dict "kind" "User" "label" "account" "spec" $account) -}}
+    {{- $subjects = set $subjects $accountName (dict "label" "account" "spec" $account "subject" (dict "kind" "User" "name" $accountName)) -}}
   {{- end -}}
   {{- range $groupName, $group := .groups -}}
     {{- if hasKey $subjects $groupName -}}
       {{- fail (printf "'%s' is used as both an account and a group" $groupName) -}}
     {{- end -}}
-    {{- $subjects = set $subjects $groupName (dict "kind" "Group" "label" "group" "spec" $group) -}}
+    {{- $subjects = set $subjects $groupName (dict "label" "group" "spec" $group "subject" (dict "kind" "Group" "name" $groupName)) -}}
+  {{- end -}}
+  {{- /* Legacy: ServiceAccounts with static tokens, keyed with a prefix as they can't collide with OIDC names */ -}}
+  {{- range $serviceAccountName, $serviceAccount := .serviceAccounts -}}
+    {{- $key := printf "serviceAccount/%s" $serviceAccountName -}}
+    {{- $subjects = set $subjects $key (dict "label" "legacy serviceAccount" "spec" $serviceAccount "subject" (dict "kind" "ServiceAccount" "namespace" $.namespace "name" (printf "%s-%s" $.serviceAccountPrefix $serviceAccountName))) -}}
   {{- end -}}
   {{- toYaml $subjects -}}
 {{- end -}}
@@ -28,9 +33,9 @@
   {{- $definedRoles := .roles -}}
   {{- $preexistingRoles := include "base-cluster.rbac.preexistingRoles" (dict) | fromYamlArray -}}
   {{- $definedNamespaces := .namespaces -}}
-  {{- $subjects := include "base-cluster.rbac.mergeSubjects" (dict "accounts" .accounts "groups" .groups) | fromYaml -}}
-  {{- range $subjectName, $subject := $subjects -}}
-    {{- $kind := $subject.kind -}}
+  {{- $subjects := include "base-cluster.rbac.mergeSubjects" (dict "accounts" .accounts "groups" .groups "serviceAccounts" .serviceAccounts "namespace" .namespace "serviceAccountPrefix" .serviceAccountPrefix) | fromYaml -}}
+  {{- range $subjectKey, $subject := $subjects -}}
+    {{- $subjectName := $subjectKey | trimPrefix "serviceAccount/" -}}
     {{- $label := $subject.label -}}
     {{- $spec := $subject.spec -}}
     {{- range $roleName, $namespaces := dig "roles" (dict) $spec -}}
@@ -46,7 +51,7 @@
         {{- end -}}
 
         {{- $existingNamespace := dig $roleNamespace (list) $namespaceMapping -}}
-        {{- $existingNamespace = append $existingNamespace (dict "kind" $kind "name" $subjectName) -}}
+        {{- $existingNamespace = append $existingNamespace $subject.subject -}}
         {{- $namespaceMapping = set $namespaceMapping $roleNamespace $existingNamespace -}}
       {{- end -}}
       {{- $existingRole = set $existingRole "namespaceMapping" $namespaceMapping -}}
@@ -59,7 +64,7 @@
 
       {{- $existingRole := dig $roleName (dict) $roles -}}
       {{- $clusterMapping := dig "clusterMapping" (list) $existingRole -}}
-      {{- $clusterMapping = append $clusterMapping (dict "kind" $kind "name" $subjectName) -}}
+      {{- $clusterMapping = append $clusterMapping $subject.subject -}}
       {{- $existingRole = set $existingRole "clusterMapping" $clusterMapping -}}
       {{- $roles = set $roles $roleName $existingRole -}}
     {{- end -}}
