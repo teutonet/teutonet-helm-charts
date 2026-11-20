@@ -684,6 +684,24 @@
                         "botToken"
                       ],
                       "additionalProperties": false
+                    },
+                    "^webhook($| \\S+$)": {
+                      "type": "object",
+                      "description": "Sets up a webhook receiver, if suffixed with ` $name` `$name` will be used as the name of the receiver, otherwise it's `webhook`",
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "format": "uri",
+                          "pattern": "^https?://"
+                        },
+                        "sendResolved": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "url"
+                      ],
+                      "additionalProperties": false
                     }
                   },
                   "additionalProperties": false
