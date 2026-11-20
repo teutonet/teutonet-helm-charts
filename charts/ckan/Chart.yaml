@@ -43,6 +43,6 @@ annotations:
     - image: docker.io/busybox:1.28                                                                                                #  default/Job/ckan-ckan-post-install.yaml
     - image: docker.io/ckan/ckan-base-datapusher:0.0.21@sha256:84d11924549f44bcc1419256811d156893d837f90885b24f81f1753733b9d6ef    #  default/Deployment/ckan-datapusher.yaml
     - image: docker.io/valkey/valkey:9.0.0-alpine3.22@sha256:b4ee67d73e00393e712accc72cfd7003b87d0fcd63f0eba798b23251bfc9c394      #  default/StatefulSet/ckan-valkey.yaml
-    - image: ghcr.io/teutonet/oci-images/ckan:1.0.15@sha256:88cd3bd9ecb13d9b02f9f16def521b808f19063c716095119f7da83623a24ef9       #  default/Deployment/ckan-ckan.yaml
-    - image: ghcr.io/teutonet/oci-images/ckan:1.0.15@sha256:88cd3bd9ecb13d9b02f9f16def521b808f19063c716095119f7da83623a24ef9       #  default/Job/ckan-ckan-post-install.yaml
+    - image: ghcr.io/teutonet/oci-images/ckan:1.0.16@sha256:92e3d48c4555fae08ff923d8982f6452e7b4637f6caa2e269e4e685133a0d3b8       #  default/Deployment/ckan-ckan.yaml
+    - image: ghcr.io/teutonet/oci-images/ckan:1.0.16@sha256:92e3d48c4555fae08ff923d8982f6452e7b4637f6caa2e269e4e685133a0d3b8       #  default/Job/ckan-ckan-post-install.yaml
     - image: ghcr.io/teutonet/oci-images/solr-ckan:1.0.29@sha256:33afbaa6e09106f3036c6b9c06a2e3ff7d4e3d7153294221ccb598117d88ea30  #  default/StatefulSet/ckan-solr.yaml
