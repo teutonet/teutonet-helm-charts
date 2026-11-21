@@ -6,6 +6,9 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
+  {{- with .Values.backup.retentionPolicy }}
+  retentionPolicy: {{ . | quote }}
+  {{- end }}
   configuration:
     destinationPath: {{ .Values.backup.s3.path | quote }}
     endpointURL: {{ .Values.backup.s3.endpointURL | quote }}
