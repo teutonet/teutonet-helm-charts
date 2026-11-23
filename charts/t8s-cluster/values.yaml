@@ -39,7 +39,7 @@ global:
     image:
       registry: registry.k8s.io
       repository: etcd
-      tag: 3.7.3-0@sha256:0d27b9478551f431f82d1e0ddb6c87ad07ebae8b904c637f3a99213349523910
+      tag: 3.7.4-0@sha256:47d217be8ec4ca943954b5f4bf8029ee9bc0ffb05fbe2a44d579a1f640e03ed4
   jq:
     image:
       registry: ghcr.io
