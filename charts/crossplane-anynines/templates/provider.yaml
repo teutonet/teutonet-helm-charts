@@ -1,0 +1,9 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-anynines
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  package: {{ include "common.images.image" (dict "imageRoot" .Values.global.provider.image "global" .Values.global) }}
+  runtimeConfigRef:
+    name: provider-anynines
