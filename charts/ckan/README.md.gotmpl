@@ -6,6 +6,23 @@
 
 {{ template "chart.description" . }}
 
+## Description
+
+[CKAN](https://ckan.org) is the world's leading open-source data management system for publishing, sharing, and finding open data. This chart deploys a fully functional CKAN instance with PostgreSQL, Valkey (Redis), Solr, and DataPusher.
+
+## Usage
+
+[Helm](https://helm.sh) must be installed to use the charts.
+Please refer to Helm's [documentation](https://helm.sh/docs/intro/install/) for installation instructions.
+
+You can use the OCI registry: `oci://ghcr.io/teutonet/teutonet-helm-charts`
+
+## Installation
+
+```bash
+helm install ckan oci://ghcr.io/teutonet/teutonet-helm-charts/ckan --version {{ .Chart.Version }} --values my-values.yaml
+```
+
 {{ template "chart.homepageLine" . }}
 
 {{ template "chart.maintainersSection" . }}
