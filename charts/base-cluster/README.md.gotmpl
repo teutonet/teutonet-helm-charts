@@ -277,6 +277,27 @@ If it's not working, ask your kubernetes hoster or check the
 `--oidc-username-claim`/`--oidc-username-prefix`/`--oidc-groups-claim`/`--oidc-groups-prefix`
 flags on your apiserver.
 
+#### Legacy: ServiceAccounts
+
+**Deprecated, only use this until you have migrated to OIDC.** If you can't use
+OIDC yet, `rbac.legacy.serviceAccounts` creates a `ServiceAccount` plus a
+long-lived token `Secret` (both named `<release>-<name>`) for each entry and
+binds it like an account (same `roles`/`clusterRoles` shape). Static service
+account tokens never expire and are a security risk. The install notes
+(`helm -n flux-system get notes base-cluster`) contain a `generateLegacyKubeconfig`
+helper to build a kubeconfig from the token.
+
+See the [migration notes](#migration) for moving existing accounts here.
+
+```yaml
+rbac:
+  legacy:
+    serviceAccounts:
+      ci-bot:
+        clusterRoles:
+          - view
+```
+
 ### Miscellaneous
 
 - You can create [`HelmRepositoy`s](#global); `.global.helmRepositories.<name>.url=<url>`
@@ -526,6 +547,15 @@ ingress:
   builds a kubeconfig that authenticates via `kubectl oidc-login` instead of a
   long-lived `Secret` token, and needs your OIDC issuer url as an additional
   argument.
+
+  If you can't migrate to OIDC yet, move every `rbac.accounts` entry without an `@`
+  unchanged to the deprecated `rbac.legacy.serviceAccounts` (see
+  [Legacy: ServiceAccounts](#legacy-serviceaccounts)). It renders the same
+  `ServiceAccount`s, `Secret`s and bindings as before this change, so existing tokens
+  keep working. Entries left in `rbac.accounts` are bound as OIDC users instead. If
+  you already upgraded to a release that removed the `ServiceAccount`s, they and their
+  tokens were deleted by that upgrade, so they come back with new tokens that need to
+  be handed out again.
 
 - This release disables grafana by default. To keep using it set
   `monitoring.grafana.enabled` to `true`. Grafana's `Secret`, `ListenerSet` and

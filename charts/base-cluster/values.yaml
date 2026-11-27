@@ -585,6 +585,8 @@ rbac:
   roles: {}
   accounts: {}
   groups: {}
+  legacy:
+    serviceAccounts: {}
 
 backup:
   provider: null
