@@ -278,7 +278,7 @@ monitoring:
         namespace-view:
           datasource: prometheus
           gnetId: 15758
-          revision: 46
+          revision: 47
         node-exporter-full:
           datasource: prometheus
           gnetId: 1860
