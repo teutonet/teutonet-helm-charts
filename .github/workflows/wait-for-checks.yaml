@@ -69,7 +69,7 @@ jobs:
               check_result="$(fetch_check_runs | jq --arg ignored "$IGNORED_JOBS,$CURRENT_JOB" '
                 .check_runs
                 | map(select(
-                    ([.conclusion] | inside(["success","skipped","cancelled"]) | not)
+                    ([.conclusion] | inside(["success","skipped","cancelled","neutral"]) | not)
                     and ([.name] | inside($ignored | split(",")) | not)
                   )) as $pending
                 | {
@@ -97,4 +97,4 @@ jobs:
           done
 
           # final check as github sometimes drops jobs or returns 403s...
-          fetch_check_runs | jq --arg ignored "$IGNORED_JOBS,$CURRENT_JOB" -e '.check_runs | map(select(([.conclusion] | inside(["success","skipped","cancelled"]) | not) and ([.name] | inside($ignored | split(",")) | not))) | map("\(.name) (\(.conclusion // .status)) (\(.html_url))") | if length == 0 then . else halt_error(1) end'
+          fetch_check_runs | jq --arg ignored "$IGNORED_JOBS,$CURRENT_JOB" -e '.check_runs | map(select(([.conclusion] | inside(["success","skipped","cancelled","neutral"]) | not) and ([.name] | inside($ignored | split(",")) | not))) | map("\(.name) (\(.conclusion // .status)) (\(.html_url))") | if length == 0 then . else halt_error(1) end'
