@@ -209,6 +209,9 @@ licenses:
   reg.kyverno.io/kyverno/kyverno:
     license: Apache-2.0
     licenseLink: https://raw.githubusercontent.com/kyverno/kyverno/refs/heads/main/LICENSE
+  reg.kyverno.io/kyverno/kyverno-cli:
+    license: Apache-2.0
+    licenseLink: https://raw.githubusercontent.com/kyverno/kyverno/refs/heads/main/LICENSE
   reg.kyverno.io/kyverno/kyvernopre:
     license: Apache-2.0
     licenseLink: https://raw.githubusercontent.com/kyverno/kyverno/refs/heads/main/LICENSE
