@@ -4,6 +4,14 @@ templates:
 release:
   name: base-cluster
 tests:
+  - it: never evicts pods owned by a Job
+    asserts:
+      - equal:
+          path: spec.values.deschedulerPolicy.profiles[0].pluginConfig[?(@.name == "DefaultEvictor")].args.labelSelector
+          value:
+            matchExpressions:
+              - key: batch.kubernetes.io/job-name
+                operator: DoesNotExist
   - it: does not restrict evictable namespaces by default
     asserts:
       - notExists:

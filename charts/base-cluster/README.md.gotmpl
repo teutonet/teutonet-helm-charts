@@ -97,6 +97,10 @@ resource requests, the descheduler might lead to period restarting of random pod
 
 In that case you should disable the descheduler.
 
+Pods owned by a `Job` (including `CronJob` runs) are never evicted, as that would
+throw away the work done so far. Overriding `descheduler.profile` replaces the whole
+`pluginConfig` list, so keep the `labelSelector` of the `DefaultEvictor` if you do.
+
 Pods that run a one-off job without a controller to resume it (e.g. CI runners) are
 lost when evicted mid-job. List their namespaces in `descheduler.excludedNamespaces`
 to keep the descheduler from evicting them when rebalancing node utilization.

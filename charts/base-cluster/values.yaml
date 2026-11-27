@@ -476,6 +476,10 @@ descheduler:
         args:
           evictLocalStoragePods: true
           nodeFit: true
+          labelSelector:
+            matchExpressions:
+              - key: batch.kubernetes.io/job-name
+                operator: DoesNotExist
       - name: RemoveDuplicates
       - name: RemovePodsViolatingNodeAffinity
         args:
